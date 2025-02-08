@@ -1,10 +1,11 @@
 name: Deploy to production
 
 on:
-  release:
-    types: [published]
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to deploy'
+        required: true
 
 jobs:
   deploy:
