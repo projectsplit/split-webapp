@@ -26,6 +26,6 @@ const App: React.FC = () => {
       </Router>
     </APIProvider>
   );
-};
+}
 
 export default App;
