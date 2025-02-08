@@ -55,7 +55,7 @@ const AuthPage
       </Button>
       <hr />
       <GoogleButton />
-      <div>Version: {packageJson.version}</div>
+      <div>{packageJson.version}</div>
     </StyledAuthPage>
   );
 };
