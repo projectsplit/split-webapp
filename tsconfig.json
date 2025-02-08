@@ -2,8 +2,8 @@
   "compilerOptions": {
     // "moduleResolution": "node",
     // "esModuleInterop": true,
-    // "resolveJsonModule": true,
     // "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "jsx": "react-jsx",
     "types": ["@types/styled-components"],
     "baseUrl": "./src",

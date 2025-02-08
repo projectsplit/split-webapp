@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import routes from "../../routes";
 import { StyledAuthPage } from "./Auth.styled";
 import Button from "../../components/Button";
+import packageJson from "../../../package.json";
 
 const AuthPage
 : React.FC = () => {
@@ -54,6 +55,7 @@ const AuthPage
       </Button>
       <hr />
       <GoogleButton />
+      <div>Version: {packageJson.version}</div>
     </StyledAuthPage>
   );
 };

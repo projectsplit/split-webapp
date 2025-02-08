@@ -4,8 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to deploy'
-        required: true
+        description: 'Select a tag to deploy'
+        type: choice
+        options: []
 
 jobs:
   deploy:
