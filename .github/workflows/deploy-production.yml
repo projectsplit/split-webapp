@@ -26,7 +26,7 @@ jobs:
         run: npm run build
         
       - name: List output of dist directory
-        run: ls -alh /home/runner/work/split-webapp/split-webapp/dist/
+        run: ls -alh ${{ github.workspace }}/dist/
 
       - name: SSH deployment to server
         uses: appleboy/ssh-action@v0.1.4
