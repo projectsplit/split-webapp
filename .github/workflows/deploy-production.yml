@@ -5,10 +5,9 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-
     run-name: Deploying to production - ${{ inputs.tag }}
-
+    runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
