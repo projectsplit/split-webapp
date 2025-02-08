@@ -22,8 +22,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Setup .env.production
+        run: echo "${{ env.ENV_PRODUCTION }}" > .env.production
+
       - name: Build React App
-        run: npm run build
+        run: npm run build-prod
         
       - name: List output of dist directory
         run: ls -alh ${{ github.workspace }}/dist/
