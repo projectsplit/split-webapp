@@ -1,9 +1,9 @@
-name: Deploy to production
+name: Deploy Production
 
 on:
   workflow_dispatch:
 
-run-name: Deploy ${{ github.ref_name }} to production
+run-name: Deploy Production ${{ github.ref_name }}
 
 jobs:
   deploy:
