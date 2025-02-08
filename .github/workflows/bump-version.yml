@@ -21,5 +21,6 @@ jobs:
           git config --local user.name "${GITHUB_ACTOR}"
       - name: Bump version patch
         run: |
+          npm config set tag-version-prefix ''
           npm version patch -m "Version bump to %s [skip ci]"
           git push --follow-tags
