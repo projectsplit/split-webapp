@@ -36,4 +36,5 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
+            echo ${{ github.workspace }}
             scp -r ${{ github.workspace }}/dist/ /home/user/split-production/webapp
