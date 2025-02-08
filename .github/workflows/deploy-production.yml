@@ -37,4 +37,3 @@ jobs:
           KEY: ${{ secrets.SERVER_SSH_KEY }}
           source: "${{ github.workspace }}/dist/"
           target: "/home/user/split-production/webapp"
-          strip_components: 1
