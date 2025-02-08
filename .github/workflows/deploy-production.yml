@@ -1,4 +1,4 @@
-name: Deploy ${{ github.event.inputs.tag }} to production
+name: Deploy to production
 
 on:
   workflow_dispatch:
@@ -6,6 +6,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    run-name: Deploying to production - ${{ inputs.tag }}
 
     steps:
       - name: Checkout code
