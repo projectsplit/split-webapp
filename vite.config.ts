@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import checker from 'vite-plugin-checker';
 // import * as fs from 'node:fs';
 // import path from 'path';
 
@@ -12,7 +13,10 @@ export default defineConfig({
   //   host: 'localhost',
   //   port: 5173,
   // },
-  plugins: [react()],
+  plugins: [
+    react(),
+    // checker({ typescript: true })
+  ],
   resolve: {
     alias: {
       '@': '/src',
