@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    // "moduleResolution": "node",
+    // "esModuleInterop": true,
+    // "resolveJsonModule": true,
+    // "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
+    "types": ["@types/styled-components"],
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    }
+  },
+  "include": ["src", "vite.config.ts"],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
