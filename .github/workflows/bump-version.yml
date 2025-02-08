@@ -22,5 +22,5 @@ jobs:
       - name: Bump version patch
         run: |
           npm config set tag-version-prefix ''
-          npm version patch -m "Version bump to %s [skip ci]"
+          npm version patch --tag-version-prefix="" -m "Version bump to %s [skip ci]"
           git push --follow-tags
