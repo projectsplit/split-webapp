@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-
-permissions:
-  contents: write
  
 jobs:
   version-bump:
@@ -26,4 +23,4 @@ jobs:
         run: |
           npm config set tag-version-prefix ''
           npm version patch --tag-version-prefix="" -m "Version bump to %s [skip ci]"
-          git push --follow-tags --force
+          git push --follow-tags
