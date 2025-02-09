@@ -15,12 +15,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '23'
-      - name: Set git config
+      - name: Set git config as GitHub Actions bot
         run: |
-          git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          git config --local user.name "${GITHUB_ACTOR}"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
       - name: Bump version patch
         run: |
           npm config set tag-version-prefix ''
           npm version patch --tag-version-prefix="" -m "Version bump to %s [skip ci]"
-          git push --follow-tags --force
+      - name: Push changes using PAT
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}.git
+          git push --force --follow-tags
