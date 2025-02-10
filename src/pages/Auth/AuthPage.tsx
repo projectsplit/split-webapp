@@ -17,6 +17,7 @@ import { LoadingSpinner } from "../../styles/loadingSpinner";
 const AuthPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [networkError, setNetworkError]=useState<string>("")
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,7 +26,7 @@ const AuthPage: React.FC = () => {
 
   const signInWithCredentialsMutation = useMutation<
     PasswordSignInResponse,
-    Error,
+    any,
     PasswordSignInRequest
   >({
     mutationFn: sendPasswordCredentials,
@@ -42,7 +43,10 @@ const AuthPage: React.FC = () => {
           navigate(from);
         },
         onError: (error) => {
-          console.error("Sign-in failed", error);
+          if(error.code === "ERR_NETWORK"){
+            setNetworkError(error.message + ": Check your internet connection")
+          }
+          console.error("Sign-in failed", error.message);
         },
       }
     );
@@ -81,35 +85,14 @@ const AuthPage: React.FC = () => {
             </SubmitButton>
           )}
 
-          {/* <div className="mailmsg">{networkError}</div> */}
+          <div className="mailmsg">{networkError}</div>
           <div className="or ">OR</div>
           <GoogleButton />
-          {/* <div className="mailmsg">{networkError}</div> */}
+          <div className="mailmsg">{networkError}</div>
         </div>
       </div>
     </StyledAuthPage>
   );
-
-  // return (
-  //   <StyledAuthPage >
-  //     <Input
-  //       type="text"
-  //       value={username}
-  //       onChange={e => setUsername(e.target.value)}
-  //       placeholder="Username" />
-  //     <Input
-  //       type="password"
-  //       value={password}
-  //       onChange={e => setPassword(e.target.value)}
-  //       placeholder="Password" />
-  //     <Button onClick={handleSignIn} disabled={signInWithCredentialsMutation.status === "success"}>
-  //       {signInWithCredentialsMutation.isPending ? "Signing In..." : "Sign In"}
-  //     </Button>
-  //     <hr />
-  //     <GoogleButton />
-  //     <div>{packageJson.version}</div>
-  //   </StyledAuthPage>
-  // );
 };
 
 export default AuthPage;
