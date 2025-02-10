@@ -26,14 +26,14 @@ export const StyledAuthPage = styled.div`
       display: flex;
       flex-direction: column;
 
-      .mailmsg {
+      .errormsg {
         margin-top: 3px;
         white-space: initial;
         color: ${({ theme }) => theme.pink};
         font-size: 12px;
       }
 
-      .mailbox {
+      .inputBox {
         display: flex;
         flex-direction: column;
         gap:15px;

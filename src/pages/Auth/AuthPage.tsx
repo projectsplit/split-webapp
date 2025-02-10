@@ -59,7 +59,7 @@ const AuthPage: React.FC = () => {
       <div className="loginBox">
         {/* <div className="promptMsg">Enter username and password to sign in.</div> */}
         <div className="controlsContainer">
-          <div className="mailbox">
+          <div className="inputBox">
             <Input
               inputMode="text"
               value={username}
@@ -86,10 +86,10 @@ const AuthPage: React.FC = () => {
             </SubmitButton>
           )}
 
-          <div className="mailmsg">{networkError}</div>
+          <div className="errormsg">{networkError}</div>
           <div className="or ">OR</div>
           <GoogleButton />
-          <div className="mailmsg">{networkError}</div>
+          <div className="errormsg">{networkError}</div>
         </div>
       </div>
     </StyledAuthPage>

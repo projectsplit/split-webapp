@@ -8,14 +8,14 @@ import Group from "./pages/Group";
 import Protected from "./pages/Protected";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import config from "./config";
-import { ThemeProvider } from "styled-components";
-import { theme } from "./theme";
+// import { ThemeProvider } from "styled-components";
+// import { theme } from "./theme";
 import GlobalStyles from "./styles/global";
 import "./App.css";
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
+    
       <>
         <GlobalStyles />
         <APIProvider apiKey={config.googleMapsApiKey}>
@@ -35,7 +35,7 @@ const App: React.FC = () => {
           </Router>
         </APIProvider>
       </>
-    </ThemeProvider>
+    
   );
 };
 
