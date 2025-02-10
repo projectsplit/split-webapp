@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 import { CreateExpenseRequest, GeoLocation, Group, PickerMember } from "../types";
 import { useEffect, useState } from "react";
 import MemberPicker from "../components/MemberPicker";
-import Input from "../components/Input";
+import Input_old from "../components/Input_old";
 import { DateTime } from "../components/DateTime";
 import Button from "../components/Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -88,7 +88,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, s
     <StyledExpenseForm>
       <div className="amount-input-wrapper">
         <span className="currency">{currencySymbol}</span>
-        <Input
+        <Input_old
           placeholder="0"
           inputMode="numeric"
           description="Amount"
@@ -97,7 +97,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, s
           className="amount-input"
           onChange={e => setAmount(e.target.value)} />
       </div>
-      <Input
+      <Input_old
         description="Description"
         placeholder="e.g. Air tickets"
         // error={descriptionError}

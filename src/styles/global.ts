@@ -1,3 +1,6 @@
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyles = createGlobalStyle`
 html,
 body,
 #root {
@@ -68,3 +71,7 @@ input {
   all: unset;
   cursor: text;
 }
+  
+`;
+
+export default GlobalStyles;
