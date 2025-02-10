@@ -13,10 +13,8 @@ const redirectToGoogleLoginPage = () => {
 const GoogleButton: React.FC = () => {
   return (
     <StyledGoogleButton onClick={redirectToGoogleLoginPage}>
-      <div className="gsi-material-button-state"></div>
-      <div className="gsi-material-button-content-wrapper">
-        <div className="gsi-material-button-icon">
           <svg
+            className="googleLogo"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 48 48"
@@ -41,10 +39,9 @@ const GoogleButton: React.FC = () => {
             ></path>
             <path fill="none" d="M0 0h48v48H0z"></path>
           </svg>
-        </div>
-        <span className="gsi-material-button-contents">Sign in with Google</span>
-        <span style={{ display: "none" }}>Sign in with Google</span>
-      </div>
+    
+        <div className="prompt">Continue with Google</div>
+   
     </StyledGoogleButton>
   );
 };
