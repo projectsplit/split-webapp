@@ -17,7 +17,7 @@ import { LoadingSpinner } from "../../styles/loadingSpinner";
 const AuthPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [networkError, setNetworkError]=useState<string>("")
+  const [networkError, setNetworkError] = useState<string>("");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,6 +34,7 @@ const AuthPage: React.FC = () => {
 
   const handleSignIn = () => {
     if (!username || !password) return;
+    setNetworkError("");
 
     signInWithCredentialsMutation.mutate(
       { username, password },
@@ -43,8 +44,8 @@ const AuthPage: React.FC = () => {
           navigate(from);
         },
         onError: (error) => {
-          if(error.code === "ERR_NETWORK"){
-            setNetworkError(error.message + ": Check your internet connection")
+          if (error.code === "ERR_NETWORK") {
+            setNetworkError(error.message + ": Check your internet connection");
           }
           console.error("Sign-in failed", error.message);
         },
