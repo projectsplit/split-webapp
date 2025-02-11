@@ -228,3 +228,34 @@ export interface ScrollPickerProps {
   selectedIndex: number
   setSelectedIndex: (index: number) => void
 }
+
+export enum Frequency {
+  Weekly,
+  Monthly,
+  Annually,
+}
+
+export type BudgetInfoResponse = {
+  budgetSubmitted: boolean;
+  averageSpentPerDay?: string;
+  remainingDays?: string;
+  totalAmountSpent?: string;
+  goal?: string;
+  currency?: string;
+  budgetType?: Frequency;
+  startDate?: any;
+  endDate?: any;
+};
+
+export type UserPendingTransaction = {
+  userIsSender: boolean;
+  userIsReceiver: boolean;
+  amount: number;
+  currency: string;
+};
+
+export type GroupsTotalAmountsResponse = {
+  numberOfGroups: number;
+  userIsOwedAmounts: { [currency: string]: number };
+  userOwesAmounts: { [currency: string]: number };
+};

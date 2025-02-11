@@ -3,39 +3,29 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./pages/Auth/AuthPage";
 import routes from "./routes";
 import GoogleCallback from "./pages/GoogleCallback";
-import GroupSelection from "./pages/GroupSelection";
 import Group from "./pages/Group";
 import Protected from "./pages/Protected";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import config from "./config";
-// import { ThemeProvider } from "styled-components";
-// import { theme } from "./theme";
-import GlobalStyles from "./styles/global";
 import "./App.css";
+import Home from "./pages/Home/Home";
 
 const App: React.FC = () => {
   return (
-    
-      <>
-        <GlobalStyles />
-        <APIProvider apiKey={config.googleMapsApiKey}>
-          <Router>
-            <Routes>
-              <Route element={<Protected />}>
-                <Route path={routes.ROOT} element={<GroupSelection />} />
-                <Route path=":groupId" element={<Group />} />
-                <Route path="*" element={<h1>Lost ?</h1>} />
-              </Route>
-              <Route
-                path={routes.GOOGLE_REDIRECT}
-                element={<GoogleCallback />}
-              />
-              <Route path={routes.AUTH} element={<Auth />} />
-            </Routes>
-          </Router>
-        </APIProvider>
-      </>
-    
+    <APIProvider apiKey={config.googleMapsApiKey}>
+      <Router>
+        <Routes>
+          <Route path={routes.AUTH} element={<Auth />} />
+          <Route path={routes.GOOGLE_REDIRECT} element={<GoogleCallback />} />
+          <Route element={<Protected />}>
+            <Route path={routes.ROOT} element={<Home />} />
+            {/* <Route path="/groups" element={<Groups />}> */}
+            <Route path=":groupId" element={<Group />} />
+            <Route path="*" element={<h1>Lost ?</h1>} />
+          </Route>
+        </Routes>
+      </Router>
+    </APIProvider>
   );
 };
 

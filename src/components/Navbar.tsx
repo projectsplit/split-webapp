@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from './Button';
 import { useQuery } from '@tanstack/react-query';
-import { getMe } from '../api/api';
+import { getMe } from '../api/services/api';
+
 
 const Navbar: React.FC = () => {
 
