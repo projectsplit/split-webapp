@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { keyframes, styled } from 'styled-components'
 import AutoWidthInput from './AutoWidthInput'
 import { useQuery } from '@tanstack/react-query'
-import { getLabels } from '../api/api'
+
 import { IoClose } from 'react-icons/io5'
 import useDebounce from '../hooks/useDebounce'
+import { getLabels } from '../api/services/api'
 const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
 
   const [text, setText] = useState<string>('')
@@ -53,7 +54,7 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
   };
 
   const handleSuggestedLabelClick = (labelName: string): void => {
-    setLabels([...labels, suggestedLabels!.find(x => x === labelName)!])
+    setLabels([...labels, suggestedLabels!.find((x:any) => x === labelName)!])
     setText('')
     inputRef.current?.focus();
   }
@@ -78,7 +79,7 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
     setText(newText)
   }
 
-  const remainingSuggestedLabels = suggestedLabels.filter(x => !labels.includes(x))
+  const remainingSuggestedLabels = suggestedLabels.filter((x:any) => !labels.includes(x))
   const isEmpty = labels.length === 0 && text.length === 0
 
   return (
@@ -107,7 +108,7 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
       </div>
       {isMenuOpen && remainingSuggestedLabels.length > 0 && (
         <div className="dropdown" ref={dropdownRef}>
-          {remainingSuggestedLabels.map((x) => (
+          {remainingSuggestedLabels.map((x:any) => (
             <div key={x} onClick={() => handleSuggestedLabelClick(x)} className="suggested-label">{x}</div>
           ))}
         </div>
