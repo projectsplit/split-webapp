@@ -4,8 +4,9 @@ import DayPicker from './DayPicker/DayPicker'
 import dayjs, { Dayjs } from 'dayjs'
 import { RxChevronLeft, RxChevronRight } from 'react-icons/rx'
 import ScrollPicker from '../ScrollPicker/ScrollPicker'
-import { DateTimePickerProps } from '../../types'
+
 import { isNow, round } from '../../utils'
+import { DateTimePickerProps } from '../../interfaces'
 
 const DateTimePicker = ({ selectedDateTime, setSelectedDateTime, realtimeUpdate, setRealtimeUpdate }: DateTimePickerProps) => {
 

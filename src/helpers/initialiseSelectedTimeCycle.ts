@@ -1,5 +1,6 @@
 import { Frequency } from "../types";
-import { generateYearsArray } from "../components/Analytics/helpers/generateYearsArray";
+import { generateYearsArray } from "./generateYearsArray";
+
 
 export const initialiseSelectedTimeCycle = (
   cycle: Frequency,

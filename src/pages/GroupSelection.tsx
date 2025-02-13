@@ -1,8 +1,9 @@
 import { styled } from "styled-components";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { getGroups } from "../api/api";
+
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { UserInfo } from "../types";
+import { getGroups } from "../api/services/api";
 
 const GroupSelection = () => {
   

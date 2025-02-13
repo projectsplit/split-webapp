@@ -1,6 +1,7 @@
 import { styled } from 'styled-components'
-import { DayPickerProps } from '../../../types'
+
 import dayjs from 'dayjs'
+import { DayPickerProps } from '../../../interfaces'
 
 const DayPicker = (props: DayPickerProps) => {
   const { selectedDateTime, setSelectedDateTime } = props

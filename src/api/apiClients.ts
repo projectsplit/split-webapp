@@ -1,8 +1,9 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import config from "../config";
-import { refreshToken } from "./api";
+
 import routes from "../routes";
+import { refreshToken } from "./auth/api";
 
 const isAccessValid = (token: string): boolean => {
   const decodedToken: { exp: number } = jwtDecode(token);
@@ -13,9 +14,9 @@ const isAccessValid = (token: string): boolean => {
 
 export const apiClient = axios.create({
   baseURL: `${config.serverUrl}`,
-  headers: {
-    "ngrok-skip-browser-warning": "ngrok",
-  },
+  // headers: {
+  //   "ngrok-skip-browser-warning": "ngrok",
+  // },
 });
 
 apiClient.interceptors.request.use(
@@ -49,7 +50,7 @@ apiClient.interceptors.response.use(
 export const authApiClient = axios.create({
   baseURL: config.serverUrl,
   withCredentials: true,
-  headers: {
-    "ngrok-skip-browser-warning": "ngrok",
-  },
+  // headers: {
+  //   "ngrok-skip-browser-warning": "ngrok",
+  // },
 });

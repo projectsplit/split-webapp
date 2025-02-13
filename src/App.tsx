@@ -7,7 +7,6 @@ import Group from "./pages/Group";
 import Protected from "./pages/Protected";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import config from "./config";
-import "./App.css";
 import Home from "./pages/Home/Home";
 
 const App: React.FC = () => {

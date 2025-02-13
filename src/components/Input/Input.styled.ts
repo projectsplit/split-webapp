@@ -17,5 +17,5 @@ export const StyledInput = styled.input<InputProps>`
 
 /* &:focus {
   outline: none;
-  box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.pink};
+  box-shadow: 0 0 0 1px ${({ theme }) => theme.pink};
 } */

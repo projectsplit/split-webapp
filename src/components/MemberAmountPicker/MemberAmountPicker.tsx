@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import { FiChevronDown } from 'react-icons/fi'
 import { HiLockClosed, HiLockOpen } from 'react-icons/hi'
 import { StyledMemberAmountPicker } from './MemberAmountPicker.styled'
-import { MemberAmountPickerProps, PickerMember } from '../../types'
+import {  PickerMember } from '../../types'
 import currency from 'currency.js'
 
 const split = (amount: number, denominator: number): string[] =>
   currency(amount).distribute(denominator).map(c => c.value.toFixed(2).toString())
 
-export const MemberAmountPicker = ({ memberAmounts, setMemberAmounts, totalAmount }: MemberAmountPickerProps) => {
+export const MemberAmountPicker = ({ memberAmounts, setMemberAmounts, totalAmount }: any) => {
 
   // const memberData: FormMember[] = [
   //   { id: 'c43e1df2-5f6f-461f-9146-d087a55248e1', order: 0, name: 'Kristipatuti', amount: '', locked: false, selected: false },
@@ -117,42 +117,42 @@ export const MemberAmountPicker = ({ memberAmounts, setMemberAmounts, totalAmoun
     }
   }
 
-  const selectAll = (): void => {
+  // const selectAll = (): void => {
 
-    const newFormMembers: Record<string, PickerMember> = Object.entries(memberAmounts).reduce((acc, [id, member]) => {
-      acc[id] = { ...member, selected: true, order: renderCounter.current }
-      return acc
-    }, {} as Record<string, PickerMember>)
+  //   const newFormMembers: Record<string, PickerMember> = Object.entries(memberAmounts).reduce((acc, [id, member]) => {
+  //     acc[id] = { ...member, selected: true, order: renderCounter.current }
+  //     return acc
+  //   }, {} as Record<string, PickerMember>)
 
-    const recalculatedFormMembers = recalculateAmounts(newFormMembers)
-    setMemberAmounts(recalculatedFormMembers)
-  }
+  //   const recalculatedFormMembers = recalculateAmounts(newFormMembers)
+  //   setMemberAmounts(recalculatedFormMembers)
+  // }
 
-  const selectNone = (): void => {
-    const newFormMembers: Record<string, PickerMember> = Object.entries(memberAmounts).reduce((acc, [id, member]) => {
-      acc[id] = { ...member, selected: false, amount: '', locked: false }
-      return acc
-    }, {} as Record<string, PickerMember>)
+  // const selectNone = (): void => {
+  //   const newFormMembers: Record<string, PickerMember> = Object.entries(memberAmounts).reduce((acc, [id, member]) => {
+  //     acc[id] = { ...member, selected: false, amount: '', locked: false }
+  //     return acc
+  //   }, {} as Record<string, PickerMember>)
 
-    setMemberAmounts(newFormMembers)
-  }
+  //   setMemberAmounts(newFormMembers)
+  // }
 
-  const changeAmount = (id: string, amount: string): void => {
+  // const changeAmount = (id: string, amount: string): void => {
 
-    const p = memberAmounts[id]
-    setMemberAmounts({
-      ...memberAmounts,
-      [id]: { ...p, amount: amount.substring(1) }
-    })
-  }
+  //   const p = memberAmounts[id]
+  //   setMemberAmounts({
+  //     ...memberAmounts,
+  //     [id]: { ...p, amount: amount.substring(1) }
+  //   })
+  // }
 
-  const selectedCount = Object.values(memberAmounts).filter(p => p.selected).length
-  const allCount = Object.values(memberAmounts).length
-  const allSelected = selectedCount == allCount
+  // const selectedCount = Object.values(memberAmounts).filter(p => p.selected).length
+  // const allCount = Object.values(memberAmounts).length
+  // const allSelected = selectedCount == allCount
 
   return (
     <StyledMemberAmountPicker>
-      <div className='main' onClick={() => setIsMenuOpen(!isMenuOpen)} ref={mainRef}>
+      {/* <div className='main' onClick={() => setIsMenuOpen(!isMenuOpen)} ref={mainRef}>
         <div className='text'>
           {selectedCount > 0 ? selectedCount + ' selected' : 'Select...'}
         </div>
@@ -190,7 +190,7 @@ export const MemberAmountPicker = ({ memberAmounts, setMemberAmounts, totalAmoun
             <div className='text'>{member.name}</div>
           </div>
         )}
-      </div>}
+      </div>} */}
     </StyledMemberAmountPicker>
   )
 }

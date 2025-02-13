@@ -1,5 +1,49 @@
 import { CSSProperties } from "react";
-import { Frequency } from "./types";
+import { ExpenseItem, Frequency, PickerMember, TransferItem } from "./types";
+
+export interface ExpenseProps {
+  expense: ExpenseItem;
+  timeZoneId: string;
+}
+
+export interface TransferProps {
+  transfer: TransferItem;
+  timeZoneId: string;
+}
+
+export interface DateTimePickerProps {
+  selectedDateTime: string;
+  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
+  realtimeUpdate: boolean;
+  setRealtimeUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  timeZoneId: string;
+}
+
+export interface DateTimeProps {
+  selectedDateTime: string;
+  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
+  timeZoneId: string;
+}
+
+export interface MemberPickerProps {
+  totalAmount: number;
+  memberAmounts: PickerMember[];
+  setMemberAmounts: React.Dispatch<React.SetStateAction<PickerMember[]>>;
+  description?: string;
+  error?: string;
+}
+
+export interface DayPickerProps {
+  selectedDateTime: string;
+  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
+  timeZoneId: string;
+}
+
+export interface ScrollPickerProps {
+  items: string[];
+  selectedIndex: number;
+  setSelectedIndex: (index: number) => void;
+}
 
 export interface SubmitButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -84,4 +128,16 @@ export interface SelectionButtonProps {
 export interface OptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
+}
+
+export interface TreeProps {
+  items: (string | JSX.Element)[];
+}
+
+export interface StyledOnTrackMessageProps {
+  style?: React.CSSProperties;
+}
+
+export interface StyledRecommendationProps {
+  style?: React.CSSProperties;
 }

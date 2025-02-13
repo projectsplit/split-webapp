@@ -1,6 +1,6 @@
-import React from "react";
-import { StyledTree } from "./Tree.styled";
 import { TreeProps } from "../../interfaces";
+import { StyledTree } from "./Tree.styled";
+
 
 export default function Tree({ items }: TreeProps) {
   return (

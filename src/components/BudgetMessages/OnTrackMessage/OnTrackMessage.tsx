@@ -1,7 +1,7 @@
-import { StyledOnTrackMessage } from "./OnTrackMessage.styled";
 import IonIcon from "@reacticons/ionicons";
-import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
 import { OnTrackMessageProps } from "../../../interfaces";
+import { StyledOnTrackMessage } from "./OnTrackMessage.styled";
+import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
 
 export default function OnTrackMessage({
   onClick,

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { DateTimeProps } from '../types'
 import DateTimePicker from './DateTimePicker/DateTimePicker'
 import { styled } from 'styled-components'
 import { DateTime as LuxonDateTime } from 'luxon'
 import { toLuxon, toUtcString } from '../utils'
+import { DateTimeProps } from '../interfaces'
 
 export const DateTime = ({ selectedDateTime, setSelectedDateTime, timeZoneId }: DateTimeProps) => {
 

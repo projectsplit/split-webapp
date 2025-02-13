@@ -1,8 +1,5 @@
 import styled from "styled-components";
-
-interface StyledRecommendationProps {
-  style?: React.CSSProperties;
-}
+import { StyledRecommendationProps } from "../../../interfaces";
 
 export const StyledRecommendation = styled.div<StyledRecommendationProps>`
 
@@ -32,12 +29,12 @@ export const StyledRecommendation = styled.div<StyledRecommendationProps>`
         gap: 10px;
         font-size: 15px;
         .amount {
-          color: ${({ theme }) => theme.colors.redish};
+          color: ${({ theme }) => theme.redish};
         }
       }
       .warning {
         font-size: 40px;
-        color: ${({ theme }) => theme.colors.redish};
+        color: ${({ theme }) => theme.redish};
       }
     }
 
@@ -49,7 +46,7 @@ export const StyledRecommendation = styled.div<StyledRecommendationProps>`
       color: #6f6f6f;
       display: inline-block;
       &:hover {
-        color: ${({ theme }) => theme.colors.whiteText};
+        color: ${({ theme }) => theme.whiteText};
       }
     }
     .close {
