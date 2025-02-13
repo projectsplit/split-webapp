@@ -1,8 +1,6 @@
 import styled from "styled-components";
+import { StyledOnTrackMessageProps } from "../../../interfaces";
 
-interface StyledOnTrackMessageProps {
-  style?: React.CSSProperties;
-}
 export const StyledOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
   .main {
     position: relative;
@@ -24,12 +22,12 @@ export const StyledOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
         gap: 10px;
         font-size: 15px;
         .amount {
-          color: ${({ theme }) => theme.colors.green};
+          color: ${({ theme }) => theme.green};
         }
       }
       .information {
         font-size: 40px;
-        color: ${({ theme }) => theme.colors.green};
+        color: ${({ theme }) => theme.green};
       }
     }
 
@@ -41,7 +39,7 @@ export const StyledOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
       color: #6f6f6f;
       display: inline-block;
       &:hover {
-        color: ${({ theme }) => theme.colors.whiteText};
+        color: ${({ theme }) => theme.whiteText};
       }
     }
 

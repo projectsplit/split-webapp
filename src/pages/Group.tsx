@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import Expenses from "./Expenses";
 import { useOutletContext, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getGroup } from "../api/api";
 import { UserInfo } from "../types";
 import { PiMagnifyingGlassBold, PiPlusBold } from "react-icons/pi";
 import ExpenseForm from "./ExpenseForm";
 import Transfers from "./Transfers";
+import { getGroup } from "../api/services/api";
 
 const Group: React.FC = () => {
   // const timeZoneId = "America/New_York"

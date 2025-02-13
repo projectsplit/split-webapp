@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from "react";
 import { styled } from "styled-components";
 import { DateTime } from 'luxon';
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getGroupTransfers } from "../api/api";
 import Transfer from "../components/Transfer";
 import { Group } from "../types";
+import { getGroupTransfers } from "../api/services/api";
 
 const Transfers: React.FC<TransfersProps> = ({ group, memberId, timeZoneId }) => {
 

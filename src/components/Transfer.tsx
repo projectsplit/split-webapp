@@ -1,7 +1,8 @@
 import React from "react";
 import { styled } from "styled-components";
-import { TransferProps } from "../types";
+
 import { DateTime } from "luxon";
+import { TransferProps } from "../interfaces";
 
 const Transfer: React.FC<TransferProps> = ({ transfer, timeZoneId }) => {
   const currency = transfer.currency === "EUR" ? "€" : transfer.currency;

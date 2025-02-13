@@ -2,13 +2,17 @@ import {
   GroupsTotalAmountsResponse,
   UserPendingTransaction,
 } from "../types";
+import { createGroupsTotalSummary } from "./createGroupsTotalSummary";
 
 export function createUserPendingTransactionsFromTotals(
-  summary: GroupsTotalAmountsResponse | undefined
+  groupsTotalAmounts: GroupsTotalAmountsResponse | undefined
 ): UserPendingTransaction[] {
-  if (!summary) {
+
+  if (groupsTotalAmounts?.groups.length===0) {
     return [];
   }
+  const summary = createGroupsTotalSummary(groupsTotalAmounts)
+
 
   const transactions: UserPendingTransaction[] = [];
 

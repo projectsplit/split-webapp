@@ -1,19 +1,22 @@
 import styled from "styled-components";
 
-export const HomeWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
-
 export const StyledHomepage = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.colors.lightColor};
+  color: ${({ theme }) => theme.lightColor};
   box-sizing: border-box;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   padding: 14px;
+  overflow: hidden; 
+
+  .fixedTop {
+    position: sticky;
+    top: 0;
+
+    z-index: 10;
+    padding-bottom: 10px; 
+  }
 
   .welcomeStripe {
     font-size: 15px;
@@ -21,6 +24,13 @@ export const StyledHomepage = styled.div`
     white-space: initial;
   }
 
+  .scrollableContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto; 
+  }
+  
   .optionsStripe {
     display: flex;
     flex-direction: column;
@@ -33,17 +43,15 @@ export const StyledHomepage = styled.div`
       gap: 9px;
       align-items: center;
 
-      .group {
-        color: #9918ff;
-        font-size: 25px;
+      .groupIconAndNumberOfGroups {
         position: relative;
       }
       .groupCount {
         position: absolute;
-        color: ${({ theme }) => theme.colors.whiteText};
+        color: ${({ theme }) => theme.whiteText};
         font-size: 15px;
-        bottom: -5px; /* Position at the bottom */
-        right: 0; /* Position at the right */
+        bottom: -2px; 
+        right: 0; 
         padding: -8px 3px;
         font-weight: bold;
       }
@@ -53,36 +61,28 @@ export const StyledHomepage = styled.div`
       }
     }
 
-    .analyticsIcon {
-      color: ${({ theme }) => theme.colors.deepPurple};
-      font-size: 30px;
-    }
-
-    .personalIcon {
-      color: ${({ theme }) => theme.colors.deepPurple};
-      font-size: 30px;
-    }
-
-    .budgetIcon {
-      color: ${({ theme }) => theme.colors.deepPurple};
+    .analyticsIcon,
+    .personalIcon,
+    .budgetIcon,
+    .groupIcon {
+      color: ${({ theme }) => theme.deepPurple};
       font-size: 30px;
     }
 
     .group {
-        color: #9918ff;
-        font-size: 25px;
-        position: relative;
-      }
-    
+      color: #9918ff;
+      font-size: 25px;
+      position: relative;
+    }
 
     .groupsInfo {
       font-size: 15px;
-      color: ${({ theme }) => theme.colors.layer6};
+      color: ${({ theme }) => theme.layer6};
       .owe {
-        color: ${({ theme }) => theme.colors.redish};
+        color: ${({ theme }) => theme.redish};
       }
       .owed {
-        color: ${({ theme }) => theme.colors.green};
+        color: ${({ theme }) => theme.green};
       }
     }
   }
@@ -111,11 +111,11 @@ export const StyledHomepage = styled.div`
     }
   }
   .spinner {
-      align-self: center;
-      animation: spin-animation 0.8s linear infinite;
-      font-size: 25px;
-      color: ${({ theme }) => theme.colors.labelColor6};
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
+    align-self: center;
+    animation: spin-animation 0.8s linear infinite;
+    font-size: 25px;
+    color: ${({ theme }) => theme.labelColor6};
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 `;

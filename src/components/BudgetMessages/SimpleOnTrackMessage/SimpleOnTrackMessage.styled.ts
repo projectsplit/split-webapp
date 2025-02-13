@@ -28,7 +28,7 @@ export const StyledSimpleOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
       }
       .information {
         font-size: 40px;
-        color: ${({ theme }) => theme.colors.green};
+        color: ${({ theme }) => theme.green};
       }
     }
 
@@ -40,7 +40,7 @@ export const StyledSimpleOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
       color: #6f6f6f;
       display: inline-block;
       &:hover {
-        color: ${({ theme }) => theme.colors.whiteText};
+        color: ${({ theme }) => theme.whiteText};
       }
     }
 

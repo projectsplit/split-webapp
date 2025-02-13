@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { sendGoogleAccessToken } from "../api/api";
+
 import routes from "../routes";
 import { SendGoogleAccessTokenRequest, SendGoogleAccessTokenResponse } from "../types";
 import { useNavigate } from "react-router-dom";
+import { sendGoogleAccessToken } from "../api/auth/api";
 
 const GoogleCallback: React.FC = () => {
   

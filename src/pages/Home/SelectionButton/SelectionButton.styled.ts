@@ -18,7 +18,7 @@ export const StyledSelectionButton = styled.div`
       }
       .descr {
         font-size: 13px;
-        color: ${({ theme }) => theme.colors.layer6};
+        color: ${({ theme }) => theme.layer6};
       }
     }
   }

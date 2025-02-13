@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { sendPasswordCredentials } from "../../api/api";
+
 import { PasswordSignInRequest, PasswordSignInResponse } from "../../types";
 import GoogleButton from "../../components/GoogleButton/GoogleButton";
 //import Input from "../../components/Input";
@@ -13,6 +13,7 @@ import WelcomeHeader from "./WelcomeHeader/WelcomeHeader";
 import Input from "../../components/Input/Input";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import { LoadingSpinner } from "../../styles/loadingSpinner";
+import { sendPasswordCredentials } from "../../api/auth/api";
 
 const AuthPage: React.FC = () => {
   const [username, setUsername] = useState("");

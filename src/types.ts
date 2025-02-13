@@ -1,75 +1,65 @@
-export interface RefreshTokenResponse {
+export type RefreshTokenResponse = {
   accessToken: string;
-}
+};
 
-export interface PasswordSignInRequest {
+export type PasswordSignInRequest = {
   username: string;
   password: string;
 };
 
-export interface PasswordSignInResponse {
+export type PasswordSignInResponse = {
   accessToken: string;
 };
 
-export interface SendGoogleAccessTokenRequest {
+export type SendGoogleAccessTokenRequest = {
   googleAccessToken: string;
 };
 
-export interface SendGoogleAccessTokenResponse {
+export type SendGoogleAccessTokenResponse = {
   accessToken: string;
 };
 
-export interface UserInfo {
+export type UserInfo = {
   userId: string;
   username: string;
 };
 
-export interface GetLabelsResponse {
+export type GetLabelsRespons = {
   labels: string[];
 };
 
-export interface ExpenseItem {
-  id: string
-  date: string
-  description: string
-  amount: number
-  currency: string
-  shareAmount: number
-  location: GeoLocation | undefined
-  labels: string[]
-}
+export type ExpenseItem = {
+  id: string;
+  date: string;
+  description: string;
+  amount: number;
+  currency: string;
+  shareAmount: number;
+  location: GeoLocation | undefined;
+  labels: string[];
+};
 
-export interface TransferItem {
-  id: string
-  date: string
-  description: string
-  amount: number
-  currency: string
-  senderName: string
-  receiverName: string
-}
+export type TransferItem = {
+  id: string;
+  date: string;
+  description: string;
+  amount: number;
+  currency: string;
+  senderName: string;
+  receiverName: string;
+};
 
-export interface ExpenseProps {
-  expense: ExpenseItem
-  timeZoneId: string
-}
-
-export interface TransferProps {
-  transfer: TransferItem
-  timeZoneId: string
-}
-
-export interface GetGroupExpensesResponse {
+export type GetGroupExpensesResponse = {
   expenses: ExpenseResponseItem[];
   next: string | null;
 };
 
-export interface GetGroupTransfersResponse {
+export type GetGroupTransfersResponse = {
   transfers: TransferResponseItem[];
   next: string | null;
 };
 
-export interface ExpenseResponseItem {
+export type ExpenseResponseItem = {
   id: string;
   created: string;
   updated: string;
@@ -82,10 +72,10 @@ export interface ExpenseResponseItem {
   payments: Payment[];
   shares: Share[];
   labels: string[];
-  location: GeoLocation | undefined
+  location: GeoLocation | undefined;
 };
 
-export interface TransferResponseItem {
+export type TransferResponseItem = {
   id: string;
   created: string;
   updated: string;
@@ -99,50 +89,50 @@ export interface TransferResponseItem {
   receiverId: string;
 };
 
-export interface Share {
+export type Share = {
   memberId: string;
   amount: number;
-}
+};
 
-export interface Payment {
+export type Payment = {
   memberId: string;
   amount: number;
-}
+};
 
-export interface GetGroupsResponse {
+export type GetGroupsResponse = {
   groups: GetGroupsResponseItem[];
   next: string | null;
 };
 
-export interface GetGroupsResponseItem {
+export type GetGroupsResponseItem = {
   id: string;
   name: string;
 };
 
-export interface Group {
-  id: string
-  created: Date
-  updated: Date
-  ownerId: string
-  name: string
-  currency: string
-  members: Member[]
-  guests: Guest[]
-  labels: Label[]
-}
+export type Group = {
+  id: string;
+  created: Date;
+  updated: Date;
+  ownerId: string;
+  name: string;
+  currency: string;
+  members: Member[];
+  guests: Guest[];
+  labels: Label[];
+};
 
-export interface Member {
-  id: string
-  name: string
-  userId: string
-  joined: Date
-}
+export type Member = {
+  id: string;
+  name: string;
+  userId: string;
+  joined: Date;
+};
 
-export interface Guest {
-  id: string
-  name: string
-  joined: Date
-}
+export type Guest = {
+  id: string;
+  name: string;
+  joined: Date;
+};
 
 export interface Label {
   id: string;
@@ -150,38 +140,16 @@ export interface Label {
   color: string;
 }
 
-export interface DateTimePickerProps {
-  selectedDateTime: string
-  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>
-  realtimeUpdate: boolean
-  setRealtimeUpdate: React.Dispatch<React.SetStateAction<boolean>>
-  timeZoneId: string
-}
+export type PickerMember = {
+  id: string;
+  name: string;
+  amount: string;
+  selected: boolean;
+  locked: boolean;
+  order: number;
+};
 
-export interface DateTimeProps {
-  selectedDateTime: string
-  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>
-  timeZoneId: string
-}
-
-export interface PickerMember {
-  id: string
-  name: string
-  amount: string
-  selected: boolean
-  locked: boolean
-  order: number
-}
-
-export interface MemberPickerProps {
-  totalAmount: number
-  memberAmounts: PickerMember[]
-  setMemberAmounts: React.Dispatch<React.SetStateAction<PickerMember[]>>
-  description?: string
-  error?: string
-}
-
-export interface CreateExpenseRequest {
+export type CreateExpenseRequest = {
   amount: number;
   groupId: string;
   currency: string;
@@ -198,36 +166,24 @@ export interface CreateExpenseRequest {
   location: GeoLocation | null;
   occured: string;
   labels: string[];
-}
+};
 
-export interface GeoLocation {
-  coordinates: Coordinates
-  google: GooglePlace | null
-}
+export type GeoLocation = {
+  coordinates: Coordinates;
+  google: GooglePlace | null;
+};
 
-export interface GooglePlace {
-  id: string | undefined
-  name: string | undefined
-  address: string | undefined
-  url: string | undefined
-}
+export type GooglePlace = {
+  id: string | undefined;
+  name: string | undefined;
+  address: string | undefined;
+  url: string | undefined;
+};
 
-export interface Coordinates {
-  latitude: number
-  longitude: number
-}
-
-export interface DayPickerProps {
-  selectedDateTime: string
-  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>
-  timeZoneId: string
-}
-
-export interface ScrollPickerProps {
-  items: string[]
-  selectedIndex: number
-  setSelectedIndex: (index: number) => void
-}
+export type Coordinates = {
+  latitude: number;
+  longitude: number;
+};
 
 export enum Frequency {
   Weekly,
@@ -254,7 +210,18 @@ export type UserPendingTransaction = {
   currency: string;
 };
 
+export type Groups = {
+  details: { [currency: string]: number };
+  id: string;
+  name: string;
+}[];
+
 export type GroupsTotalAmountsResponse = {
+  groups: Groups;
+  next: string;
+};
+
+export type GroupsTotalSummary = {
   numberOfGroups: number;
   userIsOwedAmounts: { [currency: string]: number };
   userOwesAmounts: { [currency: string]: number };

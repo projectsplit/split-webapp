@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { FiChevronDown } from 'react-icons/fi'
 import { HiLockClosed, HiLockOpen } from 'react-icons/hi'
-import { MemberPickerProps, PickerMember } from '../types'
+import { PickerMember } from '../types'
 import currency from 'currency.js'
 import styled, { keyframes } from 'styled-components'
 import AutoWidthInput from './AutoWidthInput'
+import { MemberPickerProps } from '../interfaces'
 
 const MemberPicker = ({
   memberAmounts,

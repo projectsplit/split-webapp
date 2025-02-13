@@ -13,7 +13,7 @@ export const StyledSpinner = styled(CgSpinner)`
     align-self: center;
     animation: spin-animation 0.8s linear infinite;
     font-size: 25px;
-    color: ${({ theme }) => theme.colors.labelColor6};
+    color: ${({ theme }) => theme.labelColor6};
     margin-top: 10px;
     margin-bottom: 10px;
  

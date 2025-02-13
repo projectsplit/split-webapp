@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { ScrollPickerProps } from '../../types'
 import { closestMultiple } from '../../utils'
 import StyledScrollPicker from './ScrollPicker.styled'
+import { ScrollPickerProps } from '../../interfaces'
 
 const ScrollPicker = ({ items, selectedIndex, setSelectedIndex }: ScrollPickerProps) => {
 

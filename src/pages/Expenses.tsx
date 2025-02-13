@@ -3,8 +3,9 @@ import { styled } from "styled-components";
 import Expense from "../components/Expense";
 import { DateTime } from 'luxon';
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getGroupExpenses } from "../api/api";
+
 import { Group } from "../types";
+import { getGroupExpenses } from "../api/services/api";
 
 const Expenses: React.FC<ExpensesProps> = ({ group, memberId, timeZoneId }) => {
 

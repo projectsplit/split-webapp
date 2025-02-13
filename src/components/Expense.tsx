@@ -1,8 +1,9 @@
 import React from "react";
 import { styled } from "styled-components";
-import { ExpenseProps } from "../types";
+
 import { DateTime } from "luxon";
 import { HiMapPin } from "react-icons/hi2";
+import { ExpenseProps } from "../interfaces";
 
 const Expense: React.FC<ExpenseProps> = ({ expense, timeZoneId }) => {
   const currency = expense.currency === "EUR" ? "€" : expense.currency;

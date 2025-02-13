@@ -17,7 +17,7 @@ export const TreeItemBuilder = (
 
   if (allSettled) {
     return [
-      <div className="groupsInfo">
+      <div className="groupsInfo" key='settled'>
         <div className="settled">
           <strong>You</strong> &nbsp;are settled &nbsp;
           <IonIcon
