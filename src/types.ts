@@ -24,7 +24,7 @@ export type UserInfo = {
   username: string;
 };
 
-export type GetLabelsRespons = {
+export type GetLabelsResponse = {
   labels: string[];
 };
 

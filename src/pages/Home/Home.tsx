@@ -27,7 +27,7 @@ export default function Home() {
     userInfo: UserInfo;
   }>();
 
-  const { data, isFetching, isLoading } = useQuery<any>({
+  const { data, isFetching, isLoading } = useQuery<GroupsTotalAmountsResponse>({
     queryKey: ["home"],
     queryFn: getGroupsTotalAmounts,
     refetchOnWindowFocus: false,
@@ -38,94 +38,93 @@ export default function Home() {
 
   return (
     <StyledHomepage>
-      <div className="fixedTop">
-        <LogoStripe />
-        <div className="welcomeStripe">
-          Welcome, <strong>{userInfo?.username}</strong>
-        </div>
-      </div>
-      <div className="scrollableContent">
       {isFetching ? (
-        // && budgetIsFetching ?
+         // && budgetIsFetching ?
         <Spinner />
       ) : (
-        <div className="optionsStripe">
-          {/* {showAdvice && budgetData?.budgetSubmitted && (
+        <>
+          <div className="fixedTop">
+            <LogoStripe />
+            <div className="welcomeStripe">
+              Welcome, <strong>{userInfo?.username}</strong>
+            </div>
+          </div>
+          <div className="scrollableContent">
+            <div className="optionsStripe">
+               {/* {showAdvice && budgetData?.budgetSubmitted && (
               <>
                 {BudgetInfoMessage(theme, true, budgetData, () =>
                   setShowAdvice(false)
                 )}
               </>
             )} */}
-
-          <div className="mostRecent">
-            <div className="mostRecentMsg">Most recent</div>
-
-            <TreeAdjustedContainer
-              onClick={() => console.log("goto group")}
-              hasarrow={true}
-              items={[
-                <div className="groupsInfo" key="owed">
-                  <strong>You</strong> are owed{" "}
-                  <span className="owed">£56.00</span>
-                </div>,
-                <div className="groupsInfo" key="owe">
-                  <strong>You</strong> owe <span className="owe">$5.65</span>
-                </div>,
-              ]}
-            >
-              <div className="groupName">Kythnos</div>
-            </TreeAdjustedContainer>
-          </div>
-          {!isLoading && !isFetching && data?.groups.length === 0 ? (
-            <OptionButton
-              name="Groups"
-              description="Keep track of your shared finances "
-            >
-              <TiGroup className="groupIcon" />
-            </OptionButton>
-          ) : (
-            <TreeAdjustedContainer
-              hasarrow={true}
-              onClick={() => navigate("/groups/active")}
-              items={TreeItemBuilder(
-                createUserPendingTransactionsFromTotals(data)
-              )}
-            >
-              <div className="groups">
-                <div className="groupIconAndNumberOfGroups">
-                  <TiGroup className="groupIcon" />
-                  <span className="groupCount">{data?.groups.length}</span>
-                </div>
-                <div className="groupName">Groups</div>
+              <div className="mostRecent">
+                <div className="mostRecentMsg">Most recent</div>
+                <TreeAdjustedContainer
+                  onClick={() => console.log("goto group")}
+                  hasarrow={true}
+                  items={[
+                    <div className="groupsInfo" key="owed">
+                      <strong>You</strong> are owed {" "}
+                      <span className="owed">£56.00</span>
+                    </div>,
+                    <div className="groupsInfo" key="owe">
+                      <strong>You</strong> owe <span className="owe">$5.65</span>
+                    </div>,
+                  ]}
+                >
+                  <div className="groupName">Kythnos</div>
+                </TreeAdjustedContainer>
               </div>
-            </TreeAdjustedContainer>
-          )}
-          <OptionButton
-            name="Personal"
-            description="Your personal expense tracker"
-          >
-            <BsFillPersonFill className="personalIcon" />
-          </OptionButton>
-
-          <OptionButton
-            name="Analytics"
-            description="View your spending trends"
-            onClick={() => navigate("/analytics")}
-          >
-            <BsBarChartFill className="analyticsIcon" />
-          </OptionButton>
-
-          <OptionButton
-            name="Budget"
-            description="Set up a spending cap or goal"
-            onClick={() => navigate("/budget")}
-          >
-            <BsFillPiggyBankFill className="budgetIcon" />
-          </OptionButton>
-        </div>
+              {!isLoading && !isFetching && data?.groups?.length === 0 ? (
+                <OptionButton
+                  name="Groups"
+                  description="Keep track of your shared finances"
+                >
+                  <TiGroup className="groupIcon" />
+                </OptionButton>
+              ) : (
+                <TreeAdjustedContainer
+                  hasarrow={true}
+                  onClick={() => navigate("/groups/active")}
+                  items={TreeItemBuilder(
+                    createUserPendingTransactionsFromTotals(data)
+                  )}
+                >
+                  <div className="groups">
+                    <div className="groupIconAndNumberOfGroups">
+                      <TiGroup className="groupIcon" />
+                      <span className="groupCount">{data?.groups?.length}</span>
+                    </div>
+                    <div className="groupName">Groups</div>
+                  </div>
+                </TreeAdjustedContainer>
+              )}
+              <OptionButton
+                name="Personal"
+                description="Your personal expense tracker"
+              >
+                <BsFillPersonFill className="personalIcon" />
+              </OptionButton>
+              <OptionButton
+                name="Analytics"
+                description="View your spending trends"
+                onClick={() => navigate("/analytics")}
+              >
+                <BsBarChartFill className="analyticsIcon" />
+              </OptionButton>
+              <OptionButton
+                name="Budget"
+                description="Set up a spending cap or goal"
+                onClick={() => navigate("/budget")}
+              >
+                <BsFillPiggyBankFill className="budgetIcon" />
+              </OptionButton>
+            </div>
+          </div>
+        </>
       )}
-      </div>
     </StyledHomepage>
   );
+  
 }
