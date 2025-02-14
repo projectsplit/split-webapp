@@ -11,25 +11,21 @@ export const StyledHomepage = styled.div`
   overflow: hidden; 
 
   .fixedTop {
-    position: sticky;
-    top: 0;
-
-    z-index: 10;
-    padding-bottom: 10px; 
+    padding-bottom: 5px
   }
 
   .welcomeStripe {
     font-size: 15px;
-    padding: 2.5rem 0 2.5rem 0;
+    padding: 2.5rem 0 2rem 0;
     white-space: initial;
   }
 
   .scrollableContent {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    overflow-y: auto; 
-  }
+    flex-grow: 1; 
+    overflow-y: auto;
+    min-height: 0; 
   
   .optionsStripe {
     display: flex;
@@ -85,9 +81,7 @@ export const StyledHomepage = styled.div`
         color: ${({ theme }) => theme.green};
       }
     }
-  }
-
-  .mostRecent {
+    .mostRecent {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -101,7 +95,10 @@ export const StyledHomepage = styled.div`
       font-weight: bold;
     }
   }
+  }
 
+
+}
   @keyframes spin-animation {
     from {
       transform: rotate(0deg);

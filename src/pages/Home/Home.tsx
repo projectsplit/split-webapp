@@ -39,7 +39,7 @@ export default function Home() {
   return (
     <StyledHomepage>
       {isFetching ? (
-         // && budgetIsFetching ?
+        // && budgetIsFetching ?
         <Spinner />
       ) : (
         <>
@@ -51,7 +51,7 @@ export default function Home() {
           </div>
           <div className="scrollableContent">
             <div className="optionsStripe">
-               {/* {showAdvice && budgetData?.budgetSubmitted && (
+              {/* {showAdvice && budgetData?.budgetSubmitted && (
               <>
                 {BudgetInfoMessage(theme, true, budgetData, () =>
                   setShowAdvice(false)
@@ -65,11 +65,12 @@ export default function Home() {
                   hasarrow={true}
                   items={[
                     <div className="groupsInfo" key="owed">
-                      <strong>You</strong> are owed {" "}
+                      <strong>You</strong> are owed{" "}
                       <span className="owed">£56.00</span>
                     </div>,
                     <div className="groupsInfo" key="owe">
-                      <strong>You</strong> owe <span className="owe">$5.65</span>
+                      <strong>You</strong> owe{" "}
+                      <span className="owe">$5.65</span>
                     </div>,
                   ]}
                 >
@@ -78,6 +79,7 @@ export default function Home() {
               </div>
               {!isLoading && !isFetching && data?.groups?.length === 0 ? (
                 <OptionButton
+                  onClick={() => navigate("/groups/active")}
                   name="Groups"
                   description="Keep track of your shared finances"
                 >
@@ -126,5 +128,4 @@ export default function Home() {
       )}
     </StyledHomepage>
   );
-  
 }

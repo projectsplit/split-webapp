@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./pages/Auth/AuthPage";
 import routes from "./routes";
 import GoogleCallback from "./pages/GoogleCallback";
-import Group from "./pages/Group";
 import Protected from "./pages/Protected";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import config from "./config";
@@ -18,8 +17,8 @@ const App: React.FC = () => {
           <Route path={routes.GOOGLE_REDIRECT} element={<GoogleCallback />} />
           <Route element={<Protected />}>
             <Route path={routes.ROOT} element={<Home />} />
-            {/* <Route path="/groups" element={<Groups />}> */}
-            <Route path=":groupId" element={<Group />} />
+            {/* <Route path="/groups" element={<Groups />}/> */}
+            {/* <Route path=":groupId" element={<Group />} /> */}
             <Route path="*" element={<h1>Lost ?</h1>} />
           </Route>
         </Routes>
