@@ -1,4 +1,5 @@
 import { GroupsTotalAmountsResponse, GroupsTotalSummary } from "../types";
+import currency from "currency.js";
 
 export function createGroupsTotalSummary(groupsTotalAmounts: GroupsTotalAmountsResponse | undefined): GroupsTotalSummary {
     if (!groupsTotalAmounts || !groupsTotalAmounts.groups) {
@@ -13,11 +14,14 @@ export function createGroupsTotalSummary(groupsTotalAmounts: GroupsTotalAmountsR
     const userOwesAmounts: { [currency: string]: number } = {};
   
     groupsTotalAmounts.groups.forEach(group => {
-      Object.entries(group.details).forEach(([currency, amount]) => {
+      Object.entries(group.details).forEach(([curr, amount]) => {
+        
+
         if (amount > 0) {
-          userIsOwedAmounts[currency] =  amount;
+          userIsOwedAmounts[curr] = currency(userIsOwedAmounts[curr] || 0).add(amount).value;
         } else if (amount < 0) {
-          userOwesAmounts[currency] =  Math.abs(amount);
+          amount = amount*(-1)
+          userOwesAmounts[curr] =  currency(userOwesAmounts[curr] || 0).add(amount).value;
         }
       });
     });

@@ -98,7 +98,7 @@ export const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
 
 export const getGroupsTotalAmounts = async ():Promise<GroupsTotalAmountsResponse> => {
   const response = await apiClient.get<GroupsTotalAmountsResponse>(
-    `/groups/details?pageSize=${1}`
+    `/groups/details?pageSize=${10}`
   );
   return response.data;
 };
