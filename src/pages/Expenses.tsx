@@ -9,7 +9,7 @@ import { getGroupExpenses } from "../api/services/api";
 
 const Expenses: React.FC<ExpensesProps> = ({ group, memberId, timeZoneId }) => {
 
-  const pageSize = 10
+  const pageSize = 1
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['groupExpenses', group.id, pageSize],

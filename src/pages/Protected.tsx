@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Navigate, Outlet } from "react-router-dom";
 import { getMe } from "../api/services/api";
 
-
 const Protected: React.FC = () => {
   const { data: userInfo } = useQuery({
     queryKey: ["getMe"],

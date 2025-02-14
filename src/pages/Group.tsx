@@ -15,9 +15,9 @@ const Group: React.FC = () => {
   const timeZoneId = "Europe/Athens"
   
   const { groupId } = useParams<{ groupId: string }>();
-  const { userInfo, setSelectedGroupName } = useOutletContext<{
+  const { userInfo, } = useOutletContext<{
     userInfo: UserInfo;
-    setSelectedGroupName: React.Dispatch<React.SetStateAction<string | null>>;
+    //setSelectedGroupName: React.Dispatch<React.SetStateAction<string | null>>;
   }>();
 
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState<boolean>(true);
@@ -29,14 +29,14 @@ const Group: React.FC = () => {
     enabled: !!groupId, // Prevents the query from running if groupId is undefined
   });
 
-  useEffect(() => {
-    if (isSuccess) {
-      setSelectedGroupName(group.name);
-    }
-    return () => {
-      setSelectedGroupName(null);
-    };
-  }, [isSuccess, group, setSelectedGroupName]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     setSelectedGroupName(group.name);
+  //   }
+  //   return () => {
+  //     setSelectedGroupName(null);
+  //   };
+  // }, [isSuccess, group, setSelectedGroupName]);
 
   if (!groupId || !isSuccess) {
     return <div>Error</div>;
@@ -86,7 +86,7 @@ const Group: React.FC = () => {
 export default Group;
 
 const StyledGroup = styled.div`
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   height: 100%;
 
@@ -121,17 +121,17 @@ const StyledGroup = styled.div`
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-  }
+  } */
 `;
 
 const Page = styled.div`
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 `;
 
 const TabButton = styled.a`
-  font-weight: 600;
+  /* font-weight: 600;
   padding: 8px 14px;
   margin: 2px 0rem;
   color: ${({ theme }) => theme.inactiveTabButtonTextColor};
@@ -146,5 +146,5 @@ const TabButton = styled.a`
     &:hover {
       background-color: ${({ theme }) => theme.tabButtonTextHoverColor};
     }
-  }
+  } */
 `;
