@@ -4,7 +4,7 @@ export const StyledCreateGroup = styled.div`
   box-sizing: border-box;
   bottom: 0;
   position: fixed;
-  background-color: ${({ theme }) => theme.colors.layer2};
+  background-color: ${({ theme }) => theme.layer2};
   width: 100vw;
   height: 100vh;
   z-index: 3;

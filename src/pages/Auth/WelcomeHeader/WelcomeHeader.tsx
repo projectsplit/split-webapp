@@ -8,7 +8,7 @@ export default function WelcomeHeader() {
         α
       </div>
       <div className='appName'>
-        αlphabuqs
+          <strong>Buqs</strong>
         <div className='appDescription'>
           
         </div>

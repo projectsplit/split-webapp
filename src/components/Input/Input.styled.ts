@@ -7,7 +7,7 @@ export const StyledInput = styled.input<InputProps>`
   padding: 0.8rem;
   outline: none;
   color: white;
-  background-color: ${({ theme, backgroundColor }) => backgroundColor || theme.colors.layer2};
+  background-color: ${({ theme, backgroundColor }) => backgroundColor || theme.layer2};
   border-style: none;
   font-size: 18px;
   border: ${({ error, theme }) => (error ? `1px solid  ${theme.pink}` : 'none')};
