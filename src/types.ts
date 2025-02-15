@@ -210,8 +210,10 @@ export type UserPendingTransaction = {
   currency: string;
 };
 
+export type Details = { [currency: string]: number };
+
 export type Groups = {
-  details: { [currency: string]: number };
+  details:Details
   id: string;
   name: string;
 }[];
@@ -226,3 +228,8 @@ export type GroupsTotalSummary = {
   userIsOwedAmounts: { [currency: string]: number };
   userOwesAmounts: { [currency: string]: number };
 };
+
+export type GroupsAllBalancesResponse = {
+  balances:Details
+  groupCount:number;
+}

@@ -1,5 +1,7 @@
 import { CSSProperties } from "react";
 import { ExpenseItem, Frequency, PickerMember, TransferItem } from "./types";
+import { Signal } from "@preact/signals-react";
+
 
 export interface ExpenseProps {
   expense: ExpenseItem;
@@ -56,6 +58,7 @@ export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean;
+  backgroundColor?: string;
 }
 
 export interface LoadingSpinnerProps {
@@ -66,13 +69,13 @@ export interface LoadingSpinnerProps {
 export interface OptionsContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
-  hasarrow: boolean | string;
+  hasarrow: boolean ;
 }
 
 export interface TreeAdjustedContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
-  hasarrow: boolean | string;
+  hasarrow: boolean;
   items: (string | JSX.Element)[];
 }
 
@@ -141,3 +144,26 @@ export interface StyledOnTrackMessageProps {
 export interface StyledRecommendationProps {
   style?: React.CSSProperties;
 }
+export interface NewButtonProps {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+}
+
+export interface CategoryButtonProps {
+  to?: string;
+  children: any;
+  selected?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  backgroundcoloronselect?: string;
+  style?: CSSProperties;
+  key?: any;
+}
+
+export interface MenuProps {
+  menu: Signal<string | null>;
+}
+
+export interface MenuAnimationBackgroundProps extends MenuProps {}
+
+export interface CreateGroupAnimationProps extends MenuProps{};
+
+export interface CreateGroupProps extends MenuProps{};

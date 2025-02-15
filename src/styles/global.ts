@@ -7,7 +7,8 @@ body,
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: Roboto, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Roboto, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
+  font-family: 'Inter', sans-serif;
   background-color: #0f1214;
   /* font-synthesis: none; */
   text-rendering: optimizeLegibility;
@@ -19,13 +20,14 @@ body,
   user-select: none;
   display: flex;
   flex-direction: column;
+  color: white;
 }
 
 * {
   box-sizing: border-box;
   scrollbar-gutter: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(60, 60, 60, 0.4) transparent;
+  scrollbar-color: rgba(192, 192, 192, 0.4) transparent;
 }
 
 *::-webkit-scrollbar {
