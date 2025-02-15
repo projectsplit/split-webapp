@@ -10,6 +10,7 @@ import {
   GetGroupTransfersResponse,
   BudgetInfoResponse,
   GroupsTotalAmountsResponse,
+  GroupsAllBalancesResponse,
 } from "../../types";
 
 export const getGroupExpenses = async (
@@ -96,9 +97,16 @@ export const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
   return response.data;
 };
 
-export const getGroupsTotalAmounts = async ():Promise<GroupsTotalAmountsResponse> => {
+export const getGroupsTotalAmounts = async (pageSize:number, next:string):Promise<GroupsTotalAmountsResponse> => {
   const response = await apiClient.get<GroupsTotalAmountsResponse>(
-    `/groups/details?pageSize=${10}`
+    `/groups/details?pageSize=${pageSize}&${next}`
   );
+  return response.data;
+}
+
+  export const getGroupsAllBalances = async ():Promise<GroupsAllBalancesResponse> => {
+    const response = await apiClient.get<GroupsAllBalancesResponse>(
+      `/groups/all-balances`
+    );
   return response.data;
 };

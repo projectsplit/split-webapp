@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { OptionsContainerProps } from "../../interfaces";
 
-export const StyledOptionsContainer = styled.div<OptionsContainerProps>`
+export const StyledOptionsContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "hasarrow",
+})<OptionsContainerProps>`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -11,12 +13,12 @@ export const StyledOptionsContainer = styled.div<OptionsContainerProps>`
   background-color: ${({ theme }) => theme.layer2};
   border-color: ${({ theme }) => theme.layer2};
   border-style: solid;
-  cursor: ${({ hasarrow }) => (hasarrow === "true" ? "pointer" : "default")};
+  cursor: ${({ hasarrow }) => (hasarrow === true ? "pointer" : "default")};
   transition: background-color 0.2s ease-in-out; /* Add transition for background-color */
   border: none;
   &:hover {
     background-color: ${({ theme, hasarrow }) =>
-      hasarrow === "true"
+      hasarrow === true
         ? theme.layer1
         : theme.layer2}; /* Change background-color on hover */
   }

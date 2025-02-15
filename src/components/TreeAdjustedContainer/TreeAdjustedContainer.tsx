@@ -15,17 +15,19 @@ export default function TreeAdjustedContainer({
 
   if (!hasTreeComponent) {
     return (
-      <OptionsContainer onClick={onClick} hasarrow={hasarrow.toString()} >
+      <OptionsContainer onClick={onClick} hasarrow={hasarrow} >
         {children}
         {hasarrow && (
           <IonIcon name="chevron-forward-outline" className="arrow" />
         )}
-        {items}
+         {items.map((item, index) => (
+        <div key={index}>{item}</div>  // Assigning a unique key
+      ))}
       </OptionsContainer>
     );
   }
   return (
-    <StyledTreeAdjustedContainer onClick={onClick} hasarrow={hasarrow.toString()} >
+    <StyledTreeAdjustedContainer onClick={onClick} hasarrow={hasarrow} >
       {children}
       {hasarrow && <IonIcon name="chevron-forward-outline" className="arrow" />}
       <Tree items={items} />

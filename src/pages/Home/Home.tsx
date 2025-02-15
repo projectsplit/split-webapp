@@ -8,12 +8,11 @@ import { TiGroup } from "react-icons/ti";
 import OptionButton from "./SelectionButton/SelectionButton";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { createUserPendingTransactionsFromTotals } from "../../helpers/createUserPendingTransactionsFromTotals";
 import { useTheme } from "styled-components";
 import Spinner from "../../components/Spinner/Spinner";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
-import { GroupsTotalAmountsResponse, UserInfo } from "../../types";
-import { getGroupsTotalAmounts } from "../../api/services/api";
+import { GroupsAllBalancesResponse, UserInfo } from "../../types";
+import { getGroupsAllBalances } from "../../api/services/api";
 import useBudgetInfo from "../../hooks/useBudgetInfo";
 import { TreeItemBuilder } from "../../components/TreeItemBuilder";
 import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
@@ -27,9 +26,9 @@ export default function Home() {
     userInfo: UserInfo;
   }>();
 
-  const { data, isFetching, isLoading } = useQuery<GroupsTotalAmountsResponse>({
+  const { data, isFetching, isLoading } = useQuery<GroupsAllBalancesResponse>({
     queryKey: ["home"],
-    queryFn: getGroupsTotalAmounts,
+    queryFn: getGroupsAllBalances,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
@@ -77,7 +76,7 @@ export default function Home() {
                   <div className="groupName">Kythnos</div>
                 </TreeAdjustedContainer>
               </div>
-              {!isLoading && !isFetching && data?.groups?.length === 0 ? (
+              {!isLoading && !isFetching && data?.groupCount === 0 ? (
                 <OptionButton
                   onClick={() => navigate("/groups/active")}
                   name="Groups"
@@ -89,14 +88,12 @@ export default function Home() {
                 <TreeAdjustedContainer
                   hasarrow={true}
                   onClick={() => navigate("/groups/active")}
-                  items={TreeItemBuilder(
-                    createUserPendingTransactionsFromTotals(data)
-                  )}
+                  items={TreeItemBuilder(data?.balances)}
                 >
                   <div className="groups">
                     <div className="groupIconAndNumberOfGroups">
                       <TiGroup className="groupIcon" />
-                      <span className="groupCount">{data?.groups?.length}</span>
+                      <span className="groupCount">{data?.groupCount}</span>
                     </div>
                     <div className="groupName">Groups</div>
                   </div>

@@ -11,7 +11,7 @@ export default function OptionsContainer({
 
 }: OptionsContainerProps) {
   return (
-    <StyledOptionsContainer onClick={onClick} hasarrow={hasarrow.toString()} >
+    <StyledOptionsContainer onClick={onClick} hasarrow={hasarrow} >
       {children}
       {hasarrow && <IonIcon name="chevron-forward-outline" className="arrow" />}
     </StyledOptionsContainer>
