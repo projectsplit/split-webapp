@@ -4,6 +4,7 @@ import { MenuAnimationBackgroundProps } from "../../interfaces";
 export default function MenuAnimationBackground({
   menu,
 }: MenuAnimationBackgroundProps) {
+  
   return (
     <CSSTransition in={Boolean(menu.value)} timeout={0} unmountOnExit>
       <div

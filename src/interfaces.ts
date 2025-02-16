@@ -167,3 +167,5 @@ export interface MenuAnimationBackgroundProps extends MenuProps {}
 export interface CreateGroupAnimationProps extends MenuProps{};
 
 export interface CreateGroupProps extends MenuProps{};
+
+export interface GroupsMainStripeProps extends MenuProps{};
