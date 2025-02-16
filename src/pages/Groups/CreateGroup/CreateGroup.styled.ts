@@ -1,27 +1,27 @@
 import styled from "styled-components";
 
 export const StyledCreateGroup = styled.div`
-  overflow: auto;
-  box-sizing: border-box;
   position: fixed;
-  background-color: ${({ theme }) => theme.layer2};
+  top: 0; /* Add this line */
+  bottom: 0;
   width: 100%;
   height: 100vh;
+  overflow: auto;
+  box-sizing: border-box;
+  background-color: ${({ theme }) => theme.layer2};
   z-index: 3;
   display: flex;
   flex-direction: column;
-  bottom: 0;
-
 
   .submitButton,
   .input {
-    margin-top:20px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     padding: 0 14px;
   }
-  
-  .submitButton{
+
+  .submitButton {
     margin-top: auto;
     margin-bottom: 14px;
   }
