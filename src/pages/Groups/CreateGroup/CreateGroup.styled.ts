@@ -10,6 +10,7 @@ export const StyledCreateGroup = styled.div`
   z-index: 3;
   display: flex;
   flex-direction: column;
+  bottom: 0;
 
 
   .submitButton,
