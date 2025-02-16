@@ -233,3 +233,8 @@ export type GroupsAllBalancesResponse = {
   balances:Details
   groupCount:number;
 }
+
+export type GroupRequest = {
+  name:string;
+  currency:string
+}

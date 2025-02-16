@@ -9,6 +9,7 @@ import CreateGroupAnimation from "../../components/MenuAnimations/CreateGroupAni
 
 
 export default function Groups() {
+
   const menu = useSignal<string | null>(null);
 
   return (

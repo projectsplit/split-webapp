@@ -14,8 +14,15 @@ export default defineConfig({
   //   port: 5173,
   // },
   plugins: [
-    react(),
-    // checker({ typescript: true })
+    react({
+      // Add the Babel transform here
+      babel: {
+        plugins: [
+          ["module:@preact/signals-react-transform"]
+        ]
+      }
+    }),
+    // checker({ typescript: true }),
   ],
   resolve: {
     alias: {

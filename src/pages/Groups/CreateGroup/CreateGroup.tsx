@@ -2,13 +2,29 @@ import React, { useState } from "react";
 import { StyledCreateGroup } from "./CreateGroup.styled";
 import { IoClose } from "react-icons/io5";
 import { CreateGroupProps } from "../../../interfaces";
-
 import SubmitButton from "../../../components/SubmitButton/SubmitButton";
 import Input from "../../../components/Input/Input";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createGroupFn } from "../../../api/services/api";
+import { GroupRequest } from "../../../types";
 
 export default function CreateGroup({ menu }: CreateGroupProps) {
-const [groupName, setGroupName] = useState<string>("")
+  const [groupName, setGroupName] = useState<string>("");
+  const queryClient = useQueryClient();
+
+  const createGroup = useMutation<any, any, GroupRequest>({
+    mutationFn: (groupData) => createGroupFn(groupData),
+    onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: ["groups", "active"] });
+  
+    },
+  });
+
+  const onClickHandler = ()=>{
+    createGroup.mutate({ name: groupName, currency: "EUR" })
+    queryClient.invalidateQueries({ queryKey: ["groups", "active"] })
+    menu.value = null;
+  }
 
   return (
     <StyledCreateGroup>
@@ -23,14 +39,18 @@ const [groupName, setGroupName] = useState<string>("")
         <div className="gap"></div>
       </div>
       <div className="input">
-        <Input placeholder="Group Name" backgroundColor="#2d2d2d" onChange={(e: React.ChangeEvent<HTMLInputElement>)=>setGroupName(e.target.value)}/>
+        <Input
+          placeholder="Group Name"
+          backgroundColor="#2d2d2d"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setGroupName(e.target.value)
+          }
+        />
       </div>
       <div className="submitButton">
         <SubmitButton
-        submitButtonIsActive ={groupName.trim()===""?false:true}
-          onClick={(e: React.FormEvent<HTMLButtonElement>) =>
-            console.log(groupName)
-          }
+          submitButtonIsActive={groupName.trim() === "" ? false : true}
+          onClick={onClickHandler}
         >
           Create Group
         </SubmitButton>
