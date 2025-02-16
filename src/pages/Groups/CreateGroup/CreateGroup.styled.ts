@@ -1,14 +1,13 @@
 import styled from "styled-components";
 
 export const StyledCreateGroup = styled.div`
+  overflow: auto;
   box-sizing: border-box;
-  bottom: 0;
   position: fixed;
   background-color: ${({ theme }) => theme.layer2};
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   z-index: 3;
-  padding: 0;
   display: flex;
   flex-direction: column;
 
