@@ -33,7 +33,7 @@ const StyledButton = styled.button`
   font-weight: 500;
   font-family: inherit;
   border-color: ${({ theme }) => theme.inactiveColor};
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: ${({ theme }) => theme.backgroundcolor};
   color: ${({ theme }) => theme.activeTabButtonTextColor};
   cursor: pointer;
   transition: border-color 0.25s;

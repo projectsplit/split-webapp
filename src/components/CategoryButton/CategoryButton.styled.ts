@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { CategoryButtonProps } from "../../interfaces";
 
-export const StyledCategoryButton = styled.div<CategoryButtonProps>`
+export const StyledCategoryButton = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "selected"
+})<CategoryButtonProps>`
   display: flex;
   flex-direction: row;
 

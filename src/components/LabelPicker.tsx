@@ -88,7 +88,7 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
         {labels.map((x) => {
           return (
             <span key={x}
-              style={{ backgroundColor: generateColorPairFromHue(hashStringToHue(x)).backgroundColor, color: generateColorPairFromHue(hashStringToHue(x)).textColor }}
+              style={{ backgroundColor: generateColorPairFromHue(hashStringToHue(x)).backgroundcolor, color: generateColorPairFromHue(hashStringToHue(x)).textColor }}
               onClick={() => handleRemoveClick(x)} className="selected-label">
               {x}
               <IoClose />
@@ -198,7 +198,7 @@ export const StyledLabelPicker = styled.div<{ $hasError?: boolean, $isOpen?: boo
   }
   
   .dropdown {
-    background-color: ${({ theme }) => theme.backgroundColor};
+    background-color: ${({ theme }) => theme.backgroundcolor};
     color: ${({ theme }) => theme.textActiveColor};
     border-color: ${({ theme }) => theme.lineColor};
     display: flex;
@@ -235,7 +235,7 @@ export const StyledLabelPicker = styled.div<{ $hasError?: boolean, $isOpen?: boo
         }
         
         .amount-input {
-          background-color: ${({ theme }) => theme.backgroundColor};
+          background-color: ${({ theme }) => theme.backgroundcolor};
           color: ${({ theme }) => theme.textActiveColor};
           border-color: ${({ theme }) => theme.lineColor};
           border-style: none;
@@ -269,9 +269,9 @@ export interface LabelPickerProps {
 
 function generateColorPairFromHue(hue: number) {
   hue = hue % 360;
-  const backgroundColor = `hsl(${hue}, 40%, 70%, 100%)`; // Darker color for background
+  const backgroundcolor = `hsl(${hue}, 40%, 70%, 100%)`; // Darker color for background
   const textColor = `hsl(${hue}, 30%, 25%)`; // Lighter color for text
-  return { backgroundColor, textColor };
+  return { backgroundcolor, textColor };
 }
 
 function hashStringToHue(str: string) {

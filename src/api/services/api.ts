@@ -33,10 +33,16 @@ export const getGroupTransfers = async (
   next?: string
 ): Promise<GetGroupTransfersResponse> => {
   const params = { groupId, pageSize, next };
-  const response = await apiClient.get<
-    void,
-    AxiosResponse<GetGroupTransfersResponse>
-  >("/transfers", { params });
+  const response = await apiClient.get< void, AxiosResponse<GetGroupTransfersResponse>>("/transfers", { params });
+  return response.data;
+};
+
+export const getGroupsTotalAmounts = async (
+  pageSize: number,
+  next: string
+): Promise<GroupsTotalAmountsResponse> => {
+  const params = {  pageSize, next };
+  const response = await apiClient.get<GroupsTotalAmountsResponse>("/groups/details",{params});
   return response.data;
 };
 
@@ -98,15 +104,6 @@ export const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
   return response.data;
 };
 
-export const getGroupsTotalAmounts = async (
-  pageSize: number,
-  next: string
-): Promise<GroupsTotalAmountsResponse> => {
-  const response = await apiClient.get<GroupsTotalAmountsResponse>(
-    `/groups/details?pageSize=${pageSize}&${next}`
-  );
-  return response.data;
-};
 
 export const getGroupsAllBalances =
   async (): Promise<GroupsAllBalancesResponse> => {

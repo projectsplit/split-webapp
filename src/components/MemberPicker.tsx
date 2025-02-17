@@ -253,7 +253,7 @@ export const StyledMemberPicker = styled.div<{ $hasError?: boolean, $isOpen?: bo
   }
   
   .dropdown {
-    background-color: ${({ theme }) => theme.backgroundColor};
+    background-color: ${({ theme }) => theme.backgroundcolor};
     color: ${({ theme }) => theme.textActiveColor};
     border-color: ${({ theme }) => theme.lineColor};
     display: flex;
@@ -274,7 +274,7 @@ export const StyledMemberPicker = styled.div<{ $hasError?: boolean, $isOpen?: bo
     }
     
     .selected {
-      background-color: ${({ theme }) => theme.backgroundColor};
+      background-color: ${({ theme }) => theme.backgroundcolor};
       color: ${({ theme }) => theme.textActiveColor};
     }
     
@@ -319,7 +319,7 @@ export const StyledMemberPicker = styled.div<{ $hasError?: boolean, $isOpen?: bo
         }
         
         .amount-input {
-          background-color: ${({ theme }) => theme.backgroundColor};
+          background-color: ${({ theme }) => theme.backgroundcolor};
           color: ${({ theme }) => theme.textActiveColor};
           border-color: ${({ theme }) => theme.lineColor};
           border-style: none;

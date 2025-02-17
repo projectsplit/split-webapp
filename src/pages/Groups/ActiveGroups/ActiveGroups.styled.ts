@@ -6,12 +6,13 @@ export const StyledActiveGroups = styled.div`
   scrollbar-width: thin;
   overflow: auto;
   padding: 14px;
+  
 
   .groups {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    /* margin-top: 0px; */
+    padding-bottom: 5rem;
   }
 
   .groupsInfo {

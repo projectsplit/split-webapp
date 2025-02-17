@@ -153,7 +153,7 @@ const createPayerPickerArray = (group: Group, expense: FormExpense | null): Pick
 
 const StyledExpenseForm = styled.div`
   color: ${({ theme }) => theme.textActiveColor};
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: ${({ theme }) => theme.backgroundcolor};
   height: 100%;
   z-index: 1;
   display: flex;
