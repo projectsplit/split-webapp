@@ -4,7 +4,7 @@ export const StyledDateTimePicker = styled.div`
   z-index: 1;
   -webkit-tap-highlight-color: transparent;
   color: ${({ theme }) => theme.activeTabButtonTextColor};
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: ${({ theme }) => theme.backgroundcolor};
   display: flex;
   flex-direction: column;
   border: 1px solid ${({ theme }) => theme.lineColor};
@@ -83,7 +83,7 @@ export const StyledDateTimePicker = styled.div`
   }
       
   .time-picker {
-    background-color: ${({ theme }) => theme.backgroundColor};
+    background-color: ${({ theme }) => theme.backgroundcolor};
     position: absolute;
     display: flex;
     flex-direction: row;

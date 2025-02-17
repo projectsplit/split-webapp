@@ -96,7 +96,7 @@ const StyledExpenses = styled.div`
     gap: 8px;
     
     .date-only {
-      background-color: ${({ theme }) => theme.backgroundColor};
+      background-color: ${({ theme }) => theme.backgroundcolor};
       align-self: center;
       position: sticky;
       top: 0;

@@ -1,13 +1,20 @@
 import { CSSTransition } from "react-transition-group";
 import { MenuAnimationBackgroundProps } from "../../interfaces";
+import { useRef } from "react";
 
 export default function MenuAnimationBackground({
   menu,
 }: MenuAnimationBackgroundProps) {
-  
+  const nodeRef = useRef(null);
   return (
-    <CSSTransition in={Boolean(menu.value)} timeout={0} unmountOnExit>
+    <CSSTransition
+      in={Boolean(menu.value)}
+      timeout={0}
+      unmountOnExit
+      nodeRef={nodeRef}
+    >
       <div
+        ref={nodeRef}
         style={{
           position: "fixed",
           left: "0px",

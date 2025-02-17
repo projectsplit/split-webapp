@@ -11,7 +11,7 @@ const fadeIn = keyframes`
 
 export const StyledMemberAmountPicker = styled.div`
   
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: ${({ theme }) => theme.backgroundcolor};
   color: ${({ theme }) => theme.textActiveColor};
   display: flex;
   flex-direction: column;  
@@ -43,7 +43,7 @@ export const StyledMemberAmountPicker = styled.div`
   }
   
   .dropdown {
-    background-color: ${({ theme }) => theme.backgroundColor};
+    background-color: ${({ theme }) => theme.backgroundcolor};
     color: ${({ theme }) => theme.textActiveColor};
     border-color: ${({ theme }) => theme.lineColor};
     display: flex;
@@ -63,7 +63,7 @@ export const StyledMemberAmountPicker = styled.div`
     padding: 6px 0px;
     
     .selected {
-      background-color: ${({ theme }) => theme.backgroundColor};
+      background-color: ${({ theme }) => theme.backgroundcolor};
       color: ${({ theme }) => theme.textActiveColor};
     }
     
@@ -95,7 +95,7 @@ export const StyledMemberAmountPicker = styled.div`
         }
         
         .amount {
-          background-color: ${({ theme }) => theme.backgroundColor};
+          background-color: ${({ theme }) => theme.backgroundcolor};
           color: ${({ theme }) => theme.textActiveColor};
           border-color: ${({ theme }) => theme.lineColor};
           border-style: none;

@@ -21,8 +21,8 @@ export default function CreateGroup({ menu }: CreateGroupProps) {
   });
 
   const onClickHandler = ()=>{
-    createGroup.mutate({ name: groupName, currency: "EUR" })
     queryClient.invalidateQueries({ queryKey: ["groups", "active"] })
+    createGroup.mutate({ name: groupName, currency: "EUR" })
     menu.value = null;
   }
 
@@ -41,7 +41,7 @@ export default function CreateGroup({ menu }: CreateGroupProps) {
       <div className="input">
         <Input
           placeholder="Group Name"
-          backgroundColor="#2d2d2d"
+          backgroundcolor="#2d2d2d"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setGroupName(e.target.value)
           }
@@ -49,7 +49,7 @@ export default function CreateGroup({ menu }: CreateGroupProps) {
       </div>
       <div className="submitButton">
         <SubmitButton
-          submitButtonIsActive={groupName.trim() === "" ? false : true}
+          submitbuttonisactive={groupName.trim() === "" ? false : true}
           onClick={onClickHandler}
         >
           Create Group

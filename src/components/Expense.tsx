@@ -111,7 +111,7 @@ const StyledExpense = styled.div`
       overflow: auto;
       
       .label {
-        color: ${({theme}) => theme.backgroundColor};
+        color: ${({theme}) => theme.backgroundcolor};
         background-color: ${({theme}) => theme.inactiveTabButtonTextColor};
         display: flex;
         gap: 8px;

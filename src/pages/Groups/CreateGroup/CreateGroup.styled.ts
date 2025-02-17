@@ -2,10 +2,10 @@ import styled from "styled-components";
 
 export const StyledCreateGroup = styled.div`
   position: fixed;
-  top: 0; /* Add this line */
+
   bottom: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow: auto;
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.layer2};

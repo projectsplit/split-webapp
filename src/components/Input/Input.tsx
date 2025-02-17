@@ -1,5 +1,4 @@
 import React from "react";
-
 import { StyledInput } from "./Input.styled";
 import { InputProps } from "../../interfaces";
 
@@ -15,7 +14,7 @@ export default React.forwardRef(function Input(
     autoFocus,
     error,
     width,
-    backgroundColor
+    backgroundcolor
   }: InputProps,
   ref: React.Ref<HTMLInputElement>
 ) {
@@ -32,7 +31,7 @@ export default React.forwardRef(function Input(
       autoFocus={autoFocus}
       error={error}
       width={width}
-      backgroundColor={backgroundColor}
+      backgroundcolor={backgroundcolor}
     />
   );
 });

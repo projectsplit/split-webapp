@@ -51,14 +51,14 @@ export interface SubmitButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: any;
-  submitButtonIsActive?: boolean;
+  submitbuttonisactive?: boolean;
 }
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean;
-  backgroundColor?: string;
+  backgroundcolor?: string;
 }
 
 export interface LoadingSpinnerProps {

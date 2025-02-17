@@ -23,7 +23,6 @@ export default function ActiveGroups() {
 
   const groups = data?.pages.flatMap((p) => p.groups);
 
-
   useEffect(() => {
     if (!sentinelRef.current || !hasNextPage || isFetchingNextPage) return;
 
@@ -44,7 +43,7 @@ export default function ActiveGroups() {
 
   return (
     <StyledActiveGroups >
-      {isFetching || !data ? <Spinner /> : 
+      {isFetching && !isFetchingNextPage  ? <Spinner /> : 
       <div className="groups">
         {groups?.map((g: any) => (
           <div key={g.id}>
