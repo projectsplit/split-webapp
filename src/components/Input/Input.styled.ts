@@ -3,7 +3,7 @@ import { InputProps } from '../../interfaces'
 
 
 export const StyledInput = styled.input<InputProps>`
-  border-radius: 4px;
+  border-radius: 10px;
   padding: 0.8rem;
   outline: none;
   color: white;
@@ -11,5 +11,5 @@ export const StyledInput = styled.input<InputProps>`
   border-style: none;
   font-size: 18px;
   border: ${({ error, theme }) => (error ? `1px solid  ${theme.pink}` : 'none')};
-  
+ 
 `

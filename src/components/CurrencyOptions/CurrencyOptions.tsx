@@ -4,10 +4,7 @@ import { Currency } from "../../types";
 import { currencyData } from "../../helpers/openExchangeRates";
 import { CurrencyOptionProps } from "../../interfaces";
 
-
-export default function CurrencyOptions({
-  clickHandler
-}: CurrencyOptionProps) {
+export default function CurrencyOptions({ clickHandler }: CurrencyOptionProps) {
   const [searchItem, setSearchItem] = useState<string>("");
   const [filteredCurrencies, setFilteredCurrencies] =
     useState<Currency[]>(currencyData);
@@ -24,7 +21,7 @@ export default function CurrencyOptions({
 
     setFilteredCurrencies(filteredItems);
   };
- 
+
   return (
     <StyledCurrencyOptions height="75vh">
       <div className="headerAndSearchbar">
@@ -46,10 +43,12 @@ export default function CurrencyOptions({
       {filteredCurrencies.map((currency, index) => (
         <div
           key={index}
-          className={`currencyOption ${localStorage.getItem("currency") === currency.symbol
+          className={`currencyOption ${
+            (!localStorage.getItem("currency") && currency.symbol === "USD") ||
+            localStorage.getItem("currency") === currency.symbol
               ? "clicked"
               : ""
-            }`}
+          }`}
           onClick={() => clickHandler(currency.symbol)}
         >
           <div className={currency.flagClass} />

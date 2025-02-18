@@ -30,13 +30,14 @@ export const StyledCreateGroup = styled.div`
         flex-direction: row;
         gap: 0.5rem;
         background-color: #2d2d2d;
-        border-radius: 4px;
+        border-radius: 10px;
         padding: 0.5rem;
         font-size: 1.125rem;
         width:140px;
         align-items: center;
         justify-content: space-between;
         cursor: pointer;
+       
         .angleDown {
           font-size: 1.5rem;
         }
