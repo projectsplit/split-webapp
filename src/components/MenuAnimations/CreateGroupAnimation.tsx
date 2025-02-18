@@ -6,7 +6,8 @@ import { useRef } from "react";
 
 
 export default function CreateGroupAnimation({
-    menu
+    menu,
+    currencyMenu
   }: CreateGroupAnimationProps) {
      const nodeRef = useRef(null);
     return (
@@ -15,9 +16,9 @@ export default function CreateGroupAnimation({
         classNames="infoBox"
         timeout={100}
         unmountOnExit
-        nodeRef={nodeRef}
+        nodeRef = {nodeRef}
       >
-        <CreateGroup menu={menu}/>
+        <CreateGroup menu={menu} currencyMenu={currencyMenu} nodeRef = {nodeRef}/>
       </CSSTransition>
     );
   }

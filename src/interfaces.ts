@@ -2,7 +2,6 @@ import { CSSProperties } from "react";
 import { ExpenseItem, Frequency, PickerMember, TransferItem } from "./types";
 import { Signal } from "@preact/signals-react";
 
-
 export interface ExpenseProps {
   expense: ExpenseItem;
   timeZoneId: string;
@@ -69,7 +68,7 @@ export interface LoadingSpinnerProps {
 export interface OptionsContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
-  hasarrow: boolean ;
+  hasarrow: boolean;
 }
 
 export interface TreeAdjustedContainerProps {
@@ -147,6 +146,21 @@ export interface StyledRecommendationProps {
 export interface NewButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
+export interface StyledBottomMenuProps {
+  height?: string;
+}
+export interface CurrencyOptionProps {
+  clickHandler: (curr: string) => void;
+}
+export interface CurrencyOptionsAnimationProps {
+  clickHandler: (curr: string) => void;
+  currencyMenu: Signal<string | null>;
+}
+
+export interface BottomMenuProps {
+  children: any;
+  height?: string;
+}
 
 export interface CategoryButtonProps {
   to?: string;
@@ -164,8 +178,13 @@ export interface MenuProps {
 
 export interface MenuAnimationBackgroundProps extends MenuProps {}
 
-export interface CreateGroupAnimationProps extends MenuProps{};
+export interface CreateGroupAnimationProps extends MenuProps {
+  currencyMenu: Signal<string | null>;
+}
 
-export interface CreateGroupProps extends MenuProps{};
+export interface CreateGroupProps extends MenuProps {
+  nodeRef: React.MutableRefObject<null>;
+  currencyMenu: Signal<string | null>;
+}
 
-export interface GroupsMainStripeProps extends MenuProps{};
+export interface GroupsMainStripeProps extends MenuProps {}

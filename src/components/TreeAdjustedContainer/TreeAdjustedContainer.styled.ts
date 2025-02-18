@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { OptionsContainerProps } from "../../interfaces";
 
-
 export const StyledTreeAdjustedContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== "hasarrow",
 })<OptionsContainerProps>`
@@ -33,5 +32,11 @@ export const StyledTreeAdjustedContainer = styled.div.withConfig({
     transform: translateY(-50%);
     right: 0rem;
     font-size: 30px;
+  }
+  
+  .checkmark {
+    color: ${({ theme }) => theme.green};
+    font-size: 22px;
+    font-weight: 500;
   }
 `;

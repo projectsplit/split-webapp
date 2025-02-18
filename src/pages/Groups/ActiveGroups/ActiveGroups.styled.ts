@@ -6,18 +6,25 @@ export const StyledActiveGroups = styled.div`
   scrollbar-width: thin;
   overflow: auto;
   padding: 14px;
-  
 
   .groups {
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding-bottom: 5rem;
+    .noGroupMsg {
+      display: flex;
+ 
+      color: ${({ theme }) => theme.layer6};
+      justify-content: center;
+      margin-top: 20px;
+    }
   }
 
   .groupsInfo {
     font-size: 15px;
     color: ${({ theme }) => theme.layer6};
+
     .owe {
       color: ${({ theme }) => theme.redish};
     }
@@ -31,10 +38,6 @@ export const StyledActiveGroups = styled.div`
       flex-direction: row;
       align-items: center;
     }
-    .checkmark {
-      color: ${({ theme }) => theme.green};
-      font-size: 22px;
-      font-weight: 500;
-    }
+  
   }
 `;

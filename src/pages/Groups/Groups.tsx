@@ -11,6 +11,7 @@ import CreateGroupAnimation from "../../components/MenuAnimations/CreateGroupAni
 export default function Groups() {
 
   const menu = useSignal<string | null>(null);
+  const currencyMenu = useSignal<string | null>(null);
 
   return (
     <StyledGroups>
@@ -24,7 +25,7 @@ export default function Groups() {
       <Outlet />
 
       <MenuAnimationBackground menu={menu} />
-      <CreateGroupAnimation menu={menu} />
+      <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu}/>
     </StyledGroups>
   );
 }
