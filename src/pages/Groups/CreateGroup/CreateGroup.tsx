@@ -21,7 +21,7 @@ export default function CreateGroup({
   const [groupName, setGroupName] = useState<string>("");
   const queryClient = useQueryClient();
   const currency = useSignal<string>(
-    localStorage.getItem("groupCurrency") || "USD"
+    localStorage.getItem("currency") || "USD"
   );
   const allCurrencies = useSignal<Currency[]>(currencyData);
 
@@ -33,11 +33,13 @@ export default function CreateGroup({
     mutationFn: (groupData) => createGroupFn(groupData),
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ["groups", "active"] });
+      queryClient.refetchQueries({ queryKey: ["home"] });
     },
   });
 
   const onClickHandler = () => {
     queryClient.invalidateQueries({ queryKey: ["groups", "active"] });
+    queryClient.invalidateQueries({ queryKey: ["home"] });
     createGroup.mutate({ name: groupName, currency: currency.value });
     menu.value = null;
   };
@@ -45,7 +47,7 @@ export default function CreateGroup({
   const handldeCurrencyOptionsClick = (curr: string) => {
     //setCurrency(currency);
     currency.value = curr;
-    localStorage.setItem("groupCurrency", curr);
+    localStorage.setItem("currency", curr);
     // queryClient.invalidateQueries(["spending", budgettype, curr]);
     // queryClient.getQueryData(["spending", budgettype, curr]);
     currencyMenu.value = null;

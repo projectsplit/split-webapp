@@ -46,7 +46,7 @@ export default function CurrencyOptions({
       {filteredCurrencies.map((currency, index) => (
         <div
           key={index}
-          className={`currencyOption ${localStorage.getItem("groupCurrency") === currency.symbol
+          className={`currencyOption ${localStorage.getItem("currency") === currency.symbol
               ? "clicked"
               : ""
             }`}

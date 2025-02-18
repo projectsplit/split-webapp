@@ -21,7 +21,7 @@ export default function TreeAdjustedContainer({
           <IonIcon name="chevron-forward-outline" className="arrow" />
         )}
          {items.map((item, index) => (
-        <div key={index}>{item}</div>  // Assigning a unique key
+        <div key={index}>{item}</div>  
       ))}
       </OptionsContainer>
     );

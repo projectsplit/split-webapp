@@ -14,7 +14,7 @@ export const TreeItemBuilder = (
     return [
       <div className="groupsInfo">
         <div className="settled">
-          <strong>You</strong> &nbsp;are settled &nbsp;
+          <div><strong>You</strong>&nbsp;are settled&nbsp;</div>
           <IonIcon name="checkmark-sharp" className="checkmark" />
         </div>
       </div>

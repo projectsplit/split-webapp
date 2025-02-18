@@ -8,10 +8,10 @@ export const StyledHomepage = styled.div`
   height: 100vh;
   width: 100%;
   padding: 14px;
-  overflow: hidden; 
+  overflow: hidden;
 
   .fixedTop {
-    padding-bottom: 5px
+    padding-bottom: 5px;
   }
 
   .welcomeStripe {
@@ -23,82 +23,87 @@ export const StyledHomepage = styled.div`
   .scrollableContent {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; 
+    flex-grow: 1;
     overflow-y: auto;
-    min-height: 0; 
-  
-  .optionsStripe {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    .groups {
-      position: relative;
-      display: flex;
-      flex-direction: row;
-      gap: 9px;
-      align-items: center;
-
-      .groupIconAndNumberOfGroups {
-        position: relative;
-      }
-      .groupCount {
-        position: absolute;
-        color: ${({ theme }) => theme.whiteText};
-        font-size: 15px;
-        bottom: -2px; 
-        right: 0; 
-        padding: -8px 3px;
-        font-weight: bold;
-      }
-      .groupName {
-        font-size: 20px;
-        font-weight: bold;
-      }
-    }
-
-    .analyticsIcon,
-    .personalIcon,
-    .budgetIcon,
-    .groupIcon {
-      color: ${({ theme }) => theme.deepPurple};
-      font-size: 30px;
-    }
-
-    .group {
-      color: #9918ff;
-      font-size: 25px;
-      position: relative;
-    }
+    min-height: 0;
 
     .groupsInfo {
-      font-size: 15px;
-      color: ${({ theme }) => theme.layer6};
-      .owe {
-        color: ${({ theme }) => theme.redish};
-      }
-      .owed {
-        color: ${({ theme }) => theme.green};
+      .settled {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
       }
     }
-    .mostRecent {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    .optionsStripe {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
 
-    .mostRecentMsg {
-      font-size: 12px;
-      margin-left: 5px;
-    }
-    .groupName {
-      font-size: 20px;
-      font-weight: bold;
+      .groups {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        gap: 9px;
+        align-items: center;
+
+        .groupIconAndNumberOfGroups {
+          position: relative;
+        }
+        .groupCount {
+          position: absolute;
+          color: ${({ theme }) => theme.whiteText};
+          font-size: 15px;
+          bottom: -2px;
+          right: 0;
+          padding: -8px 3px;
+          font-weight: bold;
+        }
+        .groupName {
+          font-size: 20px;
+          font-weight: bold;
+        }
+      }
+
+      .analyticsIcon,
+      .personalIcon,
+      .budgetIcon,
+      .groupIcon {
+        color: ${({ theme }) => theme.deepPurple};
+        font-size: 30px;
+      }
+
+      .group {
+        color: #9918ff;
+        font-size: 25px;
+        position: relative;
+      }
+
+      .groupsInfo {
+        font-size: 15px;
+        color: ${({ theme }) => theme.layer6};
+        .owe {
+          color: ${({ theme }) => theme.redish};
+        }
+        .owed {
+          color: ${({ theme }) => theme.green};
+        }
+      }
+      .mostRecent {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        .mostRecentMsg {
+          font-size: 12px;
+          margin-left: 5px;
+        }
+        .groupName {
+          font-size: 20px;
+          font-weight: bold;
+        }
+      }
     }
   }
-  }
-
-
-}
   @keyframes spin-animation {
     from {
       transform: rotate(0deg);

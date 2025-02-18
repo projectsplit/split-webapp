@@ -24,6 +24,7 @@ export const StyledActiveGroups = styled.div`
   .groupsInfo {
     font-size: 15px;
     color: ${({ theme }) => theme.layer6};
+
     .owe {
       color: ${({ theme }) => theme.redish};
     }
@@ -37,10 +38,6 @@ export const StyledActiveGroups = styled.div`
       flex-direction: row;
       align-items: center;
     }
-    .checkmark {
-      color: ${({ theme }) => theme.green};
-      font-size: 22px;
-      font-weight: 500;
-    }
+  
   }
 `;

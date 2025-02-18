@@ -20,7 +20,7 @@ export const StyledOptionsContainer = styled.div.withConfig({
     background-color: ${({ theme, hasarrow }) =>
       hasarrow === true
         ? theme.layer1
-        : theme.layer2}; /* Change background-color on hover */
+        : theme.layer2}; 
   }
   .arrow {
     position: absolute;
@@ -28,5 +28,10 @@ export const StyledOptionsContainer = styled.div.withConfig({
     transform: translateY(-50%);
     right: 0rem;
     font-size: 30px;
+  }
+  .checkmark {
+    color: ${({ theme }) => theme.green};
+    font-size: 22px;
+    font-weight: 500;
   }
 `;
