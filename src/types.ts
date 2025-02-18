@@ -213,7 +213,7 @@ export type UserPendingTransaction = {
 export type Details = { [currency: string]: number };
 
 export type Groups = {
-  details:Details
+  details: Details;
   id: string;
   name: string;
 }[];
@@ -230,11 +230,16 @@ export type GroupsTotalSummary = {
 };
 
 export type GroupsAllBalancesResponse = {
-  balances:Details
-  groupCount:number;
-}
+  balances: Details;
+  groupCount: number;
+};
 
 export type GroupRequest = {
-  name:string;
-  currency:string
-}
+  name: string;
+  currency: string;
+};
+export type Currency = {
+  symbol: string;
+  name: string;
+  flagClass: string;
+};
