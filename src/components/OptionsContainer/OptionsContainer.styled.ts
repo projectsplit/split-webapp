@@ -9,7 +9,7 @@ export const StyledOptionsContainer = styled.div.withConfig({
   flex-direction: column;
   padding: 1rem 0.8rem;
   border-radius: 10px;
-  gap: 14px;
+  gap: 5px;
   background-color: ${({ theme }) => theme.layer2};
   border-color: ${({ theme }) => theme.layer2};
   border-style: solid;

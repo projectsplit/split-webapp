@@ -243,3 +243,9 @@ export type Currency = {
   name: string;
   flagClass: string;
 };
+
+export type MostRecentGroupDetailsResponse = {
+  id:string;
+  name:string;
+  details:Details;
+}

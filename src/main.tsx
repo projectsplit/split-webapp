@@ -25,7 +25,7 @@ createRoot(document.getElementById("root")!).render(
     <GlobalStyles />
     <ThemeProvider theme={theme}>
       <App />
-      {/* <ReactQueryDevtools /> */}
+      <ReactQueryDevtools />
     </ThemeProvider>
   </QueryClientProvider>
   // </StrictMode>,

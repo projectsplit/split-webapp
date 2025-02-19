@@ -37,6 +37,7 @@ export const StyledHomepage = styled.div`
     .optionsStripe {
       display: flex;
       flex-direction: column;
+      justify-content: center;
       gap: 15px;
 
       .groups {
@@ -92,7 +93,8 @@ export const StyledHomepage = styled.div`
         display: flex;
         flex-direction: column;
         gap: 5px;
-
+        margin-bottom: 1rem;
+        
         .mostRecentMsg {
           font-size: 12px;
           margin-left: 5px;

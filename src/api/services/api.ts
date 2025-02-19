@@ -12,6 +12,7 @@ import {
   GroupsTotalAmountsResponse,
   GroupsAllBalancesResponse,
   GroupRequest,
+  MostRecentGroupDetailsResponse,
 } from "../../types";
 
 export const getGroupExpenses = async (
@@ -112,6 +113,14 @@ export const getGroupsAllBalances =
     );
     return response.data;
   };
+
+
+export const getMostRecentGroup = async (groupId: string): Promise<MostRecentGroupDetailsResponse> => {
+  const response = await apiClient.get<MostRecentGroupDetailsResponse>(
+    `/groups/${groupId}/details`
+  );
+  return response.data;
+};
 
 export const createGroupFn = async (request: GroupRequest) => {
   const response = await apiClient.post("/groups/create", request);
