@@ -11,15 +11,26 @@ import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "styled-components";
 import Spinner from "../../components/Spinner/Spinner";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
-import { GroupsAllBalancesResponse, UserInfo } from "../../types";
-import { getGroupsAllBalances } from "../../api/services/api";
+import {
+  GroupsAllBalancesResponse,
+  MostRecentGroupDetailsResponse,
+  UserInfo,
+} from "../../types";
+import {
+  getGroupsAllBalances,
+  getMostRecentGroup,
+} from "../../api/services/api";
 import useBudgetInfo from "../../hooks/useBudgetInfo";
 import { TreeItemBuilder } from "../../components/TreeItemBuilder";
 import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
 import { useOutletContext } from "react-router-dom";
+import { useSignal } from "@preact/signals-react";
 
 export default function Home() {
   const navigate = useNavigate();
+  const mostRecentGroupId = useSignal<string>(
+    localStorage.getItem("mostRecentGroup") || ""
+  );
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
   const { userInfo } = useOutletContext<{
@@ -33,7 +44,18 @@ export default function Home() {
     refetchOnMount: false,
   });
 
-  //const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
+  const {
+    data: mostRecentGroupData,
+    isFetching: mostRecentGroupDataIsFetching,
+  } = useQuery<MostRecentGroupDetailsResponse>({
+    queryKey: ["mostRecentGroup", mostRecentGroupId.value],
+    queryFn: () => getMostRecentGroup(mostRecentGroupId.value),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+
+  // isFetching:mostRecentGroupDataIsFetching, isLoading:mostRecentGroupDataIsLoading
+  // const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
 
   return (
     <StyledHomepage>
@@ -57,25 +79,22 @@ export default function Home() {
                 )}
               </>
             )} */}
-              <div className="mostRecent">
-                <div className="mostRecentMsg">Most recent</div>
-                <TreeAdjustedContainer
-                  onClick={() => console.log("goto group")}
-                  hasarrow={true}
-                  items={[
-                    <div className="groupsInfo" key="owed">
-                      <strong>You</strong> are owed{" "}
-                      <span className="owed">£56.00</span>
-                    </div>,
-                    <div className="groupsInfo" key="owe">
-                      <strong>You</strong> owe{" "}
-                      <span className="owe">$5.65</span>
-                    </div>,
-                  ]}
-                >
-                  <div className="groupName">Kythnos</div>
-                </TreeAdjustedContainer>
-              </div>
+
+              {mostRecentGroupDataIsFetching ? (
+                <Spinner />
+              ) : mostRecentGroupData ? (
+                <div className="mostRecent">
+                  <div className="mostRecentMsg">Most recent</div>
+                  <TreeAdjustedContainer
+                    onClick={() => console.log("goto group")}
+                    hasarrow={true}
+                    items={TreeItemBuilder(mostRecentGroupData?.details)}
+                  >
+                    <div className="groupName">{mostRecentGroupData?.name}</div>
+                  </TreeAdjustedContainer>
+                </div>
+              ) : null}
+
               {!isLoading && !isFetching && data?.groupCount === 0 ? (
                 <OptionButton
                   onClick={() => navigate("/groups/active")}
