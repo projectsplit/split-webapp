@@ -100,8 +100,7 @@ export const StyledHomepage = styled.div`
           margin-left: 5px;
         }
         .groupName {
-          font-size: 20px;
-          font-weight: bold;
+      
         }
       }
     }
