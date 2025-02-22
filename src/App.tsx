@@ -15,7 +15,6 @@ import UserInvitations from "./pages/UserInvitations";
 const App: React.FC = () => {
   
   const timeZoneId = "Europe/Athens"
-  console.log("ASD")
   
   return (
     <Router>
