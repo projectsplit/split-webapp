@@ -1,4 +1,4 @@
-import { AdvancedMarker, Map, MapMouseEvent, Pin, useMap, useMapsLibrary } from '@vis.gl/react-google-maps';
+import { AdvancedMarker, APIProvider, Map, MapMouseEvent, Pin, useMap, useMapsLibrary } from '@vis.gl/react-google-maps';
 import { styled } from 'styled-components';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useGeolocation from '../hooks/useGeoLocation';
@@ -211,53 +211,55 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, setLocation, setIsM
   }, [placesService, selectedLocation]);
 
   return (
-    <StyledPlacePicker>
-      <div className='map-container'>
-        <input
-          ref={autocompleteInputRef}
-          placeholder='Search for a location'
-          className='autocomplete-input'
-        />
-        <Map
-          className='map'
-          mapId={mapId}
-          defaultCenter={{ lat: selectedLocation.coordinates.latitude, lng: selectedLocation.coordinates.longitude }}
-          defaultZoom={defaultZoom}
-          renderingType='VECTOR'
-          onClick={handleMapClick}
-          gestureHandling="greedy"
-          disableDefaultUI
-          keyboardShortcuts={false}
-        >
-          <AdvancedMarker position={{ lat: selectedLocation.coordinates.latitude, lng: selectedLocation.coordinates.longitude }}>
-            <Pin
-              background={"#646cff"}
-              borderColor={'#1f234e'}
-              glyphColor={'#1f234e'}
-              scale={1.2}
-            />
-          </AdvancedMarker>
-        </Map>
-      </div>
-      <div className='position-name-container'>
-        <a href={selectedLocation.google?.url}>
-          <Button className='view-in-maps-button'>
-            <SiGooglemaps />
-          </Button>
-        </a>
-        {selectedLocation.google?.name && <div className='place-name'>{selectedLocation.google?.name}</div>}
-        {!selectedLocation.google?.name &&
-          <div className='coordinates'>
-            <div className='coord'>{selectedLocation.coordinates.latitude}</div>
-            <div className='coord'>{selectedLocation.coordinates.longitude}</div>
-          </div>}
-      </div>
-      <div className='buttons-container'>
-        <Button onClick={() => setIsMapOpen(false)}>Back</Button>
-        <Button onClick={clearLocation}>Clear</Button>
-        <Button className='select' onClick={submitLocation}>Select</Button>
-      </div>
-    </StyledPlacePicker>
+    <APIProvider apiKey={config.googleMapsApiKey}>
+      <StyledPlacePicker>
+        <div className='map-container'>
+          <input
+            ref={autocompleteInputRef}
+            placeholder='Search for a location'
+            className='autocomplete-input'
+          />
+          <Map
+            className='map'
+            mapId={mapId}
+            defaultCenter={{ lat: selectedLocation.coordinates.latitude, lng: selectedLocation.coordinates.longitude }}
+            defaultZoom={defaultZoom}
+            renderingType='VECTOR'
+            onClick={handleMapClick}
+            gestureHandling="greedy"
+            disableDefaultUI
+            keyboardShortcuts={false}
+          >
+            <AdvancedMarker position={{ lat: selectedLocation.coordinates.latitude, lng: selectedLocation.coordinates.longitude }}>
+              <Pin
+                background={"#646cff"}
+                borderColor={'#1f234e'}
+                glyphColor={'#1f234e'}
+                scale={1.2}
+              />
+            </AdvancedMarker>
+          </Map>
+        </div>
+        <div className='position-name-container'>
+          <a href={selectedLocation.google?.url}>
+            <Button className='view-in-maps-button'>
+              <SiGooglemaps />
+            </Button>
+          </a>
+          {selectedLocation.google?.name && <div className='place-name'>{selectedLocation.google?.name}</div>}
+          {!selectedLocation.google?.name &&
+            <div className='coordinates'>
+              <div className='coord'>{selectedLocation.coordinates.latitude}</div>
+              <div className='coord'>{selectedLocation.coordinates.longitude}</div>
+            </div>}
+        </div>
+        <div className='buttons-container'>
+          <Button onClick={() => setIsMapOpen(false)}>Back</Button>
+          <Button onClick={clearLocation}>Clear</Button>
+          <Button className='select' onClick={submitLocation}>Select</Button>
+        </div>
+      </StyledPlacePicker>
+    </APIProvider>
   )
 }
 
