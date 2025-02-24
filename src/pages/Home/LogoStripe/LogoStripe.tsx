@@ -11,10 +11,9 @@ export default function LogoStripe() {
   return (
     <StyledLogoStripe>
       <div className="mainContainer">
-        <div className="logo">α</div>
         <div className="QRandUserOptions">
+          <UserOptionsButton username={userInfo?.username} />
           <QRscanner />
-          <UserOptionsButton>{userInfo?.username}</UserOptionsButton>
         </div>
       </div>
     </StyledLogoStripe>

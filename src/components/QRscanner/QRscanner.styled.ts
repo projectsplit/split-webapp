@@ -7,5 +7,6 @@ export const StyledQRscanner = styled.div<QRscannerProps>`
     align-items: center;
     gap:14px;
     cursor: pointer;
+    font-size: 2rem;
 `;
 

@@ -21,10 +21,12 @@ export const getGroupExpenses = async (
   next?: string
 ): Promise<GetGroupExpensesResponse> => {
   const params = { groupId, pageSize, next };
+
   const response = await apiClient.get<
     void,
     AxiosResponse<GetGroupExpensesResponse>
   >("/expenses", { params });
+
   return response.data;
 };
 

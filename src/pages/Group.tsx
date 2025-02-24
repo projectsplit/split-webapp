@@ -42,10 +42,10 @@ const Group: React.FC = () => {
     return <div>Error</div>;
   }
 
-  const memberId = group?.members.find((x) => x.userId === userInfo.userId)?.id!;
+  const memberId = group?.members.find((x) => x.userId === userInfo?.userId)?.id!;
 
   const tabs = [
-    { name: "Expenses", content: <Expenses group={group} memberId={memberId} timeZoneId={timeZoneId} /> },
+    // { name: "Expenses", content: <Expenses group={group} memberId={memberId} timeZoneId={timeZoneId} /> },
     { name: "Transfers", content: <Transfers group={group} memberId={memberId} timeZoneId={timeZoneId} /> },
     {
       name: "Settle", content: <Page style={{ display: 'flex', flexDirection: 'column' }}>

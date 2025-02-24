@@ -1,31 +1,35 @@
 import { StyledGroups } from "./Groups.styled";
-import { Outlet } from "react-router-dom";
-import GroupsMainStripe from "./GroupsMainStripe/GroupsMainStripe";
+import { Outlet, useLocation } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
-import Separator from "../../components/Separator/Separator";
-import CategoryButton from "../../components/CategoryButton/CategoryButton";
 import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 import CreateGroupAnimation from "../../components/MenuAnimations/CreateGroupAnimation";
+import TopBar from "../../components/TopBar/TopBar";
+import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
+import BottomMainBar from "../../components/BottomMainBar/BottomMainBar";
 
 
 export default function Groups() {
-
   const menu = useSignal<string | null>(null);
   const currencyMenu = useSignal<string | null>(null);
+  const location = useLocation();
+  const path = location.pathname.split("/").pop() || "";
+  
 
   return (
     <StyledGroups>
-      <GroupsMainStripe menu={menu}/>
-      <div className="groupCategories">
-        <CategoryButton to="active">Active</CategoryButton>
-        <CategoryButton to="archived">Archived</CategoryButton>
-        <CategoryButton to="deleted">Deleted</CategoryButton>
-      </div>
-      <Separator />
+      <TopBar title="Groups" />
+      <CategorySelector
+        activeCat={path}
+        categories={{
+          cat1: "Active",
+          cat2: "Archived",
+          cat3: "Deleted",
+        }}
+      />
       <Outlet />
-
-      <MenuAnimationBackground menu={menu} />
-      <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu}/>
+      <BottomMainBar onClick={() => (menu.value = "createGroup")} />
+      {/* <MenuAnimationBackground menu={menu} /> */}
+      <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
     </StyledGroups>
   );
 }

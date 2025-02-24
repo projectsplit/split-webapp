@@ -25,8 +25,8 @@ export default function ActiveGroups() {
 
   useSentinel(fetchNextPage, hasNextPage, isFetchingNextPage);
 
-  const onGroupClickHandler = (id: string) => {
-    navigate(`/groups/active/${id}/transactions`);
+  const onGroupClickHandler = (id: string, groupName: string) => {
+    navigate(`/groups/active/${id}/expenses`, { state: { groupName } });
     localStorage.setItem("mostRecentGroup", id);
   };
 
@@ -46,7 +46,7 @@ export default function ActiveGroups() {
           {groups?.map((g: any) => (
             <div key={g.id}>
               <TreeAdjustedContainer
-                onClick={() => onGroupClickHandler(g.id)}
+                onClick={() => onGroupClickHandler(g.id, g.name)}
                 hasarrow={true}
                 items={TreeItemBuilder(g?.details)}
               >
