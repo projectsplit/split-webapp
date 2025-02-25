@@ -201,8 +201,13 @@ export interface CreateGroupProps extends MenuProps {
 export interface SettingsMenuProps {
   menu: Signal<string | null>;
   nodeRef: React.MutableRefObject<null>;
-}
+ }
 
 export interface TopMenuProps {
   title: string;
+}
+
+export interface ToggleSwitchProps {
+  isOn: boolean;
+  onToggle: () => void;
 }
