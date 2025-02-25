@@ -11,9 +11,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getGroup } from "../../api/services/api";
 import Spinner from "../../components/Spinner/Spinner";
 import { UserInfo } from "../../types";
-
-import TopBar from "../../components/TopBar";
 import BottomMainBar from "../../components/BottomMainBar/BottomMainBar";
+import TopBar from "../../components/TopBar";
 
 
 
