@@ -14,10 +14,10 @@ const Navbar: React.FC = () => {
 
   return (
     <NavbarContainer>
-      <TopBar>
+    
         <Logo>🔥🔥</Logo>
         <Button disabled={false}>{!isLoading ? `_${data?.username}` : error ? error : "..."}</Button>
-      </TopBar>
+  
 
       <NavLinks>
         <NavLink href="#">For you</NavLink>
@@ -42,14 +42,14 @@ const NavbarContainer = styled.div`
   width: 100%;
 `;
 
-const TopBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 0.5rem 0; 
-  box-sizing: border-box; 
-`;
+// const TopBar = styled.div`
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   width: 100%;
+//   padding: 0.5rem 0; 
+//   box-sizing: border-box; 
+// `;
 
 const Logo = styled.div`
   font-size: 1.5rem;
