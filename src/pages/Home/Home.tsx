@@ -25,6 +25,8 @@ import { TreeItemBuilder } from "../../components/TreeItemBuilder";
 import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
 import { useOutletContext } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
+import SettingsMenuAnimation from "../../components/MenuAnimations/SettingsMenuAnimation";
+import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -36,6 +38,7 @@ export default function Home() {
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
+  const menu = useSignal<string | null>(null);
 
   const { data, isFetching, isLoading } = useQuery<GroupsAllBalancesResponse>({
     queryKey: ["home"],
@@ -65,7 +68,7 @@ export default function Home() {
       ) : (
         <>
           <div className="fixedTop">
-            <LogoStripe />
+            <LogoStripe menu={menu} />
             <div className="welcomeStripe">
               Welcome, <strong>{userInfo?.username}</strong>
             </div>
@@ -142,6 +145,8 @@ export default function Home() {
           </div>
         </>
       )}
+      <MenuAnimationBackground menu={menu} />
+      <SettingsMenuAnimation menu={menu}  />
     </StyledHomepage>
   );
 }
