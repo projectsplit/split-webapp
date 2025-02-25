@@ -4,8 +4,9 @@ import { useSignal } from "@preact/signals-react";
 // import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 import CreateGroupAnimation from "../../components/MenuAnimations/CreateGroupAnimation";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import BottomMainBar from "../../components/BottomMainBar";
 import TopBar from "../../components/TopBar";
+import BottomMainBar from "../../components/BottomMainBar/BottomMainBar";
+
 
 
 export default function Groups() {
