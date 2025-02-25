@@ -186,6 +186,8 @@ export interface MenuProps {
 }
 
 export interface MenuAnimationBackgroundProps extends MenuProps {}
+export interface SettingsMenuAnimationProps extends MenuProps{}
+export interface LogoStripeProps extends MenuProps{}
 
 export interface CreateGroupAnimationProps extends MenuProps {
   currencyMenu: Signal<string | null>;
@@ -194,6 +196,11 @@ export interface CreateGroupAnimationProps extends MenuProps {
 export interface CreateGroupProps extends MenuProps {
   nodeRef: React.MutableRefObject<null>;
   currencyMenu: Signal<string | null>;
+}
+
+export interface SettingsMenuProps {
+  menu: Signal<string | null>;
+  nodeRef: React.MutableRefObject<null>;
 }
 
 export interface TopMenuProps {

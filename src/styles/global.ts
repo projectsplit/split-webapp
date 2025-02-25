@@ -119,7 +119,7 @@ input {
 }
 
 .leftslide-enter {
-  transform: translateX(100%);
+  transform: translateX(-100%);
 }
 
 .leftslide-enter.leftslide-enter-active {
