@@ -5,7 +5,6 @@ import {
   useParams,
 } from "react-router-dom";
 import { StyledGroup2 } from "./Group2.styled";
-import TopBar from "../../components/TopBar";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { useSignal } from "@preact/signals-react";
 import { useQuery } from "@tanstack/react-query";
@@ -13,6 +12,7 @@ import { getGroup } from "../../api/services/api";
 import Spinner from "../../components/Spinner/Spinner";
 import { UserInfo } from "../../types";
 import BottomMainBar from "../../components/BottomMainBar";
+import TopBar from "../../components/TopBar";
 
 
 
