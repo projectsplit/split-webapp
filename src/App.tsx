@@ -10,6 +10,11 @@ import RedirectToActiveGroups from "./routes/RedirectToActiveGroups";
 import ArchivedGroups from "./pages/Groups/ArchivedGroups/ArchivedGroups";
 import DeletedGroups from "./pages/Groups/DeletedGroups/DeletedGroups";
 import ActiveGroups from "./pages/Groups/ActiveGroups/ActiveGroups";
+import RedirectToExpenses from "./routes/RedirectToExpenses";
+import Group2 from "./pages/Group2/Group2";
+import Expenses from "./pages/Expenses";
+import Transfers from "./pages/Transfers/Transfers";
+import Members from "./pages/Members/Members";
 import UserInvitations from "./pages/UserInvitations";
 
 const App: React.FC = () => {
@@ -32,7 +37,15 @@ const App: React.FC = () => {
             <Route path="deleted" element={<DeletedGroups />} />
             {/* <Route path="*" element={<RedirectToActiveGroups />} /> */}
             {/*when it lands on /groups/active/whatever it will again land on active groups*/}
-          </Route>
+            </Route>
+
+            <Route path="/groups/active/:groupid" element={<Group2 />}>
+              {/* <Route index element={<RedirectToTransactions />} /> */}
+                <Route path="/groups/active/:groupid/expenses" element={<Expenses />} />
+                <Route path="/groups/active/:groupid/transfers" element={<Transfers />} /> 
+                <Route path="/groups/active/:groupid/members" element={<Members />} /> 
+                <Route path="*" element={<RedirectToExpenses />} />
+            </Route>
           <Route path="*" element={<h1>Lost ?</h1>} />
         </Route>
       </Routes>

@@ -1,6 +1,7 @@
 import { CSSProperties } from "react";
 import { ExpenseItem, Frequency, PickerMember, TransferItem } from "./types";
 import { Signal } from "@preact/signals-react";
+import { StringUnitLength } from "luxon";
 
 export interface ExpenseProps {
   expense: ExpenseItem;
@@ -92,7 +93,9 @@ export interface RecommendationMessageProps {
   closeButton: boolean;
   budgetType?: Frequency;
 }
-
+export interface BottomMainMenuProps {
+  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+}
 export interface OverspentMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   overspent: boolean;
@@ -129,7 +132,7 @@ export interface SelectionButtonProps {
 }
 export interface OptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  children: any;
+  username: string;
 }
 
 export interface TreeProps {
@@ -166,10 +169,16 @@ export interface CategoryButtonProps {
   to?: string;
   children: any;
   selected?: boolean;
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   backgroundcoloronselect?: string;
   style?: CSSProperties;
   key?: any;
+}
+
+export interface CategorySelectorProps {
+  categories: { cat1: string; cat2: string; cat3: string };
+  activeCat:string;
+ // onCategoryChange: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface MenuProps {
@@ -187,6 +196,6 @@ export interface CreateGroupProps extends MenuProps {
   currencyMenu: Signal<string | null>;
 }
 
-export interface GroupsMainStripeProps extends MenuProps {}
-
-
+export interface TopMenuProps {
+  title: string;
+}

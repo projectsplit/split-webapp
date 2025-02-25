@@ -6,62 +6,47 @@ export const StyledCategoryButton = styled.div.withConfig({
 })<CategoryButtonProps>`
   display: flex;
   flex-direction: row;
+  font-size:14px;
 
-  .active {
+  .active,.selected {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    padding-left: 0.8rem;
-    padding-right: 0.8rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     cursor: pointer;
     border-radius: 8px;
-    background-color: ${(props) =>
-      props.backgroundcoloronselect
-        ? props.backgroundcoloronselect
-        : ({ theme }) => theme.whiteText};
-    color: ${({ theme }) => theme.body};
-    font-weight: bold;
+    background-color: ${(props) => props.backgroundcoloronselect ? props.backgroundcoloronselect : ({ theme }) => theme.greySelect};
+    color: ${({ theme }) => theme.textActiveColor};
+    font-weight: 600;
     text-decoration: none;
   }
   .inactive {
     padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    padding-left: 0.8rem;
-    padding-right: 0.8rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     cursor: pointer;
     border-radius: 8px;
-    background-color: ${({ theme }) => theme.layer2};
-    color: ${({ theme }) => theme.whiteText};
-    font-weight: bold;
+    /* background-color: ${({ theme }) => theme.layer2}; */
+    color: ${({ theme }) => theme.textInactiveColor};
+    font-weight: 600;
     text-decoration: none;
-    transition: background-color 0.2s ease-in-out;
+    /* transition: background-color 0.2s ease-in-out;
     &:hover {
       background-color: ${({ theme }) => theme.layer1};
-    }
+    } */
   }
-  .selected {
-    padding-left: 0.8rem;
-    padding-right: 0.8rem;
-    cursor: pointer;
-    border-radius: 8px;
-    background-color: ${(props) =>
-    props.backgroundcoloronselect ? props.backgroundcoloronselect : ({ theme }) => theme.whiteText};
-    color: ${({ theme }) => theme.body};
-    font-weight: bold;
-    text-decoration: none;
-  }
+
   .unselected {
-    padding-left: 0.8rem;
-    padding-right: 0.8rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     cursor: pointer;
     border-radius: 8px;
     background-color: ${({ theme }) => theme.layer2};
     color: ${({ theme }) => theme.whiteText};
-    font-weight: bold;
+    font-weight: 600;
     text-decoration: none;
-    transition: background-color 0.2s ease-in-out;
-    &:hover {
-      background-color: ${({ theme }) => theme.layer1};
-    }
+    /* transition: background-color 0.2s ease-in-out; */
+
   }
 
   ${(props) => `

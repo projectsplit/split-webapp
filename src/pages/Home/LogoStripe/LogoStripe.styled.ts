@@ -6,18 +6,12 @@ export const StyledLogoStripe = styled.div`
 
   .logo {
     font-size: 40px;
- 
-  }
-  .mainContainer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 30px;
   }
 
   .QRandUserOptions {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     gap: 14px;
   }

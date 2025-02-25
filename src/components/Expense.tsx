@@ -26,6 +26,11 @@ const Expense: React.FC<ExpenseProps> = ({ expense, timeZoneId }) => {
         <div className='labels'>{expense.labels.map(x => <div key={x} className='label'>{x}</div>)}</div>
         <div>{currency}{expense.amount}&nbsp;(Group)</div>
       </div>
+      <div className="expense-fraction">
+  <span className="share-amount">$25</span>
+  <span className="slash">/</span>
+  <span className="total-amount">$100</span>
+</div>
     </StyledExpense>
   );
 };
@@ -129,4 +134,5 @@ const StyledExpense = styled.div`
     display: flex;
     align-items: center;
   }
+
 `;

@@ -2,18 +2,39 @@ import React, { useEffect, useRef } from "react";
 import { styled } from "styled-components";
 import Expense from "../components/Expense";
 import { DateTime } from 'luxon';
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
-import { Group } from "../types";
-import { getGroupExpenses } from "../api/services/api";
+import { Group, UserInfo } from "../types";
+import { getGroup, getGroupExpenses } from "../api/services/api";
+import { useOutletContext, useParams } from "react-router-dom";
 
-const Expenses: React.FC<ExpensesProps> = ({ group, memberId, timeZoneId }) => {
+const Expenses = () => {
+
+ const timeZoneId = "Europe/Athens"
+ const params = useParams();
+ 
+ const groupId = params?.groupid ;
+ const {userInfo} = useOutletContext<{ userInfo: UserInfo }>();
+//  const userInfo: UserInfo = {
+//   userId: "a0d2aeaf-e949-49c3-86cd-40c04efebb7a",
+//   username: "john_doe",
+// };
+// console.log(x)
+
+
+  const { data: group, isSuccess } = useQuery({
+    queryKey: [groupId],
+    queryFn: () => (groupId ? getGroup(groupId) : Promise.reject("No group ID")),
+    enabled: !!groupId, // Prevents the query from running if groupId is undefined
+  });
+
+  const memberId = group?.members.find((x) => x.userId === userInfo?.userId)?.id!;
 
   const pageSize = 1
-
+  
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ['groupExpenses', group.id, pageSize],
-    queryFn: ({ pageParam: next }) => getGroupExpenses(group.id!, pageSize, next),
+    queryKey: ['groupExpenses', group?.id, pageSize],
+    queryFn: ({ pageParam: next }) => getGroupExpenses(group?.id!, pageSize, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: '',
   });
