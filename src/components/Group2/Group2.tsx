@@ -5,14 +5,16 @@ import {
   useParams,
 } from "react-router-dom";
 import { StyledGroup2 } from "./Group2.styled";
-import TopBar from "../TopBar/TopBar";
+
 import { CategorySelector } from "../CategorySelector/CategorySelector";
-import BottomMainBar from "../BottomMainBar/BottomMainBar";
+
 import { useSignal } from "@preact/signals-react";
 import { useQuery } from "@tanstack/react-query";
 import { getGroup } from "../../api/services/api";
 import Spinner from "../Spinner/Spinner";
 import { UserInfo } from "../../types";
+import BottomMainBar from "../BottomMainBar";
+import TopBar from "../TopBar";
 
 export default function Group2() {
   // const menu = useSignal<string | null>(null);
