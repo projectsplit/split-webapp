@@ -4,8 +4,8 @@ import { useSignal } from "@preact/signals-react";
 // import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 import CreateGroupAnimation from "../../components/MenuAnimations/CreateGroupAnimation";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import TopBar from "../../components/TopBar";
-import BottomMainBar from "../../components/BottomMainBar/BottomMainBar";
+import BottomMainMenu from "../../components/BottomMainMenu/BottomMainMenu";
+import TopMenu from "../../components/TopMenu/TopMenu";
 
 
 
@@ -18,7 +18,7 @@ export default function Groups() {
 
   return (
     <StyledGroups>
-      <TopBar title="Groups" />
+      <TopMenu title="Groups" />
       <CategorySelector
         activeCat={path}
         categories={{
@@ -28,7 +28,7 @@ export default function Groups() {
         }}
       />
       <Outlet />
-      <BottomMainBar onClick={() => (menu.value = "createGroup")} />
+      <BottomMainMenu onClick={() => (menu.value = "createGroup")} />
       {/* <MenuAnimationBackground menu={menu} /> */}
       <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
     </StyledGroups>

@@ -93,7 +93,7 @@ export interface RecommendationMessageProps {
   closeButton: boolean;
   budgetType?: Frequency;
 }
-export interface BottomMainBarProps {
+export interface BottomMainMenuProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 export interface OverspentMessageProps {
@@ -196,6 +196,6 @@ export interface CreateGroupProps extends MenuProps {
   currencyMenu: Signal<string | null>;
 }
 
-export interface TopBarProps {
+export interface TopMenuProps {
   title: string;
 }
