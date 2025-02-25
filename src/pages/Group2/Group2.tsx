@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getGroup } from "../../api/services/api";
 import Spinner from "../../components/Spinner/Spinner";
 import { UserInfo } from "../../types";
-import BottomMainBar from "../../components/BottomMainBar/BottomMainBar";
+// import BottomMainBar from "../../components/BottomMainBar/BottomMainBar";
 import TopBar from "../../components/TopBar";
 
 
@@ -54,7 +54,7 @@ export default function Group2() {
           />
           <Outlet context={{ userInfo }} />
           {/* <BottomMainBar onClick={() => (menu.value = "createGroup")} /> */}
-          <BottomMainBar onClick={() => console.log("hello")} />
+          {/* <BottomMainBar onClick={() => console.log("hello")} /> */}
         </div>
       )}
     </StyledGroup2>
