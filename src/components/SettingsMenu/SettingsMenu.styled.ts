@@ -58,13 +58,15 @@ export const StyledSettingsMenu = styled.div`
       }
     }
   }
-  
+
   .optionsContainer {
     overflow-y: auto;
     flex: 1;
     padding: 0 0.875rem;
     margin-top: 1rem;
+    
     .option {
+      margin-top: 1rem;
       font-weight: 600;
       display: flex;
       flex-direction: row;
@@ -80,6 +82,38 @@ export const StyledSettingsMenu = styled.div`
       .icon {
         font-size: 1.5rem;
       }
+    }
+    .toggleOption{
+      margin-top: 1rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 15px;
+      padding: 1rem;
+      background-color: #2d2d2d;
+      border-radius: 10px;
+      justify-content: space-between;
+      cursor: pointer;
+      .description {
+        flex:1;
+        font-size: 1.1rem;
+      }
+      .icon {
+        font-size: 1.5rem;
+      }
+    }
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: grey;
+    font-size: 0.8rem;
+    .appName,
+    .version {
+      display: flex;
+      justify-content: center;
     }
   }
 `;
