@@ -13,15 +13,16 @@ import Spinner from "../../components/Spinner/Spinner";
 import { UserInfo } from "../../types";
 import BottomMainMenu from "../../components/BottomMainMenu/BottomMainMenu";
 import TopMenu from "../../components/TopMenu/TopMenu";
-
+import SettingsMenuAnimation from "../../components/MenuAnimations/SettingsMenuAnimation";
+import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 
 export default function Group2() {
-  // const menu = useSignal<string | null>(null);
+  const menu = useSignal<string | null>(null);
   // const currencyMenu = useSignal<string | null>(null);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
-  
+
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
@@ -37,11 +38,11 @@ export default function Group2() {
     <StyledGroup2>
       {isFetching ? (
         <div className="spinner">
-        <Spinner/>
+          <Spinner />
         </div>
       ) : (
         <div className="group">
-          <TopMenu title={group?.name || ""} />
+          <TopMenu title={group?.name || ""} menu={menu} />
           <CategorySelector
             activeCat={path}
             categories={{
@@ -51,8 +52,9 @@ export default function Group2() {
             }}
           />
           <Outlet context={{ userInfo }} />
-          {/* <BottomMainBar onClick={() => (menu.value = "createGroup")} /> */}
+          <MenuAnimationBackground menu={menu} />
           <BottomMainMenu onClick={() => console.log("hello")} />
+          <SettingsMenuAnimation menu={menu} />
         </div>
       )}
     </StyledGroup2>

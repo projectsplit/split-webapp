@@ -6,19 +6,18 @@ import CreateGroupAnimation from "../../components/MenuAnimations/CreateGroupAni
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import BottomMainMenu from "../../components/BottomMainMenu/BottomMainMenu";
 import TopMenu from "../../components/TopMenu/TopMenu";
-
-
+import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
+import SettingsMenuAnimation from "../../components/MenuAnimations/SettingsMenuAnimation";
 
 export default function Groups() {
   const menu = useSignal<string | null>(null);
   const currencyMenu = useSignal<string | null>(null);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
-  
 
   return (
     <StyledGroups>
-      <TopMenu title="Groups" />
+      <TopMenu title="Groups" menu={menu} />
       <CategorySelector
         activeCat={path}
         categories={{
@@ -29,7 +28,9 @@ export default function Groups() {
       />
       <Outlet />
       <BottomMainMenu onClick={() => (menu.value = "createGroup")} />
-      {/* <MenuAnimationBackground menu={menu} /> */}
+
+      <MenuAnimationBackground menu={menu} />
+      <SettingsMenuAnimation menu={menu} />
       <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
     </StyledGroups>
   );

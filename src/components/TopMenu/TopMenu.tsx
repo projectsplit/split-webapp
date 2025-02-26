@@ -6,7 +6,7 @@ import QRscanner from "../QRscanner/QRscanner";
 import { StyledTopMenu } from "./TopMenu.styled";
 
 
-export default function TopMenu({ title }: TopMenuProps) {
+export default function TopMenu({ title ,menu}: TopMenuProps) {
   
     const { userInfo } = useOutletContext<{
       userInfo: UserInfo;
@@ -15,7 +15,7 @@ export default function TopMenu({ title }: TopMenuProps) {
     return (
       <StyledTopMenu>
         <div className="useOptionsContainer">
-          <UserOptionsButton username={userInfo?.username}/>
+          <UserOptionsButton username={userInfo?.username} onClick={()=>menu.value="settings"}/>
         </div>
         <div className="titleStripe">
           <div className="title">{title}</div>
