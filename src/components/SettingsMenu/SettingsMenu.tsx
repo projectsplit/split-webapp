@@ -71,6 +71,7 @@ export default function SettingsMenu({ menu, nodeRef }: SettingsMenuProps) {
         >
           <div className={selectedCurrency?.flagClass} />
           <div className="description">Preferred Currency</div>
+          
         </div>
 
         <div className="toggleOption">

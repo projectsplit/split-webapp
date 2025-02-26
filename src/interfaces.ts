@@ -205,6 +205,7 @@ export interface SettingsMenuProps {
 
 export interface TopMenuProps {
   title: string;
+  menu: Signal<string | null>;
 }
 
 export interface ToggleSwitchProps {
