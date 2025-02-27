@@ -3,9 +3,15 @@ import { jwtDecode } from "jwt-decode";
 import config from "../config";
 
 import routes from "../routes";
-import { refreshToken } from "./auth/api";
+import { logOut, refreshToken } from "./auth/api";
+import { Mutex } from "async-mutex";
 
-const isAccessValid = (token: string): boolean => {
+const mutex = new Mutex();
+
+const isAccessTokenValid = (token: string | null): boolean => {
+
+  if (!token) return false
+
   const decodedToken: { exp: number } = jwtDecode(token);
   const currentTime = Math.floor(Date.now() / 1000);
   const tokenRefreshBufferSeconds = 50;
@@ -20,27 +26,39 @@ export const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use(
-  async c => {
-    const existingAccessToken = localStorage.getItem("accessToken");
-
-    if (existingAccessToken && existingAccessToken != "undefined" && isAccessValid(existingAccessToken)) {
-      c.headers["Authorization"] = `Bearer ${existingAccessToken}`;
-      return c;
+  async config => {
+    if (!isAccessTokenValid(getAccessToken())) {
+      if (mutex.isLocked()) {
+        await mutex.waitForUnlock();
+      } else {
+        const release = await mutex.acquire();
+        try {
+          const refreshResponse = await refreshToken();
+          storeAccessToken(refreshResponse.accessToken);
+        }
+        catch (error) {
+          await logOut();
+          clearAccessToken();
+          window.location.href = routes.AUTH;
+          throw new axios.Cancel("Session expired, logging out."); 
+        } finally {
+          release();
+        }
+      }
     }
 
-    const refreshResponse = await refreshToken();
-    localStorage.setItem("accessToken", refreshResponse.accessToken);
-    c.headers["Authorization"] = `Bearer ${refreshResponse.accessToken}`;
-    return c;
+    config.headers["Authorization"] = `Bearer ${getAccessToken()}`;
+    return config;
   },
   error => Promise.reject(error)
 );
 
 apiClient.interceptors.response.use(
   response => response,
-  error => {
+  async error => {
     if (error.response.status === 401) {
-      localStorage.removeItem("accessToken")
+      await logOut();
+      clearAccessToken();
       window.location.href = routes.AUTH;
     }
     return Promise.reject(error);
@@ -54,3 +72,15 @@ export const authApiClient = axios.create({
   //   "ngrok-skip-browser-warning": "ngrok",
   // },
 });
+
+function clearAccessToken() {
+  localStorage.removeItem("accessToken");
+}
+
+function storeAccessToken(accessToken: string) {
+  localStorage.setItem("accessToken", accessToken);
+}
+
+function getAccessToken() {
+  return localStorage.getItem("accessToken");
+}
