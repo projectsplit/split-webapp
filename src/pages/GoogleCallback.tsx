@@ -1,31 +1,30 @@
 import React, { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
-
 import routes from "../routes";
-import { SendGoogleAccessTokenRequest, SendGoogleAccessTokenResponse } from "../types";
+import { SendGoogleCodeRequest, SendGoogleAccessTokenResponse } from "../types";
 import { useNavigate } from "react-router-dom";
 import { sendGoogleAccessToken } from "../api/auth/api";
 
 const GoogleCallback: React.FC = () => {
-  
+
   const navigate = useNavigate();
-  
-  const mutation = useMutation<SendGoogleAccessTokenResponse, Error, SendGoogleAccessTokenRequest>({
+
+  const mutation = useMutation<SendGoogleAccessTokenResponse, Error, SendGoogleCodeRequest>({
     mutationFn: sendGoogleAccessToken,
     onSuccess: (res) => {
       localStorage.setItem("accessToken", res.accessToken)
       navigate(routes.ROOT)
     }
   });
-  
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.hash.substring(1));
-    const googleAccessToken = params.get("access_token");
 
-    if (googleAccessToken && mutation.status === "idle") {
-      mutation.mutate({ googleAccessToken});
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
+    if (code && mutation.status === "idle") {
+      mutation.mutate({ code });
     }
-    
+
   }, [mutation]);
 
   return (

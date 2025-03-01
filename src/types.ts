@@ -11,8 +11,8 @@ export type PasswordSignInResponse = {
   accessToken: string;
 };
 
-export type SendGoogleAccessTokenRequest = {
-  googleAccessToken: string;
+export type SendGoogleCodeRequest = {
+  code: string;
 };
 
 export type SendGoogleAccessTokenResponse = {

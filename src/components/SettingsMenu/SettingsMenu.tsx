@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { StyledSettingsMenu } from "./SettingsMenu.styled";
 import { SettingsMenuProps } from "../../interfaces";
 import { IoClose } from "react-icons/io5";
@@ -14,6 +14,8 @@ import CurrencyOptionsAnimation from "../MenuAnimations/CurrencyOptionsAnimation
 import { useSignal } from "@preact/signals-react";
 import { currencyData } from "../../helpers/openExchangeRates";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
+import { logOut } from "../../api/auth/api";
+import routes from "../../routes";
 
 export default function SettingsMenu({ menu, nodeRef }: SettingsMenuProps) {
   const version = packackageJson.version;
@@ -31,9 +33,10 @@ export default function SettingsMenu({ menu, nodeRef }: SettingsMenuProps) {
   }>();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     localStorage.removeItem("accessToken");
-    navigate("/welcome");
+    await logOut()
+    navigate(routes.AUTH);
   };
 
   const allCurrencies = useSignal<Currency[]>(currencyData);
