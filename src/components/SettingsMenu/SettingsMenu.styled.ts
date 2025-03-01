@@ -77,7 +77,7 @@ export const StyledSettingsMenu = styled.div`
       border-radius: 10px;
       cursor: pointer;
       .description {
-        font-size: 1.1rem;
+        font-size: 1rem;
       }
       .icon {
         font-size: 1.5rem;
@@ -97,7 +97,7 @@ export const StyledSettingsMenu = styled.div`
       cursor: pointer;
       .description {
         flex:1;
-        font-size: 1.1rem;
+        font-size: 1rem;
       }
       .icon {
         font-size: 1.5rem;

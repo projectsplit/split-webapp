@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { CreateExpenseRequest, GeoLocation, Group, PickerMember } from "../types";
+import { CreateExpenseRequest, FormExpense, GeoLocation, Group, PickerMember } from "../types";
 import { useEffect, useState } from "react";
 import MemberPicker from "../components/MemberPicker";
 import Input_old from "../components/Input_old";
@@ -11,8 +11,9 @@ import currency from 'currency.js'
 import LocationPicker from "../components/LocationPicker";
 import LabelPicker from "../components/LabelPicker";
 import { createExpense } from "../api/services/api";
+import { ExpenseFormProps } from "../interfaces";
 
-const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, setIsOpen }) => {
+const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, menu }) => {
 
   const [participants, setParticipants] = useState<PickerMember[]>(createParticipantPickerArray(group, expense));
   const [participantsError, setParticipantsError] = useState<string>("")
@@ -39,7 +40,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, s
     mutationFn: createExpense,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["groupExpenses"] });
-      setIsOpen(false)
+      menu.value=null;
     },
     onError: (error) => {
       console.error("Log out failed:", error.message);
@@ -119,7 +120,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, s
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
       <LocationPicker location={location} setLocation={setLocation} />
       <DateTime selectedDateTime={expenseTime} setSelectedDateTime={setExpenseTime} timeZoneId={timeZoneId} />
-      <Button className='submit-button' onClick={() => setIsOpen(false)}>Close</Button>
+      <Button className='submit-button' onClick={() => menu.value=null}>Close</Button>
       <Button className='submit-button' onClick={submitExpense}>Submit</Button>
     </StyledExpenseForm>
   );
@@ -152,8 +153,10 @@ const createPayerPickerArray = (group: Group, expense: FormExpense | null): Pick
 };
 
 const StyledExpenseForm = styled.div`
+  position: fixed;
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.backgroundcolor};
+  width: 100%;
   height: 100%;
   z-index: 1;
   display: flex;
@@ -183,40 +186,6 @@ const StyledExpenseForm = styled.div`
   }
 `;
 
-export interface ExpenseFormProps {
-  group: Group
-  expense: FormExpense | null
-  timeZoneId: string
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
 
-export interface Label {
-  id: string,
-  text: string,
-  color: string,
-}
 
-export interface FormExpense {
-  id: string,
-  groupId: string,
-  amount: string,
-  currency: string,
-  description: string,
-  payers: Payer[],
-  participants: Participant[],
-  expenseTime: Date,
-  labels: string[],
-  creationTime: Date,
-  lastUpdateTime: Date,
-  location: GeoLocation | undefined
-}
 
-export type Participant = {
-  memberId: string,
-  participationAmount: string
-}
-
-export type Payer = {
-  memberId: string,
-  paymentAmount: string
-}

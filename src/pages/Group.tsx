@@ -76,7 +76,7 @@ const Group: React.FC = () => {
       </div>
       <hr className="line" />
       <div className="tabs-container">
-        {isExpenseFormOpen && <ExpenseForm group={group} expense={null} timeZoneId={timeZoneId} setIsOpen={setIsExpenseFormOpen} />}
+        {/* {isExpenseFormOpen && <ExpenseForm group={group} expense={null} timeZoneId={timeZoneId} setIsOpen={setIsExpenseFormOpen} />} */}
         {!isExpenseFormOpen && tabs[activeTab].content}
       </div>
     </StyledGroup>

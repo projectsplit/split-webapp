@@ -1,5 +1,12 @@
 import { CSSProperties } from "react";
-import { ExpenseItem, Frequency, PickerMember, TransferItem } from "./types";
+import {
+  ExpenseItem,
+  FormExpense,
+  Frequency,
+  Group,
+  PickerMember,
+  TransferItem,
+} from "./types";
 import { Signal } from "@preact/signals-react";
 import { StringUnitLength } from "luxon";
 
@@ -177,8 +184,8 @@ export interface CategoryButtonProps {
 
 export interface CategorySelectorProps {
   categories: { cat1: string; cat2: string; cat3: string };
-  activeCat:string;
- // onCategoryChange: React.Dispatch<React.SetStateAction<string>>;
+  activeCat: string;
+  // onCategoryChange: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface MenuProps {
@@ -186,8 +193,8 @@ export interface MenuProps {
 }
 
 export interface MenuAnimationBackgroundProps extends MenuProps {}
-export interface SettingsMenuAnimationProps extends MenuProps{}
-export interface LogoStripeProps extends MenuProps{}
+export interface SettingsMenuAnimationProps extends MenuProps {}
+export interface LogoStripeProps extends MenuProps {}
 
 export interface CreateGroupAnimationProps extends MenuProps {
   currencyMenu: Signal<string | null>;
@@ -201,7 +208,7 @@ export interface CreateGroupProps extends MenuProps {
 export interface SettingsMenuProps {
   menu: Signal<string | null>;
   nodeRef: React.MutableRefObject<null>;
- }
+}
 
 export interface TopMenuProps {
   title: string;
@@ -211,4 +218,24 @@ export interface TopMenuProps {
 export interface ToggleSwitchProps {
   isOn: boolean;
   onToggle: () => void;
+}
+
+export interface NewExpenseAnimationProps {
+  group: Group;
+  expense: FormExpense | null;
+  timeZoneId: string;
+  menu: Signal<string | null>;
+}
+
+export interface ExpenseFormProps {
+  group: Group;
+  expense: FormExpense | null;
+  timeZoneId: string;
+  menu: Signal<string | null>;
+}
+
+export interface Label {
+  id: string;
+  text: string;
+  color: string;
 }
