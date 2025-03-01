@@ -15,6 +15,7 @@ import BottomMainMenu from "../../components/BottomMainMenu/BottomMainMenu";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import SettingsMenuAnimation from "../../components/MenuAnimations/SettingsMenuAnimation";
 import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
+import NewExpenseAnimation from "../../components/MenuAnimations/NewExpenseAnimation";
 
 export default function Group2() {
   const menu = useSignal<string | null>(null);
@@ -27,12 +28,20 @@ export default function Group2() {
     userInfo: UserInfo;
   }>();
 
-  const { data: group, isFetching } = useQuery({
+  const {
+    data: group,
+    isFetching,
+    isSuccess,
+  } = useQuery({
     queryKey: [groupid],
     queryFn: () =>
       groupid ? getGroup(groupid) : Promise.reject("No group ID"),
     enabled: !!groupid,
   });
+
+  // if (!groupid || !isSuccess) {
+  //   return <div>Error</div>;
+  // }
 
   return (
     <StyledGroup2>
@@ -52,9 +61,18 @@ export default function Group2() {
             }}
           />
           <Outlet context={{ userInfo }} />
+          
           <MenuAnimationBackground menu={menu} />
-          <BottomMainMenu onClick={() => console.log("hello")} />
+          {group && (
+            <NewExpenseAnimation
+              expense={null}
+              group={group}
+              timeZoneId="Europe/Athens"
+              menu={menu}
+            />
+          )}
           <SettingsMenuAnimation menu={menu} />
+          <BottomMainMenu onClick={() => (menu.value = "newExpense")} />
         </div>
       )}
     </StyledGroup2>

@@ -249,3 +249,27 @@ export type MostRecentGroupDetailsResponse = {
   name:string;
   details:Details;
 }
+
+export type FormExpense ={
+  id: string,
+  groupId: string,
+  amount: string,
+  currency: string,
+  description: string,
+  payers: Payer[],
+  participants: Participant[],
+  expenseTime: Date,
+  labels: string[],
+  creationTime: Date,
+  lastUpdateTime: Date,
+  location: GeoLocation | undefined
+}
+export type Participant = {
+  memberId: string,
+  participationAmount: string
+}
+
+export type Payer = {
+  memberId: string,
+  paymentAmount: string
+}
