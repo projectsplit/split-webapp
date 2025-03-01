@@ -1,9 +1,9 @@
 
-import { PasswordSignInRequest, SendGoogleAccessTokenRequest } from "../../types";
+import { PasswordSignInRequest, RefreshTokenResponse, SendGoogleCodeRequest } from "../../types";
 import { authApiClient } from "../apiClients";
 
-export const sendGoogleAccessToken = async (request: SendGoogleAccessTokenRequest) => {
-  const response = await authApiClient.post<SendGoogleAccessTokenRequest, any>(
+export const sendGoogleAccessToken = async (request: SendGoogleCodeRequest) => {
+  const response = await authApiClient.post<SendGoogleCodeRequest, any>(
     "/auth/external/google/token",
     request
   );
@@ -26,7 +26,7 @@ export const logOut = async () => {
   return response.data;
 };
 
-export const refreshToken = async () => {
+export const refreshToken = async (): Promise<RefreshTokenResponse> => {
   const response = await authApiClient.post(
     "/auth/refresh",
     {}
