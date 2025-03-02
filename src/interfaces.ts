@@ -58,7 +58,7 @@ export interface SubmitButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: any;
-  submitbuttonisactive?: boolean;
+  disabled?: boolean;
   color?:string;
   backgroundColor?:string;
 }
