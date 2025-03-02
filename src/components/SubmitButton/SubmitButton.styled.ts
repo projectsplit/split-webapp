@@ -8,12 +8,12 @@ export const StyledSubmitButton = styled.button<SubmitButtonProps>`
   user-select: none;
   padding: 12px 16px;
   cursor: ${({ disabled }) =>
-    disabled === false ? "not-allowed" : "pointer"};
+    disabled === true ? "not-allowed" : "pointer"};
   color: ${({ theme, color }) => (color ? color : theme.text)};
   background-color: ${({ backgroundColor, theme, disabled }) =>
     backgroundColor
       ? backgroundColor
-      : disabled !== false
+      : disabled !== true
       ? theme.buttonActive
       : theme.buttonNotActive};
   display: flex;
@@ -23,7 +23,7 @@ export const StyledSubmitButton = styled.button<SubmitButtonProps>`
 
   &:hover {
     opacity: ${({ disabled }) =>
-      disabled === false ? 1 : 0.75};
+      disabled === true ? 1 : 0.75};
   }
 
   &:disabled {
