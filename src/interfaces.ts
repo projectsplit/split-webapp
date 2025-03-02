@@ -59,6 +59,8 @@ export interface SubmitButtonProps
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: any;
   submitbuttonisactive?: boolean;
+  color?:string;
+  backgroundColor?:string;
 }
 
 export interface InputProps
@@ -239,3 +241,7 @@ export interface Label {
   text: string;
   color: string;
 }
+
+export interface GroupQuickActionsAnimationProps extends MenuProps {}
+
+export interface GroupQuickActionsMenuprops extends MenuProps {}
