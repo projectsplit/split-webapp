@@ -16,6 +16,7 @@ import TopMenu from "../../components/TopMenu/TopMenu";
 import SettingsMenuAnimation from "../../components/MenuAnimations/SettingsMenuAnimation";
 import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 import NewExpenseAnimation from "../../components/MenuAnimations/NewExpenseAnimation";
+import GroupQuickActionsAnimation from "../../components/MenuAnimations/MenuWithOptionsToAddAnimation";
 
 export default function Group2() {
   const menu = useSignal<string | null>(null);
@@ -72,7 +73,8 @@ export default function Group2() {
             />
           )}
           <SettingsMenuAnimation menu={menu} />
-          <BottomMainMenu onClick={() => (menu.value = "newExpense")} />
+          <GroupQuickActionsAnimation menu={menu}/>
+          <BottomMainMenu onClick={() => (menu.value = "menuWithOptions")} />
         </div>
       )}
     </StyledGroup2>
