@@ -88,7 +88,7 @@ export default function CreateGroup({
       </div>
       <div className="submitButton">
         <SubmitButton
-          disabled={groupName.trim() === "" ? false : true}
+          disabled={groupName.trim() === "" ? true : false}
           onClick={onClickHandler}
         >
           Create Group
