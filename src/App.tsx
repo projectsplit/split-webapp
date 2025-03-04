@@ -12,7 +12,7 @@ import DeletedGroups from "./pages/Groups/DeletedGroups/DeletedGroups";
 import ActiveGroups from "./pages/Groups/ActiveGroups/ActiveGroups";
 import RedirectToExpenses from "./routes/RedirectToExpenses";
 import Group2 from "./pages/Group2/Group2";
-import Expenses from "./pages/Expenses";
+import Expenses from "./pages/Expenses/Expenses";
 import Transfers from "./pages/Transfers/Transfers";
 import Members from "./pages/Members/Members";
 import UserInvitations from "./pages/UserInvitations";
