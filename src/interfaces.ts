@@ -245,3 +245,11 @@ export interface Label {
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
 
 export interface GroupQuickActionsMenuprops extends MenuProps {}
+
+export interface BarsWithLegendsProps {
+  bar1Total:number;
+  bar2Total:number;
+  currency:string;
+  bar1Legend:string;
+  bar2Legend:string;
+}

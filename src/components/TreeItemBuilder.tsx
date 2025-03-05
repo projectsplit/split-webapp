@@ -8,7 +8,11 @@ export const TreeItemBuilder = (
 
   if (!details) return [];
 
-  const allSettled = Object.keys(details).length === 0;
+  const filteredDetails = Object.fromEntries(
+    Object.entries(details).filter(([_, amount]) => amount !== 0)
+  );
+
+  const allSettled = Object.keys(filteredDetails).length === 0;
 
   if (allSettled) {
     return [
@@ -21,7 +25,7 @@ export const TreeItemBuilder = (
     ];
   }
 
-  return Object.entries(details).map(([currency, amount], index) => {
+  return Object.entries(filteredDetails).map(([currency, amount], index) => {
     if (amount > 0) {
       return (
         <div className="groupsInfo" key={index}>

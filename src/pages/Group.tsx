@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import Expenses from "./Expenses";
+import Expenses from "./Expenses/Expenses";
 import { useOutletContext, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { UserInfo } from "../types";
