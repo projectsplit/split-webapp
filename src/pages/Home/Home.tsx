@@ -59,7 +59,7 @@ export default function Home() {
 
   // isFetching:mostRecentGroupDataIsFetching, isLoading:mostRecentGroupDataIsLoading
   // const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
-
+console.log(mostRecentGroupData)
   return (
     <StyledHomepage>
       {isFetching ? (
@@ -89,7 +89,7 @@ export default function Home() {
                 <div className="mostRecent">
                   <div className="mostRecentMsg">Most recent</div>
                   <TreeAdjustedContainer
-                    onClick={() => console.log("goto group")}
+                    onClick={() =>  navigate(`/groups/active/${mostRecentGroupData.id}/expenses`)}
                     hasarrow={true}
                     items={TreeItemBuilder(mostRecentGroupData?.details)}
                   >

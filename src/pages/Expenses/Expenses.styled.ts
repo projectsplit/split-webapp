@@ -10,6 +10,24 @@ export const StyledExpenses = styled.div`
   height: 100%;
   gap: 16px;
 
+  .noData {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex:1;
+    .msg {
+      opacity: 0.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .icon {
+      display: flex;
+      font-size: 100px;
+      opacity: 0.4;
+    }
+  }
   .barsWithLegends {
     display: flex;
     flex-direction: column;
@@ -18,7 +36,7 @@ export const StyledExpenses = styled.div`
     .barsAndAmounts {
       display: flex;
       flex-direction: column;
-      
+
       .barAndAmount {
         display: flex;
         flex-direction: row;
@@ -27,7 +45,7 @@ export const StyledExpenses = styled.div`
         margin-top: 10px;
         .bar1 {
           font-size: 1rem;
-         
+
           height: 0.5rem;
           background-color: #5183ee;
           border-radius: 10px;
@@ -35,7 +53,7 @@ export const StyledExpenses = styled.div`
         }
         .bar2 {
           font-size: 1rem;
-         
+
           height: 0.5rem;
           background-color: #e151ee;
           border-radius: 10px;

@@ -19,7 +19,7 @@ export const StyledBarWithLegends = styled.div`
         font-size: 1rem;
 
         height: 0.5rem;
-        background-color: #5183ee;
+ 
         border-radius: 10px;
         margin-right: 10px;
       }
@@ -27,11 +27,12 @@ export const StyledBarWithLegends = styled.div`
         font-size: 1rem;
 
         height: 0.5rem;
-        background-color: #e151ee;
+        
         border-radius: 10px;
         margin-right: 10px;
       }
       .amount {
+        font-weight: 600;
       }
     }
   }
@@ -57,12 +58,7 @@ export const StyledBarWithLegends = styled.div`
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .legendUser {
-        background-color: #e151ee;
-      }
-      .legendGroup {
-        background-color: #5183ee;
-      }
+
     }
   }
 `;

@@ -252,4 +252,12 @@ export interface BarsWithLegendsProps {
   currency:string;
   bar1Legend:string;
   bar2Legend:string;
+  bar1Color:string;
+  bar2Color:string;
+}
+
+export interface TransfersProps {
+  group: Group;
+  memberId: string;
+  timeZoneId: string;
 }

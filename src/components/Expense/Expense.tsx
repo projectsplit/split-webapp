@@ -1,10 +1,7 @@
 import React from "react";
-
 import { DateTime } from "luxon";
-import { HiMapPin } from "react-icons/hi2";
 import { ExpenseProps } from "../../interfaces";
 import { StyledExpense } from "./Expense.styled";
-import { IoLocationOutline } from "react-icons/io5";
 import { MdLocationOn } from "react-icons/md";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
