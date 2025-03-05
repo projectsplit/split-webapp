@@ -16,6 +16,7 @@ import Expenses from "./pages/Expenses/Expenses";
 import Transfers from "./pages/Transfers/Transfers";
 import Members from "./pages/Members/Members";
 import UserInvitations from "./pages/UserInvitations";
+import SearchUsersToInvite from "./pages/SearchUsersToInvite";
 
 const App: React.FC = () => {
   
@@ -29,6 +30,7 @@ const App: React.FC = () => {
         <Route element={<Protected />}>
           <Route path={routes.ROOT} element={<Home />} />
           <Route path={routes.USER_INVITATIONS} element={<UserInvitations timeZoneId={timeZoneId} />} />
+          <Route path={"/lala"} element={<SearchUsersToInvite/>} />
           <Route path="/groups" element={<Groups />}>
             <Route index element={<RedirectToActiveGroups />} />
             {/*when the /groups rout is matched, it will render whatever is in the RedirectToActiveGroups*/}
