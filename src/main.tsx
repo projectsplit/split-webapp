@@ -5,6 +5,7 @@ import App from "./App";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./theme";
 import GlobalStyles from "./styles/global";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({

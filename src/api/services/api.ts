@@ -35,6 +35,7 @@ export const getGroupTransfers = async (
   pageSize: number,
   next?: string
 ): Promise<GetGroupTransfersResponse> => {
+  console.log("RAN")
   const params = { groupId, pageSize, next };
   const response = await apiClient.get< void, AxiosResponse<GetGroupTransfersResponse>>("/transfers", { params });
   return response.data;

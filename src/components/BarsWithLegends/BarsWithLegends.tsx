@@ -8,6 +8,8 @@ export default function BarsWithLegends({
   currency,
   bar1Legend,
   bar2Legend,
+  bar1Color,
+  bar2Color
 }: BarsWithLegendsProps) {
   
   const scalingFactor = 0.05;
@@ -22,11 +24,11 @@ export default function BarsWithLegends({
       {" "}
       <div className="legends">
         <div className="grouping">
-          <div className="legendGroup" />
+          <div className="legendGroup" style={{backgroundColor:bar1Color}}/>
           <div className="descr">{bar1Legend}</div>
         </div>
         <div className="grouping">
-          <div className="legendUser" />
+          <div className="legendUser" style={{backgroundColor:bar2Color}}/>
           <div className="descr">{bar2Legend}</div>
         </div>
       </div>
@@ -37,6 +39,7 @@ export default function BarsWithLegends({
             style={{
               width: `${bar1WidthPercentage * 100}%`,
               transition: "width 0.5s ease",
+              backgroundColor:bar1Color
             }}
           />
           <div className="amount">
@@ -49,6 +52,7 @@ export default function BarsWithLegends({
             style={{
               width: `${bar2WidthPercentage * 100}%`,
               transition: "width 0.5s ease",
+              backgroundColor:bar2Color
             }}
           />
           <div className="amount">

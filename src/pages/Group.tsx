@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { UserInfo } from "../types";
 import { PiMagnifyingGlassBold, PiPlusBold } from "react-icons/pi";
 import ExpenseForm from "./ExpenseForm";
-import Transfers from "./Transfers";
+import Transfers from "./Transfers/Transfers";
 import { getGroup } from "../api/services/api";
 
 const Group: React.FC = () => {
@@ -46,7 +46,7 @@ const Group: React.FC = () => {
 
   const tabs = [
     // { name: "Expenses", content: <Expenses group={group} memberId={memberId} timeZoneId={timeZoneId} /> },
-    { name: "Transfers", content: <Transfers group={group} memberId={memberId} timeZoneId={timeZoneId} /> },
+    // { name: "Transfers", content: <Transfers group={group} memberId={memberId} timeZoneId={timeZoneId} /> },
     {
       name: "Settle", content: <Page style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{}}>PLACEHOLDER</div>

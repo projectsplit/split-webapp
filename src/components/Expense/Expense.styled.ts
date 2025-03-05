@@ -21,6 +21,7 @@ export const StyledExpense = styled.div`
     .time {
       font-size: 14px;
       color: #777777;
+      font-weight: 800;
     }
   }
 
@@ -32,7 +33,7 @@ export const StyledExpense = styled.div`
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      justify-content: end;
+      justify-content:flex-end;
       .descr {
         font-size: 1.2rem;
         white-space: nowrap;
@@ -60,6 +61,7 @@ export const StyledExpense = styled.div`
         flex-direction: row;
         gap: 5px;
         margin-bottom: 6px;
+        font-weight: 600;
       }
     }
   }

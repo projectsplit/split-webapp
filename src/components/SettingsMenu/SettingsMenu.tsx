@@ -16,6 +16,7 @@ import { currencyData } from "../../helpers/openExchangeRates";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import { logOut } from "../../api/auth/api";
 import routes from "../../routes";
+import { useMutation } from "@tanstack/react-query";
 
 export default function SettingsMenu({ menu, nodeRef }: SettingsMenuProps) {
   const version = packackageJson.version;
@@ -33,9 +34,19 @@ export default function SettingsMenu({ menu, nodeRef }: SettingsMenuProps) {
   }>();
   const navigate = useNavigate();
 
+  const logOutMutation = useMutation<any, Error, void>({
+    mutationFn: logOut,
+    onSuccess: () => {
+      localStorage.removeItem("accessToken");
+      navigate(routes.AUTH)
+    },
+    onError: (error) => {
+      console.error("Log out failed:", error.message);
+    },
+  });
+  
   const handleLogout = async () => {
-    localStorage.removeItem("accessToken");
-    await logOut()
+    logOutMutation.mutate()
     navigate(routes.AUTH);
   };
 
