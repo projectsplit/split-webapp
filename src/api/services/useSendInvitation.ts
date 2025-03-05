@@ -3,11 +3,11 @@ import { apiClient } from "../apiClients";
 import { useMutation } from "@tanstack/react-query";
 
 export const useSendInvitation = () => {
-  
-  return useMutation<any, Error, { receiverId: string; groupId: string; guestId: string | null }>({
+
+  return useMutation<any, Error, { receiverId: string; groupId: string; guestId: string | null, onSuccess: () => void }>({
     mutationFn: ({ receiverId, groupId, guestId }) => sendInvitation({ receiverId, groupId, guestId }),
-    onSuccess: () => {
-      console.log("Invitation sent")
+    onSuccess: (_, variables) => {
+      variables.onSuccess()
     },
     onError: (error) => {
       console.error("Failed to send invitation", error);
