@@ -1,25 +1,25 @@
 import React from "react";
 import { StyledInvitation } from "./StyledInvitation";
-import Button from "../Button";
 import { useAcceptInvitation } from "../../api/services/useAcceptInvitation";
 import { useDeclineInvitation } from "../../api/services/useDeclineInvitation";
+import MyButton from "../MyButton/MyButton";
 
 const Invitation: React.FC<InvitationProps> = ({ invitation }) => {
 
-  const { mutate: acceptInvitation } = useAcceptInvitation();
-  const { mutate: declineInvitation } = useDeclineInvitation();
+  const accept = useAcceptInvitation();
+  const decline = useDeclineInvitation();
 
   return (
     <StyledInvitation>
       <div className="message">
         <span>You have been invited to join </span>
-        <span className="highlighted">{invitation.groupId}</span>
+        <span className="highlighted">{invitation.groupName}</span>
         {!!invitation.guestId && <span> to replace</span>}
         {!!invitation.guestId && <span className="highlighted"> {invitation.guestId}</span>}
       </div>
       <div className="actions">
-        <Button onClick={() => declineInvitation(invitation.id)} className="decline">Decline</Button>
-        <Button onClick={() => acceptInvitation(invitation.id)} className="accept">Accept</Button>
+        <MyButton onClick={() => accept.mutate(invitation.id)} isLoading={accept.isPending} hasFailed={accept.isError} variant="secondary">Decline</MyButton>
+        <MyButton onClick={() => decline.mutate(invitation.id)} isLoading={decline.isPending} hasFailed={decline.isError}>Accept</MyButton>
       </div>
     </StyledInvitation>
   );
@@ -28,16 +28,14 @@ const Invitation: React.FC<InvitationProps> = ({ invitation }) => {
 export default Invitation;
 
 type InvitationProps = {
-  invitation: InvitationItem;
+  invitation: {
+    id: string;
+    created: string;
+    senderId: string;
+    receiverId: string;
+    groupId: string;
+    groupName: string;
+    guestId: string | null;
+  };
   timeZoneId: string;
-};
-
-type InvitationItem = {
-  id: string;
-  created: string;
-  updated: string;
-  senderId: string;
-  receiverId: string;
-  groupId: string;
-  guestId: string;
 };

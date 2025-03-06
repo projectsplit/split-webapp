@@ -9,6 +9,27 @@ export const StyledUserInvitations = styled.div`
   overflow-y: auto;
   height: 100%;
   gap: 16px;
+  
+  .noData {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex:1;
+    
+    .msg {
+      opacity: 0.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .icon {
+      display: flex;
+      font-size: 100px;
+      opacity: 0.4;
+    }
+  }
     
   .invitations {
     display: flex;

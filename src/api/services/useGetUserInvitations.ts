@@ -27,9 +27,9 @@ type GetUserInvitationsResponse = {
 type GetUserInvitationsResponseItem = {
   id: string;
   created: string;
-  updated: string;
   senderId: string;
   receiverId: string;
   groupId: string;
-  guestId: string;
+  groupName: string;
+  guestId: string | null;
 };
