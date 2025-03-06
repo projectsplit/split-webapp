@@ -18,8 +18,8 @@ const Invitation: React.FC<InvitationProps> = ({ invitation }) => {
         {!!invitation.guestId && <span className="highlighted"> {invitation.guestId}</span>}
       </div>
       <div className="actions">
-        <MyButton onClick={() => accept.mutate(invitation.id)} isLoading={accept.isPending} hasFailed={accept.isError} variant="secondary">Decline</MyButton>
-        <MyButton onClick={() => decline.mutate(invitation.id)} isLoading={decline.isPending} hasFailed={decline.isError}>Accept</MyButton>
+        <MyButton onClick={() => decline.mutate(invitation.id)} isLoading={decline.isPending} hasFailed={decline.isError}>Decline</MyButton>
+        <MyButton onClick={() => accept.mutate(invitation.id)} isLoading={accept.isPending} hasFailed={accept.isError} variant="secondary">Accept</MyButton>
       </div>
     </StyledInvitation>
   );
