@@ -7,11 +7,12 @@ import useDebounce from "../../hooks/useDebounce";
 import { useSendInvitation } from "../../api/services/useSendInvitation";
 import MyButton from "../../components/MyButton/MyButton";
 import { useRevokeInvitation } from "../../api/services/useRevokeInvitation";
+import { useParams } from "react-router-dom";
 
 const SearchUsersToInvite: React.FC = () => {
 
-  const groupId = "79e52188-1783-4c95-a5c4-0daa3316061f"
-  // const groupId = "c1cd2e95-0d1e-4cc7-ba23-9340a5e8e9ea"
+  const params = useParams();
+  const groupId = params.groupid!;
   const pageSize = 3
 
   const [keyword, setKeyword] = useState("")
