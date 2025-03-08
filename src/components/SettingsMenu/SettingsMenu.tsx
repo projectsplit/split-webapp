@@ -16,13 +16,14 @@ import { currencyData } from "../../helpers/openExchangeRates";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import { logOut } from "../../api/auth/api";
 import routes from "../../routes";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function SettingsMenu({ menu, nodeRef }: SettingsMenuProps) {
   const version = packackageJson.version;
   const currency = useSignal<string>(localStorage.getItem("currency") || "USD");
   const currencyMenu = useSignal<string | null>(null);
-
+  const queryClient = useQueryClient();
+  
   const handldeCurrencyOptionsClick = (curr: string) => {
     currency.value = curr;
     localStorage.setItem("currency", curr);
@@ -40,6 +41,8 @@ export default function SettingsMenu({ menu, nodeRef }: SettingsMenuProps) {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("mostRecentGroup");
       localStorage.removeItem("currency");
+      queryClient.invalidateQueries();
+      queryClient.removeQueries();
       navigate(routes.AUTH)
     },
     onError: (error) => {
