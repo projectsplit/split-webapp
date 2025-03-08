@@ -30,7 +30,6 @@ const App: React.FC = () => {
         <Route element={<Protected />}>
           <Route path={routes.ROOT} element={<Home />} />
           <Route path={routes.USER_INVITATIONS} element={<UserInvitations timeZoneId={timeZoneId} />} />
-          <Route path={"/lala"} element={<SearchUsersToInvite/>} />
           <Route path="/groups" element={<Groups />}>
             <Route index element={<RedirectToActiveGroups />} />
             {/*when the /groups rout is matched, it will render whatever is in the RedirectToActiveGroups*/}
@@ -46,6 +45,7 @@ const App: React.FC = () => {
                 <Route path="/groups/active/:groupid/expenses" element={<Expenses />} />
                 <Route path="/groups/active/:groupid/transfers" element={<Transfers />} /> 
                 <Route path="/groups/active/:groupid/members" element={<Members />} /> 
+                <Route path={routes.GROUP_INVITE} element={<SearchUsersToInvite />} /> 
                 <Route path="*" element={<RedirectToExpenses />} />
             </Route>
           <Route path="*" element={<h1>Lost ?</h1>} />

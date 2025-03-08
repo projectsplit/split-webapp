@@ -3,7 +3,8 @@ const routes = {
   ABOUT: "/about",
   AUTH: "/welcome",
   GOOGLE_REDIRECT: "/google/redirect",
-  USER_INVITATIONS: "/invitations"
+  USER_INVITATIONS: "/invitations",
+  GROUP_INVITE: "/groups/active/:groupid/invite"
 };
 
 export default routes;
