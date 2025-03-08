@@ -8,7 +8,7 @@ export const StyledSeparator = styled.div`
     right: 0;
     z-index: 2;
     height: 1px; 
-    background-color: rgb(54,54,54); 
+    background-color: ${({theme})=>theme.lightBorder}; 
     
   }
 `

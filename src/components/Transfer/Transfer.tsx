@@ -10,7 +10,7 @@ const Transfer: React.FC<TransferProps> = ({ transfer, timeZoneId }) => {
       ? "#0CA0A0"
       : transfer.receiverName === "You"
       ? "#D79244"
-      : undefined;
+      : "rgb(54,54,54)";
 
       
   return (

@@ -39,7 +39,7 @@ export default function Group2() {
       groupid ? getGroup(groupid) : Promise.reject("No group ID"),
     enabled: !!groupid,
   });
-
+  
   // if (!groupid || !isSuccess) {
   //   return <div>Error</div>;
   // }

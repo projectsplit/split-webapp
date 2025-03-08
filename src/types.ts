@@ -1,3 +1,5 @@
+import currency from "currency.js";
+
 export type RefreshTokenResponse = {
   accessToken: string;
 };
@@ -57,6 +59,15 @@ export type GetGroupExpensesResponse = {
 export type GetGroupTransfersResponse = {
   transfers: TransferResponseItem[];
   next: string | null;
+};
+
+export type GroupedTransaction = {
+  totalAmount: currency;
+  currency: string;
+  id: string; 
+  isOwed: boolean; 
+  isUser:boolean;
+  name:string;
 };
 
 export type ExpenseResponseItem = {
@@ -127,6 +138,11 @@ export type Member = {
   userId: string;
   joined: Date;
 };
+
+export type TruncatedMember={
+  id:string;
+  name:string;
+}
 
 export type Guest = {
   id: string;
@@ -272,4 +288,15 @@ export type Participant = {
 export type Payer = {
   memberId: string,
   paymentAmount: string
+}
+export type Transfer = {
+  description:string;
+  amount:string;
+  currency:string;
+  receiverId:string;
+  senderId:string
+}
+export type CreateTransfersRequest = {
+  groupId:string;
+  transfers:Transfer[]
 }

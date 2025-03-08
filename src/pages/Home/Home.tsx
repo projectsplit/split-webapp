@@ -59,7 +59,7 @@ export default function Home() {
 
   // isFetching:mostRecentGroupDataIsFetching, isLoading:mostRecentGroupDataIsLoading
   // const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
-console.log(mostRecentGroupData)
+
   return (
     <StyledHomepage>
       {isFetching ? (

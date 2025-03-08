@@ -22,10 +22,11 @@ const Spinner = styled.span`
 const MyButton = ({
   children,
   variant = 'primary',
-  disabled = false,
-  isLoading = false,
-  hasFailed = false,
+  disabled ,
+  isLoading ,
+  hasFailed ,
   onClick,
+  primaryBackgroundColor,
   ...props
 }: MyButtonProps) => {
   return (
@@ -54,4 +55,5 @@ interface MyButtonProps {
   hasFailed?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: React.ReactNode;
+  primaryBackgroundColor?:string;
 }

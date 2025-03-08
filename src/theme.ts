@@ -18,6 +18,9 @@ export const theme = {
   lightColor: "#f5f5f5",
   pinkish: "#f91880",
   pink:"#E151EE",
+  lightPink:"#835687",
+  ciel:"#5183ee",
+  lightCiel:"#374971",
   redish: "#fc4c4c",
   yellowish: "##fcc504",
   yellow: "#FFEE34",
@@ -36,6 +39,7 @@ export const theme = {
   buttonActive: "#f0f0f0",
   buttonNotActive: "black",
   buttonColor: "#3d477a",
+  lightBorder:"rgb(54,54,54)"
 };
 
 export type ThemeType = typeof theme;
