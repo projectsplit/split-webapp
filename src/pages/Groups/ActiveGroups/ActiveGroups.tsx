@@ -20,7 +20,7 @@ export default function ActiveGroups() {
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
       initialPageParam: "",
     });
-
+    
   const groups = data?.pages.flatMap((p) => p.groups);
 
   useSentinel(fetchNextPage, hasNextPage, isFetchingNextPage);

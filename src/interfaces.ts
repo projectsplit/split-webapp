@@ -11,6 +11,7 @@ import {
 } from "./types";
 import { Signal } from "@preact/signals-react";
 import { StringUnitLength } from "luxon";
+import exp from "constants";
 
 export interface ExpenseProps {
   expense: ExpenseItem;
@@ -350,3 +351,7 @@ export interface SettleUpOptionsProps {
   menu: Signal<string | null>;
   members: TruncatedMember[];
 }
+
+export interface AddNewUserAnimationProps extends MenuProps {}
+
+export interface SearchUsersToInviteProps extends MenuProps {}

@@ -14,7 +14,7 @@ export default function GroupQuickActionsMenu({
   
   const { groupid } = useParams<{ groupid: string }>();
   const params = useParams();
-  console.log(params)
+
   
   return (
     <StyledGroupQuickActionsMenu>
@@ -31,7 +31,7 @@ export default function GroupQuickActionsMenu({
             <div className="descr">New Transfer</div>
           </div>
         </div>
-        <div className="new" onClick={() => navigate(generatePath(routes.GROUP_INVITE, { groupid: groupid }))}>
+        <div className="new" onClick={() => (menu.value = "newUser")}>
           <div className="wrapper">
             <IoPersonAddOutline className="icon" />
             <div className="descr">Add New User</div>

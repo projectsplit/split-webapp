@@ -16,7 +16,7 @@ import Expenses from "./pages/Expenses/Expenses";
 import Transfers from "./pages/Transfers/Transfers";
 import Members from "./pages/Members/Members";
 import UserInvitations from "./pages/UserInvitations";
-import SearchUsersToInvite from "./pages/SearchUsersToInvite";
+
 
 const App: React.FC = () => {
   
@@ -45,7 +45,6 @@ const App: React.FC = () => {
                 <Route path="/groups/active/:groupid/expenses" element={<Expenses />} />
                 <Route path="/groups/active/:groupid/transfers" element={<Transfers />} /> 
                 <Route path="/groups/active/:groupid/members" element={<Members />} /> 
-                <Route path={routes.GROUP_INVITE} element={<SearchUsersToInvite />} /> 
                 <Route path="*" element={<RedirectToExpenses />} />
             </Route>
           <Route path="*" element={<h1>Lost ?</h1>} />
