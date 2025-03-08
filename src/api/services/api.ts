@@ -14,6 +14,7 @@ import {
   GroupRequest,
   MostRecentGroupDetailsResponse,
 } from "../../types";
+import { DebtsResponse } from "../../interfaces";
 
 export const getGroupExpenses = async (
   groupId: string,
@@ -35,9 +36,11 @@ export const getGroupTransfers = async (
   pageSize: number,
   next?: string
 ): Promise<GetGroupTransfersResponse> => {
-  console.log("RAN")
   const params = { groupId, pageSize, next };
-  const response = await apiClient.get< void, AxiosResponse<GetGroupTransfersResponse>>("/transfers", { params });
+  const response = await apiClient.get<
+    void,
+    AxiosResponse<GetGroupTransfersResponse>
+  >("/transfers", { params });
   return response.data;
 };
 
@@ -45,8 +48,11 @@ export const getGroupsTotalAmounts = async (
   pageSize: number,
   next: string
 ): Promise<GroupsTotalAmountsResponse> => {
-  const params = {  pageSize, next };
-  const response = await apiClient.get<GroupsTotalAmountsResponse>("/groups/details",{params});
+  const params = { pageSize, next };
+  const response = await apiClient.get<GroupsTotalAmountsResponse>(
+    "/groups/details",
+    { params }
+  );
   return response.data;
 };
 
@@ -62,6 +68,14 @@ export const getGroup = async (groupId: string): Promise<Group> => {
     `/groups/${groupId}`
   );
   return response.data;
+};
+
+export const getGroupDebts = async (
+  groupId: string
+): Promise<DebtsResponse[]> => {
+  const params = { groupId };
+  const response = await apiClient.get<{debts:DebtsResponse[]}>("/debts", { params });
+  return response.data.debts;
 };
 
 export const getGroups = async (
@@ -108,7 +122,6 @@ export const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
   return response.data;
 };
 
-
 export const getGroupsAllBalances =
   async (): Promise<GroupsAllBalancesResponse> => {
     const response = await apiClient.get<GroupsAllBalancesResponse>(
@@ -117,8 +130,9 @@ export const getGroupsAllBalances =
     return response.data;
   };
 
-
-export const getMostRecentGroup = async (groupId: string): Promise<MostRecentGroupDetailsResponse> => {
+export const getMostRecentGroup = async (
+  groupId: string
+): Promise<MostRecentGroupDetailsResponse> => {
   const response = await apiClient.get<MostRecentGroupDetailsResponse>(
     `/groups/${groupId}/details`
   );

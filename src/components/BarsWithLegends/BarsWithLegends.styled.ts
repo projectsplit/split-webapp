@@ -5,6 +5,7 @@ export const StyledBarWithLegends = styled.div`
   flex-direction: column;
   /* align-self: flex-start; */
   padding: 0.7rem;
+  font-size: 14px;
   .barsAndAmounts {
     display: flex;
     flex-direction: column;
@@ -32,6 +33,7 @@ export const StyledBarWithLegends = styled.div`
         margin-right: 10px;
       }
       .amount {
+        font-size: 14px;
         font-weight: 600;
       }
     }

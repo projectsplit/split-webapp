@@ -4,7 +4,7 @@ import { SubmitButtonProps } from "../../interfaces";
 export const StyledSubmitButton = styled.button<SubmitButtonProps>`
   box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 4px;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   user-select: none;
   padding: 12px 16px;
   cursor: ${({ disabled }) =>

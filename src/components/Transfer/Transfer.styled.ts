@@ -1,13 +1,15 @@
 import styled from "styled-components";
 
-export const StyledTransfer = styled.div<{ outlineColor?: string }>`
+export const StyledTransfer = styled.div.withConfig({
+  shouldForwardProp: (prop) => !"outlineColor".includes(prop),
+})<{ outlineColor?: string }>`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
   width: 100%;
   padding-left: 10px;
   padding-right: 10px;
-
+  font-size: 14px;
   background-color: ${({ theme }) => theme.layer2};
   ${({ outlineColor }) => outlineColor && `border: 1px solid ${outlineColor};`}
 

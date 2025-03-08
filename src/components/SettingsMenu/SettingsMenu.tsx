@@ -38,6 +38,8 @@ export default function SettingsMenu({ menu, nodeRef }: SettingsMenuProps) {
     mutationFn: logOut,
     onSuccess: () => {
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("mostRecentGroup");
+      localStorage.removeItem("currency");
       navigate(routes.AUTH)
     },
     onError: (error) => {

@@ -10,6 +10,8 @@ export const StyledExpense = styled.div`
   padding: 10px;
   background-color: ${({ theme }) => theme.layer2};
   gap: 1.3rem;
+  box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`}; 
+
   .topRow {
     display: flex;
     flex-direction: row;
@@ -58,6 +60,7 @@ export const StyledExpense = styled.div`
       .userShare,
       .groupTotal {
         display: flex;
+        font-size: 14px;
         flex-direction: row;
         gap: 5px;
         margin-bottom: 6px;

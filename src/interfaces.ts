@@ -4,8 +4,10 @@ import {
   FormExpense,
   Frequency,
   Group,
+  GroupedTransaction,
   PickerMember,
   TransferItem,
+  TruncatedMember,
 } from "./types";
 import { Signal } from "@preact/signals-react";
 import { StringUnitLength } from "luxon";
@@ -260,4 +262,91 @@ export interface TransfersProps {
   group: Group;
   memberId: string;
   timeZoneId: string;
+}
+
+export interface DebtsResponse {
+  debtor:string;
+  creditor:string;
+  amount:number;
+  currency:string;
+}
+
+export interface MemberProps {
+  pendingTransactions: DebtsResponse[];
+  groupedTransactions: GroupedTransaction[];
+  memberId: string;
+  name: string;
+  isUser: boolean;
+  menu: Signal<string | null>;
+  memberIdSelectedToSettleUp: Signal<string>;
+  members: TruncatedMember[];
+  isGuest:boolean;
+}
+
+export interface RenderScenariosProps {
+  memberTransactions: GroupedTransaction[];
+  pendingTransactions: DebtsResponse[];
+  isUser: boolean;
+  memberId: string;
+  name: string;
+  showTree: boolean;
+  treeItems: React.JSX.Element[];
+  members:TruncatedMember[];
+}
+export interface RenderSettledProps {
+  name: string;
+  isUser: boolean;
+}
+
+export interface RenderBothScenariosProps {
+  memberTransactions: GroupedTransaction[];
+  pendingTransactions: DebtsResponse[];
+  isUser: boolean;
+  memberId: string;
+  name: string;
+  doNotshowTreeWhenMemberIsOwed: boolean;
+  doNotshowTreeWhenMemberOwes: boolean;
+  memberIsOwedItems: React.JSX.Element[];
+  memberOwesItems: React.JSX.Element[];
+  members:TruncatedMember[];
+}
+
+
+export interface MemberDetailedDescriptionProps {
+  pendingTransactions: DebtsResponse[];
+  memberTransactions: GroupedTransaction[];
+  memberId: string;
+  isUser: boolean;
+  isOwed: boolean;
+  name: string;
+  members:TruncatedMember[]
+}
+
+export interface DescriptionAndTreeProps {
+  memberTransactions: GroupedTransaction[];
+  pendingTransactions: DebtsResponse[];
+  isUser: boolean;
+  memberId: string;
+  name: string;
+  isOwed: boolean;
+  showTree: boolean;
+  treeItems: React.JSX.Element[];
+  members:TruncatedMember[]
+}
+
+export interface SettleUpButtonProps {
+  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+}
+
+export interface SettleUpAnimationProps {
+  menu: Signal<string | null>;
+  pendingTransactions: DebtsResponse[];
+  memberIdSelectedToSettleUp: Signal<string>;
+  members: TruncatedMember[];
+}
+export interface SettleUpOptionsProps {
+  pendingTransactions: DebtsResponse[];
+  memberIdSelectedToSettleUp: Signal<string>;
+  menu: Signal<string | null>;
+  members: TruncatedMember[];
 }
