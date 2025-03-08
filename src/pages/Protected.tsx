@@ -9,6 +9,7 @@ const Protected: React.FC = () => {
     queryFn: getMe,
   });
 
+  console.log("me",userInfo )
   const isUserAuthenticated = () => {
     return !!localStorage.getItem("accessToken");
   };

@@ -17,6 +17,7 @@ import SettingsMenuAnimation from "../../components/MenuAnimations/SettingsMenuA
 import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 import NewExpenseAnimation from "../../components/MenuAnimations/NewExpenseAnimation";
 import GroupQuickActionsAnimation from "../../components/MenuAnimations/MenuWithOptionsToAddAnimation";
+import AddNewUserAnimation from "../../components/MenuAnimations/AddNewUserAnimation";
 
 export default function Group2() {
   const menu = useSignal<string | null>(null);
@@ -39,7 +40,7 @@ export default function Group2() {
       groupid ? getGroup(groupid) : Promise.reject("No group ID"),
     enabled: !!groupid,
   });
-  
+
   // if (!groupid || !isSuccess) {
   //   return <div>Error</div>;
   // }
@@ -62,7 +63,7 @@ export default function Group2() {
             }}
           />
           <Outlet context={{ userInfo }} />
-          
+
           <MenuAnimationBackground menu={menu} />
           {group && (
             <NewExpenseAnimation
@@ -72,8 +73,10 @@ export default function Group2() {
               menu={menu}
             />
           )}
+          {group && <AddNewUserAnimation menu={menu} />}
           <SettingsMenuAnimation menu={menu} />
-          <GroupQuickActionsAnimation menu={menu}/>
+          <GroupQuickActionsAnimation menu={menu} />
+
           <BottomMainMenu onClick={() => (menu.value = "menuWithOptions")} />
         </div>
       )}
