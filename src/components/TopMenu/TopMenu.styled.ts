@@ -7,7 +7,8 @@ export const StyledTopMenu = styled.div`
   justify-content: space-between;
   align-items: center;
   padding:14px;
-  margin-bottom: 1rem;
+
+  
 
   .titleStripe {
     display: flex;
@@ -19,11 +20,6 @@ export const StyledTopMenu = styled.div`
     }
   }
 
-  .useOptionsContainer {
-    position: relative;
-    cursor: pointer;
-    display: inline-block;
-  }
 
 
 `;

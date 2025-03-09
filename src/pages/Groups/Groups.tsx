@@ -1,23 +1,27 @@
 import { StyledGroups } from "./Groups.styled";
-import { Outlet, useLocation } from "react-router-dom";
-import { useSignal } from "@preact/signals-react";
+import { Outlet, useLocation, useOutletContext } from "react-router-dom";
+import { Signal, useSignal } from "@preact/signals-react";
 // import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 import CreateGroupAnimation from "../../components/MenuAnimations/CreateGroupAnimation";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import BottomMainMenu from "../../components/BottomMainMenu/BottomMainMenu";
-import TopMenu from "../../components/TopMenu/TopMenu";
-import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
-import SettingsMenuAnimation from "../../components/MenuAnimations/SettingsMenuAnimation";
+import { useEffect } from "react";
 
 export default function Groups() {
   const menu = useSignal<string | null>(null);
   const currencyMenu = useSignal<string | null>(null);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
+  const { topMenuTitle } = useOutletContext<{
+    topMenuTitle: Signal<string>;
+  }>();
+
+  useEffect(() => {
+    topMenuTitle.value = "Groups";
+  }, []);
 
   return (
     <StyledGroups>
-      <TopMenu title="Groups" menu={menu} />
       <CategorySelector
         activeCat={path}
         categories={{
@@ -28,9 +32,6 @@ export default function Groups() {
       />
       <Outlet />
       <BottomMainMenu onClick={() => (menu.value = "createGroup")} />
-
-      <MenuAnimationBackground menu={menu} />
-      <SettingsMenuAnimation menu={menu} />
       <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
     </StyledGroups>
   );

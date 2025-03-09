@@ -2,7 +2,9 @@ import styled from 'styled-components'
 import { InputProps } from '../../interfaces'
 
 
-export const StyledInput = styled.input<InputProps>`
+export const StyledInput = styled.input.withConfig({
+  shouldForwardProp: (prop) => prop !== "backgroundcolor",
+})<InputProps>`
   border-radius: 10px;
   padding: 0.8rem;
   outline: none;

@@ -11,14 +11,14 @@ export const StyledHomepage = styled.div`
     overflow: hidden;
 
     .fixedTop {
-      padding-bottom: 5px;
+     
       padding: 14px;
     }
 
     .welcomeStripe {
       
       font-size: 15px;
-      padding: 2.5rem 0 2rem 0;
+      padding: 1rem 0 1rem 0;
       white-space: initial;
     }
 

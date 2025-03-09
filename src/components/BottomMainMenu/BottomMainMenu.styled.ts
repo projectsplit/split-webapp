@@ -1,7 +1,9 @@
 import styled from "styled-components";
 
 export const StyledBottomMainMenu = styled.div`
+  
   padding: 0.625rem;
+
   .bottomMainBar {
     display: flex;
     flex-direction: row;
