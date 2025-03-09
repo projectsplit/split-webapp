@@ -39,7 +39,7 @@ export const StyledTransfer = styled.div.withConfig({
       }
     }
     .time {
-      padding: 10px;
+      padding-top:10px;
       font-size: 14px;
       font-weight: 800;
       color: #777777;

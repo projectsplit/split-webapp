@@ -92,7 +92,7 @@ export interface TreeAdjustedContainerProps {
   items: (string | JSX.Element)[];
 }
 
-export interface QRscannerProps {
+export interface NotificationsBellProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 

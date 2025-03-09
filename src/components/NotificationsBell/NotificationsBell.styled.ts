@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { QRscannerProps } from "../../interfaces";
+import { NotificationsBellProps } from "../../interfaces";
 
-export const StyledQRscanner = styled.div<QRscannerProps>`
+export const StyledNotificationsBell = styled.div<NotificationsBellProps>`
     display: flex;
     flex-direction: row;
     align-items: center;

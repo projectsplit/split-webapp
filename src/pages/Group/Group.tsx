@@ -4,7 +4,7 @@ import {
   useOutletContext,
   useParams,
 } from "react-router-dom";
-import { StyledGroup2 } from "./Group2.styled";
+import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
 import { useQuery } from "@tanstack/react-query";
@@ -21,7 +21,7 @@ import AddNewUserAnimation from "../../components/MenuAnimations/AddNewUserAnima
 import useGroup from "../../hooks/useGroup";
 import { useEffect } from "react";
 
-export default function Group2() {
+export default function Group() {
   const menu = useSignal<string | null>(null);
   // const currencyMenu = useSignal<string | null>(null);
   const location = useLocation();
@@ -33,7 +33,7 @@ export default function Group2() {
     topMenuTitle: Signal<string>;
   }>();
 
-  const { data: group, isFetching, isSuccess } = useGroup(groupid);
+  const { data: group, isFetching } = useGroup(groupid);
 
 
  useEffect(()=>{
@@ -45,7 +45,7 @@ export default function Group2() {
   // }
 
   return (
-    <StyledGroup2>
+    <StyledGroup>
       {isFetching ? (
         <div className="spinner">
           <Spinner />
@@ -72,13 +72,13 @@ export default function Group2() {
             />
           )}
           {group && <AddNewUserAnimation menu={menu} />}
-          <GroupQuickActionsAnimation menu={menu} />
+          {group &&<GroupQuickActionsAnimation menu={menu} />}
           <div className="bottomMenu">
             {" "}
             <BottomMainMenu onClick={() => (menu.value = "menuWithOptions")} />
           </div>
         </div>
       )}
-    </StyledGroup2>
+    </StyledGroup>
   );
 }

@@ -163,7 +163,7 @@ const StyledExpenseForm = styled.div`
   flex-direction: column;
   padding: 24px 16px;
   gap: 20px;
-
+  z-index: 10;
   .amount-input-wrapper {
     position: relative;
     width: 100%;
