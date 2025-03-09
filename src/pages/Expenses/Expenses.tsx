@@ -1,31 +1,20 @@
 import { useRef } from "react";
 import Expense from "../../components/Expense/Expense";
 import { DateTime } from "luxon";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-
-import { UserInfo } from "../../types";
-import { getGroup, getGroupExpenses } from "../../api/services/api";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { Group, UserInfo } from "../../types";
+import { getGroupExpenses } from "../../api/services/api";
+import { useOutletContext } from "react-router-dom";
 import Spinner from "../../components/Spinner/Spinner";
 import useSentinel from "../../hooks/useSentinel";
 import { StyledExpenses } from "./Expenses.styled";
-
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { CiReceipt } from "react-icons/ci";
 
 const Expenses = () => {
   const timeZoneId = "Europe/Athens";
-  const params = useParams();
 
-  const groupId = params?.groupid;
-  const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
-
-  const { data: group } = useQuery({
-    queryKey: [groupId],
-    queryFn: () =>
-      groupId ? getGroup(groupId) : Promise.reject("No group ID"),
-    enabled: !!groupId, // Prevents the query from running if groupId is undefined
-  });
+  const { userInfo, group } = useOutletContext<{ userInfo: UserInfo, group: Group }>();
 
   const memberId = group?.members.find((x) => x.userId === userInfo?.userId)
     ?.id!;

@@ -1,10 +1,9 @@
 import { StyledMembers } from "./Members.styled";
 import useDebts from "../../hooks/useDebts";
 import { useOutletContext, useParams } from "react-router-dom";
-import useGroup from "../../hooks/useGroup";
 import { useMemo } from "react";
 import { groupTransactions } from "../../helpers/groupTransactions";
-import { Member, TruncatedMember, UserInfo } from "../../types";
+import { Group, Member, TruncatedMember, UserInfo } from "../../types";
 import { useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 import MemberFC from "./Member/MemberFC";
@@ -15,9 +14,8 @@ export default function Members() {
   const memberIdSelectedToSettleUp = useSignal<string>("");
   const menu = useSignal<string | null>(null);
   const { groupid } = useParams();
-  const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
+  const { userInfo, group } = useOutletContext<{ userInfo: UserInfo, group: Group }>();
   const { data: debts, isFetching } = useDebts(groupid);
-  const { data: group } = useGroup(groupid);
 
   if (!userInfo || !group) {
     return <Spinner/>;
