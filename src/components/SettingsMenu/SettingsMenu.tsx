@@ -18,7 +18,7 @@ import { logOut } from "../../api/auth/api";
 import routes from "../../routes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export default function SettingsMenu({ menu, nodeRef }: SettingsMenuProps) {
+export default function SettingsMenu({ menu, nodeRef,username }: SettingsMenuProps) {
   const version = packackageJson.version;
   const currency = useSignal<string>(localStorage.getItem("currency") || "USD");
   const currencyMenu = useSignal<string | null>(null);
@@ -30,9 +30,6 @@ export default function SettingsMenu({ menu, nodeRef }: SettingsMenuProps) {
     currencyMenu.value = null;
   };
 
-  const { userInfo } = useOutletContext<{
-    userInfo: UserInfo;
-  }>();
   const navigate = useNavigate();
 
   const logOutMutation = useMutation<any, Error, void>({
@@ -73,7 +70,7 @@ export default function SettingsMenu({ menu, nodeRef }: SettingsMenuProps) {
       <div className="headerWrapper">
         <div className="header">
           <StyledUserOptionsButton>{"CK"}</StyledUserOptionsButton>
-          <div className="name">{userInfo?.username}</div>
+          <div className="name">{username}</div>
           <div
             className="closeButtonContainer"
             onClick={() => (menu.value = null)}

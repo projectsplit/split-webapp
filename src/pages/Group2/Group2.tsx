@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { StyledGroup2 } from "./Group2.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import { useSignal } from "@preact/signals-react";
+import { Signal, useSignal } from "@preact/signals-react";
 import { useQuery } from "@tanstack/react-query";
 import { getGroup } from "../../api/services/api";
 import Spinner from "../../components/Spinner/Spinner";
@@ -18,6 +18,8 @@ import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimati
 import NewExpenseAnimation from "../../components/MenuAnimations/NewExpenseAnimation";
 import GroupQuickActionsAnimation from "../../components/MenuAnimations/MenuWithOptionsToAddAnimation";
 import AddNewUserAnimation from "../../components/MenuAnimations/AddNewUserAnimation";
+import useGroup from "../../hooks/useGroup";
+import { useEffect } from "react";
 
 export default function Group2() {
   const menu = useSignal<string | null>(null);
@@ -26,20 +28,17 @@ export default function Group2() {
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
 
-  const { userInfo } = useOutletContext<{
+  const { userInfo,topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
+    topMenuTitle: Signal<string>;
   }>();
 
-  const {
-    data: group,
-    isFetching,
-    isSuccess,
-  } = useQuery({
-    queryKey: [groupid],
-    queryFn: () =>
-      groupid ? getGroup(groupid) : Promise.reject("No group ID"),
-    enabled: !!groupid,
-  });
+  const { data: group, isFetching, isSuccess } = useGroup(groupid);
+
+
+ useEffect(()=>{
+   topMenuTitle.value = group?.name||""
+ },[group])
 
   // if (!groupid || !isSuccess) {
   //   return <div>Error</div>;
@@ -53,7 +52,6 @@ export default function Group2() {
         </div>
       ) : (
         <div className="group">
-          <TopMenu title={group?.name || ""} menu={menu} />
           <CategorySelector
             activeCat={path}
             categories={{
@@ -74,10 +72,11 @@ export default function Group2() {
             />
           )}
           {group && <AddNewUserAnimation menu={menu} />}
-          <SettingsMenuAnimation menu={menu} />
           <GroupQuickActionsAnimation menu={menu} />
-
-          <BottomMainMenu onClick={() => (menu.value = "menuWithOptions")} />
+          <div className="bottomMenu">
+            {" "}
+            <BottomMainMenu onClick={() => (menu.value = "menuWithOptions")} />
+          </div>
         </div>
       )}
     </StyledGroup2>

@@ -6,7 +6,8 @@ import SettingsMenu from "../SettingsMenu/SettingsMenu";
 
 
 export default function SettingsMenuAnimation({
-    menu
+    menu,
+    username
   }: SettingsMenuAnimationProps) {
      const nodeRef = useRef(null);
     return (
@@ -17,7 +18,7 @@ export default function SettingsMenuAnimation({
         unmountOnExit
         nodeRef = {nodeRef}
       >
-        <SettingsMenu menu={menu} nodeRef = {nodeRef}/>
+        <SettingsMenu menu={menu} username={username} nodeRef = {nodeRef}/>
       </CSSTransition>
     );
   }

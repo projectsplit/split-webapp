@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyledHomepage } from "./Home.Styled";
 import LogoStripe from "./LogoStripe/LogoStripe";
 import { BsBarChartFill } from "react-icons/bs";
@@ -24,7 +24,7 @@ import useBudgetInfo from "../../hooks/useBudgetInfo";
 import { TreeItemBuilder } from "../../components/TreeItemBuilder";
 import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
 import { useOutletContext } from "react-router-dom";
-import { useSignal } from "@preact/signals-react";
+import { Signal, useSignal } from "@preact/signals-react";
 import SettingsMenuAnimation from "../../components/MenuAnimations/SettingsMenuAnimation";
 import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 
@@ -35,8 +35,9 @@ export default function Home() {
   );
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
-  const { userInfo } = useOutletContext<{
+  const { userInfo,topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
+    topMenuTitle: Signal<string>;
   }>();
   const menu = useSignal<string | null>(null);
 
@@ -57,6 +58,10 @@ export default function Home() {
     refetchOnMount: false,
   });
 
+  useEffect(()=>{
+    topMenuTitle.value = ""
+  },[])
+
   // isFetching:mostRecentGroupDataIsFetching, isLoading:mostRecentGroupDataIsLoading
   // const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
 
@@ -68,7 +73,6 @@ export default function Home() {
       ) : (
         <>
           <div className="fixedTop">
-            <LogoStripe menu={menu} />
             <div className="welcomeStripe">
               Welcome, <strong>{userInfo?.username}</strong>
             </div>
@@ -89,7 +93,11 @@ export default function Home() {
                 <div className="mostRecent">
                   <div className="mostRecentMsg">Most recent</div>
                   <TreeAdjustedContainer
-                    onClick={() =>  navigate(`/groups/active/${mostRecentGroupData.id}/expenses`)}
+                    onClick={() =>
+                      navigate(
+                        `/groups/active/${mostRecentGroupData.id}/expenses`
+                      )
+                    }
                     hasarrow={true}
                     items={TreeItemBuilder(mostRecentGroupData?.details)}
                   >
@@ -145,8 +153,8 @@ export default function Home() {
           </div>
         </>
       )}
-      <MenuAnimationBackground menu={menu} />
-      <SettingsMenuAnimation menu={menu}  />
+      {/* <MenuAnimationBackground menu={menu} />
+      <SettingsMenuAnimation menu={menu}  /> */}
     </StyledHomepage>
   );
 }

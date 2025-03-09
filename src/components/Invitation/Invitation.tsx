@@ -1,5 +1,5 @@
 import React from "react";
-import { StyledInvitation } from "./StyledInvitation";
+import { StyledInvitation } from "./Invitation.styled";
 import { useAcceptInvitation } from "../../api/services/useAcceptInvitation";
 import { useDeclineInvitation } from "../../api/services/useDeclineInvitation";
 import MyButton from "../MyButton/MyButton";
@@ -18,8 +18,8 @@ const Invitation: React.FC<InvitationProps> = ({ invitation }) => {
         {!!invitation.guestId && <span className="highlighted"> {invitation.guestId}</span>}
       </div>
       <div className="actions">
-        <MyButton onClick={() => decline.mutate(invitation.id)} isLoading={decline.isPending} hasFailed={decline.isError}>Decline</MyButton>
-        <MyButton onClick={() => accept.mutate(invitation.id)} isLoading={accept.isPending} hasFailed={accept.isError} variant="secondary">Accept</MyButton>
+      <MyButton onClick={() => accept.mutate(invitation.id)} isLoading={accept.isPending} hasFailed={accept.isError} >Accept</MyButton>
+      <MyButton onClick={() => decline.mutate(invitation.id)} isLoading={decline.isPending} hasFailed={decline.isError} variant="secondary">Decline</MyButton>
       </div>
     </StyledInvitation>
   );

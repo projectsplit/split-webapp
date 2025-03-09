@@ -3,7 +3,6 @@ import styled from "styled-components";
 export const StyledGroups = styled.div`
   overflow: auto;
   box-sizing: border-box;
-  position: fixed;
   width: 100%;
   height: 100%;
   display: flex;

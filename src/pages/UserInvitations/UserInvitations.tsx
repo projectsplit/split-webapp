@@ -4,17 +4,18 @@ import { useGetUserInvitations } from "../../api/services/useGetUserInvitations"
 import Invitation from "../../components/Invitation";
 import Sentinel from "../../components/Sentinel";
 import { TbMoodSadSquint } from "react-icons/tb";
+import Spinner from "../../components/Spinner/Spinner";
 
 const UserInvitations: React.FC<UserInvitationsProps> = ({ timeZoneId }) => {
 
   const pageSize = 10
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetUserInvitations(pageSize)
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage,isFetching } = useGetUserInvitations(pageSize)
 
   const userInvitations = data?.pages.flatMap(p => p.invitations)
 
-  if (!userInvitations) {
-    return <div>No ivitations !!!</div>
+  if (!userInvitations ||isFetching) {
+    return <Spinner/>
   }
 
   if (userInvitations?.length === 0) {

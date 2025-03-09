@@ -8,6 +8,7 @@ import {
   PickerMember,
   TransferItem,
   TruncatedMember,
+  UserInfo,
 } from "./types";
 import { Signal } from "@preact/signals-react";
 import { StringUnitLength } from "luxon";
@@ -198,7 +199,7 @@ export interface MenuProps {
 }
 
 export interface MenuAnimationBackgroundProps extends MenuProps {}
-export interface SettingsMenuAnimationProps extends MenuProps {}
+export interface SettingsMenuAnimationProps extends MenuProps {username:string}
 export interface LogoStripeProps extends MenuProps {}
 
 export interface CreateGroupAnimationProps extends MenuProps {
@@ -213,11 +214,13 @@ export interface CreateGroupProps extends MenuProps {
 export interface SettingsMenuProps {
   menu: Signal<string | null>;
   nodeRef: React.MutableRefObject<null>;
+  username:string;
 }
 
 export interface TopMenuProps {
   title: string;
   menu: Signal<string | null>;
+  username:string;
 }
 
 export interface ToggleSwitchProps {

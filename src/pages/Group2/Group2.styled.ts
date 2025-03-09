@@ -14,9 +14,12 @@ export const StyledGroup2 = styled.div`
     height: 100%;
     display: flex;
     flex-direction: column;
+  }
 
-    .bottom-bar {
-      margin-top: auto;
-    }
+  .bottom-bar {
+    margin-bottom: auto;
+  }
+  .bottomMenu {
+    padding-bottom: 3.85rem;
   }
 `;

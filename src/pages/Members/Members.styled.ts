@@ -7,4 +7,5 @@ export const StyledMembers = styled.div`
   overflow: auto;
   gap: 10px;
   padding: 14px;
+  height: 100%;
 `;
