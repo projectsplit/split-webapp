@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledGroup2 = styled.div`
+export const StyledGroup = styled.div`
   .spinner {
     display: flex;
     flex-direction: column;

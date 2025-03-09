@@ -4,7 +4,7 @@ import {
   useOutletContext,
   useParams,
 } from "react-router-dom";
-import { StyledGroup2 } from "./Group2.styled";
+import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
 import Spinner from "../../components/Spinner/Spinner";
@@ -17,7 +17,7 @@ import AddNewUserAnimation from "../../components/MenuAnimations/AddNewUserAnima
 import useGroup from "../../hooks/useGroup";
 import { useEffect } from "react";
 
-export default function Group2() {
+export default function Group() {
   const menu = useSignal<string | null>(null);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
@@ -35,7 +35,7 @@ export default function Group2() {
   }, [group])
 
   return (
-    <StyledGroup2>
+    <StyledGroup>
       {isFetching ? (
         <div className="spinner">
           <Spinner />
@@ -62,13 +62,13 @@ export default function Group2() {
             />
           )}
           {group && <AddNewUserAnimation menu={menu} />}
-          <GroupQuickActionsAnimation menu={menu} />
+          {group &&<GroupQuickActionsAnimation menu={menu} />}
           <div className="bottomMenu">
             {" "}
             <BottomMainMenu onClick={() => (menu.value = "menuWithOptions")} />
           </div>
         </div>
       )}
-    </StyledGroup2>
+    </StyledGroup>
   );
 }

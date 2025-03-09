@@ -55,7 +55,7 @@ const Expenses = () => {
       ) : (
         <>
           <BarsWithLegends
-            bar1Legend="Group "
+            bar1Legend="Group"
             bar2Legend="Your Share"
             bar1Total={totalExpense || 0}
             bar2Total={userExpense || 0}

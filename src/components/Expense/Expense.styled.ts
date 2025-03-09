@@ -3,7 +3,6 @@ import styled from "styled-components";
 export const StyledExpense = styled.div`
   display: flex;
   flex-direction: column;
-
   border-radius: 10px;
   width: 100%;
   padding: 10px;
@@ -20,6 +19,7 @@ export const StyledExpense = styled.div`
       color: ${({ theme }) => theme.yellow};
     }
     .time {
+      
       font-size: 14px;
       color: #777777;
       font-weight: 800;
