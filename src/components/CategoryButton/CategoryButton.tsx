@@ -17,7 +17,6 @@ export const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>
             replace
             className={({ isActive }) => (isActive ? "active" : "inactive")}
             onClick={onClick}
-            replace
           >
             {children}
           </NavLink>
