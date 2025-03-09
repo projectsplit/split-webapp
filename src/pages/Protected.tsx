@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { getMe } from "../api/services/api";
 import TopMenu from "../components/TopMenu/TopMenu";
 import { useSignal } from "@preact/signals-react";
@@ -8,17 +8,16 @@ import SettingsMenuAnimation from "../components/MenuAnimations/SettingsMenuAnim
 import { StyledProtected } from "./Protected.styled";
 
 const Protected: React.FC = () => {
+  const location = useLocation()
+
   const { data: userInfo } = useQuery({
     queryKey: ["getMe"],
     queryFn: getMe,
+    enabled: isUserAuthenticated()
   });
   const topMenuTitle = useSignal<string>("");
 
   const menu = useSignal<string | null>(null);
-
-  const isUserAuthenticated = () => {
-    return !!localStorage.getItem("accessToken");
-  };
 
   return isUserAuthenticated() ? (
     <StyledProtected>
@@ -32,8 +31,12 @@ const Protected: React.FC = () => {
       <SettingsMenuAnimation menu={menu} username={userInfo?.username || ""} />
     </StyledProtected>
   ) : (
-    <Navigate to="/welcome" />
+    <Navigate to={`/welcome?redirect=${encodeURIComponent(location.pathname)}`} replace />
   );
 };
 
 export default Protected;
+
+const isUserAuthenticated = () => {
+  return !!localStorage.getItem("accessToken");
+};

@@ -7,13 +7,9 @@ import {
 import { StyledGroup2 } from "./Group2.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
-import { useQuery } from "@tanstack/react-query";
-import { getGroup } from "../../api/services/api";
 import Spinner from "../../components/Spinner/Spinner";
 import { UserInfo } from "../../types";
 import BottomMainMenu from "../../components/BottomMainMenu/BottomMainMenu";
-import TopMenu from "../../components/TopMenu/TopMenu";
-import SettingsMenuAnimation from "../../components/MenuAnimations/SettingsMenuAnimation";
 import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 import NewExpenseAnimation from "../../components/MenuAnimations/NewExpenseAnimation";
 import GroupQuickActionsAnimation from "../../components/MenuAnimations/MenuWithOptionsToAddAnimation";
@@ -23,26 +19,20 @@ import { useEffect } from "react";
 
 export default function Group2() {
   const menu = useSignal<string | null>(null);
-  // const currencyMenu = useSignal<string | null>(null);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
 
-  const { userInfo,topMenuTitle } = useOutletContext<{
+  const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
   }>();
 
-  const { data: group, isFetching, isSuccess } = useGroup(groupid);
+  const { data: group, isFetching } = useGroup(groupid);
 
-
- useEffect(()=>{
-   topMenuTitle.value = group?.name||""
- },[group])
-
-  // if (!groupid || !isSuccess) {
-  //   return <div>Error</div>;
-  // }
+  useEffect(() => {
+    topMenuTitle.value = group?.name || ""
+  }, [group])
 
   return (
     <StyledGroup2>
@@ -60,7 +50,7 @@ export default function Group2() {
               cat3: "Members",
             }}
           />
-          <Outlet context={{ userInfo }} />
+          <Outlet context={{ userInfo, group }} />
 
           <MenuAnimationBackground menu={menu} />
           {group && (
