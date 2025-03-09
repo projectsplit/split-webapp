@@ -22,9 +22,8 @@ const AuthPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const state = location.state as { from: Location };
-  const from = state ? state.from.pathname : routes.ROOT;
-
+  const redirect = new URLSearchParams(location.search).get("redirect") || routes.ROOT;
+  
   const signInWithCredentialsMutation = useMutation<
     PasswordSignInResponse,
     any,
@@ -42,7 +41,7 @@ const AuthPage: React.FC = () => {
       {
         onSuccess: (response) => {
           localStorage.setItem("accessToken", response.accessToken);
-          navigate(from);
+          navigate(redirect);
         },
         onError: (error) => {
           if (error.code === "ERR_NETWORK") {

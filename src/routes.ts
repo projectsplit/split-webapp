@@ -4,7 +4,8 @@ const routes = {
   AUTH: "/welcome",
   GOOGLE_REDIRECT: "/google/redirect",
   USER_INVITATIONS: "/invitations",
-  GROUP_INVITE: "/groups/active/:groupid/invite"
+  JOIN: "/j/:code",
+  GROUP: "/groups/active/:groupid"
 };
 
 export default routes;

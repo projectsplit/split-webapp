@@ -1,42 +1,31 @@
 import React, { useRef } from "react";
 import { DateTime } from "luxon";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
-import { UserInfo } from "../../types";
-import { getGroup, getGroupTransfers } from "../../api/services/api";
+import { Group, UserInfo } from "../../types";
+import { getGroupTransfers } from "../../api/services/api";
 import { StyledTransfers } from "./Transfers.styled";
 import Spinner from "../../components/Spinner/Spinner";
 import useSentinel from "../../hooks/useSentinel";
 import { BiTransfer } from "react-icons/bi";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 const Transfers: React.FC = () => {
+
   const pageSize = 10;
-
   const timeZoneId = "Europe/Athens";
-  const params = useParams();
+  const { userInfo, group } = useOutletContext<{ userInfo: UserInfo, group: Group }>();
 
-  const groupId = params?.groupid;
-  const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
-
-  const { data: group } = useQuery({
-    queryKey: [groupId],
-    queryFn: () =>
-      groupId ? getGroup(groupId) : Promise.reject("No group ID"),
-    enabled: !!groupId, // Prevents the query from running if groupId is undefined
-  });
-
-  const memberId = group?.members.find((x) => x.userId === userInfo?.userId)
-    ?.id!;
+  const memberId = group?.members.find((x) => x.userId === userInfo?.userId)?.id!;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
       queryKey: ["groupTransfers", group?.id, pageSize],
-      queryFn: ({ pageParam: next }) =>
-        getGroupTransfers(group?.id!, pageSize, next),
+      queryFn: ({ pageParam: next }) => getGroupTransfers(group?.id!, pageSize, next),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
       initialPageParam: "",
+      enabled: !!group
     });
 
   const transfers = data?.pages.flatMap((p) => p.transfers);
@@ -49,14 +38,13 @@ const Transfers: React.FC = () => {
     return <Spinner />;
   }
 
- 
   const totalSent = transfers?.reduce((sum, t) => {
     return sum + (t.senderId === memberId ? t.amount : 0);
   }, 0);
   const totalReceived = transfers?.reduce((sum, t) => {
     return sum + (t.receiverId === memberId ? t.amount : 0);
   }, 0);
-    
+
   return (
     <StyledTransfers>
       {!transfers || transfers.length === 0 ? (
@@ -69,8 +57,8 @@ const Transfers: React.FC = () => {
           <BarsWithLegends
             bar1Legend="You Sent"
             bar2Legend="You Received"
-            bar1Total={totalSent||0}
-            bar2Total={totalReceived||0}
+            bar1Total={totalSent || 0}
+            bar2Total={totalReceived || 0}
             currency="GBP"
             bar1Color="#0CA0A0"
             bar2Color="#D79244"
@@ -94,12 +82,12 @@ const Transfers: React.FC = () => {
                         t.senderId === memberId
                           ? "You"
                           : group?.members.find((x) => x.id === t.senderId)
-                              ?.name ?? "",
+                            ?.name ?? "",
                       receiverName:
                         t.receiverId === memberId
                           ? "You"
                           : group?.members.find((x) => x.id === t.receiverId)
-                              ?.name ?? "",
+                            ?.name ?? "",
                     }}
                     timeZoneId={timeZoneId}
                   />
