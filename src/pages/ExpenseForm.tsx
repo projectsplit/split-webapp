@@ -27,11 +27,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, m
 
   const [description, setDescription] = useState<string>("");
   // const [descriptionError, setDescriptionError] = useState<string>("");
-  
+
   const [labels, setLabels] = useState<string[]>([])
 
   const [expenseTime, setExpenseTime] = useState<string>(new Date().toISOString());
-  
+
   const [location, setLocation] = useState<GeoLocation | undefined>(expense?.location)
 
   const queryClient = useQueryClient();
@@ -40,13 +40,13 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, m
     mutationFn: createExpense,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["groupExpenses"] });
-      menu.value=null;
+      menu.value = null;
     },
     onError: (error) => {
       console.error("Log out failed:", error.message);
     },
   });
-  
+
   const submitExpense = () => {
     const createExpenseRequest: CreateExpenseRequest = {
       amount: Number(amount),
@@ -60,7 +60,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, m
       occured: expenseTime,
       labels: labels
     };
-    
+
     console.log(createExpenseRequest)
 
     createExpenseMutation.mutate(createExpenseRequest);
@@ -120,7 +120,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, m
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
       <LocationPicker location={location} setLocation={setLocation} />
       <DateTime selectedDateTime={expenseTime} setSelectedDateTime={setExpenseTime} timeZoneId={timeZoneId} />
-      <Button className='submit-button' onClick={() => menu.value=null}>Close</Button>
+      <Button className='submit-button' onClick={() => menu.value = null}>Close</Button>
       <Button className='submit-button' onClick={submitExpense}>Submit</Button>
     </StyledExpenseForm>
   );
@@ -185,7 +185,3 @@ const StyledExpenseForm = styled.div`
     margin-top: auto;
   }
 `;
-
-
-
-

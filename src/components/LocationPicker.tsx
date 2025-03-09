@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { styled } from 'styled-components';
 import PlacePicker from './PlacePicker';
 import { GeoLocation } from '../types';
+import { APIProvider } from '@vis.gl/react-google-maps';
+import config from '../config';
 
 const LocationPicker: React.FC<LocationPickerProps> = ({ location, setLocation }) => {
   const [isMapOpen, setIsMapOpen] = useState<boolean>(false)
@@ -27,16 +29,18 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ location, setLocation }
   };
 
   return (
-    <StyledLocationPicker>
-      {isMapOpen && <PlacePicker location={location} setLocation={setLocation} setIsMapOpen={setIsMapOpen} />}
-      <div className={'main'} onClick={() => setIsMapOpen(!isMapOpen)}>
-        {/* <HiMapPin className='icon' /> */}
-        <span>{renderLocationDisplay()}</span>
-      </div>
-      <div className='meta'>
-        <span className='description'>Location</span>
-      </div>
-    </StyledLocationPicker>
+    <APIProvider apiKey={config.googleMapsApiKey}>
+      <StyledLocationPicker>
+        {isMapOpen && <PlacePicker location={location} setLocation={setLocation} setIsMapOpen={setIsMapOpen} />}
+        <div className={'main'} onClick={() => setIsMapOpen(!isMapOpen)}>
+          {/* <HiMapPin className='icon' /> */}
+          <span>{renderLocationDisplay()}</span>
+        </div>
+        <div className='meta'>
+          <span className='description'>Location</span>
+        </div>
+      </StyledLocationPicker>
+    </APIProvider>
   )
 }
 
