@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { DateTime } from "luxon";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
@@ -10,25 +10,35 @@ import useSentinel from "../../hooks/useSentinel";
 import { BiTransfer } from "react-icons/bi";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { useOutletContext } from "react-router-dom";
+import { Signal } from "@preact/signals-react";
 
 const Transfers: React.FC = () => {
-
   const pageSize = 10;
   const timeZoneId = "Europe/Athens";
-  const { userInfo, group } = useOutletContext<{ userInfo: UserInfo, group: Group }>();
+  const { userInfo, group, showBottomBar } = useOutletContext<{
+    userInfo: UserInfo;
+    group: Group;
+    showBottomBar: Signal<boolean>;
+  }>();
 
-  const memberId = group?.members.find((x) => x.userId === userInfo?.userId)?.id!;
+  const memberId = group?.members.find((x) => x.userId === userInfo?.userId)
+    ?.id!;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
       queryKey: ["groupTransfers", group?.id, pageSize],
-      queryFn: ({ pageParam: next }) => getGroupTransfers(group?.id!, pageSize, next),
+      queryFn: ({ pageParam: next }) =>
+        getGroupTransfers(group?.id!, pageSize, next),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
       initialPageParam: "",
-      enabled: !!group
+      enabled: !!group,
     });
 
   const transfers = data?.pages.flatMap((p) => p.transfers);
+
+  useEffect(() => {
+    !transfers ? (showBottomBar.value = false) : (showBottomBar.value = true);
+  }, [transfers]);
 
   const sentinelRef = useRef(null);
 
@@ -82,12 +92,12 @@ const Transfers: React.FC = () => {
                         t.senderId === memberId
                           ? "You"
                           : group?.members.find((x) => x.id === t.senderId)
-                            ?.name ?? "",
+                              ?.name ?? "",
                       receiverName:
                         t.receiverId === memberId
                           ? "You"
                           : group?.members.find((x) => x.id === t.receiverId)
-                            ?.name ?? "",
+                              ?.name ?? "",
                     }}
                     timeZoneId={timeZoneId}
                   />

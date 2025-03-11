@@ -2,27 +2,17 @@ import { styled } from "styled-components";
 
 export const StyledInvitation = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  border: 1px solid ${({ theme }) => theme.lineColor};
-  gap: 10px;
-  border-radius: 10px;
-  width: 100%;
-  padding: 10px;
-  
-  .message {
-    overflow: hidden;
-    /* white-space: nowrap; */
-    text-overflow: ellipsis;
-    max-width: 100%;
-    color: ${({ theme }) => theme.secondaryTextColor};
-    
-    .highlighted {
-      color: ${({ theme }) => theme.primaryTextColor};
-      font-weight: 500;
-    }
+  flex-wrap: wrap;
+  .mainMsg{
+    flex: 1;
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+
   }
-  
   .actions {
     font-size: 14px;
     display: flex;
@@ -39,4 +29,15 @@ export const StyledInvitation = styled.div`
       color: ${({ theme }) => theme.secondaryTextColor};
     }
   }
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .actions {
+      margin-top: 1rem;
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+
 `;

@@ -356,3 +356,11 @@ export interface SettleUpOptionsProps {
 export interface AddNewUserAnimationProps extends MenuProps {}
 
 export interface SearchUsersToInviteProps extends MenuProps {}
+export interface NotificationsMenuProps extends MenuProps{}
+export interface NotificationsMenuAnimationProps extends MenuProps{}
+
+
+export interface MiddleScreenMenuProps {
+  children: any;
+  height?: string;
+}

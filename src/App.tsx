@@ -15,12 +15,10 @@ import Group from "./pages/Group/Group";
 import Expenses from "./pages/Expenses/Expenses";
 import Transfers from "./pages/Transfers/Transfers";
 import Members from "./pages/Members/Members";
-import UserInvitations from "./pages/UserInvitations";
+
 import Join from "./pages/Join";
 
 const App: React.FC = () => {
-
-  const timeZoneId = "Europe/Athens"
 
   return (
     <Router>
@@ -29,14 +27,12 @@ const App: React.FC = () => {
         <Route path={routes.GOOGLE_REDIRECT} element={<GoogleCallback />} />
         <Route element={<Protected />}>
           <Route path={routes.ROOT} element={<Home />} />
-          <Route path={routes.USER_INVITATIONS} element={<UserInvitations timeZoneId={timeZoneId} />} />
           <Route path={routes.JOIN} element={<Join />} />
           <Route path="/groups" element={<Groups />}>
             <Route index element={<RedirectToActiveGroups />} />
             <Route path="active" element={<ActiveGroups />} />
             <Route path="archived" element={<ArchivedGroups />} />
             <Route path="deleted" element={<DeletedGroups />} />
-
           </Route>
           <Route path="/groups/active/:groupid" element={<Group />}>
             <Route index element={<RedirectToExpenses />} />

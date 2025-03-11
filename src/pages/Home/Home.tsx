@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { StyledHomepage } from "./Home.Styled";
-import LogoStripe from "./LogoStripe/LogoStripe";
+
 import { BsBarChartFill } from "react-icons/bs";
 import { BsFillPiggyBankFill } from "react-icons/bs";
 import { BsFillPersonFill } from "react-icons/bs";
@@ -153,8 +153,6 @@ export default function Home() {
           </div>
         </>
       )}
-      {/* <MenuAnimationBackground menu={menu} />
-      <SettingsMenuAnimation menu={menu}  /> */}
     </StyledHomepage>
   );
 }
