@@ -1,10 +1,10 @@
 import { StyledMembers } from "./Members.styled";
 import useDebts from "../../hooks/useDebts";
 import { useOutletContext, useParams } from "react-router-dom";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { groupTransactions } from "../../helpers/groupTransactions";
 import { Group, Member, TruncatedMember, UserInfo } from "../../types";
-import { useSignal } from "@preact/signals-react";
+import { Signal, useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 import MemberFC from "./Member/MemberFC";
 import Spinner from "../../components/Spinner/Spinner";
@@ -14,11 +14,15 @@ export default function Members() {
   const memberIdSelectedToSettleUp = useSignal<string>("");
   const menu = useSignal<string | null>(null);
   const { groupid } = useParams();
-  const { userInfo, group } = useOutletContext<{ userInfo: UserInfo, group: Group }>();
+  const { userInfo, group, showBottomBar } = useOutletContext<{
+    userInfo: UserInfo;
+    group: Group;
+    showBottomBar: Signal<boolean>;
+  }>();
   const { data: debts, isFetching } = useDebts(groupid);
 
   if (!userInfo || !group) {
-    return <Spinner/>;
+    return <Spinner />;
   }
   const members = group?.members;
   const guests = group?.guests;
@@ -47,6 +51,10 @@ export default function Members() {
     return { groupedTransactions };
   }, [debts]);
 
+    useEffect(() => {
+      !allParticipants ? (showBottomBar.value = false) : (showBottomBar.value = true);
+    }, [allParticipants]);
+
   return (
     <StyledMembers>
       {isFetching ? (
@@ -64,7 +72,6 @@ export default function Members() {
             menu={menu}
             memberIdSelectedToSettleUp={memberIdSelectedToSettleUp}
             members={allParticipants || []}
-
           />
         ))
       )}
@@ -72,7 +79,7 @@ export default function Members() {
       <MenuAnimationBackground menu={menu} />
       <SettleUpAnimation
         menu={menu}
-        pendingTransactions={debts??[]}
+        pendingTransactions={debts ?? []}
         memberIdSelectedToSettleUp={memberIdSelectedToSettleUp}
         members={allParticipants || []}
       />

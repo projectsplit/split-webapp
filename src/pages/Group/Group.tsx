@@ -19,6 +19,7 @@ import { useEffect } from "react";
 
 export default function Group() {
   const menu = useSignal<string | null>(null);
+  const showBottomBar = useSignal<boolean>(false);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
@@ -31,8 +32,8 @@ export default function Group() {
   const { data: group, isFetching } = useGroup(groupid);
 
   useEffect(() => {
-    topMenuTitle.value = group?.name || ""
-  }, [group])
+    topMenuTitle.value = group?.name || "";
+  }, [group]);
 
   return (
     <StyledGroup>
@@ -50,7 +51,7 @@ export default function Group() {
               cat3: "Members",
             }}
           />
-          <Outlet context={{ userInfo, group }} />
+          <Outlet context={{ userInfo, group, showBottomBar }} />
 
           <MenuAnimationBackground menu={menu} />
           {group && (
@@ -62,10 +63,14 @@ export default function Group() {
             />
           )}
           {group && <AddNewUserAnimation menu={menu} />}
-          {group &&<GroupQuickActionsAnimation menu={menu} />}
+          <GroupQuickActionsAnimation menu={menu} />
           <div className="bottomMenu">
             {" "}
-            <BottomMainMenu onClick={() => (menu.value = "menuWithOptions")} />
+            {group && showBottomBar.value && (
+              <BottomMainMenu
+                onClick={() => (menu.value = "menuWithOptions")}
+              />
+            )}
           </div>
         </div>
       )}

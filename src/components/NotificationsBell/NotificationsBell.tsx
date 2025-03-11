@@ -7,6 +7,7 @@ export default function NotificationsBell({ onClick }: NotificationsBellProps) {
   return (
     <StyledNotificationsBell onClick={onClick}>
       <IoIosNotificationsOutline />
+      
     </StyledNotificationsBell>
   );
 }

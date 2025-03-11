@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Expense from "../../components/Expense/Expense";
 import { DateTime } from "luxon";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -10,11 +10,16 @@ import useSentinel from "../../hooks/useSentinel";
 import { StyledExpenses } from "./Expenses.styled";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { CiReceipt } from "react-icons/ci";
+import { Signal } from "@preact/signals-react";
 
 const Expenses = () => {
   const timeZoneId = "Europe/Athens";
 
-  const { userInfo, group } = useOutletContext<{ userInfo: UserInfo, group: Group }>();
+  const { userInfo, group, showBottomBar } = useOutletContext<{
+    userInfo: UserInfo;
+    group: Group;
+    showBottomBar: Signal<boolean>;
+  }>();
 
   const memberId = group?.members.find((x) => x.userId === userInfo?.userId)
     ?.id!;
@@ -31,6 +36,10 @@ const Expenses = () => {
     });
 
   const expenses = data?.pages.flatMap((p) => p.expenses);
+
+  useEffect(() => {
+    !expenses ? (showBottomBar.value = false) : (showBottomBar.value = true);
+  }, [expenses]);
 
   const sentinelRef = useRef(null);
 

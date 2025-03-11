@@ -6,6 +6,8 @@ import { useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../components/MenuAnimations/MenuAnimationBackground";
 import SettingsMenuAnimation from "../components/MenuAnimations/SettingsMenuAnimation";
 import { StyledProtected } from "./Protected.styled";
+import NotificationsMenuAnimation from "../components/MenuAnimations/NotificationsMenuAnimation";
+
 
 const Protected: React.FC = () => {
   const location = useLocation()
@@ -16,7 +18,6 @@ const Protected: React.FC = () => {
     enabled: isUserAuthenticated()
   });
   const topMenuTitle = useSignal<string>("");
-
   const menu = useSignal<string | null>(null);
 
   return isUserAuthenticated() ? (
@@ -28,6 +29,7 @@ const Protected: React.FC = () => {
       />
       <Outlet context={{ userInfo, topMenuTitle }} />
       <MenuAnimationBackground menu={menu} />
+      <NotificationsMenuAnimation menu={menu}/>
       <SettingsMenuAnimation menu={menu} username={userInfo?.username || ""} />
     </StyledProtected>
   ) : (

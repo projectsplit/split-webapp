@@ -5,13 +5,12 @@ import { useDeclineInvitation } from "../../api/services/useDeclineInvitation";
 import MyButton from "../MyButton/MyButton";
 
 const Invitation: React.FC<InvitationProps> = ({ invitation }) => {
-
   const accept = useAcceptInvitation();
   const decline = useDeclineInvitation();
-
+  console.log(invitation);
   return (
     <StyledInvitation>
-      <div className="message">
+      {/* <div className="message">
         <span>You have been invited to join </span>
         <span className="highlighted">{invitation.groupName}</span>
         {!!invitation.guestId && <span> to replace</span>}
@@ -20,6 +19,26 @@ const Invitation: React.FC<InvitationProps> = ({ invitation }) => {
       <div className="actions">
       <MyButton onClick={() => accept.mutate(invitation.id)} isLoading={accept.isPending} hasFailed={accept.isError} >Accept</MyButton>
       <MyButton onClick={() => decline.mutate(invitation.id)} isLoading={decline.isPending} hasFailed={decline.isError} variant="secondary">Decline</MyButton>
+      </div> */}
+      <div className="mainMsg">
+        <div className="message">You have been invited to join {invitation.groupName}</div>&nbsp;
+      </div>
+      <div className="actions">
+        <MyButton
+          onClick={() => accept.mutate(invitation.id)}
+          isLoading={accept.isPending}
+          hasFailed={accept.isError}
+        >
+          Accept
+        </MyButton>
+        <MyButton
+          onClick={() => decline.mutate(invitation.id)}
+          isLoading={decline.isPending}
+          hasFailed={decline.isError}
+          variant="secondary"
+        >
+          Decline
+        </MyButton>
       </div>
     </StyledInvitation>
   );

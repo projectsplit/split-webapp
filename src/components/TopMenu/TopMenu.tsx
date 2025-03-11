@@ -15,7 +15,7 @@ export default function TopMenu({ title, menu, username }: TopMenuProps) {
       <div className="titleStripe">
         <div className="title">{title}</div>
       </div>
-      <NotificationsBell />
+      <NotificationsBell  onClick={() => (menu.value = "notifications")}/>
     </StyledTopMenu>
   );
 }
