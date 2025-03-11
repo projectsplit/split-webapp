@@ -21,7 +21,16 @@ const Invitation: React.FC<InvitationProps> = ({ invitation }) => {
       <MyButton onClick={() => decline.mutate(invitation.id)} isLoading={decline.isPending} hasFailed={decline.isError} variant="secondary">Decline</MyButton>
       </div> */}
       <div className="mainMsg">
-        <div className="message">You have been invited to join {invitation.groupName}</div>&nbsp;
+        <div className="message">
+          You have been invited to join <strong>{invitation.groupName}</strong>{" "}
+          {!!invitation.guestId && (
+            <span> to replace "{invitation.guestId}"</span>
+          )}
+        </div>
+        &nbsp;
+        {!!invitation.guestId && (
+          <span className="highlighted"> {invitation.guestId}</span>
+        )}
       </div>
       <div className="actions">
         <MyButton

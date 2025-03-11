@@ -11,6 +11,8 @@ export const useDeclineInvitation = () => {
     mutationFn: invitationId => declineInvitation({ invitationId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userInvitations"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
     },
     onError: (error) => {
       console.error(error);
