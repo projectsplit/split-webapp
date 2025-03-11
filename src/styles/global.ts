@@ -9,7 +9,7 @@ body,
   height: 100%;
   /* font-family: Roboto, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
   font-family: 'Inter', sans-serif;
-  background-color: #0f1214;
+  background-color: #000000;
   /* font-synthesis: none; */
   text-rendering: optimizeLegibility;
   -webkit-tap-highlight-color: transparent;

@@ -1,5 +1,5 @@
 export const theme = {
-  backgroundcolor: "#0f1214",
+  backgroundcolor: "#000000",
   inactiveColor: "#2f3139",
   lineColor: "#2f3139",
   highlightColor: "#646cff",

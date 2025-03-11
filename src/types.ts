@@ -300,3 +300,18 @@ export type CreateTransfersRequest = {
   groupId:string;
   transfers:Transfer[]
 }
+
+export type GetUserInvitationsResponse = {
+  invitations: GetUserInvitationsResponseItem[];
+  next: string | null;
+};
+
+export type GetUserInvitationsResponseItem = {
+  id: string;
+  created: string;
+  senderId: string;
+  receiverId: string;
+  groupId: string;
+  groupName: string;
+  guestId: string | null;
+};

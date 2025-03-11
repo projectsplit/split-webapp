@@ -35,13 +35,17 @@ export default function Home() {
   );
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
-  const { userInfo,topMenuTitle } = useOutletContext<{
+  const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
   }>();
   const menu = useSignal<string | null>(null);
 
-  const { data, isFetching, isLoading } = useQuery<GroupsAllBalancesResponse>({
+  const {
+    data,
+    isFetching,
+    isLoading: isLoadingAllBalancesResponse,
+  } = useQuery<GroupsAllBalancesResponse>({
     queryKey: ["home"],
     queryFn: getGroupsAllBalances,
     refetchOnWindowFocus: false,
@@ -54,20 +58,21 @@ export default function Home() {
   } = useQuery<MostRecentGroupDetailsResponse>({
     queryKey: ["mostRecentGroup", mostRecentGroupId.value],
     queryFn: () => getMostRecentGroup(mostRecentGroupId.value),
+    enabled: mostRecentGroupId.value !== "",
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
 
-  useEffect(()=>{
-    topMenuTitle.value = ""
-  },[])
+  useEffect(() => {
+    topMenuTitle.value = "";
+  }, []);
 
   // isFetching:mostRecentGroupDataIsFetching, isLoading:mostRecentGroupDataIsLoading
   // const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
 
   return (
     <StyledHomepage>
-      {isFetching ? (
+      {isFetching || userInfo.username===undefined ? (
         // && budgetIsFetching ?
         <Spinner />
       ) : (
@@ -106,7 +111,9 @@ export default function Home() {
                 </div>
               ) : null}
 
-              {!isLoading && !isFetching && data?.groupCount === 0 ? (
+              {!isLoadingAllBalancesResponse &&
+              !isFetching &&
+              data?.groupCount === 0 ? (
                 <OptionButton
                   onClick={() => navigate("/groups/active")}
                   name="Groups"
