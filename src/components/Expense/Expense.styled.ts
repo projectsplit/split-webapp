@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledExpense = styled.div`
+export const StyledExpense = styled.div<{onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void}>`
   display: flex;
   flex-direction: column;
   border-radius: 10px;

@@ -94,6 +94,7 @@ const Expenses = () => {
                       labels: e.labels,
                     }}
                     timeZoneId={timeZoneId}
+                    onClick={()=>console.log("expense")}
                   />
                 ))}
               </div>

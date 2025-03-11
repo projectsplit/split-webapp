@@ -5,10 +5,10 @@ import { StyledExpense } from "./Expense.styled";
 import { MdLocationOn } from "react-icons/md";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
-const Expense: React.FC<ExpenseProps> = ({ expense, timeZoneId }) => {
+const Expense: React.FC<ExpenseProps> = ({ expense, timeZoneId,onClick }) => {
 
   return (
-    <StyledExpense>
+    <StyledExpense onClick={onClick}>
       <div className="topRow">
         {/* <div className="locationIcon">{expense.location &&<IoLocationOutline />}</div> */}
         {expense.location ? <MdLocationOn className="locationIcon" /> : <div />}

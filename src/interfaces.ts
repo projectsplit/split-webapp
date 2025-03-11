@@ -22,6 +22,7 @@ import {
 export interface ExpenseProps {
   expense: ExpenseItem;
   timeZoneId: string;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface TransferProps {
