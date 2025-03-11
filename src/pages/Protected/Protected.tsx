@@ -29,9 +29,8 @@ const Protected: React.FC = () => {
   const numberOfNotifications = useSignal<number>(0);
 
   useEffect(() => {
-    if (userInvitations && userInvitations?.length > 0) {
-      numberOfNotifications.value = 1;
-    }
+    numberOfNotifications.value =
+      (userInvitations?.length ?? 0) > 0 && !isFetching ? 1 : 0;
   }, [userInvitations]);
 
   return isUserAuthenticated() ? (

@@ -10,11 +10,12 @@ import { useRevokeInvitation } from "../../api/services/useRevokeInvitation";
 import { useParams } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import { SearchUsersToInviteProps } from "../../interfaces";
+import Spinner from "../../components/Spinner/Spinner";
 
 const SearchUsersToInvite = ({menu}:SearchUsersToInviteProps) => {
   const params = useParams();
   const groupId = params.groupid!;
-  const pageSize = 3;
+  const pageSize = 10;
 
   const [keyword, setKeyword] = useState("");
   const [debouncedKeyword, _isDebouncing] = useDebounce<string>(
@@ -74,7 +75,7 @@ const SearchUsersToInvite = ({menu}:SearchUsersToInviteProps) => {
         className="sentinel"
         style={{ height: "1px" }}
       ></div>
-      {isFetchingNextPage && <div>Loading more...</div>}
+      {isFetchingNextPage && <Spinner/>}
     </StyledSearchUsersToInvite>
   );
 };
