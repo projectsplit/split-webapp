@@ -29,7 +29,7 @@ const Protected: React.FC = () => {
   const numberOfNotifications = useSignal<number>(0);
 
   useEffect(() => {
-    if (userInvitations) {
+    if (userInvitations && userInvitations?.length > 0) {
       numberOfNotifications.value = 1;
     }
   }, [userInvitations]);
