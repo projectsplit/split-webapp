@@ -3,6 +3,8 @@ import {
   ExpenseItem,
   FormExpense,
   Frequency,
+  GetUserInvitationsResponse,
+  GetUserInvitationsResponseItem,
   Group,
   GroupedTransaction,
   PickerMember,
@@ -11,6 +13,11 @@ import {
   UserInfo,
 } from "./types";
 import { Signal } from "@preact/signals-react";
+import {
+  FetchNextPageOptions,
+  InfiniteData,
+  InfiniteQueryObserverResult,
+} from "@tanstack/react-query";
 
 export interface ExpenseProps {
   expense: ExpenseItem;
@@ -61,8 +68,8 @@ export interface SubmitButtonProps
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: any;
   disabled?: boolean;
-  color?:string;
-  backgroundColor?:string;
+  color?: string;
+  backgroundColor?: string;
 }
 
 export interface InputProps
@@ -197,7 +204,9 @@ export interface MenuProps {
 }
 
 export interface MenuAnimationBackgroundProps extends MenuProps {}
-export interface SettingsMenuAnimationProps extends MenuProps {username:string}
+export interface SettingsMenuAnimationProps extends MenuProps {
+  username: string;
+}
 export interface LogoStripeProps extends MenuProps {}
 
 export interface CreateGroupAnimationProps extends MenuProps {
@@ -212,13 +221,14 @@ export interface CreateGroupProps extends MenuProps {
 export interface SettingsMenuProps {
   menu: Signal<string | null>;
   nodeRef: React.MutableRefObject<null>;
-  username:string;
+  username: string;
 }
 
 export interface TopMenuProps {
   title: string;
   menu: Signal<string | null>;
-  username:string;
+  username: string;
+  numberOfNotifications: Signal<number>;
 }
 
 export interface ToggleSwitchProps {
@@ -251,13 +261,13 @@ export interface GroupQuickActionsAnimationProps extends MenuProps {}
 export interface GroupQuickActionsMenuprops extends MenuProps {}
 
 export interface BarsWithLegendsProps {
-  bar1Total:number;
-  bar2Total:number;
-  currency:string;
-  bar1Legend:string;
-  bar2Legend:string;
-  bar1Color:string;
-  bar2Color:string;
+  bar1Total: number;
+  bar2Total: number;
+  currency: string;
+  bar1Legend: string;
+  bar2Legend: string;
+  bar1Color: string;
+  bar2Color: string;
 }
 
 export interface TransfersProps {
@@ -267,10 +277,10 @@ export interface TransfersProps {
 }
 
 export interface DebtsResponse {
-  debtor:string;
-  creditor:string;
-  amount:number;
-  currency:string;
+  debtor: string;
+  creditor: string;
+  amount: number;
+  currency: string;
 }
 
 export interface MemberProps {
@@ -282,7 +292,7 @@ export interface MemberProps {
   menu: Signal<string | null>;
   memberIdSelectedToSettleUp: Signal<string>;
   members: TruncatedMember[];
-  isGuest:boolean;
+  isGuest: boolean;
 }
 
 export interface RenderScenariosProps {
@@ -293,7 +303,7 @@ export interface RenderScenariosProps {
   name: string;
   showTree: boolean;
   treeItems: React.JSX.Element[];
-  members:TruncatedMember[];
+  members: TruncatedMember[];
 }
 export interface RenderSettledProps {
   name: string;
@@ -310,9 +320,8 @@ export interface RenderBothScenariosProps {
   doNotshowTreeWhenMemberOwes: boolean;
   memberIsOwedItems: React.JSX.Element[];
   memberOwesItems: React.JSX.Element[];
-  members:TruncatedMember[];
+  members: TruncatedMember[];
 }
-
 
 export interface MemberDetailedDescriptionProps {
   pendingTransactions: DebtsResponse[];
@@ -321,7 +330,7 @@ export interface MemberDetailedDescriptionProps {
   isUser: boolean;
   isOwed: boolean;
   name: string;
-  members:TruncatedMember[]
+  members: TruncatedMember[];
 }
 
 export interface DescriptionAndTreeProps {
@@ -333,7 +342,7 @@ export interface DescriptionAndTreeProps {
   isOwed: boolean;
   showTree: boolean;
   treeItems: React.JSX.Element[];
-  members:TruncatedMember[]
+  members: TruncatedMember[];
 }
 
 export interface SettleUpButtonProps {
@@ -356,9 +365,32 @@ export interface SettleUpOptionsProps {
 export interface AddNewUserAnimationProps extends MenuProps {}
 
 export interface SearchUsersToInviteProps extends MenuProps {}
-export interface NotificationsMenuProps extends MenuProps{}
-export interface NotificationsMenuAnimationProps extends MenuProps{}
-
+export interface NotificationsMenuProps extends MenuProps {
+  fetchNextPage: (
+    options?: FetchNextPageOptions
+  ) => Promise<
+    InfiniteQueryObserverResult<
+      InfiniteData<GetUserInvitationsResponse, unknown>,
+      Error
+    >
+  >;
+  isFetchingNextPage: boolean;
+  hasNextPage: boolean;
+  userInvitations: GetUserInvitationsResponseItem[] | undefined
+}
+export interface NotificationsMenuAnimationProps extends MenuProps {
+  fetchNextPage: (
+    options?: FetchNextPageOptions
+  ) => Promise<
+    InfiniteQueryObserverResult<
+      InfiniteData<GetUserInvitationsResponse, unknown>,
+      Error
+    >
+  >;
+  isFetchingNextPage: boolean;
+  hasNextPage: boolean;
+  userInvitations: GetUserInvitationsResponseItem[] | undefined
+}
 
 export interface MiddleScreenMenuProps {
   children: any;

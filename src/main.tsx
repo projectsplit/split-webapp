@@ -6,6 +6,10 @@ import { ThemeProvider } from "styled-components";
 import { theme } from "./theme";
 import GlobalStyles from "./styles/global";
 
+import { useEffect, useState } from "react";
+import SplashScreen from "./pages/SplashScreen/SplashScreen";
+import { useSignal } from "@preact/signals-react";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -14,18 +18,39 @@ const queryClient = new QueryClient({
       staleTime: Infinity,
       refetchOnReconnect: false,
       refetchOnMount: false,
-    }
+    },
   },
 });
+
+const RootComponent: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {}, []);
+
+  if (isLoading) {
+    return <SplashScreen />;
+  }
+
+  return (
+    <ThemeProvider theme={theme}>
+      <App />
+      {/* <ReactQueryDevtools /> */}
+    </ThemeProvider>
+  );
+};
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
   <QueryClientProvider client={queryClient}>
     <GlobalStyles />
-    <ThemeProvider theme={theme}>
-      <App />
-      {/* <ReactQueryDevtools /> */}
-    </ThemeProvider>
+    <RootComponent />
   </QueryClientProvider>
   // </StrictMode>,
 );

@@ -7,7 +7,7 @@ import MyButton from "../MyButton/MyButton";
 const Invitation: React.FC<InvitationProps> = ({ invitation }) => {
   const accept = useAcceptInvitation();
   const decline = useDeclineInvitation();
-  console.log(invitation);
+
   return (
     <StyledInvitation>
       {/* <div className="message">

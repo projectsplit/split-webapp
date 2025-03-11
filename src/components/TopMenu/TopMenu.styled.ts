@@ -1,15 +1,29 @@
 import styled from "styled-components";
 
 export const StyledTopMenu = styled.div`
-
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding:14px;
+  padding: 14px;
 
-  
-
+  .bellIconAndNumberOfNotifications {
+    position: relative;
+  }
+  .notificationCount {
+    font-size: 12px;
+    font-weight: 800;
+    position: absolute;
+    background-color: red;
+    border-radius: 50%; 
+    width: 1rem; 
+    height: 1rem; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: -2px;
+    left: 0;
+  }
   .titleStripe {
     display: flex;
     flex-direction: row;
@@ -19,7 +33,4 @@ export const StyledTopMenu = styled.div`
       font-weight: bold;
     }
   }
-
-
-
 `;

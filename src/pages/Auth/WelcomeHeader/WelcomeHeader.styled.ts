@@ -1,25 +1,25 @@
 import styled from "styled-components";
 
 export const StyledWelcomeHeader = styled.div`
- 
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
-  flex-wrap: nowrap;
   color: #f5f5f5;
 
   .logo {
-    font-size: 66px;
-    display: flex;
+    width: auto;
+    height: auto;
+
     align-items: center;
   }
 
   .appName {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
     font-size: 14px;
-    padding-top: 2rem;
+    padding: 2rem;
     font-size: 36px;
 
     .appDescription {
@@ -30,4 +30,11 @@ export const StyledWelcomeHeader = styled.div`
       font-size: 18px;
     }
   }
+`;
+
+export const Logo = styled.img`
+  max-width: 25px;
+  max-height: 35px;
+  width: auto;
+  height: auto;
 `;

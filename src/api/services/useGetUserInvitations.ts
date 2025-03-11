@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { GetUserInvitationsResponse } from "../../types";
 
 export const useGetUserInvitations = (pageSize: number) => {
   return useInfiniteQuery({
@@ -19,17 +20,3 @@ const getUserInvitations = async (pageSize: number, next?: string): Promise<GetU
   return response.data;
 };
 
-type GetUserInvitationsResponse = {
-  invitations: GetUserInvitationsResponseItem[];
-  next: string | null;
-};
-
-type GetUserInvitationsResponseItem = {
-  id: string;
-  created: string;
-  senderId: string;
-  receiverId: string;
-  groupId: string;
-  groupName: string;
-  guestId: string | null;
-};

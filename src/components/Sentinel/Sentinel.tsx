@@ -35,10 +35,10 @@ const Sentinel: React.FC<SentinelProps> = ({
   }, [fetchNextPage, hasNextPage, isFetchingNextPage, id]);
 
   return (
-    <>
+    <div style={{ display: "flex", flexDirection:"column", justifyContent:"center" }}>
       <div ref={sentinelRef} style={{ height: "1px" }} data-sentinel-id={id} />
       {isFetchingNextPage && <Spinner/>}
-    </>
+    </div>
   );
 };
 

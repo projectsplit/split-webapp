@@ -1,21 +1,21 @@
 import IonIcon from "@reacticons/ionicons";
 import { NotificationsMenuProps } from "../../interfaces";
 import { StyledNotificationsMenu } from "./NotificationsMenu.styled";
-import { useGetUserInvitations } from "../../api/services/useGetUserInvitations";
 import Spinner from "../Spinner/Spinner";
 import { IoIosNotificationsOff } from "react-icons/io";
 import Sentinel from "../Sentinel";
 import Invitation from "../Invitation/Invitation";
 import Separator from "../Separator/Separator";
 
-export default function NotificationsMenu({ menu }: NotificationsMenuProps) {
+
+export default function NotificationsMenu({
+  menu,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  userInvitations,
+}: NotificationsMenuProps) {
   const timeZoneId = "Europe/Athens";
-  const pageSize = 10;
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useGetUserInvitations(pageSize);
-
-  const userInvitations = data?.pages.flatMap((p) => p.invitations);
 
   return (
     <StyledNotificationsMenu>
@@ -28,12 +28,13 @@ export default function NotificationsMenu({ menu }: NotificationsMenuProps) {
             <IonIcon name="close-outline" className="close" />
           </div>
         </div>
-        <div className="separator"><Separator /></div>
-        
+        <div className="separator">
+          <Separator />
+        </div>
       </div>
 
       <div className="notifications">
-        {!userInvitations || isFetching ? (
+        {!userInvitations ? (
           <Spinner />
         ) : userInvitations.length === 0 ? (
           <div className="noData">
@@ -42,8 +43,8 @@ export default function NotificationsMenu({ menu }: NotificationsMenuProps) {
           </div>
         ) : (
           <div className="data">
-            {userInvitations.map((x) => (
-              <div className="item">
+            {userInvitations.map((x, index) => (
+              <div className="item" key={index}>
                 <Invitation
                   key={x.id}
                   invitation={{

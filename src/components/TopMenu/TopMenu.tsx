@@ -3,7 +3,12 @@ import UserOptionsButton from "../UserOptionsButton/UserOptionsButton";
 import { StyledTopMenu } from "./TopMenu.styled";
 import NotificationsBell from "../NotificationsBell/NotificationsBell";
 
-export default function TopMenu({ title, menu, username }: TopMenuProps) {
+export default function TopMenu({
+  title,
+  menu,
+  username,
+  numberOfNotifications,
+}: TopMenuProps) {
   return (
     <StyledTopMenu>
       <div className="useOptionsContainer">
@@ -15,7 +20,22 @@ export default function TopMenu({ title, menu, username }: TopMenuProps) {
       <div className="titleStripe">
         <div className="title">{title}</div>
       </div>
-      <NotificationsBell  onClick={() => (menu.value = "notifications")}/>
+      <div
+        className="bellIconAndNumberOfNotifications"
+        onClick={() => {
+          menu.value = "notifications";
+          numberOfNotifications.value = 0;
+        }}
+      >
+        <NotificationsBell />
+        {numberOfNotifications.value === 0 ? (
+          ""
+        ) : (
+          <span className="notificationCount">
+            {numberOfNotifications.value}
+          </span>
+        )}
+      </div>
     </StyledTopMenu>
   );
 }

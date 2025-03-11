@@ -4,7 +4,14 @@ import NotificationsMenu from "../NotificationsMenu/NotificationsMenu";
 import { useRef } from "react";
 import { NotificationsMenuAnimationProps } from "../../interfaces";
 
-export default function NotificationsMenuAnimation({ menu }: NotificationsMenuAnimationProps) {
+export default function NotificationsMenuAnimation({
+  menu,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  userInvitations
+
+}: NotificationsMenuAnimationProps) {
   const nodeRef = useRef(null);
   return (
     <CSSTransition
@@ -12,9 +19,9 @@ export default function NotificationsMenuAnimation({ menu }: NotificationsMenuAn
       timeout={100}
       classNames="infoBox"
       unmountOnExit
-      nodeRef = {nodeRef}
+      nodeRef={nodeRef}
     >
-      <NotificationsMenu menu={menu} />
+      <NotificationsMenu menu={menu} fetchNextPage={fetchNextPage} hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} userInvitations={userInvitations} />
     </CSSTransition>
   );
 }

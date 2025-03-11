@@ -7,7 +7,7 @@ export const StyledGroups = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.body};
+  background-color: ${({ theme }) => theme.backgroundcolor};
 
   .bottom-bar {
     margin-top: auto;

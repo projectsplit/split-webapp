@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./pages/Auth/AuthPage";
 import routes from "./routes";
 import GoogleCallback from "./pages/GoogleCallback";
-import Protected from "./pages/Protected";
 import Home from "./pages/Home/Home";
 import Groups from "./pages/Groups/Groups";
 import RedirectToActiveGroups from "./routes/RedirectToActiveGroups";
@@ -17,9 +16,10 @@ import Transfers from "./pages/Transfers/Transfers";
 import Members from "./pages/Members/Members";
 
 import Join from "./pages/Join";
+import Protected from "./pages/Protected/Protected";
 
-const App: React.FC = () => {
 
+const App = ( ) => {
   return (
     <Router>
       <Routes>

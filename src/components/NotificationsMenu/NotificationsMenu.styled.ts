@@ -7,7 +7,7 @@ export const StyledNotificationsMenu = styled(StyledMiddleScreenMenu)`
   flex-direction: column;
   overflow: auto;
   box-sizing: border-box;
-  height:75vh;
+  max-height: 50%;
   padding: 0;
 
   .headerSeparator {
@@ -58,6 +58,7 @@ export const StyledNotificationsMenu = styled(StyledMiddleScreenMenu)`
     justify-content: center;
     padding-left: 1rem;
     padding-right: 1rem;
+    padding-bottom: 1rem;
     .data {
       .item {
         padding-top: 16px;
