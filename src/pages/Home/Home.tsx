@@ -72,7 +72,7 @@ export default function Home() {
 
   return (
     <StyledHomepage>
-      {isFetching || userInfo.username===undefined ? (
+      {isFetching || !userInfo?.username ? (
         // && budgetIsFetching ?
         <Spinner />
       ) : (
