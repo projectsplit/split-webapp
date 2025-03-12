@@ -57,7 +57,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, m
       description: description,
       labelIds: [],
       location: location ?? null,
-      occured: expenseTime,
+      occurred: expenseTime,
       labels: labels
     };
 

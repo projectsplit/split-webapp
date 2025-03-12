@@ -74,7 +74,7 @@ const Transfers: React.FC = () => {
             bar2Color="#D79244"
           />
           {Object.entries(
-            groupBy(transfers, (x) => DateOnly(x.occured, timeZoneId))
+            groupBy(transfers, (x) => DateOnly(x.occurred, timeZoneId))
           ).map(([date, transfers]) => (
             <div key={date} className="same-date-container">
               <div className="date-only">{date}</div>
@@ -85,7 +85,7 @@ const Transfers: React.FC = () => {
                     transfer={{
                       amount: t.amount,
                       currency: t.currency,
-                      date: t.occured,
+                      date: t.occurred,
                       description: t.description,
                       id: t.id,
                       senderName:

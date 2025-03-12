@@ -77,7 +77,7 @@ export type ExpenseResponseItem = {
   groupId: string;
   creatorId: string;
   amount: number;
-  occured: string;
+  occurred: string;
   description: string;
   currency: string;
   payments: Payment[];
@@ -93,7 +93,7 @@ export type TransferResponseItem = {
   groupId: string;
   creatorId: string;
   amount: number;
-  occured: string;
+  occurred: string;
   description: string;
   currency: string;
   senderId: string;
@@ -180,7 +180,7 @@ export type CreateExpenseRequest = {
   description: string;
   labelIds: string[];
   location: GeoLocation | null;
-  occured: string;
+  occurred: string;
   labels: string[];
 };
 

@@ -73,7 +73,7 @@ const Expenses = () => {
             bar1Color="#5183ee"
           />
           {Object.entries(
-            groupBy(expenses, (x) => DateOnly(x.occured, timeZoneId))
+            groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))
           ).map(([date, expenses]) => (
             <div key={date} className="same-date-container">
               <div className="date-only">{date}</div>
@@ -84,7 +84,7 @@ const Expenses = () => {
                     expense={{
                       amount: e.amount,
                       currency: e.currency,
-                      date: e.occured,
+                      date: e.occurred,
                       description: e.description,
                       id: e.id,
                       location: e.location,
