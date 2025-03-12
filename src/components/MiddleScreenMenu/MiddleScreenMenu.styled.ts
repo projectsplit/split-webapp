@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const StyledMiddleScreenMenu = styled.div`
   box-sizing: border-box;
-  margin: 10px;
+  margin: 5px;
   position: fixed;
   top: 10%; 
   left: 0;

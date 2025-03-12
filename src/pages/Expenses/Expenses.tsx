@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Expense from "../../components/Expense/Expense";
 import { DateTime } from "luxon";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -10,10 +10,14 @@ import useSentinel from "../../hooks/useSentinel";
 import { StyledExpenses } from "./Expenses.styled";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { CiReceipt } from "react-icons/ci";
-import { Signal } from "@preact/signals-react";
+import { Signal, useSignal } from "@preact/signals-react";
+// import DetailedExpenseAnimation from "../../components/MenuAnimations/DetailedExpenseAnimation";
+import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
+import DetailedExpense from "../../components/DetailedExpense/DetailedExpense";
 
 const Expenses = () => {
   const timeZoneId = "Europe/Athens";
+  const openDetailedExpense = useSignal<boolean>(false);
 
   const { userInfo, group, showBottomBar } = useOutletContext<{
     userInfo: UserInfo;
@@ -54,6 +58,8 @@ const Expenses = () => {
     return sum + (e.shares.find((x) => x.memberId === memberId)?.amount ?? 0);
   }, 0);
 
+  console.log(expenses);
+
   return (
     <StyledExpenses>
       {!expenses || expenses.length === 0 ? (
@@ -79,23 +85,41 @@ const Expenses = () => {
               <div className="date-only">{date}</div>
               <div className="expenses">
                 {expenses.map((e) => (
-                  <Expense
-                    key={e.id}
-                    expense={{
-                      amount: e.amount,
-                      currency: e.currency,
-                      date: e.occured,
-                      description: e.description,
-                      id: e.id,
-                      location: e.location,
-                      shareAmount:
+                  <div className="expense" key={e.id}>
+                    <Expense
+                      amount={e.amount}
+                      currency={e.currency}
+                      occured={e.occured}
+                      description={e.description}
+                      location={e.location}
+                      timeZoneId={timeZoneId}
+                      onClick={() => (openDetailedExpense.value = true)}
+                      userAmount={
                         e.shares.find((x) => x.memberId === memberId)?.amount ??
-                        0,
-                      labels: e.labels,
-                    }}
-                    timeZoneId={timeZoneId}
-                    onClick={()=>console.log("expense")}
-                  />
+                        0
+                      }
+                    />
+                    {openDetailedExpense.value ? (
+                      <DetailedExpense
+                        openDetailedExpense={openDetailedExpense}
+                        amount={e.amount}
+                        currency={e.currency}
+                        description={e.description}
+                        labels={e.labels}
+                        location={e.location}
+                        occured={e.occured}
+                        payments={e.payments}
+                        shares={e.shares}
+                        timeZoneId={timeZoneId}
+                        userAmount={
+                          e.shares.find((x) => x.memberId === memberId)
+                            ?.amount ?? 0
+                        }
+                        creator={e.creatorId}
+                        created={e.created}
+                      />
+                    ) : null}
+                  </div>
                 ))}
               </div>
             </div>
@@ -140,3 +164,7 @@ const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
     (groups[key(item)] ||= []).push(item);
     return groups;
   }, {} as Record<K, T[]>);
+
+// shareAmount:
+// e.shares.find((x) => x.memberId === memberId)?.amount ??
+// 0,

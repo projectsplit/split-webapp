@@ -3,11 +3,14 @@ import {
   ExpenseItem,
   FormExpense,
   Frequency,
+  GeoLocation,
   GetUserInvitationsResponse,
   GetUserInvitationsResponseItem,
   Group,
   GroupedTransaction,
+  Payment,
   PickerMember,
+  Share,
   TransferItem,
   TruncatedMember,
   UserInfo,
@@ -20,9 +23,33 @@ import {
 } from "@tanstack/react-query";
 
 export interface ExpenseProps {
-  expense: ExpenseItem;
   timeZoneId: string;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+ 
+  amount: number;
+  currency: string;
+  occured: string;
+  description: string;
+
+  location: GeoLocation | undefined;
+  userAmount:number;
+}
+
+export interface DetailedExpenseProps {
+  timeZoneId: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  payments: Payment[];
+  shares: Share[];
+  amount: number;
+  currency: string;
+  occured: string;
+  created: string;
+  description: string;
+  labels: string[];
+  location: GeoLocation | undefined;
+  userAmount:number;
+  openDetailedExpense: Signal<boolean>;
+  creator:string;
 }
 
 export interface TransferProps {
@@ -362,10 +389,19 @@ export interface SettleUpOptionsProps {
   menu: Signal<string | null>;
   members: TruncatedMember[];
 }
-
+export interface PillProps {
+  title: string;
+  color: string;
+  closeButton: boolean;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onClose?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  fontSize?: string;
+}
 export interface AddNewUserAnimationProps extends MenuProps {}
 
 export interface SearchUsersToInviteProps extends MenuProps {}
+export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
+
 export interface NotificationsMenuProps extends MenuProps {
   fetchNextPage: (
     options?: FetchNextPageOptions
@@ -377,7 +413,7 @@ export interface NotificationsMenuProps extends MenuProps {
   >;
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
-  userInvitations: GetUserInvitationsResponseItem[] | undefined
+  userInvitations: GetUserInvitationsResponseItem[] | undefined;
 }
 export interface NotificationsMenuAnimationProps extends MenuProps {
   fetchNextPage: (
@@ -390,10 +426,14 @@ export interface NotificationsMenuAnimationProps extends MenuProps {
   >;
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
-  userInvitations: GetUserInvitationsResponseItem[] | undefined
+  userInvitations: GetUserInvitationsResponseItem[] | undefined;
 }
 
 export interface MiddleScreenMenuProps {
   children: any;
   height?: string;
+}
+
+export interface EditorContentHandle {
+  clearEditor: () => void;
 }

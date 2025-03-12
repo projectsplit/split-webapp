@@ -165,6 +165,7 @@ export type PickerMember = {
   order: number;
 };
 
+
 export type CreateExpenseRequest = {
   amount: number;
   groupId: string;
@@ -280,6 +281,7 @@ export type FormExpense ={
   lastUpdateTime: Date,
   location: GeoLocation | undefined
 }
+
 export type Participant = {
   memberId: string,
   participationAmount: string

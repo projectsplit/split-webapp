@@ -5,41 +5,46 @@ import { StyledExpense } from "./Expense.styled";
 import { MdLocationOn } from "react-icons/md";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
-const Expense: React.FC<ExpenseProps> = ({ expense, timeZoneId,onClick }) => {
-
+const Expense = ({
+  timeZoneId,
+  onClick,
+  amount,
+  currency,
+  description,
+  location,
+  occured,
+  userAmount,
+}: ExpenseProps) => {
   return (
     <StyledExpense onClick={onClick}>
       <div className="topRow">
         {/* <div className="locationIcon">{expense.location &&<IoLocationOutline />}</div> */}
-        {expense.location ? <MdLocationOn className="locationIcon" /> : <div />}
-        <strong className="time">{TimeOnly(expense.date, timeZoneId)}</strong>
+        {location ? <MdLocationOn className="locationIcon" /> : <div />}
+        <strong className="time">{TimeOnly(occured, timeZoneId)}</strong>
       </div>
       <div className="wrapper">
         <div className="descrAndLabels">
-          <div className="descr">{expense.description}</div>
+          <div className="descr">{description}</div>
           <div className="labels">
-            <div className="label"/>
+            <div className="label" />
           </div>
         </div>
         <div className="amounts">
           <div className="userShare">
-            {expense.amount === 0 ? "" : <div className="legendGroup" />}
+            {amount === 0 ? "" : <div className="legendGroup" />}
             <div className="amount">
-              {displayCurrencyAndAmount(
-                Math.abs(expense.amount).toString(),
-                expense.currency
-              )}
+              {displayCurrencyAndAmount(Math.abs(amount).toString(), currency)}
             </div>
           </div>
 
           <div className="groupTotal">
-            {expense.shareAmount === 0 ? "" : <div className="legendUser" />}
+            {userAmount === 0 ? "" : <div className="legendUser" />}
             <div className="amount">
-              {expense.shareAmount === 0
+              {userAmount === 0
                 ? ""
                 : displayCurrencyAndAmount(
-                    Math.abs(expense.shareAmount).toString(),
-                    expense.currency
+                    Math.abs(userAmount).toString(),
+                    currency
                   )}
             </div>
           </div>
