@@ -22,7 +22,8 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     .labelsWrapper {
       overflow-x: auto;
       text-align: center;
-    }
+    } 
+    
     .labels {
       display: inline-flex;
       gap: 5px;
