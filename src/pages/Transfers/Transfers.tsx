@@ -11,6 +11,8 @@ import { BiTransfer } from "react-icons/bi";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { useOutletContext } from "react-router-dom";
 import { Signal } from "@preact/signals-react";
+import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
+import { DateOnly } from "../../helpers/timeHelpers";
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
@@ -23,6 +25,10 @@ const Transfers: React.FC = () => {
 
   const memberId = group?.members.find((x) => x.userId === userInfo?.userId)
     ?.id!;
+
+  const members = group?.members;
+  const guests = group?.guests;
+  const allParticipants = mergeMembersAndGuests(members || [], guests || []);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
@@ -37,8 +43,8 @@ const Transfers: React.FC = () => {
   const transfers = data?.pages.flatMap((p) => p.transfers);
 
   useEffect(() => {
-    !transfers ? (showBottomBar.value = false) : (showBottomBar.value = true);
-  }, [transfers]);
+    isFetching ? (showBottomBar.value = false) : (showBottomBar.value = true);
+  }, [isFetching]);
 
   const sentinelRef = useRef(null);
 
@@ -74,7 +80,7 @@ const Transfers: React.FC = () => {
             bar2Color="#D79244"
           />
           {Object.entries(
-            groupBy(transfers, (x) => DateOnly(x.occured, timeZoneId))
+            groupBy(transfers, (x) => DateOnly(x.occurred, timeZoneId))
           ).map(([date, transfers]) => (
             <div key={date} className="same-date-container">
               <div className="date-only">{date}</div>
@@ -85,18 +91,18 @@ const Transfers: React.FC = () => {
                     transfer={{
                       amount: t.amount,
                       currency: t.currency,
-                      date: t.occured,
+                      date: t.occurred,
                       description: t.description,
                       id: t.id,
                       senderName:
                         t.senderId === memberId
                           ? "You"
-                          : group?.members.find((x) => x.id === t.senderId)
+                          : allParticipants.find((x) => x.id === t.senderId)
                               ?.name ?? "",
                       receiverName:
                         t.receiverId === memberId
                           ? "You"
-                          : group?.members.find((x) => x.id === t.receiverId)
+                          : allParticipants.find((x) => x.id === t.receiverId)
                               ?.name ?? "",
                     }}
                     timeZoneId={timeZoneId}
@@ -119,26 +125,6 @@ const Transfers: React.FC = () => {
 
 export default Transfers;
 
-const DateOnly = (eventTimeUtc: string, timeZone: string): string => {
-  const now = DateTime.now().setZone(timeZone);
-  const eventDateTime = DateTime.fromISO(eventTimeUtc, { zone: "utc" }).setZone(
-    timeZone
-  );
-
-  if (eventDateTime.hasSame(now, "day")) {
-    return "Today";
-  }
-
-  if (eventDateTime.hasSame(now.minus({ days: 1 }), "day")) {
-    return "Yesterday";
-  }
-
-  if (eventDateTime.hasSame(now, "year")) {
-    return eventDateTime.setZone(timeZone).toFormat("d LLL");
-  }
-
-  return eventDateTime.setZone(timeZone).toFormat("d LLL yyyy");
-};
 
 const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
   arr.reduce((groups, item) => {

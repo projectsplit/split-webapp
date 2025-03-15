@@ -11,8 +11,6 @@ export const StyledMembersInfoBox = styled.div`
     }
     .hideDetalailsButton {
       color: ${({ theme }) => theme.grey};
-      font-style: italic;
-      text-decoration: underline;
       cursor: pointer;
     }
   }

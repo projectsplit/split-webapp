@@ -1,5 +1,4 @@
 import { StyledDetailedExpense } from "./DetailedExpense.Styled";
-import InfoBox from "./InfoBox/InfoBox";
 import MembersInfoBox from "./MembersInfoBox/MembersInfoBox";
 import { EditorContent } from "./EditorContent/EditorContent";
 import Comment from "./Comment/Comment";
@@ -11,26 +10,42 @@ import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import MyButton from "../MyButton/MyButton";
 import { DetailedExpenseProps } from "../../interfaces";
 import Pill from "../Pill/Pill";
+import { DateOnly, TimeOnly } from "../../helpers/timeHelpers";
+import MapsInfoBox from "./MapsInfoBox/MapsInfoBox";
+import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
+import { useSignal } from "@preact/signals-react";
+import DeleteExpenseAnimation from "../Menus/MenuAnimations/DeleteExpenseAnimation";
+import { MdLocationOn } from "react-icons/md";
+import { GeoLocation } from "../../types";
 
 export default function DetailedExpense({
-  openDetailedExpense,
+  selectedExpense,
   amount,
   currency,
   description,
   labels,
   location,
-  occured,
+  occurred,
   payments,
   shares,
   timeZoneId,
   userAmount,
-  creator
+  creator,
+  created,
+  members,
+  errorMessage,
 }: DetailedExpenseProps) {
+
+  const googleIdUrl = "https://www.google.com/maps/place/?q=place_id:";
+  const googleCoordsUrl = "https://www.google.com/maps/search/?api=1&query=";
+
   const theme = {
     text: {
       bold: "editor-bold",
     },
   };
+
+  const menu = useSignal<string | null>(null);
 
   const onError = (error: Error): void => {
     console.error(error);
@@ -41,13 +56,26 @@ export default function DetailedExpense({
     onError,
     nodes: [HeadingNode],
   };
-  console.log(description)
+
+  const googleMapsUrlBuilder = (location: GeoLocation | undefined) => {
+    if (location?.google?.id) {
+      return `${googleIdUrl}${location?.google?.id}`;
+    } else {
+      return `${googleCoordsUrl}${location?.coordinates.latitude},${location?.coordinates.latitude}`;
+    }
+  };
+const googleurl = googleMapsUrlBuilder(location)
   return (
     <StyledDetailedExpense>
       <div className="descriptionAndCloseButton">
         <div />
-        <div className="descreption">{description}</div>
-        <div className="closeButton" onClick={() => (openDetailedExpense.value = false)}>
+        <div className="descreption">
+          {description ? <span>"{description}"</span> : ""}
+        </div>
+        <div
+          className="closeButton"
+          onClick={() => (selectedExpense.value = null)}
+        >
           <IonIcon name="close-outline" className="close" />
         </div>
       </div>
@@ -64,33 +92,57 @@ export default function DetailedExpense({
           />
           <div className="dummyDiv" />
         </div>
-        <div className="date">08 Jan 20:40</div>
+        <div className="date">
+          Occurred {DateOnly(occurred, timeZoneId)}{" "}
+          {TimeOnly(occurred, timeZoneId)}
+        </div>
       </div>
 
-      <div className="total">{displayCurrencyAndAmount("23654", "EUR")}</div>
-      <MembersInfoBox />
-      <MembersInfoBox />
-      <InfoBox>show map box box</InfoBox>
+      <div className="total">
+        {displayCurrencyAndAmount(amount.toString(), currency)}
+      </div>
+      <MembersInfoBox
+        transactions={shares}
+        areShares={true}
+        currency={currency}
+        members={members}
+      />
+      <MembersInfoBox
+        transactions={payments}
+        areShares={false}
+        currency={currency}
+        members={members}
+      />
+      <MapsInfoBox location={location} googleUrl={googleurl}/>
+
       <div className="editDeleteButtons">
         <div className="dummyDiv" />
         <div className="buttons">
           <div className="editButton">
             <MyButton onClick={() => console.log("edit")}>
-              <AiFillEdit className="icon" />
-              Edit
+              <div className="buttonChildren">
+                <AiFillEdit className="icon" />
+                <span>Edit</span>
+              </div>
             </MyButton>
           </div>
           <div className="deleteButton">
-            <MyButton onClick={() => console.log("delete")}>
-              <AiFillDelete className="icon" />
-              Delete
+            <MyButton
+              onClick={() => (menu.value = "deleteExpense")}
+              variant="secondary"
+            >
+              <div className="buttonChildren">
+                <AiFillDelete className="icon" />
+                <span>Delete</span>
+              </div>
             </MyButton>
           </div>
         </div>
         <div className="dummyDiv" />
       </div>
       <div className="createdBy">
-        Created by Kristiani on Wednesday, April 19, 2023 at 15.30
+        Created by {members.find((x) => x.id === creator)?.name} on{" "}
+        {DateOnly(created, timeZoneId)} at {TimeOnly(created, timeZoneId)}
       </div>
 
       <div className="commentSection">
@@ -104,6 +156,13 @@ export default function DetailedExpense({
           </LexicalComposer>
         </div>
       </div>
+      <MenuAnimationBackground menu={menu} />
+      <DeleteExpenseAnimation
+        menu={menu}
+        description={description}
+        selectedExpense={selectedExpense}
+        errorMessage={errorMessage}
+      />
     </StyledDetailedExpense>
   );
 }

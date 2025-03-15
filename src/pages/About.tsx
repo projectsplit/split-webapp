@@ -1,9 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React from "react";
-import { getUserId, logOut } from "../api/api";
+
 import routes from "../routes";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import { getUserId } from "../api/services/api";
+import { logOut } from "../api/auth/api";
 
 const About: React.FC = () => {
 

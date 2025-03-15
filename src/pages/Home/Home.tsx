@@ -25,8 +25,8 @@ import { TreeItemBuilder } from "../../components/TreeItemBuilder";
 import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
 import { useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
-import SettingsMenuAnimation from "../../components/MenuAnimations/SettingsMenuAnimation";
-import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
+import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
+import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 
 export default function Home() {
   const navigate = useNavigate();

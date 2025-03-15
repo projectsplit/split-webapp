@@ -5,10 +5,11 @@ import { useEffect, useMemo } from "react";
 import { groupTransactions } from "../../helpers/groupTransactions";
 import { Group, Member, TruncatedMember, UserInfo } from "../../types";
 import { Signal, useSignal } from "@preact/signals-react";
-import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
+import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import MemberFC from "./Member/MemberFC";
 import Spinner from "../../components/Spinner/Spinner";
-import SettleUpAnimation from "../../components/MenuAnimations/SettleUpAnimation";
+import SettleUpAnimation from "../../components/Menus/MenuAnimations/SettleUpAnimation";
+import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
 
 export default function Members() {
   const memberIdSelectedToSettleUp = useSignal<string>("");
@@ -28,18 +29,6 @@ export default function Members() {
   const guests = group?.guests;
   const userMemberId = members?.find((m) => m.userId === userInfo.userId)?.id;
 
-  const mergeMembersAndGuests = (
-    members: Member[],
-    guests: TruncatedMember[]
-  ): TruncatedMember[] => {
-    const truncatedMembers: TruncatedMember[] = members.map(({ id, name }) => ({
-      id,
-      name,
-    }));
-
-    return [...truncatedMembers, ...guests];
-  };
-
   const allParticipants = mergeMembersAndGuests(members || [], guests || []);
   const { groupedTransactions } = useMemo(() => {
     const groupedTransactions = groupTransactions(
@@ -51,23 +40,31 @@ export default function Members() {
     return { groupedTransactions };
   }, [debts]);
 
-    useEffect(() => {
-      !allParticipants ? (showBottomBar.value = false) : (showBottomBar.value = true);
-    }, [allParticipants]);
+  useEffect(() => {
+    isFetching
+      ? (showBottomBar.value = false)
+      : (showBottomBar.value = true);
+  }, [isFetching]);
+
+  const sortedParticipants = [...allParticipants].sort((a, b) => {
+    if (a.id === userMemberId) return -1;
+    if (b.id === userMemberId) return 1;
+    return 0;
+  });
 
   return (
     <StyledMembers>
       {isFetching ? (
         <Spinner />
       ) : (
-        allParticipants?.map((p) => (
+        sortedParticipants?.map((p) => (
           <MemberFC
             key={p.id}
             pendingTransactions={debts ?? []}
             groupedTransactions={groupedTransactions}
             memberId={p.id}
             name={p.name}
-            isUser={p.id === userMemberId}
+            isLogedUser={p.id === userMemberId}
             isGuest={guests?.some((g) => g.id === p.id) ?? false}
             menu={menu}
             memberIdSelectedToSettleUp={memberIdSelectedToSettleUp}

@@ -22,7 +22,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, setLocation, setIsM
       longitude: defaultCoordinates.longitude
     },
     google: {
-      id: undefined,
+      id: null,
       address: undefined,
       name: undefined,
       url: undefined
@@ -84,7 +84,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, setLocation, setIsM
           },
           google: {
             address: firstResult.formatted_address,
-            id: firstResult.place_id,
+            id: null,
             name: firstResult.formatted_address,
             url: buildGoogleUrl({ latitude: userPosition.lat, longitude: userPosition.lng })
           }
@@ -110,7 +110,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, setLocation, setIsM
           longitude: selectedPlace.geometry.location.lng()
         },
         google: {
-          id: selectedPlace.place_id,
+          id: selectedPlace.place_id!,
           address: selectedPlace.formatted_address,
           name: selectedPlace.name,
           url: selectedPlace.url
@@ -152,7 +152,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, setLocation, setIsM
             },
             google: {
               address: firstResult.formatted_address,
-              id: firstResult.place_id,
+              id: null,
               name: firstResult.formatted_address,
               url: buildGoogleUrl({ latitude: pos.lat, longitude: pos.lng })
             }

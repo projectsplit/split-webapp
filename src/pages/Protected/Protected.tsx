@@ -2,13 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
 import { StyledProtected } from "./Protected.styled";
-import TopMenu from "../../components/TopMenu/TopMenu";
-import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
-import NotificationsMenuAnimation from "../../components/MenuAnimations/NotificationsMenuAnimation";
-import SettingsMenuAnimation from "../../components/MenuAnimations/SettingsMenuAnimation";
+import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import NotificationsMenuAnimation from "../../components/Menus/MenuAnimations/NotificationsMenuAnimation";
+import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
 import { getMe } from "../../api/services/api";
 import { useGetUserInvitations } from "../../api/services/useGetUserInvitations";
 import { useEffect } from "react";
+import TopMenu from "../../components/Menus/TopMenu/TopMenu";
 
 const Protected: React.FC = () => {
   const location = useLocation();

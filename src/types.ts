@@ -77,7 +77,7 @@ export type ExpenseResponseItem = {
   groupId: string;
   creatorId: string;
   amount: number;
-  occured: string;
+  occurred: string;
   description: string;
   currency: string;
   payments: Payment[];
@@ -93,7 +93,7 @@ export type TransferResponseItem = {
   groupId: string;
   creatorId: string;
   amount: number;
-  occured: string;
+  occurred: string;
   description: string;
   currency: string;
   senderId: string;
@@ -181,7 +181,7 @@ export type CreateExpenseRequest = {
   description: string;
   labelIds: string[];
   location: GeoLocation | null;
-  occured: string;
+  occurred: string;
   labels: string[];
 };
 
@@ -191,7 +191,7 @@ export type GeoLocation = {
 };
 
 export type GooglePlace = {
-  id: string | undefined;
+  id: string | null;
   name: string | undefined;
   address: string | undefined;
   url: string | undefined;
@@ -316,4 +316,8 @@ export type GetUserInvitationsResponseItem = {
   groupId: string;
   groupName: string;
   guestId: string | null;
+};
+
+export type DeleteExpenseRequest = {
+  expenseId: string
 };

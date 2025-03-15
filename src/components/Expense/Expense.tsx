@@ -1,9 +1,8 @@
-import React from "react";
-import { DateTime } from "luxon";
 import { ExpenseProps } from "../../interfaces";
 import { StyledExpense } from "./Expense.styled";
 import { MdLocationOn } from "react-icons/md";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
+import { TimeOnly } from "../../helpers/timeHelpers";
 
 const Expense = ({
   timeZoneId,
@@ -12,15 +11,17 @@ const Expense = ({
   currency,
   description,
   location,
-  occured,
+  occurred,
   userAmount,
 }: ExpenseProps) => {
+
+
   return (
     <StyledExpense onClick={onClick}>
       <div className="topRow">
         {/* <div className="locationIcon">{expense.location &&<IoLocationOutline />}</div> */}
         {location ? <MdLocationOn className="locationIcon" /> : <div />}
-        <strong className="time">{TimeOnly(occured, timeZoneId)}</strong>
+        <strong className="time">{TimeOnly(occurred, timeZoneId)}</strong>
       </div>
       <div className="wrapper">
         <div className="descrAndLabels">
@@ -56,9 +57,4 @@ const Expense = ({
 
 export default Expense;
 
-const TimeOnly = (eventTimeUtc: string, timeZone: string): string => {
-  const eventDateTime = DateTime.fromISO(eventTimeUtc, { zone: "utc" }).setZone(
-    timeZone
-  );
-  return eventDateTime.setZone(timeZone).toFormat("HH:mm");
-};
+

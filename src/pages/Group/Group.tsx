@@ -9,11 +9,11 @@ import { CategorySelector } from "../../components/CategorySelector/CategorySele
 import { Signal, useSignal } from "@preact/signals-react";
 import Spinner from "../../components/Spinner/Spinner";
 import { UserInfo } from "../../types";
-import BottomMainMenu from "../../components/BottomMainMenu/BottomMainMenu";
-import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
-import NewExpenseAnimation from "../../components/MenuAnimations/NewExpenseAnimation";
-import GroupQuickActionsAnimation from "../../components/MenuAnimations/MenuWithOptionsToAddAnimation";
-import AddNewUserAnimation from "../../components/MenuAnimations/AddNewUserAnimation";
+import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
+import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
+import GroupQuickActionsAnimation from "../../components/Menus/MenuAnimations/MenuWithOptionsToAddAnimation";
+import AddNewUserAnimation from "../../components/Menus/MenuAnimations/AddNewUserAnimation";
 import useGroup from "../../hooks/useGroup";
 import { useEffect } from "react";
 
@@ -23,7 +23,7 @@ export default function Group() {
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
-
+  
   const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
@@ -33,13 +33,16 @@ export default function Group() {
 
   useEffect(() => {
     topMenuTitle.value = group?.name || "";
-  }, [group]);
+  }, [group,showBottomBar.value]);
+
+
 
   return (
     <StyledGroup>
       {isFetching ? (
         <div className="spinner">
           <Spinner />
+    
         </div>
       ) : (
         <div className="group">
@@ -66,7 +69,7 @@ export default function Group() {
           <GroupQuickActionsAnimation menu={menu} />
           <div className="bottomMenu">
             {" "}
-            {group && showBottomBar.value && (
+            {showBottomBar.value && (
               <BottomMainMenu
                 onClick={() => (menu.value = "menuWithOptions")}
               />

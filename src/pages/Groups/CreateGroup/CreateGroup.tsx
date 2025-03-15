@@ -8,8 +8,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createGroupFn } from "../../../api/services/api";
 import { Currency, GroupRequest } from "../../../types";
 import { FaAngleDown } from "react-icons/fa";
-import MenuAnimationBackground from "../../../components/MenuAnimations/MenuAnimationBackground";
-import CurrencyOptionsAnimation from "../../../components/MenuAnimations/CurrencyOptionsAnimation";
+import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
 import { useSignal } from "@preact/signals-react";
 import { currencyData } from "../../../helpers/openExchangeRates";
 

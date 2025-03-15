@@ -5,7 +5,7 @@ import { DescriptionAndTree } from "../DescriptionAndTree/DescriptionAndTree";
 export const RenderOwedOnly = ({
   memberTransactions,
   pendingTransactions,
-  isUser,
+  isLogedUser,
   memberId,
   name,
   showTree,
@@ -17,7 +17,7 @@ export const RenderOwedOnly = ({
       <DescriptionAndTree
         memberTransactions={memberTransactions}
         pendingTransactions={pendingTransactions}
-        isUser={isUser}
+        isLogedUser={isLogedUser}
         memberId={memberId}
         name={name}
         isOwed={true}
@@ -32,7 +32,7 @@ export const RenderOwedOnly = ({
 export const RenderOwesOnly = ({
   memberTransactions,
   pendingTransactions,
-  isUser,
+  isLogedUser,
   memberId,
   name,
   showTree,
@@ -44,7 +44,7 @@ export const RenderOwesOnly = ({
       <DescriptionAndTree
         memberTransactions={memberTransactions}
         pendingTransactions={pendingTransactions}
-        isUser={isUser}
+        isLogedUser={isLogedUser}
         memberId={memberId}
         name={name}
         isOwed={false}
@@ -56,16 +56,16 @@ export const RenderOwesOnly = ({
   );
 };
 
-export const RenderSettled = ({ isUser, name }: RenderSettledProps) => {
+export const RenderSettled = ({ isLogedUser, name }: RenderSettledProps) => {
   return (
     <div className="settled">
-      {isUser ? (
+      {isLogedUser ? (
         <div>
-          <strong>You</strong>&nbsp;<span className="are">are</span>
+          <span className="you">You</span>&nbsp;<span className="are">are</span>
         </div>
       ) : (
         <div>
-          <strong>{name}</strong>&nbsp;<span className="is">is</span>
+          <span className="you">{name}</span>&nbsp;<span className="is">is</span>
         </div>
       )}{" "}
       &nbsp;settled
@@ -77,7 +77,7 @@ export const RenderSettled = ({ isUser, name }: RenderSettledProps) => {
 export const RenderBoth = ({
   memberTransactions,
   pendingTransactions,
-  isUser,
+  isLogedUser,
   memberId,
   name,
   doNotshowTreeWhenMemberIsOwed,
@@ -95,7 +95,7 @@ export const RenderBoth = ({
         <DescriptionAndTree
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
-          isUser={isUser}
+          isLogedUser={isLogedUser}
           memberId={memberId}
           name={name}
           isOwed={false}
@@ -106,7 +106,7 @@ export const RenderBoth = ({
         <DescriptionAndTree
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
-          isUser={isUser}
+          isLogedUser={isLogedUser}
           memberId={memberId}
           name={name}
           isOwed={true}
@@ -122,7 +122,7 @@ export const RenderBoth = ({
         <DescriptionAndTree
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
-          isUser={isUser}
+          isLogedUser={isLogedUser}
           memberId={memberId}
           name={name}
           isOwed={true}
@@ -133,7 +133,7 @@ export const RenderBoth = ({
         <DescriptionAndTree
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
-          isUser={isUser}
+          isLogedUser={isLogedUser}
           memberId={memberId}
           name={name}
           isOwed={false}
@@ -149,7 +149,7 @@ export const RenderBoth = ({
         <DescriptionAndTree
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
-          isUser={isUser}
+          isLogedUser={isLogedUser}
           memberId={memberId}
           name={name}
           isOwed={true}
@@ -160,7 +160,7 @@ export const RenderBoth = ({
         <DescriptionAndTree
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
-          isUser={isUser}
+          isLogedUser={isLogedUser}
           memberId={memberId}
           name={name}
           isOwed={false}

@@ -1,6 +1,7 @@
 import { CSSProperties } from "react";
 import {
   ExpenseItem,
+  ExpenseResponseItem,
   FormExpense,
   Frequency,
   GeoLocation,
@@ -8,6 +9,7 @@ import {
   GetUserInvitationsResponseItem,
   Group,
   GroupedTransaction,
+  Member,
   Payment,
   PickerMember,
   Share,
@@ -25,14 +27,27 @@ import {
 export interface ExpenseProps {
   timeZoneId: string;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
- 
   amount: number;
   currency: string;
-  occured: string;
+  occurred: string;
   description: string;
-
   location: GeoLocation | undefined;
-  userAmount:number;
+  userAmount: number;
+}
+
+export interface MapsInfoBoxProps {
+  location: GeoLocation | undefined;
+  googleUrl:string;
+}
+
+export interface MembersInfoBoxProps {
+  transactions: {
+    memberId: string;
+    amount: number;
+  }[];
+  areShares: boolean;
+  currency: string;
+  members: TruncatedMember[];
 }
 
 export interface DetailedExpenseProps {
@@ -42,14 +57,16 @@ export interface DetailedExpenseProps {
   shares: Share[];
   amount: number;
   currency: string;
-  occured: string;
+  occurred: string;
   created: string;
   description: string;
   labels: string[];
   location: GeoLocation | undefined;
-  userAmount:number;
-  openDetailedExpense: Signal<boolean>;
-  creator:string;
+  userAmount: number;
+  selectedExpense: Signal<ExpenseResponseItem | null>;
+  creator: string;
+  members: TruncatedMember[];
+  errorMessage: Signal<string>;
 }
 
 export interface TransferProps {
@@ -179,6 +196,7 @@ export interface SelectionButtonProps {
 export interface OptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   username: string;
+  children?: any;
 }
 
 export interface TreeProps {
@@ -287,6 +305,16 @@ export interface Label {
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
 
 export interface GroupQuickActionsMenuprops extends MenuProps {}
+export interface DeleteExpenseAnimationProps extends MenuProps {
+  description: string;
+  selectedExpense: Signal<ExpenseResponseItem | null>;
+  errorMessage: Signal<string>;
+}
+export interface DeleteExpenseConfirmationProps extends MenuProps {
+  description: string;
+  selectedExpense: Signal<ExpenseResponseItem | null>;
+  errorMessage: Signal<string>;
+}
 
 export interface BarsWithLegendsProps {
   bar1Total: number;
@@ -316,7 +344,7 @@ export interface MemberProps {
   groupedTransactions: GroupedTransaction[];
   memberId: string;
   name: string;
-  isUser: boolean;
+  isLogedUser: boolean;
   menu: Signal<string | null>;
   memberIdSelectedToSettleUp: Signal<string>;
   members: TruncatedMember[];
@@ -326,7 +354,7 @@ export interface MemberProps {
 export interface RenderScenariosProps {
   memberTransactions: GroupedTransaction[];
   pendingTransactions: DebtsResponse[];
-  isUser: boolean;
+  isLogedUser: boolean;
   memberId: string;
   name: string;
   showTree: boolean;
@@ -335,13 +363,13 @@ export interface RenderScenariosProps {
 }
 export interface RenderSettledProps {
   name: string;
-  isUser: boolean;
+  isLogedUser: boolean;
 }
 
 export interface RenderBothScenariosProps {
   memberTransactions: GroupedTransaction[];
   pendingTransactions: DebtsResponse[];
-  isUser: boolean;
+  isLogedUser: boolean;
   memberId: string;
   name: string;
   doNotshowTreeWhenMemberIsOwed: boolean;
@@ -355,7 +383,7 @@ export interface MemberDetailedDescriptionProps {
   pendingTransactions: DebtsResponse[];
   memberTransactions: GroupedTransaction[];
   memberId: string;
-  isUser: boolean;
+  isLogedUser: boolean;
   isOwed: boolean;
   name: string;
   members: TruncatedMember[];
@@ -364,7 +392,7 @@ export interface MemberDetailedDescriptionProps {
 export interface DescriptionAndTreeProps {
   memberTransactions: GroupedTransaction[];
   pendingTransactions: DebtsResponse[];
-  isUser: boolean;
+  isLogedUser: boolean;
   memberId: string;
   name: string;
   isOwed: boolean;
@@ -436,4 +464,12 @@ export interface MiddleScreenMenuProps {
 
 export interface EditorContentHandle {
   clearEditor: () => void;
+}
+
+export interface ErrorMenuAnimationProps extends MenuProps {
+  message: string;
+}
+
+export interface ErrorMenuProps extends MenuProps {
+  children: any;
 }

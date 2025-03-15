@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { StyledMiddleScreenMenu } from "../MiddleScreenMenu/MiddleScreenMenu.styled";
+import { StyledMiddleScreenMenu } from "../Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
 
 export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
   display: flex;
@@ -9,7 +9,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
   overflow: auto;
   scrollbar-width: thin;
   margin: 2px;
-  box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`}; 
+  box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`};
   .dateAndLabels {
     display: flex;
     flex-direction: column;
@@ -69,8 +69,9 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     font-size: 18px;
     font-weight: 400;
     color: #dddddd;
-    font-style: italic;
+
     min-height: 21px;
+    font-weight: bold;
   }
   .editDeleteButtons {
     display: flex;
@@ -183,6 +184,12 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
 
       .editButton,
       .deleteButton {
+       
+        .buttonChildren {
+          display: flex;
+          flex-direction: row;
+          gap:10px;
+        }
         flex: 1; /* Optional: Make buttons take equal space */
       }
     }

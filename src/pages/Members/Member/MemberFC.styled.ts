@@ -2,10 +2,10 @@ import styled from "styled-components";
 
 interface StyledMemberFC {
   isGuest: boolean;
-  isUser: boolean;
+  isLogedUser: boolean;
 }
 export const StyledMemberFC = styled.div.withConfig({
-  shouldForwardProp: (prop) => !["isGuest", "isUser"].includes(prop),
+  shouldForwardProp: (prop) => !["isGuest", "isLogedUser"].includes(prop),
 })<StyledMemberFC>`
   position: relative;
   display: flex;
@@ -55,6 +55,10 @@ export const StyledMemberFC = styled.div.withConfig({
           flex-direction: column;
         }
         .settled {
+          .you{
+            font-weight:bold;
+            color:white;
+          }
           .are,
           .is {
             color: ${({ theme }) => theme.layer6};
