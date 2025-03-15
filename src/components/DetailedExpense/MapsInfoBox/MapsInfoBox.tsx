@@ -12,7 +12,7 @@ import { MdLocationOn, MdOutlineLocationOff } from "react-icons/md";
 import { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
-export default function MapsInfoBox({ location, googleUrl }: MapsInfoBoxProps) {
+export default function MapsInfoBox({ location, googleMapsUrl }: MapsInfoBoxProps) {
   const mapId = `${config.googleMapId}`;
   const defaultZoom = 14;
   const [hide, setHide] = useState<boolean>(true);
@@ -25,7 +25,7 @@ export default function MapsInfoBox({ location, googleUrl }: MapsInfoBoxProps) {
             <div className="topStripe">
               <div className="locationAndPin">
                 <MdLocationOn className="locationIcon" />
-                <a href={googleUrl} target="_blank" rel="noopener noreferrer">
+                <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer">
                   <div className="locationName">{location.google?.name}</div>{" "}
                 </a>
               </div>

@@ -1,8 +1,9 @@
-import { ExpenseProps } from "../../interfaces";
+import { ExpenseProps} from "../../interfaces";
 import { StyledExpense } from "./Expense.styled";
 import { MdLocationOn } from "react-icons/md";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 import { TimeOnly } from "../../helpers/timeHelpers";
+import Pill from "../Pill/Pill";
 
 const Expense = ({
   timeZoneId,
@@ -13,9 +14,8 @@ const Expense = ({
   location,
   occurred,
   userAmount,
+  labels,
 }: ExpenseProps) => {
-
-
   return (
     <StyledExpense onClick={onClick}>
       <div className="topRow">
@@ -23,12 +23,16 @@ const Expense = ({
         {location ? <MdLocationOn className="locationIcon" /> : <div />}
         <strong className="time">{TimeOnly(occurred, timeZoneId)}</strong>
       </div>
-      <div className="wrapper">
-        <div className="descrAndLabels">
-          <div className="descr">{description}</div>
-          <div className="labels">
-            <div className="label" />
-          </div>
+
+      <div className="descrAndAmounts">
+        <div className="descr">
+          {description ? (
+            <span>{description}</span>
+          ) : location ? (
+            <span>{location.google?.name}</span>
+          ) : (
+            ""
+          )}
         </div>
         <div className="amounts">
           <div className="userShare">
@@ -51,10 +55,27 @@ const Expense = ({
           </div>
         </div>
       </div>
+
+      {labels.length > 0 ? (
+        <div className="labels">
+          {labels.map((l, index) => (
+            // <Label key={index} backgroundColor="rgb(189, 123, 243)" />
+            <Pill
+              key={index}
+              title={l}
+              color="#e151ee"
+              closeButton={false}
+              fontSize="12px"
+            />
+          ))}
+        </div>
+      ) : null}
     </StyledExpense>
   );
 };
 
+// const Label = ({ backgroundColor }: LabelProps) => {
+//   return <StyledLabel backgroundColor={backgroundColor} />;
+// };
+
 export default Expense;
-
-

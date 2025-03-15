@@ -64,10 +64,10 @@ export type GetGroupTransfersResponse = {
 export type GroupedTransaction = {
   totalAmount: currency;
   currency: string;
-  id: string; 
-  isOwed: boolean; 
-  isUser:boolean;
-  name:string;
+  id: string;
+  isOwed: boolean;
+  isUser: boolean;
+  name: string;
 };
 
 export type ExpenseResponseItem = {
@@ -139,22 +139,16 @@ export type Member = {
   joined: Date;
 };
 
-export type TruncatedMember={
-  id:string;
-  name:string;
-}
+export type TruncatedMember = {
+  id: string;
+  name: string;
+};
 
 export type Guest = {
   id: string;
   name: string;
   joined: Date;
 };
-
-export interface Label {
-  id: string;
-  text: string;
-  color: string;
-}
 
 export type PickerMember = {
   id: string;
@@ -165,6 +159,12 @@ export type PickerMember = {
   order: number;
 };
 
+// export type Label = {
+//   id: string;
+//   text: string;
+//   color: string;
+// };
+export type Label = string;
 
 export type CreateExpenseRequest = {
   amount: number;
@@ -262,46 +262,46 @@ export type Currency = {
 };
 
 export type MostRecentGroupDetailsResponse = {
-  id:string;
-  name:string;
-  details:Details;
-}
+  id: string;
+  name: string;
+  details: Details;
+};
 
-export type FormExpense ={
-  id: string,
-  groupId: string,
-  amount: string,
-  currency: string,
-  description: string,
-  payers: Payer[],
-  participants: Participant[],
-  expenseTime: Date,
-  labels: string[],
-  creationTime: Date,
-  lastUpdateTime: Date,
-  location: GeoLocation | undefined
-}
+export type FormExpense = {
+  id: string;
+  groupId: string;
+  amount: string;
+  currency: string;
+  description: string;
+  payers: Payer[];
+  participants: Participant[];
+  expenseTime: Date;
+  labels: string[];
+  creationTime: Date;
+  lastUpdateTime: Date;
+  location: GeoLocation | undefined;
+};
 
 export type Participant = {
-  memberId: string,
-  participationAmount: string
-}
+  memberId: string;
+  participationAmount: string;
+};
 
 export type Payer = {
-  memberId: string,
-  paymentAmount: string
-}
+  memberId: string;
+  paymentAmount: string;
+};
 export type Transfer = {
-  description:string;
-  amount:string;
-  currency:string;
-  receiverId:string;
-  senderId:string
-}
+  description: string;
+  amount: string;
+  currency: string;
+  receiverId: string;
+  senderId: string;
+};
 export type CreateTransfersRequest = {
-  groupId:string;
-  transfers:Transfer[]
-}
+  groupId: string;
+  transfers: Transfer[];
+};
 
 export type GetUserInvitationsResponse = {
   invitations: GetUserInvitationsResponseItem[];
@@ -319,5 +319,5 @@ export type GetUserInvitationsResponseItem = {
 };
 
 export type DeleteExpenseRequest = {
-  expenseId: string
+  expenseId: string;
 };

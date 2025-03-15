@@ -22,14 +22,13 @@ export default function Members() {
   }>();
   const { data: debts, isFetching } = useDebts(groupid);
 
-  if (!userInfo || !group) {
-    return <Spinner />;
-  }
+
   const members = group?.members;
   const guests = group?.guests;
-  const userMemberId = members?.find((m) => m.userId === userInfo.userId)?.id;
+  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
   const allParticipants = mergeMembersAndGuests(members || [], guests || []);
+
   const { groupedTransactions } = useMemo(() => {
     const groupedTransactions = groupTransactions(
       debts ?? [],
@@ -45,6 +44,10 @@ export default function Members() {
       ? (showBottomBar.value = false)
       : (showBottomBar.value = true);
   }, [isFetching]);
+
+  if (!userInfo || !group) {
+    return <Spinner />;
+  }
 
   const sortedParticipants = [...allParticipants].sort((a, b) => {
     if (a.id === userMemberId) return -1;

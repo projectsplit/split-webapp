@@ -10,7 +10,7 @@ import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import MyButton from "../MyButton/MyButton";
 import { DetailedExpenseProps } from "../../interfaces";
 import Pill from "../Pill/Pill";
-import { DateOnly, TimeOnly } from "../../helpers/timeHelpers";
+import { DateOnly, TimeOnly, YearOnly } from "../../helpers/timeHelpers";
 import MapsInfoBox from "./MapsInfoBox/MapsInfoBox";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import { useSignal } from "@preact/signals-react";
@@ -29,15 +29,13 @@ export default function DetailedExpense({
   payments,
   shares,
   timeZoneId,
-  userAmount,
   creator,
   created,
   members,
   errorMessage,
+  userMemberId,
 }: DetailedExpenseProps) {
-
-  const googleIdUrl = "https://www.google.com/maps/place/?q=place_id:";
-  const googleCoordsUrl = "https://www.google.com/maps/search/?api=1&query=";
+  const googleUrl = "https://www.google.com/maps/search/?api=1&query=";
 
   const theme = {
     text: {
@@ -59,12 +57,14 @@ export default function DetailedExpense({
 
   const googleMapsUrlBuilder = (location: GeoLocation | undefined) => {
     if (location?.google?.id) {
-      return `${googleIdUrl}${location?.google?.id}`;
+      return `${googleUrl}${encodeURIComponent(
+        location.google?.name!
+      )}&query_place_id=${location.google?.id}`;
     } else {
-      return `${googleCoordsUrl}${location?.coordinates.latitude},${location?.coordinates.latitude}`;
+      return `${googleUrl}${location?.coordinates.latitude},${location?.coordinates.longitude}`;
     }
   };
-const googleurl = googleMapsUrlBuilder(location)
+  const googleMapsUrl = googleMapsUrlBuilder(location);
   return (
     <StyledDetailedExpense>
       <div className="descriptionAndCloseButton">
@@ -80,21 +80,29 @@ const googleurl = googleMapsUrlBuilder(location)
         </div>
       </div>
       <div className="dateAndLabels">
-        <div className="labels">
-          <div className="dummyDiv" />
-          <Pill title="food" color="blue" closeButton={false} fontSize="18px" />
-          <Pill title="rent" color="red" closeButton={false} fontSize="18px" />
-          <Pill
-            title="drinks"
-            color="yellow"
-            closeButton={false}
-            fontSize="18px"
-          />
-          <div className="dummyDiv" />
+        <div className="labelsWrapper">
+          <div className="labels">
+            {labels.map((l, i) => (
+              <Pill
+                key={i}
+                title={l}
+                color="#e151ee"
+                closeButton={false}
+                fontSize="18px"
+              />
+            ))}
+          </div>
         </div>
         <div className="date">
-          Occurred {DateOnly(occurred, timeZoneId)}{" "}
-          {TimeOnly(occurred, timeZoneId)}
+          Occurred{" "}
+          {DateOnly(occurred, timeZoneId) === "Today"
+            ? DateOnly(occurred, timeZoneId)
+            : "on" +
+              " " +
+              DateOnly(occurred, timeZoneId) +
+              " " +
+              YearOnly(occurred, timeZoneId)}{" "}
+          at {TimeOnly(occurred, timeZoneId)}
         </div>
       </div>
 
@@ -106,14 +114,16 @@ const googleurl = googleMapsUrlBuilder(location)
         areShares={true}
         currency={currency}
         members={members}
+        userMemberId={userMemberId}
       />
       <MembersInfoBox
         transactions={payments}
         areShares={false}
         currency={currency}
         members={members}
+        userMemberId={userMemberId}
       />
-      <MapsInfoBox location={location} googleUrl={googleurl}/>
+      <MapsInfoBox location={location} googleMapsUrl={googleMapsUrl} />
 
       <div className="editDeleteButtons">
         <div className="dummyDiv" />
@@ -141,8 +151,15 @@ const googleurl = googleMapsUrlBuilder(location)
         <div className="dummyDiv" />
       </div>
       <div className="createdBy">
-        Created by {members.find((x) => x.id === creator)?.name} on{" "}
-        {DateOnly(created, timeZoneId)} at {TimeOnly(created, timeZoneId)}
+        Created by {members.find((x) => x.id === creator)?.name}{" "}
+        {DateOnly(created, timeZoneId) === "Today"
+          ? DateOnly(created, timeZoneId)
+          : "on" +
+            " " +
+            DateOnly(occurred, timeZoneId) +
+            " " +
+            YearOnly(occurred, timeZoneId)}{" "}
+        at {TimeOnly(created, timeZoneId)}
       </div>
 
       <div className="commentSection">

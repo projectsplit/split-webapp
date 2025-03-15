@@ -26,3 +26,8 @@ export const DateOnly = (eventTimeUtc: string, timeZone: string): string => {
   
     return eventDateTime.setZone(timeZone).toFormat("d LLL yyyy");
   };
+  
+  export const YearOnly = (eventTimeUtc: string, timeZone: string): string => {
+    const eventDateTime = DateTime.fromISO(eventTimeUtc, { zone: "utc" }).setZone(timeZone);
+    return eventDateTime.toFormat("yyyy");
+  };

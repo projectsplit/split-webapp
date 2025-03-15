@@ -29,17 +29,16 @@ const Expenses = () => {
     showBottomBar: Signal<boolean>;
   }>();
 
-  const memberId = group?.members.find((x) => x.userId === userInfo?.userId)
-    ?.id!;
-
   const pageSize = 10;
   const members = group?.members;
   const guests = group?.guests;
+  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
+
   const allParticipants = mergeMembersAndGuests(members || [], guests || []);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
-      queryKey: ["groupExpenses", group?.id, pageSize,errorMessage.value],
+      queryKey: ["groupExpenses", group?.id, pageSize, errorMessage.value],
       queryFn: ({ pageParam: next }) =>
         getGroupExpenses(group?.id!, pageSize, next),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
@@ -47,6 +46,7 @@ const Expenses = () => {
     });
 
   const expenses = data?.pages.flatMap((p) => p.expenses);
+ 
 
   useEffect(() => {
     isFetching ? (showBottomBar.value = false) : (showBottomBar.value = true);
@@ -61,13 +61,14 @@ const Expenses = () => {
   useSentinel(fetchNextPage, hasNextPage, isFetchingNextPage);
 
   if (isFetching) {
-  
     return <Spinner />;
   }
 
   const totalExpense = expenses?.reduce((sum, e) => sum + e.amount, 0);
   const userExpense = expenses?.reduce((sum, e) => {
-    return sum + (e.shares.find((x) => x.memberId === memberId)?.amount ?? 0);
+    return (
+      sum + (e.shares.find((x) => x.memberId === userMemberId)?.amount ?? 0)
+    );
   }, 0);
 
   return (
@@ -105,9 +106,10 @@ const Expenses = () => {
                       timeZoneId={timeZoneId}
                       onClick={() => (selectedExpense.value = e)}
                       userAmount={
-                        e.shares.find((x) => x.memberId === memberId)?.amount ??
-                        0
+                        e.shares.find((x) => x.memberId === userMemberId)
+                          ?.amount ?? 0
                       }
+                      labels={e.labels}
                     />
                   </div>
                 ))}
@@ -135,20 +137,16 @@ const Expenses = () => {
           payments={selectedExpense.value.payments}
           shares={selectedExpense.value.shares}
           timeZoneId={timeZoneId}
-          userAmount={
-            selectedExpense.value.shares.find((x) => x.memberId === memberId)
-              ?.amount ?? 0
-          }
           creator={selectedExpense.value.creatorId}
           created={selectedExpense.value.created}
           members={allParticipants}
           errorMessage={errorMessage}
+          userMemberId={userMemberId || ""}
         />
       )}
 
-      <MenuAnimationBackground menu={menu}/>
-      <ErrorMenuAnimation menu={menu} message={errorMessage.value}/>
-
+      <MenuAnimationBackground menu={menu} />
+      <ErrorMenuAnimation menu={menu} message={errorMessage.value} />
     </StyledExpenses>
   );
 };

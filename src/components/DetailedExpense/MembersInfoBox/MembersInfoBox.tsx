@@ -11,8 +11,15 @@ export default function MembersInfoBox({
   areShares,
   currency,
   members,
+  userMemberId,
 }: MembersInfoBoxProps) {
   const [hide, setHide] = React.useState<boolean>(true);
+
+  const sortedTransactions = [...transactions].sort((a, b) => {
+    if (a.memberId === userMemberId) return -1;
+    if (b.memberId === userMemberId) return 1;
+    return 0;
+  });
 
   const totalAmount = transactions.reduce(
     (acc, { amount }) => acc.add(amount),
@@ -25,20 +32,20 @@ export default function MembersInfoBox({
         <div className="topStripe">
           {areShares ? (
             <div className="info">
-              {transactions?.length === 1 ? (
-                <span>billed to {transactions?.length} member</span>
-              ) : transactions?.length === 2 ? (
-                <span>Split between {transactions?.length} members</span>
+              {sortedTransactions?.length === 1 ? (
+                <span>billed to {sortedTransactions?.length} member</span>
+              ) : sortedTransactions?.length === 2 ? (
+                <span>Split between {sortedTransactions?.length} members</span>
               ) : (
-                <span> Split among {transactions?.length} members</span>
+                <span> Split among {sortedTransactions?.length} members</span>
               )}
             </div>
           ) : (
             <div className="info">
-              {transactions?.length === 1 ? (
-                <span>Paid by {transactions?.length} member</span>
+              {sortedTransactions?.length === 1 ? (
+                <span>Paid by {sortedTransactions?.length} member</span>
               ) : (
-                <span>Paid by {transactions?.length} members</span>
+                <span>Paid by {sortedTransactions?.length} members</span>
               )}
             </div>
           )}
@@ -50,17 +57,37 @@ export default function MembersInfoBox({
 
         {!hide && (
           <div className="memberInfoStripe">
-            {transactions.map((t, i) => (
+            {sortedTransactions.map((t, i) => (
               <div className="member" key={i}>
                 <span className="memberName">
-                  {members.find((x) => x.id === t.memberId)?.name}
+                  {t.memberId === userMemberId ? (
+                    <span className="you">You</span>
+                  ) : (
+                    members.find((x) => x.id === t.memberId)?.name
+                  )}
                 </span>
+
                 <span className="amount">
-                  {displayCurrencyAndAmount(t.amount.toString(), currency)}
+                  {t.memberId === userMemberId ? (
+                    <span className="yourAmount">
+                      {displayCurrencyAndAmount(t.amount.toString(), currency)}
+                    </span>
+                  ) : (
+                    displayCurrencyAndAmount(t.amount.toString(), currency)
+                  )}
                 </span>
+
                 <span className="percentage">
                   {" "}
-                  {((t.amount / totalAmount.value) * 100).toFixed(1)}%
+                  {t.memberId === userMemberId ? (
+                    <span className="yourPercentage">
+                      {((t.amount / totalAmount.value) * 100).toFixed(1)}%
+                    </span>
+                  ) : (
+                    <span>
+                      {((t.amount / totalAmount.value) * 100).toFixed(1)}%{" "}
+                    </span>
+                  )}
                 </span>
               </div>
             ))}

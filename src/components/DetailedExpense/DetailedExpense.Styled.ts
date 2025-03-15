@@ -19,12 +19,13 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
       font-weight: 600;
       color: ${({ theme }) => theme.grey};
     }
+    .labelsWrapper {
+      overflow-x: auto;
+      text-align: center;
+    }
     .labels {
-      display: flex;
-      flex-direction: row;
-      overflow: auto;
+      display: inline-flex;
       gap: 5px;
-      justify-content: center;
     }
   }
   .descriptionAndCloseButton {
@@ -184,11 +185,10 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
 
       .editButton,
       .deleteButton {
-       
         .buttonChildren {
           display: flex;
           flex-direction: row;
-          gap:10px;
+          gap: 10px;
         }
         flex: 1; /* Optional: Make buttons take equal space */
       }

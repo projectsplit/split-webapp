@@ -9,6 +9,7 @@ import {
   GetUserInvitationsResponseItem,
   Group,
   GroupedTransaction,
+  Label,
   Member,
   Payment,
   PickerMember,
@@ -33,13 +34,16 @@ export interface ExpenseProps {
   description: string;
   location: GeoLocation | undefined;
   userAmount: number;
+  labels:Label[]
 }
 
 export interface MapsInfoBoxProps {
   location: GeoLocation | undefined;
-  googleUrl:string;
+  googleMapsUrl:string;
 }
-
+export interface LabelProps {
+  backgroundColor:string;
+}
 export interface MembersInfoBoxProps {
   transactions: {
     memberId: string;
@@ -48,6 +52,7 @@ export interface MembersInfoBoxProps {
   areShares: boolean;
   currency: string;
   members: TruncatedMember[];
+  userMemberId:string;
 }
 
 export interface DetailedExpenseProps {
@@ -62,11 +67,11 @@ export interface DetailedExpenseProps {
   description: string;
   labels: string[];
   location: GeoLocation | undefined;
-  userAmount: number;
   selectedExpense: Signal<ExpenseResponseItem | null>;
   creator: string;
   members: TruncatedMember[];
   errorMessage: Signal<string>;
+  userMemberId:string;
 }
 
 export interface TransferProps {
@@ -296,11 +301,7 @@ export interface ExpenseFormProps {
   menu: Signal<string | null>;
 }
 
-export interface Label {
-  id: string;
-  text: string;
-  color: string;
-}
+
 
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
 

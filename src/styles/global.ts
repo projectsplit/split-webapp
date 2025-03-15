@@ -29,11 +29,13 @@ body,
   scrollbar-gutter: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(192, 192, 192, 0.4) transparent;
+  scrollbar-width: thin; 
 }
 
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width:4px;
+  height: 4px;
+  
 }
 
 *::-webkit-scrollbar-track {
@@ -41,12 +43,12 @@ body,
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(192, 192, 192, 0.4);
   border-radius: 4px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(192, 192, 192, 0.6);
 }
 
 input[type="number"] {
