@@ -16,7 +16,7 @@ export default function MemberFC({
   groupedTransactions,
   memberId,
   name,
-  isUser,
+  isLogedUser,
   isGuest,
   menu,
   memberIdSelectedToSettleUp,
@@ -24,7 +24,7 @@ export default function MemberFC({
 }: MemberProps) {
 
   const showSettleUpButton =
-    (isGuest || isUser) &&
+    (isGuest || isLogedUser) &&
     pendingTransactions.filter((p) => p.debtor === memberId).length > 0;
 
   const memberOwesItems = pendingTransactions
@@ -108,7 +108,7 @@ export default function MemberFC({
   }, [groupedTransactions, memberId, pendingTransactions]);
 
   return (
-    <StyledMemberFC isGuest={isGuest} isUser={isUser}>
+    <StyledMemberFC isGuest={isGuest} isLogedUser={isLogedUser}>
       <div className="debtsCreditsStripeAndTotal">
         <div className="debtsCreditsAndTree">
           <div className="debtsCredits">
@@ -119,7 +119,7 @@ export default function MemberFC({
                     <RenderOwedOnly
                       showTree={!doNotShowTreeWhenMemberIsOwed}
                       memberTransactions={memberTransactions}
-                      isUser={isUser}
+                      isLogedUser={isLogedUser}
                       memberId={memberId}
                       name={name}
                       pendingTransactions={pendingTransactions}
@@ -130,7 +130,7 @@ export default function MemberFC({
                 );
               }
               if (!memberIsOwed && !memberOwes) {
-                return <RenderSettled isUser={isUser} name={name} />;
+                return <RenderSettled isLogedUser={isLogedUser} name={name} />;
               }
               if (memberOwes && !memberIsOwed) {
                 return (
@@ -138,7 +138,7 @@ export default function MemberFC({
                     <RenderOwesOnly
                       showTree={!doNotShowTreeWhenMemberOwes}
                       memberTransactions={memberTransactions}
-                      isUser={isUser}
+                      isLogedUser={isLogedUser}
                       memberId={memberId}
                       name={name}
                       pendingTransactions={pendingTransactions}
@@ -156,7 +156,7 @@ export default function MemberFC({
                     }
                     doNotshowTreeWhenMemberOwes={doNotShowTreeWhenMemberOwes}
                     memberTransactions={memberTransactions}
-                    isUser={isUser}
+                    isLogedUser={isLogedUser}
                     memberId={memberId}
                     name={name}
                     pendingTransactions={pendingTransactions}

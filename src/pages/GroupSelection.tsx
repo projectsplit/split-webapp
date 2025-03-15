@@ -14,8 +14,8 @@ const GroupSelection = () => {
   const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
   
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ['groups', userInfo.userId, pageSize],
-    queryFn: ({ pageParam: next }) => getGroups(userInfo.userId, pageSize, next),
+    queryKey: ['groups', userInfo?.userId, pageSize],
+    queryFn: ({ pageParam: next }) => getGroups(userInfo?.userId, pageSize, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: '',
   });

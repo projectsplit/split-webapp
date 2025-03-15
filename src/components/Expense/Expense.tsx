@@ -1,59 +1,81 @@
-import React from "react";
-import { DateTime } from "luxon";
-import { ExpenseProps } from "../../interfaces";
+import { ExpenseProps} from "../../interfaces";
 import { StyledExpense } from "./Expense.styled";
 import { MdLocationOn } from "react-icons/md";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
+import { TimeOnly } from "../../helpers/timeHelpers";
+import Pill from "../Pill/Pill";
 
-const Expense: React.FC<ExpenseProps> = ({ expense, timeZoneId }) => {
-
+const Expense = ({
+  timeZoneId,
+  onClick,
+  amount,
+  currency,
+  description,
+  location,
+  occurred,
+  userAmount,
+  labels,
+}: ExpenseProps) => {
   return (
-    <StyledExpense>
+    <StyledExpense onClick={onClick}>
       <div className="topRow">
         {/* <div className="locationIcon">{expense.location &&<IoLocationOutline />}</div> */}
-        {expense.location ? <MdLocationOn className="locationIcon" /> : <div />}
-        <strong className="time">{TimeOnly(expense.date, timeZoneId)}</strong>
+        {location ? <MdLocationOn className="locationIcon" /> : <div />}
+        <strong className="time">{TimeOnly(occurred, timeZoneId)}</strong>
       </div>
-      <div className="wrapper">
-        <div className="descrAndLabels">
-          <div className="descr">{expense.description}</div>
-          <div className="labels">
-            <div className="label"/>
-          </div>
+
+      <div className="descrAndAmounts">
+        <div className="descr">
+          {description ? (
+            <span>{description}</span>
+          ) : location ? (
+            <span>{location.google?.name}</span>
+          ) : (
+            ""
+          )}
         </div>
         <div className="amounts">
           <div className="userShare">
-            {expense.amount === 0 ? "" : <div className="legendGroup" />}
+            {amount === 0 ? "" : <div className="legendGroup" />}
             <div className="amount">
-              {displayCurrencyAndAmount(
-                Math.abs(expense.amount).toString(),
-                expense.currency
-              )}
+              {displayCurrencyAndAmount(Math.abs(amount).toString(), currency)}
             </div>
           </div>
 
           <div className="groupTotal">
-            {expense.shareAmount === 0 ? "" : <div className="legendUser" />}
+            {userAmount === 0 ? "" : <div className="legendUser" />}
             <div className="amount">
-              {expense.shareAmount === 0
+              {userAmount === 0
                 ? ""
                 : displayCurrencyAndAmount(
-                    Math.abs(expense.shareAmount).toString(),
-                    expense.currency
+                    Math.abs(userAmount).toString(),
+                    currency
                   )}
             </div>
           </div>
         </div>
       </div>
+
+      {labels.length > 0 ? (
+        <div className="labels">
+          {labels.map((l, index) => (
+            // <Label key={index} backgroundColor="rgb(189, 123, 243)" />
+            <Pill
+              key={index}
+              title={l}
+              color="#e151ee"
+              closeButton={false}
+              fontSize="12px"
+            />
+          ))}
+        </div>
+      ) : null}
     </StyledExpense>
   );
 };
 
-export default Expense;
+// const Label = ({ backgroundColor }: LabelProps) => {
+//   return <StyledLabel backgroundColor={backgroundColor} />;
+// };
 
-const TimeOnly = (eventTimeUtc: string, timeZone: string): string => {
-  const eventDateTime = DateTime.fromISO(eventTimeUtc, { zone: "utc" }).setZone(
-    timeZone
-  );
-  return eventDateTime.setZone(timeZone).toFormat("HH:mm");
-};
+export default Expense;

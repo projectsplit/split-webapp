@@ -6,7 +6,7 @@ import { StyledDescriptionAndTree } from "./DescriptionAndTree.Styled";
 export const DescriptionAndTree = ({
   memberTransactions,
     pendingTransactions,
-    isUser,
+    isLogedUser,
     memberId,
     name,
     isOwed,
@@ -22,7 +22,7 @@ export const DescriptionAndTree = ({
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
           isOwed={isOwed}
-          isUser={isUser}
+          isLogedUser={isLogedUser}
           memberId={memberId}
           name={name}
           members={members}

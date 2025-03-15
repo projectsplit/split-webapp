@@ -1,13 +1,14 @@
 import { css, keyframes, styled } from "styled-components";
 
 export const StyledMyButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => !['variant', 'isLoading', 'hasFailed'].includes(prop),
-}) <StyledMyButtonProps>`
+  shouldForwardProp: (prop) =>
+    !["variant", "isLoading", "hasFailed"].includes(prop),
+})<StyledMyButtonProps>`
   font-family: "Roboto";
-  padding: 0.5em 2em;
+  padding: 0.5em 1em;
   font-weight: 500;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -40,18 +41,18 @@ export const StyledMyButton = styled.button.withConfig({
 
   &:hover {
     ${({ disabled, isLoading, variant }) =>
-    !disabled &&
-    !isLoading &&
-    css`
+      !disabled &&
+      !isLoading &&
+      css`
         background-color: ${buttonVariants[variant].hover};
       `}
   }
 
   &:active {
     ${({ disabled, isLoading, variant }) =>
-    !disabled &&
-    !isLoading &&
-    css`
+      !disabled &&
+      !isLoading &&
+      css`
         background-color: ${buttonVariants[variant].active};
       `}
   }
@@ -67,17 +68,18 @@ const shake = keyframes`
 
 const buttonVariants = {
   primary: {
-    background: '#f0f0f0',
-    color: '#26272B',
-    hover: '#a3a3a3',
-    active: '#a3a3a3',
+    background: "#f0f0f0",
+    color: "#26272B",
+    hover: "#a3a3a3",
+    active: "#a3a3a3",
   },
   secondary: {
-    background: '#26272B',
-    color: '#f0f0f0',
-    hover: '#1a1b1d',
-    active: '#1a1b1d',
-  }
+    background: "#26272B",
+    color: "#f0f0f0",
+    hover: "#1a1b1d",
+    active: "#1a1b1d",
+  },
+
 } as const;
 
 export type MyButtonVariant = keyof typeof buttonVariants;

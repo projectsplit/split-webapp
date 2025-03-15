@@ -6,7 +6,6 @@ import Input_old from "../components/Input_old";
 import { DateTime } from "../components/DateTime";
 import Button from "../components/Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import currency from 'currency.js'
 import LocationPicker from "../components/LocationPicker";
 import LabelPicker from "../components/LabelPicker";
@@ -60,8 +59,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ group, expense, timeZoneId, m
       occurred: expenseTime,
       labels: labels
     };
-
-    console.log(createExpenseRequest)
 
     createExpenseMutation.mutate(createExpenseRequest);
   };

@@ -24,7 +24,6 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ location, setLocation }
         </div>
       );
     }
-
     return <span>{'Select a location...'}</span>;
   };
 

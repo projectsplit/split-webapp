@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
 import Expense from "../../components/Expense/Expense";
-import { DateTime } from "luxon";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Group, UserInfo } from "../../types";
+import { ExpenseResponseItem, Group, UserInfo } from "../../types";
 import { getGroupExpenses } from "../../api/services/api";
 import { useOutletContext } from "react-router-dom";
 import Spinner from "../../components/Spinner/Spinner";
@@ -10,10 +9,19 @@ import useSentinel from "../../hooks/useSentinel";
 import { StyledExpenses } from "./Expenses.styled";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { CiReceipt } from "react-icons/ci";
-import { Signal } from "@preact/signals-react";
+import { Signal, useSignal } from "@preact/signals-react";
+import DetailedExpense from "../../components/DetailedExpense/DetailedExpense";
+import { DateOnly } from "../../helpers/timeHelpers";
+import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
+import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
 
 const Expenses = () => {
   const timeZoneId = "Europe/Athens";
+
+  const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
+  const errorMessage = useSignal<string>("");
+  const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
 
   const { userInfo, group, showBottomBar } = useOutletContext<{
     userInfo: UserInfo;
@@ -21,14 +29,16 @@ const Expenses = () => {
     showBottomBar: Signal<boolean>;
   }>();
 
-  const memberId = group?.members.find((x) => x.userId === userInfo?.userId)
-    ?.id!;
-
   const pageSize = 10;
+  const members = group?.members;
+  const guests = group?.guests;
+  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
+
+  const allParticipants = mergeMembersAndGuests(members || [], guests || []);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
-      queryKey: ["groupExpenses", group?.id, pageSize],
+      queryKey: ["groupExpenses", group?.id, pageSize, errorMessage.value],
       queryFn: ({ pageParam: next }) =>
         getGroupExpenses(group?.id!, pageSize, next),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
@@ -36,10 +46,15 @@ const Expenses = () => {
     });
 
   const expenses = data?.pages.flatMap((p) => p.expenses);
+ 
 
   useEffect(() => {
-    !expenses ? (showBottomBar.value = false) : (showBottomBar.value = true);
-  }, [expenses]);
+    isFetching ? (showBottomBar.value = false) : (showBottomBar.value = true);
+  }, [isFetching]);
+
+  useEffect(() => {
+    menu.value = errorMessage.value ? "error" : menu.value;
+  }, [errorMessage.value]);
 
   const sentinelRef = useRef(null);
 
@@ -51,7 +66,9 @@ const Expenses = () => {
 
   const totalExpense = expenses?.reduce((sum, e) => sum + e.amount, 0);
   const userExpense = expenses?.reduce((sum, e) => {
-    return sum + (e.shares.find((x) => x.memberId === memberId)?.amount ?? 0);
+    return (
+      sum + (e.shares.find((x) => x.memberId === userMemberId)?.amount ?? 0)
+    );
   }, 0);
 
   return (
@@ -79,22 +96,22 @@ const Expenses = () => {
               <div className="date-only">{date}</div>
               <div className="expenses">
                 {expenses.map((e) => (
-                  <Expense
-                    key={e.id}
-                    expense={{
-                      amount: e.amount,
-                      currency: e.currency,
-                      date: e.occurred,
-                      description: e.description,
-                      id: e.id,
-                      location: e.location,
-                      shareAmount:
-                        e.shares.find((x) => x.memberId === memberId)?.amount ??
-                        0,
-                      labels: e.labels,
-                    }}
-                    timeZoneId={timeZoneId}
-                  />
+                  <div className="expense" key={e.id}>
+                    <Expense
+                      amount={e.amount}
+                      currency={e.currency}
+                      occurred={e.occurred}
+                      description={e.description}
+                      location={e.location}
+                      timeZoneId={timeZoneId}
+                      onClick={() => (selectedExpense.value = e)}
+                      userAmount={
+                        e.shares.find((x) => x.memberId === userMemberId)
+                          ?.amount ?? 0
+                      }
+                      labels={e.labels}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -107,32 +124,34 @@ const Expenses = () => {
         style={{ height: "1px" }}
       ></div>
       {isFetchingNextPage && <Spinner />}
+
+      {selectedExpense.value && (
+        <DetailedExpense
+          selectedExpense={selectedExpense}
+          amount={selectedExpense.value.amount}
+          currency={selectedExpense.value.currency}
+          description={selectedExpense.value.description}
+          labels={selectedExpense.value.labels}
+          location={selectedExpense.value.location}
+          occurred={selectedExpense.value.occurred}
+          payments={selectedExpense.value.payments}
+          shares={selectedExpense.value.shares}
+          timeZoneId={timeZoneId}
+          creator={selectedExpense.value.creatorId}
+          created={selectedExpense.value.created}
+          members={allParticipants}
+          errorMessage={errorMessage}
+          userMemberId={userMemberId || ""}
+        />
+      )}
+
+      <MenuAnimationBackground menu={menu} />
+      <ErrorMenuAnimation menu={menu} message={errorMessage.value} />
     </StyledExpenses>
   );
 };
 
 export default Expenses;
-
-const DateOnly = (eventTimeUtc: string, timeZone: string): string => {
-  const now = DateTime.now().setZone(timeZone);
-  const eventDateTime = DateTime.fromISO(eventTimeUtc, { zone: "utc" }).setZone(
-    timeZone
-  );
-
-  if (eventDateTime.hasSame(now, "day")) {
-    return "Today";
-  }
-
-  if (eventDateTime.hasSame(now.minus({ days: 1 }), "day")) {
-    return "Yesterday";
-  }
-
-  if (eventDateTime.hasSame(now, "year")) {
-    return eventDateTime.setZone(timeZone).toFormat("d LLL");
-  }
-
-  return eventDateTime.setZone(timeZone).toFormat("d LLL yyyy");
-};
 
 const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
   arr.reduce((groups, item) => {

@@ -4,6 +4,7 @@ import { StyledUserOptionsButton } from "./UserOptionsButton.styled";
 export default function UserOptionsButton({
   onClick,
   username,
+  children
 }: OptionsButtonProps) {
   
   // const getInitials = (name: string) => {

@@ -13,7 +13,6 @@ const UserInvitations: React.FC<UserInvitationsProps> = ({ timeZoneId }) => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage,isFetching } = useGetUserInvitations(pageSize)
 
   const userInvitations = data?.pages.flatMap(p => p.invitations)
-  console.log(userInvitations)
 
   if (!userInvitations ||isFetching) {
     return <Spinner/>

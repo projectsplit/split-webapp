@@ -1,13 +1,19 @@
 import { CSSProperties } from "react";
 import {
   ExpenseItem,
+  ExpenseResponseItem,
   FormExpense,
   Frequency,
+  GeoLocation,
   GetUserInvitationsResponse,
   GetUserInvitationsResponseItem,
   Group,
   GroupedTransaction,
+  Label,
+  Member,
+  Payment,
   PickerMember,
+  Share,
   TransferItem,
   TruncatedMember,
   UserInfo,
@@ -20,8 +26,52 @@ import {
 } from "@tanstack/react-query";
 
 export interface ExpenseProps {
-  expense: ExpenseItem;
   timeZoneId: string;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  amount: number;
+  currency: string;
+  occurred: string;
+  description: string;
+  location: GeoLocation | undefined;
+  userAmount: number;
+  labels:Label[]
+}
+
+export interface MapsInfoBoxProps {
+  location: GeoLocation | undefined;
+  googleMapsUrl:string;
+}
+export interface LabelProps {
+  backgroundColor:string;
+}
+export interface MembersInfoBoxProps {
+  transactions: {
+    memberId: string;
+    amount: number;
+  }[];
+  areShares: boolean;
+  currency: string;
+  members: TruncatedMember[];
+  userMemberId:string;
+}
+
+export interface DetailedExpenseProps {
+  timeZoneId: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  payments: Payment[];
+  shares: Share[];
+  amount: number;
+  currency: string;
+  occurred: string;
+  created: string;
+  description: string;
+  labels: string[];
+  location: GeoLocation | undefined;
+  selectedExpense: Signal<ExpenseResponseItem | null>;
+  creator: string;
+  members: TruncatedMember[];
+  errorMessage: Signal<string>;
+  userMemberId:string;
 }
 
 export interface TransferProps {
@@ -151,6 +201,7 @@ export interface SelectionButtonProps {
 export interface OptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   username: string;
+  children?: any;
 }
 
 export interface TreeProps {
@@ -250,15 +301,21 @@ export interface ExpenseFormProps {
   menu: Signal<string | null>;
 }
 
-export interface Label {
-  id: string;
-  text: string;
-  color: string;
-}
+
 
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
 
 export interface GroupQuickActionsMenuprops extends MenuProps {}
+export interface DeleteExpenseAnimationProps extends MenuProps {
+  description: string;
+  selectedExpense: Signal<ExpenseResponseItem | null>;
+  errorMessage: Signal<string>;
+}
+export interface DeleteExpenseConfirmationProps extends MenuProps {
+  description: string;
+  selectedExpense: Signal<ExpenseResponseItem | null>;
+  errorMessage: Signal<string>;
+}
 
 export interface BarsWithLegendsProps {
   bar1Total: number;
@@ -288,7 +345,7 @@ export interface MemberProps {
   groupedTransactions: GroupedTransaction[];
   memberId: string;
   name: string;
-  isUser: boolean;
+  isLogedUser: boolean;
   menu: Signal<string | null>;
   memberIdSelectedToSettleUp: Signal<string>;
   members: TruncatedMember[];
@@ -298,7 +355,7 @@ export interface MemberProps {
 export interface RenderScenariosProps {
   memberTransactions: GroupedTransaction[];
   pendingTransactions: DebtsResponse[];
-  isUser: boolean;
+  isLogedUser: boolean;
   memberId: string;
   name: string;
   showTree: boolean;
@@ -307,13 +364,13 @@ export interface RenderScenariosProps {
 }
 export interface RenderSettledProps {
   name: string;
-  isUser: boolean;
+  isLogedUser: boolean;
 }
 
 export interface RenderBothScenariosProps {
   memberTransactions: GroupedTransaction[];
   pendingTransactions: DebtsResponse[];
-  isUser: boolean;
+  isLogedUser: boolean;
   memberId: string;
   name: string;
   doNotshowTreeWhenMemberIsOwed: boolean;
@@ -327,7 +384,7 @@ export interface MemberDetailedDescriptionProps {
   pendingTransactions: DebtsResponse[];
   memberTransactions: GroupedTransaction[];
   memberId: string;
-  isUser: boolean;
+  isLogedUser: boolean;
   isOwed: boolean;
   name: string;
   members: TruncatedMember[];
@@ -336,7 +393,7 @@ export interface MemberDetailedDescriptionProps {
 export interface DescriptionAndTreeProps {
   memberTransactions: GroupedTransaction[];
   pendingTransactions: DebtsResponse[];
-  isUser: boolean;
+  isLogedUser: boolean;
   memberId: string;
   name: string;
   isOwed: boolean;
@@ -361,10 +418,19 @@ export interface SettleUpOptionsProps {
   menu: Signal<string | null>;
   members: TruncatedMember[];
 }
-
+export interface PillProps {
+  title: string;
+  color: string;
+  closeButton: boolean;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onClose?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  fontSize?: string;
+}
 export interface AddNewUserAnimationProps extends MenuProps {}
 
 export interface SearchUsersToInviteProps extends MenuProps {}
+export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
+
 export interface NotificationsMenuProps extends MenuProps {
   fetchNextPage: (
     options?: FetchNextPageOptions
@@ -376,7 +442,7 @@ export interface NotificationsMenuProps extends MenuProps {
   >;
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
-  userInvitations: GetUserInvitationsResponseItem[] | undefined
+  userInvitations: GetUserInvitationsResponseItem[] | undefined;
 }
 export interface NotificationsMenuAnimationProps extends MenuProps {
   fetchNextPage: (
@@ -389,10 +455,22 @@ export interface NotificationsMenuAnimationProps extends MenuProps {
   >;
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
-  userInvitations: GetUserInvitationsResponseItem[] | undefined
+  userInvitations: GetUserInvitationsResponseItem[] | undefined;
 }
 
 export interface MiddleScreenMenuProps {
   children: any;
   height?: string;
+}
+
+export interface EditorContentHandle {
+  clearEditor: () => void;
+}
+
+export interface ErrorMenuAnimationProps extends MenuProps {
+  message: string;
+}
+
+export interface ErrorMenuProps extends MenuProps {
+  children: any;
 }

@@ -8,7 +8,7 @@ export const MemberDetailedDescription = ({
   memberTransactions,
   pendingTransactions,
   memberId,
-  isUser,
+  isLogedUser,
   isOwed,
   name,
   members
@@ -22,17 +22,17 @@ export const MemberDetailedDescription = ({
 
   return (
     <StyledMemberDetailedDescription isOwed={isOwed}>
-      {isUser ? (
+      {isLogedUser ? (
         <strong className="name">You</strong>
       ) : (
         <strong className="name">{name}</strong>
       )}
       &nbsp;
-      {isOwed && isUser ? (
+      {isOwed && isLogedUser ? (
         <span className="owingText">are owed</span>
-      ) : !isOwed && isUser ? (
+      ) : !isOwed && isLogedUser ? (
         <span className="owingText">owe</span>
-      ) : isOwed && !isUser ? (
+      ) : isOwed && !isLogedUser ? (
         <span className="owingText">is owed</span>
       ) : (
         <span className="owingText">owes</span>

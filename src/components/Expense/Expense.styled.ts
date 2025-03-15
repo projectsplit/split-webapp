@@ -1,15 +1,18 @@
 import styled from "styled-components";
+import { LabelProps } from "../../interfaces";
 
-export const StyledExpense = styled.div`
+export const StyledExpense = styled.div<{
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}>`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
   width: 100%;
   padding: 10px;
   background-color: ${({ theme }) => theme.layer2};
-  gap: 1.3rem;
-  box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`}; 
-
+  gap: 1rem;
+  box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`};
+  overflow: auto;
   .topRow {
     display: flex;
     flex-direction: row;
@@ -19,41 +22,24 @@ export const StyledExpense = styled.div`
       color: ${({ theme }) => theme.yellow};
     }
     .time {
-      
       font-size: 14px;
       color: #777777;
       font-weight: 800;
     }
   }
 
-  .wrapper {
+  .descrAndAmounts {
     display: flex;
     flex-direction: row;
+    gap: 1.5rem;
     justify-content: space-between;
-    .descrAndLabels {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      justify-content:flex-end;
-      .descr {
-        font-size: 1.2rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 180px;
-      }
-      .labels {
-        display: flex;
-        flex-direction: row;
-        gap: 5px;
-        .label {
-          display: flex;
 
-          width: 2rem;
-          height: 0.3rem;
-          background-color: rgb(189, 123, 243);
-        }
-      }
+    .descr {
+      font-size: 1.2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
     }
     .amounts {
       .userShare,
@@ -77,9 +63,25 @@ export const StyledExpense = styled.div`
     border-radius: 5px;
   }
   .legendUser {
-    background-color:#e151ee ;
+    background-color: #e151ee;
   }
   .legendGroup {
-    background-color:#5183ee;
+    background-color: #5183ee;
+  }
+  .labels {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto; 
+    white-space: nowrap;
+    gap:10px;
+    
   }
 `;
+
+// export const StyledLabel = styled.div<LabelProps>`
+//   display: flex;
+//   width: 2rem;
+//   height: 0.3rem;
+//   background-color: ${({ backgroundColor }) => backgroundColor};
+//   flex-shrink: 0;
+// `;

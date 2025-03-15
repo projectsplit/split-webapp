@@ -5,18 +5,17 @@ import App from "./App";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./theme";
 import GlobalStyles from "./styles/global";
-
 import { useEffect, useState } from "react";
 import SplashScreen from "./pages/SplashScreen/SplashScreen";
-import { useSignal } from "@preact/signals-react";
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false,
+      retry: 3,
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
-      refetchOnReconnect: false,
+      refetchOnReconnect: true,
+      staleTime: 15 * 60 * 1000,
       refetchOnMount: false,
     },
   },
