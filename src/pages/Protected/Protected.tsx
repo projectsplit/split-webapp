@@ -7,8 +7,9 @@ import NotificationsMenuAnimation from "../../components/Menus/MenuAnimations/No
 import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
 import { getMe } from "../../api/services/api";
 import { useGetUserInvitations } from "../../api/services/useGetUserInvitations";
-import { useEffect } from "react";
 import TopMenu from "../../components/Menus/TopMenu/TopMenu";
+import { DateTime } from "luxon";
+import { useMemo } from "react";
 
 const Protected: React.FC = () => {
   const location = useLocation();
@@ -23,14 +24,15 @@ const Protected: React.FC = () => {
     useGetUserInvitations(10);
 
   const userInvitations = data?.pages.flatMap((p) => p.invitations);
+  const hasNewerNotifications = userInfo?.hasNewerNotifications;
 
   const topMenuTitle = useSignal<string>("");
   const menu = useSignal<string | null>(null);
-  const numberOfNotifications = useSignal<number>(0);
 
-  useEffect(() => {
-    numberOfNotifications.value =
-      (userInvitations?.length ?? 0) > 0 && !isFetching ? 1 : 0;
+  const { latest } = useMemo(() => {
+    const latest = getLatestCreated(userInvitations);
+
+    return { latest };
   }, [userInvitations]);
 
   return isUserAuthenticated() ? (
@@ -38,8 +40,9 @@ const Protected: React.FC = () => {
       <TopMenu
         title={topMenuTitle.value}
         menu={menu}
-        username={userInfo?.username || ""}
-        numberOfNotifications={numberOfNotifications}
+        username={userInfo?.username}
+        hasNewerNotifications={hasNewerNotifications || false}
+        latestTimeStamp={latest || DateTime.now().toUTC().toISO()}
       />
       <Outlet context={{ userInfo, topMenuTitle }} />
       <MenuAnimationBackground menu={menu} />
@@ -49,8 +52,11 @@ const Protected: React.FC = () => {
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         userInvitations={userInvitations}
+        hasNewerNotifications={hasNewerNotifications || false}
+        userInfo={userInfo}
+
       />
-      <SettingsMenuAnimation menu={menu} username={userInfo?.username || ""} />
+      <SettingsMenuAnimation menu={menu} userInfo={userInfo} />
     </StyledProtected>
   ) : (
     <Navigate
@@ -65,3 +71,19 @@ export default Protected;
 const isUserAuthenticated = () => {
   return !!localStorage.getItem("accessToken");
 };
+
+
+function getLatestCreated<T extends { created: string }>(...arrays: (T[] | undefined)[]): string | undefined {
+
+  const combinedItems = arrays.reduce<T[]>((acc, curr) => acc.concat(curr ?? []), []);
+
+  if (combinedItems.length === 0) {
+    return undefined; 
+  }
+
+  const latestTimestamp = Math.max(
+    ...combinedItems.map(item => new Date(item.created).getTime())
+  );
+
+  return new Date(latestTimestamp).toISOString();
+}

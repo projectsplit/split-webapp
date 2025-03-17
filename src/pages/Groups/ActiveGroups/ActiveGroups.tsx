@@ -7,6 +7,7 @@ import Spinner from "../../../components/Spinner/Spinner";
 import { TreeItemBuilder } from "../../../components/TreeItemBuilder";
 import { getGroupsTotalAmounts } from "../../../api/services/api";
 import useSentinel from "../../../hooks/useSentinel";
+import { useMostRecentGroup } from "../../../api/services/useMostRecentGroup";
 
 export default function ActiveGroups() {
   const sentinelRef = useRef(null);
@@ -20,14 +21,14 @@ export default function ActiveGroups() {
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
       initialPageParam: "",
     });
-    
-  const groups = data?.pages.flatMap((p) => p.groups);
 
+  const groups = data?.pages.flatMap((p) => p.groups);
+  const updateMostRecentGroupId = useMostRecentGroup();
   useSentinel(fetchNextPage, hasNextPage, isFetchingNextPage);
 
   const onGroupClickHandler = (id: string, groupName: string) => {
     navigate(`/groups/active/${id}/expenses`, { state: { groupName } });
-    localStorage.setItem("mostRecentGroup", id);
+    updateMostRecentGroupId.mutate(id);
   };
 
   return (

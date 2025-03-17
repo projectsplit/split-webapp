@@ -9,6 +9,7 @@ export default function NotificationsMenuAnimation({
   hasNextPage,
   isFetchingNextPage,
   userInvitations,
+  userInfo
 }: NotificationsMenuAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -25,6 +26,7 @@ export default function NotificationsMenuAnimation({
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         userInvitations={userInvitations}
+        userInfo={userInfo}
       />
     </CSSTransition>
   );

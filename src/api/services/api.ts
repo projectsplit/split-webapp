@@ -13,9 +13,9 @@ import {
   GroupsAllBalancesResponse,
   GroupRequest,
   MostRecentGroupDetailsResponse,
-  DeleteExpenseRequest,
+  DebtsResponse,
 } from "../../types";
-import { DebtsResponse } from "../../interfaces";
+
 
 export const getGroupExpenses = async (
   groupId: string,
@@ -142,10 +142,5 @@ export const getMostRecentGroup = async (
 
 export const createGroupFn = async (request: GroupRequest) => {
   const response = await apiClient.post("/groups/create", request);
-  return response.data;
-};
-
-export const deleteExpense = async (req: DeleteExpenseRequest): Promise<void> => {
-  const response =  await apiClient.post<void, AxiosResponse<void>>("/expenses/delete", req);
   return response.data;
 };

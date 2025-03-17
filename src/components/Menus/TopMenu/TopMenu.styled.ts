@@ -10,19 +10,19 @@ export const StyledTopMenu = styled.div`
   .bellIconAndNumberOfNotifications {
     position: relative;
   }
-  .notificationCount {
+  .notification {
     font-size: 12px;
     font-weight: 800;
     position: absolute;
     background-color: red;
     border-radius: 50%; 
-    width: 1rem; 
-    height: 1rem; 
+    width: 0.5rem; 
+    height: 0.5rem; 
     display: flex;
     align-items: center;
     justify-content: center;
-    bottom: -2px;
-    left: 0;
+    bottom: 5px;
+    left: 5px;
   }
   .titleStripe {
     display: flex;

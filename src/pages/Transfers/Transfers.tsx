@@ -16,13 +16,13 @@ import { DateOnly } from "../../helpers/timeHelpers";
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
-  const timeZoneId = "Europe/Athens";
+
   const { userInfo, group, showBottomBar } = useOutletContext<{
     userInfo: UserInfo;
     group: Group;
     showBottomBar: Signal<boolean>;
   }>();
-
+  const timeZoneId = userInfo?.timeZone;
   const memberId = group?.members.find((x) => x.userId === userInfo?.userId)
     ?.id!;
 
@@ -124,7 +124,6 @@ const Transfers: React.FC = () => {
 };
 
 export default Transfers;
-
 
 const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
   arr.reduce((groups, item) => {

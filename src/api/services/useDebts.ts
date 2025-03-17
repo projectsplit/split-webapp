@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { getGroupDebts } from "../api/services/api";
-import { DebtsResponse } from "../interfaces";
+import { getGroupDebts } from "./api";
+import { DebtsResponse } from "../../types";
+
 
 const usePendingTransactions = (groupId: string | undefined) => {
   return useQuery<DebtsResponse[]>({

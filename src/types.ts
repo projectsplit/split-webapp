@@ -1,4 +1,5 @@
 import currency from "currency.js";
+import { DateTime } from "luxon";
 
 export type RefreshTokenResponse = {
   accessToken: string;
@@ -24,6 +25,10 @@ export type SendGoogleAccessTokenResponse = {
 export type UserInfo = {
   userId: string;
   username: string;
+  timeZone: string;
+  recentGroupId: string;
+  hasNewerNotifications: boolean;
+  currency: string;
 };
 
 export type GetLabelsResponse = {
@@ -291,13 +296,17 @@ export type Payer = {
   memberId: string;
   paymentAmount: string;
 };
+
 export type Transfer = {
   description: string;
-  amount: string;
+  amount: number;
   currency: string;
   receiverId: string;
   senderId: string;
+  occurred: string;
 };
+
+
 export type CreateTransfersRequest = {
   groupId: string;
   transfers: Transfer[];
@@ -306,6 +315,13 @@ export type CreateTransfersRequest = {
 export type GetUserInvitationsResponse = {
   invitations: GetUserInvitationsResponseItem[];
   next: string | null;
+};
+
+export type DebtsResponse = {
+  debtor: string;
+  creditor: string;
+  amount: number;
+  currency: string;
 };
 
 export type GetUserInvitationsResponseItem = {
@@ -320,4 +336,22 @@ export type GetUserInvitationsResponseItem = {
 
 export type DeleteExpenseRequest = {
   expenseId: string;
+};
+
+export type UpdateNotificationRequest = {
+  timestamp: string;
+};
+
+export type UpdateMostRecentGroupRequest = {
+  groupId: string;
+};
+export type UpdateSelectedCurrencyRequest = {
+  currency: string;
+};
+export type UpdateSelectedTimeZoneRequest = {
+  timeZone: string;
+};
+
+export type WithCreated = {
+  created: string;
 };

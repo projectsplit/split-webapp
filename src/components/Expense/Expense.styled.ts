@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { LabelProps } from "../../interfaces";
 
 export const StyledExpense = styled.div<{
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -71,10 +70,14 @@ export const StyledExpense = styled.div<{
   .labels {
     display: flex;
     flex-direction: row;
-    overflow-x: auto; 
+    overflow-x: auto;
     white-space: nowrap;
-    gap:10px;
-    
+    gap: 10px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .labels::-webkit-scrollbar {
+    display: none;
   }
 `;
 

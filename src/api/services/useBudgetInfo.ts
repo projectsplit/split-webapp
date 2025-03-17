@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { BudgetInfoResponse } from "../types";
-import { getBudgetInfo } from "../api/services/api";
+import { BudgetInfoResponse } from "../../types";
+import { getBudgetInfo } from "./api";
 
 const useBudgetInfo = () => {
   return useQuery<BudgetInfoResponse>({

@@ -9,9 +9,9 @@ export const useAcceptInvitation = () => {
   return useMutation<any, Error, string>({
     mutationFn: invitationId => acceptInvitation({ invitationId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userInvitations"], exact: false });
-      queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
+      queryClient.refetchQueries({ queryKey: ["userInvitations"], exact: false });
+      queryClient.refetchQueries({ queryKey: ["home"], exact: false });
+      queryClient.refetchQueries({ queryKey: ["groups"], exact: false });
     },
     onError: (error) => {
       console.error(error);

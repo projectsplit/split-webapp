@@ -4,10 +4,16 @@ import { Currency } from "../../../types";
 import { currencyData } from "../../../helpers/openExchangeRates";
 import { CurrencyOptionProps } from "../../../interfaces";
 
-export default function CurrencyOptions({ clickHandler }: CurrencyOptionProps) {
+export default function CurrencyOptions({
+  clickHandler,
+  userInfo,
+  visualCurrency,
+}: CurrencyOptionProps) {
   const [searchItem, setSearchItem] = useState<string>("");
   const [filteredCurrencies, setFilteredCurrencies] =
     useState<Currency[]>(currencyData);
+
+  const userCurrency = userInfo?.currency;
 
   const handleInputChange = (e: any) => {
     const searchTerm = e.target.value;
@@ -20,6 +26,12 @@ export default function CurrencyOptions({ clickHandler }: CurrencyOptionProps) {
     );
 
     setFilteredCurrencies(filteredItems);
+  };
+
+  const onClickHandler = (currencySymbol: string) => {
+    clickHandler(currencySymbol);
+    const newCurrency = filteredCurrencies.find((c) => c.symbol === currencySymbol);
+    visualCurrency.value = newCurrency;
   };
 
   return (
@@ -44,12 +56,12 @@ export default function CurrencyOptions({ clickHandler }: CurrencyOptionProps) {
         <div
           key={index}
           className={`currencyOption ${
-            (!localStorage.getItem("currency") && currency.symbol === "USD") ||
-            localStorage.getItem("currency") === currency.symbol
+            (!userCurrency && currency.symbol === "USD") ||
+            userCurrency === currency.symbol
               ? "clicked"
               : ""
           }`}
-          onClick={() => clickHandler(currency.symbol)}
+          onClick={() => onClickHandler(currency.symbol)}
         >
           <div className={currency.flagClass} />
           <div className="currency">

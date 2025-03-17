@@ -6,12 +6,14 @@ import SubmitButton from "../../../components/SubmitButton/SubmitButton";
 import Input from "../../../components/Input/Input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createGroupFn } from "../../../api/services/api";
-import { Currency, GroupRequest } from "../../../types";
+import { Currency, GroupRequest, UserInfo } from "../../../types";
 import { FaAngleDown } from "react-icons/fa";
 import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
 import { useSignal } from "@preact/signals-react";
 import { currencyData } from "../../../helpers/openExchangeRates";
+import { useOutletContext } from "react-router-dom";
+import { useSelectedCurrency } from "../../../api/services/useSelectedCurrency";
+import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
 
 export default function CreateGroup({
   menu,
@@ -20,15 +22,20 @@ export default function CreateGroup({
 }: CreateGroupProps) {
   const [groupName, setGroupName] = useState<string>("");
   const queryClient = useQueryClient();
-  const currency = useSignal<string>(
-    localStorage.getItem("currency") || "USD"
-  );
+
+  const { userInfo } = useOutletContext<{
+    userInfo: UserInfo;
+  }>();
+
+  const userCurrency = userInfo?.currency;
+  const updatedUserCurrency = useSelectedCurrency();
+
   const allCurrencies = useSignal<Currency[]>(currencyData);
 
   const selectedCurrency = allCurrencies.value.find(
-    (c) => c.symbol === currency.value
+    (c) => c.symbol === userCurrency
   );
-
+  const visualCurrency = useSignal<Currency | undefined>(selectedCurrency);
   const createGroup = useMutation<any, any, GroupRequest>({
     mutationFn: (groupData) => createGroupFn(groupData),
     onSuccess: () => {
@@ -40,14 +47,13 @@ export default function CreateGroup({
   const onClickHandler = () => {
     queryClient.invalidateQueries({ queryKey: ["groups", "active"] });
     queryClient.invalidateQueries({ queryKey: ["home"] });
-    createGroup.mutate({ name: groupName, currency: currency.value });
+    createGroup.mutate({ name: groupName, currency: userCurrency });
     menu.value = null;
   };
 
   const handldeCurrencyOptionsClick = (curr: string) => {
     //setCurrency(currency);
-    currency.value = curr;
-    localStorage.setItem("currency", curr);
+    updatedUserCurrency.mutate(curr);
     // queryClient.invalidateQueries(["spending", budgettype, curr]);
     // queryClient.getQueryData(["spending", budgettype, curr]);
     currencyMenu.value = null;
@@ -80,8 +86,18 @@ export default function CreateGroup({
             className="currencySelector"
             onClick={() => (currencyMenu.value = "currencyOptions")}
           >
-            <div className={selectedCurrency?.flagClass} />
-            <div>{selectedCurrency?.symbol}</div>
+            <div
+              className={
+                selectedCurrency?.flagClass === visualCurrency.value?.flagClass
+                  ? selectedCurrency?.flagClass
+                  : visualCurrency.value?.flagClass
+              }
+            />
+            <div>
+              {selectedCurrency?.symbol === visualCurrency.value?.symbol
+                ? selectedCurrency?.symbol
+                : visualCurrency.value?.symbol}
+            </div>
             <FaAngleDown className="angleDown" />
           </div>
         </div>
@@ -99,6 +115,8 @@ export default function CreateGroup({
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
+        userInfo={userInfo}
+        visualCurrency={visualCurrency}
       />
     </StyledCreateGroup>
   );

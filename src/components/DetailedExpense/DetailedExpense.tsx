@@ -15,7 +15,6 @@ import MapsInfoBox from "./MapsInfoBox/MapsInfoBox";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import { useSignal } from "@preact/signals-react";
 import DeleteExpenseAnimation from "../Menus/MenuAnimations/DeleteExpenseAnimation";
-import { MdLocationOn } from "react-icons/md";
 import { GeoLocation } from "../../types";
 
 export default function DetailedExpense({
@@ -95,7 +94,7 @@ export default function DetailedExpense({
         </div>
         <div className="date">
           Occurred{" "}
-          {DateOnly(occurred, timeZoneId) === "Today"
+          {DateOnly(occurred, timeZoneId) === "Today" || DateOnly(occurred, timeZoneId) ==="Yesterday"
             ? DateOnly(occurred, timeZoneId)
             : "on" +
               " " +
@@ -152,7 +151,7 @@ export default function DetailedExpense({
       </div>
       <div className="createdBy">
         Created by {members.find((x) => x.id === creator)?.name}{" "}
-        {DateOnly(created, timeZoneId) === "Today"
+        {DateOnly(occurred, timeZoneId) === "Today" || DateOnly(occurred, timeZoneId) ==="Yesterday"
           ? DateOnly(created, timeZoneId)
           : "on" +
             " " +

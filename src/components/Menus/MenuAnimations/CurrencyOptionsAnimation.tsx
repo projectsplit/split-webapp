@@ -5,7 +5,9 @@ import "../../../styles/freakflags/freakflags.css";
 
 export default function CurrencyOptionsAnimation({
   currencyMenu,
-  clickHandler
+  clickHandler,
+  userInfo,
+  visualCurrency
 }: CurrencyOptionsAnimationProps) {
   return (
     <CSSTransition
@@ -16,6 +18,8 @@ export default function CurrencyOptionsAnimation({
     >
       <CurrencyOptions
         clickHandler={clickHandler}
+        userInfo={userInfo}
+        visualCurrency={visualCurrency}
       />
     </CSSTransition>
   );
