@@ -14,7 +14,7 @@ import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuA
 import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
 import GroupQuickActionsAnimation from "../../components/Menus/MenuAnimations/MenuWithOptionsToAddAnimation";
 import AddNewUserAnimation from "../../components/Menus/MenuAnimations/AddNewUserAnimation";
-import useGroup from "../../hooks/useGroup";
+import useGroup from "../../api/services/useGroup";
 import { useEffect } from "react";
 
 export default function Group() {
@@ -23,26 +23,23 @@ export default function Group() {
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
-  
+
   const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
   }>();
-
+  const timeZoneId = userInfo?.timeZone;
   const { data: group, isFetching } = useGroup(groupid);
-
+  const groupName = group?.name;
   useEffect(() => {
     topMenuTitle.value = group?.name || "";
-  }, [group,showBottomBar.value]);
-
-
+  }, [group, showBottomBar.value]);
 
   return (
     <StyledGroup>
       {isFetching ? (
         <div className="spinner">
           <Spinner />
-    
         </div>
       ) : (
         <div className="group">
@@ -61,11 +58,11 @@ export default function Group() {
             <NewExpenseAnimation
               expense={null}
               group={group}
-              timeZoneId="Europe/Athens"
+              timeZoneId={timeZoneId}
               menu={menu}
             />
           )}
-          {group && <AddNewUserAnimation menu={menu} />}
+          {group && <AddNewUserAnimation menu={menu} groupName={groupName} />}
           <GroupQuickActionsAnimation menu={menu} />
           <div className="bottomMenu">
             {" "}

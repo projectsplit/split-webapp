@@ -6,15 +6,14 @@ import { useDeleteExpense } from "../../../api/services/useDeleteExpense";
 import { AxiosError } from "axios";
 import Separator from "../../Separator/Separator";
 
-
 export default function DeleteExpenseConfirmation({
   menu,
   description,
   selectedExpense,
-  errorMessage
+  errorMessage,
 }: DeleteExpenseConfirmationProps) {
   const deleteExpense = useDeleteExpense();
-  
+
   const expenseId = selectedExpense.value?.id;
 
   const handleDelete = async () => {
@@ -32,10 +31,9 @@ export default function DeleteExpenseConfirmation({
     }
   };
 
-
   return (
     <StyledDeleteExpenseConfirmation>
- <div className="headerSeparator">
+      <div className="headerSeparator">
         <div className="header">
           <IonIcon name="information-circle-outline" className="infoLogo" />
           <span>Confirmation</span>
@@ -68,7 +66,8 @@ export default function DeleteExpenseConfirmation({
   );
 }
 
-{/* <div className="header">
+{
+  /* <div className="header">
 <IonIcon name="information-circle-outline" className="infoLogo" />
 <span>Confirmation</span>
 <div className="closeButton" onClick={() => (menu.value = null)}>
@@ -85,4 +84,5 @@ export default function DeleteExpenseConfirmation({
   <div>Delete this expense?</div>
 )}
 <div />
-</div> */}
+</div> */
+}

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getGroup } from "../api/services/api";
+import { getGroup } from "./api";
 
 const useGroup = (groupId: string | undefined) => {
   return useQuery({

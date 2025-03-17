@@ -20,7 +20,7 @@ import {
   getGroupsAllBalances,
   getMostRecentGroup,
 } from "../../api/services/api";
-import useBudgetInfo from "../../hooks/useBudgetInfo";
+import useBudgetInfo from "../../api/services/useBudgetInfo";
 import { TreeItemBuilder } from "../../components/TreeItemBuilder";
 import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
 import { useOutletContext } from "react-router-dom";
@@ -30,16 +30,17 @@ import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuA
 
 export default function Home() {
   const navigate = useNavigate();
-  const mostRecentGroupId = useSignal<string>(
-    localStorage.getItem("mostRecentGroup") || ""
-  );
+
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
+
   const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
   }>();
+
   const menu = useSignal<string | null>(null);
+  const recentGroupId = userInfo?.recentGroupId;
 
   const {
     data,
@@ -56,9 +57,9 @@ export default function Home() {
     data: mostRecentGroupData,
     isFetching: mostRecentGroupDataIsFetching,
   } = useQuery<MostRecentGroupDetailsResponse>({
-    queryKey: ["mostRecentGroup", mostRecentGroupId.value],
-    queryFn: () => getMostRecentGroup(mostRecentGroupId.value),
-    enabled: mostRecentGroupId.value !== "",
+    queryKey: ["mostRecentGroup", recentGroupId],
+    queryFn: () => getMostRecentGroup(recentGroupId),
+    enabled: recentGroupId !== undefined && recentGroupId !== null,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

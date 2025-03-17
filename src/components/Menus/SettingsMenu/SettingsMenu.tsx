@@ -17,17 +17,38 @@ import ToggleSwitch from "../../ToggleSwitch/ToggleSwitch";
 import { logOut } from "../../../api/auth/api";
 import routes from "../../../routes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSelectedCurrency } from "../../../api/services/useSelectedCurrency";
+import { RiTimeZoneLine } from "react-icons/ri";
+import TimeZoneOptionsAnimation from "../MenuAnimations/TimeZoneOptionsAnimation";
+import { useTimeZone } from "../../../api/services/useTimeZone";
+import { getInitials } from "../../../helpers/getInitials";
+import { timeZones } from "../../../helpers/timeZones";
 
-export default function SettingsMenu({ menu, nodeRef,username }: SettingsMenuProps) {
+export default function SettingsMenu({
+  menu,
+  nodeRef,
+  userInfo,
+}: SettingsMenuProps) {
   const version = packackageJson.version;
-  const currency = useSignal<string>(localStorage.getItem("currency") || "USD");
+  const allTimeZones = timeZones;
   const currencyMenu = useSignal<string | null>(null);
+  const timeZoneMenu = useSignal<string | null>(null);
+
   const queryClient = useQueryClient();
-  
+
+  const userCurrency = userInfo?.currency;
+  const timeZone = userInfo?.timeZone;
+  const updatedUserCurrency = useSelectedCurrency();
+  const updateTimeZone = useTimeZone();
+
   const handldeCurrencyOptionsClick = (curr: string) => {
-    currency.value = curr;
-    localStorage.setItem("currency", curr);
+    updatedUserCurrency.mutate(curr);
     currencyMenu.value = null;
+  };
+
+  const handldeTimeZoneOptionsClick = (timeZone: string) => {
+    updateTimeZone.mutate(timeZone);
+    timeZoneMenu.value = null;
   };
 
   const navigate = useNavigate();
@@ -36,27 +57,27 @@ export default function SettingsMenu({ menu, nodeRef,username }: SettingsMenuPro
     mutationFn: logOut,
     onSuccess: () => {
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("mostRecentGroup");
-      localStorage.removeItem("currency");
       queryClient.invalidateQueries();
       queryClient.removeQueries();
-      navigate(routes.AUTH)
+      navigate(routes.AUTH);
     },
     onError: (error) => {
       console.error("Log out failed:", error.message);
     },
   });
-  
+
   const handleLogout = async () => {
-    logOutMutation.mutate()
+    logOutMutation.mutate();
     navigate(routes.AUTH);
   };
 
   const allCurrencies = useSignal<Currency[]>(currencyData);
 
   const selectedCurrency = allCurrencies.value.find(
-    (c) => c.symbol === currency.value
+    (c) => c.symbol === userCurrency
   );
+  const visualCurrency = useSignal<Currency | undefined>(selectedCurrency);
+  const selectedTimeZone = allTimeZones.find((t: string) => t === timeZone);
 
   const [isOn, setIsOn] = useState(false);
 
@@ -69,8 +90,10 @@ export default function SettingsMenu({ menu, nodeRef,username }: SettingsMenuPro
       {" "}
       <div className="headerWrapper">
         <div className="header">
-          <StyledUserOptionsButton>{"CK"}</StyledUserOptionsButton>
-          <div className="name">{username}</div>
+          <StyledUserOptionsButton>
+            {getInitials(userInfo?.username)}
+          </StyledUserOptionsButton>
+          <div className="name">{userInfo?.username}</div>
           <div
             className="closeButtonContainer"
             onClick={() => (menu.value = null)}
@@ -85,14 +108,27 @@ export default function SettingsMenu({ menu, nodeRef,username }: SettingsMenuPro
           className="option"
           onClick={() => (currencyMenu.value = "currencyOptions")}
         >
-          <div className={selectedCurrency?.flagClass} />
+          <div
+            className={
+              selectedCurrency?.flagClass === visualCurrency.value?.flagClass
+                ? selectedCurrency?.flagClass
+                : visualCurrency.value?.flagClass
+            }
+          />
           <div className="description">Preferred Currency</div>
-          
+        </div>
+
+        <div
+          className="option"
+          onClick={() => (timeZoneMenu.value = "timeZones")}
+        >
+          <RiTimeZoneLine className="icon" />
+          <div className="description">TimeZone ({selectedTimeZone})</div>
         </div>
 
         <div className="toggleOption">
           <FaCoins />
-          <div className="description">Single currency display</div> 
+          <div className="description">Single currency display</div>
           <ToggleSwitch isOn={isOn} onToggle={handleToggle} />
         </div>
         <div className="option" onClick={handleLogout}>
@@ -105,9 +141,17 @@ export default function SettingsMenu({ menu, nodeRef,username }: SettingsMenuPro
         <div className="version">{version}</div>
       </div>
       <MenuAnimationBackground menu={currencyMenu} />
+      <MenuAnimationBackground menu={timeZoneMenu} />
+      <TimeZoneOptionsAnimation
+        timeZoneMenu={timeZoneMenu}
+        clickHandler={handldeTimeZoneOptionsClick}
+        userInfo={userInfo}
+      />
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
+        userInfo={userInfo}
+        visualCurrency={visualCurrency}
       />
     </StyledSettingsMenu>
   );

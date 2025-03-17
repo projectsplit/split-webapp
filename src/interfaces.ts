@@ -1,5 +1,7 @@
 import { CSSProperties } from "react";
 import {
+  Currency,
+  DebtsResponse,
   ExpenseItem,
   ExpenseResponseItem,
   FormExpense,
@@ -34,15 +36,15 @@ export interface ExpenseProps {
   description: string;
   location: GeoLocation | undefined;
   userAmount: number;
-  labels:Label[]
+  labels: Label[];
 }
 
 export interface MapsInfoBoxProps {
   location: GeoLocation | undefined;
-  googleMapsUrl:string;
+  googleMapsUrl: string;
 }
 export interface LabelProps {
-  backgroundColor:string;
+  backgroundColor: string;
 }
 export interface MembersInfoBoxProps {
   transactions: {
@@ -52,7 +54,7 @@ export interface MembersInfoBoxProps {
   areShares: boolean;
   currency: string;
   members: TruncatedMember[];
-  userMemberId:string;
+  userMemberId: string;
 }
 
 export interface DetailedExpenseProps {
@@ -71,7 +73,7 @@ export interface DetailedExpenseProps {
   creator: string;
   members: TruncatedMember[];
   errorMessage: Signal<string>;
-  userMemberId:string;
+  userMemberId: string;
 }
 
 export interface TransferProps {
@@ -200,8 +202,7 @@ export interface SelectionButtonProps {
 }
 export interface OptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  username: string;
-  children?: any;
+  username: string | undefined;
 }
 
 export interface TreeProps {
@@ -223,10 +224,23 @@ export interface StyledBottomMenuProps {
 }
 export interface CurrencyOptionProps {
   clickHandler: (curr: string) => void;
+  userInfo?: UserInfo | undefined;
+  visualCurrency: Signal<Currency | undefined>;
+}
+export interface TimeZoneOptionsProps {
+  clickHandler: (curr: string) => void;
+  userInfo?: UserInfo | undefined;
 }
 export interface CurrencyOptionsAnimationProps {
   clickHandler: (curr: string) => void;
   currencyMenu: Signal<string | null>;
+  userInfo: UserInfo | undefined;
+  visualCurrency: Signal<Currency | undefined>;
+}
+export interface TimeZoneOptionsAnimationProps {
+  clickHandler: (curr: string) => void;
+  timeZoneMenu: Signal<string | null>;
+  userInfo: UserInfo | undefined;
 }
 
 export interface BottomMenuProps {
@@ -256,7 +270,7 @@ export interface MenuProps {
 
 export interface MenuAnimationBackgroundProps extends MenuProps {}
 export interface SettingsMenuAnimationProps extends MenuProps {
-  username: string;
+  userInfo: UserInfo | undefined;
 }
 export interface LogoStripeProps extends MenuProps {}
 
@@ -272,14 +286,15 @@ export interface CreateGroupProps extends MenuProps {
 export interface SettingsMenuProps {
   menu: Signal<string | null>;
   nodeRef: React.MutableRefObject<null>;
-  username: string;
+  userInfo: UserInfo | undefined;
 }
 
 export interface TopMenuProps {
   title: string;
   menu: Signal<string | null>;
-  username: string;
-  numberOfNotifications: Signal<number>;
+  username: string | undefined;
+  hasNewerNotifications: boolean;
+  latestTimeStamp: string;
 }
 
 export interface ToggleSwitchProps {
@@ -300,8 +315,6 @@ export interface ExpenseFormProps {
   timeZoneId: string;
   menu: Signal<string | null>;
 }
-
-
 
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
 
@@ -331,13 +344,6 @@ export interface TransfersProps {
   group: Group;
   memberId: string;
   timeZoneId: string;
-}
-
-export interface DebtsResponse {
-  debtor: string;
-  creditor: string;
-  amount: number;
-  currency: string;
 }
 
 export interface MemberProps {
@@ -426,9 +432,13 @@ export interface PillProps {
   onClose?: (event: React.MouseEvent<HTMLDivElement>) => void;
   fontSize?: string;
 }
-export interface AddNewUserAnimationProps extends MenuProps {}
+export interface AddNewUserAnimationProps extends MenuProps {
+  groupName: string | undefined;
+}
 
-export interface SearchUsersToInviteProps extends MenuProps {}
+export interface SearchUsersToInviteProps extends MenuProps {
+  groupName: string | undefined;
+}
 export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
 
 export interface NotificationsMenuProps extends MenuProps {
@@ -443,6 +453,7 @@ export interface NotificationsMenuProps extends MenuProps {
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
   userInvitations: GetUserInvitationsResponseItem[] | undefined;
+  userInfo: UserInfo | undefined;
 }
 export interface NotificationsMenuAnimationProps extends MenuProps {
   fetchNextPage: (
@@ -456,6 +467,8 @@ export interface NotificationsMenuAnimationProps extends MenuProps {
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
   userInvitations: GetUserInvitationsResponseItem[] | undefined;
+  hasNewerNotifications: boolean;
+  userInfo: UserInfo | undefined;
 }
 
 export interface MiddleScreenMenuProps {

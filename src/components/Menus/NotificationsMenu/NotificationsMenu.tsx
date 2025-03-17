@@ -14,8 +14,9 @@ export default function NotificationsMenu({
   hasNextPage,
   isFetchingNextPage,
   userInvitations,
+  userInfo
 }: NotificationsMenuProps) {
-  const timeZoneId = "Europe/Athens";
+  const timeZoneId = userInfo?.timeZone;
 
   return (
     <StyledNotificationsMenu>
@@ -56,7 +57,7 @@ export default function NotificationsMenu({
                     receiverId: x.receiverId,
                     senderId: x.senderId,
                   }}
-                  timeZoneId={timeZoneId}
+                timeZoneId={timeZoneId}
                 />
               </div>
             ))}

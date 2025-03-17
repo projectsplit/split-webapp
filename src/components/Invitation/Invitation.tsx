@@ -65,5 +65,5 @@ type InvitationProps = {
     groupName: string;
     guestId: string | null;
   };
-  timeZoneId: string;
+  timeZoneId: string|undefined;
 };

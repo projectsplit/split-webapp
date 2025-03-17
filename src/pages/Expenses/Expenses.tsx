@@ -17,8 +17,6 @@ import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuA
 import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
 
 const Expenses = () => {
-  const timeZoneId = "Europe/Athens";
-
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const errorMessage = useSignal<string>("");
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
@@ -28,7 +26,7 @@ const Expenses = () => {
     group: Group;
     showBottomBar: Signal<boolean>;
   }>();
-
+  const timeZoneId = userInfo?.timeZone;
   const pageSize = 10;
   const members = group?.members;
   const guests = group?.guests;
@@ -46,7 +44,6 @@ const Expenses = () => {
     });
 
   const expenses = data?.pages.flatMap((p) => p.expenses);
- 
 
   useEffect(() => {
     isFetching ? (showBottomBar.value = false) : (showBottomBar.value = true);

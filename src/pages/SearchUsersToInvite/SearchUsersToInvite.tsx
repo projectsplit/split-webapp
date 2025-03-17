@@ -12,7 +12,7 @@ import { IoClose } from "react-icons/io5";
 import { SearchUsersToInviteProps } from "../../interfaces";
 import Spinner from "../../components/Spinner/Spinner";
 
-const SearchUsersToInvite = ({menu}:SearchUsersToInviteProps) => {
+const SearchUsersToInvite = ({ menu, groupName }: SearchUsersToInviteProps) => {
   const params = useParams();
   const groupId = params.groupid!;
   const pageSize = 10;
@@ -44,17 +44,19 @@ const SearchUsersToInvite = ({menu}:SearchUsersToInviteProps) => {
         >
           <IoClose className="closeButton" />
         </div>
-        <div className="title">Invite Users</div>
+        <div className="title">
+          Invite Users to join <span style={{fontStyle:"italic"}}>"{groupName}"</span>
+        </div>
         <div className="gap"></div>
       </div>
       <div className="input">
-      <Input
-        className="search-input"
-        placeholder="Search"
-        backgroundcolor="#2d2d2d"
-        onChange={(e) => setKeyword(e.target.value)}
-      />
-       </div>
+        <Input
+          className="search-input"
+          placeholder="Search"
+          backgroundcolor="#2d2d2d"
+          onChange={(e) => setKeyword(e.target.value)}
+        />
+      </div>
       {data?.pages.flatMap((x) =>
         x.users.map((user) => (
           <SearchResultItem
@@ -75,7 +77,7 @@ const SearchUsersToInvite = ({menu}:SearchUsersToInviteProps) => {
         className="sentinel"
         style={{ height: "1px" }}
       ></div>
-      {isFetchingNextPage && <Spinner/>}
+      {isFetchingNextPage && <Spinner />}
     </StyledSearchUsersToInvite>
   );
 };

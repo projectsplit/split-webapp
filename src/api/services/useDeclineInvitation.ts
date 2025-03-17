@@ -9,10 +9,10 @@ export const useDeclineInvitation = () => {
 
   return useMutation<any, Error, string>({
     mutationFn: invitationId => declineInvitation({ invitationId }),
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["userInvitations"], exact: false });
-      queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
+
+      queryClient.refetchQueries({ queryKey: ["userInvitations"], exact: false });
     },
     onError: (error) => {
       console.error(error);

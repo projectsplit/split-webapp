@@ -22,8 +22,13 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     .labelsWrapper {
       overflow-x: auto;
       text-align: center;
-    } 
-    
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .labelsWrapper::-webkit-scrollbar {
+      display: none;
+    }
+
     .labels {
       display: inline-flex;
       gap: 5px;
@@ -91,6 +96,9 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     display: flex;
     flex-direction: row;
     justify-content: center;
+
+    font-size: 15px;
+    font-weight: 600;
     color: ${({ theme }) => theme.grey};
   }
   p {
