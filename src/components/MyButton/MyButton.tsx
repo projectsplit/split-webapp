@@ -6,12 +6,16 @@ const spin = keyframes`
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 `;
-
-const Spinner = styled.span`
+interface SpinnerProps{
+  variant:string;
+}
+const Spinner = styled.span.withConfig({
+  shouldForwardProp: (prop) => prop !== "selected"
+})<SpinnerProps>`
   display: inline-block;
   width: 1em;
   height: 1em;
-  border: 2px solid #26272B;
+  border: 2px solid ${({ variant }) => variant === 'secondary' ? '#8594E0' : '#26272B'};
   border-radius: 50%;
   border-top-color: transparent;
   animation: ${spin} 1s linear infinite;
@@ -29,6 +33,7 @@ const MyButton = ({
   primaryBackgroundColor,
   ...props
 }: MyButtonProps) => {
+
   return (
     <StyledMyButton
       variant={variant}
@@ -38,7 +43,7 @@ const MyButton = ({
       onClick={onClick}
       {...props}
     >
-      {isLoading && <Spinner />}
+      {isLoading && <Spinner variant={variant}/>}
       <span style={{ opacity: isLoading ? 0 : 1 }}>
         {children}
       </span>

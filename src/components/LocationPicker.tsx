@@ -49,7 +49,7 @@ const StyledLocationPicker = styled.div`
   color: ${({ theme }) => theme.secondaryTextColor};
   display: flex;
   flex-direction: column;
-  
+  background-color:  ${({ theme }) => theme.layer2};
   .main {
     display: flex;
     align-items: center;
@@ -88,7 +88,7 @@ const StyledLocationPicker = styled.div`
     justify-content: space-between;
     padding: 0px 4px; 
     font-size: 12px;
-
+    background-color:  ${({ theme }) => theme.backgroundcolor};
     .description {
       color: ${({ theme }) => theme.inactiveTabButtonTextColor};
     }

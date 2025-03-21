@@ -136,7 +136,7 @@ export const StyledLabelPicker = styled.div<{ $hasError?: boolean, $isOpen?: boo
   display: flex;
   flex-direction: column;
   position: relative;
-  
+  background-color:  ${({ theme }) => theme.layer2};
   .main {
     display: flex;
     gap: 4px;
@@ -182,6 +182,7 @@ export const StyledLabelPicker = styled.div<{ $hasError?: boolean, $isOpen?: boo
   }
 
   .meta {
+    background-color:  ${({ theme }) => theme.backgroundcolor};
     display: flex;
     justify-content: space-between;
     padding: 0px 4px; 

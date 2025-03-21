@@ -35,7 +35,6 @@ export default function CreateGroup({
   const selectedCurrency = allCurrencies.value.find(
     (c) => c.symbol === userCurrency
   );
-  const visualCurrency = useSignal<Currency | undefined>(selectedCurrency);
   const createGroup = useMutation<any, any, GroupRequest>({
     mutationFn: (groupData) => createGroupFn(groupData),
     onSuccess: () => {
@@ -86,18 +85,8 @@ export default function CreateGroup({
             className="currencySelector"
             onClick={() => (currencyMenu.value = "currencyOptions")}
           >
-            <div
-              className={
-                selectedCurrency?.flagClass === visualCurrency.value?.flagClass
-                  ? selectedCurrency?.flagClass
-                  : visualCurrency.value?.flagClass
-              }
-            />
-            <div>
-              {selectedCurrency?.symbol === visualCurrency.value?.symbol
-                ? selectedCurrency?.symbol
-                : visualCurrency.value?.symbol}
-            </div>
+            <div className={selectedCurrency?.flagClass} />
+            <div>{selectedCurrency?.symbol}</div>
             <FaAngleDown className="angleDown" />
           </div>
         </div>
@@ -116,7 +105,6 @@ export default function CreateGroup({
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
         userInfo={userInfo}
-        visualCurrency={visualCurrency}
       />
     </StyledCreateGroup>
   );

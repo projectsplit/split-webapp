@@ -7,7 +7,6 @@ import { CurrencyOptionProps } from "../../../interfaces";
 export default function CurrencyOptions({
   clickHandler,
   userInfo,
-  visualCurrency,
 }: CurrencyOptionProps) {
   const [searchItem, setSearchItem] = useState<string>("");
   const [filteredCurrencies, setFilteredCurrencies] =
@@ -28,11 +27,7 @@ export default function CurrencyOptions({
     setFilteredCurrencies(filteredItems);
   };
 
-  const onClickHandler = (currencySymbol: string) => {
-    clickHandler(currencySymbol);
-    const newCurrency = filteredCurrencies.find((c) => c.symbol === currencySymbol);
-    visualCurrency.value = newCurrency;
-  };
+
 
   return (
     <StyledCurrencyOptions height="75vh">
@@ -61,7 +56,7 @@ export default function CurrencyOptions({
               ? "clicked"
               : ""
           }`}
-          onClick={() => onClickHandler(currency.symbol)}
+          onClick={() => clickHandler(currency.symbol)}
         >
           <div className={currency.flagClass} />
           <div className="currency">

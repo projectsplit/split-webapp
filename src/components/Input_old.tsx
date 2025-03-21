@@ -41,7 +41,8 @@ export default Input_old;
 const StyledInput = styled.div<{ $hasError?: boolean }>`
   display: flex;
   flex-direction: column;
-
+  background-color: ${({ theme }) => theme.layer2};
+  border-radius: 8px;
   .input-container {
     border-radius: 8px;
     border: 1px solid ${({ theme, $hasError }) => ($hasError ? theme.errorColor : theme.lineColor)};
@@ -73,7 +74,8 @@ const StyledInput = styled.div<{ $hasError?: boolean }>`
     justify-content: space-between;
     padding: 0px 4px;
     font-size: 12px;
-
+    background-color:  ${({ theme }) => theme.backgroundcolor};
+   
     .description {
       color: ${({ theme }) => theme.secondaryTextColor};
     }

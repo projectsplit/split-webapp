@@ -7,6 +7,7 @@ import { theme } from "./theme";
 import GlobalStyles from "./styles/global";
 import { useEffect, useState } from "react";
 import SplashScreen from "./pages/SplashScreen/SplashScreen";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 
 const queryClient = new QueryClient({
@@ -40,7 +41,7 @@ const RootComponent: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <App />
-      {/* <ReactQueryDevtools /> */}
+      <ReactQueryDevtools />
     </ThemeProvider>
   );
 };

@@ -1,5 +1,5 @@
 import { CSSTransition } from "react-transition-group";
-import ExpenseForm from "../../../pages/ExpenseForm";
+import ExpenseForm from "../../ExpenseForm/ExpenseForm";
 import { NewExpenseAnimationProps } from "../../../interfaces";
 
 export default function NewExpenseAnimation({

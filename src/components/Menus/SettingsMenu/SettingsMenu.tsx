@@ -110,9 +110,8 @@ export default function SettingsMenu({
         >
           <div
             className={
-              selectedCurrency?.flagClass === visualCurrency.value?.flagClass
-                ? selectedCurrency?.flagClass
-                : visualCurrency.value?.flagClass
+              selectedCurrency?.flagClass
+               
             }
           />
           <div className="description">Preferred Currency</div>
@@ -151,7 +150,6 @@ export default function SettingsMenu({
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
         userInfo={userInfo}
-        visualCurrency={visualCurrency}
       />
     </StyledSettingsMenu>
   );

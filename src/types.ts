@@ -339,7 +339,7 @@ export type DeleteExpenseRequest = {
 };
 
 export type UpdateNotificationRequest = {
-  timestamp: string;
+  timestamp: string|undefined;
 };
 
 export type UpdateMostRecentGroupRequest = {
