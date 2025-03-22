@@ -210,12 +210,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
           {showAmountError && amountError ? amountError : ""}
         </span>
       </div>
-      <Input_old
-        description="Description"
-        placeholder="e.g. Air tickets"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
       <MemberPicker
         description={"Participants"}
         totalAmount={amountNumber}
@@ -234,6 +228,13 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         group={group}
         userCurrency={userCurrency}
       />
+      <Input_old
+        description="Description"
+        placeholder="e.g. Air tickets"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
+ 
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
       <LocationPicker location={location} setLocation={setLocation} />
       {/* <DateTime

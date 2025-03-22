@@ -29,10 +29,17 @@ const MemberPicker = ({
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
+  const [maxDropdownHeight, setMaxDropdownHeight] = useState("300px");
 
   const members = group?.members;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
-
+  useEffect(() => {
+    if (isMenuOpen && dropdownRef.current) {
+      const dropdownTop = dropdownRef.current.getBoundingClientRect().top;
+      const availableHeight = window.innerHeight - dropdownTop; // Leave a 10px margin
+      setMaxDropdownHeight(`${availableHeight}px`);
+    }
+  }, [isMenuOpen]);
   renderCounter.current++;
 
   const clickOutsideListener = (event: MouseEvent) => {
@@ -214,6 +221,23 @@ const MemberPicker = ({
     setMemberAmounts(recalculateAmounts(memberAmounts));
     setIsMenuOpen(!isMenuOpen);
   };
+  
+  useEffect(() => {
+    const updateDropdownHeight = () => {
+      if (isMenuOpen && dropdownRef.current) {
+        const dropdownTop = dropdownRef.current.getBoundingClientRect().top;
+        const availableHeight = window.innerHeight - dropdownTop - 10; // leave a 10px margin
+        setMaxDropdownHeight(`${availableHeight}px`);
+      }
+    };
+  
+    // Update when menu opens and when the window is resized (e.g., keyboard appearance)
+    updateDropdownHeight();
+    window.addEventListener("resize", updateDropdownHeight);
+    return () => {
+      window.removeEventListener("resize", updateDropdownHeight);
+    };
+  }, [isMenuOpen]);
 
   return (
     <StyledMemberPicker
@@ -259,7 +283,7 @@ const MemberPicker = ({
         <FiChevronDown className="icon" />
       </div>
       {isMenuOpen && (
-        <div className="dropdown" ref={dropdownRef}>
+        <div className="dropdown" ref={dropdownRef}   style={{ maxHeight: maxDropdownHeight, overflowY: "auto" }}>
           <div className="selectAll">
             <div
               className="tick-cube"
@@ -279,7 +303,7 @@ const MemberPicker = ({
             >
               {selectAllTick ? <FaCheck className="checkmark" /> : ""}
             </div>
-            <div className="">Select all</div>
+            <div className={`${selectAllTick?"":"available"}`}>Select all</div>
           </div>
 
           <div className="member-list">

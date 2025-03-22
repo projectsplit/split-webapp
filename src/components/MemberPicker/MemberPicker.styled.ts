@@ -69,14 +69,13 @@ export const StyledMemberPicker = styled.div<{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: absolute;
-    z-index: 2;
+    z-index: 5;
     width: 100%;
     box-sizing: border-box;
     border-radius: 8px;
     border-width: 1px;
     border-style: solid;
-    max-height: 300px;
+
     top: calc(100% + 1px);
 
     .member-list {
@@ -118,21 +117,7 @@ export const StyledMemberPicker = styled.div<{
         color: ${({ theme }) => theme.highlightColor};
       }
     }
-    /* .buttons {
-      display: flex;
-      padding: 0.5em 1em;
-      align-items: center;
 
-      .select-all-button {
-        margin-left: auto;
-        color: ${({ theme }) => theme.secondaryTextColor};
-      }
-
-      .clear-button {
-        margin-right: auto;
-        color: ${({ theme }) => theme.secondaryTextColor};
-      }
-    } */
 
     .option {
       animation: ${fadeIn} 0.15s linear;

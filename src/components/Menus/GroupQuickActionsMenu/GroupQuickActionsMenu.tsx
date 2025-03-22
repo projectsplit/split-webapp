@@ -18,19 +18,19 @@ export default function GroupQuickActionsMenu({
         <div className="new" onClick={() => (menu.value = "newExpense")}>
           <div className="wrapper">
             <CiReceipt className="icon" />
-            <div className="descr">New Expense</div>
+            <div className="descr">Expense</div>
           </div>
         </div>
         <div className="new" onClick={() => (menu.value = "newTransfer")}>
           <div className="wrapper">
             <BiTransfer className="icon" />
-            <div className="descr">New Transfer</div>
+            <div className="descr">Transfer</div>
           </div>
         </div>
         <div className="new" onClick={() => (menu.value = "newUser")}>
           <div className="wrapper">
             <IoPersonAddOutline className="icon" />
-            <div className="descr">Add New User</div>
+            <div className="descr">New User</div>
           </div>
         </div>
       </div>
