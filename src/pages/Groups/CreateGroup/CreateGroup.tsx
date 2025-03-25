@@ -61,14 +61,15 @@ export default function CreateGroup({
   return (
     <StyledCreateGroup ref={nodeRef}>
       <div className="header">
+        <div className="gap"></div>
+        <div className="title">Create New Group</div>
+
         <div
           className="closeButtonContainer"
           onClick={() => (menu.value = null)}
         >
           <IoClose className="closeButton" />
         </div>
-        <div className="title">Create New Group</div>
-        <div className="gap"></div>
       </div>
       <div className="inputAndCurrWrapper">
         <div className="input">
@@ -104,7 +105,7 @@ export default function CreateGroup({
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
-        userInfo={userInfo}
+        selectedCurrency={userCurrency}
       />
     </StyledCreateGroup>
   );

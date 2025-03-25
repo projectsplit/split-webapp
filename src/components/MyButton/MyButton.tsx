@@ -31,7 +31,7 @@ const MyButton = ({
   hasFailed ,
   onClick,
   primaryBackgroundColor,
-  ...props
+  fontSize
 }: MyButtonProps) => {
 
   return (
@@ -41,7 +41,8 @@ const MyButton = ({
       isLoading={isLoading}
       hasFailed={hasFailed}
       onClick={onClick}
-      {...props}
+      fontSize={fontSize}
+ 
     >
       {isLoading && <Spinner variant={variant}/>}
       <span style={{ opacity: isLoading ? 0 : 1 }}>
@@ -61,4 +62,5 @@ interface MyButtonProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: React.ReactNode;
   primaryBackgroundColor?:string;
+  fontSize?:string;
 }

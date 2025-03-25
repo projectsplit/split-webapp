@@ -38,6 +38,7 @@ export default function SettingsMenu({
 
   const userCurrency = userInfo?.currency;
   const timeZone = userInfo?.timeZone;
+
   const updatedUserCurrency = useSelectedCurrency();
   const updateTimeZone = useTimeZone();
 
@@ -76,7 +77,6 @@ export default function SettingsMenu({
   const selectedCurrency = allCurrencies.value.find(
     (c) => c.symbol === userCurrency
   );
-  const visualCurrency = useSignal<Currency | undefined>(selectedCurrency);
   const selectedTimeZone = allTimeZones.find((t: string) => t === timeZone);
 
   const [isOn, setIsOn] = useState(false);
@@ -149,7 +149,7 @@ export default function SettingsMenu({
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
-        userInfo={userInfo}
+        selectedCurrency={userCurrency}
       />
     </StyledSettingsMenu>
   );

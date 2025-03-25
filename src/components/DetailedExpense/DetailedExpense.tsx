@@ -163,8 +163,8 @@ export default function DetailedExpense({
 
       <div className="commentSection">
         <div className="comments">
-          <Comment />
-          <Comment />
+          {/* <Comment />
+          <Comment /> */}
         </div>
         <div>
           <LexicalComposer initialConfig={initialConfig}>

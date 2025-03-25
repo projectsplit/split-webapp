@@ -40,8 +40,9 @@ export const StyledMemberPicker = styled.div<{
     overflow: hidden;
 
     .icon {
+      font-size: 1.4rem;
       &:hover {
-        color: #dddddd;
+        color: ${({ theme }) => theme.whiteText};
       }
     }
   }
@@ -51,7 +52,7 @@ export const StyledMemberPicker = styled.div<{
     justify-content: space-between;
     padding: 0px 4px;
     font-size: 12px;
-
+    background-color: ${({ theme }) => theme.backgroundcolor};
     .description {
       color: ${({ theme }) => theme.inactiveTabButtonTextColor};
     }
@@ -77,6 +78,14 @@ export const StyledMemberPicker = styled.div<{
     border-style: solid;
 
     top: calc(100% + 1px);
+
+    .separator {
+      margin-left: 10px;
+      margin-right: 10px;
+      transform: translateZ(0);
+      position: sticky;
+      min-height: 1px;
+    }
 
     .member-list {
       overflow: auto;
@@ -117,7 +126,6 @@ export const StyledMemberPicker = styled.div<{
         color: ${({ theme }) => theme.highlightColor};
       }
     }
-
 
     .option {
       animation: ${fadeIn} 0.15s linear;

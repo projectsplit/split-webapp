@@ -10,12 +10,14 @@ export const CategorySelector = ({
 }: CategorySelectorProps) => {
   const isFirstRender = useRef(true);
   const categoryKeys = Object.keys(categories);
-  const [activeCategory, setActiveCategory] = useState(Object.keys(categories)[
-    Object.values(categories).indexOf(
-      activeCat.charAt(0).toUpperCase() + activeCat.slice(1)
-    )
-  ]); // Capitalizes first letter
-  
+  const [activeCategory, setActiveCategory] = useState(
+    Object.keys(categories)[
+      Object.values(categories).indexOf(
+        activeCat.charAt(0).toUpperCase() + activeCat.slice(1)
+      )
+    ]
+  ); // Capitalizes first letter
+
   const [indicatorPosition, setIndicatorPosition] = useState({
     left: "0px",
     width: "0px",
@@ -76,8 +78,6 @@ export const CategorySelector = ({
     return () => window.removeEventListener("resize", updateIndicator);
   }, [activeCategory, activeCat]); // Only re-runs when `activeCategory` changes
 
-
-
   return (
     <StyledCategorySelector>
       <div className="groupCategories">
@@ -103,7 +103,9 @@ export const CategorySelector = ({
           }}
         />
       </div>
-      <Separator />
+      <div className="separator">
+        <Separator />
+      </div>
     </StyledCategorySelector>
   );
 };

@@ -10,11 +10,10 @@ import { useEffect, useState } from "react";
 import MemberPicker from "../MemberPicker/MemberPicker";
 import Input_old from "../Input_old";
 import { DateTime } from "../DateTime";
-import Button from "../Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import currency from "currency.js";
-import LocationPicker from "../LocationPicker";
-import LabelPicker from "../LabelPicker";
+import LocationPicker from "../LocationPicker/LocationPicker";
+import LabelPicker from "../LabelPicker/LabelPicker";
 import { createExpense } from "../../api/services/api";
 import { ExpenseFormProps } from "../../interfaces";
 import { StyledExpenseForm } from "./ExpenseForm.styled";
@@ -25,7 +24,8 @@ import InputMonetary from "../InputMonetary/InputMonetary";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import CurrencyOptionsAnimation from "../Menus/MenuAnimations/CurrencyOptionsAnimation";
 import { useOutletContext } from "react-router-dom";
-import { useSelectedCurrency } from "../../api/services/useSelectedCurrency";
+import { IoClose } from "react-icons/io5";
+import MyButton from "../MyButton/MyButton";
 
 const ExpenseForm: React.FC<ExpenseFormProps> = ({
   group,
@@ -43,7 +43,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   );
   const [payersError, setPayersError] = useState<string>("");
 
-  const [currencySymbol] = useState<string>(group.currency);
+  const [currencySymbol, setCurrencySymbol] = useState<string>(group.currency);
   const [amount, setAmount] = useState<string>("");
   const [amountError, setAmountError] = useState<string>("");
   const [showAmountError, setShowAmountError] = useState<boolean>(false);
@@ -53,15 +53,13 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const [expenseTime, setExpenseTime] = useState<string>(
     new Date().toISOString()
   );
-  const [location, setLocation] = useState<GeoLocation | undefined>(
-    expense?.location
-  );
+  const location = useSignal<GeoLocation | undefined>(expense?.location);
 
   const displayedAmount = useSignal<string>("");
   const currencyMenu = useSignal<string | null>(null);
+  const isMapOpen = useSignal<boolean>(false);
   const queryClient = useQueryClient();
   const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
-  const updatedUserCurrency = useSelectedCurrency();
   const userCurrency = userInfo?.currency;
 
   const createExpenseMutation = useMutation<any, Error, CreateExpenseRequest>({
@@ -88,15 +86,13 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     if (
       participants.length ===
       participants.filter((p) => p.selected === false).length
-    ){
-      setParticipantsError("Select at least one participant")
+    ) {
+      setParticipantsError("Select at least one participant");
     }
-    if(payers.length ===
-      payers.filter((p) => p.selected === false).length)
-      {
-        setPayersError("Select at least one payer")
-      }
-      
+    if (payers.length === payers.filter((p) => p.selected === false).length) {
+      setPayersError("Select at least one payer");
+    }
+
     if (!amountIsValid()) return;
 
     const createExpenseRequest: CreateExpenseRequest = {
@@ -111,7 +107,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         .map((value) => ({ memberId: value.id, amount: Number(value.amount) })),
       description: description,
       labelIds: [],
-      location: location ?? null,
+      location: location.value ?? null,
       occurred: expenseTime,
       labels: labels,
     };
@@ -171,7 +167,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const amountNumber = !amountError ? Number(amount) : Number.NaN;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = currencyMask(e).target.value;
+    const newValue = currencyMask(e, currencySymbol).target.value;
     const numericValue = Number(removeCommas(newValue));
     if (numericValue <= 999999999999.99) {
       displayedAmount.value = newValue;
@@ -190,19 +186,30 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   };
 
   const handldeCurrencyOptionsClick = (curr: string) => {
-    updatedUserCurrency.mutate(curr);
+    setCurrencySymbol(curr);
     currencyMenu.value = null;
   };
 
   return (
     <StyledExpenseForm>
+      <div className="header">
+        <div className="gap"></div>
+        <div className="title">New Expense</div>
+
+        <div
+          className="closeButtonContainer"
+          onClick={() => (menu.value = null)}
+        >
+          <IoClose className="closeButton" />
+        </div>
+      </div>
       <div className="inputAndErrorsWrapper">
         <InputMonetary
           currencyMenu={currencyMenu}
           value={displayedAmount.value}
           onChange={(e) => handleInputChange(e)}
           onBlur={handleInputBlur}
-          userCurrency={userCurrency}
+          currency={currencySymbol}
           autoFocus={true}
           inputError={showAmountError && !!amountError}
         />
@@ -234,26 +241,25 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
- 
+
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
-      <LocationPicker location={location} setLocation={setLocation} />
-      {/* <DateTime
+      <LocationPicker location={location} isMapOpen={isMapOpen} />
+      <DateTime
         selectedDateTime={expenseTime}
         setSelectedDateTime={setExpenseTime}
         timeZoneId={timeZoneId}
-      /> */}
-      <Button className="submit-button" onClick={() => (menu.value = null)}>
-        Close
-      </Button>
-      <Button className="submit-button" onClick={submitExpense}>
+      />
+      <div className="spacer"></div>
+      <MyButton fontSize="16" onClick={submitExpense}>
         Submit
-      </Button>
+      </MyButton>
 
       <MenuAnimationBackground menu={currencyMenu} />
+
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
-        userInfo={userInfo}
+        selectedCurrency={currencySymbol}
       />
     </StyledExpenseForm>
   );

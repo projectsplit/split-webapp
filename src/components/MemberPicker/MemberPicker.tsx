@@ -10,6 +10,7 @@ import { useOutletContext } from "react-router-dom";
 import { getSymbolFromCurrency } from "../../helpers/currency-symbol-map";
 import { StyledMemberPicker } from "./MemberPicker.styled";
 import { FaCheck } from "react-icons/fa";
+import Separator from "../Separator/Separator";
 
 const MemberPicker = ({
   memberAmounts,
@@ -29,17 +30,10 @@ const MemberPicker = ({
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
-  const [maxDropdownHeight, setMaxDropdownHeight] = useState("300px");
 
   const members = group?.members;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
-  useEffect(() => {
-    if (isMenuOpen && dropdownRef.current) {
-      const dropdownTop = dropdownRef.current.getBoundingClientRect().top;
-      const availableHeight = window.innerHeight - dropdownTop; // Leave a 10px margin
-      setMaxDropdownHeight(`${availableHeight}px`);
-    }
-  }, [isMenuOpen]);
+
   renderCounter.current++;
 
   const clickOutsideListener = (event: MouseEvent) => {
@@ -66,7 +60,7 @@ const MemberPicker = ({
     } else {
       setSelectAllTick(false);
     }
-  }, [ memberAmounts]);
+  }, [memberAmounts]);
 
   useEffect(() => {
     setMemberAmounts(
@@ -78,7 +72,10 @@ const MemberPicker = ({
     );
 
     if (totalAmount > 0) {
-      if (description === "Participants"&&!memberAmounts.some(m=>m.selected)) {
+      if (
+        description === "Participants" &&
+        !memberAmounts.some((m) => m.selected)
+      ) {
         const newFormMembers = memberAmounts.map((m) => ({
           ...m,
           selected: true,
@@ -86,7 +83,7 @@ const MemberPicker = ({
         }));
         setMemberAmounts(recalculateAmounts(newFormMembers));
       }
-      if (description === "Payers"&&!memberAmounts.some(m=>m.selected)) {
+      if (description === "Payers" && !memberAmounts.some((m) => m.selected)) {
         const newFormMembers = memberAmounts.map((m) => ({
           ...m,
           selected: m.id === userMemberId,
@@ -221,23 +218,6 @@ const MemberPicker = ({
     setMemberAmounts(recalculateAmounts(memberAmounts));
     setIsMenuOpen(!isMenuOpen);
   };
-  
-  useEffect(() => {
-    const updateDropdownHeight = () => {
-      if (isMenuOpen && dropdownRef.current) {
-        const dropdownTop = dropdownRef.current.getBoundingClientRect().top;
-        const availableHeight = window.innerHeight - dropdownTop - 10; // leave a 10px margin
-        setMaxDropdownHeight(`${availableHeight}px`);
-      }
-    };
-  
-    // Update when menu opens and when the window is resized (e.g., keyboard appearance)
-    updateDropdownHeight();
-    window.addEventListener("resize", updateDropdownHeight);
-    return () => {
-      window.removeEventListener("resize", updateDropdownHeight);
-    };
-  }, [isMenuOpen]);
 
   return (
     <StyledMemberPicker
@@ -283,7 +263,7 @@ const MemberPicker = ({
         <FiChevronDown className="icon" />
       </div>
       {isMenuOpen && (
-        <div className="dropdown" ref={dropdownRef}   style={{ maxHeight: maxDropdownHeight, overflowY: "auto" }}>
+        <div className="dropdown" ref={dropdownRef}>
           <div className="selectAll">
             <div
               className="tick-cube"
@@ -303,9 +283,13 @@ const MemberPicker = ({
             >
               {selectAllTick ? <FaCheck className="checkmark" /> : ""}
             </div>
-            <div className={`${selectAllTick?"":"available"}`}>Select all</div>
+            <div className={`${selectAllTick ? "" : "available"}`}>
+              Select all
+            </div>
           </div>
-
+          <div className="separator">
+            <Separator />
+          </div>
           <div className="member-list">
             {memberAmounts
               .filter((m) => m.selected)

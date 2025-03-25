@@ -6,13 +6,12 @@ import { CurrencyOptionProps } from "../../../interfaces";
 
 export default function CurrencyOptions({
   clickHandler,
-  userInfo,
+  selectedCurrency,
 }: CurrencyOptionProps) {
   const [searchItem, setSearchItem] = useState<string>("");
   const [filteredCurrencies, setFilteredCurrencies] =
     useState<Currency[]>(currencyData);
 
-  const userCurrency = userInfo?.currency;
 
   const handleInputChange = (e: any) => {
     const searchTerm = e.target.value;
@@ -51,8 +50,8 @@ export default function CurrencyOptions({
         <div
           key={index}
           className={`currencyOption ${
-            (!userCurrency && currency.symbol === "USD") ||
-            userCurrency === currency.symbol
+            (!selectedCurrency && currency.symbol === "USD") ||
+            selectedCurrency === currency.symbol
               ? "clicked"
               : ""
           }`}

@@ -18,7 +18,7 @@ export default React.forwardRef(function InputMonetary(
     inputError,
     // setMenu,
     currencyMenu,
-    userCurrency,
+    currency,
     autoFocus,
   }: InputMonetaryProps,
   ref: React.Ref<HTMLInputElement>
@@ -26,7 +26,7 @@ export default React.forwardRef(function InputMonetary(
   const allCurrencies = useSignal<Currency[]>(currencyData);
 
   const selectedCurrency = allCurrencies.value.find(
-    (c) => c.symbol === userCurrency
+    (c) => c.symbol === currency
   );
 
   return (

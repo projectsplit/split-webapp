@@ -25,7 +25,7 @@ export const StyledMapsInfoBox = styled.div`
       text-decoration: underline;
       cursor: pointer;
     }
-    margin-bottom: 1rem;
+    
   }
 
   .locationIcon {
@@ -34,6 +34,7 @@ export const StyledMapsInfoBox = styled.div`
   }
   .map {
     height: 450px;
+    margin-top: 1rem;
   }
   .noLocation {
     display: flex;

@@ -21,7 +21,7 @@ const StyledScrollPicker = styled.div`
     color: #77777b;
 
     &.selected {
-      color: #DDDDDD;
+      color: ${({theme})=>theme.whiteText};
       background-color: ${({ theme }) => theme.highlightColor};
     }
   }
