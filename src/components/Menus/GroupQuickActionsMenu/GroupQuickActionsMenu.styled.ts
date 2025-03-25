@@ -12,6 +12,7 @@ export const StyledGroupQuickActionsMenu = styled(StyledBottomMenu)`
         display: flex;
         flex-direction: column;
         justify-content: center;
+        position: relative;
         .icon {
           display: flex;
           align-self: center;
@@ -32,6 +33,20 @@ export const StyledGroupQuickActionsMenu = styled(StyledBottomMenu)`
           margin-bottom: 10px;
         }
       }
+      .plus {
+        font-size: 12px;
+        font-weight: 800;
+        position: absolute;
+       
+        border-radius: 50%;
+        width: 1.1rem;
+        height: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        bottom: 40px;
+        left: 5px;
+      }
     }
   }
   .closeButton {
@@ -40,6 +55,6 @@ export const StyledGroupQuickActionsMenu = styled(StyledBottomMenu)`
     justify-content: center;
   }
   .closeButton button {
-  width: 100%;
-}
+    width: 100%;
+  }
 `;
