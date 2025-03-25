@@ -31,6 +31,7 @@ export default function Group() {
   const timeZoneId = userInfo?.timeZone;
   const { data: group, isFetching } = useGroup(groupid);
   const groupName = group?.name;
+  
   useEffect(() => {
     topMenuTitle.value = group?.name || "";
   }, [group, showBottomBar.value]);

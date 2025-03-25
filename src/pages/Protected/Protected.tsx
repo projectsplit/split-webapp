@@ -8,7 +8,6 @@ import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/Setting
 import { getMe } from "../../api/services/api";
 import { useGetUserInvitations } from "../../api/services/useGetUserInvitations";
 import TopMenu from "../../components/Menus/TopMenu/TopMenu";
-import { DateTime } from "luxon";
 import { useMemo } from "react";
 
 const Protected: React.FC = () => {
@@ -42,7 +41,7 @@ const Protected: React.FC = () => {
         menu={menu}
         username={userInfo?.username}
         hasNewerNotifications={hasNewerNotifications || false}
-        latestTimeStamp={latest || DateTime.now().toUTC().toISO()}
+        latestTimeStamp={latest}
       />
       <Outlet context={{ userInfo, topMenuTitle }} />
       <MenuAnimationBackground menu={menu} />

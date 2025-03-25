@@ -1,17 +1,28 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
-import { UpdateNotificationRequest } from "../../types";
+import { UpdateNotificationRequest, UserInfo } from "../../types";
 import { apiClient } from "../apiClients";
 
-export const useLastViewedNotification = () => {
+export const useLastViewedNotification = (pageSize: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, AxiosError, string>({
-    mutationFn: (timestamp) => updateLastViewedNotification({ timestamp }),
+  return useMutation<any, AxiosError, string | undefined>({
+    mutationFn: (timestamp) => {
+      if (!timestamp) {
+        return Promise.resolve(null); // or simply return null
+      }
+      return updateLastViewedNotification({ timestamp });
+    },
     onSuccess: async () => {
+      const currentUserInfo = queryClient.getQueryData<UserInfo>(["getMe"]);
+      if (currentUserInfo) {
+        queryClient.setQueryData<UserInfo>(["getMe"], {
+          ...currentUserInfo,
+          hasNewerNotifications: false,
+        });
+      }
       queryClient.refetchQueries({
-        queryKey: ["getMe"],
-        exact: false,
+        queryKey:["userInvitations", pageSize] 
       });
     },
     onError: (error) => {

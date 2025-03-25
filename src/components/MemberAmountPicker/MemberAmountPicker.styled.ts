@@ -37,7 +37,7 @@ export const StyledMemberAmountPicker = styled.div`
     
     .icon {
       &:hover {
-        color: #DDDDDD;
+        color: ${({theme})=>theme.whiteText}
       }
     }
   }
@@ -123,7 +123,7 @@ export const StyledMemberAmountPicker = styled.div`
         }
         
         .locked-icon{
-          color: #DDDDDD;
+          color: ${({theme})=>theme.whiteText}
         }
         
         .unlocked-icon{

@@ -19,7 +19,7 @@ export default function MapsInfoBox({ location, googleMapsUrl }: MapsInfoBoxProp
 
   return (
     <APIProvider apiKey={config.googleMapsApiKey}>
-      <StyledMapsInfoBox>
+      <StyledMapsInfoBox >
         {location ? (
           <InfoBox>
             <div className="topStripe">
@@ -59,9 +59,9 @@ export default function MapsInfoBox({ location, googleMapsUrl }: MapsInfoBoxProp
                   }}
                 >
                   <Pin
-                    background={"#646cff"}
-                    borderColor={"#1f234e"}
-                    glyphColor={"#1f234e"}
+                  background={"#FFEE34"}
+                  borderColor={"#1f234e"}
+                  glyphColor={"#1f234e"}
                     scale={1.2}
                   />
                 </AdvancedMarker>

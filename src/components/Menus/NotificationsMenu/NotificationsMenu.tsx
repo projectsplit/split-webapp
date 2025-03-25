@@ -17,7 +17,6 @@ export default function NotificationsMenu({
   userInfo
 }: NotificationsMenuProps) {
   const timeZoneId = userInfo?.timeZone;
-
   return (
     <StyledNotificationsMenu>
       <div className="headerSeparator">

@@ -47,7 +47,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
       white-space: nowrap;
       font-size: 18px;
       font-weight: 400;
-      color: #dddddd;
+      color: ${({theme})=>theme.whiteText};
       font-style: italic;
       min-height: 21px;
     }
@@ -75,7 +75,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     white-space: nowrap;
     font-size: 18px;
     font-weight: 400;
-    color: #dddddd;
+    color: ${({theme})=>theme.whiteText};
 
     min-height: 21px;
     font-weight: bold;

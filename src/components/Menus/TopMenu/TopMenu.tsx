@@ -23,7 +23,8 @@ export default function TopMenu({
       navigate("/groups/active");
     }
   };
-  const updateNotification = useLastViewedNotification();
+  const updateNotification = useLastViewedNotification(10);
+  
   return (
     <StyledTopMenu>
       <div className="useOptionsContainer">

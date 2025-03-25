@@ -9,7 +9,7 @@ export const StyledMyButton = styled.button.withConfig({
   font-weight: 500;
   border: none;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: ${({fontSize})=>fontSize?`${fontSize}px`:"14px"};
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   position: relative;
@@ -89,4 +89,5 @@ export interface StyledMyButtonProps {
   disabled?: boolean;
   isLoading?: boolean;
   hasFailed?: boolean;
+  fontSize?:string
 }

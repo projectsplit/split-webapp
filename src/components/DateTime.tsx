@@ -36,6 +36,7 @@ export const DateTime = ({ selectedDateTime, setSelectedDateTime, timeZoneId }: 
     }
   }, [realtimeUpdate])
 
+
   useEffect(() => {
     window.addEventListener('mousedown', (e) => closeTimePicker(e))
 
@@ -87,6 +88,7 @@ const StyledDateTime = styled.div`
     text-overflow: clip;
     overflow: hidden;
     cursor: pointer;
+    background-color:  ${({ theme }) => theme.layer2};
     
     .icon {
     }

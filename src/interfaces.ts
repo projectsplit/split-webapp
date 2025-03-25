@@ -101,6 +101,8 @@ export interface MemberPickerProps {
   setMemberAmounts: React.Dispatch<React.SetStateAction<PickerMember[]>>;
   description?: string;
   error?: string;
+  group: Group;
+  userCurrency: string;
 }
 
 export interface DayPickerProps {
@@ -224,8 +226,7 @@ export interface StyledBottomMenuProps {
 }
 export interface CurrencyOptionProps {
   clickHandler: (curr: string) => void;
-  userInfo?: UserInfo | undefined;
-  visualCurrency: Signal<Currency | undefined>;
+  selectedCurrency?: string | undefined;
 }
 export interface TimeZoneOptionsProps {
   clickHandler: (curr: string) => void;
@@ -234,15 +235,29 @@ export interface TimeZoneOptionsProps {
 export interface CurrencyOptionsAnimationProps {
   clickHandler: (curr: string) => void;
   currencyMenu: Signal<string | null>;
-  userInfo: UserInfo | undefined;
-  visualCurrency: Signal<Currency | undefined>;
+  selectedCurrency: string | undefined;
 }
+
+export interface LocationPickerProps {
+  isMapOpen: Signal<boolean>;
+  location: Signal<GeoLocation | undefined>;
+}
+
+export interface PlacePickerProps {
+  location: Signal<GeoLocation | undefined>;
+  isMapOpen: Signal<boolean>;
+}
+export interface PlacePickerAnimationProps extends PlacePickerProps {}
 export interface TimeZoneOptionsAnimationProps {
   clickHandler: (curr: string) => void;
   timeZoneMenu: Signal<string | null>;
   userInfo: UserInfo | undefined;
 }
-
+export interface LabelPickerProps {
+  labels: string[];
+  setLabels: React.Dispatch<React.SetStateAction<string[]>>;
+  groupId: string;
+}
 export interface BottomMenuProps {
   children: any;
   height?: string;
@@ -294,7 +309,7 @@ export interface TopMenuProps {
   menu: Signal<string | null>;
   username: string | undefined;
   hasNewerNotifications: boolean;
-  latestTimeStamp: string;
+  latestTimeStamp: string | undefined;
 }
 
 export interface ToggleSwitchProps {
@@ -317,7 +332,10 @@ export interface ExpenseFormProps {
 }
 
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
-
+export interface LocationPickerAnimationProps extends MenuProps {
+  location: GeoLocation | undefined;
+  setLocation: React.Dispatch<React.SetStateAction<GeoLocation | undefined>>;
+}
 export interface GroupQuickActionsMenuprops extends MenuProps {}
 export interface DeleteExpenseAnimationProps extends MenuProps {
   description: string;
@@ -486,4 +504,17 @@ export interface ErrorMenuAnimationProps extends MenuProps {
 
 export interface ErrorMenuProps extends MenuProps {
   children: any;
+}
+
+export interface InputMonetaryProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+
+  backgroundColor?: string;
+  value?: string;
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  inputError?: boolean;
+  currencyMenu: Signal<React.SetStateAction<string | null>>;
+  currency: string;
 }

@@ -14,7 +14,8 @@ export default React.forwardRef(function Input(
     autoFocus,
     error,
     width,
-    backgroundcolor
+    backgroundcolor,
+    inputMode
   }: InputProps,
   ref: React.Ref<HTMLInputElement>
 ) {
@@ -32,6 +33,7 @@ export default React.forwardRef(function Input(
       error={error}
       width={width}
       backgroundcolor={backgroundcolor}
+      inputMode={inputMode}
     />
   );
 });

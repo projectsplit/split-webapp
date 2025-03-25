@@ -35,7 +35,6 @@ export default function CreateGroup({
   const selectedCurrency = allCurrencies.value.find(
     (c) => c.symbol === userCurrency
   );
-  const visualCurrency = useSignal<Currency | undefined>(selectedCurrency);
   const createGroup = useMutation<any, any, GroupRequest>({
     mutationFn: (groupData) => createGroupFn(groupData),
     onSuccess: () => {
@@ -62,14 +61,15 @@ export default function CreateGroup({
   return (
     <StyledCreateGroup ref={nodeRef}>
       <div className="header">
+        <div className="gap"></div>
+        <div className="title">Create New Group</div>
+
         <div
           className="closeButtonContainer"
           onClick={() => (menu.value = null)}
         >
           <IoClose className="closeButton" />
         </div>
-        <div className="title">Create New Group</div>
-        <div className="gap"></div>
       </div>
       <div className="inputAndCurrWrapper">
         <div className="input">
@@ -86,18 +86,8 @@ export default function CreateGroup({
             className="currencySelector"
             onClick={() => (currencyMenu.value = "currencyOptions")}
           >
-            <div
-              className={
-                selectedCurrency?.flagClass === visualCurrency.value?.flagClass
-                  ? selectedCurrency?.flagClass
-                  : visualCurrency.value?.flagClass
-              }
-            />
-            <div>
-              {selectedCurrency?.symbol === visualCurrency.value?.symbol
-                ? selectedCurrency?.symbol
-                : visualCurrency.value?.symbol}
-            </div>
+            <div className={selectedCurrency?.flagClass} />
+            <div>{selectedCurrency?.symbol}</div>
             <FaAngleDown className="angleDown" />
           </div>
         </div>
@@ -115,8 +105,7 @@ export default function CreateGroup({
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
-        userInfo={userInfo}
-        visualCurrency={visualCurrency}
+        selectedCurrency={userCurrency}
       />
     </StyledCreateGroup>
   );
