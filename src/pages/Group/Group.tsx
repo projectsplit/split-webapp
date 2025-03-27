@@ -16,6 +16,7 @@ import GroupQuickActionsAnimation from "../../components/Menus/MenuAnimations/Me
 import AddNewUserAnimation from "../../components/Menus/MenuAnimations/AddNewUserAnimation";
 import useGroup from "../../api/services/useGroup";
 import { useEffect } from "react";
+import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTransferAnimation";
 
 export default function Group() {
   const menu = useSignal<string | null>(null);
@@ -31,7 +32,7 @@ export default function Group() {
   const timeZoneId = userInfo?.timeZone;
   const { data: group, isFetching } = useGroup(groupid);
   const groupName = group?.name;
-  
+
   useEffect(() => {
     topMenuTitle.value = group?.name || "";
   }, [group, showBottomBar.value]);
@@ -49,7 +50,7 @@ export default function Group() {
             categories={{
               cat1: "Expenses",
               cat2: "Transfers",
-              cat3: "Members",
+              cat3: "Debts",
             }}
           />
           <Outlet context={{ userInfo, group, showBottomBar }} />
@@ -58,6 +59,13 @@ export default function Group() {
           {group && (
             <NewExpenseAnimation
               expense={null}
+              group={group}
+              timeZoneId={timeZoneId}
+              menu={menu}
+            />
+          )}
+          {group && (
+            <NewTransferAnimation
               group={group}
               timeZoneId={timeZoneId}
               menu={menu}

@@ -218,10 +218,14 @@ const MemberPicker = ({
     setMemberAmounts(recalculateAmounts(memberAmounts));
     setIsMenuOpen(!isMenuOpen);
   };
-
+  const sortedMemberAmounts = [...memberAmounts].sort((a, b) => {
+    if (a.id === userMemberId) return -1;
+    if (b.id === userMemberId) return 1;
+    return 0;
+  });
   return (
     <StyledMemberPicker
-      selectedCount={selectedCount}
+      $selectedCount={selectedCount}
       $isOpen={isMenuOpen}
       $hasError={!!error}
       tabIndex={0}
@@ -238,7 +242,7 @@ const MemberPicker = ({
             ? selectedCount === 0
               ? "Select participants"
               : selectedCount === 1
-              ? `Billed to ${memberAmounts.find((m) => m.amount != "")?.name}`
+              ? `Billed to ${sortedMemberAmounts.find((m) => m.amount != "")?.name}`
               : selectedCount === 2 && isEquallySplit.value
               ? `Split equally between ${selectedCount} `
               : selectedCount === 2 && !isEquallySplit.value
@@ -250,7 +254,7 @@ const MemberPicker = ({
             ? selectedCount === 0
               ? "Select payers"
               : selectedCount === 1
-              ? `Paid by ${memberAmounts.find((m) => m.amount != "")?.name}`
+              ? `Paid by ${sortedMemberAmounts.find((m) => m.amount != "")?.name}`
               : selectedCount === 2 && isEquallySplit.value
               ? `Paid equally by ${selectedCount} `
               : selectedCount === 2 && !isEquallySplit.value
@@ -291,7 +295,7 @@ const MemberPicker = ({
             <Separator />
           </div>
           <div className="member-list">
-            {memberAmounts
+            {sortedMemberAmounts
               .filter((m) => m.selected)
               .map((m) => (
                 <div
@@ -327,7 +331,7 @@ const MemberPicker = ({
                   </div>
                 </div>
               ))}
-            {memberAmounts
+            {sortedMemberAmounts
               .filter((m) => !m.selected)
               .map((m) => (
                 <div

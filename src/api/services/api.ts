@@ -97,11 +97,7 @@ export const getUserId = async () => {
   return response.data;
 };
 
-export const createExpense = async (
-  req: CreateExpenseRequest
-): Promise<void> => {
-  await apiClient.post<void, AxiosResponse<void>>("/expenses/create", req);
-};
+
 
 export const getLabels = async (
   groupId: string,

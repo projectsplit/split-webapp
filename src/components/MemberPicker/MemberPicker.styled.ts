@@ -12,10 +12,10 @@ const fadeIn = keyframes`
 export const StyledMemberPicker = styled.div<{
   $hasError?: boolean;
   $isOpen?: boolean;
-  selectedCount: number;
+  $selectedCount: number;
 }>`
-  color: ${({ theme, selectedCount }) =>
-    selectedCount > 0 ? "" : theme.secondaryTextColor};
+  color: ${({ theme, $selectedCount }) =>
+    $selectedCount > 0 ? "" : theme.secondaryTextColor};
   display: flex;
   flex-direction: column;
   position: relative;
