@@ -10,22 +10,21 @@ import { useEffect, useState } from "react";
 import MemberPicker from "../MemberPicker/MemberPicker";
 import Input_old from "../Input_old";
 import { DateTime } from "../DateTime";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import currency from "currency.js";
 import LocationPicker from "../LocationPicker/LocationPicker";
 import LabelPicker from "../LabelPicker/LabelPicker";
-import { createExpense } from "../../api/services/api";
 import { ExpenseFormProps } from "../../interfaces";
 import { StyledExpenseForm } from "./ExpenseForm.styled";
-import { removeCommas } from "../../helpers/removeCommas";
 import { useSignal } from "@preact/signals-react";
-import { currencyMask } from "../../helpers/currencyMask";
 import InputMonetary from "../InputMonetary/InputMonetary";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import CurrencyOptionsAnimation from "../Menus/MenuAnimations/CurrencyOptionsAnimation";
 import { useOutletContext } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import MyButton from "../MyButton/MyButton";
+import { handleInputChange } from "../../helpers/handleInputChange";
+import { amountIsValid } from "../../helpers/amountIsValid";
+import { useExpense } from "../../api/services/useExpense";
 
 const ExpenseForm: React.FC<ExpenseFormProps> = ({
   group,
@@ -58,28 +57,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const displayedAmount = useSignal<string>("");
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
-  const queryClient = useQueryClient();
   const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
   const userCurrency = userInfo?.currency;
-
-  const createExpenseMutation = useMutation<any, Error, CreateExpenseRequest>({
-    mutationFn: createExpense,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["groupExpenses"] });
-      menu.value = null;
-    },
-    onError: (error) => {
-      console.error("Log out failed:", error.message);
-    },
-  });
-
-  const amountIsValid = () => {
-    const numAmount = Number(amount);
-
-    const isInvalid = !amount || numAmount <= 0;
-    setAmountError(isInvalid ? "Enter a valid amount greater than zero" : "");
-    return !isInvalid;
-  };
+  const { mutate: createExpenseMutation, isPending } = useExpense(menu);
 
   const submitExpense = () => {
     setShowAmountError(true);
@@ -93,7 +73,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
       setPayersError("Select at least one payer");
     }
 
-    if (!amountIsValid()) return;
+    if (!amountIsValid(amount, setAmountError)) return;
 
     const createExpenseRequest: CreateExpenseRequest = {
       amount: Number(amount),
@@ -112,11 +92,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
       labels: labels,
     };
 
-    createExpenseMutation.mutate(createExpenseRequest);
+    createExpenseMutation(createExpenseRequest);
   };
 
   useEffect(() => {
-    amountIsValid();
+    amountIsValid(amount, setAmountError);
     const selectedParticipants = participants.filter((x) => x.selected);
     const areParticipantsNumbersValid = selectedParticipants.every(
       (x) => x.amount !== "NaN" && Number(x.amount) > 0
@@ -166,22 +146,13 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   const amountNumber = !amountError ? Number(amount) : Number.NaN;
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = currencyMask(e, currencySymbol).target.value;
-    const numericValue = Number(removeCommas(newValue));
-    if (numericValue <= 999999999999.99) {
-      displayedAmount.value = newValue;
-      setAmount(removeCommas(newValue));
-    }
-  };
-
   const handleInputBlur = () => {
     if (
       participants.some((p) => p.selected) ||
       payers.some((p) => p.selected)
     ) {
       setShowAmountError(true);
-      amountIsValid();
+      amountIsValid(amount, setAmountError);
     }
   };
 
@@ -207,7 +178,10 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         <InputMonetary
           currencyMenu={currencyMenu}
           value={displayedAmount.value}
-          onChange={(e) => handleInputChange(e)}
+          onChange={(e) => {
+            handleInputChange(e, currencySymbol, displayedAmount, setAmount);
+            setShowAmountError(false);
+          }}
           onBlur={handleInputBlur}
           currency={currencySymbol}
           autoFocus={true}
@@ -250,7 +224,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         timeZoneId={timeZoneId}
       />
       <div className="spacer"></div>
-      <MyButton fontSize="16" onClick={submitExpense}>
+      <MyButton fontSize="16" onClick={submitExpense} isLoading={isPending}>
         Submit
       </MyButton>
 

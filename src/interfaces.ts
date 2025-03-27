@@ -324,9 +324,21 @@ export interface NewExpenseAnimationProps {
   menu: Signal<string | null>;
 }
 
+export interface NewTransferAnimationProps {
+  group: Group;
+  timeZoneId: string;
+  menu: Signal<string | null>;
+}
+
 export interface ExpenseFormProps {
   group: Group;
   expense: FormExpense | null;
+  timeZoneId: string;
+  menu: Signal<string | null>;
+}
+
+export interface TransferFormProps {
+  group: Group;
   timeZoneId: string;
   menu: Signal<string | null>;
 }

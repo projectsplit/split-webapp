@@ -287,6 +287,7 @@ export type FormExpense = {
   location: GeoLocation | undefined;
 };
 
+
 export type Participant = {
   memberId: string;
   participationAmount: string;
@@ -311,6 +312,17 @@ export type CreateTransfersRequest = {
   groupId: string;
   transfers: Transfer[];
 };
+
+export type CreateTransferRequest = {
+  groupId: string;
+  description: string;
+  amount: number;
+  currency: string;
+  receiverId: string;
+  senderId: string;
+  occurred: string;
+
+}
 
 export type GetUserInvitationsResponse = {
   invitations: GetUserInvitationsResponseItem[];

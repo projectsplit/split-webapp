@@ -38,7 +38,7 @@ const App = ( ) => {
             <Route index element={<RedirectToExpenses />} />
             <Route path="expenses" element={<Expenses />} />
             <Route path="transfers" element={<Transfers />} />
-            <Route path="members" element={<Members />} />
+            <Route path="debts" element={<Members />} />
             <Route path="*" element={<RedirectToExpenses />} />
           </Route>
           <Route path="*" element={<h1>Lost ?</h1>} />
