@@ -21,8 +21,6 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
 
   const localStorageUserLocation = localStorage.getItem("last_coordinates");
   const lastUserLocation: Coordinates = localStorageUserLocation ? JSON.parse(localStorageUserLocation) : undefined;
-  
-  console.log(lastUserLocation)
 
   const defaultCoordinates: Coordinates = {
     latitude: lastUserLocation?.latitude ?? 53.54992,
@@ -81,14 +79,15 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
 
 
   useEffect(() => {
-    if (!!userLocation) {
-      const userCoordinates: Coordinates = {
-        latitude: userLocation.latitude!,
-        longitude: userLocation.longitude!
-      }
 
-      localStorage.setItem("last_coordinates", JSON.stringify(userCoordinates))
+    if (!userLocation?.latitude || !userLocation?.longitude) {
+      return
     }
+
+    localStorage.setItem("last_coordinates", JSON.stringify({
+      latitude: userLocation.latitude,
+      longitude: userLocation.longitude
+    }))
   }, [userLocation])
 
   useEffect(() => {
