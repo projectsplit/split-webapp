@@ -51,7 +51,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
 
   const userLocation = useGeolocation();
   const map = useMap();
-  const shouldPanToUserLocation = useRef(!location);
+  const shouldPanToUserLocation = useRef(!location.value);
   const autocompleteInputRef = useRef<HTMLInputElement>(null);
 
   const placesLib = useMapsLibrary("places");
@@ -103,7 +103,6 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
 
     geocoder!.geocode({ location: userPosition }).then((response) => {
       const firstResult = response.results[0];
- 
 
       setSelectedLocation({
         coordinates: {
@@ -176,6 +175,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
   const handleMapClick = useCallback(
     async (e: MapMouseEvent) => {
       e.stop();
+      shouldPanToUserLocation.current = false
 
       if (!e.detail.placeId || !placesService) {
         const pos = e.detail.latLng!;
