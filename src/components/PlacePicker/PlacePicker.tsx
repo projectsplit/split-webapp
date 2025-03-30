@@ -19,7 +19,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
   const googleMapsBaseUrl = "https://www.google.com/maps/search/?api=1";
   const buildGoogleUrl = (coords: Coordinates) => `${googleMapsBaseUrl}&query=${coords.latitude},${coords.longitude}`;
 
-  const localStorageUserLocation = localStorage.getItem("userLocation");
+  const localStorageUserLocation = localStorage.getItem("last_coordinates");
   const lastUserLocation: Coordinates = localStorageUserLocation ? JSON.parse(localStorageUserLocation) : undefined;
 
   const defaultCoordinates: Coordinates = {
@@ -80,7 +80,12 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
 
   useEffect(() => {
     if (!!userLocation) {
-      localStorage.setItem("userLocation", JSON.stringify(userLocation))
+      const userCoordinates: Coordinates = {
+        latitude: userLocation.latitude!,
+        longitude: userLocation.longitude!
+      }
+
+      localStorage.setItem("last_coordinates", JSON.stringify(userCoordinates))
     }
   }, [userLocation])
 
