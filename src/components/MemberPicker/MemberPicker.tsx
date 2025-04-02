@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { HiLockClosed, HiLockOpen } from "react-icons/hi";
 import { PickerMember, UserInfo } from "../../types";
-import currency from "currency.js";
 import AutoWidthInput from "../AutoWidthInput";
 import { MemberPickerProps } from "../../interfaces";
 import { useSignal } from "@preact/signals-react";
@@ -31,6 +30,7 @@ const MemberPicker = ({
     userInfo: UserInfo;
   }>();
 
+  const decimalDigits = 2
   const members = group?.members;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
@@ -102,11 +102,11 @@ const MemberPicker = ({
       }));
       setMemberAmounts(newFormMembers);
     }
-    return () => {};
+    return () => { };
   }, [totalAmount]);
 
   useEffect(() => {
-    isEquallySplit.value = isEquallySplitFn(memberAmounts, totalAmount);
+    isEquallySplit.value = isEquallySplitFn(memberAmounts, totalAmount, decimalDigits);
   }, [memberAmounts]);
 
   const recalculateAmounts = (formMembers: PickerMember[]): PickerMember[] => {
@@ -119,14 +119,11 @@ const MemberPicker = ({
     const lockedAmount = lockedSelectedMembers
       .map((m) => Number(m.amount))
       .reduce((total, a) => total + a, 0);
-    const splitArray = split(
-      totalAmount - lockedAmount,
-      unlockedSelectedMembers.length
-    );
+    const splitArray = split(totalAmount - lockedAmount, unlockedSelectedMembers.length, decimalDigits);
 
     return formMembers.map((m) => {
       if (m.selected && !m.locked) {
-        return { ...m, amount: splitArray.shift() || "" };
+        return { ...m, amount: splitArray.shift()?.toFixed(decimalDigits) || "" };
       } else {
         return m;
       }
@@ -242,27 +239,27 @@ const MemberPicker = ({
             ? selectedCount === 0
               ? "Select participants"
               : selectedCount === 1
-              ? `Billed to ${sortedMemberAmounts.find((m) => m.amount != "")?.name}`
-              : selectedCount === 2 && isEquallySplit.value
-              ? `Split equally between ${selectedCount} `
-              : selectedCount === 2 && !isEquallySplit.value
-              ? `Split unequally between ${selectedCount} `
-              : selectedCount > 2 && isEquallySplit.value
-              ? `Split equally among ${selectedCount} `
-              : `Split unequally among ${selectedCount} `
+                ? `Billed to ${sortedMemberAmounts.find((m) => m.amount != "")?.name}`
+                : selectedCount === 2 && isEquallySplit.value
+                  ? `Split equally between ${selectedCount} `
+                  : selectedCount === 2 && !isEquallySplit.value
+                    ? `Split unequally between ${selectedCount} `
+                    : selectedCount > 2 && isEquallySplit.value
+                      ? `Split equally among ${selectedCount} `
+                      : `Split unequally among ${selectedCount} `
             : description === "Payers"
-            ? selectedCount === 0
-              ? "Select payers"
-              : selectedCount === 1
-              ? `Paid by ${sortedMemberAmounts.find((m) => m.amount != "")?.name}`
-              : selectedCount === 2 && isEquallySplit.value
-              ? `Paid equally by ${selectedCount} `
-              : selectedCount === 2 && !isEquallySplit.value
-              ? `Paid unequally by ${selectedCount} `
-              : selectedCount > 2 && isEquallySplit.value
-              ? `Paid equally by ${selectedCount} `
-              : `Paid unequally by ${selectedCount} `
-            : null}
+              ? selectedCount === 0
+                ? "Select payers"
+                : selectedCount === 1
+                  ? `Paid by ${sortedMemberAmounts.find((m) => m.amount != "")?.name}`
+                  : selectedCount === 2 && isEquallySplit.value
+                    ? `Paid equally by ${selectedCount} `
+                    : selectedCount === 2 && !isEquallySplit.value
+                      ? `Paid unequally by ${selectedCount} `
+                      : selectedCount > 2 && isEquallySplit.value
+                        ? `Paid equally by ${selectedCount} `
+                        : `Paid unequally by ${selectedCount} `
+              : null}
         </div>
         <FiChevronDown className="icon" />
       </div>
@@ -358,30 +355,27 @@ const MemberPicker = ({
 
 export default MemberPicker;
 
-const split = (amount: number, denominator: number): string[] =>
-  currency(amount)
-    .distribute(denominator)
-    .map((c) => c.value.toFixed(2).toString());
+// const split = (amount: number, denominator: number): string[] =>
+//   currency(amount)
+//     .distribute(denominator)
+//     .map((c) => c.value.toFixed(2).toString());
 
 const isEquallySplitFn = (
   memberAmounts: PickerMember[],
-  totalAmount: number
+  totalAmount: number,
+  decimalDigits: number
 ): boolean => {
-  const membersWithAmounts = memberAmounts.filter(
+
+  const pickedMembersCount = memberAmounts.filter(
     (m) => m.amount !== ""
   ).length;
 
-  if (membersWithAmounts === 0) {
+  if (pickedMembersCount === 0) {
     return true;
   }
 
-  const equallySplitAmount = currency(totalAmount)
-    .distribute(membersWithAmounts)[0]
-    .value.toFixed(2);
-  const equallySplitAmountLowerEnd = currency(totalAmount)
-    .distribute(membersWithAmounts)
-    [membersWithAmounts - 1].value.toFixed(2);
-
+  const equallySplitAmount = split(totalAmount, pickedMembersCount, decimalDigits)[0].toFixed(decimalDigits);
+  const equallySplitAmountLowerEnd = split(totalAmount, pickedMembersCount, decimalDigits)[pickedMembersCount - 1].toFixed(decimalDigits);
   return memberAmounts
     .filter((m) => m.amount !== "")
     .every(
@@ -399,3 +393,19 @@ const allMembersAreSelected = (memberAmounts: PickerMember[]): boolean => {
 
   return numberofAllMembers === numberofSelectedMembers;
 };
+
+const split = (total: number, splits: number, maxDecimals: number): number[] => {
+  if (splits <= 0 || !Number.isInteger(splits) || maxDecimals < 0 || !Number.isInteger(maxDecimals)) return [];
+
+  const multiplier = Math.pow(10, maxDecimals);
+  const totalCents = Math.round(total * multiplier);
+  const baseCents = Math.floor(totalCents / splits);
+  const remainderCents = totalCents - baseCents * splits;
+
+  const result = Array(splits).fill(baseCents);
+  for (let i = 0; i < remainderCents; i++) {
+    result[i]++;
+  }
+
+  return result.map(val => Number((val / multiplier).toFixed(maxDecimals))).sort((a, b) => a - b);
+}

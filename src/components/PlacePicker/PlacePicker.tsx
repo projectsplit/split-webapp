@@ -1,11 +1,4 @@
-import {
-  AdvancedMarker,
-  Map,
-  MapMouseEvent,
-  Pin,
-  useMap,
-  useMapsLibrary,
-} from "@vis.gl/react-google-maps";
+import { AdvancedMarker, Map, MapMouseEvent, Pin, useMap, useMapsLibrary, } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useGeolocation from "../../hooks/useGeoLocation";
 import { SiGooglemaps } from "react-icons/si";
@@ -24,19 +17,18 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
   const mapId = `${config.googleMapId}`;
   const defaultZoom = 14;
   const googleMapsBaseUrl = "https://www.google.com/maps/search/?api=1";
-  const buildGoogleUrl = (coords: Coordinates) =>
-    `${googleMapsBaseUrl}&query=${coords.latitude},${coords.longitude}`;
+  const buildGoogleUrl = (coords: Coordinates) => `${googleMapsBaseUrl}&query=${coords.latitude},${coords.longitude}`;
+
+  const localStorageUserLocation = localStorage.getItem("last_coordinates");
+  const lastUserLocation: Coordinates = localStorageUserLocation ? JSON.parse(localStorageUserLocation) : undefined;
 
   const defaultCoordinates: Coordinates = {
-    latitude: 53.54992,
-    longitude: 10.00678,
+    latitude: lastUserLocation?.latitude ?? 53.54992,
+    longitude: lastUserLocation?.longitude ?? 10.00678,
   };
 
   const initialLocation: GeoLocation = location.value ?? {
-    coordinates: {
-      latitude: defaultCoordinates.latitude,
-      longitude: defaultCoordinates.longitude,
-    },
+    coordinates: defaultCoordinates,
     google: {
       id: null,
       address: undefined,
@@ -51,7 +43,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
 
   const userLocation = useGeolocation();
   const map = useMap();
-  const shouldPanToUserLocation = useRef(!location);
+  const shouldPanToUserLocation = useRef(!location.value);
   const autocompleteInputRef = useRef<HTMLInputElement>(null);
 
   const placesLib = useMapsLibrary("places");
@@ -85,6 +77,19 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
     };
   }, []);
 
+
+  useEffect(() => {
+
+    if (!userLocation?.latitude || !userLocation?.longitude) {
+      return
+    }
+
+    localStorage.setItem("last_coordinates", JSON.stringify({
+      latitude: userLocation.latitude,
+      longitude: userLocation.longitude
+    }))
+  }, [userLocation])
+
   useEffect(() => {
     if (
       !shouldPanToUserLocation.current ||
@@ -103,7 +108,6 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
 
     geocoder!.geocode({ location: userPosition }).then((response) => {
       const firstResult = response.results[0];
- 
 
       setSelectedLocation({
         coordinates: {
@@ -176,6 +180,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
   const handleMapClick = useCallback(
     async (e: MapMouseEvent) => {
       e.stop();
+      shouldPanToUserLocation.current = false
 
       if (!e.detail.placeId || !placesService) {
         const pos = e.detail.latLng!;
@@ -206,8 +211,8 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
   );
 
   const submitLocation = () => {
-    location.value=(selectedLocation);
-    isMapOpen.value=false
+    location.value = (selectedLocation);
+    isMapOpen.value = false
   };
 
   const fetchPlaceLocation = useCallback(
@@ -259,7 +264,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
           />
           <IoClose
             className="closeButton"
-            onClick={() => isMapOpen.value=false}
+            onClick={() => isMapOpen.value = false}
           />
         </div>
 
@@ -295,7 +300,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
       <div className="position-name-container">
         <a href={selectedLocation.google?.url}>
           <Button className="view-in-maps-button">
-            <SiGooglemaps className="pin"/>
+            <SiGooglemaps className="pin" />
           </Button>
         </a>
         {selectedLocation.google?.name && (
