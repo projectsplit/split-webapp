@@ -75,6 +75,21 @@ export type GroupedTransaction = {
   name: string;
 };
 
+export type FormExpense = {
+  id: string;
+  groupId: string;
+  amount: string;
+  currency: string;
+  description: string;
+  payers: Payer[];
+  participants: Participant[];
+  expenseTime: Date;
+  labels: string[];
+  creationTime: Date;
+  lastUpdateTime: Date;
+  location: GeoLocation | undefined;
+};
+
 export type ExpenseResponseItem = {
   id: string;
   created: string;
@@ -190,6 +205,10 @@ export type CreateExpenseRequest = {
   labels: string[];
 };
 
+export type CreateEditExpenseRequest = CreateExpenseRequest&{
+  expenseId:string;
+}
+
 export type GeoLocation = {
   coordinates: Coordinates;
   google: GooglePlace | null;
@@ -272,20 +291,7 @@ export type MostRecentGroupDetailsResponse = {
   details: Details;
 };
 
-export type FormExpense = {
-  id: string;
-  groupId: string;
-  amount: string;
-  currency: string;
-  description: string;
-  payers: Payer[];
-  participants: Participant[];
-  expenseTime: Date;
-  labels: string[];
-  creationTime: Date;
-  lastUpdateTime: Date;
-  location: GeoLocation | undefined;
-};
+
 
 
 export type Participant = {
@@ -348,6 +354,9 @@ export type GetUserInvitationsResponseItem = {
 
 export type DeleteExpenseRequest = {
   expenseId: string;
+};
+export type DeleteTransferRequest = {
+  transferId: string;
 };
 
 export type UpdateNotificationRequest = {

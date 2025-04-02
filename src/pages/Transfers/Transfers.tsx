@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { DateTime } from "luxon";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
-import { Group, UserInfo } from "../../types";
+import { Group, TransferResponseItem, UserInfo } from "../../types";
 import { getGroupTransfers } from "../../api/services/api";
 import { StyledTransfers } from "./Transfers.styled";
 import Spinner from "../../components/Spinner/Spinner";
@@ -10,9 +9,12 @@ import useSentinel from "../../hooks/useSentinel";
 import { BiTransfer } from "react-icons/bi";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { useOutletContext } from "react-router-dom";
-import { Signal } from "@preact/signals-react";
+import { Signal, useSignal } from "@preact/signals-react";
 import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
 import { DateOnly } from "../../helpers/timeHelpers";
+import DetailedTransfer from "../../components/DetailedTransfer/DetailedTransfer";
+import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
@@ -22,12 +24,17 @@ const Transfers: React.FC = () => {
     group: Group;
     showBottomBar: Signal<boolean>;
   }>();
+
+  const errorMessage = useSignal<string>("");
+  const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
+
   const timeZoneId = userInfo?.timeZone;
   const memberId = group?.members.find((x) => x.userId === userInfo?.userId)
     ?.id!;
-
+  const selectedTransfer = useSignal<TransferResponseItem | null>(null);
   const members = group?.members;
   const guests = group?.guests;
+  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
   const allParticipants = mergeMembersAndGuests(members || [], guests || []);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
@@ -87,6 +94,7 @@ const Transfers: React.FC = () => {
               <div className="transfers">
                 {transfers.map((t) => (
                   <Transfer
+                    onClick={() => (selectedTransfer.value = t)}
                     key={t.id}
                     transfer={{
                       amount: t.amount,
@@ -119,6 +127,28 @@ const Transfers: React.FC = () => {
         style={{ height: "1px" }}
       ></div>
       {isFetchingNextPage && <Spinner />}
+
+      {selectedTransfer.value && (
+        <DetailedTransfer
+          selectedTransfer={selectedTransfer}
+          amount={selectedTransfer.value.amount}
+          created={selectedTransfer.value.created}
+          creator={selectedTransfer.value.creatorId}
+          currency={selectedTransfer.value.currency}
+          occurred={selectedTransfer.value.occurred}
+          timeZoneId={timeZoneId}
+          errorMessage={errorMessage}
+          userMemberId={userMemberId || ""}
+          members={allParticipants}
+          
+        />
+      )}
+      <MenuAnimationBackground menu={menu} />
+      <ErrorMenuAnimation
+        menu={menu}
+        message={errorMessage.value}
+        type="transfer"
+      />
     </StyledTransfers>
   );
 };

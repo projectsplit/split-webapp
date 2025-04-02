@@ -3,7 +3,6 @@ import { StyledDeleteExpenseConfirmation } from "./DeleteExpenseConfirmation.sty
 import IonIcon from "@reacticons/ionicons";
 import MyButton from "../../MyButton/MyButton";
 import { useDeleteExpense } from "../../../api/services/useDeleteExpense";
-import { AxiosError } from "axios";
 import Separator from "../../Separator/Separator";
 
 export default function DeleteExpenseConfirmation({
@@ -12,23 +11,17 @@ export default function DeleteExpenseConfirmation({
   selectedExpense,
   errorMessage,
 }: DeleteExpenseConfirmationProps) {
-  const deleteExpense = useDeleteExpense();
+  const { mutate: deleteExpense, isPending } = useDeleteExpense(
+    menu,
+    errorMessage,
+    selectedExpense
+  );
 
   const expenseId = selectedExpense.value?.id;
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!expenseId) return;
-    try {
-      await deleteExpense.mutateAsync(expenseId);
-    } catch (err) {
-      const error = err as AxiosError;
-      errorMessage.value = String(error.response?.data);
-      selectedExpense.value = null;
-      menu.value = null;
-    } finally {
-      selectedExpense.value = null;
-      menu.value = null;
-    }
+    deleteExpense(expenseId);
   };
 
   return (
@@ -57,32 +50,13 @@ export default function DeleteExpenseConfirmation({
         <div />
       </div>
       <div className="buttons">
-        <MyButton onClick={handleDelete}>Confirm</MyButton>
+        <MyButton isLoading={isPending} onClick={handleDelete}>
+          Confirm
+        </MyButton>
         <MyButton variant="secondary" onClick={() => (menu.value = null)}>
           Cancel
         </MyButton>
       </div>
     </StyledDeleteExpenseConfirmation>
   );
-}
-
-{
-  /* <div className="header">
-<IonIcon name="information-circle-outline" className="infoLogo" />
-<span>Confirmation</span>
-<div className="closeButton" onClick={() => (menu.value = null)}>
-  <IonIcon name="close-outline" className="close" />
-</div>
-</div>
-<div className="info">
-{description ? (
-  <div>
-    Are you sure you want to delete{" "}
-    <span className="descr">"{description}"</span> ?{" "}
-  </div>
-) : (
-  <div>Delete this expense?</div>
-)}
-<div />
-</div> */
 }

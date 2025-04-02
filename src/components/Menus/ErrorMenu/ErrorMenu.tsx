@@ -3,7 +3,7 @@ import { ErrorMenuProps } from "../../../interfaces";
 import { StyledErrorMenu } from "./ErrorMenu.styled";
 import Separator from "../../Separator/Separator";
 
-export default function ErrorMenu({ menu, children }: ErrorMenuProps) {
+export default function ErrorMenu({ menu, children, type }: ErrorMenuProps) {
   return (
     <StyledErrorMenu>
       <div className="headerSeparator">
@@ -19,7 +19,9 @@ export default function ErrorMenu({ menu, children }: ErrorMenuProps) {
         </div>
       </div>
       <div className="info">
-        Expense not found. Possibly already deleted by another user.
+        {type === "expense"
+          ? "Expense not found. Possibly already deleted by another user."
+          : "Transfer not found. Possibly already deleted by another user."}
       </div>
     </StyledErrorMenu>
   );

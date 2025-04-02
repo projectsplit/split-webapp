@@ -4,10 +4,10 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import TreeAdjustedContainer from "../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import Spinner from "../../../components/Spinner/Spinner";
-import { TreeItemBuilder } from "../../../components/TreeItemBuilder";
 import { getGroupsTotalAmounts } from "../../../api/services/api";
 import useSentinel from "../../../hooks/useSentinel";
 import { useMostRecentGroup } from "../../../api/services/useMostRecentGroup";
+import { TreeItemBuilderForHomeAndGroups } from "../../../components/TreeItemBuilderForHomeAndGroups";
 
 export default function ActiveGroups() {
   const sentinelRef = useRef(null);
@@ -49,7 +49,7 @@ export default function ActiveGroups() {
               <TreeAdjustedContainer
                 onClick={() => onGroupClickHandler(g.id, g.name)}
                 hasarrow={true}
-                items={TreeItemBuilder(g?.details)}
+                items={TreeItemBuilderForHomeAndGroups(g?.details)}
               >
                 <div className="groupName">{g.name}</div>
               </TreeAdjustedContainer>

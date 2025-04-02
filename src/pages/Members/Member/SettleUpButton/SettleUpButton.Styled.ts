@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const StyledSettleUpButton = styled.div`
-  font-weight: 600;
+
   font-size: 14px;
   width:fit-content;
   background-color: ${({ theme }) => theme.buttonActive};

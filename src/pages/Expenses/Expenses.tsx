@@ -139,11 +139,12 @@ const Expenses = () => {
           members={allParticipants}
           errorMessage={errorMessage}
           userMemberId={userMemberId || ""}
+          group={group}
         />
       )}
 
       <MenuAnimationBackground menu={menu} />
-      <ErrorMenuAnimation menu={menu} message={errorMessage.value} />
+      <ErrorMenuAnimation menu={menu} message={errorMessage.value} type="expense"/>
     </StyledExpenses>
   );
 };

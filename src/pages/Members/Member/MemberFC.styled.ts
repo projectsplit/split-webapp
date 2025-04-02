@@ -21,6 +21,7 @@ export const StyledMemberFC = styled.div.withConfig({
   border: none;
   .preposition {
     color: ${({ theme }) => theme.layer6};
+    margin-top:10px;
   }
   .currencyOwes {
     color: ${({ theme }) => theme.redish};
@@ -36,9 +37,11 @@ export const StyledMemberFC = styled.div.withConfig({
       display: flex;
       flex-direction: column;
       .debtsCredits {
+       
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+
         .descAndButton {
           display: flex;
           flex-direction: column;

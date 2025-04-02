@@ -17,6 +17,7 @@ import {
   PickerMember,
   Share,
   TransferItem,
+  TransferResponseItem,
   TruncatedMember,
   UserInfo,
 } from "./types";
@@ -74,11 +75,27 @@ export interface DetailedExpenseProps {
   members: TruncatedMember[];
   errorMessage: Signal<string>;
   userMemberId: string;
+  group:Group;
+}
+
+export interface DetailedTransferProps {
+  timeZoneId: string;
+  selectedTransfer:Signal<TransferResponseItem| null>;
+  amount: number;
+  currency: string;
+  occurred: string;
+  created: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  creator: string;
+  userMemberId: string;
+  members: TruncatedMember[];
+  errorMessage: Signal<string>;
 }
 
 export interface TransferProps {
   transfer: TransferItem;
   timeZoneId: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface DateTimePickerProps {
@@ -324,6 +341,7 @@ export interface NewExpenseAnimationProps {
   menu: Signal<string | null>;
 }
 
+
 export interface NewTransferAnimationProps {
   group: Group;
   timeZoneId: string;
@@ -354,9 +372,18 @@ export interface DeleteExpenseAnimationProps extends MenuProps {
   selectedExpense: Signal<ExpenseResponseItem | null>;
   errorMessage: Signal<string>;
 }
+export interface DeleteTransferAnimationProps extends MenuProps {
+  selectedTransfer: Signal<TransferResponseItem | null>;
+  errorMessage: Signal<string>;
+}
+
 export interface DeleteExpenseConfirmationProps extends MenuProps {
   description: string;
   selectedExpense: Signal<ExpenseResponseItem | null>;
+  errorMessage: Signal<string>;
+}
+export interface DeleteTransferConfirmationProps extends MenuProps {
+  selectedTransfer: Signal<TransferResponseItem | null>;
   errorMessage: Signal<string>;
 }
 
@@ -512,10 +539,12 @@ export interface EditorContentHandle {
 
 export interface ErrorMenuAnimationProps extends MenuProps {
   message: string;
+  type:string;
 }
 
 export interface ErrorMenuProps extends MenuProps {
   children: any;
+  type:string;
 }
 
 export interface InputMonetaryProps
@@ -526,7 +555,7 @@ export interface InputMonetaryProps
   value?: string;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
-  inputError?: boolean;
+  $inputError?: boolean;
   currencyMenu: Signal<React.SetStateAction<string | null>>;
   currency: string;
 }

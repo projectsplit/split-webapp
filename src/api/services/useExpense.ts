@@ -17,6 +17,7 @@ export const useExpense = (menu: Signal<string | null>) => {
       });
       await queryClient.refetchQueries({ queryKey: ["home"], exact: false });
       await queryClient.refetchQueries({ queryKey: ["groups"], exact: false });
+      await queryClient.refetchQueries({ queryKey: ["mostRecentGroup"], exact: false });
       menu.value = null;
     },
   });

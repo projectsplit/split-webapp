@@ -1,6 +1,5 @@
 import React from "react";
 import { StyledInput, StyledInputMonetary } from "./InputMonetary.styled";
-
 import { getSymbolFromCurrency } from "../../helpers/currency-symbol-map";
 import { InputMonetaryProps } from "../../interfaces";
 import { Currency } from "../../types";
@@ -15,7 +14,7 @@ export default React.forwardRef(function InputMonetary(
     onFocus,
     onChange,
     value,
-    inputError,
+    $inputError,
     // setMenu,
     currencyMenu,
     currency,
@@ -30,7 +29,7 @@ export default React.forwardRef(function InputMonetary(
   );
 
   return (
-    <StyledInputMonetary inputError={inputError}>
+    <StyledInputMonetary $inputError={$inputError}>
       <div className="currencySelectorWrapper">
         <div
           className="currencySelector"

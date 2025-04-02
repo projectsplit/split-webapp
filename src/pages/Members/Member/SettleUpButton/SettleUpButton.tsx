@@ -1,4 +1,3 @@
-import React from "react";
 import { StyledSettleUpButton } from "./SettleUpButton.Styled";
 import { SettleUpButtonProps } from "../../../../interfaces";
 

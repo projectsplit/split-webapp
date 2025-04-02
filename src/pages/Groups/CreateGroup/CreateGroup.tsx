@@ -6,7 +6,7 @@ import SubmitButton from "../../../components/SubmitButton/SubmitButton";
 import Input from "../../../components/Input/Input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createGroupFn } from "../../../api/services/api";
-import { Currency, GroupRequest, UserInfo } from "../../../types";
+import { Currency, Group, GroupRequest, UserInfo } from "../../../types";
 import { FaAngleDown } from "react-icons/fa";
 import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import { useSignal } from "@preact/signals-react";
@@ -28,12 +28,11 @@ export default function CreateGroup({
   }>();
 
   const userCurrency = userInfo?.currency;
-  const updatedUserCurrency = useSelectedCurrency();
-
+  const [currencySymbol, setCurrencySymbol] = useState<string>(userCurrency);
   const allCurrencies = useSignal<Currency[]>(currencyData);
 
   const selectedCurrency = allCurrencies.value.find(
-    (c) => c.symbol === userCurrency
+    (c) => c.symbol === currencySymbol
   );
   const createGroup = useMutation<any, any, GroupRequest>({
     mutationFn: (groupData) => createGroupFn(groupData),
@@ -46,15 +45,12 @@ export default function CreateGroup({
   const onClickHandler = () => {
     queryClient.invalidateQueries({ queryKey: ["groups", "active"] });
     queryClient.invalidateQueries({ queryKey: ["home"] });
-    createGroup.mutate({ name: groupName, currency: userCurrency });
+    createGroup.mutate({ name: groupName, currency: currencySymbol });
     menu.value = null;
   };
 
   const handldeCurrencyOptionsClick = (curr: string) => {
-    //setCurrency(currency);
-    updatedUserCurrency.mutate(curr);
-    // queryClient.invalidateQueries(["spending", budgettype, curr]);
-    // queryClient.getQueryData(["spending", budgettype, curr]);
+    setCurrencySymbol(curr);
     currencyMenu.value = null;
   };
 
@@ -105,7 +101,7 @@ export default function CreateGroup({
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
-        selectedCurrency={userCurrency}
+        selectedCurrency={currencySymbol}
       />
     </StyledCreateGroup>
   );

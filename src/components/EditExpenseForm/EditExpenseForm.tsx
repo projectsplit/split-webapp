@@ -1,5 +1,5 @@
 import {
-  CreateExpenseRequest,
+  CreateEditExpenseRequest,
   FormExpense,
   GeoLocation,
   Group,
@@ -14,7 +14,7 @@ import currency from "currency.js";
 import LocationPicker from "../LocationPicker/LocationPicker";
 import LabelPicker from "../LabelPicker/LabelPicker";
 import { ExpenseFormProps } from "../../interfaces";
-import { StyledExpenseForm } from "./ExpenseForm.styled";
+import { StyledEditExpenseForm } from "./EditExpenseForm.styled";
 import { useSignal } from "@preact/signals-react";
 import InputMonetary from "../InputMonetary/InputMonetary";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
@@ -26,13 +26,17 @@ import { handleInputChange } from "../../helpers/handleInputChange";
 import { amountIsValid } from "../../helpers/amountIsValid";
 import { useExpense } from "../../api/services/useExpense";
 
-const ExpenseForm: React.FC<ExpenseFormProps> = ({
+const EditExpenseForm: React.FC<ExpenseFormProps> = ({
   group,
   expense,
   timeZoneId,
   menu,
 }) => {
- 
+
+  if (!expense) {
+    return <div>Error: Expense not found.</div>;
+  }
+
   const [participants, setParticipants] = useState<PickerMember[]>(
     createParticipantPickerArray(group, expense)
   );
@@ -43,19 +47,19 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   );
   const [payersError, setPayersError] = useState<string>("");
 
-  const [currencySymbol, setCurrencySymbol] = useState<string>(group.currency);
-  const [amount, setAmount] = useState<string>("");
+  const [currencySymbol, setCurrencySymbol] = useState<string>(expense.currency);
+  const [amount, setAmount] = useState<string>(expense.amount);
   const [amountError, setAmountError] = useState<string>("");
   const [showAmountError, setShowAmountError] = useState<boolean>(false);
 
-  const [description, setDescription] = useState<string>("");
-  const [labels, setLabels] = useState<string[]>([]);
+  const [description, setDescription] = useState<string>(expense.description);
+  const [labels, setLabels] = useState<string[]>(expense.labels);
   const [expenseTime, setExpenseTime] = useState<string>(
-    new Date().toISOString()
+    expense.creationTime.toISOString()
   );
   const location = useSignal<GeoLocation | undefined>(expense?.location);
 
-  const displayedAmount = useSignal<string>("");
+  const displayedAmount = useSignal<string>(expense.amount);
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
   const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
@@ -76,7 +80,8 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
     if (!amountIsValid(amount, setAmountError)) return;
 
-    const createExpenseRequest: CreateExpenseRequest = {
+    const createExpenseRequest: CreateEditExpenseRequest = {
+      expenseId:expense.id,
       amount: Number(amount),
       groupId: group.id,
       currency: currencySymbol,
@@ -163,10 +168,10 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   };
 
   return (
-    <StyledExpenseForm>
+    <StyledEditExpenseForm>
       <div className="header">
         <div className="gap"></div>
-        <div className="title">New Expense</div>
+        <div className="title">Edit Expense</div>
 
         <div
           className="closeButtonContainer"
@@ -236,11 +241,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         clickHandler={handldeCurrencyOptionsClick}
         selectedCurrency={currencySymbol}
       />
-    </StyledExpenseForm>
+    </StyledEditExpenseForm>
   );
 };
 
-export default ExpenseForm;
+export default EditExpenseForm;
 
 const createParticipantPickerArray = (
   group: Group,

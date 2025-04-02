@@ -4,7 +4,7 @@ import { TransferProps } from "../../interfaces";
 import { StyledTransfer } from "./Transfer.styled";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
-const Transfer: React.FC<TransferProps> = ({ transfer, timeZoneId }) => {
+const Transfer: React.FC<TransferProps> = ({ transfer, timeZoneId,onClick }) => {
   const outlineColor =
     transfer.senderName === "You"
       ? "#0CA0A0"
@@ -14,7 +14,7 @@ const Transfer: React.FC<TransferProps> = ({ transfer, timeZoneId }) => {
 
       
   return (
-    <StyledTransfer outlineColor={outlineColor}>
+    <StyledTransfer $outlineColor={outlineColor} onClick={onClick}>
       <div className="main">
         <div className="mainMsg">
           {transfer.senderName === "You" ? (
