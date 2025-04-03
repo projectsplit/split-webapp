@@ -9,7 +9,6 @@ import { IoClose } from "react-icons/io5";
 import { StyledPlacePicker } from "./PlacePicker.styled";
 import { PlacePickerProps } from "../../interfaces";
 import MyButton from "../MyButton/MyButton";
-import { error } from "console";
 
 const PlacePicker: React.FC<PlacePickerProps> = ({
   location,
