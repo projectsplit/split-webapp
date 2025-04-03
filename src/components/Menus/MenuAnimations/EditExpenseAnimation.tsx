@@ -6,7 +6,8 @@ export default function EditExpenseAnimation({
   group,
   timeZoneId,
   menu,
-  expense
+  expense,
+  selectedExpense
 }: NewExpenseAnimationProps) {
   return (
     <CSSTransition in={menu.value === "editExpense"} timeout={0} unmountOnExit>
@@ -15,6 +16,7 @@ export default function EditExpenseAnimation({
         expense={expense}
         timeZoneId={timeZoneId}
         menu={menu}
+        selectedExpense={selectedExpense}
       />
     </CSSTransition>
   );

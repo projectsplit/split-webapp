@@ -32,7 +32,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   timeZoneId,
   menu,
 }) => {
- 
   const [participants, setParticipants] = useState<PickerMember[]>(
     createParticipantPickerArray(group, expense)
   );
@@ -144,6 +143,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
     return () => clearTimeout(errorsWithTimeOut);
   }, [amount, participants, payers]);
+  
+  useEffect(() => {
+    setAmount("");
+    displayedAmount.value = "";
+  }, [currencySymbol]);
 
   const amountNumber = !amountError ? Number(amount) : Number.NaN;
 
@@ -200,6 +204,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         setMemberAmounts={setParticipants}
         group={group}
         userCurrency={userCurrency}
+        selectedCurrency={currencySymbol}
       />
       <MemberPicker
         description={"Payers"}
@@ -209,6 +214,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         setMemberAmounts={setPayers}
         group={group}
         userCurrency={userCurrency}
+        selectedCurrency={currencySymbol}
       />
       <Input_old
         description="Description"

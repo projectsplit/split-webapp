@@ -3,7 +3,7 @@ import useDebts from "../../api/services/useDebts";
 import { useOutletContext, useParams } from "react-router-dom";
 import { useEffect, useMemo } from "react";
 import { groupTransactions } from "../../helpers/groupTransactions";
-import { Group,UserInfo } from "../../types";
+import { Group, UserInfo } from "../../types";
 import { Signal, useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import MemberFC from "./Member/MemberFC";
@@ -12,7 +12,6 @@ import SettleUpAnimation from "../../components/Menus/MenuAnimations/SettleUpAni
 import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
 
 export default function Members() {
-
   const memberIdSelectedToSettleUp = useSignal<string>("");
   const menu = useSignal<string | null>(null);
 
@@ -22,8 +21,9 @@ export default function Members() {
     group: Group;
     showBottomBar: Signal<boolean>;
   }>();
-  const { data: debts, isFetching } = useDebts(groupid);
 
+  const { data, isFetching, isLoading } = useDebts(groupid);
+  const { debts, totalSpent } = data ?? { debts: [], totalSpent: {} };
 
   const members = group?.members;
   const guests = group?.guests;
@@ -42,9 +42,7 @@ export default function Members() {
   }, [debts]);
 
   useEffect(() => {
-    isFetching
-      ? (showBottomBar.value = false)
-      : (showBottomBar.value = true);
+    isFetching ? (showBottomBar.value = false) : (showBottomBar.value = true);
   }, [isFetching]);
 
   if (!userInfo || !group) {
@@ -74,6 +72,7 @@ export default function Members() {
             menu={menu}
             memberIdSelectedToSettleUp={memberIdSelectedToSettleUp}
             members={allParticipants || []}
+            totalSpent={totalSpent}
           />
         ))
       )}

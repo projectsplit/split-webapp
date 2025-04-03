@@ -10,6 +10,7 @@ import {
   RenderSettled,
 } from "./RenderScenarios/RenderScenarios";
 import SettleUpButton from "./SettleUpButton/SettleUpButton";
+import { joinAmounts } from "../../../helpers/joinAmounts";
 
 export default function MemberFC({
   pendingTransactions,
@@ -21,7 +22,12 @@ export default function MemberFC({
   menu,
   memberIdSelectedToSettleUp,
   members,
+  totalSpent,
 }: MemberProps) {
+  const totalsSpent = totalSpent[memberId];
+  const removeZeroesValuesFromTotalSpent = Object.fromEntries(
+    Object.entries(totalsSpent).filter(([_, amount]) => amount !== 0)
+  );
 
   const showSettleUpButton =
     (isGuest || isLogedUser) &&
@@ -169,49 +175,27 @@ export default function MemberFC({
               return null;
             })()}
           </div>
-          {!positionSettleUpButtonUnderTotal && showSettleUpButton ? (
+
+         { Object.keys(removeZeroesValuesFromTotalSpent).length === 0? <div className="totalSpent">No recorded spending 💰</div>:
+          <div className="totalSpent">
+            {isLogedUser ? <strong className="name">You</strong> : <strong className="name">{name}</strong>} spent{" "}
+            <span className="amounts">
+              {joinAmounts(Object.entries(removeZeroesValuesFromTotalSpent))}
+            </span>{" "}
+            <span>in total</span>
+          </div>}
+        </div>
+
+        {showSettleUpButton ? (
+          <div className="settleUpPos">
             <SettleUpButton
               onClick={() => {
                 menu.value = "SettleUp";
                 memberIdSelectedToSettleUp.value = memberId;
               }}
             />
-          ) : (
-            ""
-          )}
-        </div>
-
-        <div className="totalSpentAndAmounts">
-          <div className="totalSpent">
-            <strong>Total Spent</strong>
           </div>
-          <div className="amounts">
-            <span>$400</span>
-            
-            {/* <span>$400</span>
-            <span>$400</span>
-            <span>$400</span>
-            <span>$400</span>
-            <span>$400</span>
-            <span>$400</span>
-            <span>$400</span>
-            <span>$400</span> */}
-          </div>
-          <div>
-            {positionSettleUpButtonUnderTotal &&
-            !doNotShowSettleUpButtonIfSettled &&
-            showSettleUpButton ? (
-              <SettleUpButton
-                onClick={() => {
-                  menu.value = "SettleUp";
-                  memberIdSelectedToSettleUp.value = memberId;
-                }}
-              />
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
+        ) : null}
       </div>
       <div className="guest">{isGuest ? "Guest*" : null}</div>
     </StyledMemberFC>

@@ -13,7 +13,7 @@ import { DateTime } from "../DateTime";
 import currency from "currency.js";
 import LocationPicker from "../LocationPicker/LocationPicker";
 import LabelPicker from "../LabelPicker/LabelPicker";
-import { ExpenseFormProps } from "../../interfaces";
+import { EditExpenseFormProps } from "../../interfaces";
 import { StyledEditExpenseForm } from "./EditExpenseForm.styled";
 import { useSignal } from "@preact/signals-react";
 import InputMonetary from "../InputMonetary/InputMonetary";
@@ -24,13 +24,14 @@ import { IoClose } from "react-icons/io5";
 import MyButton from "../MyButton/MyButton";
 import { handleInputChange } from "../../helpers/handleInputChange";
 import { amountIsValid } from "../../helpers/amountIsValid";
-import { useExpense } from "../../api/services/useExpense";
+import { useEditExpense } from "../../api/services/useEditExpense";
 
-const EditExpenseForm: React.FC<ExpenseFormProps> = ({
+const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   group,
   expense,
   timeZoneId,
   menu,
+  selectedExpense
 }) => {
 
   if (!expense) {
@@ -64,7 +65,7 @@ const EditExpenseForm: React.FC<ExpenseFormProps> = ({
   const isMapOpen = useSignal<boolean>(false);
   const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
   const userCurrency = userInfo?.currency;
-  const { mutate: createExpenseMutation, isPending } = useExpense(menu);
+  const { mutate: editExpenseMutation, isPending } = useEditExpense(menu,selectedExpense);
 
   const submitExpense = () => {
     setShowAmountError(true);
@@ -80,10 +81,9 @@ const EditExpenseForm: React.FC<ExpenseFormProps> = ({
 
     if (!amountIsValid(amount, setAmountError)) return;
 
-    const createExpenseRequest: CreateEditExpenseRequest = {
+    const createEditExpenseRequest: CreateEditExpenseRequest = {
       expenseId:expense.id,
       amount: Number(amount),
-      groupId: group.id,
       currency: currencySymbol,
       payments: payers
         .filter((value) => value.selected)
@@ -98,7 +98,7 @@ const EditExpenseForm: React.FC<ExpenseFormProps> = ({
       labels: labels,
     };
 
-    createExpenseMutation(createExpenseRequest);
+    editExpenseMutation(createEditExpenseRequest);
   };
 
   useEffect(() => {

@@ -100,6 +100,7 @@ export default function DetailedExpense({
         <div
           className="closeButton"
           onClick={() => (selectedExpense.value = null)}
+          
         >
           <IonIcon name="close-outline" className="close" />
         </div>
@@ -211,6 +212,8 @@ export default function DetailedExpense({
         group={group}
         timeZoneId={timeZoneId}
         menu={menu}
+        selectedExpense={selectedExpense}
+        
       />
     </StyledDetailedExpense>
   );

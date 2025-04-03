@@ -1,11 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
 import { Group, TransferResponseItem, UserInfo } from "../../types";
 import { getGroupTransfers } from "../../api/services/api";
 import { StyledTransfers } from "./Transfers.styled";
 import Spinner from "../../components/Spinner/Spinner";
-import useSentinel from "../../hooks/useSentinel";
 import { BiTransfer } from "react-icons/bi";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { useOutletContext } from "react-router-dom";
@@ -15,6 +14,7 @@ import { DateOnly } from "../../helpers/timeHelpers";
 import DetailedTransfer from "../../components/DetailedTransfer/DetailedTransfer";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
+import Sentinel from "../../components/Sentinel";
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
@@ -50,14 +50,12 @@ const Transfers: React.FC = () => {
   const transfers = data?.pages.flatMap((p) => p.transfers);
 
   useEffect(() => {
-    isFetching ? (showBottomBar.value = false) : (showBottomBar.value = true);
+    isFetching && !isFetchingNextPage
+      ? (showBottomBar.value = false)
+      : (showBottomBar.value = true);
   }, [isFetching]);
 
-  const sentinelRef = useRef(null);
-
-  useSentinel(fetchNextPage, hasNextPage, isFetchingNextPage);
-
-  if (isFetching) {
+  if (isFetching && !isFetchingNextPage) {
     return <Spinner />;
   }
 
@@ -121,12 +119,11 @@ const Transfers: React.FC = () => {
           ))}
         </>
       )}
-      <div
-        ref={sentinelRef}
-        className="sentinel"
-        style={{ height: "1px" }}
-      ></div>
-      {isFetchingNextPage && <Spinner />}
+      <Sentinel
+        fetchNextPage={fetchNextPage}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+      />
 
       {selectedTransfer.value && (
         <DetailedTransfer
@@ -140,7 +137,6 @@ const Transfers: React.FC = () => {
           errorMessage={errorMessage}
           userMemberId={userMemberId || ""}
           members={allParticipants}
-          
         />
       )}
       <MenuAnimationBackground menu={menu} />

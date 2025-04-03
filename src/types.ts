@@ -205,9 +205,24 @@ export type CreateExpenseRequest = {
   labels: string[];
 };
 
-export type CreateEditExpenseRequest = CreateExpenseRequest&{
-  expenseId:string;
-}
+export type CreateEditExpenseRequest = {
+  expenseId: string;
+  amount: number;
+  currency: string;
+  payments: {
+    memberId: string;
+    amount: number;
+  }[];
+  shares: {
+    memberId: string;
+    amount: number;
+  }[];
+  description: string;
+  labelIds: string[];
+  location: GeoLocation | null;
+  occurred: string;
+  labels: string[];
+};
 
 export type GeoLocation = {
   coordinates: Coordinates;
@@ -291,9 +306,6 @@ export type MostRecentGroupDetailsResponse = {
   details: Details;
 };
 
-
-
-
 export type Participant = {
   memberId: string;
   participationAmount: string;
@@ -313,7 +325,6 @@ export type Transfer = {
   occurred: string;
 };
 
-
 export type CreateTransfersRequest = {
   groupId: string;
   transfers: Transfer[];
@@ -327,19 +338,23 @@ export type CreateTransferRequest = {
   receiverId: string;
   senderId: string;
   occurred: string;
-
-}
+};
 
 export type GetUserInvitationsResponse = {
   invitations: GetUserInvitationsResponseItem[];
   next: string | null;
 };
 
-export type DebtsResponse = {
+export type Debt = {
   debtor: string;
   creditor: string;
   amount: number;
   currency: string;
+};
+
+export type DebtsResponse = {
+  debts: Debt[];
+  totalSpent: Record<string, Record<string, number>>;
 };
 
 export type GetUserInvitationsResponseItem = {
@@ -360,7 +375,7 @@ export type DeleteTransferRequest = {
 };
 
 export type UpdateNotificationRequest = {
-  timestamp: string|undefined;
+  timestamp: string | undefined;
 };
 
 export type UpdateMostRecentGroupRequest = {

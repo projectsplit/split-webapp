@@ -1,8 +1,7 @@
 import { CSSProperties } from "react";
 import {
-  Currency,
+  Debt,
   DebtsResponse,
-  ExpenseItem,
   ExpenseResponseItem,
   FormExpense,
   Frequency,
@@ -12,7 +11,6 @@ import {
   Group,
   GroupedTransaction,
   Label,
-  Member,
   Payment,
   PickerMember,
   Share,
@@ -120,6 +118,7 @@ export interface MemberPickerProps {
   error?: string;
   group: Group;
   userCurrency: string;
+  selectedCurrency:string;
 }
 
 export interface DayPickerProps {
@@ -354,6 +353,9 @@ export interface ExpenseFormProps {
   timeZoneId: string;
   menu: Signal<string | null>;
 }
+export interface EditExpenseFormProps extends ExpenseFormProps {
+  selectedExpense: Signal<ExpenseResponseItem | null>;
+}
 
 export interface TransferFormProps {
   group: Group;
@@ -404,7 +406,7 @@ export interface TransfersProps {
 }
 
 export interface MemberProps {
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   groupedTransactions: GroupedTransaction[];
   memberId: string;
   name: string;
@@ -413,11 +415,12 @@ export interface MemberProps {
   memberIdSelectedToSettleUp: Signal<string>;
   members: TruncatedMember[];
   isGuest: boolean;
+  totalSpent: Record<string, Record<string, number>>
 }
 
 export interface RenderScenariosProps {
   memberTransactions: GroupedTransaction[];
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   isLogedUser: boolean;
   memberId: string;
   name: string;
@@ -432,7 +435,7 @@ export interface RenderSettledProps {
 
 export interface RenderBothScenariosProps {
   memberTransactions: GroupedTransaction[];
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   isLogedUser: boolean;
   memberId: string;
   name: string;
@@ -444,7 +447,7 @@ export interface RenderBothScenariosProps {
 }
 
 export interface MemberDetailedDescriptionProps {
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   memberTransactions: GroupedTransaction[];
   memberId: string;
   isLogedUser: boolean;
@@ -455,7 +458,7 @@ export interface MemberDetailedDescriptionProps {
 
 export interface DescriptionAndTreeProps {
   memberTransactions: GroupedTransaction[];
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   isLogedUser: boolean;
   memberId: string;
   name: string;
@@ -471,12 +474,12 @@ export interface SettleUpButtonProps {
 
 export interface SettleUpAnimationProps {
   menu: Signal<string | null>;
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   memberIdSelectedToSettleUp: Signal<string>;
   members: TruncatedMember[];
 }
 export interface SettleUpOptionsProps {
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   memberIdSelectedToSettleUp: Signal<string>;
   menu: Signal<string | null>;
   members: TruncatedMember[];

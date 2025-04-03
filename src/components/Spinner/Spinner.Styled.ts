@@ -2,6 +2,7 @@ import { CgSpinner } from "react-icons/cg";
 import styled from "styled-components";
 
 export const StyledSpinner = styled(CgSpinner)`
+
   @keyframes spin-animation {
     from {
       transform: rotate(0deg);
