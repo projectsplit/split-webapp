@@ -19,16 +19,14 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
   const googleMapsBaseUrl = "https://www.google.com/maps/search/?api=1";
   const buildGoogleUrl = (coords: Coordinates) => `${googleMapsBaseUrl}&query=${coords.latitude},${coords.longitude}`;
 
-  const localStorageUserLocation = localStorage.getItem("last_coordinates");
-  const lastUserLocation: Coordinates = localStorageUserLocation ? JSON.parse(localStorageUserLocation) : undefined;
+  const localStorageUserLocation = localStorage.getItem("last_geo_location");
+  const lastUserGeoLocation: GeoLocation = localStorageUserLocation ? JSON.parse(localStorageUserLocation) : undefined;
 
-  const defaultCoordinates: Coordinates = {
-    latitude: lastUserLocation?.latitude ?? 53.54992,
-    longitude: lastUserLocation?.longitude ?? 10.00678,
-  };
-
-  const initialLocation: GeoLocation = location.value ?? {
-    coordinates: defaultCoordinates,
+  const initialLocation: GeoLocation = location.value ?? lastUserGeoLocation ?? {
+    coordinates: {
+      latitude: 53.54992,
+      longitude: 10.00678,
+    },
     google: {
       id: null,
       address: undefined,
@@ -77,19 +75,6 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
     };
   }, []);
 
-
-  useEffect(() => {
-
-    if (!userLocation?.latitude || !userLocation?.longitude) {
-      return
-    }
-
-    localStorage.setItem("last_coordinates", JSON.stringify({
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude
-    }))
-  }, [userLocation])
-
   useEffect(() => {
     if (
       !shouldPanToUserLocation.current ||
@@ -109,7 +94,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
     geocoder!.geocode({ location: userPosition }).then((response) => {
       const firstResult = response.results[0];
 
-      setSelectedLocation({
+      const userLocationWithGoogle = {
         coordinates: {
           latitude: userPosition.lat,
           longitude: userPosition.lng,
@@ -123,11 +108,15 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
             longitude: userPosition.lng,
           }),
         },
-      });
-    });
+      }
 
-    shouldPanToUserLocation.current = false;
-    map.panTo(userPosition);
+      setSelectedLocation(userLocationWithGoogle);
+
+      localStorage.setItem("last_geo_location", JSON.stringify(userLocationWithGoogle))
+
+      shouldPanToUserLocation.current = false;
+      map.panTo(userPosition);
+    });
   }, [
     userLocation.latitude,
     userLocation.longitude,
@@ -186,7 +175,6 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
         const pos = e.detail.latLng!;
         geocoder!.geocode({ location: pos }).then((response) => {
           const firstResult = response.results[0];
-          console.log(firstResult);
 
           setSelectedLocation({
             coordinates: {
