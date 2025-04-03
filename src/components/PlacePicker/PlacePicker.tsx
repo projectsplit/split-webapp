@@ -9,6 +9,7 @@ import { IoClose } from "react-icons/io5";
 import { StyledPlacePicker } from "./PlacePicker.styled";
 import { PlacePickerProps } from "../../interfaces";
 import MyButton from "../MyButton/MyButton";
+import { error } from "console";
 
 const PlacePicker: React.FC<PlacePickerProps> = ({
   location,
@@ -35,9 +36,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
     },
   };
 
-  const [selectedLocation, setSelectedLocation] = useState<GeoLocation>(
-    location.value ?? initialLocation
-  );
+  const [selectedLocation, setSelectedLocation] = useState<GeoLocation>(location.value ?? initialLocation);
 
   const userLocation = useGeolocation();
   const map = useMap();
@@ -127,11 +126,11 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
   ]);
 
   useEffect(() => {
-    if (!autocomplete || !map) return;
+    if (!autocomplete || !map || !placesService) return;
 
     const autocompleteListener = autocomplete.addListener(
       "place_changed",
-      () => {
+      async () => {
         const selectedPlace = autocomplete.getPlace();
         if (!selectedPlace?.geometry?.location) return;
 
@@ -143,7 +142,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
           },
           google: {
             id: selectedPlace.place_id!,
-            address: selectedPlace.formatted_address,
+            address: await fetchAddressFromPlaceId(selectedPlace.place_id!, placesService) ?? "",
             name: selectedPlace.name,
             url: selectedPlace.url,
           },
@@ -313,3 +312,19 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
 };
 
 export default PlacePicker;
+
+const fetchAddressFromPlaceId = async (placeId: string, placesService: google.maps.places.PlacesService): Promise<string | undefined> => {
+  
+  const placeDetails: google.maps.places.PlaceResult | null = await new Promise((resolve) => {
+    placesService.getDetails({ placeId, fields: ["formatted_address"] }, (place, status) => {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        resolve(place)
+      }
+      else {
+        resolve(null)
+      }
+    });
+  });
+  
+  return placeDetails?.formatted_address ?? undefined;
+};
