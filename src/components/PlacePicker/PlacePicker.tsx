@@ -10,10 +10,7 @@ import { StyledPlacePicker } from "./PlacePicker.styled";
 import { PlacePickerProps } from "../../interfaces";
 import MyButton from "../MyButton/MyButton";
 
-const PlacePicker: React.FC<PlacePickerProps> = ({
-  location,
-  isMapOpen
-}) => {
+const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen }) => {
   const mapId = `${config.googleMapId}`;
   const defaultZoom = 14;
   const googleMapsBaseUrl = "https://www.google.com/maps/search/?api=1";
@@ -56,7 +53,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
       new placesLib.Autocomplete(autocompleteInputRef.current, {
         fields: ["place_id", "geometry", "name", "url"],
       }),
-    [autocompleteInputRef, placesLib]
+    [autocompleteInputRef.current, placesLib]
   );
 
   const geocodingLib = useMapsLibrary("geocoding");
@@ -313,7 +310,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
 export default PlacePicker;
 
 const fetchAddressFromPlaceId = async (placeId: string, placesService: google.maps.places.PlacesService): Promise<string | undefined> => {
-  
+
   const placeDetails: google.maps.places.PlaceResult | null = await new Promise((resolve) => {
     placesService.getDetails({ placeId, fields: ["formatted_address"] }, (place, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -324,6 +321,6 @@ const fetchAddressFromPlaceId = async (placeId: string, placesService: google.ma
       }
     });
   });
-  
+
   return placeDetails?.formatted_address ?? undefined;
 };
