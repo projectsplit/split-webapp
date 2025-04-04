@@ -1,3 +1,5 @@
+import { significantDigitsFromTicker } from "./openExchangeRates";
+
 export const currencyMask = (
   e: React.ChangeEvent<HTMLInputElement>,
   ticker: string
@@ -10,19 +12,9 @@ export const currencyMask = (
   const valueBeforeCursor = oldValue.substring(0, oldCursorPosition ?? 0);
   const commasCountBeforeCursor = (valueBeforeCursor.match(/,/g) || []).length;
   let value = oldValue;
-  const zeroDecimalCurrencies = [
-    "JPY",
-    "KRW",
-    "VND",
-    "IDR",
-    "PYG",
-    "CLP",
-    "COP",
-    "LAK",
-    "MMK",
-    "MNT",
-  ];
-  const isZeroDecimal = zeroDecimalCurrencies.includes(ticker.toUpperCase());
+
+  const decimalPoints = significantDigitsFromTicker(ticker.toUpperCase());
+
   // Prevent multiple dots (decimal points)
   if (
     (value.match(/\./g) || []).length > 1 ||
@@ -36,19 +28,25 @@ export const currencyMask = (
   // Remove leading zeros before the decimal point
   value = value.replace(/^0+(?=\d)/, "");
   // Separate thousands with commas
-  value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  // Ensure only up to two decimal places are allowed
-  const decimalIndex = value.indexOf(".");
 
-  if (isZeroDecimal) {
-    // Remove any decimals for zero-decimal currencies
-    if (decimalIndex !== -1) {
-      value = value.slice(0, decimalIndex);
-    }
+  if (decimalPoints >= 3) {
+    const parts = value.split(".");
+    // Add commas only to the integer part (parts[0])
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // Rejoin the parts
+    value = parts.join(".");
   } else {
-    // Ensure only up to two decimal places for non-zero-decimal currencies
-    if (decimalIndex !== -1) {
-      value = value.slice(0, decimalIndex + 3); // Keep only up to 2 decimal places
+    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  const decimalIndex = value.indexOf(".");
+  if (decimalIndex !== -1) {
+    if (decimalPoints === 0) {
+      // If no decimal places are allowed, remove the decimal point and everything after it
+      value = value.slice(0, decimalIndex);
+    } else {
+      // Keep only the allowed number of decimal places
+      value = value.slice(0, decimalIndex + decimalPoints + 1);
     }
   }
 

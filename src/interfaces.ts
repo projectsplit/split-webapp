@@ -117,7 +117,6 @@ export interface MemberPickerProps {
   description?: string;
   error?: string;
   group: Group;
-  userCurrency: string;
   selectedCurrency:string;
 }
 

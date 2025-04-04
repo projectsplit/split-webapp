@@ -181,8 +181,7 @@ export default function MemberFC({
             {isLogedUser ? <strong className="name">You</strong> : <strong className="name">{name}</strong>} spent{" "}
             <span className="amounts">
               {joinAmounts(Object.entries(removeZeroesValuesFromTotalSpent))}
-            </span>{" "}
-            <span>in total</span>
+            </span>
           </div>}
         </div>
 

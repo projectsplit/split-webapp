@@ -19,7 +19,7 @@ const MemberPicker = ({
   description,
   error,
   group,
-  userCurrency,
+ 
   selectedCurrency,
 }: MemberPickerProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

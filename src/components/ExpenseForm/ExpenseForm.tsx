@@ -4,7 +4,6 @@ import {
   GeoLocation,
   Group,
   PickerMember,
-  UserInfo,
 } from "../../types";
 import { useEffect, useState } from "react";
 import MemberPicker from "../MemberPicker/MemberPicker";
@@ -19,12 +18,12 @@ import { useSignal } from "@preact/signals-react";
 import InputMonetary from "../InputMonetary/InputMonetary";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import CurrencyOptionsAnimation from "../Menus/MenuAnimations/CurrencyOptionsAnimation";
-import { useOutletContext } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import MyButton from "../MyButton/MyButton";
 import { handleInputChange } from "../../helpers/handleInputChange";
 import { amountIsValid } from "../../helpers/amountIsValid";
 import { useExpense } from "../../api/services/useExpense";
+import { significantDigitsFromTicker } from "../../helpers/openExchangeRates";
 
 const ExpenseForm: React.FC<ExpenseFormProps> = ({
   group,
@@ -57,8 +56,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const displayedAmount = useSignal<string>("");
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
-  const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
-  const userCurrency = userInfo?.currency;
+
   const { mutate: createExpenseMutation, isPending } = useExpense(menu);
 
   const submitExpense = () => {
@@ -101,12 +99,19 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     const areParticipantsNumbersValid = selectedParticipants.every(
       (x) => x.amount !== "NaN" && Number(x.amount) > 0
     );
+
     const isParticipantsSumInvalid =
       selectedParticipants.length > 0 &&
-      selectedParticipants.reduce(
-        (acc, payer) => currency(acc).add(payer.amount).value,
-        0
-      ) !== currency(amount).value;
+      (significantDigitsFromTicker(currencySymbol) >= 3
+        ? Number(
+            selectedParticipants
+              .reduce((acc, payer) => acc + Number(payer.amount), 0)
+              .toFixed(significantDigitsFromTicker(currencySymbol))
+          ) !== Number(Number(amount).toFixed(significantDigitsFromTicker(currencySymbol)))
+        : selectedParticipants.reduce(
+            (acc, payer) => currency(acc).add(payer.amount).value,
+            0
+          ) !== currency(amount).value);
 
     const selectedPayers = payers.filter((x) => x.selected);
     const arePayersNumbersValid = selectedPayers.every(
@@ -114,10 +119,16 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     );
     const isPayersSumInvalid =
       selectedPayers.length > 0 &&
-      selectedPayers.reduce(
-        (acc, payer) => currency(acc).add(payer.amount).value,
-        0
-      ) !== currency(amount).value;
+      (significantDigitsFromTicker(currencySymbol) >= 3
+        ? Number(
+            selectedPayers
+              .reduce((acc, payer) => acc + Number(payer.amount), 0)
+              .toFixed(significantDigitsFromTicker(currencySymbol))
+          ) !== Number(Number(amount).toFixed(significantDigitsFromTicker(currencySymbol)))
+        : selectedPayers.reduce(
+            (acc, payer) => currency(acc).add(payer.amount).value,
+            0
+          ) !== currency(amount).value);
 
     // Validate amount when participants or payers are selected
     if (selectedParticipants.length > 0 || selectedPayers.length > 0) {
@@ -143,7 +154,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
     return () => clearTimeout(errorsWithTimeOut);
   }, [amount, participants, payers]);
-  
+
   useEffect(() => {
     setAmount("");
     displayedAmount.value = "";
@@ -203,7 +214,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         error={participantsError}
         setMemberAmounts={setParticipants}
         group={group}
-        userCurrency={userCurrency}
         selectedCurrency={currencySymbol}
       />
       <MemberPicker
@@ -213,7 +223,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         error={payersError}
         setMemberAmounts={setPayers}
         group={group}
-        userCurrency={userCurrency}
         selectedCurrency={currencySymbol}
       />
       <Input_old
