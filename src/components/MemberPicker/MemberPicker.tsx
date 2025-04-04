@@ -10,6 +10,7 @@ import { getSymbolFromCurrency } from "../../helpers/currency-symbol-map";
 import { StyledMemberPicker } from "./MemberPicker.styled";
 import { FaCheck } from "react-icons/fa";
 import Separator from "../Separator/Separator";
+import { significantDigitsFromTicker } from "../../helpers/openExchangeRates";
 
 const MemberPicker = ({
   memberAmounts,
@@ -18,7 +19,8 @@ const MemberPicker = ({
   description,
   error,
   group,
-  userCurrency,
+ 
+  selectedCurrency,
 }: MemberPickerProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectAllTick, setSelectAllTick] = useState<boolean>(false);
@@ -30,7 +32,9 @@ const MemberPicker = ({
     userInfo: UserInfo;
   }>();
 
-  const decimalDigits = 2
+  const [decimalDigits, setDecimalDigits] = useState<number>(2);
+  
+
   const members = group?.members;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
@@ -46,6 +50,10 @@ const MemberPicker = ({
       setIsMenuOpen(false);
     }
   };
+
+  useEffect(() => {
+    setDecimalDigits(significantDigitsFromTicker(selectedCurrency));
+  }, [selectedCurrency]);
 
   useEffect(() => {
     document.addEventListener("mousedown", clickOutsideListener);
@@ -102,11 +110,15 @@ const MemberPicker = ({
       }));
       setMemberAmounts(newFormMembers);
     }
-    return () => { };
+    return () => {};
   }, [totalAmount]);
 
   useEffect(() => {
-    isEquallySplit.value = isEquallySplitFn(memberAmounts, totalAmount, decimalDigits);
+    isEquallySplit.value = isEquallySplitFn(
+      memberAmounts,
+      totalAmount,
+      decimalDigits
+    );
   }, [memberAmounts]);
 
   const recalculateAmounts = (formMembers: PickerMember[]): PickerMember[] => {
@@ -119,11 +131,18 @@ const MemberPicker = ({
     const lockedAmount = lockedSelectedMembers
       .map((m) => Number(m.amount))
       .reduce((total, a) => total + a, 0);
-    const splitArray = split(totalAmount - lockedAmount, unlockedSelectedMembers.length, decimalDigits);
+    const splitArray = split(
+      totalAmount - lockedAmount,
+      unlockedSelectedMembers.length,
+      decimalDigits
+    );
 
     return formMembers.map((m) => {
       if (m.selected && !m.locked) {
-        return { ...m, amount: splitArray.shift()?.toFixed(decimalDigits) || "" };
+        return {
+          ...m,
+          amount: splitArray.shift()?.toFixed(decimalDigits) || "",
+        };
       } else {
         return m;
       }
@@ -239,27 +258,31 @@ const MemberPicker = ({
             ? selectedCount === 0
               ? "Select participants"
               : selectedCount === 1
-                ? `Billed to ${sortedMemberAmounts.find((m) => m.amount != "")?.name}`
-                : selectedCount === 2 && isEquallySplit.value
-                  ? `Split equally between ${selectedCount} `
-                  : selectedCount === 2 && !isEquallySplit.value
-                    ? `Split unequally between ${selectedCount} `
-                    : selectedCount > 2 && isEquallySplit.value
-                      ? `Split equally among ${selectedCount} `
-                      : `Split unequally among ${selectedCount} `
+              ? `Billed to ${
+                  sortedMemberAmounts.find((m) => m.amount != "")?.name
+                }`
+              : selectedCount === 2 && isEquallySplit.value
+              ? `Split equally between ${selectedCount} `
+              : selectedCount === 2 && !isEquallySplit.value
+              ? `Split unequally between ${selectedCount} `
+              : selectedCount > 2 && isEquallySplit.value
+              ? `Split equally among ${selectedCount} `
+              : `Split unequally among ${selectedCount} `
             : description === "Payers"
-              ? selectedCount === 0
-                ? "Select payers"
-                : selectedCount === 1
-                  ? `Paid by ${sortedMemberAmounts.find((m) => m.amount != "")?.name}`
-                  : selectedCount === 2 && isEquallySplit.value
-                    ? `Paid equally by ${selectedCount} `
-                    : selectedCount === 2 && !isEquallySplit.value
-                      ? `Paid unequally by ${selectedCount} `
-                      : selectedCount > 2 && isEquallySplit.value
-                        ? `Paid equally by ${selectedCount} `
-                        : `Paid unequally by ${selectedCount} `
-              : null}
+            ? selectedCount === 0
+              ? "Select payers"
+              : selectedCount === 1
+              ? `Paid by ${
+                  sortedMemberAmounts.find((m) => m.amount != "")?.name
+                }`
+              : selectedCount === 2 && isEquallySplit.value
+              ? `Paid equally by ${selectedCount} `
+              : selectedCount === 2 && !isEquallySplit.value
+              ? `Paid unequally by ${selectedCount} `
+              : selectedCount > 2 && isEquallySplit.value
+              ? `Paid equally by ${selectedCount} `
+              : `Paid unequally by ${selectedCount} `
+            : null}
         </div>
         <FiChevronDown className="icon" />
       </div>
@@ -308,11 +331,11 @@ const MemberPicker = ({
                   </div>
                   <div className="right">
                     <div>
-                      {getSymbolFromCurrency(userCurrency)}
+                      {getSymbolFromCurrency(selectedCurrency)}
                       <AutoWidthInput
                         className="amount-input"
                         inputMode="decimal"
-                        value={m.amount}
+                        value={Number(m.amount).toLocaleString().toString()}
                         onBlur={(_) => handleInputBlur(m.id)}
                         onChange={(e) => changeAmount(m.id, e.target.value)}
                         onClick={(e) => e.stopPropagation()}
@@ -365,7 +388,6 @@ const isEquallySplitFn = (
   totalAmount: number,
   decimalDigits: number
 ): boolean => {
-
   const pickedMembersCount = memberAmounts.filter(
     (m) => m.amount !== ""
   ).length;
@@ -374,8 +396,16 @@ const isEquallySplitFn = (
     return true;
   }
 
-  const equallySplitAmount = split(totalAmount, pickedMembersCount, decimalDigits)[0].toFixed(decimalDigits);
-  const equallySplitAmountLowerEnd = split(totalAmount, pickedMembersCount, decimalDigits)[pickedMembersCount - 1].toFixed(decimalDigits);
+  const equallySplitAmount = split(
+    totalAmount,
+    pickedMembersCount,
+    decimalDigits
+  )[0].toFixed(decimalDigits);
+  const equallySplitAmountLowerEnd = split(
+    totalAmount,
+    pickedMembersCount,
+    decimalDigits
+  )[pickedMembersCount - 1].toFixed(decimalDigits);
   return memberAmounts
     .filter((m) => m.amount !== "")
     .every(
@@ -394,8 +424,18 @@ const allMembersAreSelected = (memberAmounts: PickerMember[]): boolean => {
   return numberofAllMembers === numberofSelectedMembers;
 };
 
-const split = (total: number, splits: number, maxDecimals: number): number[] => {
-  if (splits <= 0 || !Number.isInteger(splits) || maxDecimals < 0 || !Number.isInteger(maxDecimals)) return [];
+const split = (
+  total: number,
+  splits: number,
+  maxDecimals: number
+): number[] => {
+  if (
+    splits <= 0 ||
+    !Number.isInteger(splits) ||
+    maxDecimals < 0 ||
+    !Number.isInteger(maxDecimals)
+  )
+    return [];
 
   const multiplier = Math.pow(10, maxDecimals);
   const totalCents = Math.round(total * multiplier);
@@ -407,5 +447,7 @@ const split = (total: number, splits: number, maxDecimals: number): number[] => 
     result[i]++;
   }
 
-  return result.map(val => Number((val / multiplier).toFixed(maxDecimals))).sort((a, b) => a - b);
-}
+  return result
+    .map((val) => Number((val / multiplier).toFixed(maxDecimals)))
+    .sort((a, b) => a - b);
+};

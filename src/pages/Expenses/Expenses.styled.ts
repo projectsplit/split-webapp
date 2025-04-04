@@ -9,6 +9,7 @@ export const StyledExpenses = styled.div`
   overflow-y: auto;
   height: 100%;
   gap: 16px;
+  
 
   .noData {
     display: flex;

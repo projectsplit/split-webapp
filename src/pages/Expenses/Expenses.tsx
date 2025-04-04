@@ -5,7 +5,6 @@ import { ExpenseResponseItem, Group, UserInfo } from "../../types";
 import { getGroupExpenses } from "../../api/services/api";
 import { useOutletContext } from "react-router-dom";
 import Spinner from "../../components/Spinner/Spinner";
-import useSentinel from "../../hooks/useSentinel";
 import { StyledExpenses } from "./Expenses.styled";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { CiReceipt } from "react-icons/ci";
@@ -15,6 +14,7 @@ import { DateOnly } from "../../helpers/timeHelpers";
 import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
+import Sentinel from "../../components/Sentinel";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -46,18 +46,16 @@ const Expenses = () => {
   const expenses = data?.pages.flatMap((p) => p.expenses);
 
   useEffect(() => {
-    isFetching ? (showBottomBar.value = false) : (showBottomBar.value = true);
+    isFetching && !isFetchingNextPage
+      ? (showBottomBar.value = false)
+      : (showBottomBar.value = true);
   }, [isFetching]);
 
   useEffect(() => {
     menu.value = errorMessage.value ? "error" : menu.value;
   }, [errorMessage.value]);
 
-  const sentinelRef = useRef(null);
-
-  useSentinel(fetchNextPage, hasNextPage, isFetchingNextPage);
-
-  if (isFetching) {
+  if (isFetching && !isFetchingNextPage) {
     return <Spinner />;
   }
 
@@ -115,13 +113,11 @@ const Expenses = () => {
           ))}
         </>
       )}
-      <div
-        ref={sentinelRef}
-        className="sentinel"
-        style={{ height: "1px" }}
-      ></div>
-      {isFetchingNextPage && <Spinner />}
-
+      <Sentinel
+        fetchNextPage={fetchNextPage}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+      />
       {selectedExpense.value && (
         <DetailedExpense
           selectedExpense={selectedExpense}
@@ -139,11 +135,16 @@ const Expenses = () => {
           members={allParticipants}
           errorMessage={errorMessage}
           userMemberId={userMemberId || ""}
+          group={group}
         />
       )}
 
       <MenuAnimationBackground menu={menu} />
-      <ErrorMenuAnimation menu={menu} message={errorMessage.value} />
+      <ErrorMenuAnimation
+        menu={menu}
+        message={errorMessage.value}
+        type="expense"
+      />
     </StyledExpenses>
   );
 };

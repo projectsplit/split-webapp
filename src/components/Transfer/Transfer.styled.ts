@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
-export const StyledTransfer = styled.div.withConfig({
-  shouldForwardProp: (prop) => !"outlineColor".includes(prop),
-})<{ outlineColor?: string }>`
+export const StyledTransfer = styled.div<{
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  $outlineColor?:string
+}>`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
@@ -11,7 +12,7 @@ export const StyledTransfer = styled.div.withConfig({
   padding-right: 10px;
   font-size: 14px;
   background-color: ${({ theme }) => theme.layer2};
-  ${({ outlineColor }) => outlineColor && `border: 1px solid ${outlineColor};`}
+  ${({ $outlineColor }) => $outlineColor && `border: 1px solid ${$outlineColor};`}
 
   .main {
     display: flex;

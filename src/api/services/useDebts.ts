@@ -4,7 +4,7 @@ import { DebtsResponse } from "../../types";
 
 
 const usePendingTransactions = (groupId: string | undefined) => {
-  return useQuery<DebtsResponse[]>({
+  return useQuery<DebtsResponse>({
     queryKey: ["debts", groupId],
     queryFn: () =>
       groupId

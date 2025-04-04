@@ -7,7 +7,8 @@ import { useRef } from "react";
 
 export default function CreateGroupAnimation({
     menu,
-    currencyMenu
+    currencyMenu,
+   
   }: CreateGroupAnimationProps) {
      const nodeRef = useRef(null);
     return (
@@ -18,7 +19,7 @@ export default function CreateGroupAnimation({
         unmountOnExit
         nodeRef = {nodeRef}
       >
-        <CreateGroup menu={menu} currencyMenu={currencyMenu} nodeRef = {nodeRef}/>
+        <CreateGroup menu={menu} currencyMenu={currencyMenu} nodeRef = {nodeRef} />
       </CSSTransition>
     );
   }

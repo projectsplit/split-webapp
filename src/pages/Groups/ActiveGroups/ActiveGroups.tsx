@@ -1,16 +1,15 @@
 import { StyledActiveGroups } from "./ActiveGroups.styled";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import TreeAdjustedContainer from "../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import Spinner from "../../../components/Spinner/Spinner";
-import { TreeItemBuilder } from "../../../components/TreeItemBuilder";
 import { getGroupsTotalAmounts } from "../../../api/services/api";
-import useSentinel from "../../../hooks/useSentinel";
 import { useMostRecentGroup } from "../../../api/services/useMostRecentGroup";
+import { TreeItemBuilderForHomeAndGroups } from "../../../components/TreeItemBuilderForHomeAndGroups";
+import Sentinel from "../../../components/Sentinel";
 
 export default function ActiveGroups() {
-  const sentinelRef = useRef(null);
+
   const navigate = useNavigate();
   const pageSize = 10;
 
@@ -24,7 +23,7 @@ export default function ActiveGroups() {
 
   const groups = data?.pages.flatMap((p) => p.groups);
   const updateMostRecentGroupId = useMostRecentGroup();
-  useSentinel(fetchNextPage, hasNextPage, isFetchingNextPage);
+
 
   const onGroupClickHandler = (id: string, groupName: string) => {
     navigate(`/groups/active/${id}/expenses`, { state: { groupName } });
@@ -49,18 +48,17 @@ export default function ActiveGroups() {
               <TreeAdjustedContainer
                 onClick={() => onGroupClickHandler(g.id, g.name)}
                 hasarrow={true}
-                items={TreeItemBuilder(g?.details)}
+                items={TreeItemBuilderForHomeAndGroups(g?.details)}
               >
                 <div className="groupName">{g.name}</div>
               </TreeAdjustedContainer>
             </div>
           ))}
-          <div
-            ref={sentinelRef}
-            className="sentinel"
-            style={{ height: "1px" }}
-          ></div>
-          {isFetchingNextPage ? <Spinner /> : null}
+          <Sentinel
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
         </div>
       )}
     </StyledActiveGroups>

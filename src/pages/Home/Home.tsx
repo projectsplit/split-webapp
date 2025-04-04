@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { StyledHomepage } from "./Home.Styled";
-
 import { BsBarChartFill } from "react-icons/bs";
 import { BsFillPiggyBankFill } from "react-icons/bs";
 import { BsFillPersonFill } from "react-icons/bs";
@@ -21,12 +20,13 @@ import {
   getMostRecentGroup,
 } from "../../api/services/api";
 import useBudgetInfo from "../../api/services/useBudgetInfo";
-import { TreeItemBuilder } from "../../components/TreeItemBuilder";
+
 import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
 import { useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
 import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -101,11 +101,11 @@ export default function Home() {
                   <TreeAdjustedContainer
                     onClick={() =>
                       navigate(
-                        `/groups/active/${mostRecentGroupData.id}/expenses`
+                        `/groups/active/${mostRecentGroupData.id}/debts`
                       )
                     }
                     hasarrow={true}
-                    items={TreeItemBuilder(mostRecentGroupData?.details)}
+                    items={TreeItemBuilderForHomeAndGroups(mostRecentGroupData?.details)}
                   >
                     <div className="groupName">{mostRecentGroupData?.name}</div>
                   </TreeAdjustedContainer>
@@ -126,7 +126,7 @@ export default function Home() {
                 <TreeAdjustedContainer
                   hasarrow={true}
                   onClick={() => navigate("/groups/active")}
-                  items={TreeItemBuilder(data?.balances)}
+                  items={TreeItemBuilderForHomeAndGroups(data?.balances)}
                 >
                   <div className="groups">
                     <div className="groupIconAndNumberOfGroups">

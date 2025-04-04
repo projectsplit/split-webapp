@@ -1,8 +1,7 @@
 import { CSSProperties } from "react";
 import {
-  Currency,
+  Debt,
   DebtsResponse,
-  ExpenseItem,
   ExpenseResponseItem,
   FormExpense,
   Frequency,
@@ -12,11 +11,11 @@ import {
   Group,
   GroupedTransaction,
   Label,
-  Member,
   Payment,
   PickerMember,
   Share,
   TransferItem,
+  TransferResponseItem,
   TruncatedMember,
   UserInfo,
 } from "./types";
@@ -74,11 +73,27 @@ export interface DetailedExpenseProps {
   members: TruncatedMember[];
   errorMessage: Signal<string>;
   userMemberId: string;
+  group:Group;
+}
+
+export interface DetailedTransferProps {
+  timeZoneId: string;
+  selectedTransfer:Signal<TransferResponseItem| null>;
+  amount: number;
+  currency: string;
+  occurred: string;
+  created: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  creator: string;
+  userMemberId: string;
+  members: TruncatedMember[];
+  errorMessage: Signal<string>;
 }
 
 export interface TransferProps {
   transfer: TransferItem;
   timeZoneId: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface DateTimePickerProps {
@@ -102,7 +117,7 @@ export interface MemberPickerProps {
   description?: string;
   error?: string;
   group: Group;
-  userCurrency: string;
+  selectedCurrency:string;
 }
 
 export interface DayPickerProps {
@@ -324,6 +339,7 @@ export interface NewExpenseAnimationProps {
   menu: Signal<string | null>;
 }
 
+
 export interface NewTransferAnimationProps {
   group: Group;
   timeZoneId: string;
@@ -335,6 +351,9 @@ export interface ExpenseFormProps {
   expense: FormExpense | null;
   timeZoneId: string;
   menu: Signal<string | null>;
+}
+export interface EditExpenseFormProps extends ExpenseFormProps {
+  selectedExpense: Signal<ExpenseResponseItem | null>;
 }
 
 export interface TransferFormProps {
@@ -354,9 +373,18 @@ export interface DeleteExpenseAnimationProps extends MenuProps {
   selectedExpense: Signal<ExpenseResponseItem | null>;
   errorMessage: Signal<string>;
 }
+export interface DeleteTransferAnimationProps extends MenuProps {
+  selectedTransfer: Signal<TransferResponseItem | null>;
+  errorMessage: Signal<string>;
+}
+
 export interface DeleteExpenseConfirmationProps extends MenuProps {
   description: string;
   selectedExpense: Signal<ExpenseResponseItem | null>;
+  errorMessage: Signal<string>;
+}
+export interface DeleteTransferConfirmationProps extends MenuProps {
+  selectedTransfer: Signal<TransferResponseItem | null>;
   errorMessage: Signal<string>;
 }
 
@@ -377,7 +405,7 @@ export interface TransfersProps {
 }
 
 export interface MemberProps {
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   groupedTransactions: GroupedTransaction[];
   memberId: string;
   name: string;
@@ -386,11 +414,12 @@ export interface MemberProps {
   memberIdSelectedToSettleUp: Signal<string>;
   members: TruncatedMember[];
   isGuest: boolean;
+  totalSpent: Record<string, Record<string, number>>
 }
 
 export interface RenderScenariosProps {
   memberTransactions: GroupedTransaction[];
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   isLogedUser: boolean;
   memberId: string;
   name: string;
@@ -405,7 +434,7 @@ export interface RenderSettledProps {
 
 export interface RenderBothScenariosProps {
   memberTransactions: GroupedTransaction[];
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   isLogedUser: boolean;
   memberId: string;
   name: string;
@@ -417,7 +446,7 @@ export interface RenderBothScenariosProps {
 }
 
 export interface MemberDetailedDescriptionProps {
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   memberTransactions: GroupedTransaction[];
   memberId: string;
   isLogedUser: boolean;
@@ -428,7 +457,7 @@ export interface MemberDetailedDescriptionProps {
 
 export interface DescriptionAndTreeProps {
   memberTransactions: GroupedTransaction[];
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   isLogedUser: boolean;
   memberId: string;
   name: string;
@@ -444,12 +473,12 @@ export interface SettleUpButtonProps {
 
 export interface SettleUpAnimationProps {
   menu: Signal<string | null>;
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   memberIdSelectedToSettleUp: Signal<string>;
   members: TruncatedMember[];
 }
 export interface SettleUpOptionsProps {
-  pendingTransactions: DebtsResponse[];
+  pendingTransactions: Debt[];
   memberIdSelectedToSettleUp: Signal<string>;
   menu: Signal<string | null>;
   members: TruncatedMember[];
@@ -512,10 +541,12 @@ export interface EditorContentHandle {
 
 export interface ErrorMenuAnimationProps extends MenuProps {
   message: string;
+  type:string;
 }
 
 export interface ErrorMenuProps extends MenuProps {
   children: any;
+  type:string;
 }
 
 export interface InputMonetaryProps
@@ -526,7 +557,7 @@ export interface InputMonetaryProps
   value?: string;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
-  inputError?: boolean;
+  $inputError?: boolean;
   currencyMenu: Signal<React.SetStateAction<string | null>>;
   currency: string;
 }

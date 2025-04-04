@@ -1,9 +1,10 @@
 import {
-  CreateExpenseRequest,
+  CreateEditExpenseRequest,
   FormExpense,
   GeoLocation,
   Group,
   PickerMember,
+  UserInfo,
 } from "../../types";
 import { useEffect, useState } from "react";
 import MemberPicker from "../MemberPicker/MemberPicker";
@@ -12,25 +13,31 @@ import { DateTime } from "../DateTime";
 import currency from "currency.js";
 import LocationPicker from "../LocationPicker/LocationPicker";
 import LabelPicker from "../LabelPicker/LabelPicker";
-import { ExpenseFormProps } from "../../interfaces";
-import { StyledExpenseForm } from "./ExpenseForm.styled";
+import { EditExpenseFormProps } from "../../interfaces";
+import { StyledEditExpenseForm } from "./EditExpenseForm.styled";
 import { useSignal } from "@preact/signals-react";
 import InputMonetary from "../InputMonetary/InputMonetary";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import CurrencyOptionsAnimation from "../Menus/MenuAnimations/CurrencyOptionsAnimation";
+import { useOutletContext } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import MyButton from "../MyButton/MyButton";
 import { handleInputChange } from "../../helpers/handleInputChange";
 import { amountIsValid } from "../../helpers/amountIsValid";
-import { useExpense } from "../../api/services/useExpense";
-import { significantDigitsFromTicker } from "../../helpers/openExchangeRates";
+import { useEditExpense } from "../../api/services/useEditExpense";
 
-const ExpenseForm: React.FC<ExpenseFormProps> = ({
+const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   group,
   expense,
   timeZoneId,
   menu,
+  selectedExpense
 }) => {
+
+  if (!expense) {
+    return <div>Error: Expense not found.</div>;
+  }
+
   const [participants, setParticipants] = useState<PickerMember[]>(
     createParticipantPickerArray(group, expense)
   );
@@ -41,23 +48,24 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   );
   const [payersError, setPayersError] = useState<string>("");
 
-  const [currencySymbol, setCurrencySymbol] = useState<string>(group.currency);
-  const [amount, setAmount] = useState<string>("");
+  const [currencySymbol, setCurrencySymbol] = useState<string>(expense.currency);
+  const [amount, setAmount] = useState<string>(expense.amount);
   const [amountError, setAmountError] = useState<string>("");
   const [showAmountError, setShowAmountError] = useState<boolean>(false);
 
-  const [description, setDescription] = useState<string>("");
-  const [labels, setLabels] = useState<string[]>([]);
+  const [description, setDescription] = useState<string>(expense.description);
+  const [labels, setLabels] = useState<string[]>(expense.labels);
   const [expenseTime, setExpenseTime] = useState<string>(
-    new Date().toISOString()
+    expense.creationTime.toISOString()
   );
   const location = useSignal<GeoLocation | undefined>(expense?.location);
 
-  const displayedAmount = useSignal<string>("");
+  const displayedAmount = useSignal<string>(expense.amount);
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
-
-  const { mutate: createExpenseMutation, isPending } = useExpense(menu);
+  const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
+  const userCurrency = userInfo?.currency;
+  const { mutate: editExpenseMutation, isPending } = useEditExpense(menu,selectedExpense);
 
   const submitExpense = () => {
     setShowAmountError(true);
@@ -73,9 +81,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
     if (!amountIsValid(amount, setAmountError)) return;
 
-    const createExpenseRequest: CreateExpenseRequest = {
+    const createEditExpenseRequest: CreateEditExpenseRequest = {
+      expenseId:expense.id,
       amount: Number(amount),
-      groupId: group.id,
       currency: currencySymbol,
       payments: payers
         .filter((value) => value.selected)
@@ -90,7 +98,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
       labels: labels,
     };
 
-    createExpenseMutation(createExpenseRequest);
+    editExpenseMutation(createEditExpenseRequest);
   };
 
   useEffect(() => {
@@ -99,19 +107,12 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     const areParticipantsNumbersValid = selectedParticipants.every(
       (x) => x.amount !== "NaN" && Number(x.amount) > 0
     );
-
     const isParticipantsSumInvalid =
       selectedParticipants.length > 0 &&
-      (significantDigitsFromTicker(currencySymbol) >= 3
-        ? Number(
-            selectedParticipants
-              .reduce((acc, payer) => acc + Number(payer.amount), 0)
-              .toFixed(significantDigitsFromTicker(currencySymbol))
-          ) !== Number(Number(amount).toFixed(significantDigitsFromTicker(currencySymbol)))
-        : selectedParticipants.reduce(
-            (acc, payer) => currency(acc).add(payer.amount).value,
-            0
-          ) !== currency(amount).value);
+      selectedParticipants.reduce(
+        (acc, payer) => currency(acc).add(payer.amount).value,
+        0
+      ) !== currency(amount).value;
 
     const selectedPayers = payers.filter((x) => x.selected);
     const arePayersNumbersValid = selectedPayers.every(
@@ -119,16 +120,10 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     );
     const isPayersSumInvalid =
       selectedPayers.length > 0 &&
-      (significantDigitsFromTicker(currencySymbol) >= 3
-        ? Number(
-            selectedPayers
-              .reduce((acc, payer) => acc + Number(payer.amount), 0)
-              .toFixed(significantDigitsFromTicker(currencySymbol))
-          ) !== Number(Number(amount).toFixed(significantDigitsFromTicker(currencySymbol)))
-        : selectedPayers.reduce(
-            (acc, payer) => currency(acc).add(payer.amount).value,
-            0
-          ) !== currency(amount).value);
+      selectedPayers.reduce(
+        (acc, payer) => currency(acc).add(payer.amount).value,
+        0
+      ) !== currency(amount).value;
 
     // Validate amount when participants or payers are selected
     if (selectedParticipants.length > 0 || selectedPayers.length > 0) {
@@ -155,11 +150,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     return () => clearTimeout(errorsWithTimeOut);
   }, [amount, participants, payers]);
 
-  useEffect(() => {
-    setAmount("");
-    displayedAmount.value = "";
-  }, [currencySymbol]);
-
   const amountNumber = !amountError ? Number(amount) : Number.NaN;
 
   const handleInputBlur = () => {
@@ -178,10 +168,10 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   };
 
   return (
-    <StyledExpenseForm>
+    <StyledEditExpenseForm>
       <div className="header">
         <div className="gap"></div>
-        <div className="title">New Expense</div>
+        <div className="title">Edit Expense</div>
 
         <div
           className="closeButtonContainer"
@@ -214,7 +204,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         error={participantsError}
         setMemberAmounts={setParticipants}
         group={group}
-        selectedCurrency={currencySymbol}
+        userCurrency={userCurrency}
       />
       <MemberPicker
         description={"Payers"}
@@ -223,7 +213,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         error={payersError}
         setMemberAmounts={setPayers}
         group={group}
-        selectedCurrency={currencySymbol}
+        userCurrency={userCurrency}
       />
       <Input_old
         description="Description"
@@ -251,11 +241,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         clickHandler={handldeCurrencyOptionsClick}
         selectedCurrency={currencySymbol}
       />
-    </StyledExpenseForm>
+    </StyledEditExpenseForm>
   );
 };
 
-export default ExpenseForm;
+export default EditExpenseForm;
 
 const createParticipantPickerArray = (
   group: Group,

@@ -12,7 +12,6 @@ export default function TreeAdjustedContainer({
 
 }: TreeAdjustedContainerProps) {
   const hasTreeComponent = items.length > 1 ? true : false;
-
   if (!hasTreeComponent) {
     return (
       <OptionsContainer onClick={onClick} hasarrow={hasarrow} >

@@ -4,6 +4,7 @@ const useSentinel = (fetchNextPage:()=>void, hasNextPage:boolean, isFetchingNext
   const sentinelRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
+    
     if (!sentinelRef.current || !hasNextPage || isFetchingNextPage) return;
 
     const observer = new IntersectionObserver(([entry]) => {

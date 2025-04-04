@@ -15,7 +15,8 @@ import MapsInfoBox from "./MapsInfoBox/MapsInfoBox";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import { useSignal } from "@preact/signals-react";
 import DeleteExpenseAnimation from "../Menus/MenuAnimations/DeleteExpenseAnimation";
-import { GeoLocation } from "../../types";
+import { FormExpense, GeoLocation } from "../../types";
+import EditExpenseAnimation from "../Menus/MenuAnimations/EditExpenseAnimation";
 
 export default function DetailedExpense({
   selectedExpense,
@@ -33,6 +34,7 @@ export default function DetailedExpense({
   members,
   errorMessage,
   userMemberId,
+  group,
 }: DetailedExpenseProps) {
   const googleUrl = "https://www.google.com/maps/search/?api=1&query=";
 
@@ -64,21 +66,46 @@ export default function DetailedExpense({
     }
   };
   const googleMapsUrl = googleMapsUrlBuilder(location);
+
+  const expenseToEdit: FormExpense | undefined = selectedExpense.value
+    ? {
+        id: selectedExpense.value.id,
+        amount: selectedExpense.value.amount.toString(),
+        description: selectedExpense.value.description,
+        currency: selectedExpense.value.currency,
+        groupId: group.id,
+        labels: selectedExpense.value.labels,
+        participants: selectedExpense.value.shares.map((share) => ({
+          memberId: share.memberId,
+          participationAmount: share.amount.toString(),
+        })),
+        payers: selectedExpense.value.payments.map((payment) => ({
+          memberId: payment.memberId,
+          paymentAmount: payment.amount.toString(),
+        })),
+        location: selectedExpense.value.location,
+        expenseTime: new Date(selectedExpense.value.occurred),
+        creationTime: new Date(selectedExpense.value.created),
+        lastUpdateTime: new Date(selectedExpense.value.updated),
+      }
+    : undefined;
+
   return (
     <StyledDetailedExpense>
       <div className="descriptionAndCloseButton">
-        <div />
+      
         <div className="descreption">
           {description ? <span>"{description}"</span> : ""}
         </div>
         <div
           className="closeButton"
           onClick={() => (selectedExpense.value = null)}
+          
         >
           <IonIcon name="close-outline" className="close" />
         </div>
       </div>
-      <div className="dateAndLabels">
+     {labels.length>0? <div className="dateAndLabels">
         <div className="labelsWrapper">
           <div className="labels">
             {labels.map((l, i) => (
@@ -92,18 +119,7 @@ export default function DetailedExpense({
             ))}
           </div>
         </div>
-        <div className="date">
-          Occurred{" "}
-          {DateOnly(occurred, timeZoneId) === "Today" || DateOnly(occurred, timeZoneId) ==="Yesterday"
-            ? DateOnly(occurred, timeZoneId)
-            : "on" +
-              " " +
-              DateOnly(occurred, timeZoneId) +
-              " " +
-              YearOnly(occurred, timeZoneId)}{" "}
-          at {TimeOnly(occurred, timeZoneId)}
-        </div>
-      </div>
+      </div>:null}
 
       <div className="total">
         {displayCurrencyAndAmount(amount.toString(), currency)}
@@ -128,7 +144,7 @@ export default function DetailedExpense({
         <div className="dummyDiv" />
         <div className="buttons">
           <div className="editButton">
-            <MyButton onClick={() => console.log("edit")}>
+            <MyButton onClick={() => (menu.value = "editExpense")}>
               <div className="buttonChildren">
                 <AiFillEdit className="icon" />
                 <span>Edit</span>
@@ -151,7 +167,8 @@ export default function DetailedExpense({
       </div>
       <div className="createdBy">
         Created by {members.find((x) => x.id === creator)?.name}{" "}
-        {DateOnly(occurred, timeZoneId) === "Today" || DateOnly(occurred, timeZoneId) ==="Yesterday"
+        {DateOnly(occurred, timeZoneId) === "Today" ||
+        DateOnly(occurred, timeZoneId) === "Yesterday"
           ? DateOnly(created, timeZoneId)
           : "on" +
             " " +
@@ -160,7 +177,18 @@ export default function DetailedExpense({
             YearOnly(occurred, timeZoneId)}{" "}
         at {TimeOnly(created, timeZoneId)}
       </div>
-
+      <div className="date">
+        Occurred{" "}
+        {DateOnly(occurred, timeZoneId) === "Today" ||
+        DateOnly(occurred, timeZoneId) === "Yesterday"
+          ? DateOnly(occurred, timeZoneId)
+          : "on" +
+            " " +
+            DateOnly(occurred, timeZoneId) +
+            " " +
+            YearOnly(occurred, timeZoneId)}{" "}
+        at {TimeOnly(occurred, timeZoneId)}
+      </div>
       <div className="commentSection">
         <div className="comments">
           {/* <Comment />
@@ -178,6 +206,14 @@ export default function DetailedExpense({
         description={description}
         selectedExpense={selectedExpense}
         errorMessage={errorMessage}
+      />
+      <EditExpenseAnimation
+        expense={expenseToEdit || null}
+        group={group}
+        timeZoneId={timeZoneId}
+        menu={menu}
+        selectedExpense={selectedExpense}
+        
       />
     </StyledDetailedExpense>
   );

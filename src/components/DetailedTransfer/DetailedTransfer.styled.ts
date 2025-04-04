@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { StyledMiddleScreenMenu } from "../Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
 
-export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
+export const StyledDetailedTransfer = styled(StyledMiddleScreenMenu)<{
+  $outlineColor?: string;
+}>`
   display: flex;
   flex-direction: column;
   height: 99%;
@@ -10,100 +12,55 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
   scrollbar-width: thin;
   margin: 2px;
   box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`};
-  .dateAndLabels {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    .labelsWrapper {
-      overflow-x: auto;
-      text-align: center;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .labelsWrapper::-webkit-scrollbar {
-      display: none;
-    }
-
-    .labels {
-      display: inline-flex;
-      gap: 5px;
-    }
-  }
-  .descriptionAndCloseButton {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    .expenseName{
-      font-size: 20px;
-    }
-    .descreption {
-      display: flex;
-      justify-content: center;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 18px;
-      font-weight: 400;
-      color: ${({theme})=>theme.whiteText};
-      font-style: italic;
-      min-height: 21px;
-    }
-    .closeButton {
-      font-size: 30px;
-      color: #6f6f6f;
-      height: 17px;
-      margin-top: -15px;
-      margin-right: -8px;
-      &:hover {
-        color: ${({ theme }) => theme.whiteText};
-      }
-      .close {
-        cursor: pointer;
-        display: block;
-      }
-    }
-  }
-
   .total {
     display: flex;
     justify-content: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 18px;
-    font-weight: 400;
-    color: ${({theme})=>theme.whiteText};
-
-    min-height: 21px;
-    font-weight: bold;
   }
-  .editDeleteButtons {
+  .transfer {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    .buttons {
+    flex-direction: column;
+    border-radius: 10px;
+    width: 100%;
+    gap: 5px;
+    padding: 10px;
+    font-size: 14px;
+    background-color: ${({ theme }) => theme.layer2};
+    ${({ $outlineColor }) =>
+      $outlineColor && `border: 1px solid ${$outlineColor};`}
+    .sentFrom,.to,.sentTo,.descr {
       display: flex;
-      flex-direction: row;
-      gap: 25px;
-      .editButton {
-      }
+      justify-content: center;
+    }
+    .name {
+      color: ${({ theme }) => theme.textActiveColor};
+    }
+    .sentFrom,
+    .to {
+      color: ${({ theme }) => theme.layer6};
+    }
+    .descr {
+      display: flex;
+      justify-content: center;
+      color: ${({ theme }) => theme.layer6};
+      font-style: italic;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 5px;
     }
   }
-  .createdBy,.date {
+  .deleteButton {
     display: flex;
-    flex-direction: row;
     justify-content: center;
-
+  }
+  .createdBy,
+  .date {
     font-size: 15px;
     font-weight: 600;
-    color: ${({ theme }) => theme.grey};
+    display: flex;
+    justify-content: center;
+    color: ${({ theme }) => theme.layer6};
   }
-  p {
-    margin: 0;
-  }
-
   .textEditor {
     display: flex;
     flex-direction: column;
@@ -111,7 +68,6 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     max-height: 90px;
     overflow-y: auto;
   }
-
   .options {
     background-color: ${({ theme }) => theme.inputGrey};
     border-bottom-left-radius: 10px;
@@ -125,7 +81,6 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     cursor: pointer;
     font-size: 20px;
   }
-
   .commentSection {
     display: flex;
     flex-direction: column;
@@ -173,6 +128,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
       border-radius: 5px;
     }
   }
+
   .comments {
     display: flex;
     flex-direction: column;
@@ -180,26 +136,28 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     margin-bottom: 5px;
   }
 
-  .editDeleteButtons {
+  .headlineAndClose {
     display: flex;
     flex-direction: row;
+    align-items: center;
     justify-content: space-between;
-
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 25px;
-      justify-content: center;
-
-      .editButton,
-      .deleteButton {
-        .buttonChildren {
-          display: flex;
-          flex-direction: row;
-          gap: 10px;
-        }
-        flex: 1; /* Optional: Make buttons take equal space */
+    .head {
+      font-size: 20px;
+    }
+    .closeButton {
+      font-size: 30px;
+      color: #6f6f6f;
+      height: 17px;
+      margin-top: -15px;
+      margin-right: -8px;
+      &:hover {
+        color: ${({ theme }) => theme.whiteText};
+      }
+      .close {
+        cursor: pointer;
+        display: block;
       }
     }
   }
+
 `;

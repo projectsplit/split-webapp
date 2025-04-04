@@ -138,7 +138,7 @@ export default function TransferForm({
           onBlur={handleInputBlur}
           currency={currencySymbol}
           autoFocus={true}
-          inputError={showAmountError && !!amountError}
+          $inputError={showAmountError && !!amountError}
         />
         <span className="errorMsg">
           {showAmountError && amountError ? amountError : ""}

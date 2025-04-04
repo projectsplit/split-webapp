@@ -10,9 +10,8 @@ export const StyledMemberDetailedDescription = styled.div.withConfig({
   align-items: center;
   flex-direction: row;
   font-size: 15px;
-
   flex-grow: 1;
-
+  line-height:1.4;
   .owingText {
     white-space: nowrap;
     color: ${({ theme }) => theme.layer6};
@@ -24,4 +23,5 @@ export const StyledMemberDetailedDescription = styled.div.withConfig({
     color: ${(props) =>
       props.isOwed ? ({ theme }) => theme.green : ({ theme }) => theme.redish};
   }
+
 `;

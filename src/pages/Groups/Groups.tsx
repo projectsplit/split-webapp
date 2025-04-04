@@ -7,12 +7,13 @@ import { CategorySelector } from "../../components/CategorySelector/CategorySele
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
 import { useEffect } from "react";
 
+
 export default function Groups() {
   const menu = useSignal<string | null>(null);
   const currencyMenu = useSignal<string | null>(null);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
-  const { topMenuTitle } = useOutletContext<{
+  const { topMenuTitle, } = useOutletContext<{
     topMenuTitle: Signal<string>;
   }>();
 
@@ -32,7 +33,7 @@ export default function Groups() {
       />
       <Outlet />
       <BottomMainMenu onClick={() => (menu.value = "createGroup")} />
-      <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
+      <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu}  />
     </StyledGroups>
   );
 }
