@@ -2,7 +2,8 @@ import styled from "styled-components";
 import { OptionsContainerProps } from "../../interfaces";
 
 export const StyledTreeAdjustedContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "hasarrow",
+  shouldForwardProp: (prop) =>
+    !["hasOption", "iconfontsize,optionname"].includes(prop),
 })<OptionsContainerProps>`
   position: relative;
   display: flex;
@@ -15,25 +16,29 @@ export const StyledTreeAdjustedContainer = styled.div.withConfig({
   background-color: ${({ theme }) => theme.layer2};
   border-color: ${({ theme }) => theme.layer2};
   border-style: solid;
-  cursor: ${({ hasarrow }) => (hasarrow === true ? "pointer" : "default")};
+  /* cursor: ${({ hasOption }) =>
+    hasOption === true ? "pointer" : "default"}; */
+  cursor: pointer;
   transition: background-color 0.2s ease-in-out; /* Add transition for background-color */
   border: none;
 
+  /* &:hover {
+    background-color: ${({ theme, hasOption }) =>
+    hasOption === true ? theme.layer1 : theme.layer2}; 
+  } */
   &:hover {
-    background-color: ${({ theme, hasarrow }) =>
-      hasarrow === true
-        ? theme.layer1
-        : theme.layer2}; /* Change background-color on hover */
+    background-color: ${({ theme }) => theme.layer1};
   }
 
   .arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 0rem;
-    font-size: 30px;
+    right: ${({ right }) => `${right ? right : 0}rem`};
+    font-size: ${({ iconfontsize }) => `${iconfontsize ? iconfontsize : 30}px`};
+    z-index:2;
   }
-  
+
   .checkmark {
     color: ${({ theme }) => theme.green};
     font-size: 22px;

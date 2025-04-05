@@ -12,12 +12,25 @@ export const StyledArchivedGroups = styled.div`
     flex-direction: column;
     gap: 10px;
     padding-bottom: 5rem;
-    .noGroupMsg {
+    .noData {
       display: flex;
- 
-      color: ${({ theme }) => theme.layer6};
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      margin-top: 20px;
+      flex: 1;
+      margin-top:100px;
+      .msg {
+        opacity: 0.4;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .icon {
+        display: flex;
+        font-size: 100px;
+        opacity: 0.4;
+        margin-top: 20px;
+      }
     }
   }
 `;

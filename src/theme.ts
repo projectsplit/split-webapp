@@ -16,7 +16,7 @@ export const theme = {
   clicked: "#464689",
   whiteText: "#DDDDDD",
   lightColor: "#f5f5f5",
-  pinkish: "#f91880",
+  pinkish: "#e151eeb3",
   pink:"#E151EE",
   lightPink:"#835687",
   ciel:"#5183ee",

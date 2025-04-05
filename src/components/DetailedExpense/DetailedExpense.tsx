@@ -93,33 +93,34 @@ export default function DetailedExpense({
   return (
     <StyledDetailedExpense>
       <div className="descriptionAndCloseButton">
-      
+        <div />
         <div className="descreption">
           {description ? <span>"{description}"</span> : ""}
         </div>
         <div
           className="closeButton"
           onClick={() => (selectedExpense.value = null)}
-          
         >
           <IonIcon name="close-outline" className="close" />
         </div>
       </div>
-     {labels.length>0? <div className="dateAndLabels">
-        <div className="labelsWrapper">
-          <div className="labels">
-            {labels.map((l, i) => (
-              <Pill
-                key={i}
-                title={l}
-                color="#e151ee"
-                closeButton={false}
-                fontSize="18px"
-              />
-            ))}
+      {labels.length > 0 ? (
+        <div className="dateAndLabels">
+          <div className="labelsWrapper">
+            <div className="labels">
+              {labels.map((l, i) => (
+                <Pill
+                  key={i}
+                  title={l}
+                  color="#e151ee"
+                  closeButton={false}
+                  fontSize="18px"
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div>:null}
+      ) : null}
 
       <div className="total">
         {displayCurrencyAndAmount(amount.toString(), currency)}
@@ -213,7 +214,6 @@ export default function DetailedExpense({
         timeZoneId={timeZoneId}
         menu={menu}
         selectedExpense={selectedExpense}
-        
       />
     </StyledDetailedExpense>
   );

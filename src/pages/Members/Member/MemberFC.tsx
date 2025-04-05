@@ -178,9 +178,9 @@ export default function MemberFC({
 
          { Object.keys(removeZeroesValuesFromTotalSpent).length === 0? <div className="totalSpent">No recorded spending 💰</div>:
           <div className="totalSpent">
-            {isLogedUser ? <strong className="name">You</strong> : <strong className="name">{name}</strong>} spent{" "}
+            Total spent:{" "}
             <span className="amounts">
-              {joinAmounts(Object.entries(removeZeroesValuesFromTotalSpent))}
+            {" "} {joinAmounts(Object.entries(removeZeroesValuesFromTotalSpent))}
             </span>
           </div>}
         </div>

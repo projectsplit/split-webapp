@@ -1,7 +1,7 @@
 import { CSSTransition } from "react-transition-group";
 import { useRef } from "react";
 import {DeleteTransferAnimationProps } from "../../../interfaces";
-import DeleteTransferConfirmation from "../DeleteTransferConfirmation/DeleteTransferConfirmation";
+import DeleteTransferConfirmation from "../Confirmations/DeleteTransferConfirmation";
 
 export default function DeleteTransferAnimation({
   menu,

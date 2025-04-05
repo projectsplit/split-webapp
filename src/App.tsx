@@ -7,7 +7,6 @@ import Home from "./pages/Home/Home";
 import Groups from "./pages/Groups/Groups";
 import RedirectToActiveGroups from "./routes/RedirectToActiveGroups";
 import ArchivedGroups from "./pages/Groups/ArchivedGroups/ArchivedGroups";
-import DeletedGroups from "./pages/Groups/DeletedGroups/DeletedGroups";
 import ActiveGroups from "./pages/Groups/ActiveGroups/ActiveGroups";
 import RedirectToExpenses from "./routes/RedirectToExpenses";
 import Group from "./pages/Group/Group";
@@ -32,7 +31,6 @@ const App = ( ) => {
             <Route index element={<RedirectToActiveGroups />} />
             <Route path="active" element={<ActiveGroups />} />
             <Route path="archived" element={<ArchivedGroups />} />
-            <Route path="deleted" element={<DeletedGroups />} />
           </Route>
           <Route path="/groups/active/:groupid" element={<Group />}>
             <Route index element={<RedirectToExpenses />} />

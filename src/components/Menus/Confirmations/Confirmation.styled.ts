@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { StyledMiddleScreenMenu } from "../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
 
-export const StyledDeleteExpenseConfirmation = styled(StyledMiddleScreenMenu)`
+export const StyledConfirmation = styled(StyledMiddleScreenMenu)`
   .headerSeparator {
     position: sticky;
     top: 0;

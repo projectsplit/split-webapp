@@ -12,13 +12,27 @@ export const StyledActiveGroups = styled.div`
     flex-direction: column;
     gap: 10px;
     padding-bottom: 5rem;
-    .noGroupMsg {
+    .noData {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex:1;
+    margin-top:100px;
+    .msg {
+      opacity: 0.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+   
+    }
+    .icon {
       display: flex;
- 
-      color: ${({ theme }) => theme.layer6};
-      justify-content: center;
+      font-size: 100px;
+      opacity: 0.4;
       margin-top: 20px;
     }
+  }
   }
 
   .groupsInfo {

@@ -156,14 +156,24 @@ export interface LoadingSpinnerProps {
 export interface OptionsContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
-  hasarrow: boolean;
+  hasOption: boolean;
+  optionname?:any;
+  iconfontsize?:number;
+  right?:number;
+  onIconClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
-
+export interface GroupOptionsProps {
+  group:Group|undefined;
+}
 export interface TreeAdjustedContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
-  hasarrow: boolean;
+  hasOption: boolean;
+  optionname?:any;
   items: (string | JSX.Element)[];
+  iconfontsize?:number;
+  right?:number;
+  onIconClick?:(event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export interface NotificationsBellProps {
@@ -216,6 +226,7 @@ export interface SelectionButtonProps {
   name: string;
   description: string;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  hasArrow:boolean;
 }
 export interface OptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -289,7 +300,7 @@ export interface CategoryButtonProps {
 }
 
 export interface CategorySelectorProps {
-  categories: { cat1: string; cat2: string; cat3: string };
+  categories: { cat1?: string; cat2?: string; cat3?: string };
   activeCat: string;
   // onCategoryChange: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -337,6 +348,7 @@ export interface NewExpenseAnimationProps {
   expense: FormExpense | null;
   timeZoneId: string;
   menu: Signal<string | null>;
+  selectedExpense?: Signal<ExpenseResponseItem | null>
 }
 
 
@@ -560,4 +572,19 @@ export interface InputMonetaryProps
   $inputError?: boolean;
   currencyMenu: Signal<React.SetStateAction<string | null>>;
   currency: string;
+}
+
+export interface ConfirmationProps {
+  children:any;
+  menu: Signal<string | null>;
+  isLoading:boolean;
+  onClick: ((event: React.MouseEvent<HTMLButtonElement>) => void) | undefined
+}
+
+export interface ConfirmArchiveGroupAnimationProps {
+  menu: Signal<string | null>;
+}
+
+export interface ConfirmArchiveGroupProps {
+  menu: Signal<string | null>;
 }

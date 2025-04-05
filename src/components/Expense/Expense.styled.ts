@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-export const StyledExpense = styled.div<{
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}>`
+export const StyledExpense = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "userAmount",
+})<{onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;userAmount: number;}>`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
@@ -10,7 +10,8 @@ export const StyledExpense = styled.div<{
   padding: 10px;
   background-color: ${({ theme }) => theme.layer2};
   gap: 1rem;
-  box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`};
+  box-shadow: ${({ theme, userAmount }) =>
+    `0 0 0 1px ${userAmount === 0 ? theme.lightBorder : theme.pinkish}`};
   overflow: auto;
   .topRow {
     display: flex;
@@ -41,8 +42,17 @@ export const StyledExpense = styled.div<{
       max-width: 180px;
     }
     .amounts {
-      .userShare,
       .groupTotal {
+        display: flex;
+        font-size: 14px;
+        flex-direction: row;
+        gap: 5px;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color:${({ theme }) => theme.grey};
+     
+      }
+      .userShare {
         display: flex;
         font-size: 14px;
         flex-direction: row;
@@ -62,10 +72,10 @@ export const StyledExpense = styled.div<{
     border-radius: 5px;
   }
   .legendUser {
-    background-color: #e151ee;
+    background-color: ${({ theme }) => theme.pink};
   }
   .legendGroup {
-    background-color: #5183ee;
+    background-color: ${({ theme }) => theme.ciel};
   }
   .labels {
     display: flex;
@@ -81,10 +91,3 @@ export const StyledExpense = styled.div<{
   }
 `;
 
-// export const StyledLabel = styled.div<LabelProps>`
-//   display: flex;
-//   width: 2rem;
-//   height: 0.3rem;
-//   background-color: ${({ backgroundColor }) => backgroundColor};
-//   flex-shrink: 0;
-// `;

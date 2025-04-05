@@ -111,7 +111,6 @@ export default function SettingsMenu({
           <div
             className={
               selectedCurrency?.flagClass
-               
             }
           />
           <div className="description">Preferred Currency</div>

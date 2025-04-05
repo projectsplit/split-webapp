@@ -76,8 +76,8 @@ const Transfers: React.FC = () => {
       ) : (
         <>
           <BarsWithLegends
-            bar1Legend="You Sent"
-            bar2Legend="You Received"
+            bar1Legend="Total Sent"
+            bar2Legend="Total Received"
             bar1Total={totalSent || 0}
             bar2Total={totalReceived || 0}
             currency="GBP"
