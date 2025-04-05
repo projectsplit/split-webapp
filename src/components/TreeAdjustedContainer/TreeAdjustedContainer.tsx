@@ -3,8 +3,6 @@ import Tree from "../Tree/Tree";
 import OptionsContainer from "../OptionsContainer/OptionsContainer";
 import IonIcon from "@reacticons/ionicons";
 import { TreeAdjustedContainerProps } from "../../interfaces";
-import { useOutletContext } from "react-router-dom";
-import { Signal } from "@preact/signals-react";
 
 export default function TreeAdjustedContainer({
   children,

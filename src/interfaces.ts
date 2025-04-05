@@ -231,6 +231,7 @@ export interface SelectionButtonProps {
 export interface OptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   username: string | undefined;
+  children?:any
 }
 
 export interface TreeProps {
