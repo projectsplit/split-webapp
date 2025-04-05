@@ -17,7 +17,7 @@ const Expense = ({
   labels,
 }: ExpenseProps) => {
   return (
-    <StyledExpense onClick={onClick}>
+    <StyledExpense onClick={onClick} userAmount={userAmount}>
       <div className="topRow">
         {/* <div className="locationIcon">{expense.location &&<IoLocationOutline />}</div> */}
         {location ? <MdLocationOn className="locationIcon" /> : <div />}
@@ -35,14 +35,14 @@ const Expense = ({
           )}
         </div>
         <div className="amounts">
-          <div className="userShare">
+          <div className="groupTotal">
             {amount === 0 ? "" : <div className="legendGroup" />}
             <div className="amount">
               {displayCurrencyAndAmount(Math.abs(amount).toString(), currency)}
             </div>
           </div>
 
-          <div className="groupTotal">
+          <div className="userShare">
             {userAmount === 0 ? "" : <div className="legendUser" />}
             <div className="amount">
               {userAmount === 0

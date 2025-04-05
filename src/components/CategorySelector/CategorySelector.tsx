@@ -85,7 +85,7 @@ export const CategorySelector = ({
           <CategoryButton
             key={key}
             ref={categoryRefs[key]}
-            to={categories[key as keyof typeof categories].toLocaleLowerCase()}
+            to={categories[key as keyof typeof categories]?.toLocaleLowerCase()}
             onClick={() => {
               setActiveCategory(key);
             }}

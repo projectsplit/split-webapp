@@ -100,12 +100,13 @@ export default function Home() {
                   <div className="mostRecentMsg">Most recent</div>
                   <TreeAdjustedContainer
                     onClick={() =>
-                      navigate(
-                        `/groups/active/${mostRecentGroupData.id}/debts`
-                      )
+                      navigate(`/groups/active/${mostRecentGroupData.id}/debts`)
                     }
-                    hasarrow={true}
-                    items={TreeItemBuilderForHomeAndGroups(mostRecentGroupData?.details)}
+                    hasOption={true}
+                    optionname="chevron-forward-outline"
+                    items={TreeItemBuilderForHomeAndGroups(
+                      mostRecentGroupData?.details
+                    )}
                   >
                     <div className="groupName">{mostRecentGroupData?.name}</div>
                   </TreeAdjustedContainer>
@@ -119,12 +120,14 @@ export default function Home() {
                   onClick={() => navigate("/groups/active")}
                   name="Groups"
                   description="Keep track of your shared finances"
+                  hasArrow={false}
                 >
                   <TiGroup className="groupIcon" />
                 </OptionButton>
               ) : (
                 <TreeAdjustedContainer
-                  hasarrow={true}
+                  hasOption={false}
+                  optionname="chevron-forward-outline"
                   onClick={() => navigate("/groups/active")}
                   items={TreeItemBuilderForHomeAndGroups(data?.balances)}
                 >
@@ -140,6 +143,7 @@ export default function Home() {
               <OptionButton
                 name="Personal"
                 description="Your personal expense tracker"
+                hasArrow={false}
               >
                 <BsFillPersonFill className="personalIcon" />
               </OptionButton>
@@ -147,6 +151,7 @@ export default function Home() {
                 name="Analytics"
                 description="View your spending trends"
                 onClick={() => navigate("/analytics")}
+                hasArrow={false}
               >
                 <BsBarChartFill className="analyticsIcon" />
               </OptionButton>
@@ -154,6 +159,7 @@ export default function Home() {
                 name="Budget"
                 description="Set up a spending cap or goal"
                 onClick={() => navigate("/budget")}
+                hasArrow={false}
               >
                 <BsFillPiggyBankFill className="budgetIcon" />
               </OptionButton>

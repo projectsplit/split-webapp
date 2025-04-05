@@ -1,6 +1,6 @@
 import { CSSTransition } from "react-transition-group";
 import { useRef } from "react";
-import DeleteExpenseConfirmation from "../DeleteExpenseConfirmation/DeleteExpenseConfirmation";
+import DeleteExpenseConfirmation from "../Confirmations/DeleteExpenseConfirmation";
 import { DeleteExpenseAnimationProps } from "../../../interfaces";
 
 export default function DeleteExpenseAnimation({

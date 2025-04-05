@@ -6,11 +6,12 @@ export default function SelectionButton({
   children,
   name,
   description,
-  onClick
+  onClick,
+  hasArrow
 }: SelectionButtonProps) {
   return (
     <StyledSelectionButton onClick={onClick}>
-      <OptionsContainer hasarrow={true}>
+      <OptionsContainer hasOption={hasArrow} optionname="chevron-forward-outline">
         <div className="main">
           {children}
           <div className="confing">

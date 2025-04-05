@@ -1,14 +1,17 @@
 const openExchangeCurrencies = [
-  { symbol: "INR", name: "Indian Rupee", significantDecimalDigits: 2 },
-  { symbol: "CNY", name: "Chinese Yuan", significantDecimalDigits: 2 },
   { symbol: "USD", name: "United States Dollar", significantDecimalDigits: 2 },
   { symbol: "EUR", name: "Euro", significantDecimalDigits: 2 },
-  { symbol: "JPY", name: "Japanese Yen", significantDecimalDigits: 0 },
   {
     symbol: "GBP",
     name: "British Pound Sterling",
     significantDecimalDigits: 2,
   },
+  { symbol: "CHF", name: "Swiss Franc", significantDecimalDigits: 2 },
+  { symbol: "INR", name: "Indian Rupee", significantDecimalDigits: 2 },
+  { symbol: "CNY", name: "Chinese Yuan", significantDecimalDigits: 2 },
+ 
+  { symbol: "JPY", name: "Japanese Yen", significantDecimalDigits: 0 },
+
   {
     symbol: "AED",
     name: "United Arab Emirates Dirham",
@@ -46,7 +49,7 @@ const openExchangeCurrencies = [
   { symbol: "BZD", name: "Belize Dollar", significantDecimalDigits: 2 },
   { symbol: "CAD", name: "Canadian Dollar", significantDecimalDigits: 2 },
   { symbol: "CDF", name: "Congolese Franc", significantDecimalDigits: 2 },
-  { symbol: "CHF", name: "Swiss Franc", significantDecimalDigits: 2 },
+
   {
     symbol: "CLF",
     name: "Chilean Unit of Account (UF)",
@@ -226,10 +229,9 @@ export const currencyData = openExchangeCurrencies.map((currency) => {
   };
 });
 
-export const significantDigitsFromTicker = (
-  ticker: string
-): number => {
-
-  return openExchangeCurrencies.find((curr) => curr.symbol === ticker)
-    ?.significantDecimalDigits??2;
+export const significantDigitsFromTicker = (ticker: string): number => {
+  return (
+    openExchangeCurrencies.find((curr) => curr.symbol === ticker)
+      ?.significantDecimalDigits ?? 2
+  );
 };

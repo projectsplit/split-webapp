@@ -4,7 +4,6 @@ import {
   GeoLocation,
   Group,
   PickerMember,
-  UserInfo,
 } from "../../types";
 import { useEffect, useState } from "react";
 import MemberPicker from "../MemberPicker/MemberPicker";
@@ -19,7 +18,6 @@ import { useSignal } from "@preact/signals-react";
 import InputMonetary from "../InputMonetary/InputMonetary";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import CurrencyOptionsAnimation from "../Menus/MenuAnimations/CurrencyOptionsAnimation";
-import { useOutletContext } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import MyButton from "../MyButton/MyButton";
 import { handleInputChange } from "../../helpers/handleInputChange";
@@ -63,8 +61,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   const displayedAmount = useSignal<string>(expense.amount);
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
-  const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
-  const userCurrency = userInfo?.currency;
+  
   const { mutate: editExpenseMutation, isPending } = useEditExpense(menu,selectedExpense);
 
   const submitExpense = () => {
@@ -204,7 +201,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
         error={participantsError}
         setMemberAmounts={setParticipants}
         group={group}
-        userCurrency={userCurrency}
+        selectedCurrency={currencySymbol}
       />
       <MemberPicker
         description={"Payers"}
@@ -213,7 +210,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
         error={payersError}
         setMemberAmounts={setPayers}
         group={group}
-        userCurrency={userCurrency}
+        selectedCurrency={currencySymbol}
       />
       <Input_old
         description="Description"

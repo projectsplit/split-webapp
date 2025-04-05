@@ -62,6 +62,7 @@ export default function Group() {
               group={group}
               timeZoneId={timeZoneId}
               menu={menu}
+              
             />
           )}
           {group && (

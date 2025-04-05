@@ -13,7 +13,7 @@ export default function MembersInfoBox({
   members,
   userMemberId,
 }: MembersInfoBoxProps) {
-  const [hide, setHide] = React.useState<boolean>(true);
+  const [hide, setHide] = React.useState<boolean>(false);
 
   const sortedTransactions = [...transactions].sort((a, b) => {
     if (a.memberId === userMemberId) return -1;

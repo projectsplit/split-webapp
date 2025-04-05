@@ -7,29 +7,50 @@ import { TreeAdjustedContainerProps } from "../../interfaces";
 export default function TreeAdjustedContainer({
   children,
   onClick,
-  hasarrow,
+  hasOption,
+  optionname,
   items,
-
+  iconfontsize,
+  right,
+  onIconClick
 }: TreeAdjustedContainerProps) {
   const hasTreeComponent = items.length > 1 ? true : false;
+
   if (!hasTreeComponent) {
     return (
-      <OptionsContainer onClick={onClick} hasarrow={hasarrow} >
+      <OptionsContainer
+        onClick={onClick}
+        hasOption={hasOption}
+        optionname={optionname}
+        iconfontsize={iconfontsize}
+        right={right}
+        onIconClick={onIconClick}
+      >
         {children}
-        {hasarrow && (
-          <IonIcon name="chevron-forward-outline" className="arrow" />
-        )}
-         {items.map((item, index) => (
-        <div key={index}>{item}</div>  
-      ))}
+        {items.map((item, index) => (
+          <div key={index}>{item}</div>
+        ))}
       </OptionsContainer>
     );
   }
   return (
-    <StyledTreeAdjustedContainer onClick={onClick} hasarrow={hasarrow} >
+    <StyledTreeAdjustedContainer
+      onClick={onClick}
+      hasOption={hasOption}
+      optionname={optionname}
+      iconfontsize={iconfontsize}
+      right={right}
+    >
       {children}
-      {hasarrow && <IonIcon name="chevron-forward-outline" className="arrow" />}
+      {hasOption && (
+        <IonIcon
+          name={optionname}
+          className="arrow"
+          onClick={onIconClick}
+        />
+      )}
       <Tree items={items} />
     </StyledTreeAdjustedContainer>
   );
 }
+//"chevron-forward-outline"

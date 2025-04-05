@@ -13,13 +13,14 @@ export default function Groups() {
   const currencyMenu = useSignal<string | null>(null);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
-  const { topMenuTitle, } = useOutletContext<{
+  const { topMenuTitle } = useOutletContext<{
     topMenuTitle: Signal<string>;
   }>();
 
   useEffect(() => {
     topMenuTitle.value = "Groups";
   }, []);
+  const openGroupOptionsMenu = useSignal<boolean>(false);
 
   return (
     <StyledGroups>
@@ -28,12 +29,12 @@ export default function Groups() {
         categories={{
           cat1: "Active",
           cat2: "Archived",
-          cat3: "Deleted",
         }}
       />
-      <Outlet />
+
+      <Outlet context={{ openGroupOptionsMenu }} />
       <BottomMainMenu onClick={() => (menu.value = "createGroup")} />
-      <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu}  />
+      <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
     </StyledGroups>
   );
 }
