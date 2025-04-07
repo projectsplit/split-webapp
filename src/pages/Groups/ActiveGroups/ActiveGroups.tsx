@@ -10,18 +10,19 @@ import Sentinel from "../../../components/Sentinel";
 import { MdOutlineGroupOff } from "react-icons/md";
 import GroupOptions from "../GroupOptions/GroupOptions";
 import { Signal, useSignal } from "@preact/signals-react";
-import useGroup from "../../../api/services/useGroup";
+import { GroupWithDetails } from "../../../types";
 
 export default function ActiveGroups() {
   const navigate = useNavigate();
   const pageSize = 10;
 
-  const { openGroupOptionsMenu } = useOutletContext<{
-    openGroupOptionsMenu: Signal<boolean>;
-  }>();
-  const groupid = useSignal<string>("")
+  // const { openGroupOptionsMenu } = useOutletContext<{
+  //   openGroupOptionsMenu: Signal<boolean>;
+  // }>();
+
+  // const selectedGroup = useSignal<GroupWithDetails|null>(null)
  
-  const { data: selectedGroup } = useGroup(groupid.value);
+  // const { data: selectedGroup } = useGroup(groupid.value);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
@@ -57,24 +58,17 @@ export default function ActiveGroups() {
             <div key={g.id} >
               <TreeAdjustedContainer
                 onClick={() => onGroupClickHandler(g.id, g.name)}
-                hasOption={true}
-                optionname={"settings-outline"}
+                hasOption={false}
+                // optionname={"settings-outline"}
                 iconfontsize={20}
                 right={0.8}
                 items={TreeItemBuilderForHomeAndGroups(g?.details)}
-                onIconClick={(e) => {
-                  groupid.value = g.id
-                  e.stopPropagation();
-                  openGroupOptionsMenu.value = true;
-                }}
               >
                 <div className="groupName">{g.name}</div>
               </TreeAdjustedContainer>
             </div>
           ))}
-          {openGroupOptionsMenu.value && (
-            <GroupOptions group={selectedGroup} />
-          )}
+  
           <Sentinel
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}

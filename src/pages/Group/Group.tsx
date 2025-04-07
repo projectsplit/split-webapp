@@ -8,7 +8,7 @@ import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
 import Spinner from "../../components/Spinner/Spinner";
-import { UserInfo } from "../../types";
+import { ExpenseResponseItem, UserInfo } from "../../types";
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
@@ -17,6 +17,7 @@ import AddNewUserAnimation from "../../components/Menus/MenuAnimations/AddNewUse
 import useGroup from "../../api/services/useGroup";
 import { useEffect } from "react";
 import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTransferAnimation";
+import GroupOptions from "../Groups/GroupOptions/GroupOptions";
 
 export default function Group() {
   const menu = useSignal<string | null>(null);
@@ -25,10 +26,12 @@ export default function Group() {
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
 
-  const { userInfo, topMenuTitle } = useOutletContext<{
+  const { userInfo, topMenuTitle,openGroupOptionsMenu } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
+    openGroupOptionsMenu:Signal<boolean>
   }>();
+  const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const timeZoneId = userInfo?.timeZone;
   const { data: group, isFetching } = useGroup(groupid);
   const groupName = group?.name;
@@ -54,6 +57,7 @@ export default function Group() {
             }}
           />
           <Outlet context={{ userInfo, group, showBottomBar }} />
+          {openGroupOptionsMenu.value && <GroupOptions group={group} />}
 
           <MenuAnimationBackground menu={menu} />
           {group && (
@@ -62,7 +66,7 @@ export default function Group() {
               group={group}
               timeZoneId={timeZoneId}
               menu={menu}
-              
+              selectedExpense={selectedExpense}
             />
           )}
           {group && (

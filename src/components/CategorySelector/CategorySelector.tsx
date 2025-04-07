@@ -77,10 +77,9 @@ export const CategorySelector = ({
     window.addEventListener("resize", updateIndicator);
     return () => window.removeEventListener("resize", updateIndicator);
   }, [activeCategory, activeCat]); // Only re-runs when `activeCategory` changes
-
   return (
     <StyledCategorySelector>
-      <div className="groupCategories">
+      <div className="categories">
         {Object.entries(categories).map(([key, label]) => (
           <CategoryButton
             key={key}

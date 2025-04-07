@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const StyledCategorySelector = styled.div`
-  .groupCategories {
+  .categories {
     margin: 14px;
     display: flex;
     flex-direction: row;
@@ -14,7 +14,6 @@ export const StyledCategorySelector = styled.div`
       bottom: -15px;
       height: 3px;
       background-color: ${({ theme }) => theme.textActiveColor};
-
       border-radius: 5px;
     }
   }

@@ -268,14 +268,19 @@ export type UserPendingTransaction = {
 
 export type Details = { [currency: string]: number };
 
-export type Groups = {
+export type GroupWithDetails = {
+  details: Details;
+  id: string;
+  name: string;
+};
+export type GroupsWithDetails = {
   details: Details;
   id: string;
   name: string;
 }[];
 
 export type GroupsTotalAmountsResponse = {
-  groups: Groups;
+  groups: GroupsWithDetails;
   next: string;
 };
 

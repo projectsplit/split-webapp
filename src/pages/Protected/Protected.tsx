@@ -27,6 +27,7 @@ const Protected: React.FC = () => {
 
   const topMenuTitle = useSignal<string>("");
   const menu = useSignal<string | null>(null);
+  const openGroupOptionsMenu = useSignal<boolean>(false);
 
   const { latest } = useMemo(() => {
     const latest = getLatestCreated(userInvitations);
@@ -42,8 +43,9 @@ const Protected: React.FC = () => {
         username={userInfo?.username}
         hasNewerNotifications={hasNewerNotifications || false}
         latestTimeStamp={latest}
+        openGroupOptionsMenu={openGroupOptionsMenu}
       />
-      <Outlet context={{ userInfo, topMenuTitle }} />
+      <Outlet context={{ userInfo, topMenuTitle,openGroupOptionsMenu }} />
       <MenuAnimationBackground menu={menu} />
       <NotificationsMenuAnimation
         menu={menu}
@@ -53,7 +55,6 @@ const Protected: React.FC = () => {
         userInvitations={userInvitations}
         hasNewerNotifications={hasNewerNotifications || false}
         userInfo={userInfo}
-
       />
       <SettingsMenuAnimation menu={menu} userInfo={userInfo} />
     </StyledProtected>
@@ -71,17 +72,20 @@ const isUserAuthenticated = () => {
   return !!localStorage.getItem("accessToken");
 };
 
-
-function getLatestCreated<T extends { created: string }>(...arrays: (T[] | undefined)[]): string | undefined {
-
-  const combinedItems = arrays.reduce<T[]>((acc, curr) => acc.concat(curr ?? []), []);
+function getLatestCreated<T extends { created: string }>(
+  ...arrays: (T[] | undefined)[]
+): string | undefined {
+  const combinedItems = arrays.reduce<T[]>(
+    (acc, curr) => acc.concat(curr ?? []),
+    []
+  );
 
   if (combinedItems.length === 0) {
-    return undefined; 
+    return undefined;
   }
 
   const latestTimestamp = Math.max(
-    ...combinedItems.map(item => new Date(item.created).getTime())
+    ...combinedItems.map((item) => new Date(item.created).getTime())
   );
 
   return new Date(latestTimestamp).toISOString();

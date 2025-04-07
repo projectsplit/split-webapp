@@ -20,6 +20,6 @@ export const StyledGroup = styled.div`
     margin-bottom: auto;
   }
   .bottomMenu {
-    padding-bottom: 3.85rem;
+    padding-bottom: 4.91rem;
   }
 `;

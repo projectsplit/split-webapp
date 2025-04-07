@@ -6,6 +6,7 @@ import CreateGroupAnimation from "../../components/Menus/MenuAnimations/CreateGr
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
 import { useEffect } from "react";
+import { UserInfo } from "../../types";
 
 
 export default function Groups() {
@@ -13,14 +14,15 @@ export default function Groups() {
   const currencyMenu = useSignal<string | null>(null);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
-  const { topMenuTitle } = useOutletContext<{
+  const { topMenuTitle,userInfo } = useOutletContext<{
     topMenuTitle: Signal<string>;
+    userInfo: UserInfo;
+
   }>();
 
   useEffect(() => {
     topMenuTitle.value = "Groups";
   }, []);
-  const openGroupOptionsMenu = useSignal<boolean>(false);
 
   return (
     <StyledGroups>
@@ -31,8 +33,7 @@ export default function Groups() {
           cat2: "Archived",
         }}
       />
-
-      <Outlet context={{ openGroupOptionsMenu }} />
+      <Outlet context={{ userInfo }} />
       <BottomMainMenu onClick={() => (menu.value = "createGroup")} />
       <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
     </StyledGroups>

@@ -17,12 +17,13 @@ export default function MenuAnimationBackground({
         ref={nodeRef}
         style={{
           position: "fixed",
-          left: "0px",
-          top: "0px",
+          top: 0,
+          left: 0,
           height: "100%",
           width: "100%",
           backgroundColor: "black",
           opacity: "0.7",
+          
         }}
         onClick={() => (menu.value = null)}
       />

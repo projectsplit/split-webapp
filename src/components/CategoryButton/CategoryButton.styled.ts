@@ -52,4 +52,6 @@ export const StyledCategoryButton = styled.div.withConfig({
   ${(props) => `
     ${props.style}
   `}
+
+ 
 `;

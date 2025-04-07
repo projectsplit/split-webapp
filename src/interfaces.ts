@@ -10,6 +10,7 @@ import {
   GetUserInvitationsResponseItem,
   Group,
   GroupedTransaction,
+  GroupWithDetails,
   Label,
   Payment,
   PickerMember,
@@ -73,12 +74,12 @@ export interface DetailedExpenseProps {
   members: TruncatedMember[];
   errorMessage: Signal<string>;
   userMemberId: string;
-  group:Group;
+  group: Group;
 }
 
 export interface DetailedTransferProps {
   timeZoneId: string;
-  selectedTransfer:Signal<TransferResponseItem| null>;
+  selectedTransfer: Signal<TransferResponseItem | null>;
   amount: number;
   currency: string;
   occurred: string;
@@ -117,7 +118,7 @@ export interface MemberPickerProps {
   description?: string;
   error?: string;
   group: Group;
-  selectedCurrency:string;
+  selectedCurrency: string;
 }
 
 export interface DayPickerProps {
@@ -157,23 +158,24 @@ export interface OptionsContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
   hasOption: boolean;
-  optionname?:any;
-  iconfontsize?:number;
-  right?:number;
+  optionname?: any;
+  iconfontsize?: number;
+  right?: number;
   onIconClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 export interface GroupOptionsProps {
-  group:Group|undefined;
+  group: Group | undefined;
 }
+
 export interface TreeAdjustedContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
   hasOption: boolean;
-  optionname?:any;
+  optionname?: any;
   items: (string | JSX.Element)[];
-  iconfontsize?:number;
-  right?:number;
-  onIconClick?:(event: React.MouseEvent<HTMLDivElement>) => void;
+  iconfontsize?: number;
+  right?: number;
+  onIconClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export interface NotificationsBellProps {
@@ -226,12 +228,12 @@ export interface SelectionButtonProps {
   name: string;
   description: string;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  hasArrow:boolean;
+  hasArrow: boolean;
 }
 export interface OptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   username: string | undefined;
-  children?:any
+  children?: any;
 }
 
 export interface TreeProps {
@@ -337,6 +339,7 @@ export interface TopMenuProps {
   username: string | undefined;
   hasNewerNotifications: boolean;
   latestTimeStamp: string | undefined;
+  openGroupOptionsMenu: Signal<boolean>;
 }
 
 export interface ToggleSwitchProps {
@@ -349,9 +352,8 @@ export interface NewExpenseAnimationProps {
   expense: FormExpense | null;
   timeZoneId: string;
   menu: Signal<string | null>;
-  selectedExpense?: Signal<ExpenseResponseItem | null>
+  selectedExpense: Signal<ExpenseResponseItem | null>;
 }
-
 
 export interface NewTransferAnimationProps {
   group: Group;
@@ -427,7 +429,7 @@ export interface MemberProps {
   memberIdSelectedToSettleUp: Signal<string>;
   members: TruncatedMember[];
   isGuest: boolean;
-  totalSpent: Record<string, Record<string, number>>
+  totalSpent: Record<string, Record<string, number>>;
 }
 
 export interface RenderScenariosProps {
@@ -554,12 +556,12 @@ export interface EditorContentHandle {
 
 export interface ErrorMenuAnimationProps extends MenuProps {
   message: string;
-  type:string;
+  type: string;
 }
 
 export interface ErrorMenuProps extends MenuProps {
   children: any;
-  type:string;
+  type: string;
 }
 
 export interface InputMonetaryProps
@@ -576,16 +578,31 @@ export interface InputMonetaryProps
 }
 
 export interface ConfirmationProps {
-  children:any;
+  children: any;
   menu: Signal<string | null>;
-  isLoading:boolean;
-  onClick: ((event: React.MouseEvent<HTMLButtonElement>) => void) | undefined
+  isLoading: boolean;
+  onClick: ((event: React.MouseEvent<HTMLButtonElement>) => void) | undefined;
 }
 
-export interface ConfirmArchiveGroupAnimationProps {
-  menu: Signal<string | null>;
+export interface ConfirmArchiveGroupAnimationProps extends MenuProps {}
+
+export interface ConfirmLeaveGroupAnimationProps extends MenuProps {
+  groupId: string | undefined;
+  memberId: string | undefined;
 }
 
-export interface ConfirmArchiveGroupProps {
-  menu: Signal<string | null>;
+export interface ConfirmArchiveGroupProps extends MenuProps {}
+
+export interface ConfirmLeaveGroupProps extends MenuProps {
+  groupId: string | undefined;
+  memberId: string | undefined;
+}
+
+export interface RenameGroupMenuProps extends MenuProps {
+  groupId: string | undefined;
+  groupName:string| undefined
+}
+export interface RenameGroupAnimationAnimationProps extends MenuProps {
+  groupId: string | undefined;
+  groupName:string| undefined
 }

@@ -12,9 +12,8 @@ export default function ConfirmArchiveGroup({
     <Confirmation menu={menu} isLoading={false} onClick={handleConfirm}>
       <div className="archiveGroupText">
         <span>
-          Are you sure you want to archive this group? Once archived, members
-          won’t be able to add, edit, or delete expenses, transfers and settle
-          debts.{" "}
+        Are you sure you want to archive this group? Once archived, members
+          won’t be able to add, edit, or delete expenses and transfers.{" "}
         </span>
         <span> You can always un-archive the group later if needed. </span>
         <span className="handshake">🤝</span>
