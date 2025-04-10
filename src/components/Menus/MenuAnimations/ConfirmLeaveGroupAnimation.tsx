@@ -6,7 +6,8 @@ import ConfirmLeaveGroup from "../Confirmations/ConfirmLeaveGroup";
 export default function ConfirmLeaveGroupAnimation({
   menu,
   groupId,
-  memberId
+  memberId,
+  openGroupOptionsMenu
 }: ConfirmLeaveGroupAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -17,7 +18,7 @@ export default function ConfirmLeaveGroupAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <ConfirmLeaveGroup menu={menu} groupId={groupId} memberId={memberId}/>
+      <ConfirmLeaveGroup menu={menu} groupId={groupId} memberId={memberId}  openGroupOptionsMenu={openGroupOptionsMenu}/>
     </CSSTransition>
   );
 }

@@ -4,7 +4,7 @@ import { apiClient } from "../apiClients";
 import { CreateExpenseRequest } from "../../types";
 import { Signal } from "@preact/signals-react";
 
-export const useExpense = (menu: Signal<string | null>) => {
+export const useExpense = (menu: Signal<string | null>, groupId:string) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, CreateExpenseRequest>({
@@ -18,6 +18,7 @@ export const useExpense = (menu: Signal<string | null>) => {
       await queryClient.refetchQueries({ queryKey: ["home"], exact: false });
       await queryClient.refetchQueries({ queryKey: ["groups"], exact: false });
       await queryClient.refetchQueries({ queryKey: ["mostRecentGroup"], exact: false });
+      await queryClient.refetchQueries({ queryKey: [groupId], exact: false });
       menu.value = null;
     },
   });

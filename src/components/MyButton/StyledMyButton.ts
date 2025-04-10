@@ -69,12 +69,12 @@ const shake = keyframes`
 const buttonVariants = {
   primary: {
     background: "#f0f0f0",
-    color: "#26272B",
+    color: "#2d2d2d",
     hover: "#a3a3a3",
     active: "#a3a3a3",
   },
   secondary: {
-    background: "#26272B",
+    background: "#2d2d2d",
     color: "#f0f0f0",
     hover: "#1a1b1d",
     active: "#1a1b1d",

@@ -51,7 +51,7 @@ export default function TransferForm({
   const allMembers = [...group.guests, ...group.members];
   const members = group?.members;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
-  const { mutate: createTransferMutation, isPending } = useTransfer(menu);
+  const { mutate: createTransferMutation, isPending } = useTransfer(menu, group.id);
 
   const handldeCurrencyOptionsClick = (curr: string) => {
     setCurrencySymbol(curr);

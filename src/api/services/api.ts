@@ -47,9 +47,10 @@ export const getGroupTransfers = async (
 
 export const getGroupsTotalAmounts = async (
   pageSize: number,
-  next: string
+  next: string,
+  isArchived:boolean
 ): Promise<GroupsTotalAmountsResponse> => {
-  const params = { pageSize, next };
+  const params = { pageSize, next, isArchived };
   const response = await apiClient.get<GroupsTotalAmountsResponse>(
     "/groups/details",
     { params }
@@ -68,6 +69,7 @@ export const getGroup = async (groupId: string): Promise<Group> => {
   const response = await apiClient.get<void, AxiosResponse<Group>>(
     `/groups/${groupId}`
   );
+
   return response.data;
 };
 

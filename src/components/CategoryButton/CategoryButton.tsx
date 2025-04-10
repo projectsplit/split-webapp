@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { forwardRef } from "react";
 
 export const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
+
   ({ children, to, selected, onClick, backgroundcoloronselect, style }, ref) => {
     return (
       <StyledCategoryButton
@@ -21,7 +22,10 @@ export const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>
             {children}
           </NavLink>
         ) : (
-          <div className={selected ? "selected" : "unselected"}>
+          <div
+            className={selected ? "active" : "inactive"}
+            onClick={onClick}
+          >
             {children}
           </div>
         )}

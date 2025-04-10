@@ -21,7 +21,7 @@ export default function DeleteTransferConfirmation({
   };
 
   return (
-    <Confirmation onClick={handleDelete} menu={menu} isLoading={isPending}>
+    <Confirmation onClick={handleDelete} menu={menu} isLoading={isPending} header={"Confirmation"}>
       <div>Are you sure you want to delete this transfer?</div>
     </Confirmation>
   );

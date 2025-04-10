@@ -4,7 +4,7 @@ import { apiClient } from "../apiClients";
 import { Signal } from "@preact/signals-react";
 import { Group } from "../../types";
 
-export const useRemoveMemberFromGroup = (
+export const useRemoveGuestFromGroup = (
   groupId: string | undefined,
   noGroupError:Signal<string>,
   noMemberError:Signal<string>
@@ -12,28 +12,23 @@ export const useRemoveMemberFromGroup = (
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, string>({
-    mutationFn: (memberId) => {
+    mutationFn: (guestId) => {
       if (!groupId) {
         noGroupError.value = "No group found";
         return Promise.reject(new Error("No group found"));
       }
-      if (!memberId) {
+      if (!guestId) {
         noMemberError.value = "No member found";
         return Promise.reject(new Error("No member found"));
       }
-      return removeMember({memberId}, groupId);
-      // return new Promise((resolve) => {
-      //   setTimeout(() => {
-      //     resolve({ success: true, memberId, groupId }); // Simulate a successful response
-      //   }, 500); // Simulate a 500ms delay
-      // });
+      return removeGuest({guestId}, groupId);
     },
-    onSuccess: async (_,memberId:string) => {
+    onSuccess: async (_,guestId:string) => {
       const previousGroup:Group|undefined = queryClient.getQueryData([groupId]);
       if (previousGroup) {
         queryClient.setQueryData([groupId], {
           ...previousGroup,
-          members: previousGroup.members.filter((m) => m.id !== memberId),
+          guests: previousGroup.guests.filter((m) => m.id !== guestId),
         });
       }
       
@@ -49,13 +44,12 @@ export const useRemoveMemberFromGroup = (
 
 };
 
-
-const removeMember = async (
-  req: {memberId:string},
+const removeGuest = async (
+  req: {guestId:string},
   groupId: string
 ): Promise<void> => {
   const response = await apiClient.post<void, AxiosResponse<void>>(
-    `/groups/${groupId}/remove-member`,
+    `/groups/${groupId}/remove-guest`,
     req
   );
   return response.data;

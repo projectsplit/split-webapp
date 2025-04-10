@@ -22,7 +22,7 @@ export default function TopMenu({
 
   const handleNavigate = (title: string) => {
     if (title !== "" && title !== "Groups") {
-      navigate("/groups/active");
+      navigate("/groups");
     }
   };
   const isInGroup = title !== "" && title !== "Groups";

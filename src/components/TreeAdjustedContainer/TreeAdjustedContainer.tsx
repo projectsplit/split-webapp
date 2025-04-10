@@ -12,10 +12,10 @@ export default function TreeAdjustedContainer({
   items,
   iconfontsize,
   right,
-  onIconClick
+  onIconClick,
+  optionColor
 }: TreeAdjustedContainerProps) {
   const hasTreeComponent = items.length > 1 ? true : false;
-
   if (!hasTreeComponent) {
     return (
       <OptionsContainer
@@ -25,6 +25,7 @@ export default function TreeAdjustedContainer({
         iconfontsize={iconfontsize}
         right={right}
         onIconClick={onIconClick}
+        optionColor={optionColor}
       >
         {children}
         {items.map((item, index) => (
@@ -40,6 +41,7 @@ export default function TreeAdjustedContainer({
       optionname={optionname}
       iconfontsize={iconfontsize}
       right={right}
+      optionColor={optionColor}
     >
       {children}
       {hasOption && (
@@ -53,4 +55,4 @@ export default function TreeAdjustedContainer({
     </StyledTreeAdjustedContainer>
   );
 }
-//"chevron-forward-outline"
+

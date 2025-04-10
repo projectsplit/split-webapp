@@ -18,6 +18,8 @@ import useGroup from "../../api/services/useGroup";
 import { useEffect } from "react";
 import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTransferAnimation";
 import GroupOptions from "../Groups/GroupOptions/GroupOptions";
+import { AxiosError } from "axios";
+import { MdOutlineGroupOff } from "react-icons/md";
 
 export default function Group() {
   const menu = useSignal<string | null>(null);
@@ -26,14 +28,18 @@ export default function Group() {
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
 
-  const { userInfo, topMenuTitle,openGroupOptionsMenu } = useOutletContext<{
+  const { userInfo, topMenuTitle, openGroupOptionsMenu } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
-    openGroupOptionsMenu:Signal<boolean>
+    openGroupOptionsMenu: Signal<boolean>;
   }>();
+
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const timeZoneId = userInfo?.timeZone;
-  const { data: group, isFetching } = useGroup(groupid);
+  const { data: group, isFetching, isError, error } = useGroup(groupid);
+  const groupError = error as AxiosError;
+  // console.log(String(groupError?.request.response));
+
   const groupName = group?.name;
 
   useEffect(() => {
@@ -43,8 +49,25 @@ export default function Group() {
   return (
     <StyledGroup>
       {isFetching ? (
-        <div className="spinner">
-          <Spinner />
+        <div className="group">
+          <div className="spinner">
+            <Spinner />
+          </div>
+          <div className="bottomMenu">
+            {" "}
+            {<BottomMainMenu onClick={() => (menu.value = null)} />}
+          </div>
+        </div>
+      ) : isError ? (
+        <div className="group">
+          <div className="noData">
+            <div className="msg">No Group was found</div>
+            <MdOutlineGroupOff className="icon" />
+          </div>
+          <div className="bottomMenu">
+            {" "}
+            {<BottomMainMenu onClick={() => (menu.value = null)} />}
+          </div>
         </div>
       ) : (
         <div className="group">
@@ -55,6 +78,7 @@ export default function Group() {
               cat2: "Transfers",
               cat3: "Debts",
             }}
+            navLinkUse={true}
           />
           <Outlet context={{ userInfo, group, showBottomBar }} />
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}

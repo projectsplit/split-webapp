@@ -4,10 +4,9 @@ import Confirmation from "./Confirmation";
 import { useArchiveGroup } from "../../../api/services/useArchiveGroup";
 import { Signal, useSignal } from "@preact/signals-react";
 
-export default function ConfirmArchiveGroup({
+export default function ConfirmUnArchiveGroup({
   menu,
   groupId,
-  openGroupOptionsMenu,
 }: ConfirmArchiveGroupProps) {
   const noGroupFoundError = useSignal<string>("");
   const navigate = useNavigate();
@@ -22,9 +21,8 @@ export default function ConfirmArchiveGroup({
   );
 
   const handleConfirm = () => {
-    archiveGroup(true);
-    openGroupOptionsMenu.value = false;
-    activeGroupCatAsState.value = "Archived";
+    archiveGroup(false);
+    activeGroupCatAsState.value = "Active";
     navigate("/groups");
   };
 
@@ -36,12 +34,7 @@ export default function ConfirmArchiveGroup({
       header={"Confirmation"}
     >
       <div className="archiveGroupText">
-        <span>
-          Are you sure you want to archive this group? Once archived, members
-          won’t be able to add, edit, or delete expenses and transfers.{" "}
-        </span>
-        <span> You can always un-archive the group later if needed. </span>
-        <span className="handshake">🤝</span>
+        <span>Would you like to un-archive this group? </span>
       </div>
     </Confirmation>
   );

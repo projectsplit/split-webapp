@@ -1,24 +1,26 @@
-import styled from "styled-components";
+import { styled } from "styled-components";
 
-export const StyledSearchUsersToInvite = styled.div`
+export const StyledRemoveUserFromGroup = styled.div`
   position: fixed;
   font-size: 1.125rem;
+  left: 0;
+  right: 0;
+  margin: 0;
   bottom: 0;
   width: 100%;
   height: 100%;
+  overflow: auto;
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.layer2};
-  z-index: 3;
+  /* z-index: 1; */
   display: flex;
   flex-direction: column;
-
   .fixed-header-container {
     position: sticky;
     top: 0;
-    z-index: 4;
+    z-index: 0;
     background-color: ${({ theme }) => theme.layer2};
   }
-
   .header {
     padding: 0.875rem;
     display: flex;
@@ -59,13 +61,34 @@ export const StyledSearchUsersToInvite = styled.div`
       margin-right: 0.9375rem;
     }
   }
-
   .scrollable-content {
     overflow-y: auto;
     flex: 1;
-    padding-top: 10px; 
-  }
+    padding-top: 10px;
 
+    .members {
+      display: flex;
+      flex-direction: column;
+      padding: 0.875rem;
+      font-size: 15px;
+
+      .memberWithButton {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 19px;
+        .guestWrap {
+          display: flex;
+          flex-direction: column;
+          .guest {
+            color: ${({ theme }) => theme.textInactiveColor};
+            font-size: 11px;
+          }
+        }
+      }
+    }
+  }
   .input {
     display: flex;
     width: 100%;
@@ -79,34 +102,6 @@ export const StyledSearchUsersToInvite = styled.div`
       padding-top: 7px;
       padding-bottom: 7px;
       font-size: 16px;
-    }
-  }
-
-  .search-result {
-    margin-top: 0.625rem;
-    margin-bottom: 0.625rem;
-    display: flex;
-    flex-direction: column;
-    padding: 0 0.875rem;
-
-    .top-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .action-button {
-        border: none;
-        border-radius: 4px;
-        user-select: none;
-        color: ${({ theme, color }) => (color ? color : theme.text)};
-        display: flex;
-      }
-    }
-
-    .bottom-row {
-      display: flex;
-      color: ${({ theme }) => theme.secondaryTextColor};
-      font-size: 14px;
     }
   }
 `;

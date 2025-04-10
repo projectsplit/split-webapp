@@ -57,7 +57,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
 
-  const { mutate: createExpenseMutation, isPending } = useExpense(menu);
+  const { mutate: createExpenseMutation, isPending } = useExpense(menu, group.id);
 
   const submitExpense = () => {
     setShowAmountError(true);

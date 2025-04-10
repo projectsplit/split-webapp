@@ -1,26 +1,37 @@
 import { useNavigate } from "react-router-dom";
 import { ConfirmLeaveGroupProps } from "../../../interfaces";
 import Confirmation from "./Confirmation";
-import { useRemoveMemberFromGroup } from "../../../api/services/useRemoveMemberFromGroup";
 import { useSignal } from "@preact/signals-react";
+import { useLeaveGroup } from "../../../api/services/useLeaveGroup";
+import { useMostRecentGroup } from "../../../api/services/useMostRecentGroup";
 
 export default function ConfirmLeaveGroup({
   menu,
   groupId,
-  memberId,
+   openGroupOptionsMenu
 }: ConfirmLeaveGroupProps) {
   const noGroupError = useSignal<string>("");
   const noMemberError = useSignal<string>("");
   const navigate = useNavigate();
 
+  const { mutate: leaveGroupMutation, isPending } = useLeaveGroup(
+    menu,
+    groupId,
+    noGroupError,
+    navigate
+  );
 
+ const updateMostRecentGroupId = useMostRecentGroup();
 
   const handleConfirm = () => {
-    
+    //TODO: mutation to update mostRecentGroupId for user info
+   // updateMostRecentGroupId.mutate("")
+    leaveGroupMutation();
+    openGroupOptionsMenu.value=false
   };
 
   return (
-    <Confirmation menu={menu} isLoading={false} onClick={handleConfirm}>
+    <Confirmation menu={menu} isLoading={isPending} onClick={handleConfirm} header={"Confirmation"}>
       <div className="leaveGroupText">
         {noGroupError.value === "" && noMemberError.value === "" ? (
           <span>

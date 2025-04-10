@@ -1,23 +1,22 @@
 import { CSSTransition } from "react-transition-group";
 import { useRef } from "react";
 import { ConfirmArchiveGroupAnimationProps } from "../../../interfaces";
-import ConfirmArchiveGroup from "../Confirmations/ConfirmArchiveGroup";
+import ConfirmUnArchiveGroup from "../Confirmations/ConfirmUnArchiveGroup";
 
-export default function ConfirmArchiveGroupAnimation({
+export default function ConfirmUnArchiveGroupAnimation({
   menu,
-  groupId,
-  openGroupOptionsMenu
+  groupId
 }: ConfirmArchiveGroupAnimationProps) {
   const nodeRef = useRef(null);
   return (
     <CSSTransition
-      in={menu.value === "archiveGroup"}
+      in={menu.value === "unarchiveGroup"}
       timeout={100}
       classNames="infoBox"
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <ConfirmArchiveGroup menu={menu} groupId={groupId} openGroupOptionsMenu={openGroupOptionsMenu}/>
+      <ConfirmUnArchiveGroup menu={menu} groupId={groupId} />
     </CSSTransition>
   );
 }

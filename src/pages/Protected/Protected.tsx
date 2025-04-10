@@ -28,6 +28,7 @@ const Protected: React.FC = () => {
   const topMenuTitle = useSignal<string>("");
   const menu = useSignal<string | null>(null);
   const openGroupOptionsMenu = useSignal<boolean>(false);
+  const activeGroupCatAsState = useSignal<string>("Active");
 
   const { latest } = useMemo(() => {
     const latest = getLatestCreated(userInvitations);
@@ -45,7 +46,7 @@ const Protected: React.FC = () => {
         latestTimeStamp={latest}
         openGroupOptionsMenu={openGroupOptionsMenu}
       />
-      <Outlet context={{ userInfo, topMenuTitle,openGroupOptionsMenu }} />
+      <Outlet context={{ userInfo, topMenuTitle,openGroupOptionsMenu,activeGroupCatAsState }} />
       <MenuAnimationBackground menu={menu} />
       <NotificationsMenuAnimation
         menu={menu}

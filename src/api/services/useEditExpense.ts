@@ -6,7 +6,8 @@ import { Signal } from "@preact/signals-react";
 
 export const useEditExpense = (
   menu: Signal<string | null>,
-  selectedExpense: Signal<ExpenseResponseItem | null>
+  selectedExpense: Signal<ExpenseResponseItem | null>,
+  groupId:string
 ) => {
   const queryClient = useQueryClient();
 
@@ -24,6 +25,10 @@ export const useEditExpense = (
       await queryClient.refetchQueries({ queryKey: ["groups"], exact: false });
       await queryClient.refetchQueries({
         queryKey: ["mostRecentGroup"],
+        exact: false,
+      });
+      await queryClient.refetchQueries({
+        queryKey: [groupId],
         exact: false,
       });
     },

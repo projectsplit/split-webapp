@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledGroups = styled.div`
+export const StyledGroupsContainer = styled.div`
   overflow: auto;
   box-sizing: border-box;
   width: 100%;

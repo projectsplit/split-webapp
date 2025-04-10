@@ -162,6 +162,7 @@ export interface OptionsContainerProps {
   iconfontsize?: number;
   right?: number;
   onIconClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  optionColor?: string;
 }
 export interface GroupOptionsProps {
   group: Group | undefined;
@@ -176,6 +177,7 @@ export interface TreeAdjustedContainerProps {
   iconfontsize?: number;
   right?: number;
   onIconClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  optionColor?: string;
 }
 
 export interface NotificationsBellProps {
@@ -296,7 +298,7 @@ export interface CategoryButtonProps {
   to?: string;
   children: any;
   selected?: boolean;
-  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  onClick?: React.MouseEventHandler<HTMLElement>;
   backgroundcoloronselect?: string;
   style?: CSSProperties;
   key?: any;
@@ -305,6 +307,8 @@ export interface CategoryButtonProps {
 export interface CategorySelectorProps {
   categories: { cat1?: string; cat2?: string; cat3?: string };
   activeCat: string;
+  navLinkUse:boolean;
+  activeCatAsState?:Signal<string>
   // onCategoryChange: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -582,27 +586,43 @@ export interface ConfirmationProps {
   menu: Signal<string | null>;
   isLoading: boolean;
   onClick: ((event: React.MouseEvent<HTMLButtonElement>) => void) | undefined;
+  header: string;
 }
 
-export interface ConfirmArchiveGroupAnimationProps extends MenuProps {}
+export interface ConfirmArchiveGroupAnimationProps extends MenuProps {
+  groupId: string | undefined;
+  openGroupOptionsMenu: Signal<boolean>;
+}
 
 export interface ConfirmLeaveGroupAnimationProps extends MenuProps {
   groupId: string | undefined;
   memberId: string | undefined;
+  openGroupOptionsMenu: Signal<boolean>;
 }
 
-export interface ConfirmArchiveGroupProps extends MenuProps {}
+export interface ConfirmArchiveGroupProps extends MenuProps {
+  groupId: string | undefined;
+  openGroupOptionsMenu: Signal<boolean>;
+}
 
 export interface ConfirmLeaveGroupProps extends MenuProps {
   groupId: string | undefined;
   memberId: string | undefined;
+  openGroupOptionsMenu: Signal<boolean>;
 }
-
+export interface RemoveGuestWarningProps extends MenuProps {}
+export interface RemoveGuestWarningAnimationProps extends MenuProps{}
 export interface RenameGroupMenuProps extends MenuProps {
   groupId: string | undefined;
-  groupName:string| undefined
+  groupName: string | undefined;
 }
 export interface RenameGroupAnimationAnimationProps extends MenuProps {
   groupId: string | undefined;
-  groupName:string| undefined
+  groupName: string | undefined;
+}
+
+export interface RemoveUserFromGroupMenuProps {
+  openRemoveUserMenu: Signal<boolean>;
+  groupId: string | undefined;
+  userInfo: UserInfo;
 }
