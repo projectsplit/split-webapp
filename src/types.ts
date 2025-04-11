@@ -171,6 +171,7 @@ export type Guest = {
   name: string;
   joined: Date;
 };
+export type GroupMember = Member | Guest;
 
 export type PickerMember = {
   id: string;

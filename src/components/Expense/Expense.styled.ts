@@ -11,7 +11,7 @@ export const StyledExpense = styled.div.withConfig({
   background-color: ${({ theme }) => theme.layer2};
   gap: 1rem;
   box-shadow: ${({ theme, userAmount }) =>
-    `0 0 0 1px ${userAmount === 0 ? theme.lightBorder : theme.pinkish}`};
+    `0 0 0 1px ${userAmount === 0 ? theme.lightBorder : theme.lightBorder}`};
   overflow: auto;
   .topRow {
     display: flex;
