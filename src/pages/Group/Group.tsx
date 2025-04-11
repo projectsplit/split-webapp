@@ -34,6 +34,7 @@ export default function Group() {
     openGroupOptionsMenu: Signal<boolean>;
   }>();
 
+  console.log(openGroupOptionsMenu.value)
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const timeZoneId = userInfo?.timeZone;
   const { data: group, isFetching, isError, error } = useGroup(groupid);
@@ -57,6 +58,7 @@ export default function Group() {
             {" "}
             {<BottomMainMenu onClick={() => (menu.value = null)} />}
           </div>
+          {openGroupOptionsMenu.value && <GroupOptions group={group} />}
         </div>
       ) : isError ? (
         <div className="group">

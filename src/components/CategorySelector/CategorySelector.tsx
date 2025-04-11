@@ -14,17 +14,24 @@ export const CategorySelector = ({
 
   const isFirstRender = useRef(true);
   const categoryKeys = Object.keys(categories);
-  const initialIndex = Object.values(categories).indexOf(
-    navLinkUse
+  const getInitialActiveCategory = () => {
+    const currentValue = navLinkUse
       ? activeCat.charAt(0).toUpperCase() + activeCat.slice(1)
       : activeCatAsState
-      ? activeCatAsState.value.charAt(0).toUpperCase() +
-        activeCatAsState.value.slice(1)
-      : activeCat.charAt(0).toUpperCase() + activeCat.slice(1)
-  );
-  const [activeCategory, setActiveCategory] = useState(
-    initialIndex !== -1 ? categoryKeys[initialIndex] : categoryKeys[0]
-  );; // finds if activeCat is cat1 cat2 or cat3 from categories e.g expenses, transfers, debts
+      ? activeCatAsState.value.charAt(0).toUpperCase() + activeCatAsState.value.slice(1)
+      : activeCat.charAt(0).toUpperCase() + activeCat.slice(1);
+    const initialIndex = Object.values(categories).indexOf(currentValue);
+    return initialIndex !== -1 ? categoryKeys[initialIndex] : categoryKeys[0];
+  };
+
+  const [activeCategory, setActiveCategory] = useState(getInitialActiveCategory);
+
+  useEffect(() => {
+    const updatedCategory = getInitialActiveCategory();
+    if (updatedCategory !== activeCategory) {
+      setActiveCategory(updatedCategory);
+    }
+  }, [activeCatAsState?.value, activeCat]);
 
   const [indicatorPosition, setIndicatorPosition] = useState({
     left: "0px",
@@ -60,7 +67,7 @@ export const CategorySelector = ({
 
     const updateIndicator = () => {
       const activeButton = categoryRefs[activeCategory]?.current;
-
+   
       if (activeButton) {
         const { offsetLeft, clientWidth } = activeButton;
         const reducedWidth = clientWidth * 0.5;
@@ -72,19 +79,6 @@ export const CategorySelector = ({
         });
       }
     };
-
-    // setActiveCategory(
-    //   Object.keys(categories)[
-    //     Object.values(categories).indexOf(
-    //       navLinkUse
-    //       ? activeCat.charAt(0).toUpperCase() + activeCat.slice(1)
-    //       : activeCatAsState
-    //       ? activeCatAsState.value.charAt(0).toUpperCase() +
-    //         activeCatAsState.value.slice(1)
-    //       : activeCat.charAt(0).toUpperCase() + activeCat.slice(1)
-    //     )
-    //   ]
-    // );
 
     updateIndicator();
     window.addEventListener("resize", updateIndicator);

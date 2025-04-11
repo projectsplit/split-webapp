@@ -68,7 +68,7 @@ export default function ArchivedGroups() {
           />
         </div>
       )}
-      <ConfirmUnArchiveGroupAnimation menu={menu} groupId={groupId.value} openGroupOptionsMenu={openGroupOptionsMenu} />
+      {/* <ConfirmUnArchiveGroupAnimation menu={menu} groupId={groupId.value} openGroupOptionsMenu={openGroupOptionsMenu} /> */}
     </StyledGroups>
   );
 }

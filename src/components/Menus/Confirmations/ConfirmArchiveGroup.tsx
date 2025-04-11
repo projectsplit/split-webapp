@@ -23,9 +23,10 @@ export default function ConfirmArchiveGroup({
 
   const handleConfirm = () => {
     archiveGroup(true);
+    navigate("/groups");
     openGroupOptionsMenu.value = false;
     activeGroupCatAsState.value = "Archived";
-    navigate("/groups");
+  
   };
 
   return (

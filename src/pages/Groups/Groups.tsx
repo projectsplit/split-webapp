@@ -1,11 +1,9 @@
 import { StyledGroupsContainer } from "./GroupsContainer.styled";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
-// import MenuAnimationBackground from "../../components/MenuAnimations/MenuAnimationBackground";
 import CreateGroupAnimation from "../../components/Menus/MenuAnimations/CreateGroupAnimation";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { useEffect } from "react";
-import { UserInfo } from "../../types";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { getGroupsTotalAmounts } from "../../api/services/api";
 import { useMostRecentGroup } from "../../api/services/useMostRecentGroup";
@@ -17,17 +15,19 @@ import Sentinel from "../../components/Sentinel";
 import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
 import { GoArchive } from "react-icons/go";
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
+import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
+import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 
 export default function Groups() {
   const queryClient = useQueryClient();
   const menu = useSignal<string | null>(null);
   const currencyMenu = useSignal<string | null>(null);
+  const groupIdClicked = useSignal<string>("")
 
-  const { topMenuTitle,activeGroupCatAsState } = useOutletContext<{
+  const { topMenuTitle, activeGroupCatAsState,openGroupOptionsMenu } = useOutletContext<{
     topMenuTitle: Signal<string>;
-    userInfo: UserInfo;
     openGroupOptionsMenu: Signal<boolean>;
-    activeGroupCatAsState:Signal<string>;
+    activeGroupCatAsState: Signal<string>;
   }>();
 
   const navigate = useNavigate();
@@ -46,28 +46,19 @@ export default function Groups() {
       initialPageParam: "",
     });
 
-  // useEffect(() => {
-  //   queryClient.invalidateQueries({
-  //     queryKey: ["groups", "active"],
-  //     exact: true,
-  //   });
-  //   queryClient.invalidateQueries({
-  //     queryKey: ["groups", "archived"],
-  //     exact: true,
-  //   });
-  // }, [activeGroupCatAsState.value]);
+  useEffect(() => {
+    topMenuTitle.value = "Groups";
 
-    useEffect(() => {
-    queryClient.invalidateQueries({
+    queryClient.refetchQueries({
       queryKey: ["groups", "active"],
       exact: true,
     });
-    queryClient.invalidateQueries({
+    queryClient.refetchQueries({
       queryKey: ["groups", "archived"],
       exact: true,
     });
-  }, []);
- 
+  }, [activeGroupCatAsState.value]);
+
   const groups = data?.pages.flatMap((p) => p.groups);
   const updateMostRecentGroupId = useMostRecentGroup();
 
@@ -76,15 +67,15 @@ export default function Groups() {
     updateMostRecentGroupId.mutate(id);
   };
 
-  useEffect(() => {
-    topMenuTitle.value = "Groups";
-  }, []);
-
   const filteredGroups = groups?.filter((g) =>
     activeGroupCatAsState.value === "Active" ? !g.isArchived : g.isArchived
   );
-  
-//TODO when backend is ready try to remove activeGroupCatAsState.value.toLowerCase() from dependency
+
+  const onIconClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, groupId:string) => {
+    e.stopPropagation();
+    groupIdClicked.value=groupId
+    menu.value="unarchiveGroup"
+  };
 
   return (
     <StyledGroupsContainer>
@@ -120,11 +111,12 @@ export default function Groups() {
               )
             ) : null}
             {filteredGroups?.map((g: any) => (
-              
               <div key={g.id}>
                 <TreeAdjustedContainer
                   onClick={() => onGroupClickHandler(g.id, g.name)}
-                  hasOption={false}
+                  hasOption={
+                    activeGroupCatAsState.value === "Archived" ? true : false
+                  }
                   optionname={
                     activeGroupCatAsState.value === "Archived"
                       ? "file-tray-full-outline"
@@ -135,6 +127,13 @@ export default function Groups() {
                   items={TreeItemBuilderForHomeAndGroups(g?.details)}
                   optionColor={
                     activeGroupCatAsState.value === "Archived" ? "#D79244" : ""
+                  }
+                  onIconClick={(
+                    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+                  ) =>
+                    activeGroupCatAsState.value === "Archived"
+                      ? onIconClick(e,g.id)
+                      : null
                   }
                 >
                   <div className="groupName">{g.name}</div>
@@ -150,9 +149,10 @@ export default function Groups() {
           </div>
         )}
       </StyledGroups>
-
+      <MenuAnimationBackground menu={menu}/>
       <BottomMainMenu onClick={() => (menu.value = "createGroup")} />
       <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
+      <ConfirmUnArchiveGroupAnimation menu={menu} groupId={groupIdClicked.value} openGroupOptionsMenu={openGroupOptionsMenu}/>
     </StyledGroupsContainer>
   );
 }
