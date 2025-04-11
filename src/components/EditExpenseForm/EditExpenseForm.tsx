@@ -36,7 +36,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   if (!expense) {
     return <div>Error: Expense not found.</div>;
   }
-  
+
   const [participants, setParticipants] = useState<PickerMember[]>(
     createParticipantPickerArray(group, expense)
   );
@@ -46,24 +46,20 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
     createPayerPickerArray(group, expense)
   );
   const [payersError, setPayersError] = useState<string>("");
-
   const [currencySymbol, setCurrencySymbol] = useState<string>(expense.currency);
   const [amount, setAmount] = useState<string>(expense.amount);
   const [amountError, setAmountError] = useState<string>("");
   const [showAmountError, setShowAmountError] = useState<boolean>(false);
-
   const [description, setDescription] = useState<string>(expense.description);
   const [labels, setLabels] = useState<Label[]>(expense.labels);
-  const [expenseTime, setExpenseTime] = useState<string>(
-    expense.creationTime.toISOString()
-  );
+  const [expenseTime, setExpenseTime] = useState<string>(expense.creationTime.toISOString());
   const location = useSignal<GeoLocation | undefined>(expense?.location);
 
   const displayedAmount = useSignal<string>(expense.amount);
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
-  
-  const { mutate: editExpenseMutation, isPending } = useEditExpense(menu,selectedExpense, group.id);
+
+  const { mutate: editExpenseMutation, isPending } = useEditExpense(menu, selectedExpense, group.id);
 
   const submitExpense = () => {
     setShowAmountError(true);
@@ -80,7 +76,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
     if (!amountIsValid(amount, setAmountError)) return;
 
     const createEditExpenseRequest: CreateEditExpenseRequest = {
-      expenseId:expense.id,
+      expenseId: expense.id,
       amount: Number(amount),
       currency: currencySymbol,
       payments: payers
@@ -132,15 +128,15 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
         !areParticipantsNumbersValid
           ? "Amounts must be positive"
           : isParticipantsSumInvalid
-          ? "Amounts must add up to total"
-          : ""
+            ? "Amounts must add up to total"
+            : ""
       );
       setPayersError(
         !arePayersNumbersValid
           ? "Amounts must be positive"
           : isPayersSumInvalid
-          ? "Amounts must add up to total"
-          : ""
+            ? "Amounts must add up to total"
+            : ""
       );
     }, 200);
 
@@ -218,14 +214,13 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
       <LocationPicker location={location} isMapOpen={isMapOpen} />
-      {/* <DateTime
+      <DateTime
         selectedDateTime={expenseTime}
         setSelectedDateTime={setExpenseTime}
         timeZoneId={timeZoneId}
-      /> */}
+      />
       <div className="spacer"></div>
       <MyButton fontSize="16" onClick={submitExpense} isLoading={isPending}>
         Submit

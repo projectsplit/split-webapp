@@ -234,11 +234,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
       <LocationPicker location={location} isMapOpen={isMapOpen} />
-      {/* <DateTime
+      <DateTime
         selectedDateTime={expenseTime}
         setSelectedDateTime={setExpenseTime}
         timeZoneId={timeZoneId}
-      /> */}
+      />
       <div className="spacer"></div>
       <MyButton fontSize="16" onClick={submitExpense} isLoading={isPending}>
         Submit
