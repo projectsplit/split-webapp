@@ -1,5 +1,4 @@
 import currency from "currency.js";
-import { DateTime } from "luxon";
 
 export type RefreshTokenResponse = {
   accessToken: string;
@@ -32,7 +31,14 @@ export type UserInfo = {
 };
 
 export type GetLabelsResponse = {
-  labels: string[];
+  labels: GetLabelsResponseItem[];
+};
+
+export type GetLabelsResponseItem = {
+  id: string;
+  text: string;
+  color: string;
+  count: number;
 };
 
 export type ExpenseItem = {
@@ -84,7 +90,11 @@ export type FormExpense = {
   payers: Payer[];
   participants: Participant[];
   expenseTime: Date;
-  labels: string[];
+  labels: {
+    id: string,
+    text: string,
+    color: string
+  }[];
   creationTime: Date;
   lastUpdateTime: Date;
   location: GeoLocation | undefined;
@@ -102,7 +112,11 @@ export type ExpenseResponseItem = {
   currency: string;
   payments: Payment[];
   shares: Share[];
-  labels: string[];
+  labels: {
+    id: string,
+    text: string,
+    color: string
+  }[];
   location: GeoLocation | undefined;
 };
 
@@ -182,12 +196,11 @@ export type PickerMember = {
   order: number;
 };
 
-// export type Label = {
-//   id: string;
-//   text: string;
-//   color: string;
-// };
-export type Label = string;
+export type Label = {
+  id: string,
+  text: string,
+  color: string
+};
 
 export type CreateExpenseRequest = {
   amount: number;
@@ -202,10 +215,12 @@ export type CreateExpenseRequest = {
     amount: number;
   }[];
   description: string;
-  labelIds: string[];
   location: GeoLocation | null;
   occurred: string;
-  labels: string[];
+  labels: {
+    text: string,
+    color: string
+  }[];
 };
 
 export type CreateEditExpenseRequest = {
@@ -221,10 +236,12 @@ export type CreateEditExpenseRequest = {
     amount: number;
   }[];
   description: string;
-  labelIds: string[];
   location: GeoLocation | null;
   occurred: string;
-  labels: string[];
+  labels: {
+    text: string,
+    color: string
+  }[];
 };
 
 export type GeoLocation = {

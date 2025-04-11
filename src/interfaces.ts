@@ -1,7 +1,6 @@
 import { CSSProperties } from "react";
 import {
   Debt,
-  DebtsResponse,
   ExpenseResponseItem,
   FormExpense,
   Frequency,
@@ -67,7 +66,11 @@ export interface DetailedExpenseProps {
   occurred: string;
   created: string;
   description: string;
-  labels: string[];
+  labels: {
+    id: string,
+    text: string,
+    color: string
+  }[];
   location: GeoLocation | undefined;
   selectedExpense: Signal<ExpenseResponseItem | null>;
   creator: string;
@@ -285,8 +288,8 @@ export interface TimeZoneOptionsAnimationProps {
   userInfo: UserInfo | undefined;
 }
 export interface LabelPickerProps {
-  labels: string[];
-  setLabels: React.Dispatch<React.SetStateAction<string[]>>;
+  labels: Label[];
+  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
   groupId: string;
 }
 export interface BottomMenuProps {
@@ -504,6 +507,7 @@ export interface SettleUpOptionsProps {
 export interface PillProps {
   title: string;
   color: string;
+  textColor: string;
   closeButton: boolean;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onClose?: (event: React.MouseEvent<HTMLDivElement>) => void;

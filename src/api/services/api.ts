@@ -101,20 +101,6 @@ export const getUserId = async () => {
 };
 
 
-
-export const getLabels = async (
-  groupId: string,
-  limit: number,
-  query?: string
-) => {
-  const params = { groupId, limit, query };
-  const response = await apiClient.get<void, AxiosResponse<GetLabelsResponse>>(
-    "/expenses/labels",
-    { params }
-  );
-  return response.data;
-};
-
 export const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
   const response = await apiClient.get<BudgetInfoResponse>(
     `/budget/budgetinfo`

@@ -93,7 +93,7 @@ export const StyledLabelPicker = styled.div<{
     max-height: 300px;
     top: calc(100% - 12px);
 
-    .suggested-label {
+    .suggested-label-container {
       animation: ${fadeIn} 0.15s linear;
       display: flex;
       flex-direction: row;
@@ -101,6 +101,17 @@ export const StyledLabelPicker = styled.div<{
       align-items: center;
       padding: 10px 14px;
       box-sizing: content-box;
+      
+      .suggested-label-text {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        border-radius: 2px;
+        padding: 2px 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 700;
+      }
     }
   }
 `;
