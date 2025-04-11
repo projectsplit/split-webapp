@@ -5,10 +5,10 @@ import { NotificationsMenuAnimationProps } from "../../../interfaces";
 
 export default function NotificationsMenuAnimation({
   menu,
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
-  userInvitations,
+  // fetchNextPage,
+  // hasNextPage,
+  // isFetchingNextPage,
+  // userInvitations,
   userInfo
 }: NotificationsMenuAnimationProps) {
   const nodeRef = useRef(null);
@@ -22,10 +22,10 @@ export default function NotificationsMenuAnimation({
     >
       <NotificationsMenu
         menu={menu}
-        fetchNextPage={fetchNextPage}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-        userInvitations={userInvitations}
+        // fetchNextPage={fetchNextPage}
+        // hasNextPage={hasNextPage}
+        // isFetchingNextPage={isFetchingNextPage}
+        // userInvitations={userInvitations}
         userInfo={userInfo}
       />
     </CSSTransition>

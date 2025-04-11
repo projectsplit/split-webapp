@@ -342,7 +342,6 @@ export interface TopMenuProps {
   menu: Signal<string | null>;
   username: string | undefined;
   hasNewerNotifications: boolean;
-  latestTimeStamp: string | undefined;
   openGroupOptionsMenu: Signal<boolean>;
 }
 
@@ -520,31 +519,31 @@ export interface SearchUsersToInviteProps extends MenuProps {
 export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
 
 export interface NotificationsMenuProps extends MenuProps {
-  fetchNextPage: (
-    options?: FetchNextPageOptions
-  ) => Promise<
-    InfiniteQueryObserverResult<
-      InfiniteData<GetUserInvitationsResponse, unknown>,
-      Error
-    >
-  >;
-  isFetchingNextPage: boolean;
-  hasNextPage: boolean;
-  userInvitations: GetUserInvitationsResponseItem[] | undefined;
+  // fetchNextPage: (
+  //   options?: FetchNextPageOptions
+  // ) => Promise<
+  //   InfiniteQueryObserverResult<
+  //     InfiniteData<GetUserInvitationsResponse, unknown>,
+  //     Error
+  //   >
+  // >;
+  // isFetchingNextPage: boolean;
+  // hasNextPage: boolean;
+  // userInvitations: GetUserInvitationsResponseItem[] | undefined;
   userInfo: UserInfo | undefined;
 }
 export interface NotificationsMenuAnimationProps extends MenuProps {
-  fetchNextPage: (
-    options?: FetchNextPageOptions
-  ) => Promise<
-    InfiniteQueryObserverResult<
-      InfiniteData<GetUserInvitationsResponse, unknown>,
-      Error
-    >
-  >;
-  isFetchingNextPage: boolean;
-  hasNextPage: boolean;
-  userInvitations: GetUserInvitationsResponseItem[] | undefined;
+  // fetchNextPage: (
+  //   options?: FetchNextPageOptions
+  // ) => Promise<
+  //   InfiniteQueryObserverResult<
+  //     InfiniteData<GetUserInvitationsResponse, unknown>,
+  //     Error
+  //   >
+  // >;
+  // isFetchingNextPage: boolean;
+  // hasNextPage: boolean;
+  // userInvitations: GetUserInvitationsResponseItem[] | undefined;
   hasNewerNotifications: boolean;
   userInfo: UserInfo | undefined;
 }

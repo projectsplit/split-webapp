@@ -6,17 +6,32 @@ import { IoIosNotificationsOff } from "react-icons/io";
 import Sentinel from "../../Sentinel";
 import Invitation from "../../Invitation/Invitation";
 import Separator from "../../Separator/Separator";
-
+import { useEffect, useMemo } from "react";
+import { useLastViewedNotification } from "../../../api/services/useLastViewedNotification";
+import { useGetUserInvitations } from "../../../api/services/useGetUserInvitations";
 
 export default function NotificationsMenu({
   menu,
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
-  userInvitations,
-  userInfo
+  userInfo,
 }: NotificationsMenuProps) {
   const timeZoneId = userInfo?.timeZone;
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
+    useGetUserInvitations(10);
+
+  const userInvitations = data?.pages.flatMap((p) => p.invitations);
+
+  const { latest } = useMemo(() => {
+    const latest = getLatestCreated(userInvitations);
+
+    return { latest };
+  }, [userInvitations]);
+
+  const { mutate: updateNotification } = useLastViewedNotification(10);
+  useEffect(() => {
+    updateNotification(latest);
+  }, []);
+
   return (
     <StyledNotificationsMenu>
       <div className="headerSeparator">
@@ -56,7 +71,7 @@ export default function NotificationsMenu({
                     receiverId: x.receiverId,
                     senderId: x.senderId,
                   }}
-                timeZoneId={timeZoneId}
+                  timeZoneId={timeZoneId}
                 />
               </div>
             ))}
@@ -70,4 +85,23 @@ export default function NotificationsMenu({
       </div>
     </StyledNotificationsMenu>
   );
+}
+
+function getLatestCreated<T extends { created: string }>(
+  ...arrays: (T[] | undefined)[]
+): string | undefined {
+  const combinedItems = arrays.reduce<T[]>(
+    (acc, curr) => acc.concat(curr ?? []),
+    []
+  );
+
+  if (combinedItems.length === 0) {
+    return undefined;
+  }
+
+  const latestTimestamp = Math.max(
+    ...combinedItems.map((item) => new Date(item.created).getTime())
+  );
+
+  return new Date(latestTimestamp).toISOString();
 }

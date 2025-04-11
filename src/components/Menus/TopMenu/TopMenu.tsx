@@ -12,7 +12,6 @@ export default function TopMenu({
   menu,
   username,
   hasNewerNotifications,
-  latestTimeStamp,
   openGroupOptionsMenu,
 }: TopMenuProps) {
   const navigate = useNavigate();
@@ -26,7 +25,7 @@ export default function TopMenu({
     }
   };
   const isInGroup = title !== "" && title !== "Groups";
-  const updateNotification = useLastViewedNotification(10);
+  //const updateNotification = useLastViewedNotification(10);
 
   return (
     <StyledTopMenu title={title}>
@@ -79,7 +78,6 @@ export default function TopMenu({
           onClick={() => {
             menu.value = "notifications";
             setVisuallyShowNotification(false);
-            updateNotification.mutate(latestTimeStamp);
           }}
         >
           {username ? <NotificationsBell /> : null}

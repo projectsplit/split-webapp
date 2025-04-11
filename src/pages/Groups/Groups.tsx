@@ -119,7 +119,7 @@ export default function Groups() {
                   }
                   optionname={
                     activeGroupCatAsState.value === "Archived"
-                      ? "file-tray-full-outline"
+                      ? "arrow-undo-outline"
                       : null
                   }
                   iconfontsize={30}
