@@ -3,16 +3,16 @@ import { StyledPill } from "./Pill.styled";
 
 import { IoClose } from "react-icons/io5";
 
-export default function Pill({ title, color, closeButton, onClick,onClose,fontSize }: PillProps) {
+export default function Pill({ title, color, closeButton, onClick, onClose, fontSize, textColor }: PillProps) {
   return (
-    <StyledPill color={color} fontSize={fontSize}>
+    <StyledPill color={color} fontSize={fontSize} textColor={textColor}>
       <div className="titleAndCloseButton" onClick={onClick}>
         <div className="title">{title}</div>
         {closeButton ? (
           <div className="closeSign" onClick={(e) => {
-            e.stopPropagation(); 
+            e.stopPropagation();
             if (onClose) {
-              onClose(e); 
+              onClose(e);
             }
           }}>
             <IoClose />

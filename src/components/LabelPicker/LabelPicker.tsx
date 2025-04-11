@@ -1,25 +1,51 @@
 import { useEffect, useRef, useState } from "react";
 import AutoWidthInput from "../AutoWidthInput";
-import { useQuery } from "@tanstack/react-query";
 import { IoClose } from "react-icons/io5";
-import useDebounce from "../../hooks/useDebounce";
-import { getLabels } from "../../api/services/api";
 import { StyledLabelPicker } from "./LabelPicker.styled";
 import { LabelPickerProps } from "../../interfaces";
 import { FiChevronDown } from "react-icons/fi";
+import { useGetGroupLabels } from "../../api/services/useGetGroupLabels";
+import { Label } from "../../types";
 
 const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
+
+  const labelColors: { [key: string]: string } = {
+    color1: "#9dc3ff",
+    color2: "#ff9baf",
+    color3: "#ede478",
+    color4: "#6ed7b9",
+    color5: "#ffa1ef",
+    color6: "#c2a7ff",
+    color7: "#81e1fe",
+    color8: "#ffb79a"
+  };
+  
+  console.log("labels", labels)
+
   const [text, setText] = useState<string>("");
-  const [debouncedText, _isDebouncing] = useDebounce<string>(text, 500);
 
-  const { data: suggestedLabelsResponse, isLoading: _isLoading } = useQuery({
-    queryKey: ["labels", groupId, 5, debouncedText],
-    queryFn: () => getLabels(groupId, 5, debouncedText),
-    refetchOnMount: true,
-    staleTime: 10000,
-  });
+  const { data: suggestedLabelsResponse, isLoading: _isLoading } = useGetGroupLabels(groupId);
 
-  const suggestedLabels = suggestedLabelsResponse?.labels ?? [];
+  const groupLabels = suggestedLabelsResponse?.labels ?? [];
+  const usedColors = groupLabels?.map(x => x.color)?.concat(labels?.map(x => x.color)) ?? []
+  const availableColors = Object.keys(labelColors).filter(x => !usedColors.includes(x))
+
+  const addLabel = (labelText: string) => {
+
+    if (labels.map(x => x.text).includes(labelText)) {
+      setText("");
+      return
+    }
+
+    const existingGroupLabel = groupLabels.find(x => x.text == labelText);
+
+    const newExpenseLabel: Label = !!existingGroupLabel
+      ? { id: existingGroupLabel.id, color: existingGroupLabel.color, text: existingGroupLabel.text }
+      : { id: labelText, color: availableColors[0], text: labelText };
+
+    setLabels([...labels, newExpenseLabel]);
+    setText("");
+  }
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -51,51 +77,53 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
     inputRef.current?.focus();
   };
 
-  const handleRemoveClick = (id: string) => {
-    setLabels(labels.filter((x) => x !== id));
+  const handleBlur = () => {
+    if (text.length > 0) {
+      addLabel(text)
+    }
+  };
+
+  const handleSelectedLabelClick = (labelText: string) => {
+    setLabels(labels.filter(x => x.text !== labelText));
   };
 
   const handleSuggestedLabelClick = (labelName: string): void => {
-    setLabels([...labels, suggestedLabels!.find((x: any) => x === labelName)!]);
-    setText("");
+    addLabel(labelName)
     inputRef.current?.focus();
   };
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInpuTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newText = e.currentTarget.value;
+    const trimmedText = newText.trim()
 
-    if (newText.trim().length === 0) {
+    if (trimmedText.length === 0) {
       setText("");
       return;
     }
 
     if (newText.slice(-1) === " ") {
-      if (!labels.includes(newText.trim())) {
-        setLabels([...labels, newText.trim()]);
-      }
-      setText("");
+      addLabel(trimmedText);
       return;
     }
 
-    setText(newText);
+    setText(trimmedText);
   };
 
-  const remainingSuggestedLabels = suggestedLabels.filter(
-    (x: any) => !labels.includes(x)
-  );
-  const isEmpty = labels.length === 0 && text.length === 0;
+  const remainingSuggestedLabels = groupLabels.filter(x => !labels.map(x => x.text).includes(x.text));
+
+  const isEmpty = labels?.length === 0 && text.length === 0;
 
   const handleArrowMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Prevent focus from shifting to the main container.
+
     e.preventDefault();
     e.stopPropagation();
-  
+
     if (isMenuOpen) {
       setIsMenuOpen(false);
-      inputRef.current?.blur(); // Remove focus when closing the menu.
+      inputRef.current?.blur();
     } else {
       setIsMenuOpen(true);
-      inputRef.current?.focus(); // Focus the input when opening the menu.
+      inputRef.current?.focus();
     }
   };
 
@@ -104,22 +132,22 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
       <div
         className="main"
         onFocus={() => handleFocus()}
+        onBlur={handleBlur}
         ref={mainRef}
         tabIndex={0}
       >
         {labels.map((x) => {
           return (
             <span
-              key={x}
+              key={x.text}
               style={{
-                backgroundColor: generateColorPairFromHue(hashStringToHue(x))
-                  .backgroundcolor,
-                color: generateColorPairFromHue(hashStringToHue(x)).textColor,
+                backgroundColor: labelColors[x.color],
+                color: "#000000c8",
               }}
-              onClick={() => handleRemoveClick(x)}
+              onClick={() => handleSelectedLabelClick(x.text)}
               className="selected-label"
             >
-              {x}
+              {x.text}
               <IoClose />
             </span>
           );
@@ -131,7 +159,7 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
           autoCorrect="off"
           spellCheck={false}
           value={text}
-          onChange={handleTextChange}
+          onChange={handleInpuTextChange}
           ref={inputRef}
         />
         {isEmpty && (
@@ -143,13 +171,19 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
       </div>
       {isMenuOpen && remainingSuggestedLabels.length > 0 && (
         <div className="dropdown" ref={dropdownRef}>
-          {remainingSuggestedLabels.map((x: any) => (
+          {remainingSuggestedLabels.map(x => (
             <div
-              key={x}
-              onClick={() => handleSuggestedLabelClick(x)}
-              className="suggested-label"
+              key={x.text}
+              onClick={() => handleSuggestedLabelClick(x.text)}
+              className="suggested-label-container"
             >
-              {x}
+              <div
+                className="suggested-label-text"
+                style={{
+                  backgroundColor: labelColors[x.color],
+                  color: "#000000c8",
+                }}>{x.text}
+              </div>
             </div>
           ))}
         </div>
@@ -160,22 +194,3 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
 };
 
 export default LabelPicker;
-
-function generateColorPairFromHue(hue: number) {
-  hue = hue % 360;
-  const backgroundcolor = `hsl(${hue}, 40%, 70%, 100%)`; // Darker color for background
-  const textColor = `hsl(${hue}, 30%, 25%)`; // Lighter color for text
-  return { backgroundcolor, textColor };
-}
-
-function hashStringToHue(str: string) {
-  // Generate a hash using the Fowler-Noll-Vo hash function (FNV-1a)
-  let hash = 2166136261; // FNV offset basis
-  for (let i = 0; i < str.length; i++) {
-    hash ^= str.charCodeAt(i); // XOR the character code
-    hash = (hash * 16777619) >>> 0; // Multiply by FNV prime and ensure it's a 32-bit number
-  }
-
-  // Map the hash to a value between 0 and 360
-  return hash % 360;
-}

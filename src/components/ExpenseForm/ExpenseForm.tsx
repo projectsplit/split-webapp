@@ -3,6 +3,7 @@ import {
   FormExpense,
   GeoLocation,
   Group,
+  Label,
   PickerMember,
 } from "../../types";
 import { useEffect, useState } from "react";
@@ -47,7 +48,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const [showAmountError, setShowAmountError] = useState<boolean>(false);
 
   const [description, setDescription] = useState<string>("");
-  const [labels, setLabels] = useState<string[]>([]);
+  const [labels, setLabels] = useState<Label[]>([]);
   const [expenseTime, setExpenseTime] = useState<string>(
     new Date().toISOString()
   );
@@ -84,10 +85,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         .filter((value) => value.selected)
         .map((value) => ({ memberId: value.id, amount: Number(value.amount) })),
       description: description,
-      labelIds: [],
       location: location.value ?? null,
       occurred: expenseTime,
-      labels: labels,
+      labels: labels.map(x => ({ text: x.text, color: x.color })),
     };
 
     createExpenseMutation(createExpenseRequest);
@@ -104,14 +104,14 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
       selectedParticipants.length > 0 &&
       (significantDigitsFromTicker(currencySymbol) >= 3
         ? Number(
-            selectedParticipants
-              .reduce((acc, payer) => acc + Number(payer.amount), 0)
-              .toFixed(significantDigitsFromTicker(currencySymbol))
-          ) !== Number(Number(amount).toFixed(significantDigitsFromTicker(currencySymbol)))
+          selectedParticipants
+            .reduce((acc, payer) => acc + Number(payer.amount), 0)
+            .toFixed(significantDigitsFromTicker(currencySymbol))
+        ) !== Number(Number(amount).toFixed(significantDigitsFromTicker(currencySymbol)))
         : selectedParticipants.reduce(
-            (acc, payer) => currency(acc).add(payer.amount).value,
-            0
-          ) !== currency(amount).value);
+          (acc, payer) => currency(acc).add(payer.amount).value,
+          0
+        ) !== currency(amount).value);
 
     const selectedPayers = payers.filter((x) => x.selected);
     const arePayersNumbersValid = selectedPayers.every(
@@ -121,14 +121,14 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
       selectedPayers.length > 0 &&
       (significantDigitsFromTicker(currencySymbol) >= 3
         ? Number(
-            selectedPayers
-              .reduce((acc, payer) => acc + Number(payer.amount), 0)
-              .toFixed(significantDigitsFromTicker(currencySymbol))
-          ) !== Number(Number(amount).toFixed(significantDigitsFromTicker(currencySymbol)))
+          selectedPayers
+            .reduce((acc, payer) => acc + Number(payer.amount), 0)
+            .toFixed(significantDigitsFromTicker(currencySymbol))
+        ) !== Number(Number(amount).toFixed(significantDigitsFromTicker(currencySymbol)))
         : selectedPayers.reduce(
-            (acc, payer) => currency(acc).add(payer.amount).value,
-            0
-          ) !== currency(amount).value);
+          (acc, payer) => currency(acc).add(payer.amount).value,
+          0
+        ) !== currency(amount).value);
 
     // Validate amount when participants or payers are selected
     if (selectedParticipants.length > 0 || selectedPayers.length > 0) {
@@ -140,15 +140,15 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         !areParticipantsNumbersValid
           ? "Amounts must be positive"
           : isParticipantsSumInvalid
-          ? "Amounts must add up to total"
-          : ""
+            ? "Amounts must add up to total"
+            : ""
       );
       setPayersError(
         !arePayersNumbersValid
           ? "Amounts must be positive"
           : isPayersSumInvalid
-          ? "Amounts must add up to total"
-          : ""
+            ? "Amounts must add up to total"
+            : ""
       );
     }, 200);
 
@@ -234,11 +234,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
       <LocationPicker location={location} isMapOpen={isMapOpen} />
-      <DateTime
+      {/* <DateTime
         selectedDateTime={expenseTime}
         setSelectedDateTime={setExpenseTime}
         timeZoneId={timeZoneId}
-      />
+      /> */}
       <div className="spacer"></div>
       <MyButton fontSize="16" onClick={submitExpense} isLoading={isPending}>
         Submit

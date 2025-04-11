@@ -3,6 +3,7 @@ import {
   FormExpense,
   GeoLocation,
   Group,
+  Label,
   PickerMember,
 } from "../../types";
 import { useEffect, useState } from "react";
@@ -35,7 +36,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   if (!expense) {
     return <div>Error: Expense not found.</div>;
   }
-
+  
   const [participants, setParticipants] = useState<PickerMember[]>(
     createParticipantPickerArray(group, expense)
   );
@@ -52,7 +53,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   const [showAmountError, setShowAmountError] = useState<boolean>(false);
 
   const [description, setDescription] = useState<string>(expense.description);
-  const [labels, setLabels] = useState<string[]>(expense.labels);
+  const [labels, setLabels] = useState<Label[]>(expense.labels);
   const [expenseTime, setExpenseTime] = useState<string>(
     expense.creationTime.toISOString()
   );
@@ -89,7 +90,6 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
         .filter((value) => value.selected)
         .map((value) => ({ memberId: value.id, amount: Number(value.amount) })),
       description: description,
-      labelIds: [],
       location: location.value ?? null,
       occurred: expenseTime,
       labels: labels,
@@ -221,11 +221,11 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
 
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
       <LocationPicker location={location} isMapOpen={isMapOpen} />
-      <DateTime
+      {/* <DateTime
         selectedDateTime={expenseTime}
         setSelectedDateTime={setExpenseTime}
         timeZoneId={timeZoneId}
-      />
+      /> */}
       <div className="spacer"></div>
       <MyButton fontSize="16" onClick={submitExpense} isLoading={isPending}>
         Submit

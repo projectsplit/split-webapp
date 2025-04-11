@@ -35,17 +35,26 @@ export default function DetailedExpense({
   errorMessage,
   userMemberId,
   group,
-}: DetailedExpenseProps) {
+}: DetailedExpenseProps) { 
   const googleUrl = "https://www.google.com/maps/search/?api=1&query=";
-
   const theme = {
     text: {
       bold: "editor-bold",
     },
   };
 
-  const menu = useSignal<string | null>(null);
+  const labelColors: { [key: string]: string } = {
+    color1: "#9dc3ff",
+    color2: "#ff9baf",
+    color3: "#ede478",
+    color4: "#6ed7b9",
+    color5: "#ffa1ef",
+    color6: "#c2a7ff",
+    color7: "#81e1fe",
+    color8: "#ffb79a"
+  };
 
+  const menu = useSignal<string | null>(null);
   const onError = (error: Error): void => {
     console.error(error);
   };
@@ -69,25 +78,25 @@ export default function DetailedExpense({
 
   const expenseToEdit: FormExpense | undefined = selectedExpense.value
     ? {
-        id: selectedExpense.value.id,
-        amount: selectedExpense.value.amount.toString(),
-        description: selectedExpense.value.description,
-        currency: selectedExpense.value.currency,
-        groupId: group.id,
-        labels: selectedExpense.value.labels,
-        participants: selectedExpense.value.shares.map((share) => ({
-          memberId: share.memberId,
-          participationAmount: share.amount.toString(),
-        })),
-        payers: selectedExpense.value.payments.map((payment) => ({
-          memberId: payment.memberId,
-          paymentAmount: payment.amount.toString(),
-        })),
-        location: selectedExpense.value.location,
-        expenseTime: new Date(selectedExpense.value.occurred),
-        creationTime: new Date(selectedExpense.value.created),
-        lastUpdateTime: new Date(selectedExpense.value.updated),
-      }
+      id: selectedExpense.value.id,
+      amount: selectedExpense.value.amount.toString(),
+      description: selectedExpense.value.description,
+      currency: selectedExpense.value.currency,
+      groupId: group.id,
+      labels: selectedExpense.value.labels,
+      participants: selectedExpense.value.shares.map((share) => ({
+        memberId: share.memberId,
+        participationAmount: share.amount.toString(),
+      })),
+      payers: selectedExpense.value.payments.map((payment) => ({
+        memberId: payment.memberId,
+        paymentAmount: payment.amount.toString(),
+      })),
+      location: selectedExpense.value.location,
+      expenseTime: new Date(selectedExpense.value.occurred),
+      creationTime: new Date(selectedExpense.value.created),
+      lastUpdateTime: new Date(selectedExpense.value.updated),
+    }
     : undefined;
 
   return (
@@ -104,24 +113,22 @@ export default function DetailedExpense({
           <IonIcon name="close-outline" className="close" />
         </div>
       </div>
-      {labels.length > 0 ? (
-        <div className="dateAndLabels">
-          <div className="labelsWrapper">
-            <div className="labels">
-              {labels.map((l, i) => (
-                <Pill
-                  key={i}
-                  title={l}
-                  color="#e151ee"
-                  closeButton={false}
-                  fontSize="18px"
-                />
-              ))}
-            </div>
+      {labels.length > 0 ? <div className="dateAndLabels">
+        <div className="labelsWrapper">
+          <div className="labels">
+            {labels.map((l, i) => (
+              <Pill
+                key={i}
+                title={l.text}
+                textColor="#000000c8"
+                color={labelColors[l.color]}
+                closeButton={false}
+                fontSize="18px"
+              />
+            ))}
           </div>
         </div>
-      ) : null}
-
+      </div> : null}
       <div className="total">
         {displayCurrencyAndAmount(amount.toString(), currency)}
       </div>
@@ -169,25 +176,25 @@ export default function DetailedExpense({
       <div className="createdBy">
         Created by {members.find((x) => x.id === creator)?.name}{" "}
         {DateOnly(occurred, timeZoneId) === "Today" ||
-        DateOnly(occurred, timeZoneId) === "Yesterday"
+          DateOnly(occurred, timeZoneId) === "Yesterday"
           ? DateOnly(created, timeZoneId)
           : "on" +
-            " " +
-            DateOnly(occurred, timeZoneId) +
-            " " +
-            YearOnly(occurred, timeZoneId)}{" "}
+          " " +
+          DateOnly(occurred, timeZoneId) +
+          " " +
+          YearOnly(occurred, timeZoneId)}{" "}
         at {TimeOnly(created, timeZoneId)}
       </div>
       <div className="date">
         Occurred{" "}
         {DateOnly(occurred, timeZoneId) === "Today" ||
-        DateOnly(occurred, timeZoneId) === "Yesterday"
+          DateOnly(occurred, timeZoneId) === "Yesterday"
           ? DateOnly(occurred, timeZoneId)
           : "on" +
-            " " +
-            DateOnly(occurred, timeZoneId) +
-            " " +
-            YearOnly(occurred, timeZoneId)}{" "}
+          " " +
+          DateOnly(occurred, timeZoneId) +
+          " " +
+          YearOnly(occurred, timeZoneId)}{" "}
         at {TimeOnly(occurred, timeZoneId)}
       </div>
       <div className="commentSection">

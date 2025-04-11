@@ -1,12 +1,13 @@
 import styled from "styled-components";
 interface StyledPillOptions {
   color: string;
+  textColor: string;
   fontSize?: string;
 }
 export const StyledPill = styled.div<StyledPillOptions>`
-  font-weight: 400;
+  font-weight: 600;
   font-size: ${({ fontSize }) => fontSize || '18px'};
-  background-color: #131519c9;
+  background-color: ${(props) => props.color};
   -webkit-tap-highlight-color: transparent;
 
   display: flex;
@@ -15,16 +16,16 @@ export const StyledPill = styled.div<StyledPillOptions>`
 
   border-style: solid;
   border-width: 1px;
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 1px 8px;
   gap: 3px;
 
   cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 4px;
+  /* box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 4px; */
   color: ${(props) => props.color};
 
   .title {
-    color: ${(props) => props.color};
+    color: ${(props) => props.textColor};
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis;
