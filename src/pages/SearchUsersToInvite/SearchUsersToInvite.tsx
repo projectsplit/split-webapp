@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import { SearchUsersToInviteProps } from "../../interfaces";
 import Spinner from "../../components/Spinner/Spinner";
+import Separator from "../../components/Separator/Separator";
 
 const SearchUsersToInvite = ({ menu, groupName }: SearchUsersToInviteProps) => {
   const params = useParams();
@@ -37,47 +38,52 @@ const SearchUsersToInvite = ({ menu, groupName }: SearchUsersToInviteProps) => {
 
   return (
     <StyledSearchUsersToInvite>
-      <div className="header">
-        <div
-          className="closeButtonContainer"
-          onClick={() => (menu.value = null)}
-        >
-          <IoClose className="closeButton" />
+      <div className="fixed-header-container">
+        <div className="header">
+          <div className="gap"></div>
+          <div className="title">members</div>
+          <div
+            className="closeButtonContainer"
+            onClick={() => (menu.value = null)}
+          >
+            <IoClose className="closeButton" />
+          </div>
         </div>
-        <div className="title">
-          Invite Users to join <span style={{fontStyle:"italic"}}>"{groupName}"</span>
-        </div>
-        <div className="gap"></div>
+        <Separator />
       </div>
-      <div className="input">
-        <Input
-          className="search-input"
-          placeholder="Search"
-          backgroundcolor="#2d2d2d"
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-      </div>
-      {data?.pages.flatMap((x) =>
-        x.users.map((user) => (
-          <SearchResultItem
-            key={user.userId}
-            userId={user.userId}
-            username={user.username}
-            isAlreadyInvited={user.isAlreadyInvited}
-            isGroupMember={user.isGroupMember}
-            groupId={groupId}
-            onInviteSuccess={() =>
-              updateUserInvitationStatus(user.userId, !user.isAlreadyInvited)
-            }
+
+      <div className="scrollable-content">
+        <div className="input">
+          <Input
+            className="search-input"
+            placeholder="Search"
+            backgroundcolor="#2d2d2d"
+            onChange={(e) => setKeyword(e.target.value)}
           />
-        ))
-      )}
-      <div
-        ref={sentinelRef}
-        className="sentinel"
-        style={{ height: "1px" }}
-      ></div>
-      {isFetchingNextPage && <Spinner />}
+        </div>
+
+        {data?.pages.flatMap((x) =>
+          x.users.map((user) => (
+            <SearchResultItem
+              key={user.userId}
+              userId={user.userId}
+              username={user.username}
+              isAlreadyInvited={user.isAlreadyInvited}
+              isGroupMember={user.isGroupMember}
+              groupId={groupId}
+              onInviteSuccess={() =>
+                updateUserInvitationStatus(user.userId, !user.isAlreadyInvited)
+              }
+            />
+          ))
+        )}
+        <div
+          ref={sentinelRef}
+          className="sentinel"
+          style={{ height: "1px" }}
+        ></div>
+        {isFetchingNextPage && <Spinner />}
+      </div>
     </StyledSearchUsersToInvite>
   );
 };
@@ -109,7 +115,7 @@ const SearchResultItem: React.FC<{
         <div className="top-row">
           <div>{username}</div>
         </div>
-        <div className="bottom-row">already a group member</div>
+        <div className="bottom-row">already a member</div>
       </div>
     );
   }
@@ -132,7 +138,7 @@ const SearchResultItem: React.FC<{
           onClick={isPending ? undefined : onClick}
           hasFailed={isError}
         >
-          {isAlreadyInvited ? "Invited" : "Invite"}
+          {isAlreadyInvited ? "Uninvite" : "Invite"}
         </MyButton>
       </div>
     </div>

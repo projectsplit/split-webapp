@@ -4,7 +4,9 @@ import { ConfirmArchiveGroupAnimationProps } from "../../../interfaces";
 import ConfirmArchiveGroup from "../Confirmations/ConfirmArchiveGroup";
 
 export default function ConfirmArchiveGroupAnimation({
-  menu
+  menu,
+  groupId,
+  openGroupOptionsMenu
 }: ConfirmArchiveGroupAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -15,7 +17,7 @@ export default function ConfirmArchiveGroupAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <ConfirmArchiveGroup menu={menu} />
+      <ConfirmArchiveGroup menu={menu} groupId={groupId} openGroupOptionsMenu={openGroupOptionsMenu}/>
     </CSSTransition>
   );
 }

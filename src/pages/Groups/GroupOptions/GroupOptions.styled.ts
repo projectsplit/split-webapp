@@ -16,7 +16,7 @@ export const StyledGroupOptions = styled.div`
   display: flex;
   flex-direction: column;
 
-  .groupName{
+  .groupName {
     display: flex;
     justify-content: center;
     margin-top: 20px;
@@ -24,7 +24,7 @@ export const StyledGroupOptions = styled.div`
   .headerWrapper {
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 0;
     background-color: ${({ theme }) => theme.layer2};
     .header {
       padding: 0.875rem;
@@ -86,7 +86,7 @@ export const StyledGroupOptions = styled.div`
       background-color: #2d2d2d;
       border-radius: 10px;
       cursor: pointer;
-      
+
       .description {
         font-size: 1rem;
       }
@@ -117,16 +117,16 @@ export const StyledGroupOptions = styled.div`
       }
     }
   }
-  .archiveGroupText{
+  .archiveGroupText {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap:10px;
+    gap: 10px;
     text-align: start;
-    .handshake{
+    .handshake {
       display: flex;
       justify-content: center;
-      font-size: 25px;
+      font-size: 35px;
     }
   }
 `;

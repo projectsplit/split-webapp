@@ -16,11 +16,11 @@ export const StyledSettingsMenu = styled.div`
   .headerWrapper {
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 0;
     background-color: ${({ theme }) => theme.layer2};
     .header {
       position: sticky;
-      z-index: 4;
+      z-index: 0;
       padding: 0.875rem;
       display: flex;
       flex-direction: row;

@@ -1,32 +1,22 @@
-import { StyledActiveGroups } from "./ActiveGroups.styled";
+import { StyledGroups } from "../Groups.styled";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import TreeAdjustedContainer from "../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
-import Spinner from "../../../components/Spinner/Spinner";
-import { getGroupsTotalAmounts } from "../../../api/services/api";
-import { useMostRecentGroup } from "../../../api/services/useMostRecentGroup";
-import { TreeItemBuilderForHomeAndGroups } from "../../../components/TreeItemBuilderForHomeAndGroups";
-import Sentinel from "../../../components/Sentinel";
+import { useNavigate } from "react-router-dom";
+import TreeAdjustedContainer from "../../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
+import Spinner from "../../../../components/Spinner/Spinner";
+import { getGroupsTotalAmounts } from "../../../../api/services/api";
+import { useMostRecentGroup } from "../../../../api/services/useMostRecentGroup";
+import { TreeItemBuilderForHomeAndGroups } from "../../../../components/TreeItemBuilderForHomeAndGroups";
+import Sentinel from "../../../../components/Sentinel";
 import { MdOutlineGroupOff } from "react-icons/md";
-import GroupOptions from "../GroupOptions/GroupOptions";
-import { Signal, useSignal } from "@preact/signals-react";
-import useGroup from "../../../api/services/useGroup";
 
 export default function ActiveGroups() {
   const navigate = useNavigate();
   const pageSize = 10;
 
-  const { openGroupOptionsMenu } = useOutletContext<{
-    openGroupOptionsMenu: Signal<boolean>;
-  }>();
-  const groupid = useSignal<string>("")
- 
-  const { data: selectedGroup } = useGroup(groupid.value);
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
       queryKey: ["groups", "active"],
-      queryFn: ({ pageParam: next }) => getGroupsTotalAmounts(pageSize, next),
+      queryFn: ({ pageParam: next }) => getGroupsTotalAmounts(pageSize, next, false),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
       initialPageParam: "",
     });
@@ -40,7 +30,7 @@ export default function ActiveGroups() {
   };
 
   return (
-    <StyledActiveGroups>
+    <StyledGroups>
       {isFetching && !isFetchingNextPage ? (
         <Spinner />
       ) : (
@@ -57,24 +47,17 @@ export default function ActiveGroups() {
             <div key={g.id} >
               <TreeAdjustedContainer
                 onClick={() => onGroupClickHandler(g.id, g.name)}
-                hasOption={true}
+                hasOption={false}
                 optionname={"settings-outline"}
-                iconfontsize={20}
+                iconfontsize={30}
                 right={0.8}
                 items={TreeItemBuilderForHomeAndGroups(g?.details)}
-                onIconClick={(e) => {
-                  groupid.value = g.id
-                  e.stopPropagation();
-                  openGroupOptionsMenu.value = true;
-                }}
               >
                 <div className="groupName">{g.name}</div>
               </TreeAdjustedContainer>
             </div>
           ))}
-          {openGroupOptionsMenu.value && (
-            <GroupOptions group={selectedGroup} />
-          )}
+  
           <Sentinel
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}
@@ -82,6 +65,6 @@ export default function ActiveGroups() {
           />
         </div>
       )}
-    </StyledActiveGroups>
+    </StyledGroups>
   );
 }

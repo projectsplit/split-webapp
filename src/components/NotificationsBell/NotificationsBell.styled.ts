@@ -7,6 +7,6 @@ export const StyledNotificationsBell = styled.div<NotificationsBellProps>`
     align-items: center;
     gap:14px;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 1.8rem;
 `;
 

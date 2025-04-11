@@ -5,7 +5,7 @@ import { NewExpenseAnimationProps } from "../../../interfaces";
 export default function NewExpenseAnimation({
   group,
   timeZoneId,
-  menu,
+  menu
 }: NewExpenseAnimationProps) {
   return (
     <CSSTransition in={menu.value === "newExpense"} timeout={0} unmountOnExit>

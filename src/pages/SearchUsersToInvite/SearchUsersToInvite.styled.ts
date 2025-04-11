@@ -1,17 +1,23 @@
 import styled from "styled-components";
 
 export const StyledSearchUsersToInvite = styled.div`
- position: fixed;
+  position: fixed;
   font-size: 1.125rem;
   bottom: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.layer2};
   z-index: 3;
   display: flex;
   flex-direction: column;
+
+  .fixed-header-container {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    background-color: ${({ theme }) => theme.layer2};
+  }
 
   .header {
     padding: 0.875rem;
@@ -53,12 +59,29 @@ export const StyledSearchUsersToInvite = styled.div`
       margin-right: 0.9375rem;
     }
   }
-  .input {
-    margin-top: 0.625rem;
-    display: flex;
-    flex-direction: column;
-    padding: 0 0.875rem;
+
+  .scrollable-content {
+    overflow-y: auto;
+    flex: 1;
+    padding-top: 10px; 
   }
+
+  .input {
+    display: flex;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+
+    .search-input {
+      width: 100%;
+      flex: 1;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      font-size: 16px;
+    }
+  }
+
   .search-result {
     margin-top: 0.625rem;
     margin-bottom: 0.625rem;
@@ -66,12 +89,11 @@ export const StyledSearchUsersToInvite = styled.div`
     flex-direction: column;
     padding: 0 0.875rem;
 
-    
     .top-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      
+
       .action-button {
         border: none;
         border-radius: 4px;
@@ -80,11 +102,11 @@ export const StyledSearchUsersToInvite = styled.div`
         display: flex;
       }
     }
-    
+
     .bottom-row {
       display: flex;
       color: ${({ theme }) => theme.secondaryTextColor};
-      font-style: italic;
+      font-size: 14px;
     }
   }
 `;

@@ -7,16 +7,31 @@ import { StyledCategorySelector } from "./CategorySelector.styled";
 export const CategorySelector = ({
   categories,
   activeCat,
+  navLinkUse,
+  activeCatAsState,
 }: CategorySelectorProps) => {
+  //activeCat which is "Active" "Archived" should now change with state. This is what changes with link now
+
   const isFirstRender = useRef(true);
   const categoryKeys = Object.keys(categories);
-  const [activeCategory, setActiveCategory] = useState(
-    Object.keys(categories)[
-      Object.values(categories).indexOf(
-        activeCat.charAt(0).toUpperCase() + activeCat.slice(1)
-      )
-    ]
-  ); // Capitalizes first letter
+  const getInitialActiveCategory = () => {
+    const currentValue = navLinkUse
+      ? activeCat.charAt(0).toUpperCase() + activeCat.slice(1)
+      : activeCatAsState
+      ? activeCatAsState.value.charAt(0).toUpperCase() + activeCatAsState.value.slice(1)
+      : activeCat.charAt(0).toUpperCase() + activeCat.slice(1);
+    const initialIndex = Object.values(categories).indexOf(currentValue);
+    return initialIndex !== -1 ? categoryKeys[initialIndex] : categoryKeys[0];
+  };
+
+  const [activeCategory, setActiveCategory] = useState(getInitialActiveCategory);
+
+  useEffect(() => {
+    const updatedCategory = getInitialActiveCategory();
+    if (updatedCategory !== activeCategory) {
+      setActiveCategory(updatedCategory);
+    }
+  }, [activeCatAsState?.value, activeCat]);
 
   const [indicatorPosition, setIndicatorPosition] = useState({
     left: "0px",
@@ -52,7 +67,7 @@ export const CategorySelector = ({
 
     const updateIndicator = () => {
       const activeButton = categoryRefs[activeCategory]?.current;
-
+   
       if (activeButton) {
         const { offsetLeft, clientWidth } = activeButton;
         const reducedWidth = clientWidth * 0.5;
@@ -65,30 +80,26 @@ export const CategorySelector = ({
       }
     };
 
-    setActiveCategory(
-      Object.keys(categories)[
-        Object.values(categories).indexOf(
-          activeCat.charAt(0).toUpperCase() + activeCat.slice(1)
-        )
-      ]
-    );
-
     updateIndicator();
     window.addEventListener("resize", updateIndicator);
     return () => window.removeEventListener("resize", updateIndicator);
-  }, [activeCategory, activeCat]); // Only re-runs when `activeCategory` changes
+  }, [activeCategory,activeCatAsState?.value, activeCat]); // Only re-runs when `activeCategory` changes
 
   return (
     <StyledCategorySelector>
-      <div className="groupCategories">
+      <div className="categories">
         {Object.entries(categories).map(([key, label]) => (
           <CategoryButton
             key={key}
             ref={categoryRefs[key]}
-            to={categories[key as keyof typeof categories]?.toLocaleLowerCase()}
+            to={ navLinkUse? categories[key as keyof typeof categories]?.toLocaleLowerCase() : undefined }
             onClick={() => {
               setActiveCategory(key);
+              if (!navLinkUse && activeCatAsState) {
+                activeCatAsState.value = categories[key as keyof typeof categories]!;
+              }
             }}
+            selected={activeCategory === key}
           >
             {label}
           </CategoryButton>

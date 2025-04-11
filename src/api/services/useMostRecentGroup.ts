@@ -9,10 +9,16 @@ export const useMostRecentGroup = () => {
   return useMutation<any, AxiosError, string>({
     mutationFn: (groupId) => updateMostRecentGroup({ groupId }),
     onSuccess: async () => {
-      queryClient.refetchQueries({
+      await queryClient.refetchQueries({
         queryKey: ["getMe"],
         exact: false,
       });
+      await queryClient.refetchQueries({
+        queryKey: ["mostRecentGroup"],
+        exact: false,
+      });
+      await queryClient.refetchQueries({ queryKey: ["home"], exact: false });
+      await queryClient.refetchQueries({ queryKey: ["groups"], exact: false });
     },
     onError: (error) => {
       console.log(error);

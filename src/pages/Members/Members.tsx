@@ -24,7 +24,6 @@ export default function Members() {
 
   const { data, isFetching, isLoading } = useDebts(groupid);
   const { debts, totalSpent } = data ?? { debts: [], totalSpent: {} };
-
   const members = group?.members;
   const guests = group?.guests;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;

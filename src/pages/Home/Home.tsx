@@ -68,6 +68,7 @@ export default function Home() {
     topMenuTitle.value = "";
   }, []);
 
+  const isArchived = mostRecentGroupData?.isArchived;
   // isFetching:mostRecentGroupDataIsFetching, isLoading:mostRecentGroupDataIsLoading
   // const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
 
@@ -99,9 +100,9 @@ export default function Home() {
                 <div className="mostRecent">
                   <div className="mostRecentMsg">Most recent</div>
                   <TreeAdjustedContainer
-                    onClick={() =>
-                      navigate(`/groups/active/${mostRecentGroupData.id}/debts`)
-                    }
+                    onClick={() => {
+                      navigate(`/groups/${mostRecentGroupData.id}`);
+                    }}
                     hasOption={true}
                     optionname="chevron-forward-outline"
                     items={TreeItemBuilderForHomeAndGroups(
@@ -117,7 +118,7 @@ export default function Home() {
               !isFetching &&
               data?.groupCount === 0 ? (
                 <OptionButton
-                  onClick={() => navigate("/groups/active")}
+                  onClick={() => navigate("/groups")}
                   name="Groups"
                   description="Keep track of your shared finances"
                   hasArrow={false}
@@ -128,7 +129,7 @@ export default function Home() {
                 <TreeAdjustedContainer
                   hasOption={false}
                   optionname="chevron-forward-outline"
-                  onClick={() => navigate("/groups/active")}
+                  onClick={() => navigate("/groups")}
                   items={TreeItemBuilderForHomeAndGroups(data?.balances)}
                 >
                   <div className="groups">

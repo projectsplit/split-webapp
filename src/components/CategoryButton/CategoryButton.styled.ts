@@ -26,14 +26,11 @@ export const StyledCategoryButton = styled.div.withConfig({
     padding-right: 1.5rem;
     cursor: pointer;
     border-radius: 8px;
-    /* background-color: ${({ theme }) => theme.layer2}; */
+
     color: ${({ theme }) => theme.textInactiveColor};
     font-weight: 600;
     text-decoration: none;
-    /* transition: background-color 0.2s ease-in-out;
-    &:hover {
-      background-color: ${({ theme }) => theme.layer1};
-    } */
+
   }
 
   .unselected {
@@ -45,11 +42,13 @@ export const StyledCategoryButton = styled.div.withConfig({
     color: ${({ theme }) => theme.whiteText};
     font-weight: 600;
     text-decoration: none;
-    /* transition: background-color 0.2s ease-in-out; */
+
 
   }
 
   ${(props) => `
     ${props.style}
   `}
+
+ 
 `;

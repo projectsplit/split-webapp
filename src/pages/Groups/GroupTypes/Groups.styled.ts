@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledActiveGroups = styled.div`
+export const StyledGroups = styled.div`
   display: flex;
   flex-direction: column;
   scrollbar-width: thin;

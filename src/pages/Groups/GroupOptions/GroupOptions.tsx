@@ -5,30 +5,85 @@ import { Signal, useSignal } from "@preact/signals-react";
 import Separator from "../../../components/Separator/Separator";
 import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
-import { Currency } from "../../../types";
+import { Currency, UserInfo } from "../../../types";
 import { currencyData } from "../../../helpers/openExchangeRates";
 import { GroupOptionsProps } from "../../../interfaces";
 import { MdEdit } from "react-icons/md";
 import { FaArchive } from "react-icons/fa";
 import ConfirmArchiveGroupAnimation from "../../../components/Menus/MenuAnimations/ConfirmArchiveGroupAnimation";
+import ConfirmLeaveGroupAnimation from "../../../components/Menus/MenuAnimations/ConfirmLeaveGroupAnimation";
+import RenameGroupAnimationAnimation from "../../../components/Menus/MenuAnimations/RenameGroupAnimation";
+import { useChangeGroupCurrency } from "../../../api/services/useChangeGroupCurrency";
+import { useQueryClient } from "@tanstack/react-query";
+import RemoveUserFromGroupMenu from "../../../components/Menus/RemoveUserFromGroupMenu/RemoveUserFromGroupMenu";
+import { useEffect } from "react";
 
 export default function GroupOptions({ group }: GroupOptionsProps) {
-  const { openGroupOptionsMenu } = useOutletContext<{
+  const { userInfo, openGroupOptionsMenu } = useOutletContext<{
     openGroupOptionsMenu: Signal<boolean>;
+    userInfo: UserInfo;
   }>();
-
+  const queryClient = useQueryClient();
+  const refetchQueries = useSignal<boolean>(false);
+  const groupCurrency = group?.currency || "";
+  const groupName = group?.name;
   const currencyMenu = useSignal<string | null>(null);
   const archiveGroupMenu = useSignal<string | null>(null);
   const leaveGroupMenu = useSignal<string | null>(null);
+  const renameMenu = useSignal<string | null>(null);
+  const noGroupFoundError = useSignal<string>("");
   const allCurrencies = useSignal<Currency[]>(currencyData);
+  const openRemoveUserMenu = useSignal<boolean>(false);
   const selectedCurrency = allCurrencies.value.find(
-    (c) => c.symbol === group?.currency
+    (c) => c.symbol === groupCurrency
+  );
+
+  const members = group?.members;
+  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
+  const updateGroupCurrency = useChangeGroupCurrency(
+    group?.id,
+    noGroupFoundError,
+    refetchQueries
   );
 
   const handldeCurrencyOptionsClick = (curr: string) => {
-    //updateGroupCurrency.mutate(curr);
     currencyMenu.value = null;
+    updateGroupCurrency.mutate(curr);
   };
+
+  const handleClose = async () => {
+    openGroupOptionsMenu.value = false;
+    if (refetchQueries.value) {
+      try {
+        await queryClient.refetchQueries({
+          queryKey: [group?.id],
+          exact: false,
+        });
+        await queryClient.refetchQueries({
+          queryKey: ["groups"],
+          exact: false,
+        });
+        await queryClient.refetchQueries({
+          queryKey: ["mostRecentGroup"],
+          exact: false,
+        });
+      } catch (error) {
+        console.error("Error refetching queries:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleBackNavigation = () => {
+      if (openGroupOptionsMenu.value) {
+        handleClose();
+      }
+    };
+    window.addEventListener("popstate", handleBackNavigation);
+    return () => {
+      window.removeEventListener("popstate", handleBackNavigation);
+    };
+  }, [openGroupOptionsMenu]);
 
   return (
     <StyledGroupOptions>
@@ -36,12 +91,9 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
       <div className="headerWrapper">
         <div className="header">
           <div className="gap"></div>
-          <div className="title">{group?.name}</div>
+          <div className="title">{groupName}</div>
 
-          <div
-            className="closeButtonContainer"
-            onClick={() => (openGroupOptionsMenu.value = false)}
-          >
+          <div className="closeButtonContainer" onClick={handleClose}>
             <IoClose className="closeButton" />
           </div>
         </div>
@@ -56,7 +108,10 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
           <div className="description">Group Base Currency</div>
         </div>
 
-        <div className="option" onClick={() => console.log("edit name")}>
+        <div
+          className="option"
+          onClick={() => (renameMenu.value = "renameGroup")}
+        >
           <MdEdit className="icon" />
           <div className="description">Edit Group Name </div>
         </div>
@@ -69,30 +124,54 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
           <div className="description">Archive Group </div>
         </div>
 
-        <div className="option">
-          <IoPersonRemove
-            className="icon"
-            onClick={() => console.log("remove user from group")}
-          />
-          <div className="description">Remove User </div>
+        <div
+          className="option"
+          onClick={() => (openRemoveUserMenu.value = true)}
+        >
+          <IoPersonRemove className="icon" />
+          <div className="description">Remove Member </div>
         </div>
 
-        <div className="option-leave">
-          <IoExit
-            className="icon-exit"
-            onClick={() => console.log("leave group")}
-          />
+        <div
+          className="option-leave"
+          onClick={() => (leaveGroupMenu.value = "leaveGroup")}
+        >
+          <IoExit className="icon-exit" />
           <div className="description">Leave Group </div>
         </div>
       </div>
       <MenuAnimationBackground menu={currencyMenu} />
       <MenuAnimationBackground menu={archiveGroupMenu} />
+      <MenuAnimationBackground menu={leaveGroupMenu} />
+      <MenuAnimationBackground menu={renameMenu} />
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
-        selectedCurrency={group?.currency}
+        selectedCurrency={groupCurrency}
       />
-      <ConfirmArchiveGroupAnimation menu={archiveGroupMenu} />
+      <ConfirmArchiveGroupAnimation
+        menu={archiveGroupMenu}
+        groupId={group?.id}
+        openGroupOptionsMenu={openGroupOptionsMenu}
+      />
+      <ConfirmLeaveGroupAnimation
+        menu={leaveGroupMenu}
+        groupId={group?.id}
+        memberId={userMemberId}
+        openGroupOptionsMenu={openGroupOptionsMenu}
+      />
+      <RenameGroupAnimationAnimation
+        menu={renameMenu}
+        groupId={group?.id}
+        groupName={group?.name}
+      />
+      {openRemoveUserMenu.value && (
+        <RemoveUserFromGroupMenu
+          groupId={group?.id}
+          openRemoveUserMenu={openRemoveUserMenu}
+          userInfo={userInfo}
+        />
+      )}
     </StyledGroupOptions>
   );
 }
