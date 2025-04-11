@@ -6,9 +6,7 @@ import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuA
 import NotificationsMenuAnimation from "../../components/Menus/MenuAnimations/NotificationsMenuAnimation";
 import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
 import { getMe } from "../../api/services/api";
-import { useGetUserInvitations } from "../../api/services/useGetUserInvitations";
 import TopMenu from "../../components/Menus/TopMenu/TopMenu";
-import { useMemo } from "react";
 
 const Protected: React.FC = () => {
   const location = useLocation();
@@ -19,10 +17,6 @@ const Protected: React.FC = () => {
     enabled: isUserAuthenticated(),
   });
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useGetUserInvitations(10);
-
-  const userInvitations = data?.pages.flatMap((p) => p.invitations);
   const hasNewerNotifications = userInfo?.hasNewerNotifications;
 
   const topMenuTitle = useSignal<string>("");
@@ -30,11 +24,7 @@ const Protected: React.FC = () => {
   const openGroupOptionsMenu = useSignal<boolean>(false);
   const activeGroupCatAsState = useSignal<string>("Active");
 
-  const { latest } = useMemo(() => {
-    const latest = getLatestCreated(userInvitations);
 
-    return { latest };
-  }, [userInvitations]);
 
   return isUserAuthenticated() ? (
     <StyledProtected>
@@ -43,17 +33,12 @@ const Protected: React.FC = () => {
         menu={menu}
         username={userInfo?.username}
         hasNewerNotifications={hasNewerNotifications || false}
-        latestTimeStamp={latest}
         openGroupOptionsMenu={openGroupOptionsMenu}
       />
       <Outlet context={{ userInfo, topMenuTitle,openGroupOptionsMenu,activeGroupCatAsState }} />
       <MenuAnimationBackground menu={menu} />
       <NotificationsMenuAnimation
         menu={menu}
-        fetchNextPage={fetchNextPage}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-        userInvitations={userInvitations}
         hasNewerNotifications={hasNewerNotifications || false}
         userInfo={userInfo}
       />
@@ -73,21 +58,3 @@ const isUserAuthenticated = () => {
   return !!localStorage.getItem("accessToken");
 };
 
-function getLatestCreated<T extends { created: string }>(
-  ...arrays: (T[] | undefined)[]
-): string | undefined {
-  const combinedItems = arrays.reduce<T[]>(
-    (acc, curr) => acc.concat(curr ?? []),
-    []
-  );
-
-  if (combinedItems.length === 0) {
-    return undefined;
-  }
-
-  const latestTimestamp = Math.max(
-    ...combinedItems.map((item) => new Date(item.created).getTime())
-  );
-
-  return new Date(latestTimestamp).toISOString();
-}
