@@ -28,20 +28,29 @@ export default function Group() {
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
 
-  const { userInfo, topMenuTitle, openGroupOptionsMenu } = useOutletContext<{
-    userInfo: UserInfo;
-    topMenuTitle: Signal<string>;
-    openGroupOptionsMenu: Signal<boolean>;
-  }>();
+  const { userInfo, topMenuTitle, openGroupOptionsMenu, shouldStyleBorder } =
+    useOutletContext<{
+      userInfo: UserInfo;
+      topMenuTitle: Signal<string>;
+      openGroupOptionsMenu: Signal<boolean>;
+      shouldStyleBorder: Signal<boolean>;
+    }>();
 
-  console.log(openGroupOptionsMenu.value)
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const timeZoneId = userInfo?.timeZone;
   const { data: group, isFetching, isError, error } = useGroup(groupid);
   const groupError = error as AxiosError;
+
   // console.log(String(groupError?.request.response));
 
   const groupName = group?.name;
+
+  useEffect(() => {
+    shouldStyleBorder.value = group?.isArchived || false;
+    return () => {
+      shouldStyleBorder.value = false;
+    };
+  }, [group, shouldStyleBorder.value]);
 
   useEffect(() => {
     topMenuTitle.value = group?.name || "";

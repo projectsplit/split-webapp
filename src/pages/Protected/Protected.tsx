@@ -16,16 +16,17 @@ const Protected: React.FC = () => {
     queryFn: getMe,
     enabled: isUserAuthenticated(),
   });
-
+  const shouldStyleBorder = useSignal<boolean>(false);
   const hasNewerNotifications = userInfo?.hasNewerNotifications;
 
   const topMenuTitle = useSignal<string>("");
   const menu = useSignal<string | null>(null);
   const openGroupOptionsMenu = useSignal<boolean>(false);
   const activeGroupCatAsState = useSignal<string>("Active");
+  
 
   return isUserAuthenticated() ? (
-    <StyledProtected>
+    <StyledProtected shouldStyleBorder={shouldStyleBorder.value}>
       <TopMenu
         title={topMenuTitle.value}
         menu={menu}
@@ -33,7 +34,7 @@ const Protected: React.FC = () => {
         hasNewerNotifications={hasNewerNotifications || false}
         openGroupOptionsMenu={openGroupOptionsMenu}
       />
-      <Outlet context={{ userInfo, topMenuTitle,openGroupOptionsMenu,activeGroupCatAsState }} />
+      <Outlet context={{ userInfo, topMenuTitle,openGroupOptionsMenu,activeGroupCatAsState,shouldStyleBorder }} />
       <MenuAnimationBackground menu={menu} />
       <NotificationsMenuAnimation
         menu={menu}
