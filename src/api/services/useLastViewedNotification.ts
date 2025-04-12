@@ -3,7 +3,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { UpdateNotificationRequest, UserInfo } from "../../types";
 import { apiClient } from "../apiClients";
 
-export const useLastViewedNotification = (pageSize: number) => {
+export const useLastViewedNotification = () => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, string | undefined>({
@@ -21,9 +21,6 @@ export const useLastViewedNotification = (pageSize: number) => {
           hasNewerNotifications: false,
         });
       }
-      queryClient.refetchQueries({
-        queryKey:["userInvitations", pageSize] 
-      });
     },
     onError: (error) => {
       console.log(error);
