@@ -1,7 +1,6 @@
 import { StyledDetailedExpense } from "./DetailedExpense.Styled";
 import MembersInfoBox from "./MembersInfoBox/MembersInfoBox";
 import { EditorContent } from "./EditorContent/EditorContent";
-import Comment from "./Comment/Comment";
 import IonIcon from "@reacticons/ionicons";
 import { HeadingNode } from "@lexical/rich-text";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
@@ -17,6 +16,7 @@ import { useSignal } from "@preact/signals-react";
 import DeleteExpenseAnimation from "../Menus/MenuAnimations/DeleteExpenseAnimation";
 import { FormExpense, GeoLocation } from "../../types";
 import EditExpenseAnimation from "../Menus/MenuAnimations/EditExpenseAnimation";
+import labelColors from "../../labelColors";
 
 export default function DetailedExpense({
   selectedExpense,
@@ -41,17 +41,6 @@ export default function DetailedExpense({
     text: {
       bold: "editor-bold",
     },
-  };
-
-  const labelColors: { [key: string]: string } = {
-    color1: "#9dc3ff",
-    color2: "#ff9baf",
-    color3: "#ede478",
-    color4: "#6ed7b9",
-    color5: "#ffa1ef",
-    color6: "#c2a7ff",
-    color7: "#81e1fe",
-    color8: "#ffb79a"
   };
 
   const menu = useSignal<string | null>(null);
