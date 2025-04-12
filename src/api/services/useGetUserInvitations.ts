@@ -9,6 +9,8 @@ export const useGetUserInvitations = (pageSize: number) => {
     queryFn: ({ pageParam: next }) => getUserInvitations(pageSize, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: "",
+    refetchOnMount:true,
+    gcTime:0
   });
 };
 

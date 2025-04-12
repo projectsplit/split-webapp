@@ -16,21 +16,20 @@ export default function NotificationsMenu({
 }: NotificationsMenuProps) {
   const timeZoneId = userInfo?.timeZone;
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
     useGetUserInvitations(10);
 
   const userInvitations = data?.pages.flatMap((p) => p.invitations);
 
-  const { latest } = useMemo(() => {
-    const latest = getLatestCreated(userInvitations);
+  const { mutate: updateNotification } = useLastViewedNotification();
 
-    return { latest };
-  }, [userInvitations]);
-
-  const { mutate: updateNotification } = useLastViewedNotification(10);
   useEffect(() => {
-    updateNotification(latest);
-  }, []);
+    if (isSuccess && data.pages.length === 1 && data?.pages[0].invitations.length > 0) {
+      const latestTimeStamp = data?.pages[0].invitations[0].created
+      updateNotification(latestTimeStamp);
+    }
+   
+  }, [isSuccess, data]);
 
   return (
     <StyledNotificationsMenu>

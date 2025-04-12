@@ -24,8 +24,6 @@ const Protected: React.FC = () => {
   const openGroupOptionsMenu = useSignal<boolean>(false);
   const activeGroupCatAsState = useSignal<string>("Active");
 
-
-
   return isUserAuthenticated() ? (
     <StyledProtected>
       <TopMenu
