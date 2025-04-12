@@ -6,19 +6,9 @@ import { LabelPickerProps } from "../../interfaces";
 import { FiChevronDown } from "react-icons/fi";
 import { useGetGroupLabels } from "../../api/services/useGetGroupLabels";
 import { Label } from "../../types";
+import labelColors from "../../labelColors";
 
 const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
-
-  const labelColors: { [key: string]: string } = {
-    color1: "#9dc3ff",
-    color2: "#ff9baf",
-    color3: "#ede478",
-    color4: "#6ed7b9",
-    color5: "#ffa1ef",
-    color6: "#c2a7ff",
-    color7: "#81e1fe",
-    color8: "#ffb79a"
-  };
   
   console.log("labels", labels)
 
