@@ -17,7 +17,7 @@ export default function NotificationsMenu({
   const timeZoneId = userInfo?.timeZone;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
-    useGetUserInvitations(1);
+    useGetUserInvitations(10);
 
   const userInvitations = data?.pages.flatMap((p) => p.invitations);
 
