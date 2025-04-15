@@ -31,7 +31,9 @@ export const StyledBottomMainMenu = styled.div<{$groupIsArchived?:boolean;}>`
       display: flex;
       justify-content: center;
       align-items: center;
-      cursor: pointer;
+      cursor:  ${({ $groupIsArchived }) => !$groupIsArchived?'pointer':'not-allowed'};
+      ${({ theme,$groupIsArchived }) => !$groupIsArchived?theme.greyOutline:theme.orange};
+
       .prohibited{
         color:${({ theme,$groupIsArchived }) => !$groupIsArchived?theme.greyOutline:theme.orange};
         cursor: not-allowed;
