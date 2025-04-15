@@ -15,6 +15,7 @@ import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
+import useDebts from "../../api/services/useDebts";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -33,6 +34,10 @@ const Expenses = () => {
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
   const allParticipants = mergeMembersAndGuests(members || [], guests || []);
+  
+  const { data:debts, isFetching:isFetchingDebts } = useDebts(group.id);
+  const {totalSpent } = debts ?? { totalSpent: {} };
+  console.log(totalSpent)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
@@ -56,8 +61,10 @@ const Expenses = () => {
   }, [errorMessage.value]);
 
   if (isFetching && !isFetchingNextPage) {
-    return <Spinner />;
+    return <div className="spinner"><Spinner /></div>;
   }
+
+
 
   const totalExpense = expenses?.reduce((sum, e) => sum + e.amount, 0);
   const userExpense = expenses?.reduce((sum, e) => {

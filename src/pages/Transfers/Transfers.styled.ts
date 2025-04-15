@@ -52,4 +52,14 @@ export const StyledTransfers = styled.div`
       gap: 8px;
     }
   }
+  
+  .spinner {
+    display: flex;
+    flex-direction: column;
+    flex: 1; 
+    align-items: center; 
+    justify-content: center; 
+    margin-top: 2rem; 
+    height: 100%;
+  }
 `;

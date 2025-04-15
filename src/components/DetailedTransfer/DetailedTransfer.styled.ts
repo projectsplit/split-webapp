@@ -12,6 +12,7 @@ export const StyledDetailedTransfer = styled(StyledMiddleScreenMenu)<{
   scrollbar-width: thin;
   margin: 2px;
   box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`};
+  z-index:4;
   .total {
     display: flex;
     justify-content: center;
@@ -96,7 +97,10 @@ export const StyledDetailedTransfer = styled(StyledMiddleScreenMenu)<{
       border: 1px solid #ccc;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
-      padding: 0.7rem;
+      padding-top: 0.1rem;
+      padding-left: 0.9rem;
+      padding-right: 0.3rem;
+      padding-bottom: 0.3rem;
       color: white;
       background-color: ${({ theme }) => theme.inputGrey};
       border-style: none;
@@ -105,7 +109,8 @@ export const StyledDetailedTransfer = styled(StyledMiddleScreenMenu)<{
     }
     .contentEditablePlaceholder {
       position: absolute;
-      padding: 0.6rem;
+      padding-left: 0.9rem;
+      margin-top:15px;
       color: ${({ theme }) => theme.grey};
       pointer-events: none;
     }

@@ -29,14 +29,19 @@ export default function Group() {
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
 
-  const { userInfo, topMenuTitle, openGroupOptionsMenu, groupIsArchived,confirmUnarchiveMenu } =
-    useOutletContext<{
-      userInfo: UserInfo;
-      topMenuTitle: Signal<string>;
-      openGroupOptionsMenu: Signal<boolean>;
-      groupIsArchived: Signal<boolean>;
-      confirmUnarchiveMenu:Signal<string | null>
-    }>();
+  const {
+    userInfo,
+    topMenuTitle,
+    openGroupOptionsMenu,
+    groupIsArchived,
+    confirmUnarchiveMenu,
+  } = useOutletContext<{
+    userInfo: UserInfo;
+    topMenuTitle: Signal<string>;
+    openGroupOptionsMenu: Signal<boolean>;
+    groupIsArchived: Signal<boolean>;
+    confirmUnarchiveMenu: Signal<string | null>;
+  }>();
 
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const timeZoneId = userInfo?.timeZone;
@@ -44,14 +49,13 @@ export default function Group() {
   const groupError = error as AxiosError;
 
   // console.log(String(groupError?.request.response));
-
+  console.log(selectedExpense.value);
   const groupName = group?.name;
 
   useEffect(() => {
     groupIsArchived.value = group?.isArchived || false;
     return () => {
       groupIsArchived.value = false;
-    
     };
   }, [group, groupIsArchived.value]);
 
@@ -60,7 +64,7 @@ export default function Group() {
   }, [group, showBottomBar.value]);
 
   return (
-    <StyledGroup $isLoading={isFetching}>
+    <StyledGroup>
       {isFetching ? (
         <div className="group">
           <div className="spinner">
@@ -116,22 +120,26 @@ export default function Group() {
             />
           )}
           {group && <AddNewUserAnimation menu={menu} groupName={groupName} />}
-          {group && <ConfirmUnArchiveGroupAnimation groupId={group.id} openGroupOptionsMenu={openGroupOptionsMenu} menu={confirmUnarchiveMenu} navigateToGroups={false}/>}
+          {group && (
+            <ConfirmUnArchiveGroupAnimation
+              groupId={group.id}
+              openGroupOptionsMenu={openGroupOptionsMenu}
+              menu={confirmUnarchiveMenu}
+              navigateToGroups={false}
+            />
+          )}
           <GroupQuickActionsAnimation menu={menu} />
           <div className="bottomMenu">
             {" "}
-            {showBottomBar.value && (
-              <BottomMainMenu
-              isLoading={isFetching}
+            <BottomMainMenu
               group={group}
-                onClick={() => {
-                  if(group && !group.isArchived){
-                    (menu.value = "menuWithOptions")
-                  }
-                  else{}}
+              onClick={() => {
+                if (group && !group.isArchived) {
+                  menu.value = "menuWithOptions";
+                } else {
                 }
-              />
-            )}
+              }}
+            />
           </div>
         </div>
       )}

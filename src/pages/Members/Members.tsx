@@ -45,7 +45,11 @@ export default function Members() {
   }, [isFetching]);
 
   if (!userInfo || !group) {
-    return <Spinner />;
+    return (
+      <div className="spinner">
+        <Spinner />
+      </div>
+    );
   }
 
   const sortedParticipants = [...allParticipants].sort((a, b) => {
@@ -61,7 +65,7 @@ export default function Members() {
       ) : (
         sortedParticipants?.map((p) => (
           <MemberFC
-          group={group}
+            group={group}
             key={p.id}
             pendingTransactions={debts ?? []}
             groupedTransactions={groupedTransactions}
