@@ -7,12 +7,14 @@ import { Signal, useSignal } from "@preact/signals-react";
 export default function ConfirmUnArchiveGroup({
   menu,
   groupId,
-  openGroupOptionsMenu
+  openGroupOptionsMenu,
+  navigateToGroups
 }: ConfirmArchiveGroupProps) {
   const noGroupFoundError = useSignal<string>("");
   const navigate = useNavigate();
-  const { activeGroupCatAsState } = useOutletContext<{
+  const { activeGroupCatAsState,groupIsArchived } = useOutletContext<{
     activeGroupCatAsState: Signal<string>;
+    groupIsArchived:Signal<boolean>
   }>();
 
   const { mutate: archiveGroup, isPending } = useArchiveGroup(
@@ -25,7 +27,8 @@ export default function ConfirmUnArchiveGroup({
     archiveGroup(false);
     openGroupOptionsMenu.value = false;
     activeGroupCatAsState.value = "Active";
-    navigate("/groups");
+    if(navigateToGroups) {navigate("/groups")};
+    groupIsArchived.value=false
   };
 
   return (

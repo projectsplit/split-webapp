@@ -3,7 +3,6 @@ import { TopMenuProps } from "../../../interfaces";
 import NotificationsBell from "../../NotificationsBell/NotificationsBell";
 import UserOptionsButton from "../../UserOptionsButton/UserOptionsButton";
 import { StyledTopMenu } from "./TopMenu.styled";
-import { useLastViewedNotification } from "../../../api/services/useLastViewedNotification";
 import { useState } from "react";
 import IonIcon from "@reacticons/ionicons";
 
@@ -13,6 +12,8 @@ export default function TopMenu({
   username,
   hasNewerNotifications,
   openGroupOptionsMenu,
+  groupIsArchived,
+  confirmUnarchiveMenu
 }: TopMenuProps) {
   const navigate = useNavigate();
 
@@ -25,7 +26,6 @@ export default function TopMenu({
     }
   };
   const isInGroup = title !== "" && title !== "Groups";
-  //const updateNotification = useLastViewedNotification(10);
 
   return (
     <StyledTopMenu title={title}>
@@ -65,13 +65,23 @@ export default function TopMenu({
       <div className="bellAndCog">
         {" "}
         {isInGroup ? (
-          <div
-            className="cogContainer"
-            onClick={() => (openGroupOptionsMenu.value = true)}
-          >
-            {" "}
-            <IonIcon name="settings-outline" className="cog" />
-          </div>
+          groupIsArchived ? (
+            <div
+              className="cogContainer"
+              onClick={() => (confirmUnarchiveMenu.value='unarchiveGroup')}
+            >
+              {" "}
+              <IonIcon name="arrow-undo-outline" className="arrow" />
+            </div>
+          ) : (
+            <div
+              className="cogContainer"
+              onClick={() => (openGroupOptionsMenu.value = true)}
+            >
+              {" "}
+              <IonIcon name="settings-outline" className="cog" />
+            </div>
+          )
         ) : null}
         <div
           className="bellIconAndNumberOfNotifications"

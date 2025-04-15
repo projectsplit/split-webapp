@@ -22,13 +22,14 @@ export default function Groups() {
   const queryClient = useQueryClient();
   const menu = useSignal<string | null>(null);
   const currencyMenu = useSignal<string | null>(null);
-  const groupIdClicked = useSignal<string>("")
+  const groupIdClicked = useSignal<string>("");
 
-  const { topMenuTitle, activeGroupCatAsState,openGroupOptionsMenu } = useOutletContext<{
-    topMenuTitle: Signal<string>;
-    openGroupOptionsMenu: Signal<boolean>;
-    activeGroupCatAsState: Signal<string>;
-  }>();
+  const { topMenuTitle, activeGroupCatAsState, openGroupOptionsMenu } =
+    useOutletContext<{
+      topMenuTitle: Signal<string>;
+      openGroupOptionsMenu: Signal<boolean>;
+      activeGroupCatAsState: Signal<string>;
+    }>();
 
   const navigate = useNavigate();
   const pageSize = 10;
@@ -44,22 +45,19 @@ export default function Groups() {
         ),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
       initialPageParam: "",
+      staleTime: 0
     });
 
   useEffect(() => {
     topMenuTitle.value = "Groups";
-
     queryClient.refetchQueries({
-      queryKey: ["groups", "active"],
-      exact: true,
-    });
-    queryClient.refetchQueries({
-      queryKey: ["groups", "archived"],
+      queryKey: ["groups", activeGroupCatAsState.value.toLowerCase()],
       exact: true,
     });
   }, [activeGroupCatAsState.value]);
 
   const groups = data?.pages.flatMap((p) => p.groups);
+ 
   const updateMostRecentGroupId = useMostRecentGroup();
 
   const onGroupClickHandler = (id: string, groupName: string) => {
@@ -71,10 +69,13 @@ export default function Groups() {
     activeGroupCatAsState.value === "Active" ? !g.isArchived : g.isArchived
   );
 
-  const onIconClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, groupId:string) => {
+  const onIconClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    groupId: string
+  ) => {
     e.stopPropagation();
-    groupIdClicked.value=groupId
-    menu.value="unarchiveGroup"
+    groupIdClicked.value = groupId;
+    menu.value = "unarchiveGroup";
   };
 
   return (
@@ -125,14 +126,14 @@ export default function Groups() {
                   iconfontsize={30}
                   right={0.8}
                   items={TreeItemBuilderForHomeAndGroups(g?.details)}
-                  optionColor={
+                  $optionColor={
                     activeGroupCatAsState.value === "Archived" ? "#D79244" : ""
                   }
                   onIconClick={(
                     e: React.MouseEvent<HTMLDivElement, MouseEvent>
                   ) =>
                     activeGroupCatAsState.value === "Archived"
-                      ? onIconClick(e,g.id)
+                      ? onIconClick(e, g.id)
                       : null
                   }
                 >
@@ -149,10 +150,15 @@ export default function Groups() {
           </div>
         )}
       </StyledGroups>
-      <MenuAnimationBackground menu={menu}/>
+      <MenuAnimationBackground menu={menu} />
       <BottomMainMenu onClick={() => (menu.value = "createGroup")} />
       <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
-      <ConfirmUnArchiveGroupAnimation menu={menu} groupId={groupIdClicked.value} openGroupOptionsMenu={openGroupOptionsMenu}/>
+      <ConfirmUnArchiveGroupAnimation
+        menu={menu}
+        groupId={groupIdClicked.value}
+        openGroupOptionsMenu={openGroupOptionsMenu}
+        navigateToGroups={true}
+      />
     </StyledGroupsContainer>
   );
 }

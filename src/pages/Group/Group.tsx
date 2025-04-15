@@ -20,6 +20,7 @@ import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTrans
 import GroupOptions from "../Groups/GroupOptions/GroupOptions";
 import { AxiosError } from "axios";
 import { MdOutlineGroupOff } from "react-icons/md";
+import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
 
 export default function Group() {
   const menu = useSignal<string | null>(null);
@@ -28,12 +29,13 @@ export default function Group() {
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
 
-  const { userInfo, topMenuTitle, openGroupOptionsMenu, shouldStyleBorder } =
+  const { userInfo, topMenuTitle, openGroupOptionsMenu, groupIsArchived,confirmUnarchiveMenu } =
     useOutletContext<{
       userInfo: UserInfo;
       topMenuTitle: Signal<string>;
       openGroupOptionsMenu: Signal<boolean>;
-      shouldStyleBorder: Signal<boolean>;
+      groupIsArchived: Signal<boolean>;
+      confirmUnarchiveMenu:Signal<string | null>
     }>();
 
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -46,18 +48,19 @@ export default function Group() {
   const groupName = group?.name;
 
   useEffect(() => {
-    shouldStyleBorder.value = group?.isArchived || false;
+    groupIsArchived.value = group?.isArchived || false;
     return () => {
-      shouldStyleBorder.value = false;
+      groupIsArchived.value = false;
+    
     };
-  }, [group, shouldStyleBorder.value]);
+  }, [group, groupIsArchived.value]);
 
   useEffect(() => {
     topMenuTitle.value = group?.name || "";
   }, [group, showBottomBar.value]);
 
   return (
-    <StyledGroup>
+    <StyledGroup $isLoading={isFetching}>
       {isFetching ? (
         <div className="group">
           <div className="spinner">
@@ -95,6 +98,7 @@ export default function Group() {
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}
 
           <MenuAnimationBackground menu={menu} />
+          <MenuAnimationBackground menu={confirmUnarchiveMenu} />
           {group && (
             <NewExpenseAnimation
               expense={null}
@@ -112,12 +116,20 @@ export default function Group() {
             />
           )}
           {group && <AddNewUserAnimation menu={menu} groupName={groupName} />}
+          {group && <ConfirmUnArchiveGroupAnimation groupId={group.id} openGroupOptionsMenu={openGroupOptionsMenu} menu={confirmUnarchiveMenu} navigateToGroups={false}/>}
           <GroupQuickActionsAnimation menu={menu} />
           <div className="bottomMenu">
             {" "}
             {showBottomBar.value && (
               <BottomMainMenu
-                onClick={() => (menu.value = "menuWithOptions")}
+              isLoading={isFetching}
+              group={group}
+                onClick={() => {
+                  if(group && !group.isArchived){
+                    (menu.value = "menuWithOptions")
+                  }
+                  else{}}
+                }
               />
             )}
           </div>

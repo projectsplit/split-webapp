@@ -26,6 +26,12 @@ export const StyledTopMenu = styled.div<{ title: string }>`
       position: relative;
       cursor: pointer;
     }
+    .arrow{
+      font-size: 1.5rem;
+      position: relative;
+      cursor: pointer;
+      color: ${({ theme }) => theme.orange}
+    }
   }
 
   .bellIconAndNumberOfNotifications {

@@ -6,7 +6,8 @@ import ConfirmUnArchiveGroup from "../Confirmations/ConfirmUnArchiveGroup";
 export default function ConfirmUnArchiveGroupAnimation({
   menu,
   groupId,
-  openGroupOptionsMenu
+  openGroupOptionsMenu,
+  navigateToGroups
 }: ConfirmArchiveGroupAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -17,7 +18,7 @@ export default function ConfirmUnArchiveGroupAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <ConfirmUnArchiveGroup menu={menu} groupId={groupId} openGroupOptionsMenu={openGroupOptionsMenu} />
+      <ConfirmUnArchiveGroup menu={menu} groupId={groupId} openGroupOptionsMenu={openGroupOptionsMenu} navigateToGroups={navigateToGroups} />
     </CSSTransition>
   );
 }

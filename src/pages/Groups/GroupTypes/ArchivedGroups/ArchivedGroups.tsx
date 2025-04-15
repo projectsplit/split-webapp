@@ -53,7 +53,7 @@ export default function ArchivedGroups() {
                 iconfontsize={30}
                 right={0.8}
                 items={TreeItemBuilderForHomeAndGroups(g?.details)}
-                optionColor="#D79244"
+                $optionColor="#D79244"
                
               >
                 <div className="groupName">{g.name}</div>

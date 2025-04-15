@@ -61,6 +61,7 @@ export default function Members() {
       ) : (
         sortedParticipants?.map((p) => (
           <MemberFC
+          group={group}
             key={p.id}
             pendingTransactions={debts ?? []}
             groupedTransactions={groupedTransactions}

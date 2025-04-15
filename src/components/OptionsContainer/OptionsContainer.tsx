@@ -8,7 +8,7 @@ export default function OptionsContainer({
   onClick,
   hasOption,
   optionname,
-  optionColor,
+  $optionColor,
   iconfontsize,
   right,
   onIconClick,
@@ -23,7 +23,7 @@ export default function OptionsContainer({
     >
       {children}
       {hasOption && (
-        <IonIcon name={optionname} className="arrow" onClick={onIconClick} style={{color:optionColor}}/>
+        <IonIcon name={optionname} className="arrow" onClick={onIconClick} style={{color:$optionColor}}/>
       )}
     </StyledOptionsContainer>
   );

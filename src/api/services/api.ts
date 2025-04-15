@@ -50,6 +50,7 @@ export const getGroupsTotalAmounts = async (
   next: string,
   isArchived:boolean
 ): Promise<GroupsTotalAmountsResponse> => {
+  console.log(isArchived)
   const params = { pageSize, next, isArchived };
   const response = await apiClient.get<GroupsTotalAmountsResponse>(
     "/groups/details",

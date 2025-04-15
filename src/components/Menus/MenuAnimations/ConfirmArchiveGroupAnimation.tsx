@@ -17,7 +17,7 @@ export default function ConfirmArchiveGroupAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <ConfirmArchiveGroup menu={menu} groupId={groupId} openGroupOptionsMenu={openGroupOptionsMenu}/>
+      <ConfirmArchiveGroup menu={menu} groupId={groupId} openGroupOptionsMenu={openGroupOptionsMenu} navigateToGroups={true}/>
     </CSSTransition>
   );
 }

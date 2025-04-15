@@ -1,7 +1,7 @@
 import styled from "styled-components";
 interface StyledPillOptions {
   color: string;
-  textColor: string;
+  $textColor: string;
   fontSize?: string;
 }
 export const StyledPill = styled.div<StyledPillOptions>`
@@ -25,7 +25,7 @@ export const StyledPill = styled.div<StyledPillOptions>`
   color: ${(props) => props.color};
 
   .title {
-    color: ${(props) => props.textColor};
+    color: ${(props) => props.$textColor};
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis;

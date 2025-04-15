@@ -8,11 +8,15 @@ export default function ConfirmArchiveGroup({
   menu,
   groupId,
   openGroupOptionsMenu,
+  navigateToGroups,
 }: ConfirmArchiveGroupProps) {
+
   const noGroupFoundError = useSignal<string>("");
   const navigate = useNavigate();
-  const { activeGroupCatAsState } = useOutletContext<{
+
+  const { activeGroupCatAsState,groupIsArchived } = useOutletContext<{
     activeGroupCatAsState: Signal<string>;
+    groupIsArchived:Signal<boolean>
   }>();
 
   const { mutate: archiveGroup, isPending } = useArchiveGroup(
@@ -23,10 +27,12 @@ export default function ConfirmArchiveGroup({
 
   const handleConfirm = () => {
     archiveGroup(true);
-    navigate("/groups");
-    openGroupOptionsMenu.value = false;
-    activeGroupCatAsState.value = "Archived";
-  
+    if (navigateToGroups && isPending === false) {
+      openGroupOptionsMenu.value = false;
+      activeGroupCatAsState.value = "Archived";
+ 
+      navigate("/groups");
+    }
   };
 
   return (

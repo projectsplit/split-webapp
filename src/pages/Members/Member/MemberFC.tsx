@@ -23,6 +23,7 @@ export default function MemberFC({
   memberIdSelectedToSettleUp,
   members,
   totalSpent,
+  group
 }: MemberProps) {
   const totalsSpent = totalSpent[memberId];
   const removeZeroesValuesFromTotalSpent = Object.fromEntries(
@@ -30,8 +31,7 @@ export default function MemberFC({
   );
 
   const showSettleUpButton =
-    (isGuest || isLogedUser) &&
-    pendingTransactions.filter((p) => p.debtor === memberId).length > 0;
+    (isGuest || isLogedUser) &&  pendingTransactions.filter((p) => p.debtor === memberId).length > 0&&!group.isArchived;
 
   const memberOwesItems = pendingTransactions
     .filter((p) => p.debtor === memberId)

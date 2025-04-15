@@ -63,7 +63,7 @@ const Expense = ({
           {labels.map((l, index) => {
             return (
               <Pill
-                textColor={"#000000c8"}
+                $textColor={"#000000c8"}
                 key={index}
                 title={l.text}
                 color={labelColors[l.color]}
