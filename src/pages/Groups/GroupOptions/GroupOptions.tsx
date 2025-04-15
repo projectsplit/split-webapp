@@ -85,6 +85,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
     };
   }, [openGroupOptionsMenu]);
 
+ 
   return (
     <StyledGroupOptions>
       {" "}
@@ -153,6 +154,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
         menu={archiveGroupMenu}
         groupId={group?.id}
         openGroupOptionsMenu={openGroupOptionsMenu}
+        navigateToGroups={true}
       />
       <ConfirmLeaveGroupAnimation
         menu={leaveGroupMenu}

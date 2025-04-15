@@ -16,25 +16,29 @@ const Protected: React.FC = () => {
     queryFn: getMe,
     enabled: isUserAuthenticated(),
   });
-  const shouldStyleBorder = useSignal<boolean>(false);
+  const groupIsArchived = useSignal<boolean>(false)
+  
+
   const hasNewerNotifications = userInfo?.hasNewerNotifications;
 
   const topMenuTitle = useSignal<string>("");
   const menu = useSignal<string | null>(null);
   const openGroupOptionsMenu = useSignal<boolean>(false);
   const activeGroupCatAsState = useSignal<string>("Active");
-  
+  const confirmUnarchiveMenu =useSignal<string | null>(null);
 
   return isUserAuthenticated() ? (
-    <StyledProtected shouldStyleBorder={shouldStyleBorder.value}>
+    <StyledProtected $shouldStyleBorder={groupIsArchived.value}>
       <TopMenu
         title={topMenuTitle.value}
         menu={menu}
         username={userInfo?.username}
         hasNewerNotifications={hasNewerNotifications || false}
         openGroupOptionsMenu={openGroupOptionsMenu}
+        groupIsArchived={groupIsArchived.value}
+        confirmUnarchiveMenu={confirmUnarchiveMenu}
       />
-      <Outlet context={{ userInfo, topMenuTitle,openGroupOptionsMenu,activeGroupCatAsState,shouldStyleBorder }} />
+      <Outlet context={{ userInfo, topMenuTitle,openGroupOptionsMenu,activeGroupCatAsState,groupIsArchived,confirmUnarchiveMenu }} />
       <MenuAnimationBackground menu={menu} />
       <NotificationsMenuAnimation
         menu={menu}
@@ -42,6 +46,7 @@ const Protected: React.FC = () => {
         userInfo={userInfo}
       />
       <SettingsMenuAnimation menu={menu} userInfo={userInfo} />
+      {/* <ConfirmUnArchiveGroupAnimation  /> */}
     </StyledProtected>
   ) : (
     <Navigate

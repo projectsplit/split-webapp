@@ -48,7 +48,7 @@ const Transfers: React.FC = () => {
     });
 
   const transfers = data?.pages.flatMap((p) => p.transfers);
-
+  const groupIsArchived = group.isArchived
   useEffect(() => {
     isFetching && !isFetchingNextPage
       ? (showBottomBar.value = false)
@@ -137,6 +137,7 @@ const Transfers: React.FC = () => {
           errorMessage={errorMessage}
           userMemberId={userMemberId || ""}
           members={allParticipants}
+          groupIsArchived={groupIsArchived}
         />
       )}
       <MenuAnimationBackground menu={menu} />

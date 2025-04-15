@@ -11,14 +11,13 @@ export const MemberDetailedDescription = ({
   isLogedUser,
   isOwed,
   name,
-  members
+  members,
 }: MemberDetailedDescriptionProps) => {
 
   const doNotshowTreeWhenMemberOwes =
     pendingTransactions.filter((p) => p.debtor === memberId).length === 1;
   const doNotshowTreeWhenMemberIsOwed =
     pendingTransactions.filter((p) => p.creditor === memberId).length === 1;
-
 
   return (
     <StyledMemberDetailedDescription isOwed={isOwed}>
@@ -38,7 +37,6 @@ export const MemberDetailedDescription = ({
         <span className="owingText">owes</span>
       )}
       &nbsp;{" "}
-      
       {memberTransactions
         .filter((mt) => mt.isOwed === isOwed)
         .map((mt, index, array) => {
@@ -51,19 +49,16 @@ export const MemberDetailedDescription = ({
           const isLast = index === array.length - 1;
 
           if (isLast && array.length > 1) {
-        
             return (
               <div className="and" key={index}>
                 {" "}
                 <span className="owingText">and</span>{" "}
                 <span className="amount">{formattedAmount} </span>
-                <span  className="owingText">in total</span>
-                
+                <span className="owingText">in total</span>
               </div>
             );
           }
 
- 
           return (
             <React.Fragment key={index}>
               <span
@@ -71,39 +66,57 @@ export const MemberDetailedDescription = ({
                 style={{
                   marginRight:
                     array.length === 1 &&
-                    (doNotshowTreeWhenMemberOwes || doNotshowTreeWhenMemberIsOwed)? "4px" : "0px"}}>
+                    (doNotshowTreeWhenMemberOwes ||
+                      doNotshowTreeWhenMemberIsOwed)
+                      ? "4px"
+                      : "0px",
+                }}
+              >
                 {formattedAmount}{" "}
-               {array.length === 1 &&(!doNotshowTreeWhenMemberOwes && !doNotshowTreeWhenMemberIsOwed)?<span  className="owingText">in total</span>:''} 
+                {array.length === 1 &&
+                !doNotshowTreeWhenMemberOwes &&
+                !doNotshowTreeWhenMemberIsOwed ? (
+                  <span className="owingText">in total</span>
+                ) : (
+                  ""
+                )}
               </span>
-              
               <div className="transaction-container">
-                {array.length === 1 && doNotshowTreeWhenMemberOwes
+                {array.length === 1 &&
+                doNotshowTreeWhenMemberOwes &&
+                isOwed === false
                   ? pendingTransactions
                       .filter((p) => p.debtor === memberId)
-                      .map((p,index) => (
+                      .map((p, index) => (
                         <div className="transaction" key={index}>
                           <span className="preposition">to</span>{" "}
-                          <strong>{members.find(member=>member.id===p.creditor)?.name}</strong>
-                          
+                          <strong>
+                            {
+                              members.find((member) => member.id === p.creditor)
+                                ?.name
+                            }
+                          </strong>
                         </div>
-                        
                       ))
-                  : ""}
-                {array.length === 1 && doNotshowTreeWhenMemberIsOwed
+                  : array.length === 1 &&
+                    doNotshowTreeWhenMemberIsOwed &&
+                    isOwed
                   ? pendingTransactions
                       .filter((p) => p.creditor === memberId)
                       .map((p, index) => (
                         <div className="transaction" key={index}>
                           <span className="preposition">from</span>{" "}
-                          <strong>{members.find(member=>member.id===p.debtor)?.name}</strong>
-                          
+                          <strong>
+                            {
+                              members.find((member) => member.id === p.debtor)
+                                ?.name
+                            }
+                          </strong>
                         </div>
                       ))
                   : ""}
               </div>
-              {!isLast && !isSecondToLast && <span className="comma">,</span>
-              }
-              
+              {!isLast && !isSecondToLast && <span className="comma">,</span>}
               &nbsp;
             </React.Fragment>
           );

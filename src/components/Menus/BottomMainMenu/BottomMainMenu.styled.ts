@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledBottomMainMenu = styled.div`
+export const StyledBottomMainMenu = styled.div<{$groupIsArchived?:boolean;}>`
   
   padding: 0.625rem;
 
@@ -26,12 +26,16 @@ export const StyledBottomMainMenu = styled.div`
     .add {
       font-size: 1.5rem;
       padding: 0.5rem;
-      border: 2px solid ${({ theme }) => theme.greyOutline};
+      border: 2px solid ${({ theme,$groupIsArchived }) => !$groupIsArchived?theme.greyOutline:theme.orange};
       border-radius: 20%;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
+      .prohibited{
+        color:${({ theme,$groupIsArchived }) => !$groupIsArchived?theme.greyOutline:theme.orange};
+        cursor: not-allowed;
+      }
     }
   }
 `;

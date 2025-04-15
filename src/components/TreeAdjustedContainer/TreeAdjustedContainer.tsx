@@ -13,7 +13,7 @@ export default function TreeAdjustedContainer({
   iconfontsize,
   right,
   onIconClick,
-  optionColor
+  $optionColor
 }: TreeAdjustedContainerProps) {
   const hasTreeComponent = items.length > 1 ? true : false;
   if (!hasTreeComponent) {
@@ -25,7 +25,7 @@ export default function TreeAdjustedContainer({
         iconfontsize={iconfontsize}
         right={right}
         onIconClick={onIconClick}
-        optionColor={optionColor}
+        $optionColor={$optionColor}
       >
         {children}
         {items.map((item, index) => (
@@ -41,7 +41,7 @@ export default function TreeAdjustedContainer({
       optionname={optionname}
       iconfontsize={iconfontsize}
       right={right}
-      optionColor={optionColor}
+      $optionColor={$optionColor}
     >
       {children}
       {hasOption && (

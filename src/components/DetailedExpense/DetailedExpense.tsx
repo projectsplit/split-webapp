@@ -35,7 +35,7 @@ export default function DetailedExpense({
   errorMessage,
   userMemberId,
   group,
-}: DetailedExpenseProps) { 
+}: DetailedExpenseProps) {
   const googleUrl = "https://www.google.com/maps/search/?api=1&query=";
   const theme = {
     text: {
@@ -67,25 +67,25 @@ export default function DetailedExpense({
 
   const expenseToEdit: FormExpense | undefined = selectedExpense.value
     ? {
-      id: selectedExpense.value.id,
-      amount: selectedExpense.value.amount.toString(),
-      description: selectedExpense.value.description,
-      currency: selectedExpense.value.currency,
-      groupId: group.id,
-      labels: selectedExpense.value.labels,
-      participants: selectedExpense.value.shares.map((share) => ({
-        memberId: share.memberId,
-        participationAmount: share.amount.toString(),
-      })),
-      payers: selectedExpense.value.payments.map((payment) => ({
-        memberId: payment.memberId,
-        paymentAmount: payment.amount.toString(),
-      })),
-      location: selectedExpense.value.location,
-      expenseTime: new Date(selectedExpense.value.occurred),
-      creationTime: new Date(selectedExpense.value.created),
-      lastUpdateTime: new Date(selectedExpense.value.updated),
-    }
+        id: selectedExpense.value.id,
+        amount: selectedExpense.value.amount.toString(),
+        description: selectedExpense.value.description,
+        currency: selectedExpense.value.currency,
+        groupId: group.id,
+        labels: selectedExpense.value.labels,
+        participants: selectedExpense.value.shares.map((share) => ({
+          memberId: share.memberId,
+          participationAmount: share.amount.toString(),
+        })),
+        payers: selectedExpense.value.payments.map((payment) => ({
+          memberId: payment.memberId,
+          paymentAmount: payment.amount.toString(),
+        })),
+        location: selectedExpense.value.location,
+        expenseTime: new Date(selectedExpense.value.occurred),
+        creationTime: new Date(selectedExpense.value.created),
+        lastUpdateTime: new Date(selectedExpense.value.updated),
+      }
     : undefined;
 
   return (
@@ -102,22 +102,24 @@ export default function DetailedExpense({
           <IonIcon name="close-outline" className="close" />
         </div>
       </div>
-      {labels.length > 0 ? <div className="dateAndLabels">
-        <div className="labelsWrapper">
-          <div className="labels">
-            {labels.map((l, i) => (
-              <Pill
-                key={i}
-                title={l.text}
-                textColor="#000000c8"
-                color={labelColors[l.color]}
-                closeButton={false}
-                fontSize="18px"
-              />
-            ))}
+      {labels.length > 0 ? (
+        <div className="dateAndLabels">
+          <div className="labelsWrapper">
+            <div className="labels">
+              {labels.map((l, i) => (
+                <Pill
+                  key={i}
+                  title={l.text}
+                  $textColor="#000000c8"
+                  color={labelColors[l.color]}
+                  closeButton={false}
+                  fontSize="18px"
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div> : null}
+      ) : null}
       <div className="total">
         {displayCurrencyAndAmount(amount.toString(), currency)}
       </div>
@@ -139,51 +141,55 @@ export default function DetailedExpense({
 
       <div className="editDeleteButtons">
         <div className="dummyDiv" />
-        <div className="buttons">
-          <div className="editButton">
-            <MyButton onClick={() => (menu.value = "editExpense")}>
-              <div className="buttonChildren">
-                <AiFillEdit className="icon" />
-                <span>Edit</span>
-              </div>
-            </MyButton>
+
+        {!group.isArchived ? (
+          <div className="buttons">
+            <div className="editButton">
+              <MyButton onClick={() => (menu.value = "editExpense")}>
+                <div className="buttonChildren">
+                  <AiFillEdit className="icon" />
+                  <span>Edit</span>
+                </div>
+              </MyButton>
+            </div>
+            <div className="deleteButton">
+              <MyButton
+                onClick={() => (menu.value = "deleteExpense")}
+                variant="secondary"
+              >
+                <div className="buttonChildren">
+                  <AiFillDelete className="icon" />
+                  <span>Delete</span>
+                </div>
+              </MyButton>
+            </div>
           </div>
-          <div className="deleteButton">
-            <MyButton
-              onClick={() => (menu.value = "deleteExpense")}
-              variant="secondary"
-            >
-              <div className="buttonChildren">
-                <AiFillDelete className="icon" />
-                <span>Delete</span>
-              </div>
-            </MyButton>
-          </div>
-        </div>
+        ) : null}
+
         <div className="dummyDiv" />
       </div>
       <div className="createdBy">
         Created by {members.find((x) => x.id === creator)?.name}{" "}
         {DateOnly(occurred, timeZoneId) === "Today" ||
-          DateOnly(occurred, timeZoneId) === "Yesterday"
+        DateOnly(occurred, timeZoneId) === "Yesterday"
           ? DateOnly(created, timeZoneId)
           : "on" +
-          " " +
-          DateOnly(occurred, timeZoneId) +
-          " " +
-          YearOnly(occurred, timeZoneId)}{" "}
+            " " +
+            DateOnly(occurred, timeZoneId) +
+            " " +
+            YearOnly(occurred, timeZoneId)}{" "}
         at {TimeOnly(created, timeZoneId)}
       </div>
       <div className="date">
         Occurred{" "}
         {DateOnly(occurred, timeZoneId) === "Today" ||
-          DateOnly(occurred, timeZoneId) === "Yesterday"
+        DateOnly(occurred, timeZoneId) === "Yesterday"
           ? DateOnly(occurred, timeZoneId)
           : "on" +
-          " " +
-          DateOnly(occurred, timeZoneId) +
-          " " +
-          YearOnly(occurred, timeZoneId)}{" "}
+            " " +
+            DateOnly(occurred, timeZoneId) +
+            " " +
+            YearOnly(occurred, timeZoneId)}{" "}
         at {TimeOnly(occurred, timeZoneId)}
       </div>
       <div className="commentSection">
@@ -191,11 +197,11 @@ export default function DetailedExpense({
           {/* <Comment />
           <Comment /> */}
         </div>
-        <div>
+       {!group.isArchived?<div>
           <LexicalComposer initialConfig={initialConfig}>
             <EditorContent />
           </LexicalComposer>
-        </div>
+        </div>:null } 
       </div>
       <MenuAnimationBackground menu={menu} />
       <DeleteExpenseAnimation

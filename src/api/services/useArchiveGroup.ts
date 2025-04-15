@@ -19,10 +19,12 @@ export const useArchiveGroup = (
       }
       return archiveGroup({ isArchived }, groupId);
     },
-    onSuccess: async (_data, isArchived: boolean) => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey:["groups"], exact:false});
       await queryClient.refetchQueries({ queryKey: ["groups", "active"], exact: true });
       await queryClient.refetchQueries({ queryKey: ["groups", "archived"], exact: true });
       await queryClient.refetchQueries({ queryKey: ["mostRecentGroup"], exact: false });
+      await queryClient.refetchQueries({ queryKey: [groupId], exact: false });
       menu.value = null;
     },
   });

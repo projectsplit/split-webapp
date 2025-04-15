@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledGroup = styled.div`
+export const StyledGroup = styled.div<{$isLoading?:boolean}>`
 
   .spinner {
     display: flex;
@@ -38,11 +38,10 @@ export const StyledGroup = styled.div`
   }
   }
 
-  /* .bottom-bar {
-    margin-bottom: auto;
-  } */
+
   .bottomMenu {
     margin-top: auto; 
-    padding-bottom: 4.91rem;
+    padding-bottom: ${({ $isLoading }) => ($isLoading ? '2.91rem' : '4.91rem')};
+    
   }
 `;

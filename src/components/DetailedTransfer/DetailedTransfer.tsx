@@ -23,7 +23,8 @@ export default function DetailedTransfer({
   timeZoneId,
   userMemberId,
   members,
-  errorMessage
+  errorMessage,
+  groupIsArchived,
 }: DetailedTransferProps) {
   const menu = useSignal<string | null>(null);
 
@@ -81,16 +82,24 @@ export default function DetailedTransfer({
               ?.name
           }
         </div>
-        <div className="descr">{selectedTransfer.value?.description? `“ ${selectedTransfer.value?.description} ”`:""}</div>
+        <div className="descr">
+          {selectedTransfer.value?.description
+            ? `“ ${selectedTransfer.value?.description} ”`
+            : ""}
+        </div>
       </div>
-      <div className="deleteButton">
-        <MyButton onClick={() => (menu.value = "deleteTransfer")}>
-          <div className="buttonChildren">
-            <AiFillDelete className="icon" />
-            <span>Delete</span>
-          </div>
-        </MyButton>
-      </div>
+
+      {!groupIsArchived ? (
+        <div className="deleteButton">
+          <MyButton onClick={() => (menu.value = "deleteTransfer")}>
+            <div className="buttonChildren">
+              <AiFillDelete className="icon" />
+              <span>Delete</span>
+            </div>
+          </MyButton>
+        </div>
+      ) : null}
+
       <div className="createdBy">
         Created by {members.find((x) => x.id === creator)?.name}{" "}
         {DateOnly(occurred, timeZoneId) === "Today" ||
@@ -129,7 +138,6 @@ export default function DetailedTransfer({
       <MenuAnimationBackground menu={menu} />
       <DeleteTransferAnimation
         menu={menu}
-       
         selectedTransfer={selectedTransfer}
         errorMessage={errorMessage}
       />

@@ -92,6 +92,7 @@ export interface DetailedTransferProps {
   userMemberId: string;
   members: TruncatedMember[];
   errorMessage: Signal<string>;
+  groupIsArchived:boolean
 }
 
 export interface TransferProps {
@@ -165,7 +166,7 @@ export interface OptionsContainerProps {
   iconfontsize?: number;
   right?: number;
   onIconClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  optionColor?: string;
+  $optionColor?: string;
 }
 export interface GroupOptionsProps {
   group: Group | undefined;
@@ -180,7 +181,7 @@ export interface TreeAdjustedContainerProps {
   iconfontsize?: number;
   right?: number;
   onIconClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  optionColor?: string;
+  $optionColor?: string;
 }
 
 export interface NotificationsBellProps {
@@ -199,6 +200,8 @@ export interface RecommendationMessageProps {
 }
 export interface BottomMainMenuProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+  group?:Group;
+  isLoading?:boolean
 }
 export interface OverspentMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -346,6 +349,8 @@ export interface TopMenuProps {
   username: string | undefined;
   hasNewerNotifications: boolean;
   openGroupOptionsMenu: Signal<boolean>;
+  groupIsArchived: boolean;
+  confirmUnarchiveMenu:Signal<string | null>
 }
 
 export interface ToggleSwitchProps {
@@ -436,6 +441,7 @@ export interface MemberProps {
   members: TruncatedMember[];
   isGuest: boolean;
   totalSpent: Record<string, Record<string, number>>;
+  group:Group
 }
 
 export interface RenderScenariosProps {
@@ -507,7 +513,7 @@ export interface SettleUpOptionsProps {
 export interface PillProps {
   title: string;
   color: string;
-  textColor: string;
+  $textColor: string;
   closeButton: boolean;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onClose?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -595,6 +601,7 @@ export interface ConfirmationProps {
 export interface ConfirmArchiveGroupAnimationProps extends MenuProps {
   groupId: string | undefined;
   openGroupOptionsMenu: Signal<boolean>;
+  navigateToGroups:boolean;
 }
 
 export interface ConfirmLeaveGroupAnimationProps extends MenuProps {
@@ -606,6 +613,7 @@ export interface ConfirmLeaveGroupAnimationProps extends MenuProps {
 export interface ConfirmArchiveGroupProps extends MenuProps {
   groupId: string | undefined;
   openGroupOptionsMenu: Signal<boolean>;
+  navigateToGroups:boolean
 }
 
 export interface ConfirmLeaveGroupProps extends MenuProps {
