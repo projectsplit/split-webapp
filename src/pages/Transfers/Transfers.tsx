@@ -56,7 +56,7 @@ const Transfers: React.FC = () => {
   }, [isFetching]);
 
   if (isFetching && !isFetchingNextPage) {
-    return <Spinner />;
+return <div className="spinner"><Spinner /></div>;
   }
 
   const totalSent = transfers?.reduce((sum, t) => {

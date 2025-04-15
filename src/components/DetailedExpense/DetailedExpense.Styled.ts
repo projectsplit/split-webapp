@@ -10,6 +10,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
   scrollbar-width: thin;
   margin: 2px;
   box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`};
+  z-index:4;
   .dateAndLabels {
     display: flex;
     flex-direction: column;

@@ -1,21 +1,22 @@
 import styled from "styled-components";
 
-export const StyledGroup = styled.div<{$isLoading?:boolean}>`
-
+export const StyledGroup = styled.div`
+  overflow: auto;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   .spinner {
     display: flex;
     flex-direction: column;
     margin-top: 2rem;
   }
   .group {
+    flex: 1; /* Allow the group content to take available space */
     overflow: auto;
-    box-sizing: border-box;
-    position: fixed;
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
-
     .noData {
     display: flex;
     flex-direction: column;
@@ -37,11 +38,17 @@ export const StyledGroup = styled.div<{$isLoading?:boolean}>`
     }
   }
   }
-
+  .spinner {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    flex: 1; /* Ensure spinner takes available space during loading */
+  }
 
   .bottomMenu {
-    margin-top: auto; 
-    padding-bottom: ${({ $isLoading }) => ($isLoading ? '2.91rem' : '4.91rem')};
-    
+    position: sticky;
+    bottom: 0;
+    z-index: 2; /* Ensure it stays above other content */
+    background-color: ${({ theme }) => theme.backgroundcolor || '#fff'}; /* Match background to avoid visual gaps */
   }
 `;

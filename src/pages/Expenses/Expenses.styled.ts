@@ -9,6 +9,7 @@ export const StyledExpenses = styled.div`
   overflow-y: auto;
   height: 100%;
   gap: 16px;
+  flex: 1;
   
 
   .noData {
@@ -120,5 +121,17 @@ export const StyledExpenses = styled.div`
       flex-direction: column;
       gap: 8px;
     }
+  }
+
+
+
+  .spinner {
+    display: flex;
+    flex-direction: column;
+    flex: 1; 
+    align-items: center;
+    justify-content: center; 
+    margin-top: 2rem; 
+    height: 100%; 
   }
 `;

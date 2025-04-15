@@ -13,7 +13,7 @@ export const StyledBottomMenu = styled.div<StyledBottomMenuProps>`
   border-radius: 12px 12px 0px 0px;
   display: flex;
   flex-direction: column;
-  z-index: 2;
+  z-index: 3;
   gap: 14px;
   padding: 14px;
   height: ${(props) => props.height};

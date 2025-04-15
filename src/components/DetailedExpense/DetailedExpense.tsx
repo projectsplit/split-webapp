@@ -197,11 +197,13 @@ export default function DetailedExpense({
           {/* <Comment />
           <Comment /> */}
         </div>
-       {!group.isArchived?<div>
-          <LexicalComposer initialConfig={initialConfig}>
-            <EditorContent />
-          </LexicalComposer>
-        </div>:null } 
+        {!group.isArchived ? (
+          <div>
+            <LexicalComposer initialConfig={initialConfig}>
+              <EditorContent />
+            </LexicalComposer>
+          </div>
+        ) : null}
       </div>
       <MenuAnimationBackground menu={menu} />
       <DeleteExpenseAnimation
