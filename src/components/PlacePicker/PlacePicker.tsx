@@ -233,39 +233,6 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
     [placesService, selectedLocation]
   );
 
-  useEffect(() => {
-    if (
-      selectedLocation.google?.address ||
-      !geocoder ||
-      !shouldPanToUserLocation.current
-    ) return;
-
-    const position: google.maps.LatLngLiteral = {
-      lat: selectedLocation.coordinates.latitude,
-      lng: selectedLocation.coordinates.longitude,
-    };
-
-    geocoder.geocode({ location: position }).then((response) => {
-      const firstResult = response.results[0];
-
-      setSelectedLocation({
-        coordinates: {
-          latitude: position.lat,
-          longitude: position.lng,
-        },
-        google: {
-          address: firstResult.formatted_address,
-          id: null,
-          name: firstResult.formatted_address,
-          url: buildGoogleUrl({
-            latitude: position.lat,
-            longitude: position.lng,
-          }),
-        },
-      });
-    });
-  }, [geocoder, selectedLocation]);
-
   return (
     <StyledPlacePicker >
       <div className="map-container">
