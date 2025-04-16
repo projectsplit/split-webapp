@@ -370,7 +370,7 @@ const MemberPicker = ({
       )}
       <div className="meta">
         {description && <span className="description">{description}</span>}
-        {error && <span className="error">{error}</span>}
+        {<span className="error">{error}</span>}
       </div>
     </StyledMemberPicker>
   );

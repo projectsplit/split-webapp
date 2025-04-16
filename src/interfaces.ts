@@ -1,15 +1,13 @@
 import { CSSProperties } from "react";
 import {
+  Coordinates,
   Debt,
   ExpenseResponseItem,
   FormExpense,
   Frequency,
   GeoLocation,
-  GetUserInvitationsResponse,
-  GetUserInvitationsResponseItem,
   Group,
   GroupedTransaction,
-  GroupWithDetails,
   Label,
   Payment,
   PickerMember,
@@ -20,11 +18,6 @@ import {
   UserInfo,
 } from "./types";
 import { Signal } from "@preact/signals-react";
-import {
-  FetchNextPageOptions,
-  InfiniteData,
-  InfiniteQueryObserverResult,
-} from "@tanstack/react-query";
 
 export interface ExpenseProps {
   timeZoneId: string;
@@ -278,12 +271,15 @@ export interface CurrencyOptionsAnimationProps {
 export interface LocationPickerProps {
   isMapOpen: Signal<boolean>;
   location: Signal<GeoLocation | undefined>;
+  timeZoneCoordinates: Coordinates
 }
 
 export interface PlacePickerProps {
   location: Signal<GeoLocation | undefined>;
   isMapOpen: Signal<boolean>;
+  defaultCoordinates: Coordinates;
 }
+
 export interface PlacePickerAnimationProps extends PlacePickerProps {}
 export interface TimeZoneOptionsAnimationProps {
   clickHandler: (curr: string) => void;
@@ -364,6 +360,7 @@ export interface NewExpenseAnimationProps {
   timeZoneId: string;
   menu: Signal<string | null>;
   selectedExpense: Signal<ExpenseResponseItem | null>;
+  timeZoneCoordinates: Coordinates
 }
 
 export interface NewTransferAnimationProps {
@@ -377,7 +374,9 @@ export interface ExpenseFormProps {
   expense: FormExpense | null;
   timeZoneId: string;
   menu: Signal<string | null>;
+  timeZoneCoordinates: Coordinates;
 }
+
 export interface EditExpenseFormProps extends ExpenseFormProps {
   selectedExpense: Signal<ExpenseResponseItem | null>;
 }

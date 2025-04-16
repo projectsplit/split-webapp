@@ -31,6 +31,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   expense,
   timeZoneId,
   menu,
+  timeZoneCoordinates
 }) => {
   const [participants, setParticipants] = useState<PickerMember[]>(
     createParticipantPickerArray(group, expense)
@@ -41,6 +42,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     createPayerPickerArray(group, expense)
   );
   const [payersError, setPayersError] = useState<string>("");
+  const [descriptionError, setDescriptionError] = useState<string>("");
 
   const [currencySymbol, setCurrencySymbol] = useState<string>(group.currency);
   const [amount, setAmount] = useState<string>("");
@@ -62,17 +64,23 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   const submitExpense = () => {
     setShowAmountError(true);
-    if (
-      participants.length ===
-      participants.filter((p) => p.selected === false).length
-    ) {
+
+    if (participants.length === participants.filter((p) => p.selected === false).length) {
       setParticipantsError("Select at least one participant");
+      return
     }
+
     if (payers.length === payers.filter((p) => p.selected === false).length) {
       setPayersError("Select at least one payer");
+      return
     }
 
     if (!amountIsValid(amount, setAmountError)) return;
+    
+    if (!location.value && description.length == 0){
+      setDescriptionError("Select a description or a location")
+      return
+    }
 
     const createExpenseRequest: CreateExpenseRequest = {
       amount: Number(amount),
@@ -160,6 +168,10 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     displayedAmount.value = "";
   }, [currencySymbol]);
 
+  useEffect(() => {
+    setDescriptionError("")
+  }, [location.value, description]);
+
   const amountNumber = !amountError ? Number(amount) : Number.NaN;
 
   const handleInputBlur = () => {
@@ -194,7 +206,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         <InputMonetary
           currencyMenu={currencyMenu}
           value={displayedAmount.value}
-          onChange={(e) => {
+          onChange={e => {
             handleInputChange(e, currencySymbol, displayedAmount, setAmount);
             setShowAmountError(false);
           }}
@@ -229,11 +241,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         description="Description"
         placeholder="e.g. Air tickets"
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        error={descriptionError}
+        onChange={e => setDescription(e.target.value)}
       />
-
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
-      <LocationPicker location={location} isMapOpen={isMapOpen} />
+      <LocationPicker location={location} isMapOpen={isMapOpen} timeZoneCoordinates={timeZoneCoordinates} />
       <DateTime
         selectedDateTime={expenseTime}
         setSelectedDateTime={setExpenseTime}
@@ -243,9 +255,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
       <MyButton fontSize="16" onClick={submitExpense} isLoading={isPending}>
         Submit
       </MyButton>
-
       <MenuAnimationBackground menu={currencyMenu} />
-
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}

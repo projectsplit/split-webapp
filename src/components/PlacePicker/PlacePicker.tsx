@@ -10,7 +10,7 @@ import { StyledPlacePicker } from "./PlacePicker.styled";
 import { PlacePickerProps } from "../../interfaces";
 import MyButton from "../MyButton/MyButton";
 
-const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen }) => {
+const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultCoordinates }) => {
   const mapId = `${config.googleMapId}`;
   const defaultZoom = 14;
   const googleMapsBaseUrl = "https://www.google.com/maps/search/?api=1";
@@ -20,10 +20,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen }) => {
   const lastUserGeoLocation: GeoLocation = localStorageUserLocation ? JSON.parse(localStorageUserLocation) : undefined;
 
   const initialLocation: GeoLocation = location.value ?? lastUserGeoLocation ?? {
-    coordinates: {
-      latitude: 53.54992,
-      longitude: 10.00678,
-    },
+    coordinates: defaultCoordinates,
     google: {
       id: null,
       address: undefined,
@@ -235,6 +232,39 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen }) => {
     },
     [placesService, selectedLocation]
   );
+
+  useEffect(() => {
+    if (
+      selectedLocation.google?.address ||
+      !geocoder ||
+      !shouldPanToUserLocation.current
+    ) return;
+
+    const position: google.maps.LatLngLiteral = {
+      lat: selectedLocation.coordinates.latitude,
+      lng: selectedLocation.coordinates.longitude,
+    };
+
+    geocoder.geocode({ location: position }).then((response) => {
+      const firstResult = response.results[0];
+
+      setSelectedLocation({
+        coordinates: {
+          latitude: position.lat,
+          longitude: position.lng,
+        },
+        google: {
+          address: firstResult.formatted_address,
+          id: null,
+          name: firstResult.formatted_address,
+          url: buildGoogleUrl({
+            latitude: position.lat,
+            longitude: position.lng,
+          }),
+        },
+      });
+    });
+  }, [geocoder, selectedLocation]);
 
   return (
     <StyledPlacePicker >

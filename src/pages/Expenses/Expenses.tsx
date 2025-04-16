@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Expense from "../../components/Expense/Expense";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { ExpenseResponseItem, Group, UserInfo } from "../../types";
@@ -35,9 +35,7 @@ const Expenses = () => {
 
   const allParticipants = mergeMembersAndGuests(members || [], guests || []);
   
-  const { data:debts, isFetching:isFetchingDebts } = useDebts(group.id);
-  const {totalSpent } = debts ?? { totalSpent: {} };
-  console.log(totalSpent)
+  useDebts(group.id);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
