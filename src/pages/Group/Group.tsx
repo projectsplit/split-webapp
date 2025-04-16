@@ -1,9 +1,4 @@
-import {
-  Outlet,
-  useLocation,
-  useOutletContext,
-  useParams,
-} from "react-router-dom";
+import { Outlet, useLocation, useOutletContext, useParams, } from "react-router-dom";
 import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
@@ -18,7 +13,6 @@ import useGroup from "../../api/services/useGroup";
 import { useEffect } from "react";
 import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTransferAnimation";
 import GroupOptions from "../Groups/GroupOptions/GroupOptions";
-import { AxiosError } from "axios";
 import { MdOutlineGroupOff } from "react-icons/md";
 import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
 
@@ -45,11 +39,9 @@ export default function Group() {
 
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const timeZoneId = userInfo?.timeZone;
-  const { data: group, isFetching, isError, error } = useGroup(groupid);
-  const groupError = error as AxiosError;
+  const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
+  const { data: group, isFetching, isError } = useGroup(groupid);
 
-  // console.log(String(groupError?.request.response));
-  console.log(selectedExpense.value);
   const groupName = group?.name;
 
   useEffect(() => {
@@ -110,6 +102,7 @@ export default function Group() {
               timeZoneId={timeZoneId}
               menu={menu}
               selectedExpense={selectedExpense}
+              timeZoneCoordinates={timeZoneCoordinates}
             />
           )}
           {group && (

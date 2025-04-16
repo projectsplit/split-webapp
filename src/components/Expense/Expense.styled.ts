@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const StyledExpense = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== "userAmount",
-})<{onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;userAmount: number;}>`
+}) <{ onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void; userAmount: number; }>`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
@@ -10,17 +10,40 @@ export const StyledExpense = styled.div.withConfig({
   padding: 10px;
   background-color: ${({ theme }) => theme.layer2};
   gap: 1rem;
-  box-shadow: ${({ theme, userAmount }) =>
-    `0 0 0 1px ${userAmount === 0 ? theme.lightBorder : theme.lightBorder}`};
+  box-shadow: ${({ theme, userAmount }) => `0 0 0 1px ${userAmount === 0 ? theme.lightBorder : theme.lightBorder}`};
   overflow: auto;
+  
   .topRow {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    .locationIcon {
-      font-size: 18px;
-      color: ${({ theme }) => theme.yellow};
+    
+    .icons {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      align-items: center;
+      
+      .locationIcon {
+        font-size: 18px;
+        color: ${({ theme }) => theme.yellow};
+      }
+      
+      .labels {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 10px;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      .labels::-webkit-scrollbar {
+        display: none;
+      }
     }
+    
     .time {
       font-size: 14px;
       color: #777777;
@@ -35,13 +58,14 @@ export const StyledExpense = styled.div.withConfig({
     justify-content: space-between;
 
     .descr {
-      font-size: 1.2rem;
+      font-size: 1.1em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 180px;
     }
+    
     .amounts {
+      
       .groupTotal {
         display: flex;
         font-size: 14px;
@@ -50,8 +74,8 @@ export const StyledExpense = styled.div.withConfig({
         margin-bottom: 6px;
         font-weight: 600;
         color:${({ theme }) => theme.grey};
-     
       }
+      
       .userShare {
         display: flex;
         font-size: 14px;
@@ -71,23 +95,12 @@ export const StyledExpense = styled.div.withConfig({
 
     border-radius: 5px;
   }
+  
   .legendUser {
     background-color: ${({ theme }) => theme.pink};
   }
+  
   .legendGroup {
     background-color: ${({ theme }) => theme.ciel};
   }
-  .labels {
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    white-space: nowrap;
-    gap: 10px;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .labels::-webkit-scrollbar {
-    display: none;
-  }
 `;
-

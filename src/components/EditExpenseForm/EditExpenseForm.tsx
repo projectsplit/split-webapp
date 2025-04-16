@@ -30,7 +30,8 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   expense,
   timeZoneId,
   menu,
-  selectedExpense
+  selectedExpense,
+  timeZoneCoordinates
 }) => {
 
   if (!expense) {
@@ -215,7 +216,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
         onChange={(e) => setDescription(e.target.value)}
       />
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
-      <LocationPicker location={location} isMapOpen={isMapOpen} />
+      <LocationPicker location={location} isMapOpen={isMapOpen} timeZoneCoordinates={timeZoneCoordinates} />
       <DateTime
         selectedDateTime={expenseTime}
         setSelectedDateTime={setExpenseTime}

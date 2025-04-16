@@ -1,7 +1,6 @@
 import { AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
 import { useQuery } from "@tanstack/react-query";
-import { GetLabelsResponse } from "../../types";
 
 export const useGetGroupLabels = (groupId: string) => {
 
@@ -20,4 +19,13 @@ const getLabels = async (groupId: string) => {
     { params }
   );
   return response.data;
+};
+
+export type GetLabelsResponse = {
+  labels: {
+    id: string;
+    text: string;
+    color: string;
+    count: number;
+  }[];
 };

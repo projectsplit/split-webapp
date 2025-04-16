@@ -5,8 +5,6 @@ import {
   GetGroupsResponse,
   UserInfo,
   Group,
-  CreateExpenseRequest,
-  GetLabelsResponse,
   GetGroupTransfersResponse,
   BudgetInfoResponse,
   GroupsTotalAmountsResponse,
@@ -15,7 +13,6 @@ import {
   MostRecentGroupDetailsResponse,
   DebtsResponse,
 } from "../../types";
-
 
 export const getGroupExpenses = async (
   groupId: string,
@@ -50,7 +47,6 @@ export const getGroupsTotalAmounts = async (
   next: string,
   isArchived:boolean
 ): Promise<GroupsTotalAmountsResponse> => {
-  console.log(isArchived)
   const params = { pageSize, next, isArchived };
   const response = await apiClient.get<GroupsTotalAmountsResponse>(
     "/groups/details",

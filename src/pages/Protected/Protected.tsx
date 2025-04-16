@@ -18,7 +18,6 @@ const Protected: React.FC = () => {
   });
   const groupIsArchived = useSignal<boolean>(false)
   
-
   const hasNewerNotifications = userInfo?.hasNewerNotifications;
 
   const topMenuTitle = useSignal<string>("");

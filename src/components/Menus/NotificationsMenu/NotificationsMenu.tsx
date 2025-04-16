@@ -6,7 +6,7 @@ import { IoIosNotificationsOff } from "react-icons/io";
 import Sentinel from "../../Sentinel";
 import Invitation from "../../Invitation/Invitation";
 import Separator from "../../Separator/Separator";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useLastViewedNotification } from "../../../api/services/useLastViewedNotification";
 import { useGetUserInvitations } from "../../../api/services/useGetUserInvitations";
 
@@ -84,23 +84,4 @@ export default function NotificationsMenu({
       </div>
     </StyledNotificationsMenu>
   );
-}
-
-function getLatestCreated<T extends { created: string }>(
-  ...arrays: (T[] | undefined)[]
-): string | undefined {
-  const combinedItems = arrays.reduce<T[]>(
-    (acc, curr) => acc.concat(curr ?? []),
-    []
-  );
-
-  if (combinedItems.length === 0) {
-    return undefined;
-  }
-
-  const latestTimestamp = Math.max(
-    ...combinedItems.map((item) => new Date(item.created).getTime())
-  );
-
-  return new Date(latestTimestamp).toISOString();
 }

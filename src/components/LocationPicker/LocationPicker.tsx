@@ -8,6 +8,7 @@ import PlacePicker from "../PlacePicker/PlacePicker";
 const LocationPicker: React.FC<LocationPickerProps> = ({
   location,
   isMapOpen,
+  timeZoneCoordinates
 }) => {
   const locationName = location.value?.google?.name;
   const locationCoordinates = location.value?.coordinates;
@@ -37,7 +38,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
     <APIProvider apiKey={config.googleMapsApiKey}>
       <StyledLocationPicker location={location.value}>
         {isMapOpen.value && (
-          <PlacePicker location={location} isMapOpen={isMapOpen} />
+          <PlacePicker location={location} isMapOpen={isMapOpen} defaultCoordinates={timeZoneCoordinates} />
         )}
         <div className={"main"}>
           {/* <HiMapPin className='icon' /> */}
