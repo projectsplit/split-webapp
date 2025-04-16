@@ -46,7 +46,7 @@ export const StyledExpense = styled.div.withConfig({
     
     .time {
       font-size: 14px;
-      color: #777777;
+      color: ${({ theme }) => theme.secondaryTextColor};
       font-weight: 800;
     }
   }

@@ -17,34 +17,34 @@ export const theme = {
   whiteText: "#DDDDDD",
   lightColor: "#f5f5f5",
   pinkish: "#e151eeb3",
-  pink:"#E151EE",
-  lightPink:"#835687",
-  ciel:"#5183ee",
-  lightCiel:"#374971",
+  pink: "#E151EE",
+  lightPink: "#835687",
+  ciel: "#5183ee",
+  lightCiel: "#374971",
   redish: "#fc4c4c",
   yellowish: "##fcc504",
   yellow: "#FFEE34",
   green: "#0d8d01",
   deepPurple: "#8300e7",
   deepPurple2: "#ac5ee7",
-  layer1: "#1f1f22",
+  layer1: "#30323a",
   layer2: "#18181B",
   layer6: "#a3a3a3",
   labelColor6: "#8594E0",
   inputGrey: "#2d2d2d",
-  greySelect:"#272A33",
-  grey: "#777777",
-  greyOutline:"#2E2E2E",
+  greySelect: "#272A33",
+  grey: "#696e80",
+  greyOutline: "#30323a",
   searchBarGrey: "#2c2c2c",
   buttonActive: "#f0f0f0",
   buttonNotActive: "black",
   buttonColor: "#3d477a",
-  lightBorder:"rgb(54,54,54)",
-  orange:"#D79244"
+  lightBorder: "#30323a",
+  orange: "#D79244"
 };
 
 export type ThemeType = typeof theme;
 
 declare module "styled-components" {
-  export interface DefaultTheme extends ThemeType {}
+  export interface DefaultTheme extends ThemeType { }
 }
