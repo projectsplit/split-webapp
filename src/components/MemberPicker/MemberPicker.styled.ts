@@ -144,7 +144,7 @@ export const StyledMemberPicker = styled.div<{
         gap: 10px;
 
         .currency {
-          color: #777777;
+          color: ${({ theme }) => theme.secondaryTextColor};
         }
 
         .amount-input {
