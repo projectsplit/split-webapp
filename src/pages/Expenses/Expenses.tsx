@@ -81,6 +81,7 @@ const Expenses = () => {
       </div>
     );
   }
+  
 
   const totalExpense = getGroupTotalByCurrency(totalSpent, group.currency);
   const userExpense =
