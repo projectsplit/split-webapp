@@ -335,7 +335,7 @@ const MemberPicker = ({
                       <AutoWidthInput
                         className="amount-input"
                         inputMode="decimal"
-                        value={Number(m.amount).toLocaleString().toString()}
+                        value={(m.amount)}
                         onBlur={(_) => handleInputBlur(m.id)}
                         onChange={(e) => changeAmount(m.id, e.target.value)}
                         onClick={(e) => e.stopPropagation()}

@@ -60,9 +60,9 @@ export interface DetailedExpenseProps {
   created: string;
   description: string;
   labels: {
-    id: string,
-    text: string,
-    color: string
+    id: string;
+    text: string;
+    color: string;
   }[];
   location: GeoLocation | undefined;
   selectedExpense: Signal<ExpenseResponseItem | null>;
@@ -85,7 +85,7 @@ export interface DetailedTransferProps {
   userMemberId: string;
   members: TruncatedMember[];
   errorMessage: Signal<string>;
-  groupIsArchived:boolean
+  groupIsArchived: boolean;
 }
 
 export interface TransferProps {
@@ -193,8 +193,8 @@ export interface RecommendationMessageProps {
 }
 export interface BottomMainMenuProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
-  group?:Group;
-  isLoading?:boolean
+  group?: Group;
+  isLoading?: boolean;
 }
 export interface OverspentMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -309,8 +309,8 @@ export interface CategoryButtonProps {
 export interface CategorySelectorProps {
   categories: { cat1?: string; cat2?: string; cat3?: string };
   activeCat: string;
-  navLinkUse:boolean;
-  activeCatAsState?:Signal<string>
+  navLinkUse: boolean;
+  activeCatAsState?: Signal<string>;
   // onCategoryChange: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -346,7 +346,7 @@ export interface TopMenuProps {
   hasNewerNotifications: boolean;
   openGroupOptionsMenu: Signal<boolean>;
   groupIsArchived: boolean;
-  confirmUnarchiveMenu:Signal<string | null>
+  confirmUnarchiveMenu: Signal<string | null>;
 }
 
 export interface ToggleSwitchProps {
@@ -421,6 +421,7 @@ export interface BarsWithLegendsProps {
   bar2Legend: string;
   bar1Color: string;
   bar2Color: string;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export interface TransfersProps {
@@ -440,7 +441,7 @@ export interface MemberProps {
   members: TruncatedMember[];
   isGuest: boolean;
   totalSpent: Record<string, Record<string, number>>;
-  group:Group
+  group: Group;
 }
 
 export interface RenderScenariosProps {
@@ -600,7 +601,7 @@ export interface ConfirmationProps {
 export interface ConfirmArchiveGroupAnimationProps extends MenuProps {
   groupId: string | undefined;
   openGroupOptionsMenu: Signal<boolean>;
-  navigateToGroups:boolean;
+  navigateToGroups: boolean;
 }
 
 export interface ConfirmLeaveGroupAnimationProps extends MenuProps {
@@ -612,7 +613,7 @@ export interface ConfirmLeaveGroupAnimationProps extends MenuProps {
 export interface ConfirmArchiveGroupProps extends MenuProps {
   groupId: string | undefined;
   openGroupOptionsMenu: Signal<boolean>;
-  navigateToGroups:boolean
+  navigateToGroups: boolean;
 }
 
 export interface ConfirmLeaveGroupProps extends MenuProps {
@@ -621,7 +622,7 @@ export interface ConfirmLeaveGroupProps extends MenuProps {
   openGroupOptionsMenu: Signal<boolean>;
 }
 export interface RemoveGuestWarningProps extends MenuProps {}
-export interface RemoveGuestWarningAnimationProps extends MenuProps{}
+export interface RemoveGuestWarningAnimationProps extends MenuProps {}
 export interface RenameGroupMenuProps extends MenuProps {
   groupId: string | undefined;
   groupName: string | undefined;
@@ -635,4 +636,30 @@ export interface RemoveUserFromGroupMenuProps {
   openRemoveUserMenu: Signal<boolean>;
   groupId: string | undefined;
   userInfo: UserInfo;
+}
+
+export interface GroupTotalExpensesByCurrencyAnimationProps extends MenuProps {
+  bar1Color: string;
+  bar2Color: string;
+  bar1Legend: string;
+  bar2Legend: string;
+  groupTotalsByCurrency: Record<string, number>
+  userTotalsByCurrency: Record<string, number>
+}
+export interface GroupTotalExpensesByCurrencyProps extends MenuProps {
+  bar1Color: string;
+  bar2Color: string;
+  bar1Legend: string;
+  bar2Legend: string;
+  groupTotalsByCurrency: Record<string, number>
+  userTotalsByCurrency: Record<string, number>
+}
+
+export interface BarsAndAmountsProps{
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  currency:string;
+  bar1Total:number;
+  bar2Total:number;
+  bar1Color:string;
+  bar2Color:string;
 }
