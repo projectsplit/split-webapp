@@ -16,6 +16,12 @@ import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuA
 import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
 import useDebts from "../../api/services/useDebts";
+import {
+  getAllCurrencyTotals,
+  getGroupTotalByCurrency,
+  getCurrencyValues,
+} from "../../helpers/getGroupTotalByCurrency";
+import GroupTotalExpensesByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalExpensesByCurrencyAnimation";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -27,6 +33,7 @@ const Expenses = () => {
     group: Group;
     showBottomBar: Signal<boolean>;
   }>();
+
   const timeZoneId = userInfo?.timeZone;
   const pageSize = 10;
   const members = group?.members;
@@ -34,10 +41,17 @@ const Expenses = () => {
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
   const allParticipants = mergeMembersAndGuests(members || [], guests || []);
-  
-  const { data:debts, isFetching:isFetchingDebts } = useDebts(group.id);
-  const {totalSpent } = debts ?? { totalSpent: {} };
-  console.log(totalSpent)
+
+  const { data: debts, isFetching: isFetchingDebts } = useDebts(group.id);
+  const totalSpent: Record<
+    string,
+    Record<string, number>
+  > = debts?.totalSpent ?? {};
+
+  const groupTotalsByCurrency = getAllCurrencyTotals(totalSpent);
+  const userTotalsByCurrency = getCurrencyValues(totalSpent, userMemberId);
+  const shouldOpenMultiCurrencyTable =
+    Object.keys(groupTotalsByCurrency).length > 1;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
@@ -61,17 +75,18 @@ const Expenses = () => {
   }, [errorMessage.value]);
 
   if (isFetching && !isFetchingNextPage) {
-    return <div className="spinner"><Spinner /></div>;
+    return (
+      <div className="spinner">
+        <Spinner />
+      </div>
+    );
   }
 
-
-
-  const totalExpense = expenses?.reduce((sum, e) => sum + e.amount, 0);
-  const userExpense = expenses?.reduce((sum, e) => {
-    return (
-      sum + (e.shares.find((x) => x.memberId === userMemberId)?.amount ?? 0)
-    );
-  }, 0);
+  const totalExpense = getGroupTotalByCurrency(totalSpent, group.currency);
+  const userExpense =
+    userMemberId && group.currency
+      ? totalSpent[userMemberId]?.[group.currency] ?? 0
+      : 0;
 
   return (
     <StyledExpenses>
@@ -90,6 +105,11 @@ const Expenses = () => {
             currency={group.currency}
             bar2Color="#e151ee"
             bar1Color="#5183ee"
+            onClick={() => {
+              if (shouldOpenMultiCurrencyTable) {
+                menu.value = "epensesByCurrency";
+              } else null;
+            }}
           />
           {Object.entries(
             groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))
@@ -147,10 +167,20 @@ const Expenses = () => {
       )}
 
       <MenuAnimationBackground menu={menu} />
+
       <ErrorMenuAnimation
         menu={menu}
         message={errorMessage.value}
         type="expense"
+      />
+      <GroupTotalExpensesByCurrencyAnimation
+        menu={menu}
+        bar1Legend="Group Total"
+        bar2Legend="Your Share"
+        bar2Color="#e151ee"
+        bar1Color="#5183ee"
+        groupTotalsByCurrency={groupTotalsByCurrency}
+        userTotalsByCurrency={userTotalsByCurrency}
       />
     </StyledExpenses>
   );

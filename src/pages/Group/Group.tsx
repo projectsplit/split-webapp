@@ -48,8 +48,6 @@ export default function Group() {
   const { data: group, isFetching, isError, error } = useGroup(groupid);
   const groupError = error as AxiosError;
 
-  // console.log(String(groupError?.request.response));
-  console.log(selectedExpense.value);
   const groupName = group?.name;
 
   useEffect(() => {

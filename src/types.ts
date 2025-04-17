@@ -387,6 +387,8 @@ export type DebtsResponse = {
   totalSpent: Record<string, Record<string, number>>;
 };
 
+export type TotalSpent = Record<string, Record<string, number>>;
+
 export type GetUserInvitationsResponseItem = {
   id: string;
   created: string;

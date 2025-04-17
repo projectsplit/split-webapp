@@ -66,6 +66,7 @@ return <div className="spinner"><Spinner /></div>;
     return sum + (t.receiverId === memberId ? t.amount : 0);
   }, 0);
 
+
   return (
     <StyledTransfers>
       {!transfers || transfers.length === 0 ? (
