@@ -3,7 +3,6 @@ import { apiClient } from "../apiClients";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GetUserInvitationsResponse } from "../../types";
 
-
 export const useDeclineInvitation = () => {
   const queryClient = useQueryClient();
 

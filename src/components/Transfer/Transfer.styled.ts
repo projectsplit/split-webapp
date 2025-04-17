@@ -43,7 +43,7 @@ export const StyledTransfer = styled.div<{
       padding-top:10px;
       font-size: 14px;
       font-weight: 800;
-      color: #777777;
+      color: ${({ theme }) => theme.secondaryTextColor};
     }
   }
 

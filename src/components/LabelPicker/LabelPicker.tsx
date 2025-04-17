@@ -7,12 +7,13 @@ import { FiChevronDown } from "react-icons/fi";
 import { useGetGroupLabels } from "../../api/services/useGetGroupLabels";
 import { Label } from "../../types";
 import labelColors from "../../labelColors";
+import { AiFillDelete } from "react-icons/ai";
+import { useRemoveLabel } from "../../api/services/useRemoveLabel";
 
 const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
-  
-  console.log("labels", labels)
 
   const [text, setText] = useState<string>("");
+  const removeLabelMutation = useRemoveLabel()
 
   const { data: suggestedLabelsResponse, isLoading: _isLoading } = useGetGroupLabels(groupId);
 
@@ -82,6 +83,12 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
     inputRef.current?.focus();
   };
 
+  const removeLabel = (e: React.MouseEvent<SVGElement, MouseEvent>, labelId: string): void => {
+    e.stopPropagation()
+    removeLabelMutation.mutate({ groupId, labelId })
+    inputRef.current?.focus();
+  };
+
   const handleInpuTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newText = e.currentTarget.value;
     const trimmedText = newText.trim()
@@ -100,6 +107,7 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
   };
 
   const remainingSuggestedLabels = groupLabels.filter(x => !labels.map(x => x.text).includes(x.text));
+  console.log(remainingSuggestedLabels)
 
   const isEmpty = labels?.length === 0 && text.length === 0;
 
@@ -163,8 +171,8 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
         <div className="dropdown" ref={dropdownRef}>
           {remainingSuggestedLabels.map(x => (
             <div
-              key={x.text}
               onClick={() => handleSuggestedLabelClick(x.text)}
+              key={x.text}
               className="suggested-label-container"
             >
               <div
@@ -174,6 +182,12 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
                   color: "#000000c8",
                 }}>{x.text}
               </div>
+              {x.count == 0 &&
+                <AiFillDelete
+                  style={{ color: "gray" }}
+                  onClick={e => removeLabel(e, x.id)}
+                />
+              }
             </div>
           ))}
         </div>

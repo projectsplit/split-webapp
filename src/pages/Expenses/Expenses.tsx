@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Expense from "../../components/Expense/Expense";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { ExpenseResponseItem, Group, UserInfo } from "../../types";

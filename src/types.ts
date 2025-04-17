@@ -25,20 +25,10 @@ export type UserInfo = {
   userId: string;
   username: string;
   timeZone: string;
+  timeZoneCoordinates: Coordinates;
   recentGroupId: string;
   hasNewerNotifications: boolean;
   currency: string;
-};
-
-export type GetLabelsResponse = {
-  labels: GetLabelsResponseItem[];
-};
-
-export type GetLabelsResponseItem = {
-  id: string;
-  text: string;
-  color: string;
-  count: number;
 };
 
 export type ExpenseItem = {
@@ -164,7 +154,7 @@ export type Group = {
   members: Member[];
   guests: Guest[];
   labels: Label[];
-  isArchived:boolean;
+  isArchived: boolean;
 };
 
 export type Member = {
@@ -180,7 +170,7 @@ export type TruncatedMember = {
 };
 
 export type Guest = {
-  canBeRemoved:boolean;
+  canBeRemoved: boolean;
   id: string;
   name: string;
   joined: Date;
@@ -292,15 +282,15 @@ export type GroupWithDetails = {
   details: Details;
   id: string;
   name: string;
-  currency:string;
-  isArchived:boolean;
+  currency: string;
+  isArchived: boolean;
 };
 export type GroupsWithDetails = {
   details: Details;
   id: string;
   name: string;
-  currency:string;
-  isArchived:boolean;
+  currency: string;
+  isArchived: boolean;
 }[];
 
 export type GroupsTotalAmountsResponse = {
@@ -333,7 +323,7 @@ export type MostRecentGroupDetailsResponse = {
   id: string;
   name: string;
   details: Details;
-  isArchived:boolean
+  isArchived: boolean
 };
 
 export type Participant = {
@@ -419,12 +409,12 @@ export type UpdateSelectedCurrencyRequest = {
 export type UpdateSelectedTimeZoneRequest = {
   timeZone: string;
 };
-export type UpdateGroupNameRequest ={
-  name:string
+export type UpdateGroupNameRequest = {
+  name: string
 }
 
-export type ArchiveGroupRequest ={
-  isArchived:boolean;
+export type ArchiveGroupRequest = {
+  isArchived: boolean;
 }
 export type WithCreated = {
   created: string;
