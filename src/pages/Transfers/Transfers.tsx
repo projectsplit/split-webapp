@@ -4,7 +4,6 @@ import Transfer from "../../components/Transfer/Transfer";
 import { Group, TransferResponseItem, UserInfo } from "../../types";
 import { getGroupTransfers } from "../../api/services/api";
 import { StyledTransfers } from "./Transfers.styled";
-import Spinner from "../../components/Spinner/Spinner";
 import { BiTransfer } from "react-icons/bi";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { useOutletContext } from "react-router-dom";
@@ -15,6 +14,7 @@ import DetailedTransfer from "../../components/DetailedTransfer/DetailedTransfer
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
+import Spinner from "../../components/Spinner/Spinner";
 
 const Transfers: React.FC = () => {
   const pageSize = 10;

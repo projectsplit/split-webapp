@@ -21,10 +21,10 @@ export const theme = {
   lightPink: "#835687",
   ciel: "#5183ee",
   lightCiel: "#374971",
-  redish: "#fc4c4c",
+  redish: "#FC6F6F",
   yellowish: "##fcc504",
   yellow: "#FFEE34",
-  green: "#0d8d01",
+  green: "#55AF4D",
   deepPurple: "#8300e7",
   deepPurple2: "#ac5ee7",
   layer1: "#30323a",
@@ -40,7 +40,7 @@ export const theme = {
   buttonNotActive: "black",
   buttonColor: "#3d477a",
   lightBorder: "#30323a",
-  orange: "#D79244"
+  orange: "#DFA769"
 };
 
 export type ThemeType = typeof theme;

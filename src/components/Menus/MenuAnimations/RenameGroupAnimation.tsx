@@ -17,7 +17,7 @@ export default function RenameGroupAnimationAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <RenameGroupMenu menu={menu} groupId={groupId}  groupName={ groupName} />
+      <RenameGroupMenu menu={menu} groupId={groupId} groupName={groupName} />
     </CSSTransition>
   );
 }

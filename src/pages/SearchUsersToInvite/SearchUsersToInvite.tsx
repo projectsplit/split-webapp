@@ -10,10 +10,10 @@ import { useRevokeInvitation } from "../../api/services/useRevokeInvitation";
 import { useParams } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import { SearchUsersToInviteProps } from "../../interfaces";
-import Spinner from "../../components/Spinner/Spinner";
 import Separator from "../../components/Separator/Separator";
+import Spinner from "../../components/Spinner/Spinner";
 
-const SearchUsersToInvite = ({ menu, groupName }: SearchUsersToInviteProps) => {
+const SearchUsersToInvite = ({ menu }: SearchUsersToInviteProps) => {
   const params = useParams();
   const groupId = params.groupid!;
   const pageSize = 10;

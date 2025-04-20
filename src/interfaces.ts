@@ -51,6 +51,7 @@ export interface MembersInfoBoxProps {
 
 export interface DetailedExpenseProps {
   timeZoneId: string;
+  timeZoneCoordinates: Coordinates;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   payments: Payment[];
   shares: Share[];
@@ -106,6 +107,7 @@ export interface DateTimeProps {
   selectedDateTime: string;
   setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
   timeZoneId: string;
+  isEdit: boolean;
 }
 
 export interface MemberPickerProps {
@@ -336,7 +338,7 @@ export interface CreateGroupProps extends MenuProps {
 export interface SettingsMenuProps {
   menu: Signal<string | null>;
   nodeRef: React.MutableRefObject<null>;
-  userInfo: UserInfo | undefined;
+  userInfo: UserInfo;
 }
 
 export interface TopMenuProps {
@@ -662,4 +664,9 @@ export interface BarsAndAmountsProps{
   bar2Total:number;
   bar1Color:string;
   bar2Color:string;
+}
+
+export interface EditUsernameProps {
+  existingUsername: string;
+  close: () => void;
 }

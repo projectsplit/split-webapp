@@ -1,7 +1,6 @@
 import IonIcon from "@reacticons/ionicons";
 import { NotificationsMenuProps } from "../../../interfaces";
 import { StyledNotificationsMenu } from "./NotificationsMenu.styled";
-import Spinner from "../../Spinner/Spinner";
 import { IoIosNotificationsOff } from "react-icons/io";
 import Sentinel from "../../Sentinel";
 import Invitation from "../../Invitation/Invitation";
@@ -9,6 +8,7 @@ import Separator from "../../Separator/Separator";
 import { useEffect } from "react";
 import { useLastViewedNotification } from "../../../api/services/useLastViewedNotification";
 import { useGetUserInvitations } from "../../../api/services/useGetUserInvitations";
+import Spinner from "../../Spinner/Spinner";
 
 export default function NotificationsMenu({
   menu,

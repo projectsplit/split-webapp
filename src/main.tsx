@@ -32,8 +32,6 @@ const RootComponent: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {}, []);
-
   if (isLoading) {
     return <SplashScreen />;
   }

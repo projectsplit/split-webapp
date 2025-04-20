@@ -30,7 +30,6 @@ const MyButton = ({
   isLoading ,
   hasFailed ,
   onClick,
-  primaryBackgroundColor,
   fontSize
 }: MyButtonProps) => {
 

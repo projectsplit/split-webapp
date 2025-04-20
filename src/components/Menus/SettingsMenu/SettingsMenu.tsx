@@ -23,6 +23,7 @@ import TimeZoneOptionsAnimation from "../MenuAnimations/TimeZoneOptionsAnimation
 import { useTimeZone } from "../../../api/services/useTimeZone";
 import { getInitials } from "../../../helpers/getInitials";
 import { timeZones } from "../../../helpers/timeZones";
+import EditUsername from "../EditUsername/EditUsername";
 
 export default function SettingsMenu({
   menu,
@@ -33,6 +34,7 @@ export default function SettingsMenu({
   const allTimeZones = timeZones;
   const currencyMenu = useSignal<string | null>(null);
   const timeZoneMenu = useSignal<string | null>(null);
+  const [isEditUsernameMenuOpen, setIsEditUsernameMenuOpen] = useState(false)
 
   const queryClient = useQueryClient();
 
@@ -115,7 +117,6 @@ export default function SettingsMenu({
           />
           <div className="description">Preferred Currency</div>
         </div>
-
         <div
           className="option"
           onClick={() => (timeZoneMenu.value = "timeZones")}
@@ -128,6 +129,9 @@ export default function SettingsMenu({
           <FaCoins />
           <div className="description">Single currency display</div>
           <ToggleSwitch isOn={isOn} onToggle={handleToggle} />
+        </div>
+        <div className="option" onClick={() => setIsEditUsernameMenuOpen(true)}        >
+          <div className="description">Change username</div>
         </div>
         <div className="option" onClick={handleLogout}>
           <TbLogout2 className="icon" />
@@ -150,6 +154,10 @@ export default function SettingsMenu({
         clickHandler={handldeCurrencyOptionsClick}
         selectedCurrency={userCurrency}
       />
+      {isEditUsernameMenuOpen && <EditUsername
+        existingUsername={userInfo.username}
+        close={() => setIsEditUsernameMenuOpen(false)}
+      />}
     </StyledSettingsMenu>
   );
 }
