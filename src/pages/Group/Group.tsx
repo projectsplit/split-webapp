@@ -2,7 +2,6 @@ import { Outlet, useLocation, useOutletContext, useParams, } from "react-router-
 import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
-import Spinner from "../../components/Spinner/Spinner";
 import { ExpenseResponseItem, UserInfo } from "../../types";
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
@@ -15,6 +14,7 @@ import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTrans
 import GroupOptions from "../Groups/GroupOptions/GroupOptions";
 import { MdOutlineGroupOff } from "react-icons/md";
 import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
+import Spinner from "../../components/Spinner/Spinner";
 
 export default function Group() {
   const menu = useSignal<string | null>(null);

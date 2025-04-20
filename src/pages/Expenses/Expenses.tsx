@@ -4,7 +4,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { ExpenseResponseItem, Group, UserInfo } from "../../types";
 import { getGroupExpenses } from "../../api/services/api";
 import { useOutletContext } from "react-router-dom";
-import Spinner from "../../components/Spinner/Spinner";
 import { StyledExpenses } from "./Expenses.styled";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { CiReceipt } from "react-icons/ci";
@@ -22,6 +21,7 @@ import {
   getCurrencyValues,
 } from "../../helpers/getGroupTotalByCurrency";
 import GroupTotalExpensesByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalExpensesByCurrencyAnimation";
+import Spinner from "../../components/Spinner/Spinner";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -75,13 +75,8 @@ const Expenses = () => {
   }, [errorMessage.value]);
 
   if (isFetching && !isFetchingNextPage) {
-    return (
-      <div className="spinner">
-        <Spinner />
-      </div>
-    );
+    return <div className="spinner"><Spinner /></div>;
   }
-  
 
   const totalExpense = getGroupTotalByCurrency(totalSpent, group.currency);
   const userExpense =
@@ -158,6 +153,7 @@ const Expenses = () => {
           payments={selectedExpense.value.payments}
           shares={selectedExpense.value.shares}
           timeZoneId={timeZoneId}
+          timeZoneCoordinates={userInfo.timeZoneCoordinates}
           creator={selectedExpense.value.creatorId}
           created={selectedExpense.value.created}
           members={allParticipants}

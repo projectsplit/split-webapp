@@ -218,6 +218,7 @@ export default function TransferForm({
         selectedDateTime={transferTime}
         setSelectedDateTime={setTransferTime}
         timeZoneId={timeZoneId}
+        isEdit={false}
       />
       <div className="spacer"></div>
       <MyButton fontSize="16" onClick={submitTransfer} isLoading={isPending}>

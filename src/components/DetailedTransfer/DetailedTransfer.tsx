@@ -129,12 +129,12 @@ export default function DetailedTransfer({
           {/* <Comment />
           <Comment /> */}
         </div>
-        {!groupIsArchived ?
+        {/* {!groupIsArchived ?
         <div>
           <LexicalComposer initialConfig={initialConfig}>
             <EditorContent />
           </LexicalComposer>
-        </div>:null}
+        </div>:null} */}
       </div>
       <MenuAnimationBackground menu={menu} />
       <DeleteTransferAnimation

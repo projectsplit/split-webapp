@@ -5,10 +5,10 @@ import { DateTime as LuxonDateTime } from 'luxon'
 import { toLuxon, toUtcString } from '../utils'
 import { DateTimeProps } from '../interfaces'
 
-export const DateTime = ({ selectedDateTime, setSelectedDateTime, timeZoneId }: DateTimeProps) => {
+export const DateTime = ({ selectedDateTime, setSelectedDateTime, timeZoneId, isEdit }: DateTimeProps) => {
 
   const [showPicker, setShowPicker] = useState<boolean>(false)
-  const [realtimeUpdate, setRealtimeUpdate] = useState<boolean>(true)
+  const [realtimeUpdate, setRealtimeUpdate] = useState<boolean>(!isEdit)
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

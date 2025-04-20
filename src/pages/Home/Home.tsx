@@ -8,7 +8,6 @@ import OptionButton from "./SelectionButton/SelectionButton";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "styled-components";
-import Spinner from "../../components/Spinner/Spinner";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import {
   GroupsAllBalancesResponse,
@@ -27,6 +26,7 @@ import { Signal, useSignal } from "@preact/signals-react";
 import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
+import Spinner from "../../components/Spinner/Spinner";
 
 export default function Home() {
   const navigate = useNavigate();

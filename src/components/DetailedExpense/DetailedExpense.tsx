@@ -1,11 +1,8 @@
 import { StyledDetailedExpense } from "./DetailedExpense.Styled";
 import MembersInfoBox from "./MembersInfoBox/MembersInfoBox";
-import { EditorContent } from "./EditorContent/EditorContent";
 import IonIcon from "@reacticons/ionicons";
-import { HeadingNode } from "@lexical/rich-text";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import MyButton from "../MyButton/MyButton";
 import { DetailedExpenseProps } from "../../interfaces";
 import Pill from "../Pill/Pill";
@@ -29,6 +26,7 @@ export default function DetailedExpense({
   payments,
   shares,
   timeZoneId,
+  timeZoneCoordinates,
   creator,
   created,
   members,
@@ -37,22 +35,22 @@ export default function DetailedExpense({
   group,
 }: DetailedExpenseProps) {
   const googleUrl = "https://www.google.com/maps/search/?api=1&query=";
-  const theme = {
-    text: {
-      bold: "editor-bold",
-    },
-  };
+  // const theme = {
+  //   text: {
+  //     bold: "editor-bold",
+  //   },
+  // };
 
   const menu = useSignal<string | null>(null);
-  const onError = (error: Error): void => {
-    console.error(error);
-  };
-  const initialConfig = {
-    namespace: "MyEditor",
-    theme,
-    onError,
-    nodes: [HeadingNode],
-  };
+  // const onError = (error: Error): void => {
+  //   console.error(error);
+  // };
+  // const initialConfig = {
+  //   namespace: "MyEditor",
+  //   theme,
+  //   onError,
+  //   nodes: [HeadingNode],
+  // };
 
   const googleMapsUrlBuilder = (location: GeoLocation | undefined) => {
     if (location?.google?.id) {
@@ -67,25 +65,25 @@ export default function DetailedExpense({
 
   const expenseToEdit: FormExpense | undefined = selectedExpense.value
     ? {
-        id: selectedExpense.value.id,
-        amount: selectedExpense.value.amount.toString(),
-        description: selectedExpense.value.description,
-        currency: selectedExpense.value.currency,
-        groupId: group.id,
-        labels: selectedExpense.value.labels,
-        participants: selectedExpense.value.shares.map((share) => ({
-          memberId: share.memberId,
-          participationAmount: share.amount.toString(),
-        })),
-        payers: selectedExpense.value.payments.map((payment) => ({
-          memberId: payment.memberId,
-          paymentAmount: payment.amount.toString(),
-        })),
-        location: selectedExpense.value.location,
-        expenseTime: new Date(selectedExpense.value.occurred),
-        creationTime: new Date(selectedExpense.value.created),
-        lastUpdateTime: new Date(selectedExpense.value.updated),
-      }
+      id: selectedExpense.value.id,
+      amount: selectedExpense.value.amount.toString(),
+      description: selectedExpense.value.description,
+      currency: selectedExpense.value.currency,
+      groupId: group.id,
+      labels: selectedExpense.value.labels,
+      participants: selectedExpense.value.shares.map((share) => ({
+        memberId: share.memberId,
+        participationAmount: share.amount.toString(),
+      })),
+      payers: selectedExpense.value.payments.map((payment) => ({
+        memberId: payment.memberId,
+        paymentAmount: payment.amount.toString(),
+      })),
+      location: selectedExpense.value.location,
+      expenseTime: new Date(selectedExpense.value.occurred),
+      creationTime: new Date(selectedExpense.value.created),
+      lastUpdateTime: new Date(selectedExpense.value.updated),
+    }
     : undefined;
 
   return (
@@ -171,25 +169,25 @@ export default function DetailedExpense({
       <div className="createdBy">
         Created by {members.find((x) => x.id === creator)?.name}{" "}
         {DateOnly(occurred, timeZoneId) === "Today" ||
-        DateOnly(occurred, timeZoneId) === "Yesterday"
+          DateOnly(occurred, timeZoneId) === "Yesterday"
           ? DateOnly(created, timeZoneId)
           : "on" +
-            " " +
-            DateOnly(occurred, timeZoneId) +
-            " " +
-            YearOnly(occurred, timeZoneId)}{" "}
+          " " +
+          DateOnly(occurred, timeZoneId) +
+          " " +
+          YearOnly(occurred, timeZoneId)}{" "}
         at {TimeOnly(created, timeZoneId)}
       </div>
       <div className="date">
         Occurred{" "}
         {DateOnly(occurred, timeZoneId) === "Today" ||
-        DateOnly(occurred, timeZoneId) === "Yesterday"
+          DateOnly(occurred, timeZoneId) === "Yesterday"
           ? DateOnly(occurred, timeZoneId)
           : "on" +
-            " " +
-            DateOnly(occurred, timeZoneId) +
-            " " +
-            YearOnly(occurred, timeZoneId)}{" "}
+          " " +
+          DateOnly(occurred, timeZoneId) +
+          " " +
+          YearOnly(occurred, timeZoneId)}{" "}
         at {TimeOnly(occurred, timeZoneId)}
       </div>
       <div className="commentSection">
@@ -197,13 +195,13 @@ export default function DetailedExpense({
           {/* <Comment />
           <Comment /> */}
         </div>
-        {!group.isArchived ? (
+        {/* {!group.isArchived ? (
           <div>
             <LexicalComposer initialConfig={initialConfig}>
               <EditorContent />
             </LexicalComposer>
           </div>
-        ) : null}
+        ) : null} */}
       </div>
       <MenuAnimationBackground menu={menu} />
       <DeleteExpenseAnimation
@@ -218,6 +216,7 @@ export default function DetailedExpense({
         timeZoneId={timeZoneId}
         menu={menu}
         selectedExpense={selectedExpense}
+        timeZoneCoordinates={timeZoneCoordinates}
       />
     </StyledDetailedExpense>
   );

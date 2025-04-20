@@ -8,7 +8,6 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { getGroupsTotalAmounts } from "../../api/services/api";
 import { useMostRecentGroup } from "../../api/services/useMostRecentGroup";
 import { StyledGroups } from "./GroupTypes/Groups.styled";
-import Spinner from "../../components/Spinner/Spinner";
 import { MdOutlineGroupOff } from "react-icons/md";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import Sentinel from "../../components/Sentinel";
@@ -17,6 +16,7 @@ import { GoArchive } from "react-icons/go";
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
 import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import Spinner from "../../components/Spinner/Spinner";
 
 export default function Groups() {
   const queryClient = useQueryClient();

@@ -15,7 +15,7 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
   const [text, setText] = useState<string>("");
   const removeLabelMutation = useRemoveLabel()
 
-  const { data: suggestedLabelsResponse, isLoading: _isLoading } = useGetGroupLabels(groupId);
+  const { data: suggestedLabelsResponse } = useGetGroupLabels(groupId);
 
   const groupLabels = suggestedLabelsResponse?.labels ?? [];
   const usedColors = groupLabels?.map(x => x.color)?.concat(labels?.map(x => x.color)) ?? []

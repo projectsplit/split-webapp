@@ -2,8 +2,6 @@ import styled, { keyframes } from "styled-components";
 import IonIcon from "@reacticons/ionicons";
 import { LoadingSpinnerProps } from "../interfaces";
 
-
-
 const spinAnimation = keyframes`
   from {
     transform: rotate(0deg);

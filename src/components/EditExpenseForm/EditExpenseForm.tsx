@@ -37,6 +37,8 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   if (!expense) {
     return <div>Error: Expense not found.</div>;
   }
+  
+  console.log(expense)
 
   const [participants, setParticipants] = useState<PickerMember[]>(
     createParticipantPickerArray(group, expense)
@@ -53,9 +55,8 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   const [showAmountError, setShowAmountError] = useState<boolean>(false);
   const [description, setDescription] = useState<string>(expense.description);
   const [labels, setLabels] = useState<Label[]>(expense.labels);
-  const [expenseTime, setExpenseTime] = useState<string>(expense.creationTime.toISOString());
+  const [expenseTime, setExpenseTime] = useState<string>(expense.expenseTime.toISOString());
   const location = useSignal<GeoLocation | undefined>(expense?.location);
-
   const displayedAmount = useSignal<string>(expense.amount);
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
@@ -221,6 +222,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
         selectedDateTime={expenseTime}
         setSelectedDateTime={setExpenseTime}
         timeZoneId={timeZoneId}
+        isEdit={true}
       />
       <div className="spacer"></div>
       <MyButton fontSize="16" onClick={submitExpense} isLoading={isPending}>

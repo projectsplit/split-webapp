@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { StyledRenameGroupMenu } from "./RenameGroupMenu.styled";
 import { RenameGroupMenuProps } from "../../../interfaces";
 import MyButton from "../../MyButton/MyButton";

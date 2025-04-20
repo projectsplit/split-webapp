@@ -7,9 +7,9 @@ import { Group, UserInfo } from "../../types";
 import { Signal, useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import MemberFC from "./Member/MemberFC";
-import Spinner from "../../components/Spinner/Spinner";
 import SettleUpAnimation from "../../components/Menus/MenuAnimations/SettleUpAnimation";
 import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
+import Spinner from "../../components/Spinner/Spinner";
 
 export default function Members() {
   const memberIdSelectedToSettleUp = useSignal<string>("");

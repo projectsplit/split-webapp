@@ -51,9 +51,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   const [description, setDescription] = useState<string>("");
   const [labels, setLabels] = useState<Label[]>([]);
-  const [expenseTime, setExpenseTime] = useState<string>(
-    new Date().toISOString()
-  );
+  const [expenseTime, setExpenseTime] = useState<string>(new Date().toISOString());
   const location = useSignal<GeoLocation | undefined>(expense?.location);
 
   const displayedAmount = useSignal<string>("");
@@ -76,8 +74,8 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
 
     if (!amountIsValid(amount, setAmountError)) return;
-    
-    if (!location.value && description.length == 0){
+
+    if (!location.value && description.length == 0) {
       setDescriptionError("Select a description or a location")
       return
     }
@@ -250,6 +248,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         selectedDateTime={expenseTime}
         setSelectedDateTime={setExpenseTime}
         timeZoneId={timeZoneId}
+        isEdit={false}
       />
       <div className="spacer"></div>
       <MyButton fontSize="16" onClick={submitExpense} isLoading={isPending}>
