@@ -629,7 +629,7 @@ export interface RenameGroupMenuProps extends MenuProps {
   groupId: string | undefined;
   groupName: string | undefined;
 }
-export interface RenameGroupAnimationAnimationProps extends MenuProps {
+export interface RenameGroupAnimationProps extends MenuProps {
   groupId: string | undefined;
   groupName: string | undefined;
 }
@@ -668,5 +668,10 @@ export interface BarsAndAmountsProps{
 
 export interface EditUsernameProps {
   existingUsername: string;
-  close: () => void;
+  editUsernameMenu:Signal<string | null>;
+}
+
+export interface EditUsernameAnimationProps {
+  existingUsername: string;
+  editUsernameMenu:Signal<string | null>;
 }

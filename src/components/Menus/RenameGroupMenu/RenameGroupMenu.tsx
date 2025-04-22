@@ -34,10 +34,8 @@ export default function RenameGroupMenu({
               <IonIcon name="close-outline" className="close" />
             </div>
             <span className="exclamation">❗</span>
-            <span>
-              Something went wrong. Either the group doesn't exist anymore or
-              your connection is unstable. Please refresh your browser/app and
-              try again.
+            <span className="error">
+             {changeNameError}
             </span>
           </div>
         </div>
@@ -45,7 +43,7 @@ export default function RenameGroupMenu({
         <>
           <div className="headerSeparator">
             <div className="header">
-              <MdEdit className="infoLogo" />
+              
 
               <input
                 className="input"

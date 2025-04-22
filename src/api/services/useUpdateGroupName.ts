@@ -29,10 +29,11 @@ export const useUpdateGroupName = (
       });
       menu.value = null;
     },
-    // onError: (err) => {
-    //   const error = err as AxiosError;
-    //   changeNameError.value = String(error.response?.data);
-    // },
+    onError: (err) => {
+      const error = err as AxiosError;
+      console.log(error)
+      changeNameError.value = String(error.response?.data);
+    },
   });
 };
 

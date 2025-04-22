@@ -1,9 +1,8 @@
 import currency from "currency.js";
-import { DebtsResponse } from "../interfaces";
 import { GroupedTransaction, TruncatedMember } from "../types";
 
 export function groupTransactions(
-  transactions: DebtsResponse[],
+  transactions: any,
   members:TruncatedMember[],
   userId:string
 ): GroupedTransaction[] {
