@@ -3,88 +3,43 @@ import { StyledMiddleScreenMenu } from "../Layouts/MiddleScreenMenu/MiddleScreen
 
 export const StyledEditUsername = styled(StyledMiddleScreenMenu)`
 
-  border-radius: 1px;
-  border-color: ${({theme}) => theme.greySelect};
-  border-style: solid;
-  border-radius: 10px;
 
   .username-status {
     display: flex;
     flex-direction: column;
     font-size: 14px;
-    color: ${({ theme }) => theme.redish}
+    color: ${({ theme }) => theme.redish};
   }
 
-  .errorMessage{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
-    text-align: start;
-    font-size: 14px;
-    
-    .closeButton {
-      font-size: 30px;
-      color: #6f6f6f;
-      height: 17px;
-      margin-top: -15px;
-      margin-right: -8px;
-      align-self: flex-end; 
-      &:hover {
-        color: ${({ theme }) => theme.whiteText};
-      }
-      .close {
-        cursor: pointer;
-        display: block;
-      }
-    }
-      
-    .exclamation {
-      display: flex;
-      justify-content: center;
-      font-size: 25px;
-    }
-  }
-    
   .headerSeparator {
     position: sticky;
     top: 0;
     background-color: ${({ theme }) => theme.layer2};
-    
+
     .input {
       width: 85%;
     }
-    
+
     .separator {
       transform: translateZ(0);
       position: sticky;
     }
-    
+
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding-bottom: 10px;
-      
-      .infoLogo {
-        font-size: 30px;
+      .checkmark{
+    
+        font-size: 25px;
+        bottom: 0px;
+        color: ${({ theme }) => theme.green};
       }
-      
-      .closeButton {
-        font-size: 30px;
-        color: #6f6f6f;
-        height: 17px;
-        margin-top: -15px;
-        margin-right: -8px;
-        
-        &:hover {
-          color: ${({ theme }) => theme.whiteText};
-        }
-        
-        .close {
-          cursor: pointer;
-          display: block;
-        }
+      .warning{
+        font-size: 25px;
+        bottom: 0px;
+        color: ${({ theme }) => theme.redish};
       }
     }
   }

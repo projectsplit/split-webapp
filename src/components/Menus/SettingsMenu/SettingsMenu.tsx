@@ -23,7 +23,8 @@ import TimeZoneOptionsAnimation from "../MenuAnimations/TimeZoneOptionsAnimation
 import { useTimeZone } from "../../../api/services/useTimeZone";
 import { getInitials } from "../../../helpers/getInitials";
 import { timeZones } from "../../../helpers/timeZones";
-import EditUsername from "../EditUsername/EditUsername";
+import EditUsernameAnimation from "../MenuAnimations/EditUsernameAnimation";
+import { FaUserPen } from "react-icons/fa6";
 
 export default function SettingsMenu({
   menu,
@@ -34,7 +35,7 @@ export default function SettingsMenu({
   const allTimeZones = timeZones;
   const currencyMenu = useSignal<string | null>(null);
   const timeZoneMenu = useSignal<string | null>(null);
-  const [isEditUsernameMenuOpen, setIsEditUsernameMenuOpen] = useState(false)
+  const editUsernameMenu = useSignal<string|null>(null);
 
   const queryClient = useQueryClient();
 
@@ -130,9 +131,13 @@ export default function SettingsMenu({
           <div className="description">Single currency display</div>
           <ToggleSwitch isOn={isOn} onToggle={handleToggle} />
         </div>
-        <div className="option" onClick={() => setIsEditUsernameMenuOpen(true)}        >
+
+        <div className="option" onClick={() => editUsernameMenu.value = 'editUsername'}>
+        <FaUserPen className="icon"/>
           <div className="description">Change username</div>
         </div>
+
+
         <div className="option" onClick={handleLogout}>
           <TbLogout2 className="icon" />
           <div className="description">Log out</div>
@@ -144,6 +149,7 @@ export default function SettingsMenu({
       </div>
       <MenuAnimationBackground menu={currencyMenu} />
       <MenuAnimationBackground menu={timeZoneMenu} />
+      <MenuAnimationBackground menu={editUsernameMenu} />
       <TimeZoneOptionsAnimation
         timeZoneMenu={timeZoneMenu}
         clickHandler={handldeTimeZoneOptionsClick}
@@ -154,10 +160,7 @@ export default function SettingsMenu({
         clickHandler={handldeCurrencyOptionsClick}
         selectedCurrency={userCurrency}
       />
-      {isEditUsernameMenuOpen && <EditUsername
-        existingUsername={userInfo.username}
-        close={() => setIsEditUsernameMenuOpen(false)}
-      />}
+     <EditUsernameAnimation editUsernameMenu={editUsernameMenu} existingUsername={userInfo.username}/>
     </StyledSettingsMenu>
   );
 }

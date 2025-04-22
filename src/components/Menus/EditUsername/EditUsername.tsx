@@ -9,13 +9,17 @@ import Spinner from "../../Spinner/Spinner";
 import { GrFormCheckmark } from "react-icons/gr";
 import { FiAlertTriangle } from "react-icons/fi";
 
-export default function EditUsername({ existingUsername, close }: EditUsernameProps) {
+export default function EditUsername({ existingUsername ,editUsernameMenu}: EditUsernameProps) {
 
   const [username, setUsername] = useState(existingUsername)
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
   const usernameStatus = useGetUsernameStatus(username)
-  const editUsernameMutation = useEditUsername()
+
+  const {
+    mutate: editUsername,
+    isPending,   
+  } = useEditUsername();
 
   useEffect(() => {
     if (!usernameStatus.isSuccess) {
@@ -41,13 +45,16 @@ export default function EditUsername({ existingUsername, close }: EditUsernamePr
     setUsername(e.target.value)
   }
 
-  const handleConfirm = (_: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    editUsernameMutation.mutate(
-      username,
-      {
-        onSuccess: () => { close() }
-      })
-  }
+
+  const handleConfirm = (
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    editUsername(username, {
+      onSuccess: () => {
+        editUsernameMenu.value = null;
+      }
+    });
+  };
 
   return (
     <StyledEditUsername>
@@ -60,7 +67,7 @@ export default function EditUsername({ existingUsername, close }: EditUsernamePr
             onChange={handleInputChange}
             autoFocus={true}
           />
-          {username.length > 0 && (!usernameStatus.isSuccess ? <Spinner fontSize={"14px"} /> : !errorMessage ? <GrFormCheckmark /> : <FiAlertTriangle />)}
+          {username.length > 0 && (!usernameStatus.isSuccess ? <Spinner fontSize={"18px"} /> : !errorMessage ? <GrFormCheckmark className="checkmark"/> : <FiAlertTriangle className="warning"/>)}
         </div>
         <div className="separator">
           <Separator />
@@ -68,10 +75,10 @@ export default function EditUsername({ existingUsername, close }: EditUsernamePr
       </div>
       <div className="username-status">{errorMessage ?? "\xa0"}</div>
       <div className="buttons">
-        <MyButton isLoading={false} onClick={handleConfirm}>
+        <MyButton isLoading={isPending} onClick={handleConfirm}>
           Confirm
         </MyButton>
-        <MyButton variant="secondary" onClick={close}>
+        <MyButton variant="secondary" onClick={()=>editUsernameMenu.value=null}>
           Cancel
         </MyButton>
       </div>

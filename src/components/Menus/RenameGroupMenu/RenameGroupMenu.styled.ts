@@ -2,28 +2,32 @@ import styled from "styled-components";
 import { StyledMiddleScreenMenu } from "../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
 
 export const StyledRenameGroupMenu = styled(StyledMiddleScreenMenu)`
-.errorMessage{
+  .errorMessage {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 10px;
     text-align: start;
     font-size: 14px;
+    .error{
+      display:flex;
+      justify-content:center;
+    }
     .closeButton {
-        font-size: 30px;
-        color: #6f6f6f;
-        height: 17px;
-        margin-top: -15px;
-        margin-right: -8px;
-        align-self: flex-end; 
-        &:hover {
-          color: ${({ theme }) => theme.whiteText};
-        }
-        .close {
-          cursor: pointer;
-          display: block;
-        }
+      font-size: 30px;
+      color: #6f6f6f;
+      height: 17px;
+      margin-top: -15px;
+      margin-right: -8px;
+      align-self: flex-end;
+      &:hover {
+        color: ${({ theme }) => theme.whiteText};
       }
+      .close {
+        cursor: pointer;
+        display: block;
+      }
+    }
     .exclamation {
       display: flex;
       justify-content: center;

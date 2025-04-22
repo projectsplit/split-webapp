@@ -18,8 +18,6 @@ export const BarsAndAmounts = ({
   const bar1WidthPercentage = bar1Width / (bar1Width + bar2Width);
   const bar2WidthPercentage = bar2Width / (bar1Width + bar2Width);
 
-  console.log(bar1WidthPercentage,bar2WidthPercentage)
-  
   return (
     <StyledBarsAndAmounts onClick={onClick}>
       <div className="barAndAmount">
