@@ -67,7 +67,7 @@ export default function EditUsername({ existingUsername ,editUsernameMenu}: Edit
             onChange={handleInputChange}
             autoFocus={true}
           />
-          {username.length > 0 && (!usernameStatus.isSuccess ? <Spinner fontSize={"18px"} /> : !errorMessage ? <GrFormCheckmark className="checkmark"/> : <FiAlertTriangle className="warning"/>)}
+          {username.length > 0 && (!usernameStatus.isSuccess ? <Spinner fontSize={"25px"} /> : !errorMessage ? <GrFormCheckmark className="checkmark"/> : <FiAlertTriangle className="warning"/>)}
         </div>
         <div className="separator">
           <Separator />
