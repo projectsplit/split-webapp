@@ -251,7 +251,7 @@ const createParticipantPickerArray = (
     amount:
       expense?.participants.find((p) => p.memberId === member.id)
         ?.participationAmount ?? "",
-    locked: false,
+    locked: expense?.participants.some(p => p.memberId === member.id) ?? false,
     name: member.name,
     order: 0,
     selected:
@@ -268,7 +268,7 @@ const createPayerPickerArray = (
     amount:
       expense?.payers.find((p) => p.memberId === member.id)?.paymentAmount ??
       "",
-    locked: false,
+    locked: expense?.payers.some(p => p.memberId === member.id) ?? false,
     name: member.name,
     order: 0,
     selected: expense?.payers.some((p) => p.memberId === member.id) ?? false,
