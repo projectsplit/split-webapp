@@ -1,45 +1,45 @@
-name: Deploy Production
+runs-on: ubuntu-latest
 
-on:
-  workflow_dispatch:
+steps:
+  - name: Checkout code
+    uses: actions/checkout@v4
 
-run-name: Deploy Production ${{ github.ref_name }}
+  - name: Set up Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: '23'
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  - name: Install dependencies
+    run: npm install
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '23'
+  - name: echo ENV_PRODUCTION
+    run: echo "${{ vars.ENV_PRODUCTION }}"
 
-      - name: Install dependencies
-        run: npm install
+  - name: Setup .env.production
+    run: echo "${{ vars.ENV_PRODUCTION }}" > .env.production
 
-      - name: echo ENV_PRODUCTION
-        run: echo "${{ vars.ENV_PRODUCTION }}"
+  - name: Build React App
+    run: npm run build-prod
 
-      - name: Setup .env.production
-        run: echo "${{ vars.ENV_PRODUCTION }}" > .env.production
+  - name: List output of dist directory
+    run: ls -alh ${{ github.workspace }}/dist/
 
-      - name: Build React App
-        run: npm run build-prod
-        
-      - name: List output of dist directory
-        run: ls -alh ${{ github.workspace }}/dist/
-            
-      - name: Upload dist content via scp
-        uses: appleboy/scp-action@master
-        with:
-          HOST: ${{ secrets.SERVER_HOST }}
-          USERNAME: ${{ secrets.SERVER_USER }}
-          PORT: ${{ secrets.SERVER_SSH_PORT }}
-          KEY: ${{ secrets.SERVER_SSH_KEY }}
-          source: "${{ github.workspace }}/dist/"
-          target: "/home/user/split-production/webapp"
-          strip_components: 3
+  - name: Empty target webapp directory
+    uses: appleboy/ssh-action@master
+    with:
+      host: ${{ secrets.SERVER_HOST }}
+      username: ${{ secrets.SERVER_USER }}
+      port: ${{ secrets.SERVER_SSH_PORT }}
+      key: ${{ secrets.SERVER_SSH_KEY }}
+      script: rm -rf /home/user/split-production/webapp/*
+
+  - name: Upload dist content via scp
+    uses: appleboy/scp-action@master
+    with:
+      HOST: ${{ secrets.SERVER_HOST }}
+      USERNAME: ${{ secrets.SERVER_USER }}
+      PORT: ${{ secrets.SERVER_SSH_PORT }}
+      KEY: ${{ secrets.SERVER_SSH_KEY }}
+      source: "${{ github.workspace }}/dist/*"
+      target: "/home/user/split-production/webapp"
+      strip_components: 1
