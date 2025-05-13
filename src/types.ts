@@ -234,6 +234,28 @@ export type CreateEditExpenseRequest = {
   }[];
 };
 
+export type ExpenseRequest = {
+  expenseId?: string;
+  groupId?: string;
+  amount: number;
+  currency: string;
+  payments: {
+    memberId: string;
+    amount: number;
+  }[];
+  shares: {
+    memberId: string;
+    amount: number;
+  }[];
+  description: string;
+  location: GeoLocation | null;
+  occurred: string;
+  labels: {
+    text: string,
+    color: string
+  }[];
+}
+
 export type GeoLocation = {
   coordinates: Coordinates;
   google: GooglePlace | null;

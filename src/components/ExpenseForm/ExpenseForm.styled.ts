@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 export const StyledExpenseForm = styled.div`
   position: fixed;
@@ -6,12 +6,14 @@ export const StyledExpenseForm = styled.div`
   background-color: ${({ theme }) => theme.backgroundcolor};
   width: 100%;
   height: 100%;
-  z-index: 1;
+  left: 0;
+  right: 0;
+  margin: 0;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   padding: 12px 16px;
   gap: 20px;
-  z-index: 10;
   bottom: 0;
   overflow-y: auto;
   .header {
@@ -64,8 +66,7 @@ export const StyledExpenseForm = styled.div`
       justify-content: end;
     }
   }
- .spacer {
+  .spacer {
     flex-grow: 1; /* This pushes the button to the bottom */
   }
-
 `;

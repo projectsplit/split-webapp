@@ -377,6 +377,9 @@ export interface ExpenseFormProps {
   timeZoneId: string;
   menu: Signal<string | null>;
   timeZoneCoordinates: Coordinates;
+  header:string;
+  selectedExpense: Signal<ExpenseResponseItem | null>;
+  isCreateExpense:boolean;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
