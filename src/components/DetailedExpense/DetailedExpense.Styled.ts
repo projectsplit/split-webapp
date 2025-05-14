@@ -6,7 +6,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
   flex-direction: column;
   height: 99%;
   top: 0.3%;
-  overflow: auto;
+  //overflow: auto;
   scrollbar-width: thin;
   margin: 2px;
   box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`};

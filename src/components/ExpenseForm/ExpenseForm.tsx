@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StyledExpenseForm } from "./ExpenseForm.styled";
 import {
   ExpenseRequest,
@@ -22,7 +22,7 @@ import { amountIsValid } from "../../helpers/amountIsValid";
 import { significantDigitsFromTicker } from "../../helpers/openExchangeRates";
 import currency from "currency.js";
 import { useSignal } from "@preact/signals-react";
-import Input_old from "../Input_old";
+import FormInput from "../FormInput/FormInput";
 import { ExpenseFormProps } from "../../interfaces";
 import { useExpense } from "../../api/services/useExpense";
 import { useEditExpense } from "../../api/services/useEditExpense";
@@ -45,14 +45,20 @@ export default function ExpenseForm({
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
     useEditExpense(menu, selectedExpense, group.id);
 
-  const [participants, setParticipants] = useState<PickerMember[]>(
-    createParticipantPickerArray(group, expense)
+  const participantsInitial = useMemo(
+    () => createParticipantPickerArray(group, expense),
+    [group, expense]
   );
+  const [participants, setParticipants] =
+    useState<PickerMember[]>(participantsInitial);
   const [participantsError, setParticipantsError] = useState<string>("");
 
-  const [payers, setPayers] = useState<PickerMember[]>(
-    createPayerPickerArray(group, expense)
+  const payersInitial = useMemo(
+    () => createPayerPickerArray(group, expense),
+    [group, expense]
   );
+  const [payers, setPayers] = useState<PickerMember[]>(payersInitial);
+
   const [payersError, setPayersError] = useState<string>("");
   const [descriptionError, setDescriptionError] = useState<string>("");
 
@@ -87,7 +93,7 @@ export default function ExpenseForm({
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
 
-  const submitExpense = () => {
+  const submitExpense = useCallback(() => {
     setShowAmountError(true);
 
     if (
@@ -131,7 +137,22 @@ export default function ExpenseForm({
     } else {
       editExpenseMutation(expenseRequest);
     }
-  };
+  }, [
+    participants,
+    payers,
+    amount,
+    setAmountError,
+    location.value,
+    description,
+    isCreateExpense,
+    group.id,
+    expense?.id,
+    currencySymbol,
+    expenseTime,
+    labels,
+    createExpenseMutation,
+    editExpenseMutation,
+  ]);
 
   useEffect(() => {
     amountIsValid(amount, setAmountError);
@@ -217,7 +238,7 @@ export default function ExpenseForm({
 
   const amountNumber = !amountError ? Number(amount) : Number.NaN;
 
-  const handleInputBlur = () => {
+  const handleInputBlur = useCallback(() => {
     if (
       participants.some((p) => p.selected) ||
       payers.some((p) => p.selected)
@@ -225,13 +246,31 @@ export default function ExpenseForm({
       setShowAmountError(true);
       amountIsValid(amount, setAmountError);
     }
-  };
+  },[participants, payers, amount, setAmountError]);
 
-  const handldeCurrencyOptionsClick = (curr: string) => {
-    setCurrencySymbol(curr);
-    currencyMenu.value = null;
-  };
+  const handleCurrencyOptionsClick = useCallback(
+    (curr: string) => {
+      setCurrencySymbol(curr);
+      currencyMenu.value = null;
+    },
+    [currencyMenu]
+  );
 
+  const handleInputChangeCallback = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      handleInputChange(e, currencySymbol, displayedAmount, setAmount);
+      setShowAmountError(false);
+    },
+    [currencySymbol, displayedAmount, setAmount]
+  );
+
+  const handleDescriptionChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setDescription(e.target.value);
+    },
+    []
+  );
+  
   return (
     <StyledExpenseForm>
       <div className="header">
@@ -249,10 +288,7 @@ export default function ExpenseForm({
         <InputMonetary
           currencyMenu={currencyMenu}
           value={displayedAmount.value}
-          onChange={(e) => {
-            handleInputChange(e, currencySymbol, displayedAmount, setAmount);
-            setShowAmountError(false);
-          }}
+          onChange={handleInputChangeCallback}
           onBlur={handleInputBlur}
           currency={currencySymbol}
           autoFocus={true}
@@ -280,12 +316,12 @@ export default function ExpenseForm({
         group={group}
         selectedCurrency={currencySymbol}
       />
-      <Input_old
+      <FormInput
         description="Description"
         placeholder="e.g. Air tickets"
         value={description}
         error={descriptionError}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={handleDescriptionChange}
       />
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
       <LocationPicker
@@ -312,7 +348,7 @@ export default function ExpenseForm({
       <MenuAnimationBackground menu={currencyMenu} />
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
-        clickHandler={handldeCurrencyOptionsClick}
+        clickHandler={handleCurrencyOptionsClick}
         selectedCurrency={currencySymbol}
       />
     </StyledExpenseForm>

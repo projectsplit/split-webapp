@@ -14,9 +14,6 @@ export const useEditExpense = (
   return useMutation<any, AxiosError, ExpenseRequest>({
     mutationFn: (expense) => editExpense(expense),
     onSuccess: async () => {
-      selectedExpense.value = null;
-      menu.value = null;
-
       await queryClient.invalidateQueries({ queryKey: ["debts"], exact: false });
       await queryClient.invalidateQueries({
         queryKey: ["groupExpenses"],
@@ -32,6 +29,8 @@ export const useEditExpense = (
         queryKey: [groupId],
         exact: false,
       });
+      selectedExpense.value = null;
+      menu.value = null;
     },
   });
 };

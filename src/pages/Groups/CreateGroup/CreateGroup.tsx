@@ -36,15 +36,13 @@ export default function CreateGroup({
   );
   const createGroup = useMutation<any, any, GroupRequest>({
     mutationFn: (groupData) => createGroupFn(groupData),
-    onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ["groups", "active"] });
-      queryClient.refetchQueries({ queryKey: ["home"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["groups", "active"] });
+      await queryClient.invalidateQueries({ queryKey: ["home"] });
     },
   });
 
   const onClickHandler = () => {
-    queryClient.invalidateQueries({ queryKey: ["groups", "active"] });
-    queryClient.invalidateQueries({ queryKey: ["home"] });
     createGroup.mutate({ name: groupName, currency: currencySymbol });
     menu.value = null;
   };

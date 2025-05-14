@@ -19,12 +19,11 @@ export const StyledMemberPicker = styled.div<{
   display: flex;
   flex-direction: column;
   position: relative;
-  background-color: ${({ theme }) => theme.layer2};
-  border-radius: 8px;
   .main {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: ${({ theme }) => theme.layer2};
     border: 1px solid
       ${({ theme, $hasError, $isOpen }) =>
         $hasError

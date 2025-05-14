@@ -107,7 +107,7 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
   };
 
   const remainingSuggestedLabels = groupLabels.filter(x => !labels.map(x => x.text).includes(x.text));
-  console.log(remainingSuggestedLabels)
+ 
 
   const isEmpty = labels?.length === 0 && text.length === 0;
 

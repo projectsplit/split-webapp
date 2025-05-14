@@ -8,11 +8,11 @@ export const StyledLocationPicker = styled.div<StyledLocationPickerProps>`
   color: ${({ theme }) => theme.secondaryTextColor};
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.layer2};
 
   .main {
     display: flex;
     justify-content: space-between;
+    background-color: ${({ theme }) => theme.layer2};
     align-items: center;
     border: 1px solid ${({ theme }) => theme.lineColor};
     border-radius: 8px;
@@ -27,7 +27,7 @@ export const StyledLocationPicker = styled.div<StyledLocationPickerProps>`
       flex: 1;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis; 
+      text-overflow: ellipsis;
     }
 
     .closeButtonWrapper {
@@ -35,9 +35,8 @@ export const StyledLocationPicker = styled.div<StyledLocationPickerProps>`
       align-items: center;
       .closeButton {
         font-size: 1.4rem;
-        color: ${({ location,theme }) => (!!location ? theme.textActiveColor : "")};
-
-
+        color: ${({ location, theme }) =>
+          !!location ? theme.textActiveColor : ""};
       }
     }
     .icon {

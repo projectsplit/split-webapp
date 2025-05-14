@@ -2,7 +2,7 @@ import { IoClose } from "react-icons/io5";
 import { TransferFormProps } from "../../interfaces";
 import { StyledTransferForm } from "./TransferForm.styled";
 import InputMonetary from "../InputMonetary/InputMonetary";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSignal } from "@preact/signals-react";
 import { handleInputChange } from "../../helpers/handleInputChange";
 import { amountIsValid } from "../../helpers/amountIsValid";
@@ -10,7 +10,7 @@ import { DateTime } from "../DateTime";
 import MyButton from "../MyButton/MyButton";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import CurrencyOptionsAnimation from "../Menus/MenuAnimations/CurrencyOptionsAnimation";
-import Input_old from "../Input_old";
+import Input_old from "../FormInput/FormInput";
 import { useOutletContext } from "react-router-dom";
 import { CreateTransferRequest, UserInfo } from "../../types";
 import { useTransfer } from "../../api/services/useTransfers";
@@ -43,10 +43,10 @@ export default function TransferForm({
   const [senderId, setSenderId] = useState<string>("");
   const [receiverId, setReceiverId] = useState<string>("");
 
-  const handleInputBlur = () => {
+  const handleInputBlur = useCallback(() => {
     setShowAmountError(true);
     amountIsValid(amount, setAmountError);
-  };
+  },[amount, setShowAmountError, setAmountError]);
 
   const allMembers = [...group.guests, ...group.members];
   const members = group?.members;
@@ -58,7 +58,7 @@ export default function TransferForm({
     currencyMenu.value = null;
   };
 
-  const submitTransfer = () => {
+  const submitTransfer = useCallback(() => {
     setShowAmountError(true);
     setShowIdError(true);
     if (!amountIsValid(amount, setAmountError)) return;
@@ -75,13 +75,13 @@ export default function TransferForm({
     };
 
     createTransferMutation(createTransferRequest);
-  };
+  },[setShowAmountError, setShowIdError, amount, idError.error, group.id, currencySymbol, receiverId, senderId,transferTime, description]);
 
-  const sortedMembers = [...allMembers].sort((a, b) => {
+  const sortedMembers =useMemo(()=>[...allMembers].sort((a, b) => {
     if (a.id === userMemberId) return -1;
     if (b.id === userMemberId) return 1;
     return 0;
-  });
+  }),[allMembers]) 
 
   useEffect(() => {
     if (senderId === receiverId && senderId !== "") {
