@@ -14,6 +14,8 @@ import { currencyData } from "../../../helpers/openExchangeRates";
 import { useOutletContext } from "react-router-dom";
 import { useSelectedCurrency } from "../../../api/services/useSelectedCurrency";
 import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
+import MyButton from "../../../components/MyButton/MyButton";
+import FormInput from "../../../components/FormInput/FormInput";
 
 export default function CreateGroup({
   menu,
@@ -34,17 +36,17 @@ export default function CreateGroup({
   const selectedCurrency = allCurrencies.value.find(
     (c) => c.symbol === currencySymbol
   );
-  const createGroup = useMutation<any, any, GroupRequest>({
+  const {mutate:createGroup, isPending} = useMutation<any, any, GroupRequest>({
     mutationFn: (groupData) => createGroupFn(groupData),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["groups", "active"] });
       await queryClient.invalidateQueries({ queryKey: ["home"] });
+      menu.value = null;
     },
   });
 
   const onClickHandler = () => {
-    createGroup.mutate({ name: groupName, currency: currencySymbol });
-    menu.value = null;
+    createGroup({ name: groupName, currency: currencySymbol });
   };
 
   const handldeCurrencyOptionsClick = (curr: string) => {
@@ -67,9 +69,9 @@ export default function CreateGroup({
       </div>
       <div className="inputAndCurrWrapper">
         <div className="input">
-          <Input
+          <FormInput
             placeholder="Group Name"
-            backgroundcolor="#2d2d2d"
+            value={groupName}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setGroupName(e.target.value)
             }
@@ -87,12 +89,13 @@ export default function CreateGroup({
         </div>
       </div>
       <div className="submitButton">
-        <SubmitButton
+        <MyButton
           disabled={groupName.trim() === "" ? true : false}
           onClick={onClickHandler}
+          isLoading={isPending}
         >
           Create Group
-        </SubmitButton>
+        </MyButton>
       </div>
 
       <MenuAnimationBackground menu={currencyMenu} />

@@ -55,15 +55,15 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
     openGroupOptionsMenu.value = false;
     if (refetchQueries.value) {
       try {
-        await queryClient.refetchQueries({
+        await queryClient.invalidateQueries({
           queryKey: [group?.id],
           exact: false,
         });
-        await queryClient.refetchQueries({
+        await queryClient.invalidateQueries({
           queryKey: ["groups"],
           exact: false,
         });
-        await queryClient.refetchQueries({
+        await queryClient.invalidateQueries({
           queryKey: ["mostRecentGroup"],
           exact: false,
         });

@@ -8,7 +8,7 @@ export const StyledCreateGroup = styled.div`
   height: 100%;
   overflow: auto;
   box-sizing: border-box;
-  background-color: ${({ theme }) => theme.layer2};
+  background-color: black;
   z-index: 3;
   display: flex;
   flex-direction: column;

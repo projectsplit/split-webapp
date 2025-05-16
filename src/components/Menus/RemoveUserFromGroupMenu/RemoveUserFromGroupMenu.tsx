@@ -45,7 +45,7 @@ export default function RemoveUserFromGroupMenu({
 
   const refetchGroupData = async () => {
     try {
-      await queryClient.refetchQueries({
+      await queryClient.invalidateQueries({
         queryKey: [groupId],
         exact: false,
       });
