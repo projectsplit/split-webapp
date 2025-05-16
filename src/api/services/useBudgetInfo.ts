@@ -7,7 +7,7 @@ const useBudgetInfo = () => {
     queryKey: ["budget"],
     queryFn:  getBudgetInfo,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     staleTime: 9000,
     enabled: true,
   });

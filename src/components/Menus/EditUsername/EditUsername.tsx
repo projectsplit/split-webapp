@@ -8,18 +8,21 @@ import { useEditUsername } from "../../../api/services/useEditUsername";
 import Spinner from "../../Spinner/Spinner";
 import { GrFormCheckmark } from "react-icons/gr";
 import { FiAlertTriangle } from "react-icons/fi";
+import { useParams } from "react-router-dom";
 
 export default function EditUsername({ existingUsername ,editUsernameMenu}: EditUsernameProps) {
 
   const [username, setUsername] = useState(existingUsername)
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
-
+  const params = useParams();
+  const groupId = params?.groupid;
+ 
   const usernameStatus = useGetUsernameStatus(username)
 
   const {
     mutate: editUsername,
     isPending,   
-  } = useEditUsername();
+  } = useEditUsername(groupId);
 
   useEffect(() => {
     if (!usernameStatus.isSuccess) {

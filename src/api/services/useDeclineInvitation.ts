@@ -35,7 +35,7 @@ export const useDeclineInvitation = () => {
     },
     onSuccess: () => {
    
-      queryClient.refetchQueries({ queryKey: ["userInvitations"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["userInvitations"], exact: false });
     },
     onError: (error, invitationId, context) => {
       // Rollback to the previous state if the mutation fails

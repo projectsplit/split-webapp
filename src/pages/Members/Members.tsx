@@ -57,7 +57,6 @@ export default function Members() {
     if (b.id === userMemberId) return 1;
     return 0;
   });
-
   return (
     <StyledMembers>
       {isFetching ? (

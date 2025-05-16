@@ -3,7 +3,7 @@ import { getGroupDebts } from "./api";
 import { DebtsResponse } from "../../types";
 
 
-const usePendingTransactions = (groupId: string | undefined) => {
+const useDebts = (groupId: string | undefined) => {
   return useQuery<DebtsResponse>({
     queryKey: ["debts", groupId],
     queryFn: () =>
@@ -17,4 +17,4 @@ const usePendingTransactions = (groupId: string | undefined) => {
   });
 };
 
-export default usePendingTransactions;
+export default useDebts;

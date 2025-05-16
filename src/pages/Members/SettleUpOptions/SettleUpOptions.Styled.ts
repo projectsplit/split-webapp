@@ -6,7 +6,9 @@ export const StyledSettleUpOptions = styled(StyledBottomMenu)`
   
   overflow: auto;
   padding: 0;
-
+  height: auto; /* Allow height to adjust based on content */
+  max-height: 50vh; /* Maximum height */
+  overflow-y: auto;
   .header {
     display: flex;
     flex-direction: column;

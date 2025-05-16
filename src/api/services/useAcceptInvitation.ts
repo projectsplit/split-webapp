@@ -36,17 +36,17 @@ export const useAcceptInvitation = () => {
     return { previousInvitations };
     },
     onSuccess: () => {
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: ["userInvitations"],
         exact: false,
       });
-      queryClient.refetchQueries({ queryKey: ["home"], exact: false });
-      queryClient.refetchQueries({ queryKey: ["groups"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
     },
     onError: (error, invitationId, context) => {
       // Rollback to the previous state if the mutation fails
       queryClient.setQueryData(["userInvitations", 10], context?.previousInvitations);
-      queryClient.refetchQueries({ queryKey: ["userInvitations"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["userInvitations"], exact: false });
       console.error(error);
     },
     onSettled: () => {
