@@ -17,7 +17,7 @@ const FormInput = forwardRef<HTMLInputElement, InputProps>(
         }, 0);
       }
     };
-
+ 
     return (
       <StyledInput $hasError={!!error}>
         <div className="input-container">

@@ -29,7 +29,9 @@ export const StyledCreateGroup = styled.div`
         display: flex;
         flex-direction: row;
         gap: 0.5rem;
-        background-color: #2d2d2d;
+        background-color: ${({ theme }) => theme.layer2};
+        border: 1px solid
+      ${({ theme}) =>theme.lineColor};
         border-radius: 10px;
         padding: 0.5rem;
         font-size: 1.125rem;

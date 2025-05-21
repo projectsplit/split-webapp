@@ -12,10 +12,10 @@ import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/Me
 import { useSignal } from "@preact/signals-react";
 import { currencyData } from "../../../helpers/openExchangeRates";
 import { useOutletContext } from "react-router-dom";
-import { useSelectedCurrency } from "../../../api/services/useSelectedCurrency";
 import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
 import MyButton from "../../../components/MyButton/MyButton";
 import FormInput from "../../../components/FormInput/FormInput";
+//TODO invite people when creating group. When create group is hit then multiple invitations should be sent
 
 export default function CreateGroup({
   menu,

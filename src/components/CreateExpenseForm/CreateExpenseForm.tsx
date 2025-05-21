@@ -1,5 +1,5 @@
 import { ExpenseFormProps } from "../../interfaces";
-import ExpenseForm from "../ExpenseForm/ExpenseForm";
+import ExpenseForm2 from "../ExpenseForm/ExpenseForm2";
 
 
 const CreateExpenseForm: React.FC<ExpenseFormProps> = ({
@@ -13,7 +13,7 @@ const CreateExpenseForm: React.FC<ExpenseFormProps> = ({
 }) => {
  
   return (
-    <ExpenseForm
+    <ExpenseForm2
       expense={expense}
       group={group}
       menu={menu}
