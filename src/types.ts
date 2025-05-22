@@ -451,7 +451,6 @@ export type ExpenseFormState = {
   expenseTime: string;
   participants: PickerMember[];
   payers: PickerMember[];
-  location?: GeoLocation;
   showErrors: boolean;
   errors: {
     showAmount: string;
@@ -471,7 +470,6 @@ export type ExpenseFormAction =
   | { type: "SET_EXPENSE_TIME"; payload: string }
   | { type: "SET_PARTICIPANTS"; payload: PickerMember[] }
   | { type: "SET_PAYERS"; payload: PickerMember[] }
-  | { type: "SET_LOCATION"; payload: GeoLocation | undefined }
   | { type: "SET_SHOW_ERRORS"; payload: boolean }
   | { type: "SET_ERROR"; payload: Partial<ExpenseFormState["errors"]> }
   | { type: "RESET_AMOUNT" };

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { jwtDecode } from "jwt-decode";
 import config from "../config";
 
@@ -56,7 +56,7 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   response => response,
   async error => {
-    if (error.response.status === 401) {
+    if (error instanceof AxiosError && error.response && error.response.status === 401){
       await logOut();
       clearAccessToken();
       window.location.href = routes.AUTH;

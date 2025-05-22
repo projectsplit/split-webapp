@@ -14,14 +14,14 @@ import { significantDigitsFromTicker } from "../../helpers/openExchangeRates";
 
 const MemberPicker = ({
   memberAmounts,
-  setMemberAmounts,
+  dispatch,
   totalAmount,
   description,
   error,
   group,
- 
   selectedCurrency,
 }: MemberPickerProps) => {
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectAllTick, setSelectAllTick] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -33,7 +33,8 @@ const MemberPicker = ({
   }>();
 
   const [decimalDigits, setDecimalDigits] = useState<number>(2);
-  
+  const actionType =
+    description === "Participants" ? "SET_PARTICIPANTS" : "SET_PAYERS";
 
   const members = group?.members;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
@@ -71,13 +72,14 @@ const MemberPicker = ({
   }, [memberAmounts]);
 
   useEffect(() => {
-    setMemberAmounts(
-      recalculateAmounts(
+    dispatch({
+      type: actionType,
+      payload: recalculateAmounts(
         memberAmounts.map((m) =>
           m.id === userMemberId ? { ...m, name: "You" } : m
         )
-      )
-    );
+      ),
+    });
 
     if (totalAmount > 0) {
       if (
@@ -89,7 +91,11 @@ const MemberPicker = ({
           selected: true,
           order: renderCounter.current,
         }));
-        setMemberAmounts(recalculateAmounts(newFormMembers));
+        dispatch({
+          type: actionType,
+          payload: recalculateAmounts(newFormMembers),
+        });
+      
       }
       if (description === "Payers" && !memberAmounts.some((m) => m.selected)) {
         const newFormMembers = memberAmounts.map((m) => ({
@@ -97,7 +103,11 @@ const MemberPicker = ({
           selected: m.id === userMemberId,
           order: renderCounter.current,
         }));
-        setMemberAmounts(recalculateAmounts(newFormMembers));
+        dispatch({
+          type: actionType,
+          payload: recalculateAmounts(newFormMembers),
+        });
+       
       }
     }
 
@@ -108,7 +118,11 @@ const MemberPicker = ({
         amount: "",
         locked: false,
       }));
-      setMemberAmounts(newFormMembers);
+      dispatch({
+        type: actionType,
+        payload: newFormMembers,
+      });
+      
     }
     return () => {};
   }, [totalAmount]);
@@ -147,6 +161,7 @@ const MemberPicker = ({
         return m;
       }
     });
+    
   };
 
   const selectMember = (selectedId: string): void => {
@@ -156,7 +171,8 @@ const MemberPicker = ({
       }
       return m;
     });
-    setMemberAmounts(recalculateAmounts(newFormMembers));
+    dispatch({ type: actionType, payload: recalculateAmounts(newFormMembers) });
+    
   };
 
   const deselectMember = (id: string): void => {
@@ -166,7 +182,7 @@ const MemberPicker = ({
       }
       return m;
     });
-    setMemberAmounts(recalculateAmounts(newFormMembers));
+    dispatch({ type: actionType, payload: recalculateAmounts(newFormMembers) });
   };
 
   const toggleLock = (
@@ -181,7 +197,7 @@ const MemberPicker = ({
       }
       return m;
     });
-    setMemberAmounts(recalculateAmounts(newFormMembers));
+    dispatch({ type: actionType, payload: recalculateAmounts(newFormMembers) });
   };
 
   const selectAll = (_: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
@@ -190,7 +206,7 @@ const MemberPicker = ({
       selected: true,
       order: renderCounter.current,
     }));
-    setMemberAmounts(recalculateAmounts(newFormMembers));
+    dispatch({ type: actionType, payload: recalculateAmounts(newFormMembers) });
   };
 
   const selectNone = (): void => {
@@ -200,7 +216,10 @@ const MemberPicker = ({
       amount: "",
       locked: false,
     }));
-    setMemberAmounts(newFormMembers);
+    dispatch({
+      type: actionType,
+      payload: newFormMembers,
+    });
   };
 
   const changeAmount = (id: string, amount: string): void => {
@@ -210,7 +229,8 @@ const MemberPicker = ({
       }
       return m;
     });
-    setMemberAmounts(recalculateAmounts(updatedMembers));
+
+    dispatch({ type: actionType, payload: recalculateAmounts(updatedMembers) });
   };
 
   const handleInputBlur = (id: string) => {
@@ -225,13 +245,13 @@ const MemberPicker = ({
       }
       return m;
     });
-    setMemberAmounts(recalculateAmounts(updatedMembers));
+    dispatch({ type: actionType, payload: recalculateAmounts(updatedMembers) });
   };
 
   const selectedCount = memberAmounts.filter((m) => m.selected).length;
 
   const handleMainClick = () => {
-    setMemberAmounts(recalculateAmounts(memberAmounts));
+    dispatch({ type: actionType, payload: recalculateAmounts(memberAmounts) });
     setIsMenuOpen(!isMenuOpen);
   };
   const sortedMemberAmounts = [...memberAmounts].sort((a, b) => {
@@ -335,7 +355,7 @@ const MemberPicker = ({
                       <AutoWidthInput
                         className="amount-input"
                         inputMode="decimal"
-                        value={(m.amount)}
+                        value={m.amount}
                         onBlur={(_) => handleInputBlur(m.id)}
                         onChange={(e) => changeAmount(m.id, e.target.value)}
                         onClick={(e) => e.stopPropagation()}

@@ -10,7 +10,7 @@ import labelColors from "../../labelColors";
 import { AiFillDelete } from "react-icons/ai";
 import { useRemoveLabel } from "../../api/services/useRemoveLabel";
 
-const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
+const LabelPicker = ({ labels, dispatch, groupId }: LabelPickerProps) => {
 
   const [text, setText] = useState<string>("");
   const removeLabelMutation = useRemoveLabel()
@@ -34,7 +34,8 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
       ? { id: existingGroupLabel.id, color: existingGroupLabel.color, text: existingGroupLabel.text }
       : { id: labelText, color: availableColors[0], text: labelText };
 
-    setLabels([...labels, newExpenseLabel]);
+    dispatch({type:"SET_LABELS", payload:[...labels, newExpenseLabel]})
+   
     setText("");
   }
 
@@ -75,7 +76,8 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
   };
 
   const handleSelectedLabelClick = (labelText: string) => {
-    setLabels(labels.filter(x => x.text !== labelText));
+    dispatch({type:"SET_LABELS", payload:labels.filter(x => x.text !== labelText)})
+   
   };
 
   const handleSuggestedLabelClick = (labelName: string): void => {

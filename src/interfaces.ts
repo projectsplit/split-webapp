@@ -2,6 +2,7 @@ import { CSSProperties } from "react";
 import {
   Coordinates,
   Debt,
+  ExpenseFormAction,
   ExpenseResponseItem,
   FormExpense,
   Frequency,
@@ -18,6 +19,7 @@ import {
   UserInfo,
 } from "./types";
 import { Signal } from "@preact/signals-react";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
 export interface ExpenseProps {
   timeZoneId: string;
@@ -97,7 +99,7 @@ export interface TransferProps {
 
 export interface DateTimePickerProps {
   selectedDateTime: string;
-  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
+  dispatch: React.Dispatch<ExpenseFormAction>;
   realtimeUpdate: boolean;
   setRealtimeUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   timeZoneId: string;
@@ -105,7 +107,7 @@ export interface DateTimePickerProps {
 
 export interface DateTimeProps {
   selectedDateTime: string;
-  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
+  dispatch: React.Dispatch<ExpenseFormAction>;
   timeZoneId: string;
   isEdit: boolean;
 }
@@ -113,8 +115,8 @@ export interface DateTimeProps {
 export interface MemberPickerProps {
   totalAmount: number;
   memberAmounts: PickerMember[];
-  setMemberAmounts: React.Dispatch<React.SetStateAction<PickerMember[]>>;
-  description?: string;
+  dispatch: React.Dispatch<ExpenseFormAction>;
+  description: "Participants" | "Payers"
   error?: string;
   group: Group;
   selectedCurrency: string;
@@ -122,7 +124,7 @@ export interface MemberPickerProps {
 
 export interface DayPickerProps {
   selectedDateTime: string;
-  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
+  dispatch: React.Dispatch<ExpenseFormAction>;
   timeZoneId: string;
 }
 
@@ -290,7 +292,7 @@ export interface TimeZoneOptionsAnimationProps {
 }
 export interface LabelPickerProps {
   labels: Label[];
-  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
+  dispatch: React.Dispatch<ExpenseFormAction>;
   groupId: string;
 }
 export interface BottomMenuProps {
@@ -677,4 +679,13 @@ export interface EditUsernameProps {
 export interface EditUsernameAnimationProps {
   existingUsername: string;
   editUsernameMenu:Signal<string | null>;
+}
+
+export interface GroupErrorProps{
+  groupError: Signal<{
+    message: string;
+    code?: string;
+    status?: number;
+    config?: any;
+  } | undefined>;
 }

@@ -4,8 +4,12 @@ import { getGroup } from "./api";
 const useGroup = (groupId: string | undefined) => {
   return useQuery({
     queryKey: [groupId],
-    queryFn: () =>
-      groupId ? getGroup(groupId) : Promise.reject("No group ID"),
+    queryFn: async () => {
+      if (!groupId) {
+        throw new Error("No group ID provided");
+      }
+      return await getGroup(groupId);
+    },
     enabled: !!groupId,
   });
 };

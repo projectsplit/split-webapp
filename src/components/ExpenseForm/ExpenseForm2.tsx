@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { StyledExpenseForm } from "./ExpenseForm.styled";
 import {
   ExpenseFormAction,
@@ -29,6 +36,11 @@ import { ExpenseFormProps } from "../../interfaces";
 import { useExpense } from "../../api/services/useExpense";
 import { useEditExpense } from "../../api/services/useEditExpense";
 import { useExpenseValidation } from "../../hooks/useExpenseValidation";
+import {
+  createParticipantPickerArray,
+  createPayerPickerArray,
+  expenseFormReducer,
+} from "./utils";
 
 export default function ExpenseForm2({
   group,
@@ -40,7 +52,6 @@ export default function ExpenseForm2({
   selectedExpense,
   isCreateExpense,
 }: ExpenseFormProps) {
-
   const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
     useExpense(menu, group.id);
 
@@ -50,62 +61,40 @@ export default function ExpenseForm2({
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
 
+  const location = useSignal<GeoLocation | undefined>(
+    expense?.location ?? undefined
+  );
 
   const initialState: ExpenseFormState = {
     amount: isCreateExpense || !expense ? "" : expense.amount,
     displayedAmount: isCreateExpense || !expense ? "" : expense.amount,
-    currencySymbol: isCreateExpense || !expense ? group.currency : expense.currency,
+    currencySymbol:
+      isCreateExpense || !expense ? group.currency : expense.currency,
     description: isCreateExpense || !expense ? "" : expense.description,
     labels: isCreateExpense || !expense ? [] : expense.labels,
-    expenseTime: isCreateExpense || !expense ? new Date().toISOString() : expense.expenseTime.toISOString(),
+    expenseTime:
+      isCreateExpense || !expense
+        ? new Date().toISOString()
+        : expense.expenseTime.toISOString(),
     participants: createParticipantPickerArray(group, expense),
     payers: createPayerPickerArray(group, expense),
-    location: expense?.location ?? undefined,
-    errors: { amount: "", participants: "", payers: "", description: "", showAmount: "" },
-    showErrors: false
+    errors: {
+      amount: "",
+      participants: "",
+      payers: "",
+      description: "",
+      showAmount: "",
+    },
+    showErrors: false,
   };
 
-  function expenseFormReducer(state: ExpenseFormState, action: ExpenseFormAction): ExpenseFormState {
-    switch (action.type) {
-      case "SET_AMOUNT":
-        return { ...state, amount: action.payload };
-      case "SET_DISPLAYED_AMOUNT":
-        return { ...state, displayedAmount: action.payload };
-      case "SET_CURRENCY":
-        return {
-          ...state,
-          currencySymbol: action.payload,
-          amount: "",
-          displayedAmount: "",
-          errors: { ...state.errors, amount: "" }
-        }
-      case "SET_DESCRIPTION":
-        return { ...state, description: action.payload };
-      case "SET_LABELS":
-        return { ...state, labels: action.payload };
-      case "SET_EXPENSE_TIME":
-        return { ...state, expenseTime: action.payload };
-      case "SET_PARTICIPANTS":
-        return { ...state, participants: action.payload };
-      case "SET_PAYERS":
-        return { ...state, payers: action.payload };
-      case "SET_LOCATION":
-        return { ...state, location: action.payload };
-      case "SET_ERROR":
-        return { ...state, errors: { ...state.errors, ...action.payload } };
-      case "SET_SHOW_ERRORS":
-        return { ...state, showErrors: action.payload };
-      case "RESET_AMOUNT":
-        return { ...state, amount: "", errors: { ...state.errors, amount: "" } };
-      default:
-        return state;
-    }
-  }
   const [state, dispatch] = useReducer(expenseFormReducer, initialState);
 
   const submitExpense = useCallback(() => {
     dispatch({ type: "SET_SHOW_ERRORS", payload: true });
-    const amountError = amountIsValid(state.amount) ? "" : "Enter a valid amount greater than zero";
+    const amountError = amountIsValid(state.amount)
+      ? ""
+      : "Enter a valid amount greater than zero";
 
     if (amountError) {
       dispatch({ type: "SET_ERROR", payload: { amount: amountError } });
@@ -116,17 +105,29 @@ export default function ExpenseForm2({
       state.participants.length ===
       state.participants.filter((p) => p.selected === false).length
     ) {
-      dispatch({ type: "SET_ERROR", payload: { participants: "Select at least one participant" } });
+      dispatch({
+        type: "SET_ERROR",
+        payload: { participants: "Select at least one participant" },
+      });
       return;
     }
 
-    if (state.payers.length === state.payers.filter((p) => p.selected === false).length) {
-      dispatch({ type: "SET_ERROR", payload: { payers: "Select at least one payer" } });
+    if (
+      state.payers.length ===
+      state.payers.filter((p) => p.selected === false).length
+    ) {
+      dispatch({
+        type: "SET_ERROR",
+        payload: { payers: "Select at least one payer" },
+      });
       return;
     }
 
-    if (!state.location && state.description.length == 0) {
-      dispatch({ type: "SET_ERROR", payload: { description: "Select a description or a location" } });
+    if (!location.value && state.description.length == 0) {
+      dispatch({
+        type: "SET_ERROR",
+        payload: { description: "Select a description or a location" },
+      });
       return;
     }
 
@@ -141,7 +142,7 @@ export default function ExpenseForm2({
         .filter((value) => value.selected)
         .map((value) => ({ memberId: value.id, amount: Number(value.amount) })),
       description: state.description,
-      location: state.location ?? null,
+      location: location.value ?? null,
       occurred: state.expenseTime,
       labels: state.labels.map((x) => ({ text: x.text, color: x.color })),
     };
@@ -155,7 +156,7 @@ export default function ExpenseForm2({
     state.participants,
     state.payers,
     state.amount,
-    state.location,
+    location.value,
     state.description,
     isCreateExpense,
     group.id,
@@ -173,12 +174,11 @@ export default function ExpenseForm2({
     payers: state.payers,
     currencySymbol: state.currencySymbol,
     description: state.description,
-    location: state.location,
-    dispatch
+    location: location,
+    dispatch,
   });
 
-
-  const amountNumber = !state.errors.amount ? Number(state.amount) : Number.NaN;
+  // const amountNumber = !state.errors.amount ? Number(state.amount) : Number.NaN;
 
   const handleInputBlur = useCallback(() => {
     if (
@@ -210,6 +210,7 @@ export default function ExpenseForm2({
   const handleDescriptionChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       dispatch({ type: "SET_DESCRIPTION", payload: e.target.value });
+      dispatch({ type: "SET_SHOW_ERRORS", payload: false });
     },
     []
   );
@@ -219,7 +220,6 @@ export default function ExpenseForm2({
       <div className="header">
         <div className="gap"></div>
         <div className="title">{header}</div>
-
         <div
           className="closeButtonContainer"
           onClick={() => (menu.value = null)}
@@ -243,19 +243,19 @@ export default function ExpenseForm2({
       </div>
       <MemberPicker
         description={"Participants"}
-        totalAmount={amountNumber}
+        totalAmount={Number(state.amount)}
         memberAmounts={state.participants}
         error={state.errors.participants}
-        setMemberAmounts={setParticipants}
+        dispatch={dispatch}
         group={group}
         selectedCurrency={state.currencySymbol}
       />
       <MemberPicker
         description={"Payers"}
-        totalAmount={amountNumber}
+        totalAmount={Number(state.amount)}
         memberAmounts={state.payers}
         error={state.errors.payers}
-        setMemberAmounts={setPayers}
+        dispatch={dispatch}
         group={group}
         selectedCurrency={state.currencySymbol}
       />
@@ -266,15 +266,19 @@ export default function ExpenseForm2({
         error={state.errors.description}
         onChange={handleDescriptionChange}
       />
-      <LabelPicker labels={state.labels} setLabels={setLabels} groupId={group.id} />
+      <LabelPicker
+        labels={state.labels}
+        dispatch={dispatch}
+        groupId={group.id}
+      />
       <LocationPicker
-        location={state.location}
+        location={location}
         isMapOpen={isMapOpen}
         timeZoneCoordinates={timeZoneCoordinates}
       />
       <DateTime
         selectedDateTime={state.expenseTime}
-        setSelectedDateTime={setExpenseTime}
+        dispatch={dispatch}
         timeZoneId={timeZoneId}
         isEdit={!isCreateExpense}
       />
@@ -297,36 +301,3 @@ export default function ExpenseForm2({
     </StyledExpenseForm>
   );
 }
-
-const createParticipantPickerArray = (
-  group: Group,
-  expense: FormExpense | null
-): PickerMember[] => {
-  return [...group.guests, ...group.members].map((member) => ({
-    id: member.id,
-    amount:
-      expense?.participants.find((p) => p.memberId === member.id)
-        ?.participationAmount ?? "",
-    locked: false,
-    name: member.name,
-    order: 0,
-    selected:
-      expense?.participants.some((p) => p.memberId === member.id) ?? false,
-  }));
-};
-
-const createPayerPickerArray = (
-  group: Group,
-  expense: FormExpense | null
-): PickerMember[] => {
-  return [...group.guests, ...group.members].map((member) => ({
-    id: member.id,
-    amount:
-      expense?.payers.find((p) => p.memberId === member.id)?.paymentAmount ??
-      "",
-    locked: false,
-    name: member.name,
-    order: 0,
-    selected: expense?.payers.some((p) => p.memberId === member.id) ?? false,
-  }));
-};
