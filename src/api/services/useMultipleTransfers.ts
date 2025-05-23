@@ -2,18 +2,20 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
 import { CreateTransfersRequest } from "../../types";
+import { Signal } from "@preact/signals-react";
 
 
-export const useMultipleTransfers = () => {
+export const useMultipleTransfers = (menu: Signal<string | null>,) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, CreateTransfersRequest>({
     mutationFn: (transfers) => submitMultipleTransfers( transfers ),
     onSuccess: async () => {
-      await queryClient.refetchQueries({ queryKey: ["debts"], exact: false });
-      await queryClient.refetchQueries({ queryKey: ["groupTransfers"], exact: false });
-      await queryClient.refetchQueries({ queryKey: ["home"], exact: false });
-      await queryClient.refetchQueries({ queryKey: ["groups"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["debts"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["groupTransfers"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
+      menu.value = null;
     }
   });
 };

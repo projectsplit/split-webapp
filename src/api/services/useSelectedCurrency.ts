@@ -19,7 +19,7 @@ export const useSelectedCurrency = () => {
     },
 
     onSuccess: async () => {
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: ["getMe"],
         exact: false,
       });

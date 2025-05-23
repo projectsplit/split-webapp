@@ -76,7 +76,7 @@ const Expenses = () => {
 
   if (isFetching && !isFetchingNextPage) {
     return <div className="spinner"><Spinner /></div>;
-  }
+  }//TODO see if you can bypass this when adding or editing an expense.
 
   const totalExpense = getGroupTotalByCurrency(totalSpent, group.currency);
   const userExpense =

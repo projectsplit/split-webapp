@@ -9,7 +9,7 @@ export const useTimeZone = () => {
   return useMutation<any, AxiosError, string>({
     mutationFn: (timeZone) => updateTimeZone({ timeZone }),
     onSuccess: async () => {
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: ["getMe"],
         exact: false,
       });

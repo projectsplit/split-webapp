@@ -234,6 +234,28 @@ export type CreateEditExpenseRequest = {
   }[];
 };
 
+export type ExpenseRequest = {
+  expenseId?: string;
+  groupId?: string;
+  amount: number;
+  currency: string;
+  payments: {
+    memberId: string;
+    amount: number;
+  }[];
+  shares: {
+    memberId: string;
+    amount: number;
+  }[];
+  description: string;
+  location: GeoLocation | null;
+  occurred: string;
+  labels: {
+    text: string,
+    color: string
+  }[];
+}
+
 export type GeoLocation = {
   coordinates: Coordinates;
   google: GooglePlace | null;
@@ -419,3 +441,35 @@ export type ArchiveGroupRequest = {
 export type WithCreated = {
   created: string;
 };
+
+export type ExpenseFormState = {
+  amount: string;
+  displayedAmount: string;
+  currencySymbol: string;
+  description: string;
+  labels: Label[];
+  expenseTime: string;
+  participants: PickerMember[];
+  payers: PickerMember[];
+  showErrors: boolean;
+  errors: {
+    showAmount: string;
+    amount: string;
+    participants: string;
+    payers: string;
+    description: string;
+  };
+}
+
+export type ExpenseFormAction =
+  | { type: "SET_AMOUNT"; payload: string }
+  | { type: "SET_DISPLAYED_AMOUNT"; payload: string }
+  | { type: "SET_CURRENCY"; payload: string }
+  | { type: "SET_DESCRIPTION"; payload: string }
+  | { type: "SET_LABELS"; payload: Label[] }
+  | { type: "SET_EXPENSE_TIME"; payload: string }
+  | { type: "SET_PARTICIPANTS"; payload: PickerMember[] }
+  | { type: "SET_PAYERS"; payload: PickerMember[] }
+  | { type: "SET_SHOW_ERRORS"; payload: boolean }
+  | { type: "SET_ERROR"; payload: Partial<ExpenseFormState["errors"]> }
+  | { type: "RESET_AMOUNT" };

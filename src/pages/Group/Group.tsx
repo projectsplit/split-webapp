@@ -1,4 +1,10 @@
-import { Outlet, useLocation, useOutletContext, useParams, } from "react-router-dom";
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useOutletContext,
+  useParams,
+} from "react-router-dom";
 import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
@@ -12,16 +18,27 @@ import useGroup from "../../api/services/useGroup";
 import { useEffect } from "react";
 import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTransferAnimation";
 import GroupOptions from "../Groups/GroupOptions/GroupOptions";
-import { MdOutlineGroupOff } from "react-icons/md";
 import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
 import Spinner from "../../components/Spinner/Spinner";
+import { AxiosError, InternalAxiosRequestConfig } from "axios";
+import GroupError from "./GroupError";
 
+type errorObject = {
+  message: string;
+  code: string | undefined;
+  status: number | undefined;
+  config: InternalAxiosRequestConfig<any> | undefined;
+};
 export default function Group() {
+
   const menu = useSignal<string | null>(null);
   const showBottomBar = useSignal<boolean>(false);
+  const groupError = useSignal<errorObject>();
+  const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
+  const navigate = useNavigate();
 
   const {
     userInfo,
@@ -37,10 +54,14 @@ export default function Group() {
     confirmUnarchiveMenu: Signal<string | null>;
   }>();
 
-  const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
-  const { data: group, isFetching, isError } = useGroup(groupid);
+  const {
+    data: group,
+    isFetching,
+    isError,
+    error,
+  } = useGroup(groupid);
 
   const groupName = group?.name;
 
@@ -54,6 +75,31 @@ export default function Group() {
   useEffect(() => {
     topMenuTitle.value = group?.name || "";
   }, [group, showBottomBar.value]);
+
+  useEffect(() => {
+    if (isError && error) {
+      groupError.value = {
+        message: error.message,
+        code: error instanceof AxiosError ? error.code : undefined,
+        status:
+          error instanceof AxiosError ? error.response?.status : undefined,
+        config: error instanceof AxiosError ? error.config : undefined,
+      };
+    } else {
+      groupError.value = undefined;
+    }
+  }, [isError, error]);
+
+  useEffect(() => {
+    if (
+      isError &&
+      groupError.value &&
+      typeof groupError.value.status === "number" &&
+      groupError.value.status === 404
+    ) {
+      navigate("/groups");
+    }
+  }, [isError, groupError.value, navigate]);
 
   return (
     <StyledGroup>
@@ -69,16 +115,7 @@ export default function Group() {
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}
         </div>
       ) : isError ? (
-        <div className="group">
-          <div className="noData">
-            <div className="msg">No Group was found</div>
-            <MdOutlineGroupOff className="icon" />
-          </div>
-          <div className="bottomMenu">
-            {" "}
-            {<BottomMainMenu onClick={() => (menu.value = null)} />}
-          </div>
-        </div>
+        <GroupError groupError={groupError}/>
       ) : (
         <div className="group">
           <CategorySelector

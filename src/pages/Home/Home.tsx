@@ -50,7 +50,7 @@ export default function Home() {
     queryKey: ["home"],
     queryFn: getGroupsAllBalances,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 
   const {
@@ -61,7 +61,7 @@ export default function Home() {
     queryFn: () => getMostRecentGroup(recentGroupId),
     enabled: recentGroupId !== undefined && recentGroupId !== null,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 
   useEffect(() => {

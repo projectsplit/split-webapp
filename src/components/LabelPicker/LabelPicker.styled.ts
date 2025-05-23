@@ -16,9 +16,10 @@ export const StyledLabelPicker = styled.div<{
   display: flex;
   flex-direction: column;
   position: relative;
-  background-color: ${({ theme }) => theme.layer2};
+ 
   cursor: pointer;
   .main {
+    background-color: ${({ theme }) => theme.layer2};
     display: flex;
     gap: 4px;
     align-items: center;

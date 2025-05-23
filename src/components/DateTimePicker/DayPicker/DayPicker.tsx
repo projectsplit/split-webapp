@@ -1,6 +1,6 @@
-import { styled } from 'styled-components'
-import { DateTime as LuxonDateTime } from 'luxon'
-import { DayPickerProps } from '../../../interfaces'
+import { styled } from "styled-components";
+import { DateTime as LuxonDateTime } from "luxon";
+import { DayPickerProps } from "../../../interfaces";
 
 const DayPicker = (props: DayPickerProps) => {
   const {

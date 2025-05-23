@@ -63,12 +63,16 @@ export const getMe = async () => {
 };
 
 export const getGroup = async (groupId: string): Promise<Group> => {
-  const response = await apiClient.get<void, AxiosResponse<Group>>(
-    `/groups/${groupId}`
-  );
+  try {
+    const response = await apiClient.get<void, AxiosResponse<Group>>(
+      `/groups/${groupId}`
+    );
+    return response.data;
+  } catch (error) {
 
-  return response.data;
-};
+    throw error; 
+  }
+}
 
 export const getGroupDebts = async (
   groupId: string

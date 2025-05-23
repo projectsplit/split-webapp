@@ -50,7 +50,7 @@ export default function Groups() {
 
   useEffect(() => {
     topMenuTitle.value = "Groups";
-    queryClient.refetchQueries({
+    queryClient.invalidateQueries({
       queryKey: ["groups", activeGroupCatAsState.value.toLowerCase()],
       exact: true,
     });

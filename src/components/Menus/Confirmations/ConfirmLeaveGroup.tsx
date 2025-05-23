@@ -24,9 +24,7 @@ export default function ConfirmLeaveGroup({
  const updateMostRecentGroupId = useMostRecentGroup();
 
   const handleConfirm = () => {
-    //TODO: mutation to update mostRecentGroupId for user info
-   // updateMostRecentGroupId.mutate("")
-    leaveGroupMutation();
+    //TODO: If owner tries to leave group, spit out a message to explain owner cannot leave group
     openGroupOptionsMenu.value=false
   };
 

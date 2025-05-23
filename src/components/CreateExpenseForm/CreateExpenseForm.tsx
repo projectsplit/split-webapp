@@ -1,20 +1,17 @@
-
-import { EditExpenseFormProps } from "../../interfaces";
+import { ExpenseFormProps } from "../../interfaces";
 import ExpenseForm from "../ExpenseForm/ExpenseForm";
 
-const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
+
+const CreateExpenseForm: React.FC<ExpenseFormProps> = ({
   group,
   expense,
   timeZoneId,
   menu,
-  selectedExpense,
-  timeZoneCoordinates
+  timeZoneCoordinates,
+  header,
+  selectedExpense
 }) => {
-
-  if (!expense) {
-    return <div>Error: Expense not found.</div>;
-  }
-  
+ 
   return (
     <ExpenseForm
       expense={expense}
@@ -22,10 +19,12 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
       menu={menu}
       timeZoneCoordinates={timeZoneCoordinates}
       timeZoneId={timeZoneId}
-      header="Edit Expense"
+      header={header}
+      isCreateExpense={true}
       selectedExpense={selectedExpense}
-      isCreateExpense={false}
     />
   );
 };
-export default EditExpenseForm;
+
+export default CreateExpenseForm;
+

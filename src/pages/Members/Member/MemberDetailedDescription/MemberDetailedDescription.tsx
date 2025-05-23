@@ -4,6 +4,7 @@ import { displayCurrencyAndAmount } from "../../../../helpers/displayCurrencyAnd
 import { StyledMemberDetailedDescription } from "./MemberDetailedDescription.Styled";
 import { MemberDetailedDescriptionProps } from "../../../../interfaces";
 
+
 export const MemberDetailedDescription = ({
   memberTransactions,
   pendingTransactions,
@@ -18,6 +19,7 @@ export const MemberDetailedDescription = ({
     pendingTransactions.filter((p) => p.debtor === memberId).length === 1;
   const doNotshowTreeWhenMemberIsOwed =
     pendingTransactions.filter((p) => p.creditor === memberId).length === 1;
+
 
   return (
     <StyledMemberDetailedDescription isOwed={isOwed}>

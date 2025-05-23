@@ -2,6 +2,7 @@ import { CSSProperties } from "react";
 import {
   Coordinates,
   Debt,
+  ExpenseFormAction,
   ExpenseResponseItem,
   FormExpense,
   Frequency,
@@ -114,7 +115,7 @@ export interface MemberPickerProps {
   totalAmount: number;
   memberAmounts: PickerMember[];
   setMemberAmounts: React.Dispatch<React.SetStateAction<PickerMember[]>>;
-  description?: string;
+  description: "Participants" | "Payers"
   error?: string;
   group: Group;
   selectedCurrency: string;
@@ -125,6 +126,7 @@ export interface DayPickerProps {
   setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
   timeZoneId: string;
 }
+
 
 export interface ScrollPickerProps {
   items: string[];
@@ -377,6 +379,9 @@ export interface ExpenseFormProps {
   timeZoneId: string;
   menu: Signal<string | null>;
   timeZoneCoordinates: Coordinates;
+  header:string;
+  selectedExpense: Signal<ExpenseResponseItem | null>;
+  isCreateExpense:boolean;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
@@ -674,4 +679,13 @@ export interface EditUsernameProps {
 export interface EditUsernameAnimationProps {
   existingUsername: string;
   editUsernameMenu:Signal<string | null>;
+}
+
+export interface GroupErrorProps{
+  groupError: Signal<{
+    message: string;
+    code?: string;
+    status?: number;
+    config?: any;
+  } | undefined>;
 }

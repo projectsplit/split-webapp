@@ -37,10 +37,10 @@ export const useRemoveMemberFromGroup = (
         });
       }
       
-      await queryClient.refetchQueries({ queryKey: ["home"], exact: false });
-      await queryClient.refetchQueries({ queryKey: ["debts", groupId], exact: false });
-      await queryClient.refetchQueries({ queryKey: ["groups"], exact: false });
-      await queryClient.refetchQueries({
+      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["debts", groupId], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
+      await queryClient.invalidateQueries({
         queryKey: ["mostRecentGroup"],
         exact: false,
       });

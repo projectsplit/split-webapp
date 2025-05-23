@@ -14,20 +14,19 @@ export const useDeleteTransfer = (
   return useMutation<any, AxiosError, string>({
     mutationFn: (transferId) => deleteTransfer({ transferId }),
     onSuccess: async () => {
-      selectedTransfer.value = null;
-      menu.value = null;
-
-      await queryClient.refetchQueries({ queryKey: ["debts"], exact: false });
-      await queryClient.refetchQueries({
+      await queryClient.invalidateQueries({ queryKey: ["debts"], exact: false });
+      await queryClient.invalidateQueries({
         queryKey: ["groupTransfers"],
         exact: false,
       });
-      await queryClient.refetchQueries({ queryKey: ["home"], exact: false });
-      await queryClient.refetchQueries({ queryKey: ["groups"], exact: false });
-      await queryClient.refetchQueries({
+      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
+      await queryClient.invalidateQueries({
         queryKey: ["mostRecentGroup"],
         exact: false,
       });
+      selectedTransfer.value = null;
+      menu.value = null;
     },
     onError: (err) => {
       const error = err as AxiosError;

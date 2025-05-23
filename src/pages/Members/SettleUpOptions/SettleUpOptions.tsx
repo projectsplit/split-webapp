@@ -3,10 +3,10 @@ import { useSignal } from "@preact/signals-react";
 import { useParams } from "react-router-dom";
 import { SettleUpOptionsProps } from "../../../interfaces";
 import { StyledSettleUpOptions } from "./SettleUpOptions.Styled";
-import SubmitButton from "../../../components/SubmitButton/SubmitButton";
 import { CreateTransfersRequest, Transfer } from "../../../types";
 import { DateTime } from "luxon";
 import { useMultipleTransfers } from "../../../api/services/useMultipleTransfers";
+import MyButton from "../../../components/MyButton/MyButton";
 
 export default function SettleUpOptions({
   pendingTransactions,
@@ -17,7 +17,7 @@ export default function SettleUpOptions({
   const selectedItem = useSignal<number[]>([0]);
   const params = useParams();
   const groupId = params?.groupid;
-  const submitMultipleTransfers = useMultipleTransfers();
+  const {mutate:submitMultipleTransfers, isPending} = useMultipleTransfers(menu);
   const enabled = selectedItem.value.length > 0;
 
   const memberPendingTransactions = pendingTransactions.filter(
@@ -43,12 +43,12 @@ export default function SettleUpOptions({
       transfers,
     };
 
-    submitMultipleTransfers.mutate(createTransfersRequest);
-    menu.value = null;
+    submitMultipleTransfers(createTransfersRequest);
+    
   };
-
+//TODO: "Amount must respect provided currency format" for currencies like BHD formar is thre digits. Need to amend backend
   return (
-    <StyledSettleUpOptions height="50vh">
+    <StyledSettleUpOptions>
       <strong className="header">Settle Up</strong>
 
       {memberPendingTransactions.map((p, index) => (
@@ -80,9 +80,9 @@ export default function SettleUpOptions({
 
       <div className="settleUpButton">
         {" "}
-        <SubmitButton onClick={() => submitButtonHandler()} disabled={!enabled}>
+        <MyButton onClick={() => submitButtonHandler()} disabled={!enabled} isLoading={isPending}>
           Settle Up
-        </SubmitButton>
+        </MyButton>
       </div>
     </StyledSettleUpOptions>
   );

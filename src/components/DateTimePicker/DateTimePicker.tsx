@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
-import { StyledDateTimePicker } from './DateTimePicker.styled'
-import DayPicker from './DayPicker/DayPicker'
-import { RxChevronLeft, RxChevronRight } from 'react-icons/rx'
-import ScrollPicker from '../ScrollPicker/ScrollPicker'
-import { isNow, round, toLuxon, toUtcString } from '../../utils'
-import { DateTime as LuxonDateTime } from 'luxon'
-import { DateTimePickerProps } from '../../interfaces'
+import { useEffect, useState } from "react";
+import { StyledDateTimePicker } from "./DateTimePicker.styled";
+import DayPicker from "./DayPicker/DayPicker";
+import { RxChevronLeft, RxChevronRight } from "react-icons/rx";
+import ScrollPicker from "../ScrollPicker/ScrollPicker";
+import { isNow, round, toLuxon, toUtcString } from "../../utils";
+import { DateTime as LuxonDateTime } from "luxon";
+import { DateTimePickerProps } from "../../interfaces";
 
 const DateTimePicker = ({ selectedDateTime, setSelectedDateTime, realtimeUpdate, setRealtimeUpdate, timeZoneId }: DateTimePickerProps) => {
 
