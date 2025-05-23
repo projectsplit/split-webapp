@@ -19,7 +19,6 @@ import {
   UserInfo,
 } from "./types";
 import { Signal } from "@preact/signals-react";
-import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
 export interface ExpenseProps {
   timeZoneId: string;
@@ -99,7 +98,7 @@ export interface TransferProps {
 
 export interface DateTimePickerProps {
   selectedDateTime: string;
-  dispatch: React.Dispatch<ExpenseFormAction>;
+  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
   realtimeUpdate: boolean;
   setRealtimeUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   timeZoneId: string;
@@ -107,7 +106,7 @@ export interface DateTimePickerProps {
 
 export interface DateTimeProps {
   selectedDateTime: string;
-  dispatch: React.Dispatch<ExpenseFormAction>;
+  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
   timeZoneId: string;
   isEdit: boolean;
 }
@@ -115,7 +114,7 @@ export interface DateTimeProps {
 export interface MemberPickerProps {
   totalAmount: number;
   memberAmounts: PickerMember[];
-  dispatch: React.Dispatch<ExpenseFormAction>;
+  setMemberAmounts: React.Dispatch<React.SetStateAction<PickerMember[]>>;
   description: "Participants" | "Payers"
   error?: string;
   group: Group;
@@ -124,9 +123,10 @@ export interface MemberPickerProps {
 
 export interface DayPickerProps {
   selectedDateTime: string;
-  dispatch: React.Dispatch<ExpenseFormAction>;
+  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
   timeZoneId: string;
 }
+
 
 export interface ScrollPickerProps {
   items: string[];
@@ -292,7 +292,7 @@ export interface TimeZoneOptionsAnimationProps {
 }
 export interface LabelPickerProps {
   labels: Label[];
-  dispatch: React.Dispatch<ExpenseFormAction>;
+  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
   groupId: string;
 }
 export interface BottomMenuProps {

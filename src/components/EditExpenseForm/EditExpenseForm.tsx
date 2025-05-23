@@ -1,6 +1,6 @@
 
 import { EditExpenseFormProps } from "../../interfaces";
-import ExpenseForm2 from "../ExpenseForm/ExpenseForm2";
+import ExpenseForm from "../ExpenseForm/ExpenseForm";
 
 const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   group,
@@ -16,7 +16,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   }
   
   return (
-    <ExpenseForm2
+    <ExpenseForm
       expense={expense}
       group={group}
       menu={menu}

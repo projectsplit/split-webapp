@@ -5,65 +5,36 @@ import { DateTime as LuxonDateTime } from 'luxon'
 import { toLuxon, toUtcString } from '../utils'
 import { DateTimeProps } from '../interfaces'
 
-export const DateTime = ({ selectedDateTime, dispatch, timeZoneId, isEdit }: DateTimeProps) => {
+export const DateTime = ({ selectedDateTime, setSelectedDateTime, timeZoneId, isEdit }: DateTimeProps) => {
 
   const [showPicker, setShowPicker] = useState<boolean>(false)
   const [realtimeUpdate, setRealtimeUpdate] = useState<boolean>(!isEdit)
   const ref = useRef<HTMLDivElement>(null)
 
-  // useEffect(() => {
-  //   let interval: NodeJS.Timeout;
-  //   if (realtimeUpdate) {
-  //     interval = setInterval(() => {
-  //       setSelectedDateTime(() => {
-  //         const now = LuxonDateTime.utc().setZone(timeZoneId);
-  //         const prevDateTime = toLuxon(selectedDateTime, timeZoneId);
-  //         return toUtcString(
-  //           prevDateTime.set({
-  //             hour: now.hour,
-  //             minute: now.minute,
-  //             second: now.second,
-  //           })
-  //         );
-  //       });
-  //     }, 1000);
-  //   }
-  
-  //   return () => {
-  //     if (interval) {
-  //       clearInterval(interval);
-  //     }
-  //   };
-  // }, [realtimeUpdate, selectedDateTime, timeZoneId]);
-
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: NodeJS.Timeout
 
     if (realtimeUpdate) {
       interval = setInterval(() => {
-        dispatch({
-          type: "SET_EXPENSE_TIME",
-          payload: (() => {
-            const now = LuxonDateTime.utc().setZone(timeZoneId);
-            const prevDateTime = toLuxon(selectedDateTime, timeZoneId);
-            return toUtcString(
-              prevDateTime.set({
-                hour: now.hour,
-                minute: now.minute,
-                second: now.second,
-              })
-            );
-          })(),
-        });
-      }, 1000);
+        setSelectedDateTime(prev => {
+          const now = LuxonDateTime.utc().setZone(timeZoneId)
+          const updatedDateTime = toLuxon(prev, timeZoneId).set({
+            hour: now.hour,
+            minute: now.minute,
+            second: now.second,
+          })
+
+          return toUtcString(updatedDateTime);
+        })
+      }, 1000)
     }
 
     return () => {
       if (interval) {
-        clearInterval(interval);
+        clearInterval(interval)
       }
-    };
-  }, [realtimeUpdate]);
+    }
+  }, [realtimeUpdate])
 
 
   useEffect(() => {
@@ -92,7 +63,7 @@ export const DateTime = ({ selectedDateTime, dispatch, timeZoneId, isEdit }: Dat
       {showPicker &&
         <DateTimePicker
           selectedDateTime={selectedDateTime}
-          dispatch={dispatch}
+          setSelectedDateTime={setSelectedDateTime}
           realtimeUpdate={realtimeUpdate}
           setRealtimeUpdate={setRealtimeUpdate}
           timeZoneId={timeZoneId}

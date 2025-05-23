@@ -10,7 +10,7 @@ import labelColors from "../../labelColors";
 import { AiFillDelete } from "react-icons/ai";
 import { useRemoveLabel } from "../../api/services/useRemoveLabel";
 
-const LabelPicker = ({ labels, dispatch, groupId }: LabelPickerProps) => {
+const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
 
   const [text, setText] = useState<string>("");
   const removeLabelMutation = useRemoveLabel()
@@ -34,8 +34,7 @@ const LabelPicker = ({ labels, dispatch, groupId }: LabelPickerProps) => {
       ? { id: existingGroupLabel.id, color: existingGroupLabel.color, text: existingGroupLabel.text }
       : { id: labelText, color: availableColors[0], text: labelText };
 
-    dispatch({type:"SET_LABELS", payload:[...labels, newExpenseLabel]})
-   
+    setLabels([...labels, newExpenseLabel]);
     setText("");
   }
 
@@ -76,8 +75,7 @@ const LabelPicker = ({ labels, dispatch, groupId }: LabelPickerProps) => {
   };
 
   const handleSelectedLabelClick = (labelText: string) => {
-    dispatch({type:"SET_LABELS", payload:labels.filter(x => x.text !== labelText)})
-   
+    setLabels(labels.filter(x => x.text !== labelText));
   };
 
   const handleSuggestedLabelClick = (labelName: string): void => {
@@ -109,7 +107,7 @@ const LabelPicker = ({ labels, dispatch, groupId }: LabelPickerProps) => {
   };
 
   const remainingSuggestedLabels = groupLabels.filter(x => !labels.map(x => x.text).includes(x.text));
- 
+
 
   const isEmpty = labels?.length === 0 && text.length === 0;
 
