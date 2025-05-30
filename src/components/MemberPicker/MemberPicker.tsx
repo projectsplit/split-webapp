@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
-import { HiLockClosed, HiLockOpen } from "react-icons/hi";
-import { PickerMember, UserInfo } from "../../types";
-import AutoWidthInput from "../AutoWidthInput";
+import { UserInfo } from "../../types";
 import { MemberPickerProps } from "../../interfaces";
 import { useSignal } from "@preact/signals-react";
 import { useOutletContext } from "react-router-dom";
-import { getSymbolFromCurrency } from "../../helpers/currency-symbol-map";
 import { StyledMemberPicker } from "./MemberPicker.styled";
-import { FaCheck } from "react-icons/fa";
-import Separator from "../Separator/Separator";
 import { significantDigitsFromTicker } from "../../helpers/openExchangeRates";
+import { CategorySelector } from "../CategorySelector/CategorySelector";
+import Right from "./helpers/components/Right";
+import Text from "./helpers/components/Text";
+import NameAndAmounts from "./helpers/components/NameAndAmounts";
+import { isEquallySplitFn } from "./helpers/isEquallySplitFn";
+import { recalculateAmounts } from "./helpers/recalculateAmounts";
+import { useRecalculateAmounts } from "./helpers/hooks/useRecalculateAmounts";
 
 const MemberPicker = ({
   memberAmounts,
@@ -19,21 +21,20 @@ const MemberPicker = ({
   description,
   error,
   group,
- 
+  category,
   selectedCurrency,
 }: MemberPickerProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectAllTick, setSelectAllTick] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const renderCounter = useRef<number>(0);
   const isEquallySplit = useSignal<boolean>(true);
+
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
 
   const [decimalDigits, setDecimalDigits] = useState<number>(2);
-  
 
   const members = group?.members;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
@@ -62,56 +63,16 @@ const MemberPicker = ({
     };
   }, []);
 
-  useEffect(() => {
-    if (allMembersAreSelected(memberAmounts)) {
-      setSelectAllTick(true);
-    } else {
-      setSelectAllTick(false);
-    }
-  }, [memberAmounts]);
-
-  useEffect(() => {
-    setMemberAmounts(
-      recalculateAmounts(
-        memberAmounts.map((m) =>
-          m.id === userMemberId ? { ...m, name: "You" } : m
-        )
-      )
-    );
-
-    if (totalAmount > 0) {
-      if (
-        description === "Participants" &&
-        !memberAmounts.some((m) => m.selected)
-      ) {
-        const newFormMembers = memberAmounts.map((m) => ({
-          ...m,
-          selected: true,
-          order: renderCounter.current,
-        }));
-        setMemberAmounts(recalculateAmounts(newFormMembers));
-      }
-      if (description === "Payers" && !memberAmounts.some((m) => m.selected)) {
-        const newFormMembers = memberAmounts.map((m) => ({
-          ...m,
-          selected: m.id === userMemberId,
-          order: renderCounter.current,
-        }));
-        setMemberAmounts(recalculateAmounts(newFormMembers));
-      }
-    }
-
-    if (totalAmount === 0) {
-      const newFormMembers = memberAmounts.map((m) => ({
-        ...m,
-        selected: false,
-        amount: "",
-        locked: false,
-      }));
-      setMemberAmounts(newFormMembers);
-    }
-    return () => {};
-  }, [totalAmount]);
+  useRecalculateAmounts(
+    memberAmounts,
+    setMemberAmounts,
+    totalAmount,
+    userMemberId,
+    decimalDigits,
+    description,
+    renderCounter,
+    category
+  );
 
   useEffect(() => {
     isEquallySplit.value = isEquallySplitFn(
@@ -121,34 +82,6 @@ const MemberPicker = ({
     );
   }, [memberAmounts]);
 
-  const recalculateAmounts = (formMembers: PickerMember[]): PickerMember[] => {
-    const lockedSelectedMembers = formMembers.filter(
-      (m) => m.selected && m.locked
-    );
-    const unlockedSelectedMembers = formMembers.filter(
-      (m) => m.selected && !m.locked
-    );
-    const lockedAmount = lockedSelectedMembers
-      .map((m) => Number(m.amount))
-      .reduce((total, a) => total + a, 0);
-    const splitArray = split(
-      totalAmount - lockedAmount,
-      unlockedSelectedMembers.length,
-      decimalDigits
-    );
-
-    return formMembers.map((m) => {
-      if (m.selected && !m.locked) {
-        return {
-          ...m,
-          amount: splitArray.shift()?.toFixed(decimalDigits) || "",
-        };
-      } else {
-        return m;
-      }
-    });
-  };
-
   const selectMember = (selectedId: string): void => {
     const newFormMembers = memberAmounts.map((m) => {
       if (m.id === selectedId) {
@@ -156,17 +89,29 @@ const MemberPicker = ({
       }
       return m;
     });
-    setMemberAmounts(recalculateAmounts(newFormMembers));
+
+    setMemberAmounts(
+      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category)
+    );
   };
 
   const deselectMember = (id: string): void => {
     const newFormMembers = memberAmounts.map((m) => {
       if (m.id === id) {
-        return { ...m, selected: false, amount: "", locked: false };
+        return {
+          ...m,
+          selected: false,
+          actualAmount: "",
+          screenQuantity: "",
+          locked: false,
+        };
       }
       return m;
     });
-    setMemberAmounts(recalculateAmounts(newFormMembers));
+
+    setMemberAmounts(
+      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category)
+    );
   };
 
   const toggleLock = (
@@ -181,64 +126,75 @@ const MemberPicker = ({
       }
       return m;
     });
-    setMemberAmounts(recalculateAmounts(newFormMembers));
+    setMemberAmounts(
+      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category)
+    );
   };
 
-  const selectAll = (_: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
-    const newFormMembers = memberAmounts.map((m) => ({
-      ...m,
-      selected: true,
-      order: renderCounter.current,
-    }));
-    setMemberAmounts(recalculateAmounts(newFormMembers));
-  };
-
-  const selectNone = (): void => {
-    const newFormMembers = memberAmounts.map((m) => ({
-      ...m,
-      selected: false,
-      amount: "",
-      locked: false,
-    }));
-    setMemberAmounts(newFormMembers);
-  };
-
-  const changeAmount = (id: string, amount: string): void => {
+  const changeAmount = (id: string, screenQuantity: string): void => {
     const updatedMembers = memberAmounts.map((m) => {
       if (m.id === id) {
-        return { ...m, amount, locked: true };
+        return { ...m, screenQuantity, locked: true };
       }
       return m;
     });
-    setMemberAmounts(recalculateAmounts(updatedMembers));
+    setMemberAmounts(
+      recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category)
+    );
   };
 
   const handleInputBlur = (id: string) => {
     const updatedMembers = memberAmounts.map((m) => {
       if (m.id === id) {
-        const isZero = Number(m.amount) === 0;
-        return {
-          ...m,
-          amount: isZero ? "0.00" : m.amount,
-          locked: isZero ? false : m.locked,
-        };
+        switch (category.value) {
+          case "Amounts":
+            const isZero = Number(m.screenQuantity) === 0;
+            return {
+              ...m,
+              screenQuantity: isZero ? "0.00" : m.screenQuantity,
+              locked: isZero ? false : m.locked,
+            };
+          case "Shares":
+            const isShareZero = Number(m.screenQuantity) === 0;
+            return {
+              ...m,
+              screenQuantity: isShareZero ? "" : m.screenQuantity, //"0"
+              locked: isShareZero ? false : m.locked,
+            };
+          case "Percentages":
+            const isPercentageZero = Number(m.screenQuantity) === 0;
+            return {
+              ...m,
+              screenQuantity: isPercentageZero ? "0.00" : m.screenQuantity,
+              locked: isPercentageZero ? false : m.locked,
+            };
+          default:
+            return m;
+        }
       }
+
       return m;
     });
-    setMemberAmounts(recalculateAmounts(updatedMembers));
+    setMemberAmounts(
+      recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category)
+    );
   };
 
   const selectedCount = memberAmounts.filter((m) => m.selected).length;
 
   const handleMainClick = () => {
-    setMemberAmounts(recalculateAmounts(memberAmounts));
+    setMemberAmounts(
+      recalculateAmounts(memberAmounts, totalAmount, decimalDigits, category)
+    );
     setIsMenuOpen(!isMenuOpen);
   };
+
   const sortedMemberAmounts = [...memberAmounts].sort((a, b) => {
     if (a.id === userMemberId) return -1;
     if (b.id === userMemberId) return 1;
     return 0;
   });
+
   return (
     <StyledMemberPicker
       $selectedCount={selectedCount}
@@ -253,114 +209,61 @@ const MemberPicker = ({
       }}
     >
       <div className="main" onClick={handleMainClick} ref={mainRef}>
-        <div className="text">
-          {description === "Participants"
-            ? selectedCount === 0
-              ? "Select participants"
-              : selectedCount === 1
-              ? `Billed to ${
-                  sortedMemberAmounts.find((m) => m.amount != "")?.name
-                }`
-              : selectedCount === 2 && isEquallySplit.value
-              ? `Split equally between ${selectedCount} `
-              : selectedCount === 2 && !isEquallySplit.value
-              ? `Split unequally between ${selectedCount} `
-              : selectedCount > 2 && isEquallySplit.value
-              ? `Split equally among ${selectedCount} `
-              : `Split unequally among ${selectedCount} `
-            : description === "Payers"
-            ? selectedCount === 0
-              ? "Select payers"
-              : selectedCount === 1
-              ? `Paid by ${
-                  sortedMemberAmounts.find((m) => m.amount != "")?.name
-                }`
-              : selectedCount === 2 && isEquallySplit.value
-              ? `Paid equally by ${selectedCount} `
-              : selectedCount === 2 && !isEquallySplit.value
-              ? `Paid unequally by ${selectedCount} `
-              : selectedCount > 2 && isEquallySplit.value
-              ? `Paid equally by ${selectedCount} `
-              : `Paid unequally by ${selectedCount} `
-            : null}
-        </div>
+        <Text
+          description={description}
+          isEquallySplit={isEquallySplit}
+          selectedCount={selectedCount}
+          sortedMemberAmounts={sortedMemberAmounts}
+          category={category}
+        />
         <FiChevronDown className="icon" />
       </div>
       {isMenuOpen && (
         <div className="dropdown" ref={dropdownRef}>
-          <div className="selectAll">
-            <div
-              className="tick-cube"
-              onClick={() => {
-                setSelectAllTick((prev) => {
-                  const newValue = !prev;
-                  if (newValue) {
-                    selectAll(
-                      {} as React.MouseEvent<HTMLDivElement, MouseEvent>
-                    );
-                  } else {
-                    selectNone();
-                  }
-                  return newValue;
-                });
+          <div className="categories">
+            <CategorySelector
+              activeCat={"Amounts"}
+              categories={{
+                cat1: "Amounts",
+                cat2: "Shares",
+                cat3: "Percentages",
               }}
-            >
-              {selectAllTick ? <FaCheck className="checkmark" /> : ""}
-            </div>
-            <div className={`${selectAllTick ? "" : "available"}`}>
-              Select all
-            </div>
-          </div>
-          <div className="separator">
-            <Separator />
+              navLinkUse={false}
+              activeCatAsState={category}
+            />
           </div>
           <div className="member-list">
             {sortedMemberAmounts
               .filter((m) => m.selected)
               .map((m) => (
-                <div
-                  key={m.id}
-                  className="selected option"
-                  onClick={() => deselectMember(m.id)}
-                >
-                  <div className="textAndCheck">
-                    <div className="tick-cube">
-                      <FaCheck className="checkmark" />
-                    </div>
-                    {m.name}
-                  </div>
-                  <div className="right">
-                    <div>
-                      {getSymbolFromCurrency(selectedCurrency)}
-                      <AutoWidthInput
-                        className="amount-input"
-                        inputMode="decimal"
-                        value={(m.amount)}
-                        onBlur={(_) => handleInputBlur(m.id)}
-                        onChange={(e) => changeAmount(m.id, e.target.value)}
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    </div>
-                    <div onClick={(e) => toggleLock(e, m.id)}>
-                      {m.locked ? (
-                        <HiLockClosed className="locked-icon" />
-                      ) : (
-                        <HiLockOpen className="unlocked-icon" />
-                      )}
-                    </div>
-                  </div>
+                <div key={m.id} className="selected option">
+                  <NameAndAmounts
+                    category={category}
+                    m={m}
+                    onClick={() => deselectMember(m.id)}
+                    currency={selectedCurrency}
+                  />
+                  <Right
+                    screenQuantity={m.screenQuantity}
+                    category={category}
+                    changeAmount={changeAmount}
+                    handleInputBlur={handleInputBlur}
+                    id={m.id}
+                    locked={m.locked}
+                    selectedCurrency={selectedCurrency}
+                    toggleLock={toggleLock}
+                  />
                 </div>
               ))}
             {sortedMemberAmounts
               .filter((m) => !m.selected)
               .map((m) => (
-                <div
-                  key={m.id}
-                  className="available option"
-                  onClick={(_) => selectMember(m.id)}
-                >
+                <div key={m.id} className="available option">
                   <div className="textAndCheck">
-                    <div className="tick-cube" />
+                    <div
+                      className="tick-cube"
+                      onClick={(_) => selectMember(m.id)}
+                    />
                     {m.name}
                   </div>
                 </div>
@@ -377,77 +280,3 @@ const MemberPicker = ({
 };
 
 export default MemberPicker;
-
-// const split = (amount: number, denominator: number): string[] =>
-//   currency(amount)
-//     .distribute(denominator)
-//     .map((c) => c.value.toFixed(2).toString());
-
-const isEquallySplitFn = (
-  memberAmounts: PickerMember[],
-  totalAmount: number,
-  decimalDigits: number
-): boolean => {
-  const pickedMembersCount = memberAmounts.filter(
-    (m) => m.amount !== ""
-  ).length;
-
-  if (pickedMembersCount === 0) {
-    return true;
-  }
-
-  const equallySplitAmount = split(
-    totalAmount,
-    pickedMembersCount,
-    decimalDigits
-  )[0].toFixed(decimalDigits);
-  const equallySplitAmountLowerEnd = split(
-    totalAmount,
-    pickedMembersCount,
-    decimalDigits
-  )[pickedMembersCount - 1].toFixed(decimalDigits);
-  return memberAmounts
-    .filter((m) => m.amount !== "")
-    .every(
-      (m) =>
-        m.amount === equallySplitAmount ||
-        m.amount === equallySplitAmountLowerEnd
-    );
-};
-
-const allMembersAreSelected = (memberAmounts: PickerMember[]): boolean => {
-  const numberofAllMembers = memberAmounts.length;
-  const numberofSelectedMembers = memberAmounts.filter(
-    (m) => m.selected
-  ).length;
-
-  return numberofAllMembers === numberofSelectedMembers;
-};
-
-const split = (
-  total: number,
-  splits: number,
-  maxDecimals: number
-): number[] => {
-  if (
-    splits <= 0 ||
-    !Number.isInteger(splits) ||
-    maxDecimals < 0 ||
-    !Number.isInteger(maxDecimals)
-  )
-    return [];
-
-  const multiplier = Math.pow(10, maxDecimals);
-  const totalCents = Math.round(total * multiplier);
-  const baseCents = Math.floor(totalCents / splits);
-  const remainderCents = totalCents - baseCents * splits;
-
-  const result = Array(splits).fill(baseCents);
-  for (let i = 0; i < remainderCents; i++) {
-    result[i]++;
-  }
-
-  return result
-    .map((val) => Number((val / multiplier).toFixed(maxDecimals)))
-    .sort((a, b) => a - b);
-};

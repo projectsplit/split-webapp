@@ -2,7 +2,6 @@ import { CSSProperties } from "react";
 import {
   Coordinates,
   Debt,
-  ExpenseFormAction,
   ExpenseResponseItem,
   FormExpense,
   Frequency,
@@ -114,11 +113,12 @@ export interface DateTimeProps {
 export interface MemberPickerProps {
   totalAmount: number;
   memberAmounts: PickerMember[];
-  setMemberAmounts: React.Dispatch<React.SetStateAction<PickerMember[]>>;
+  setMemberAmounts: (newParticipants: PickerMember[]) => void
   description: "Participants" | "Payers"
   error?: string;
   group: Group;
   selectedCurrency: string;
+  category:Signal<string>;
 }
 
 export interface DayPickerProps {
@@ -688,4 +688,12 @@ export interface GroupErrorProps{
     status?: number;
     config?: any;
   } | undefined>;
+}
+
+
+export interface NameAndAmountsProps {
+  category: Signal<String>;
+  m: PickerMember;
+onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
+currency:string;
 }
