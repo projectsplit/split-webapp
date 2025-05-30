@@ -32,7 +32,14 @@ import FormInput from "../FormInput/FormInput";
 import { ExpenseFormProps } from "../../interfaces";
 import { useExpense } from "../../api/services/useExpense";
 import { useEditExpense } from "../../api/services/useEditExpense";
-import { createParticipantPickerArray, createPayerPickerArray, submitExpense, useExpenseValidation } from "./expenseFormUtils";
+import {
+  createParticipantPickerArray,
+  createPayerPickerArray,
+  submitExpense,
+} from "./expenseFormUtils";
+
+import { useSetBySharesAmountsToZero } from "./hooks/useSetBySharesAmountsToZero";
+import { useExpenseValidation } from "./hooks/useExpenseValidation";
 
 export default function ExpenseForm({
   group,
@@ -52,19 +59,57 @@ export default function ExpenseForm({
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
     useEditExpense(menu, selectedExpense, group.id);
 
-  const participantsInitial = useMemo(
-    () => createParticipantPickerArray(group, expense),
-    [group, expense]
-  );
-  const [participants, setParticipants] =
-    useState<PickerMember[]>(participantsInitial);
+  const [participantsByCategory, setParticipantsByCategory] = useState<{
+    "Amounts": PickerMember[];
+    "Shares": PickerMember[];
+    "Percentages": PickerMember[];
+  }>({
+    "Amounts": createParticipantPickerArray(
+      group,
+      expense,
+      "Amounts",
+      isCreateExpense
+    ),
+    "Shares": createParticipantPickerArray(
+      group,
+      expense,
+      "Shares",
+      isCreateExpense
+    ),
+    "Percentages": createParticipantPickerArray(
+      group,
+      expense,
+      "Percentages",
+      isCreateExpense
+    ),
+  });
+
   const [participantsError, setParticipantsError] = useState<string>("");
 
-  const payersInitial = useMemo(
-    () => createPayerPickerArray(group, expense),
-    [group, expense]
-  );
-  const [payers, setPayers] = useState<PickerMember[]>(payersInitial);
+  const [payersByCategory, setPayersByCategory] = useState<{
+    "Amounts": PickerMember[];
+    "Shares": PickerMember[];
+    "Percentages": PickerMember[];
+  }>({
+    "Amounts": createPayerPickerArray(
+      group,
+      expense,
+      "Amounts",
+      isCreateExpense
+    ),
+    "Shares": createPayerPickerArray(
+      group,
+      expense,
+      "Shares",
+      isCreateExpense
+    ),
+    "Percentages": createPayerPickerArray(
+      group,
+      expense,
+      "Percentages",
+      isCreateExpense
+    ),
+  });
 
   const [payersError, setPayersError] = useState<string>("");
   const [descriptionError, setDescriptionError] = useState<string>("");
@@ -99,6 +144,29 @@ export default function ExpenseForm({
   );
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
+  const participantsCategory = useSignal<string>("Amounts");
+  const payersCategory = useSignal<string>("Amounts");
+
+  const participants =
+    participantsByCategory[
+      participantsCategory.value as keyof typeof participantsByCategory
+    ];
+  const payers =
+    payersByCategory[payersCategory.value as keyof typeof payersByCategory];
+
+  const setParticipants = (newParticipants: PickerMember[]) => {
+    setParticipantsByCategory((prev) => ({
+      ...prev,
+      [participantsCategory.value]: newParticipants,
+    }));
+  };
+
+  const setPayers = (newPayers: PickerMember[]) => {
+    setPayersByCategory((prev) => ({
+      ...prev,
+      [payersCategory.value]: newPayers,
+    }));
+  };
 
   const onSubmit = () =>
     submitExpense({
@@ -120,6 +188,8 @@ export default function ExpenseForm({
       createExpenseMutation,
       editExpenseMutation,
       setShowAmountError,
+      participantsCategory,
+      payersCategory,
     });
 
   useExpenseValidation({
@@ -131,7 +201,23 @@ export default function ExpenseForm({
     setPayersError,
     setShowAmountError,
     setAmountError,
+    participantsCategory,
+    payersCategory,
   });
+
+  const prevParticipantsByCategory = useRef(participantsByCategory);
+  const prevPayersByCategory = useRef(payersByCategory);
+
+  useSetBySharesAmountsToZero(
+    payersCategory,
+    prevPayersByCategory,
+    payersByCategory,
+    participantsCategory,
+    prevParticipantsByCategory,
+    participantsByCategory,
+    setParticipantsByCategory,
+    setPayersByCategory
+  );
 
   useEffect(() => {
     if (isInitialRender.current && !isCreateExpense) {
@@ -146,6 +232,11 @@ export default function ExpenseForm({
     if (!isCreateExpense) return;
     setDescriptionError("");
   }, [location.value, description]);
+
+  useEffect(() => {
+    setParticipantsError("");
+    setPayersError("");
+  }, [participantsByCategory['Shares'],payersByCategory['Shares']]);
 
   const amountNumber = !amountError ? Number(amount) : Number.NaN;
 
@@ -217,6 +308,7 @@ export default function ExpenseForm({
         setMemberAmounts={setParticipants}
         group={group}
         selectedCurrency={currencySymbol}
+        category={participantsCategory}
       />
       <MemberPicker
         description={"Payers"}
@@ -226,6 +318,7 @@ export default function ExpenseForm({
         setMemberAmounts={setPayers}
         group={group}
         selectedCurrency={currencySymbol}
+        category={payersCategory}
       />
       <FormInput
         description="Description"
@@ -265,5 +358,3 @@ export default function ExpenseForm({
     </StyledExpenseForm>
   );
 }
-
-

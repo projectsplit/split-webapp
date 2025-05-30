@@ -14,6 +14,7 @@ export const StyledMemberPicker = styled.div<{
   $isOpen?: boolean;
   $selectedCount: number;
 }>`
+
   color: ${({ theme, $selectedCount }) =>
     $selectedCount > 0 ? "" : theme.secondaryTextColor};
   display: flex;
@@ -77,7 +78,9 @@ export const StyledMemberPicker = styled.div<{
     border-style: solid;
 
     top: calc(100% + 1px);
-
+    .categories{
+      margin-top: 7px;
+    }
     .separator {
       margin-left: 10px;
       margin-right: 10px;
@@ -92,6 +95,14 @@ export const StyledMemberPicker = styled.div<{
         display: flex;
         flex-direction: row;
         gap: 10px;
+        align-items:center;
+        .nameAndAmount{
+          display:flex;
+          flex-direction:column;
+          .amount{
+            font-size:12px;
+          }
+        }
       }
     }
 

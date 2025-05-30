@@ -180,7 +180,8 @@ export type GroupMember = Member | Guest;
 export type PickerMember = {
   id: string;
   name: string;
-  amount: string;
+  screenQuantity: string;
+  actualAmount: string;
   selected: boolean;
   locked: boolean;
   order: number;
@@ -460,16 +461,3 @@ export type ExpenseFormState = {
     description: string;
   };
 }
-
-export type ExpenseFormAction =
-  | { type: "SET_AMOUNT"; payload: string }
-  | { type: "SET_DISPLAYED_AMOUNT"; payload: string }
-  | { type: "SET_CURRENCY"; payload: string }
-  | { type: "SET_DESCRIPTION"; payload: string }
-  | { type: "SET_LABELS"; payload: Label[] }
-  | { type: "SET_EXPENSE_TIME"; payload: string }
-  | { type: "SET_PARTICIPANTS"; payload: PickerMember[] }
-  | { type: "SET_PAYERS"; payload: PickerMember[] }
-  | { type: "SET_SHOW_ERRORS"; payload: boolean }
-  | { type: "SET_ERROR"; payload: Partial<ExpenseFormState["errors"]> }
-  | { type: "RESET_AMOUNT" };
