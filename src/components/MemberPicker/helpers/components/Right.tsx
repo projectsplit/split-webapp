@@ -3,6 +3,7 @@ import { getSymbolFromCurrency } from "../../../../helpers/currency-symbol-map";
 import { memo } from "react";
 import AutoWidthInput from "../../../AutoWidthInput";
 import { Signal } from "@preact/signals-react";
+import { PickerMember } from "../../../../types";
 
 interface RightProps {
   screenQuantity: string;
@@ -16,6 +17,7 @@ interface RightProps {
     id: string
   ) => void;
   category: Signal<string>;
+  memberAmounts: PickerMember[];
 }
 
 const Right: React.FC<RightProps> = ({
@@ -27,12 +29,23 @@ const Right: React.FC<RightProps> = ({
   changeAmount,
   toggleLock,
   category,
+  memberAmounts,
 }) => {
+  const totalSharesValue = memberAmounts.reduce(
+    (sum, member) => sum + Number(member.screenQuantity),
+    0
+  );
+  const formattedTotalShares = totalSharesValue === 0
+    ? ""
+    : Number.isInteger(totalSharesValue)
+    ? totalSharesValue.toString()
+    : totalSharesValue.toString().replace(/\.?0+$/, "");
+
   switch (category.value) {
     case "Amounts":
       return (
         <div className="right">
-          <div>
+          <div className="inputField">
             {getSymbolFromCurrency(selectedCurrency)}
             <AutoWidthInput
               className="amount-input"
@@ -41,6 +54,7 @@ const Right: React.FC<RightProps> = ({
               onBlur={() => handleInputBlur(id)}
               onChange={(e) => changeAmount(id, e.target.value)}
               onClick={(e) => e.stopPropagation()}
+              category={category.value}
             />
           </div>
           <div onClick={(e) => toggleLock(e, id)}>
@@ -55,24 +69,42 @@ const Right: React.FC<RightProps> = ({
     case "Shares":
       return (
         <div className="right">
-          <div>
-            
+          <div className="inputField">
             <AutoWidthInput
               className="amount-input"
-              inputMode="numeric"
+              inputMode="decimal"
               value={screenQuantity}
               onBlur={() => handleInputBlur(id)}
               onChange={(e) => changeAmount(id, e.target.value)}
               onClick={(e) => e.stopPropagation()}
+              category={category.value}
             />
-            shares
+            <div className="shares">
+              <div className="fraction">
+                <div className="nominatorDenominator">
+                {screenQuantity === formattedTotalShares ?"":<>
+                {screenQuantity === "" || screenQuantity === "0" ? (
+                  <span className="numerator"></span>
+                ) : screenQuantity === formattedTotalShares ? (
+                  <span className="numerator">1</span>
+                ) : (
+                  <>
+                    <span className="numerator">{screenQuantity}</span>/
+                    <span className="denominator">{formattedTotalShares}</span>
+                  </>
+                )}
+                </>}
+                </div>
+                <span className="shares-label">shares</span>
+              </div>
+            </div>
           </div>
         </div>
       );
     case "Percentages":
       return (
         <div className="right">
-          <div>
+          <div className="inputField">
             %
             <AutoWidthInput
               className="amount-input"
@@ -81,6 +113,7 @@ const Right: React.FC<RightProps> = ({
               onBlur={() => handleInputBlur(id)}
               onChange={(e) => changeAmount(id, e.target.value)}
               onClick={(e) => e.stopPropagation()}
+              category={category.value}
             />
           </div>
           <div onClick={(e) => toggleLock(e, id)}>

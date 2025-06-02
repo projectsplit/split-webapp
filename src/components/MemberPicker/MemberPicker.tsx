@@ -143,42 +143,82 @@ const MemberPicker = ({
     );
   };
 
-  const handleInputBlur = (id: string) => {
-    const updatedMembers = memberAmounts.map((m) => {
-      if (m.id === id) {
-        switch (category.value) {
-          case "Amounts":
-            const isZero = Number(m.screenQuantity) === 0;
-            return {
-              ...m,
-              screenQuantity: isZero ? "0.00" : m.screenQuantity,
-              locked: isZero ? false : m.locked,
-            };
-          case "Shares":
-            const isShareZero = Number(m.screenQuantity) === 0;
-            return {
-              ...m,
-              screenQuantity: isShareZero ? "" : m.screenQuantity, //"0"
-              locked: isShareZero ? false : m.locked,
-            };
-          case "Percentages":
-            const isPercentageZero = Number(m.screenQuantity) === 0;
-            return {
-              ...m,
-              screenQuantity: isPercentageZero ? "0.00" : m.screenQuantity,
-              locked: isPercentageZero ? false : m.locked,
-            };
-          default:
-            return m;
-        }
-      }
+  // const handleInputBlur = (id: string) => {
+  //   const updatedMembers = memberAmounts.map((m) => {
+  //     if (m.id === id) {
 
-      return m;
-    });
-    setMemberAmounts(
-      recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category)
-    );
-  };
+  //       switch (category.value) {
+  //         case "Amounts":
+  //           const isZero = Number(m.screenQuantity) === 0;
+  //           return {
+  //             ...m,
+  //             screenQuantity: isZero ? "0.00" : m.screenQuantity,
+  //             locked: isZero ? false : m.locked,
+  //           };
+  //         case "Shares":
+  //           const isShareZero = Number(m.screenQuantity) === 0;
+  //           return {
+  //             ...m,
+  //             screenQuantity: isShareZero ? "" : m.screenQuantity, //"0"
+  //             locked: isShareZero ? false : m.locked,
+  //           };
+  //         case "Percentages":
+  //           const isPercentageZero = Number(m.screenQuantity) === 0;
+  //           return {
+  //             ...m,
+  //             screenQuantity: isPercentageZero ? "0.00" : m.screenQuantity,
+  //             locked: isPercentageZero ? false : m.locked,
+  //           };
+  //         default:
+  //           return m;
+  //       }
+  //     }
+
+  //     return m;
+  //   });
+  //   setMemberAmounts(
+  //     recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category)
+  //   );
+  // };
+
+const handleInputBlur = (id: string) => {
+  const updatedMembers = memberAmounts.map((m) => {
+    if (m.id === id) {
+      const cleanedValue = m.screenQuantity
+        .replace(/^0+(?=\d*\.?\d+)/, (match) => (match.includes(".") ? "0" : ""))
+        .replace(/\.$/, ""); // Remove trailing decimal point
+      const numericValue = Number(cleanedValue);
+      const isZero = numericValue === 0 || isNaN(numericValue);
+
+      switch (category.value) {
+        case "Amounts":
+          return {
+            ...m,
+            screenQuantity: isZero ? "0.00" : cleanedValue,
+            locked: isZero ? false : m.locked,
+          };
+        case "Shares":
+          return {
+            ...m,
+            screenQuantity: isZero ? "" : cleanedValue,
+            locked: isZero ? false : m.locked,
+          };
+        case "Percentages":
+          return {
+            ...m,
+            screenQuantity: isZero ? "0.00" : cleanedValue,
+            locked: isZero ? false : m.locked,
+          };
+        default:
+          return m;
+      }
+    }
+    return m;
+  });
+  setMemberAmounts(
+    recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category)
+  );
+};
 
   const selectedCount = memberAmounts.filter((m) => m.selected).length;
 
@@ -201,6 +241,7 @@ const MemberPicker = ({
       $isOpen={isMenuOpen}
       $hasError={!!error}
       tabIndex={0}
+      $category={category.value}
       role="button"
       onKeyDown={(e) => {
         if (e.key === "Enter") {
@@ -233,6 +274,7 @@ const MemberPicker = ({
             />
           </div>
           <div className="member-list">
+            
             {sortedMemberAmounts
               .filter((m) => m.selected)
               .map((m) => (
@@ -252,6 +294,7 @@ const MemberPicker = ({
                     locked={m.locked}
                     selectedCurrency={selectedCurrency}
                     toggleLock={toggleLock}
+                    memberAmounts={memberAmounts}
                   />
                 </div>
               ))}

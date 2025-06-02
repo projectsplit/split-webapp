@@ -13,8 +13,8 @@ export const StyledMemberPicker = styled.div<{
   $hasError?: boolean;
   $isOpen?: boolean;
   $selectedCount: number;
+  $category: string;
 }>`
-
   color: ${({ theme, $selectedCount }) =>
     $selectedCount > 0 ? "" : theme.secondaryTextColor};
   display: flex;
@@ -78,7 +78,7 @@ export const StyledMemberPicker = styled.div<{
     border-style: solid;
 
     top: calc(100% + 1px);
-    .categories{
+    .categories {
       margin-top: 7px;
     }
     .separator {
@@ -95,12 +95,12 @@ export const StyledMemberPicker = styled.div<{
         display: flex;
         flex-direction: row;
         gap: 10px;
-        align-items:center;
-        .nameAndAmount{
-          display:flex;
-          flex-direction:column;
-          .amount{
-            font-size:12px;
+        align-items: center;
+        .nameAndAmount {
+          display: flex;
+          flex-direction: column;
+          .amount {
+            font-size: 12px;
           }
         }
       }
@@ -152,7 +152,31 @@ export const StyledMemberPicker = styled.div<{
         justify-items: end;
         align-items: center;
         gap: 10px;
+        .inputField {
+          display: flex;
+          flex-direction: row;
+          ${({ $category }) => ($category === "Shares" ? "gap:5px" : "")};
+          align-items:center;
+          .shares {
+            display: flex;
+            flex-direction: row;
+            .fraction {
+              .nominatorDenominator{
+                color:grey;
+              }
+              display:flex;
+              flex-direction:row;
+              gap:10px;
+              font-size: 12px;
+              gap:4px;
+            }
+          }
+        }
 
+        .sharesInput {
+          background-color: white;
+          color: black;
+        }
         .currency {
           color: ${({ theme }) => theme.secondaryTextColor};
         }
