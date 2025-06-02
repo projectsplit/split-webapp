@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { amountIsValid } from "../../helpers/amountIsValid";
 import {
   ExpenseRequest,
@@ -150,7 +149,6 @@ if (payersCategory.value === 'Shares') {
               ? "Amounts must add up to total"
               : ""
           );
-
   }
   
   if (!amountIsValid(amount, setAmountError)) return;
@@ -160,10 +158,7 @@ if (payersCategory.value === 'Shares') {
     return;
   }
 
- 
-
   //Add a setError only for when Shares state is active so if all shares accross all payers and participants are 0 then show error
-
   //console.log(payers, participants, amount);
 
   const expenseRequest: ExpenseRequest = {
@@ -271,47 +266,3 @@ export const createPayerPickerArray = (
     };
   });
 };
-
-// export const createPayerPickerArray = (
-//   group: Group,
-//   expense: FormExpense | null,
-//   type: string
-// ): PickerMember[] => {
-//   return [...group.guests, ...group.members].map((member) => {
-//     const payer = expense?.payers.find((p) => p.memberId === member.id);
-//     const paymentAmount = payer?.paymentAmount ?? "";
-//     let screenQuantity: string;
-
-//     if (type === "Amounts") {
-//       screenQuantity = paymentAmount;
-//     } else if (type === "Shares") {
-//       screenQuantity = "0";
-//     } else if (type === "Percentages") {
-//       if (
-//         expense?.amount &&
-//         paymentAmount &&
-//         !isNaN(Number(expense.amount)) &&
-//         Number(expense.amount) !== 0
-//       ) {
-//         screenQuantity = (
-//           (Number(paymentAmount) / Number(expense.amount)) *
-//           100
-//         ).toFixed(1);
-//       } else {
-//         screenQuantity = "";
-//       }
-//     } else {
-//       screenQuantity = "";
-//     }
-
-//     return {
-//       id: member.id,
-//       actualAmount: paymentAmount,
-//       screenQuantity,
-//       locked: payer ? true : false,
-//       name: member.name,
-//       order: 0,
-//       selected: payer ? true : false,
-//     };
-//   });
-// };
