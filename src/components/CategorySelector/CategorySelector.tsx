@@ -83,7 +83,16 @@ export const CategorySelector = ({
     updateIndicator();
     window.addEventListener("resize", updateIndicator);
     return () => window.removeEventListener("resize", updateIndicator);
-  }, [activeCategory,activeCatAsState?.value, activeCat]); // Only re-runs when `activeCategory` changes
+  }, [activeCategory,activeCatAsState?.value, activeCat]); 
+
+
+  const isSmallScreen = window.matchMedia("(max-width: 400px)").matches;
+   const getCategoryLabel = (label: string) => {
+    if (label === "Percentages" && isSmallScreen) {
+      return "%ages";
+    }
+    return label;
+  };
 
   return (
     <StyledCategorySelector>
@@ -101,7 +110,7 @@ export const CategorySelector = ({
             }}
             selected={activeCategory === key}
           >
-            {label}
+              {getCategoryLabel(label)}
           </CategoryButton>
         ))}
         <div

@@ -16,7 +16,7 @@ export const StyledLabelPicker = styled.div<{
   display: flex;
   flex-direction: column;
   position: relative;
- 
+
   cursor: pointer;
   .main {
     background-color: ${({ theme }) => theme.layer2};
@@ -54,7 +54,7 @@ export const StyledLabelPicker = styled.div<{
     .icon {
       display: flex;
       font-size: 1.4rem;
-      color: ${({ $isOpen ,theme}) => ($isOpen ? theme.textActiveColor : "")};
+      color: ${({ $isOpen, theme }) => ($isOpen ? theme.textActiveColor : "")};
       margin-left: auto; /* Pushes the button to the right */
       cursor: pointer;
     }
@@ -85,14 +85,19 @@ export const StyledLabelPicker = styled.div<{
     flex-direction: column;
     justify-content: space-between;
     position: absolute;
-    z-index: 2;
+    z-index: 3;
     width: 100%;
     box-sizing: border-box;
     border-radius: 8px;
     border-width: 1px;
     border-style: solid;
     max-height: 300px;
+    overflow-y: auto;
     top: calc(100% - 12px);
+
+    @media (max-width: 768px) {
+      max-height: 200px;
+    }
 
     .suggested-label-container {
       animation: ${fadeIn} 0.15s linear;
@@ -102,7 +107,7 @@ export const StyledLabelPicker = styled.div<{
       align-items: center;
       padding: 10px 14px;
       box-sizing: content-box;
-      
+
       .suggested-label-text {
         display: flex;
         gap: 8px;

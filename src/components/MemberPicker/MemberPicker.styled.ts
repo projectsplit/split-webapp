@@ -38,7 +38,7 @@ export const StyledMemberPicker = styled.div<{
     cursor: pointer;
     text-overflow: clip;
     overflow: hidden;
-
+    position: relative;
     .icon {
       font-size: 1.4rem;
       &:hover {
@@ -70,16 +70,23 @@ export const StyledMemberPicker = styled.div<{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    position: absolute;
     z-index: 5;
     width: 100%;
     box-sizing: border-box;
     border-radius: 8px;
     border-width: 1px;
     border-style: solid;
-
-    top: calc(100% + 1px);
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden; 
+    top: calc(100% - 12px);
+    /* @media (max-width: 768px) {
+      max-height: 200px;
+    } */
     .categories {
       margin-top: 7px;
+      
     }
     .separator {
       margin-left: 10px;
@@ -115,12 +122,6 @@ export const StyledMemberPicker = styled.div<{
       color: ${({ theme }) => theme.secondaryTextColor};
     }
 
-    .selectAll {
-      display: flex;
-      flex-direction: row;
-      padding: 10px 14px;
-      gap: 10px;
-    }
     .tick-cube {
       position: relative;
       height: 25px;
@@ -156,19 +157,19 @@ export const StyledMemberPicker = styled.div<{
           display: flex;
           flex-direction: row;
           ${({ $category }) => ($category === "Shares" ? "gap:5px" : "")};
-          align-items:center;
+          align-items: center;
           .shares {
             display: flex;
             flex-direction: row;
             .fraction {
-              .nominatorDenominator{
-                color:grey;
+              .nominatorDenominator {
+                color: grey;
               }
-              display:flex;
-              flex-direction:row;
-              gap:10px;
+              display: flex;
+              flex-direction: row;
+              gap: 10px;
               font-size: 12px;
-              gap:4px;
+              gap: 4px;
             }
           }
         }
