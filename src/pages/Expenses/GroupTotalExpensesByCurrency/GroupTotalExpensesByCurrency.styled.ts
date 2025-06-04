@@ -3,6 +3,8 @@ import { StyledMiddleScreenMenu } from "../../../components/Menus/Layouts/Middle
 
 export const StyledGroupTotalExpensesByCurrency = styled(StyledMiddleScreenMenu)`
   font-size: 14px;
+  max-height: 80vh; /* Limit height to 80% of viewport height */
+  overflow-y: auto;
   .header {
       display: flex;
       justify-content: space-between;

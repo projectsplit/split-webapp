@@ -49,7 +49,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
             {renderLocationDisplay()}
           </span>
           <div className="closeButtonWrapper">
-            <IoClose className="closeButton" onClick={clearLocation} />
+            {location.value!==undefined?<IoClose className="closeButton" onClick={clearLocation} />:null}
           </div>
         </div>
         <div className="meta">
