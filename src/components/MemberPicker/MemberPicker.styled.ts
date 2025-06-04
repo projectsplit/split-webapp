@@ -77,7 +77,7 @@ export const StyledMemberPicker = styled.div<{
     border-radius: 8px;
     border-width: 1px;
     border-style: solid;
-    max-height: 300px;
+    max-height: 350px;
     overflow-y: auto;
     overflow-x: hidden; 
     top: calc(100% - 12px);
