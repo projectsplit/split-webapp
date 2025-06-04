@@ -2,6 +2,7 @@ import { Signal } from "@preact/signals-react";
 import { PickerMember } from "../../../types";
 import { split } from "./split";
 import { distributeRemainderCents } from "./distributeRemainderCents";
+import { distributeRemainderCentsForShares } from "./distributeRemainderCentsForShares";
 
 export const recalculateAmounts = (
   formMembers: PickerMember[],
@@ -54,12 +55,12 @@ export const recalculateAmounts = (
       screenArray = split(
         100 - lockedTotalAmount,
         unlockedSelectedMembers.length,
-         decimalDigits+2
+        decimalDigits + 2
       );
       actualPercentageSplit = split(
         100 - lockedTotalAmount,
         unlockedSelectedMembers.length,
-        decimalDigits+2
+        decimalDigits + 2
       );
 
       const {
@@ -73,6 +74,7 @@ export const recalculateAmounts = (
       );
       let unlockedIndex = 0;
       let lockedIndex = 0;
+
       return synchronizedFormMembers.map((m) => {
         if (m.selected && !m.locked) {
           return {
@@ -97,32 +99,36 @@ export const recalculateAmounts = (
         };
       });
 
-    case "Shares":
-      const totalShares = synchronizedFormMembers.reduce(
-        (sum, member) =>
-          sum + (member.screenQuantity ? Number(member.screenQuantity) : 0),
-        0
-      );
-      if (totalShares === 0) {
-        return synchronizedFormMembers;
-      }
-      const totalEqualShares = totalAmount / totalShares;
-      return synchronizedFormMembers.map((m) => {
-        if (m.selected) {
-          return {
-            ...m,
-            actualAmount: (Number(m.screenQuantity) * totalEqualShares).toFixed(
-              decimalDigits
-            ),
-            screenQuantity: m.screenQuantity || "", //"0"
-          };
-        }
-        return {
-          ...m,
-          actualAmount: "",
-          screenQuantity: "",
-        };
-      });
+case "Shares":
+  const totalShares = synchronizedFormMembers.reduce(
+    (sum, member) =>
+      sum + (member.screenQuantity && member.selected ? Number(member.screenQuantity) : 0),
+    0
+  );
+  if (totalShares === 0) {
+    return synchronizedFormMembers;
+  }
+  const { adjustedToOriginalAmount } = distributeRemainderCentsForShares(
+    decimalDigits,
+    totalAmount,
+    synchronizedFormMembers
+  );
+
+  return synchronizedFormMembers.map((m) => {
+    if (m.selected) {
+      const adjustedMember = adjustedToOriginalAmount.find((a) => a.id === m.id);
+      return {
+        ...m,
+        actualAmount: adjustedMember ? adjustedMember.amount : "",
+        screenQuantity: m.screenQuantity || "",
+      };
+    }
+    return {
+      ...m,
+      actualAmount: "",
+      screenQuantity: "",
+    };
+  });
 
     default:
       return synchronizedFormMembers;

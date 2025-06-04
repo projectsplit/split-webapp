@@ -1,5 +1,6 @@
 import { getSymbolFromCurrency } from "./currency-symbol-map";
 import { getLocaleFromCurrency } from "./getLocaleFromCurrency";
+import { significantDigitsFromTicker } from "./openExchangeRates";
 
 export const displayCurrencyAndAmount = (
   amount: string | undefined,
@@ -14,7 +15,7 @@ export const displayCurrencyAndAmount = (
 
   const formatter = new Intl.NumberFormat(getLocaleFromCurrency(currency), {
     minimumFractionDigits: amount2decimal % 1 !== 0 ? 2 : 0,
-    maximumFractionDigits: amount2decimal % 1 !== 0 ? 2 : 0,
+    maximumFractionDigits: amount2decimal % 1 !== 0 ? significantDigitsFromTicker(currency) : 0,
   });
 
   return `${symbol}${formatter.format(amount2decimal)}`;
