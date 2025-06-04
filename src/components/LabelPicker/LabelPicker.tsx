@@ -159,6 +159,7 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
           value={text}
           onChange={handleInpuTextChange}
           ref={inputRef}
+          isText={true}
         />
         {isEmpty && (
           <div style={{ position: "absolute", flex: 1 }}>Select label</div>
