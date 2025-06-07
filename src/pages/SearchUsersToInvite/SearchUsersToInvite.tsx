@@ -29,6 +29,7 @@ const SearchUsersToInvite = ({ menu }: SearchUsersToInviteProps) => {
   const category = useSignal<string>("Invite User");
   const cannotBeRemovedClickedWarning = useSignal<string>("");
   const [guestName, setGuestName] = useState<string>("");
+ 
   const noGroupError = useSignal<string>("");
   const noMemberError = useSignal<string>("");
   const [debouncedKeyword, _isDebouncing] = useDebounce<string>(
@@ -138,6 +139,7 @@ const SearchUsersToInvite = ({ menu }: SearchUsersToInviteProps) => {
               placeholder="guest's name"
               backgroundcolor="#2d2d2d"
               onChange={(e) => setGuestName(e.target.value)}
+              value={guestName}
             />
             <div className="createButton">
               <MyButton

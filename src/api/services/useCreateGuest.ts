@@ -8,7 +8,7 @@ export const useCreateGuest = (
   groupId: string | undefined,
   noGroupError: Signal<string>,
   guestName: string,
-  setGuestName?: React.Dispatch<React.SetStateAction<string>>
+  setGuestName: React.Dispatch<React.SetStateAction<string>>
 ) => {
   const queryClient = useQueryClient();
 
@@ -53,9 +53,8 @@ export const useCreateGuest = (
         queryKey: ["mostRecentGroup"],
         exact: false,
       });
-      if (setGuestName) {
-        setGuestName("");
-      }
+
+      setGuestName("");
     },
   });
 };
@@ -68,6 +67,6 @@ const createGuest = async (
     `/groups/${groupId}/add-guest`,
     req
   );
-  console.log(response);
+
   return response.data;
 };
