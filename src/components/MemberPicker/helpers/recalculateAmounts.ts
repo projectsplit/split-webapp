@@ -10,8 +10,6 @@ export const recalculateAmounts = (
   decimalDigits: number,
   category: Signal<string>
 ): PickerMember[] => {
-  // Synchronize actualAmount and screenQuantity for "Amounts" locked members
-  //TODO FIX FOR "Percentages" and "Shares" categories
 
   const synchronizedFormMembers = formMembers.map((m) =>
     m.locked && m.selected ? { ...m, actualAmount: m.screenQuantity } : m

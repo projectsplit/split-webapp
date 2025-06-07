@@ -11,7 +11,7 @@ export const useRemoveGuestFromGroup = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, AxiosError, string>({
+  return useMutation<void, AxiosError, string>({
     mutationFn: (guestId) => {
       if (!groupId) {
         noGroupError.value = "No group found";
@@ -40,6 +40,10 @@ export const useRemoveGuestFromGroup = (
         exact: false,
       });
     },
+    onError: (error) => {
+      console.error("Failed to remove guest:", error.message);
+      noMemberError.value = "Failed to remove guest. Please try again.";
+    }
   });
 
 };
@@ -48,9 +52,11 @@ const removeGuest = async (
   req: {guestId:string},
   groupId: string
 ): Promise<void> => {
+
   const response = await apiClient.post<void, AxiosResponse<void>>(
     `/groups/${groupId}/remove-guest`,
     req
   );
+
   return response.data;
 };

@@ -24,7 +24,7 @@ export default function RemoveUserFromGroupMenu({
   const cannotBeRemovedClickedWarning = useSignal<string>("");
   const [searchItem, setSearchItem] = useState<string>("");
 
-  const { data: group, isFetching } = useGroup(groupId);
+  const { data: group } = useGroup(groupId);
   
   const groupUsers = group?.members.filter((m) => m.userId !== userInfo.userId)?? [];
   const groupGuests = group?.guests?? [];

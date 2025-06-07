@@ -53,6 +53,9 @@ export const StyledSearchUsersToInvite = styled.div`
     }
 
     .title {
+      display:flex;
+      flex-direction:row;
+      gap:10px;
       font-weight: 600;
     }
     .gap {
@@ -63,7 +66,28 @@ export const StyledSearchUsersToInvite = styled.div`
   .scrollable-content {
     overflow-y: auto;
     flex: 1;
-    padding-top: 10px; 
+    .members {
+      display: flex;
+      flex-direction: column;
+      padding: 0.875rem;
+      font-size: 15px;
+
+      .memberWithButton {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 19px;
+        .guestWrap {
+          display: flex;
+          flex-direction: column;
+          .guest {
+            color: ${({ theme }) => theme.textInactiveColor};
+            font-size: 11px;
+          }
+        }
+      }
+    }
   }
 
   .input {
@@ -71,7 +95,7 @@ export const StyledSearchUsersToInvite = styled.div`
     width: 100%;
     padding-left: 10px;
     padding-right: 10px;
-    padding-top: 10px;
+
 
     .search-input {
       width: 100%;
@@ -79,6 +103,9 @@ export const StyledSearchUsersToInvite = styled.div`
       padding-top: 7px;
       padding-bottom: 7px;
       font-size: 16px;
+    }
+    .createButton{
+      margin-left: 10px;
     }
   }
 

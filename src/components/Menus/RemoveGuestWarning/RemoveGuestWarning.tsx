@@ -21,7 +21,7 @@ export default function RemoveGuestWarning({ menu }: RemoveGuestWarningProps) {
       <div className="info">
         <div className="info">
           This guest cannot be removed because they are involved in expenses or
-          transfers. Removing them would affect the accuracy of the group's
+          transfers. Removing them will disrupt the group's
           financial history.
           <div />
         </div>

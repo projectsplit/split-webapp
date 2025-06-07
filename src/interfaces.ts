@@ -528,10 +528,12 @@ export interface PillProps {
 }
 export interface AddNewUserAnimationProps extends MenuProps {
   groupName: string | undefined;
+ 
 }
 
 export interface SearchUsersToInviteProps extends MenuProps {
   groupName: string | undefined;
+
 }
 export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
 
@@ -563,6 +565,18 @@ export interface NotificationsMenuAnimationProps extends MenuProps {
   // userInvitations: GetUserInvitationsResponseItem[] | undefined;
   hasNewerNotifications: boolean;
   userInfo: UserInfo | undefined;
+}
+export interface MemberItemProps {
+  member: {
+    id: string;
+    name: string;
+  };
+  groupId: string | undefined;
+  noGroupError: Signal<string>;
+  noMemberError: Signal<string>;
+  isGuest: boolean;
+  canBeRemoved: boolean;
+  onCannotRemoveClick: () => void;
 }
 
 export interface MiddleScreenMenuProps {
