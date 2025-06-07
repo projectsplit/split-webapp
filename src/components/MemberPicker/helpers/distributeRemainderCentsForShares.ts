@@ -5,6 +5,7 @@ export function distributeRemainderCentsForShares(
   totalAmount: number,
   synchronizedFormMembers: PickerMember[]
 ) {
+ 
   const multiplier = Math.pow(10, decimalDigits);
   const totalCents = Math.round(totalAmount * multiplier);
 

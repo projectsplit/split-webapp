@@ -25,7 +25,7 @@ export default function MemberFC({
   totalSpent,
   group
 }: MemberProps) {
-  const totalsSpent = totalSpent[memberId];
+  const totalsSpent = totalSpent[memberId]|| {};
   const removeZeroesValuesFromTotalSpent = Object.fromEntries(
     Object.entries(totalsSpent).filter(([_, amount]) => amount !== 0)
   );

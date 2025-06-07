@@ -8,36 +8,44 @@ import { useMostRecentGroup } from "../../../api/services/useMostRecentGroup";
 export default function ConfirmLeaveGroup({
   menu,
   groupId,
-   openGroupOptionsMenu
+  openGroupOptionsMenu,
 }: ConfirmLeaveGroupProps) {
-  const noGroupError = useSignal<string>("");
+  const groupError = useSignal<string>("");
   const noMemberError = useSignal<string>("");
   const navigate = useNavigate();
-
   const { mutate: leaveGroupMutation, isPending } = useLeaveGroup(
     menu,
     groupId,
-    noGroupError,
-    navigate
+    groupError,
+    navigate,
+    openGroupOptionsMenu
   );
 
- const updateMostRecentGroupId = useMostRecentGroup();
+  const updateMostRecentGroupId = useMostRecentGroup();
 
   const handleConfirm = () => {
-    //TODO: If owner tries to leave group, spit out a message to explain owner cannot leave group
-    openGroupOptionsMenu.value=false
+    if (groupError.value === "") {
+      leaveGroupMutation();
+    } else {
+      openGroupOptionsMenu.value = false;
+    }
   };
 
   return (
-    <Confirmation menu={menu} isLoading={isPending} onClick={handleConfirm} header={"Confirmation"}>
+    <Confirmation
+      menu={menu}
+      isLoading={isPending}
+      onClick={handleConfirm}
+      header={groupError.value === "" ? "Confirmation" : "Info"}
+    >
       <div className="leaveGroupText">
-        {noGroupError.value === "" && noMemberError.value === "" ? (
+        {groupError.value === "" && noMemberError.value === "" ? (
           <span>
             Are you sure you want to leave this group?{" "}
             <span style={{ fontSize: "20px" }}>🤔</span>
           </span>
-        ) : noGroupError.value !== "" ? (
-          <span>Could not find your group. Please try again.</span>
+        ) : groupError.value !== "" ? (
+          <span>{groupError.value}</span>
         ) : (
           <span>Something went wrong. Please try again.</span>
         )}

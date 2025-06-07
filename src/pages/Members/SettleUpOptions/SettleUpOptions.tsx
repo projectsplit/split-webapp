@@ -46,7 +46,7 @@ export default function SettleUpOptions({
     submitMultipleTransfers(createTransfersRequest);
     
   };
-//TODO: "Amount must respect provided currency format" for currencies like BHD formar is thre digits. Need to amend backend
+
   return (
     <StyledSettleUpOptions>
       <strong className="header">Settle Up</strong>

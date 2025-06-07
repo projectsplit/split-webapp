@@ -1,20 +1,7 @@
-import { Signal } from "@preact/signals-react";
 import MyButton from "../../../MyButton/MyButton";
 import { useRemoveMemberFromGroup } from "../../../../api/services/useRemoveMemberFromGroup";
 import { useRemoveGuestFromGroup } from "../../../../api/services/useRemoveGuestFromGroup";
-
-interface MemberItemProps {
-  member: {
-    id: string;
-    name: string;
-  };
-  groupId: string | undefined;
-  noGroupError: Signal<string>;
-  noMemberError: Signal<string>;
-  isGuest: boolean;
-  canBeRemoved: boolean;
-  onCannotRemoveClick: () => void;
-}
+import { MemberItemProps } from "../../../../interfaces";
 
 export default function MemberItem({
   member,

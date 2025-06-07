@@ -121,6 +121,7 @@ export default function ExpenseForm({
     isCreateExpense || !expense ? "" : expense.amount
   );
   const [amountError, setAmountError] = useState<string>("");
+  console.log(amountError)
   const [showAmountError, setShowAmountError] = useState<boolean>(false);
 
   const [description, setDescription] = useState<string>(
