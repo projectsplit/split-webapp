@@ -108,8 +108,8 @@ const Transfers: React.FC = () => {
             </div>
           ) : (
             <BarsWithLegends
-              bar1Legend="You Sent"
-              bar2Legend="You Received"
+              bar1Legend="Total Sent"
+              bar2Legend="Total Received"
               bar1Total={usertotalSent || 0}
               bar2Total={usertotalReceived || 0}
               currency={group.currency}
