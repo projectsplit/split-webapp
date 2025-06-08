@@ -1,9 +1,10 @@
 import { CSSTransition } from "react-transition-group";
-import { GroupTotalExpensesByCurrencyAnimationProps } from "../../../interfaces";
+import { GroupTotalsByCurrencyAnimationProps } from "../../../interfaces";
 import { useRef } from "react";
-import { GroupTotalExpensesByCurrency } from "../../../pages/Expenses/GroupTotalExpensesByCurrency/GroupTotalExpensesByCurrency";
+import { GroupTotalsByCurrency } from "../../../pages/Group/GroupTotalsByCurrency/GroupTotalsByCurrency";
 
-export default function GroupTotalExpensesByCurrencyAnimation({
+
+export default function GroupTotalsByCurrencyAnimation({
   menu,
   bar1Color,
   bar2Color,
@@ -11,7 +12,7 @@ export default function GroupTotalExpensesByCurrencyAnimation({
   bar2Legend,
   groupTotalsByCurrency,
   userTotalsByCurrency,
-}: GroupTotalExpensesByCurrencyAnimationProps) {
+}: GroupTotalsByCurrencyAnimationProps) {
   const nodeRef = useRef(null);
   return (
     <CSSTransition
@@ -21,7 +22,7 @@ export default function GroupTotalExpensesByCurrencyAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <GroupTotalExpensesByCurrency
+      <GroupTotalsByCurrency
         menu={menu}
         bar1Color={bar1Color}
         bar2Color={bar2Color}

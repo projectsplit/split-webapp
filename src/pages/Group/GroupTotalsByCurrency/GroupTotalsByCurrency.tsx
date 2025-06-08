@@ -1,9 +1,10 @@
 import IonIcon from "@reacticons/ionicons";
 import { BarsAndAmounts } from "../../../components/BarsWithLegends/BarsAndAmounts/BarsAndAmounts";
 import { GroupTotalExpensesByCurrencyProps } from "../../../interfaces";
-import { StyledGroupTotalExpensesByCurrency } from "./GroupTotalExpensesByCurrency.styled";
+import { StyledGroupTotalsByCurrency } from "./GroupTotalsByCurrency.styled";
 
-export const GroupTotalExpensesByCurrency = ({
+
+export const GroupTotalsByCurrency = ({
   menu,
   bar1Color,
   bar2Color,
@@ -20,7 +21,7 @@ export const GroupTotalExpensesByCurrency = ({
   );
 
   return (
-    <StyledGroupTotalExpensesByCurrency>
+    <StyledGroupTotalsByCurrency>
        <div className="header">
           <span>By Currency</span>
           <div className="closeButton" onClick={() => (menu.value = null)}>
@@ -48,6 +49,6 @@ export const GroupTotalExpensesByCurrency = ({
           bar2Color={bar2Color}
         />
       ))}
-    </StyledGroupTotalExpensesByCurrency>
+    </StyledGroupTotalsByCurrency>
   );
 };

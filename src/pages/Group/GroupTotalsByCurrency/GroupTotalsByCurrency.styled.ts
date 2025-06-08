@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { StyledMiddleScreenMenu } from "../../../components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
 
-export const StyledGroupTotalExpensesByCurrency = styled(StyledMiddleScreenMenu)`
+export const StyledGroupTotalsByCurrency = styled(StyledMiddleScreenMenu)`
   font-size: 14px;
   max-height: 80vh; /* Limit height to 80% of viewport height */
   overflow-y: auto;

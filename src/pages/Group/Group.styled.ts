@@ -26,9 +26,10 @@ export const StyledGroup = styled.div`
 
       .msg {
         opacity: 0.4;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        white-space: normal; 
+        text-align: center; 
+        max-width: 90%; 
+        word-break: break-word; 
       }
       .icon {
         display: flex;
@@ -42,7 +43,7 @@ export const StyledGroup = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: 2rem;
-    flex: 1; 
+    flex: 1;
   }
   .retry {
     display: flex;
