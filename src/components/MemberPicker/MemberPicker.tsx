@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect,useRef, useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
-import { UserInfo } from "../../types";
 import { MemberPickerProps } from "../../interfaces";
 import { useSignal } from "@preact/signals-react";
-import { useOutletContext } from "react-router-dom";
 import { StyledMemberPicker } from "./MemberPicker.styled";
 import { significantDigitsFromTicker } from "../../helpers/openExchangeRates";
 import { CategorySelector } from "../CategorySelector/CategorySelector";
@@ -20,8 +18,8 @@ const MemberPicker = ({
   totalAmount,
   description,
   error,
-  group,
   category,
+  userMemberId,
   selectedCurrency,
 }: MemberPickerProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,14 +28,8 @@ const MemberPicker = ({
   const renderCounter = useRef<number>(0);
   const isEquallySplit = useSignal<boolean>(true);
 
-  const { userInfo } = useOutletContext<{
-    userInfo: UserInfo;
-  }>();
 
   const [decimalDigits, setDecimalDigits] = useState<number>(2);
-
-  const members = group?.members;
-  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
   renderCounter.current++;
 
@@ -143,43 +135,6 @@ const MemberPicker = ({
     );
   };
 
-  // const handleInputBlur = (id: string) => {
-  //   const updatedMembers = memberAmounts.map((m) => {
-  //     if (m.id === id) {
-
-  //       switch (category.value) {
-  //         case "Amounts":
-  //           const isZero = Number(m.screenQuantity) === 0;
-  //           return {
-  //             ...m,
-  //             screenQuantity: isZero ? "0.00" : m.screenQuantity,
-  //             locked: isZero ? false : m.locked,
-  //           };
-  //         case "Shares":
-  //           const isShareZero = Number(m.screenQuantity) === 0;
-  //           return {
-  //             ...m,
-  //             screenQuantity: isShareZero ? "" : m.screenQuantity, //"0"
-  //             locked: isShareZero ? false : m.locked,
-  //           };
-  //         case "Percentages":
-  //           const isPercentageZero = Number(m.screenQuantity) === 0;
-  //           return {
-  //             ...m,
-  //             screenQuantity: isPercentageZero ? "0.00" : m.screenQuantity,
-  //             locked: isPercentageZero ? false : m.locked,
-  //           };
-  //         default:
-  //           return m;
-  //       }
-  //     }
-
-  //     return m;
-  //   });
-  //   setMemberAmounts(
-  //     recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category)
-  //   );
-  // };
 
 const handleInputBlur = (id: string) => {
   const updatedMembers = memberAmounts.map((m) => {

@@ -119,6 +119,7 @@ export interface MemberPickerProps {
   group: Group;
   selectedCurrency: string;
   category:Signal<string>;
+  userMemberId: string | undefined
 }
 
 export interface DayPickerProps {

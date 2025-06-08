@@ -7,12 +7,10 @@ import React, {
 } from "react";
 import { StyledExpenseForm } from "./ExpenseForm.styled";
 import {
-  ExpenseRequest,
-  FormExpense,
   GeoLocation,
-  Group,
   Label,
   PickerMember,
+  UserInfo,
 } from "../../types";
 import MyButton from "../MyButton/MyButton";
 import { DateTime } from "../DateTime";
@@ -25,8 +23,6 @@ import { handleInputChange } from "../../helpers/handleInputChange";
 import InputMonetary from "../InputMonetary/InputMonetary";
 import { IoClose } from "react-icons/io5";
 import { amountIsValid } from "../../helpers/amountIsValid";
-import { significantDigitsFromTicker } from "../../helpers/openExchangeRates";
-import currency from "currency.js";
 import { useSignal } from "@preact/signals-react";
 import FormInput from "../FormInput/FormInput";
 import { ExpenseFormProps } from "../../interfaces";
@@ -40,6 +36,7 @@ import {
 
 import { useSetBySharesAmountsToZero } from "./hooks/useSetBySharesAmountsToZero";
 import { useExpenseValidation } from "./hooks/useExpenseValidation";
+import { useOutletContext } from "react-router-dom";
 
 export default function ExpenseForm({
   group,
@@ -60,23 +57,23 @@ export default function ExpenseForm({
     useEditExpense(menu, selectedExpense, group.id);
 
   const [participantsByCategory, setParticipantsByCategory] = useState<{
-    "Amounts": PickerMember[];
-    "Shares": PickerMember[];
-    "Percentages": PickerMember[];
+    Amounts: PickerMember[];
+    Shares: PickerMember[];
+    Percentages: PickerMember[];
   }>({
-    "Amounts": createParticipantPickerArray(
+    Amounts: createParticipantPickerArray(
       group,
       expense,
       "Amounts",
       isCreateExpense
     ),
-    "Shares": createParticipantPickerArray(
+    Shares: createParticipantPickerArray(
       group,
       expense,
       "Shares",
       isCreateExpense
     ),
-    "Percentages": createParticipantPickerArray(
+    Percentages: createParticipantPickerArray(
       group,
       expense,
       "Percentages",
@@ -87,23 +84,13 @@ export default function ExpenseForm({
   const [participantsError, setParticipantsError] = useState<string>("");
 
   const [payersByCategory, setPayersByCategory] = useState<{
-    "Amounts": PickerMember[];
-    "Shares": PickerMember[];
-    "Percentages": PickerMember[];
+    Amounts: PickerMember[];
+    Shares: PickerMember[];
+    Percentages: PickerMember[];
   }>({
-    "Amounts": createPayerPickerArray(
-      group,
-      expense,
-      "Amounts",
-      isCreateExpense
-    ),
-    "Shares": createPayerPickerArray(
-      group,
-      expense,
-      "Shares",
-      isCreateExpense
-    ),
-    "Percentages": createPayerPickerArray(
+    Amounts: createPayerPickerArray(group, expense, "Amounts", isCreateExpense),
+    Shares: createPayerPickerArray(group, expense, "Shares", isCreateExpense),
+    Percentages: createPayerPickerArray(
       group,
       expense,
       "Percentages",
@@ -121,7 +108,7 @@ export default function ExpenseForm({
     isCreateExpense || !expense ? "" : expense.amount
   );
   const [amountError, setAmountError] = useState<string>("");
-  console.log(amountError)
+
   const [showAmountError, setShowAmountError] = useState<boolean>(false);
 
   const [description, setDescription] = useState<string>(
@@ -148,12 +135,30 @@ export default function ExpenseForm({
   const participantsCategory = useSignal<string>("Amounts");
   const payersCategory = useSignal<string>("Amounts");
 
+  const { userInfo } = useOutletContext<{
+    userInfo: UserInfo;
+  }>();
+  const members = group?.members;
+  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
+
   const participants =
     participantsByCategory[
       participantsCategory.value as keyof typeof participantsByCategory
     ];
   const payers =
     payersByCategory[payersCategory.value as keyof typeof payersByCategory];
+
+  const adjustParticipants = useMemo(() => {
+    return participants.map((m) =>
+      m.id === userMemberId ? { ...m, name: "you" } : m
+    );
+  }, [participants, userMemberId]);
+
+  const adjustPayers = useMemo(() => {
+    return payers.map((m) =>
+      m.id === userMemberId ? { ...m, name: "you" } : m
+    );
+  }, [participants, userMemberId]);
 
   const setParticipants = (newParticipants: PickerMember[]) => {
     setParticipantsByCategory((prev) => ({
@@ -237,7 +242,7 @@ export default function ExpenseForm({
   useEffect(() => {
     setParticipantsError("");
     setPayersError("");
-  }, [participantsByCategory['Shares'],payersByCategory['Shares']]);
+  }, [participantsByCategory["Shares"], payersByCategory["Shares"]]);
 
   const amountNumber = !amountError ? Number(amount) : Number.NaN;
 
@@ -304,22 +309,24 @@ export default function ExpenseForm({
       <MemberPicker
         description={"Participants"}
         totalAmount={amountNumber}
-        memberAmounts={participants}
+        memberAmounts={adjustParticipants}
         error={participantsError}
         setMemberAmounts={setParticipants}
         group={group}
         selectedCurrency={currencySymbol}
         category={participantsCategory}
+        userMemberId={userMemberId}
       />
       <MemberPicker
         description={"Payers"}
         totalAmount={amountNumber}
-        memberAmounts={payers}
+        memberAmounts={adjustPayers}
         error={payersError}
         setMemberAmounts={setPayers}
         group={group}
         selectedCurrency={currencySymbol}
         category={payersCategory}
+        userMemberId={userMemberId}
       />
       <FormInput
         description="Description"

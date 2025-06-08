@@ -14,13 +14,10 @@ export const useRecalculateAmounts = (
   category: Signal<string>
 ) => {
   useEffect(() => {
-    const adjustForUserMembers = memberAmounts.map((m) =>
-      m.id === userMemberId ? { ...m, name: "you" } : m
-    );
 
 setMemberAmounts(
   recalculateAmounts(
-    adjustForUserMembers,
+    memberAmounts,
     totalAmount,
     decimalDigits,
     category
@@ -30,9 +27,9 @@ setMemberAmounts(
 if (totalAmount > 0) {
   if (
     description === "Participants" &&
-    !adjustForUserMembers.some((m) => m.selected)
+    !memberAmounts.some((m) => m.selected)
   ) {
-    const newFormMembers = adjustForUserMembers.map((m) => ({
+    const newFormMembers = memberAmounts.map((m) => ({
       ...m,
       selected: true,
       order: renderCounter.current,
@@ -48,9 +45,9 @@ if (totalAmount > 0) {
   }
   if (
     description === "Payers" &&
-    !adjustForUserMembers.some((m) => m.selected)
+    !memberAmounts.some((m) => m.selected)
   ) {
-    const newFormMembers = adjustForUserMembers.map((m) => ({
+    const newFormMembers = memberAmounts.map((m) => ({
       ...m,
       selected: m.id === userMemberId,
       order: renderCounter.current,
@@ -67,7 +64,7 @@ if (totalAmount > 0) {
 }
 
 if (totalAmount === 0) {
-  const newFormMembers = adjustForUserMembers.map((m) => ({
+  const newFormMembers = memberAmounts.map((m) => ({
     ...m,
     selected: false,
     actualAmount: "",
