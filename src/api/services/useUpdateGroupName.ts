@@ -31,7 +31,7 @@ export const useUpdateGroupName = (
     },
     onError: (err) => {
       const error = err as AxiosError;
-      console.log(error)
+
       changeNameError.value = String(error.response?.data);
     },
   });
