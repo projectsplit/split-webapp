@@ -61,8 +61,6 @@ export const getMe = async () => {
   return response.data;
 };
 
-
-
 export const getGroupDebts = async (
   groupId: string
 ): Promise<DebtsResponse> => {

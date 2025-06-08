@@ -15,6 +15,9 @@ import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuA
 import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
 import Spinner from "../../components/Spinner/Spinner";
+import useDebts from "../../api/services/useDebts";
+import { getCurrencyValues } from "../../helpers/getGroupTotalByCurrency";
+import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalsByCurrencyAnimation";
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
@@ -48,24 +51,47 @@ const Transfers: React.FC = () => {
     });
 
   const transfers = data?.pages.flatMap((p) => p.transfers);
-  const groupIsArchived = group.isArchived
+  const groupIsArchived = group.isArchived;
   useEffect(() => {
     isFetching && !isFetchingNextPage
       ? (showBottomBar.value = false)
       : (showBottomBar.value = true);
   }, [isFetching]);
 
+  const { data: debts, isFetching: totalsAreFetching } = useDebts(group.id);
+
+  const groupTotalReceived: Record<
+    string,
+    Record<string, number>
+  > = debts?.totalReceived ?? {};
+  const groupTotalSent: Record<
+    string,
+    Record<string, number>
+  > = debts?.totalSent ?? {};
+
+  const userTotalSent = getCurrencyValues(groupTotalSent, userMemberId);
+  const userTotalReceived = getCurrencyValues(groupTotalReceived, userMemberId);
+
+  const shouldOpenMultiCurrencyTable =
+    Object.keys(groupTotalReceived).length > 1 ||
+    Object.keys(groupTotalSent).length > 1;
+
+  const usertotalReceived =
+    userMemberId && group.currency
+      ? groupTotalReceived[userMemberId]?.[group.currency] ?? 0
+      : 0;
+  const usertotalSent =
+    userMemberId && group.currency
+      ? groupTotalSent[userMemberId]?.[group.currency] ?? 0
+      : 0;
+
   if (isFetching && !isFetchingNextPage) {
-return <div className="spinner"><Spinner /></div>;
+    return (
+      <div className="spinner">
+        <Spinner />
+      </div>
+    );
   }
-
-  const totalSent = transfers?.reduce((sum, t) => {
-    return sum + (t.senderId === memberId ? t.amount : 0);
-  }, 0);
-  const totalReceived = transfers?.reduce((sum, t) => {
-    return sum + (t.receiverId === memberId ? t.amount : 0);
-  }, 0);
-
 
   return (
     <StyledTransfers>
@@ -76,15 +102,26 @@ return <div className="spinner"><Spinner /></div>;
         </div>
       ) : (
         <>
-          <BarsWithLegends
-            bar1Legend="Total Sent"
-            bar2Legend="Total Received"
-            bar1Total={totalSent || 0}
-            bar2Total={totalReceived || 0}
-            currency="GBP"
-            bar1Color="#0CA0A0"
-            bar2Color="#D79244"
-          />
+          {totalsAreFetching ? (
+            <div className="spinnerTotals">
+              <Spinner />
+            </div>
+          ) : (
+            <BarsWithLegends
+              bar1Legend="You Sent"
+              bar2Legend="You Received"
+              bar1Total={usertotalSent || 0}
+              bar2Total={usertotalReceived || 0}
+              currency={group.currency}
+              bar1Color="#0CA0A0"
+              bar2Color="#D79244"
+              onClick={() => {
+                if (shouldOpenMultiCurrencyTable) {
+                  menu.value = "epensesByCurrency";
+                } else null;
+              }}
+            />
+          )}
           {Object.entries(
             groupBy(transfers, (x) => DateOnly(x.occurred, timeZoneId))
           ).map(([date, transfers]) => (
@@ -146,6 +183,15 @@ return <div className="spinner"><Spinner /></div>;
         menu={menu}
         message={errorMessage.value}
         type="transfer"
+      />
+      <GroupTotalsByCurrencyAnimation
+        menu={menu}
+        bar1Legend="You Sent"
+        bar2Legend="You Received"
+        bar1Color="#0CA0A0"
+        bar2Color="#D79244"
+        groupTotalsByCurrency={userTotalSent}
+        userTotalsByCurrency={userTotalReceived}
       />
     </StyledTransfers>
   );

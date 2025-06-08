@@ -20,7 +20,7 @@ import {
   getGroupTotalByCurrency,
   getCurrencyValues,
 } from "../../helpers/getGroupTotalByCurrency";
-import GroupTotalExpensesByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalExpensesByCurrencyAnimation";
+import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalsByCurrencyAnimation";
 import Spinner from "../../components/Spinner/Spinner";
 
 const Expenses = () => {
@@ -42,7 +42,7 @@ const Expenses = () => {
 
   const allParticipants = mergeMembersAndGuests(members || [], guests || []);
 
-  const { data: debts, isFetching: isFetchingDebts } = useDebts(group.id);
+  const { data: debts, isFetching: totalsAreFetching } = useDebts(group.id);
   const totalSpent: Record<
     string,
     Record<string, number>
@@ -75,8 +75,12 @@ const Expenses = () => {
   }, [errorMessage.value]);
 
   if (isFetching && !isFetchingNextPage) {
-    return <div className="spinner"><Spinner /></div>;
-  }//TODO see if you can bypass this when adding or editing an expense.
+    return (
+      <div className="spinner">
+        <Spinner />
+      </div>
+    );
+  }
 
   const totalExpense = getGroupTotalByCurrency(totalSpent, group.currency);
   const userExpense =
@@ -93,20 +97,26 @@ const Expenses = () => {
         </div>
       ) : (
         <>
-          <BarsWithLegends
-            bar1Legend="Group Total"
-            bar2Legend="Your Share"
-            bar1Total={totalExpense || 0}
-            bar2Total={userExpense || 0}
-            currency={group.currency}
-            bar2Color="#e151ee"
-            bar1Color="#5183ee"
-            onClick={() => {
-              if (shouldOpenMultiCurrencyTable) {
-                menu.value = "epensesByCurrency";
-              } else null;
-            }}
-          />
+          {totalsAreFetching ? (
+            <div className="spinnerTotals">
+              <Spinner />
+            </div>
+          ) : (
+            <BarsWithLegends
+              bar1Legend="Group Total"
+              bar2Legend="Your Share"
+              bar1Total={totalExpense || 0}
+              bar2Total={userExpense || 0}
+              currency={group.currency}
+              bar2Color="#e151ee"
+              bar1Color="#5183ee"
+              onClick={() => {
+                if (shouldOpenMultiCurrencyTable) {
+                  menu.value = "epensesByCurrency";
+                } else null;
+              }}
+            />
+          )}
           {Object.entries(
             groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))
           ).map(([date, expenses]) => (
@@ -170,7 +180,7 @@ const Expenses = () => {
         message={errorMessage.value}
         type="expense"
       />
-      <GroupTotalExpensesByCurrencyAnimation
+      <GroupTotalsByCurrencyAnimation
         menu={menu}
         bar1Legend="Group Total"
         bar2Legend="Your Share"

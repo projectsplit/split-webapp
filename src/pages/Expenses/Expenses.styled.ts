@@ -10,14 +10,13 @@ export const StyledExpenses = styled.div`
   height: 100%;
   gap: 16px;
   flex: 1;
-  
 
   .noData {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex:1;
+    flex: 1;
     .msg {
       opacity: 0.4;
       white-space: nowrap;
@@ -123,15 +122,22 @@ export const StyledExpenses = styled.div`
     }
   }
 
-
-
   .spinner {
     display: flex;
     flex-direction: column;
-    flex: 1; 
+    flex: 1;
     align-items: center;
-    justify-content: center; 
-    margin-top: 2rem; 
-    height: 100%; 
+    justify-content: center;
+    margin-top: 2rem;
+    height: 100%;
+  }
+  .spinnerTotals {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    height: 100%;
   }
 `;

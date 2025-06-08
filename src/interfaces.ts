@@ -659,7 +659,7 @@ export interface RemoveUserFromGroupMenuProps {
   userInfo: UserInfo;
 }
 
-export interface GroupTotalExpensesByCurrencyAnimationProps extends MenuProps {
+export interface GroupTotalsByCurrencyAnimationProps extends MenuProps {
   bar1Color: string;
   bar2Color: string;
   bar1Legend: string;

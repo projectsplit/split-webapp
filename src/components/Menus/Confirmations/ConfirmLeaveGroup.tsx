@@ -21,7 +21,7 @@ export default function ConfirmLeaveGroup({
     openGroupOptionsMenu
   );
 
-  const updateMostRecentGroupId = useMostRecentGroup();
+ useMostRecentGroup();
 
   const handleConfirm = () => {
     if (groupError.value === "") {
