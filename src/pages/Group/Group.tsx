@@ -8,7 +8,11 @@ import {
 import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
-import { ExpenseResponseItem, UserInfo } from "../../types";
+import {
+  EnhancedMembersWithProps,
+  ExpenseResponseItem,
+  UserInfo,
+} from "../../types";
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
@@ -22,6 +26,7 @@ import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimation
 import Spinner from "../../components/Spinner/Spinner";
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
 import GroupError from "./GroupError";
+import SearchTransactionsAnimation from "../../components/Menus/MenuAnimations/SearchTransactionsAnimation";
 
 type errorObject = {
   message: string;
@@ -30,7 +35,6 @@ type errorObject = {
   config: InternalAxiosRequestConfig<any> | undefined;
 };
 export default function Group() {
-
   const menu = useSignal<string | null>(null);
   const showBottomBar = useSignal<boolean>(false);
   const groupError = useSignal<errorObject>();
@@ -56,12 +60,7 @@ export default function Group() {
 
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
-  const {
-    data: group,
-    isFetching,
-    isError,
-    error,
-  } = useGroup(groupid);
+  const { data: group, isFetching, isError, error } = useGroup(groupid);
 
   const groupName = group?.name;
 
@@ -115,7 +114,7 @@ export default function Group() {
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}
         </div>
       ) : isError ? (
-        <GroupError groupError={groupError}/>
+        <GroupError groupError={groupError} />
       ) : (
         <div className="group">
           <CategorySelector
@@ -159,6 +158,7 @@ export default function Group() {
             />
           )}
           <GroupQuickActionsAnimation menu={menu} />
+          {group && <SearchTransactionsAnimation menu={menu} group={group} userInfo={userInfo}/>}
           <div className="bottomMenu">
             {" "}
             <BottomMainMenu
@@ -169,6 +169,7 @@ export default function Group() {
                 } else {
                 }
               }}
+              menu={menu}
             />
           </div>
         </div>

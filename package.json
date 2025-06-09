@@ -25,6 +25,7 @@
     "currencyjs": "^1.1.1",
     "dayjs": "^1.11.13",
     "jwt-decode": "^4.0.0",
+    "lexical-beautiful-mentions": "^0.1.47",
     "luxon": "^3.5.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

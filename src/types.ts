@@ -1,4 +1,6 @@
 import currency from "currency.js";
+import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
+import { DateTime } from "luxon";
 
 export type RefreshTokenResponse = {
   accessToken: string;
@@ -463,3 +465,68 @@ export type ExpenseFormState = {
     description: string;
   };
 }
+
+export type FetchedMember = {
+  memberId: string;
+  value: string;
+  isUser:boolean;
+};
+
+export type FetchedMembers = FetchedMember[];
+
+export type EnhancedMembersWithProps = {
+  value: string;
+  memberId: string;
+  isUser:boolean;
+  prop: string;
+}[];
+
+export type Members = {
+  payers: FetchedMembers;
+  participants: FetchedMembers;
+  senders: FetchedMembers;
+  receivers: FetchedMembers;
+};
+export type FilteredMembers = Members;
+
+export type FilteredResultItem = {
+  [key: string]: BeautifulMentionsItemData; // Dynamic properties
+  value: string; // `value` is explicitly required
+  prop: string; // `prop` should also be explicitly defined
+};
+
+export type GroupedItem = {
+  [key: string]: FilteredResultItem[]; // Groups items under keys by `prop`
+};
+
+export type CreateFiltersRequest = {
+  groupId: string;
+  participantsIds: string[];
+  payersIds: string[];
+  receiversIds: string[];
+  sendersIds: string[];
+  description: string;
+  before: DateTime[];
+  during: DateTime[];
+  after: DateTime[];
+};
+
+export type SerializedLexicalNode = {
+  type: string;
+  [key: string]: any;
+};
+
+export type SerializedElementNode = SerializedLexicalNode & {
+  children: SerializedLexicalNode[];
+};
+
+export type FilterResponse = {
+  payers: FetchedMembers;
+  participants: FetchedMembers;
+  senders: FetchedMembers;
+  receivers: FetchedMembers;
+  before: DateTime[];
+  during: DateTime[];
+  after: DateTime[];
+  description: string;
+};

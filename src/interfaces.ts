@@ -3,6 +3,8 @@ import {
   Coordinates,
   Debt,
   ExpenseResponseItem,
+  FetchedMembers,
+  FilteredMembers,
   FormExpense,
   Frequency,
   GeoLocation,
@@ -18,6 +20,12 @@ import {
   UserInfo,
 } from "./types";
 import { Signal } from "@preact/signals-react";
+import { DateTime } from "luxon";
+import { EditorState } from "lexical";
+import {
+  BeautifulMentionsItemData,
+  BeautifulMentionsMenuProps,
+} from "lexical-beautiful-mentions";
 
 export interface ExpenseProps {
   timeZoneId: string;
@@ -113,13 +121,13 @@ export interface DateTimeProps {
 export interface MemberPickerProps {
   totalAmount: number;
   memberAmounts: PickerMember[];
-  setMemberAmounts: (newParticipants: PickerMember[]) => void
-  description: "Participants" | "Payers"
+  setMemberAmounts: (newParticipants: PickerMember[]) => void;
+  description: "Participants" | "Payers";
   error?: string;
   group: Group;
   selectedCurrency: string;
-  category:Signal<string>;
-  userMemberId: string | undefined
+  category: Signal<string>;
+  userMemberId: string | undefined;
 }
 
 export interface DayPickerProps {
@@ -127,7 +135,6 @@ export interface DayPickerProps {
   setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
   timeZoneId: string;
 }
-
 
 export interface ScrollPickerProps {
   items: string[];
@@ -200,6 +207,7 @@ export interface BottomMainMenuProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   group?: Group;
   isLoading?: boolean;
+  menu?: Signal<string | null>;
 }
 export interface OverspentMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -276,7 +284,7 @@ export interface CurrencyOptionsAnimationProps {
 export interface LocationPickerProps {
   isMapOpen: Signal<boolean>;
   location: Signal<GeoLocation | undefined>;
-  timeZoneCoordinates: Coordinates
+  timeZoneCoordinates: Coordinates;
 }
 
 export interface PlacePickerProps {
@@ -365,7 +373,7 @@ export interface NewExpenseAnimationProps {
   timeZoneId: string;
   menu: Signal<string | null>;
   selectedExpense: Signal<ExpenseResponseItem | null>;
-  timeZoneCoordinates: Coordinates
+  timeZoneCoordinates: Coordinates;
 }
 
 export interface NewTransferAnimationProps {
@@ -380,9 +388,9 @@ export interface ExpenseFormProps {
   timeZoneId: string;
   menu: Signal<string | null>;
   timeZoneCoordinates: Coordinates;
-  header:string;
+  header: string;
   selectedExpense: Signal<ExpenseResponseItem | null>;
-  isCreateExpense:boolean;
+  isCreateExpense: boolean;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
@@ -529,12 +537,10 @@ export interface PillProps {
 }
 export interface AddNewUserAnimationProps extends MenuProps {
   groupName: string | undefined;
- 
 }
 
 export interface SearchUsersToInviteProps extends MenuProps {
   groupName: string | undefined;
-
 }
 export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
 
@@ -665,50 +671,188 @@ export interface GroupTotalsByCurrencyAnimationProps extends MenuProps {
   bar2Color: string;
   bar1Legend: string;
   bar2Legend: string;
-  groupTotalsByCurrency: Record<string, number>
-  userTotalsByCurrency: Record<string, number>
+  groupTotalsByCurrency: Record<string, number>;
+  userTotalsByCurrency: Record<string, number>;
 }
 export interface GroupTotalExpensesByCurrencyProps extends MenuProps {
   bar1Color: string;
   bar2Color: string;
   bar1Legend: string;
   bar2Legend: string;
-  groupTotalsByCurrency: Record<string, number>
-  userTotalsByCurrency: Record<string, number>
+  groupTotalsByCurrency: Record<string, number>;
+  userTotalsByCurrency: Record<string, number>;
 }
 
-export interface BarsAndAmountsProps{
+export interface BarsAndAmountsProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  currency:string;
-  bar1Total:number;
-  bar2Total:number;
-  bar1Color:string;
-  bar2Color:string;
+  currency: string;
+  bar1Total: number;
+  bar2Total: number;
+  bar1Color: string;
+  bar2Color: string;
 }
 
 export interface EditUsernameProps {
   existingUsername: string;
-  editUsernameMenu:Signal<string | null>;
+  editUsernameMenu: Signal<string | null>;
 }
 
 export interface EditUsernameAnimationProps {
   existingUsername: string;
-  editUsernameMenu:Signal<string | null>;
+  editUsernameMenu: Signal<string | null>;
 }
 
-export interface GroupErrorProps{
-  groupError: Signal<{
-    message: string;
-    code?: string;
-    status?: number;
-    config?: any;
-  } | undefined>;
+export interface GroupErrorProps {
+  groupError: Signal<
+    | {
+        message: string;
+        code?: string;
+        status?: number;
+        config?: any;
+      }
+    | undefined
+  >;
 }
-
 
 export interface NameAndAmountsProps {
   category: Signal<String>;
   m: PickerMember;
-onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
-currency:string;
+  onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
+  currency: string;
+}
+
+export interface CurrentSearchFieldProps {
+  currentSearch: string;
+  filterState: Signal<CreateFiltersRequest>;
+  removedFilter: Signal<boolean>;
+  submitButtonIsActive: Signal<boolean>;
+}
+
+export type CreateFiltersRequest = {
+  groupId: string;
+  participantsIds: string[];
+  payersIds: string[];
+  receiversIds: string[];
+  sendersIds: string[];
+  description: string;
+  before: DateTime[];
+  during: DateTime[];
+  after: DateTime[];
+};
+
+export interface EditorContentHandle {
+  clearEditor: () => void;
+}
+export type EnhancedMembersWithProps = {
+  value: string;
+  memberId: string;
+  isUser: boolean;
+  prop: string;
+}[];
+
+export interface LexicalEditorProps {
+  enhancedMembersWithProps: EnhancedMembersWithProps;
+  submitButtonIsActive: Signal<boolean>;
+  isFetching: boolean;
+
+  filterState: Signal<CreateFiltersRequest>;
+  setEditorState: React.Dispatch<React.SetStateAction<EditorState | null>>;
+  contentEditableHeight: number;
+  members: FetchedMembers | undefined;
+  cancelled: Signal<boolean>;
+  filteredMembers: Signal<FilteredMembers>;
+}
+
+export interface FilterCalendarProps {
+  calendarIsOpen: Signal<boolean>;
+  showOptions: Signal<boolean>;
+  datePeriodClicked: Signal<string>;
+}
+export interface SearchMenuProps {
+  contentEditableHeight: number;
+}
+export interface CombinedMenuProps
+  extends SearchMenuProps,
+    BeautifulMentionsMenuProps {}
+
+export interface StyledMenuItemProps {
+  selected?: boolean;
+}
+export interface SearchCategoryButtonProps {
+  category: string;
+  type: string;
+  submitButtonIsActive: Signal<boolean>;
+  // onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+}
+
+export interface SearchDateButtonProps extends SearchCategoryButtonProps {
+  dates: any;
+  showOptions: Signal<boolean>;
+  calendarIsOpen: Signal<boolean>;
+  datePeriodClicked: Signal<string>;
+  filterState: Signal<CreateFiltersRequest>;
+  cancelled: Signal<boolean>;
+  removedFilter: Signal<boolean>;
+}
+
+export interface SearchLabelButtonProps extends SearchCategoryButtonProps {
+  labels: any; //TODO build proper type
+}
+
+export interface MembersPillsDisplayProps {
+  category: string;
+  filteredMembers: Signal<FilteredMembers>;
+  showOptions: Signal<boolean>;
+  submitButtonIsActive: Signal<boolean>;
+  filterState: Signal<CreateFiltersRequest>;
+  cancelled: Signal<boolean>;
+  removedFilter: Signal<boolean>;
+}
+export interface SearchMemberButtonProps extends SearchCategoryButtonProps {
+  showOptions: Signal<boolean>;
+  filteredMembers: Signal<FilteredMembers>;
+  submitButtonIsActive: Signal<boolean>;
+  filterState: Signal<CreateFiltersRequest>;
+  cancelled: Signal<boolean>;
+  removedFilter: Signal<boolean>;
+}
+
+export interface OptionsToolbarProps {
+  editorStateString: string | undefined;
+  filteredResults: {
+    [key: string]: BeautifulMentionsItemData;
+    value: string;
+  }[];
+  setFilteredResults: React.Dispatch<
+    React.SetStateAction<
+      {
+        [key: string]: BeautifulMentionsItemData;
+        value: string;
+      }[]
+    >
+  >;
+  submitButtonIsActive: Signal<boolean>;
+}
+
+export interface MentionsToolbarProps {
+  showOptions: Signal<boolean>;
+  ref?: React.Ref<HTMLDivElement>;
+  // filteredMembers:Members;
+  submitButtonIsActive: Signal<boolean>;
+  filterState: Signal<CreateFiltersRequest>;
+  cancelled: Signal<boolean>;
+  removedFilter: Signal<boolean>;
+  filteredMembers: Signal<FilteredMembers>;
+  calendarIsOpen: Signal<boolean>;
+  datePeriodClicked: Signal<string>;
+}
+export interface SearchTransactionsProps {
+  menu: Signal<string | null>;
+  group: Group;
+  userInfo: UserInfo;
+}
+export interface SearchTransactionAnimationProps {
+  menu: Signal<string | null>;
+  group: Group;
+  userInfo: UserInfo;
 }

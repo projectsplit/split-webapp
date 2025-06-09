@@ -39,7 +39,7 @@ const RootComponent: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <App />
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
     </ThemeProvider>
   );
 };
