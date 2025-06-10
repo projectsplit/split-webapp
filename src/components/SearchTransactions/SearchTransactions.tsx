@@ -18,10 +18,7 @@ import { initializeFilterState } from "./helpers/initializeFilterState";
 import { initialConfig } from "./utils/lexicalThemeConfiguration";
 import Spinner from "../Spinner/Spinner";
 import { EditorContentHandle, SearchTransactionsProps } from "../../interfaces";
-import {
-  CreateFiltersRequest,
-  FilteredMembers,
-} from "../../types";
+import { CreateFiltersRequest, FilteredMembers } from "../../types";
 import MyButton from "../MyButton/MyButton";
 import { useSubmitFilters } from "../../api/services/useSubmitFilters";
 import { useGetGroupFilters } from "../../api/services/useGetGroupFilters";
@@ -30,7 +27,7 @@ import { useMembers } from "./hooks/useMembers";
 export default function SearchTransactions({
   menu,
   group,
-  userInfo
+  userInfo,
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
@@ -45,7 +42,10 @@ export default function SearchTransactions({
     receivers: [],
   });
 
- const { fetchedMembers, enhancedMembersWithProps } = useMembers(group, userInfo)
+  const { fetchedMembers, enhancedMembersWithProps } = useMembers(
+    group,
+    userInfo
+  );
 
   const editorContentRef = useRef<EditorContentHandle | null>(null);
 
@@ -129,14 +129,15 @@ export default function SearchTransactions({
     <StyledSearchTransactions>
       <>
         <div className="header">
+           <div className="gap"></div>
+          <div className="searchingIn">
+            Searching In:&nbsp;
+            <span className="groupName">{group.name}</span>
+          </div>
           <div className="closeSign" onClick={() => (menu.value = null)}>
             <IoClose />
           </div>
-          <div className="searchingIn">
-            Searching In:&nbsp;
-            <span className="groupName">Tour</span>
-          </div>
-          <div className="gap"></div>
+         
         </div>
         <div className="searchBarAndCategories">
           <div className="lexicalSearch">
@@ -164,6 +165,7 @@ export default function SearchTransactions({
         </div>
         <div className="submitButtons">
           <MyButton
+            fontSize="16"
             onClick={() =>
               handleSubmitButton(editorState, filterState, submitFilters, menu)
             }
@@ -173,7 +175,10 @@ export default function SearchTransactions({
             Apply
           </MyButton>
           {submitButtonIsActive.value ? (
-            <MyButton onClick={() => handleCancelClick(editorContentRef)}>
+            <MyButton
+              onClick={() => handleCancelClick(editorContentRef)}
+              fontSize="16"
+            >
               Cancel
             </MyButton>
           ) : null}

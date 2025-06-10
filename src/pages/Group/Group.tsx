@@ -9,7 +9,6 @@ import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
 import {
-  EnhancedMembersWithProps,
   ExpenseResponseItem,
   UserInfo,
 } from "../../types";
@@ -100,6 +99,7 @@ export default function Group() {
     }
   }, [isError, groupError.value, navigate]);
 
+  
   return (
     <StyledGroup>
       {isFetching ? (
@@ -169,7 +169,6 @@ export default function Group() {
                 } else {
                 }
               }}
-              menu={menu}
             />
           </div>
         </div>

@@ -207,7 +207,6 @@ export interface BottomMainMenuProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   group?: Group;
   isLoading?: boolean;
-  menu?: Signal<string | null>;
 }
 export interface OverspentMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -534,6 +533,7 @@ export interface PillProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onClose?: (event: React.MouseEvent<HTMLDivElement>) => void;
   fontSize?: string;
+   $border: boolean
 }
 export interface AddNewUserAnimationProps extends MenuProps {
   groupName: string | undefined;

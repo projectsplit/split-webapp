@@ -116,6 +116,7 @@ export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
                 closeButton={true}
                 onClose={() => removeFilter(member.memberId)}
                 $textColor="#000000c8"
+                $border={false}
               />
             </div>
           ))

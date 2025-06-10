@@ -27,6 +27,7 @@ export default function CurrentSearchField({
           closeButton={true}
           onClose={() => removeFilter()}
           $textColor="#000000c8"
+          $border={false}
         />
       </div>
     </StyledCurrentSearchField>

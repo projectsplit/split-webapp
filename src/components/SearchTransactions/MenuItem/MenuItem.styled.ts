@@ -3,7 +3,7 @@ import { StyledMenuItemProps } from "../../../interfaces";
 
 
 export const StyledMenuItem = styled.li<StyledMenuItemProps>`
-   font-weight: 400;
+  font-weight: 400;
   font-size: 18px;
   background-color: #131519c9;
   -webkit-tap-highlight-color: transparent;

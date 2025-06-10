@@ -5,8 +5,8 @@ export const StyledSearchTransactions = styled.div`
   bottom: 0;
   position: fixed;
   background-color: ${({ theme }) => theme.layer2};
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   z-index: 3;
   padding: 0;
   display: flex;
@@ -67,13 +67,13 @@ export const StyledSearchTransactions = styled.div`
         color: white;
         background-color: ${({ theme }) => theme.inputGrey};
         border-style: none;
-        font-size: 18px;
+        font-size: 16px;
         outline: none;
         min-height: 20px;
       }
       .contentEditablePlaceholder {
         position: absolute;
-        top: 11px;
+        top: 8px;
         left: 12px;
         padding: 0 1px;
         color: ${({ theme }) => theme.grey};
@@ -81,9 +81,11 @@ export const StyledSearchTransactions = styled.div`
       }
       .editor-bold {
       }
-     
+
       .trigger {
-        background-color:${({ theme }) => theme.grey};
+        border-radius: 5px;
+        background-color: ${({ theme }) => theme.grey};
+        padding: 2px ;
       }
       .value {
       }
@@ -92,6 +94,7 @@ export const StyledSearchTransactions = styled.div`
         background-color: ${({ theme }) =>
           theme.grey}; // configured by the beautifulMentionsTheme
         border-radius: 5px;
+        padding: 2px ;
       }
 
       .containerFocused {

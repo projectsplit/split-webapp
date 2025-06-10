@@ -3,11 +3,23 @@ interface StyledPillOptions {
   color: string;
   $textColor: string;
   fontSize?: string;
+  $border: boolean;
 }
 export const StyledPill = styled.div<StyledPillOptions>`
-  font-weight: 600;
-  font-size: ${({ fontSize }) => fontSize || '18px'};
+  font-weight: 400;
+  font-size: ${({ fontSize }) => fontSize || "18px"};
   background-color: ${(props) => props.color};
+
+  ${({ $border }) =>
+    $border !== false
+      ? `
+          border-style: solid;
+          border-width: 1px;
+          border-color: white;
+
+        `
+      : ""}
+
   -webkit-tap-highlight-color: transparent;
 
   display: flex;
@@ -16,7 +28,7 @@ export const StyledPill = styled.div<StyledPillOptions>`
 
   border-style: solid;
   border-width: 1px;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 1px 8px;
   gap: 3px;
 
@@ -26,8 +38,8 @@ export const StyledPill = styled.div<StyledPillOptions>`
 
   .title {
     color: ${(props) => props.$textColor};
-    white-space: nowrap; 
-    overflow: hidden; 
+    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100px;
   }

@@ -103,6 +103,7 @@ export default function SearchDateButton({
                 closeButton={true}
                 onClose={() => removeFilter(date)}
                 $textColor="#000000c8"
+                $border={false}
               />
             </div>
           ))
