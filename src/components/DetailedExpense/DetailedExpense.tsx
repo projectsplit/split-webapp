@@ -112,6 +112,7 @@ export default function DetailedExpense({
                   color={labelColors[l.color]}
                   closeButton={false}
                   fontSize="18px"
+                  $border={false}
                 />
               ))}
             </div>

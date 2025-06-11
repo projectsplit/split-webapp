@@ -1,21 +1,33 @@
-import { $getRoot, LexicalEditor } from "lexical";
+import {
+  $getSelection,
+  $isRangeSelection,
+  $isTextNode,
+  LexicalEditor,
+} from "lexical";
 
 export const removeWordFromEditor = (
   editor: LexicalEditor,
   wordToRemove: string
-): void => {
-  const escapedWord = wordToRemove.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-  const regex = new RegExp(`\\s*${escapedWord}\\s*`, "g");
-
+) => {
   editor.update(() => {
-    const root = $getRoot();
-    const allTextNodes = root.getAllTextNodes();
-    for (const node of allTextNodes) {
-      const textContent = node.getTextContent();
-      const newTextContent = textContent.replace(regex, " ");
-      if (newTextContent !== textContent) {
-        node.setTextContent(newTextContent);
+    const selection = $getSelection();
+
+    if ($isRangeSelection(selection)) {
+      const anchorNode = selection.anchor.getNode();
+
+      if ($isTextNode(anchorNode)) {
+        const textContent = anchorNode.getTextContent();
+
+        const triggerIndex = textContent.indexOf(wordToRemove);
+        if (triggerIndex !== -1) {
+          anchorNode.spliceText(triggerIndex, wordToRemove.length, "");
+          selection.setTextNodeRange(
+            anchorNode,
+            triggerIndex,
+            anchorNode,
+            triggerIndex
+          );
+        }
       }
     }
   });

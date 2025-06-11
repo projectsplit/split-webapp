@@ -39,6 +39,8 @@ export const StyledGroup = styled.div`
       }
     }
   }
+
+  
   .spinner {
     display: flex;
     flex-direction: column;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { StyledMenuItemProps } from "../../../interfaces";
 
 
-export const StyledMenuItem = styled.li<StyledMenuItemProps>`
+export const StyledMenuItem = styled.li`
   font-weight: 400;
   font-size: 18px;
   background-color: #131519c9;

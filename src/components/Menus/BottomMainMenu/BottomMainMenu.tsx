@@ -9,7 +9,7 @@ import { RiProhibited2Line } from "react-icons/ri";
 export default function BottomMainMenu({
   onClick,
   group,
-
+  menu
 }: BottomMainMenuProps) {
   const navigate = useNavigate();
   return (
@@ -33,11 +33,11 @@ export default function BottomMainMenu({
 
         <div className="search">
           <IoMdSearch
-            // onClick={() => {
-            //   if (menu) {
-            //     menu.value = "search";
-            //   }
-            // }}
+            onClick={() => {
+              if (menu) {
+                menu.value = "search";
+              }
+            }}
           />
         </div>
       </div>

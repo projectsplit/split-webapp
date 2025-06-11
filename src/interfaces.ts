@@ -207,6 +207,7 @@ export interface BottomMainMenuProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   group?: Group;
   isLoading?: boolean;
+  menu?: Signal<string | null>;
 }
 export interface OverspentMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -769,7 +770,7 @@ export interface FilterCalendarProps {
   datePeriodClicked: Signal<string>;
 }
 export interface SearchMenuProps {
-  contentEditableHeight: number;
+  $contentEditableHeight: number;
 }
 export interface CombinedMenuProps
   extends SearchMenuProps,

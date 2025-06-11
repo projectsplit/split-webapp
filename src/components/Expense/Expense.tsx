@@ -31,6 +31,7 @@ const Expense = ({
                   title={l.text}
                   color={labelColors[l.color]}
                   closeButton={false}
+                  $border={false}
                   fontSize="14px" />
               ))}
             </div>

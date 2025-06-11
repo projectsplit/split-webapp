@@ -13,7 +13,7 @@ export const StyledSearchTransactions = styled.div`
   flex-direction: column;
 
   p {
-    margin: 0;
+    margin: 3px;
   }
 
   .header {
@@ -70,11 +70,12 @@ export const StyledSearchTransactions = styled.div`
         font-size: 16px;
         outline: none;
         min-height: 20px;
+        line-height: 1.6em;
       }
       .contentEditablePlaceholder {
         position: absolute;
-        top: 8px;
-        left: 12px;
+        top: 14px;
+        left: 10px;
         padding: 0 1px;
         color: ${({ theme }) => theme.grey};
         pointer-events: none;
@@ -85,7 +86,7 @@ export const StyledSearchTransactions = styled.div`
       .trigger {
         border-radius: 5px;
         background-color: ${({ theme }) => theme.grey};
-        padding: 2px ;
+        padding: 2px;
       }
       .value {
       }
@@ -94,12 +95,13 @@ export const StyledSearchTransactions = styled.div`
         background-color: ${({ theme }) =>
           theme.grey}; // configured by the beautifulMentionsTheme
         border-radius: 5px;
-        padding: 2px ;
+        padding: 2px;
       }
 
       .containerFocused {
         background-color: ${({ theme }) => theme.grey};
         border-radius: 5px;
+        padding: 2px;
       }
     }
   }

@@ -18,7 +18,7 @@ import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpens
 import GroupQuickActionsAnimation from "../../components/Menus/MenuAnimations/MenuWithOptionsToAddAnimation";
 import AddNewUserAnimation from "../../components/Menus/MenuAnimations/AddNewUserAnimation";
 import useGroup from "../../api/services/useGroup";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTransferAnimation";
 import GroupOptions from "../Groups/GroupOptions/GroupOptions";
 import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
@@ -163,6 +163,7 @@ export default function Group() {
             {" "}
             <BottomMainMenu
               group={group}
+              menu={menu}
               onClick={() => {
                 if (group && !group.isArchived) {
                   menu.value = "menuWithOptions";

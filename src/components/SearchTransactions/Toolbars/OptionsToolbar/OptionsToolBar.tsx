@@ -34,13 +34,13 @@ const OptionsToolBar = ({
                 <div className="types">
                   {results.map((result, index) => (
                     <Pill
+                      key={index}
                       $textColor="#FFFFFF"
                       color="#131519c9"
                       title={result.value}
                       closeButton={false}
                       $border={true}
                       onClick={() => {
-                        
                         editor.update(() => {
                           const nodeMap = editor._editorState._nodeMap;
                           let lastTextNodeKey = null;
