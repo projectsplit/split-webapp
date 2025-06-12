@@ -158,7 +158,7 @@ export default function Group() {
             />
           )}
           <GroupQuickActionsAnimation menu={menu} />
-          {group && <SearchTransactionsAnimation menu={menu} group={group} userInfo={userInfo}/>}
+          {group && <SearchTransactionsAnimation menu={menu} group={group} userInfo={userInfo} timeZoneId={timeZoneId}/>}
           <div className="bottomMenu">
             {" "}
             <BottomMainMenu

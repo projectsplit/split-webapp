@@ -28,6 +28,7 @@ export default function SearchTransactions({
   menu,
   group,
   userInfo,
+  timeZoneId
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
@@ -158,6 +159,7 @@ export default function SearchTransactions({
                   members={fetchedMembers}
                   cancelled={cancelled}
                   filteredMembers={filteredMembers}
+                  timeZoneId={timeZoneId}
                 />
               )}
             </LexicalComposer>

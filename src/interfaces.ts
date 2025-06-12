@@ -106,9 +106,14 @@ export interface TransferProps {
 export interface DateTimePickerProps {
   selectedDateTime: string;
   setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
-  realtimeUpdate: boolean;
-  setRealtimeUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  realtimeUpdate?: boolean;
+  setRealtimeUpdate?: React.Dispatch<React.SetStateAction<boolean>>;
+  showTimeControls: boolean;
   timeZoneId: string;
+  datePeriodClicked?: Signal<string>;
+  calendarIsOpen?: Signal<boolean>;
+  showOptions?: Signal<boolean>;
+  withLexicalContext?: boolean;
 }
 
 export interface DateTimeProps {
@@ -116,6 +121,7 @@ export interface DateTimeProps {
   setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
   timeZoneId: string;
   isEdit: boolean;
+  withLexicalContext?: boolean;
 }
 
 export interface MemberPickerProps {
@@ -134,6 +140,10 @@ export interface DayPickerProps {
   selectedDateTime: string;
   setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
   timeZoneId: string;
+  datePeriodClicked?: Signal<string>;
+  calendarIsOpen?: Signal<boolean>;
+  showOptions?: Signal<boolean>;
+  withLexicalContext?: boolean;
 }
 
 export interface ScrollPickerProps {
@@ -534,7 +544,7 @@ export interface PillProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onClose?: (event: React.MouseEvent<HTMLDivElement>) => void;
   fontSize?: string;
-   $border: boolean
+  $border: boolean;
 }
 export interface AddNewUserAnimationProps extends MenuProps {
   groupName: string | undefined;
@@ -762,12 +772,14 @@ export interface LexicalEditorProps {
   members: FetchedMembers | undefined;
   cancelled: Signal<boolean>;
   filteredMembers: Signal<FilteredMembers>;
+  timeZoneId: string;
 }
 
 export interface FilterCalendarProps {
   calendarIsOpen: Signal<boolean>;
   showOptions: Signal<boolean>;
   datePeriodClicked: Signal<string>;
+  timeZoneId: string;
 }
 export interface SearchMenuProps {
   $contentEditableHeight: number;
@@ -851,9 +863,11 @@ export interface SearchTransactionsProps {
   menu: Signal<string | null>;
   group: Group;
   userInfo: UserInfo;
+  timeZoneId: string;
 }
 export interface SearchTransactionAnimationProps {
   menu: Signal<string | null>;
   group: Group;
   userInfo: UserInfo;
+  timeZoneId: string;
 }

@@ -5,7 +5,7 @@ import { DateTime as LuxonDateTime } from 'luxon'
 import { toLuxon, toUtcString } from '../utils'
 import { DateTimeProps } from '../interfaces'
 
-export const DateTime = ({ selectedDateTime, setSelectedDateTime, timeZoneId, isEdit }: DateTimeProps) => {
+export const DateTime = ({ selectedDateTime, setSelectedDateTime, timeZoneId, isEdit,withLexicalContext }: DateTimeProps) => {
 
   const [showPicker, setShowPicker] = useState<boolean>(false)
   const [realtimeUpdate, setRealtimeUpdate] = useState<boolean>(!isEdit)
@@ -67,6 +67,8 @@ export const DateTime = ({ selectedDateTime, setSelectedDateTime, timeZoneId, is
           realtimeUpdate={realtimeUpdate}
           setRealtimeUpdate={setRealtimeUpdate}
           timeZoneId={timeZoneId}
+          showTimeControls={true}
+          withLexicalContext={withLexicalContext}
         />}
     </StyledDateTime>
   )

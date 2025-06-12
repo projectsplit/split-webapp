@@ -39,7 +39,7 @@ export const EditorContent = forwardRef<
     members,
     cancelled,
     filteredMembers,
-
+    timeZoneId
   } = props;
 
   const [editor] = useLexicalComposerContext();
@@ -125,6 +125,7 @@ export const EditorContent = forwardRef<
           calendarIsOpen={calendarIsOpen}
           showOptions={showOptions}
           datePeriodClicked={datePeriodClicked}
+          timeZoneId={timeZoneId}
         />
       ) : filteredResults.length === 0 || editorStateString === "" ? (
         <MentionsToolbar
