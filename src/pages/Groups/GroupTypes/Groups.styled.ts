@@ -54,4 +54,5 @@ export const StyledGroups = styled.div`
     }
   
   }
+
 `;

@@ -6,8 +6,6 @@ import {
 import { IoClose } from "react-icons/io5";
 import { EditorState } from "lexical";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { BeautifulMentionsItem } from "lexical-beautiful-mentions";
-import { updateMembersMentions } from "./helpers/updateMembersMentions";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
@@ -18,17 +16,22 @@ import { initializeFilterState } from "./helpers/initializeFilterState";
 import { initialConfig } from "./utils/lexicalThemeConfiguration";
 import Spinner from "../Spinner/Spinner";
 import { EditorContentHandle, SearchTransactionsProps } from "../../interfaces";
-import { CreateFiltersRequest, FilteredMembers } from "../../types";
+import {
+  CreateFiltersRequest,
+  FetchedLabel,
+  FilteredMembers,
+} from "../../types";
 import MyButton from "../MyButton/MyButton";
 import { useSubmitFilters } from "../../api/services/useSubmitFilters";
 import { useGetGroupFilters } from "../../api/services/useGetGroupFilters";
 import { useMembers } from "./hooks/useMembers";
 
+
 export default function SearchTransactions({
   menu,
   group,
   userInfo,
-  timeZoneId
+  timeZoneId,
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
@@ -36,28 +39,7 @@ export default function SearchTransactions({
   const contentEditableWrapRef = useRef<HTMLDivElement>(null);
   const submitButtonIsActive = useSignal<boolean>(false);
   const cancelled = useSignal<boolean>(false);
-  const filteredMembers = useSignal<FilteredMembers>({
-    payers: [],
-    participants: [],
-    senders: [],
-    receivers: [],
-  });
-
-  const { fetchedMembers, enhancedMembersWithProps } = useMembers(
-    group,
-    userInfo
-  );
-
-  const editorContentRef = useRef<EditorContentHandle | null>(null);
-
-  const params = useParams();
-
-  const {
-    isFetching,
-    data: groupFiltersData,
-    error,
-  } = useGetGroupFilters(params.groupid);
-
+  const queryClient = useQueryClient();
   const filterState = useSignal<CreateFiltersRequest>({
     groupId: "",
     participantsIds: [],
@@ -68,9 +50,35 @@ export default function SearchTransactions({
     before: [],
     during: [],
     after: [],
+    labels: [],
   });
 
-  const queryClient = useQueryClient();
+  const filteredMembers = useSignal<FilteredMembers>({
+    payers: [],
+    participants: [],
+    senders: [],
+    receivers: [],
+  });
+  const filteredLabels = useSignal<FetchedLabel[]>([]);
+
+  const editorContentRef = useRef<EditorContentHandle | null>(null);
+  const params = useParams();
+
+  const { fetchedMembers, enhancedMembersWithProps } = useMembers(
+    group,
+    userInfo
+  );
+  const fetchedLabels: FetchedLabel[] = group.labels.map((l) => ({
+    id: l.id,
+    value: l.text,
+    color:l.color
+  }));
+
+  const {
+    isFetching,
+    data: groupFiltersData,
+    error,
+  } = useGetGroupFilters(params.groupid);
 
   useEffect(() => {
     if (groupFiltersData) {
@@ -78,7 +86,8 @@ export default function SearchTransactions({
         groupFiltersData,
         params,
         filterState,
-        filteredMembers
+        filteredMembers,
+        filteredLabels
       );
     }
   }, [groupFiltersData, params.groupid, cancelled.value]);
@@ -96,7 +105,7 @@ export default function SearchTransactions({
       }
     };
 
-    handleResize();
+    //handleResize();
 
     const resizeObserver = new ResizeObserver(handleResize);
     if (contentEditableWrapRef.current) {
@@ -113,24 +122,11 @@ export default function SearchTransactions({
   const { mutate: submitFilters, isPending } =
     useSubmitFilters(submitFiltersError);
 
-  const mentionItems: Record<string, BeautifulMentionsItem[]> = {};
-
-  mentionItems["payer:"] = [];
-  mentionItems["participant:"] = [];
-  mentionItems["sender:"] = [];
-  mentionItems["receiver:"] = [];
-  mentionItems["before:"] = [];
-  mentionItems["during:"] = [];
-  mentionItems["after:"] = [];
-  mentionItems["category:"] = [];
-
-  updateMembersMentions(fetchedMembers, mentionItems);
-
   return (
     <StyledSearchTransactions>
       <>
         <div className="header">
-           <div className="gap"></div>
+          <div className="gap"></div>
           <div className="searchingIn">
             Searching In:&nbsp;
             <span className="groupName">{group.name}</span>
@@ -138,7 +134,6 @@ export default function SearchTransactions({
           <div className="closeSign" onClick={() => (menu.value = null)}>
             <IoClose />
           </div>
-         
         </div>
         <div className="searchBarAndCategories">
           <div className="lexicalSearch">
@@ -157,9 +152,12 @@ export default function SearchTransactions({
                   filterState={filterState}
                   setEditorState={setEditorState}
                   members={fetchedMembers}
+                  labels = {fetchedLabels}
                   cancelled={cancelled}
                   filteredMembers={filteredMembers}
                   timeZoneId={timeZoneId}
+                  filteredLabels={filteredLabels}
+                  
                 />
               )}
             </LexicalComposer>
@@ -189,3 +187,4 @@ export default function SearchTransactions({
     </StyledSearchTransactions>
   );
 }
+//TODO: paint label mentions, fix scroll of mentions over cancel, check viewport-fit=cover fking things up (try to see if you can apply a universal bottom css)

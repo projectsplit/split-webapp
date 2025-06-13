@@ -26,10 +26,10 @@ export const StyledGroup = styled.div`
 
       .msg {
         opacity: 0.4;
-        white-space: normal; 
-        text-align: center; 
-        max-width: 90%; 
-        word-break: break-word; 
+        white-space: normal;
+        text-align: center;
+        max-width: 90%;
+        word-break: break-word;
       }
       .icon {
         display: flex;
@@ -39,8 +39,10 @@ export const StyledGroup = styled.div`
       }
     }
   }
+  .bottomMenu {
+    bottom: env(safe-area-inset-bottom, 0); /* Respect safe area */
+  }
 
-  
   .spinner {
     display: flex;
     flex-direction: column;

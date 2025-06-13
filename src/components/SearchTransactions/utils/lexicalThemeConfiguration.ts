@@ -45,6 +45,12 @@ const beautifulMentionsTheme: BeautifulMentionsTheme = {
     container: "container",
     containerFocused: "containerFocused",
   },
+   "category:": {
+    trigger: "trigger",
+    value: "value",
+    container: "container",
+    containerFocused: "containerFocused",
+  },
 };
 
 const theme = {
@@ -64,3 +70,4 @@ export const initialConfig = {
   onError,
   nodes: [HeadingNode, BeautifulMentionNode],
 };
+

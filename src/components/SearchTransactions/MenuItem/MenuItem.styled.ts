@@ -1,11 +1,9 @@
 import styled from "styled-components";
-import { StyledMenuItemProps } from "../../../interfaces";
 
-
-export const StyledMenuItem = styled.li`
+export const StyledMenuItem = styled.li<{ $bgColor?: string }>`
   font-weight: 400;
   font-size: 18px;
-  background-color: #131519c9;
+  background-color: ${(props) => props.$bgColor || "#131519c9"};
   -webkit-tap-highlight-color: transparent;
 
   display: flex;
@@ -18,7 +16,7 @@ export const StyledMenuItem = styled.li`
   padding: 1px 8px;
   gap: 3px;
   cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0.50) 0px 4px 4px;
-  color:${props => props.color};
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 4px;
+  color: ${(props) => (props.$bgColor ? "black" : props.color || "inherit")};
   margin-bottom: 20px;
 `;

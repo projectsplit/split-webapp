@@ -4,6 +4,7 @@ import {
   Debt,
   ExpenseResponseItem,
   FetchedMembers,
+  FetchedLabel,
   FilteredMembers,
   FormExpense,
   Frequency,
@@ -18,11 +19,12 @@ import {
   TransferResponseItem,
   TruncatedMember,
   UserInfo,
+  CreateFiltersRequest,
 } from "./types";
 import { Signal } from "@preact/signals-react";
-import { DateTime } from "luxon";
 import { EditorState } from "lexical";
 import {
+  BeautifulMentionsItem,
   BeautifulMentionsItemData,
   BeautifulMentionsMenuProps,
 } from "lexical-beautiful-mentions";
@@ -739,21 +741,11 @@ export interface CurrentSearchFieldProps {
   submitButtonIsActive: Signal<boolean>;
 }
 
-export type CreateFiltersRequest = {
-  groupId: string;
-  participantsIds: string[];
-  payersIds: string[];
-  receiversIds: string[];
-  sendersIds: string[];
-  description: string;
-  before: DateTime[];
-  during: DateTime[];
-  after: DateTime[];
-};
 
 export interface EditorContentHandle {
   clearEditor: () => void;
 }
+
 export type EnhancedMembersWithProps = {
   value: string;
   memberId: string;
@@ -765,7 +757,7 @@ export interface LexicalEditorProps {
   enhancedMembersWithProps: EnhancedMembersWithProps;
   submitButtonIsActive: Signal<boolean>;
   isFetching: boolean;
-
+  labels: FetchedLabel[];
   filterState: Signal<CreateFiltersRequest>;
   setEditorState: React.Dispatch<React.SetStateAction<EditorState | null>>;
   contentEditableHeight: number;
@@ -773,6 +765,7 @@ export interface LexicalEditorProps {
   cancelled: Signal<boolean>;
   filteredMembers: Signal<FilteredMembers>;
   timeZoneId: string;
+  filteredLabels:Signal<FetchedLabel[]>
 }
 
 export interface FilterCalendarProps {
@@ -808,10 +801,6 @@ export interface SearchDateButtonProps extends SearchCategoryButtonProps {
   removedFilter: Signal<boolean>;
 }
 
-export interface SearchLabelButtonProps extends SearchCategoryButtonProps {
-  labels: any; //TODO build proper type
-}
-
 export interface MembersPillsDisplayProps {
   category: string;
   filteredMembers: Signal<FilteredMembers>;
@@ -821,9 +810,28 @@ export interface MembersPillsDisplayProps {
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
 }
+export interface LabelsPillsDisplayProps{
+  category: string;
+  filteredLabels: Signal<FetchedLabel[]>
+  showOptions: Signal<boolean>;
+  submitButtonIsActive: Signal<boolean>;
+  filterState: Signal<CreateFiltersRequest>;
+  cancelled: Signal<boolean>;
+  removedFilter: Signal<boolean>;
+}
+
 export interface SearchMemberButtonProps extends SearchCategoryButtonProps {
   showOptions: Signal<boolean>;
   filteredMembers: Signal<FilteredMembers>;
+  submitButtonIsActive: Signal<boolean>;
+  filterState: Signal<CreateFiltersRequest>;
+  cancelled: Signal<boolean>;
+  removedFilter: Signal<boolean>;
+}
+
+export interface SearchLabelButtonProps extends SearchCategoryButtonProps {
+  showOptions: Signal<boolean>;
+  filteredLabels: Signal<FetchedLabel[]>;
   submitButtonIsActive: Signal<boolean>;
   filterState: Signal<CreateFiltersRequest>;
   cancelled: Signal<boolean>;
@@ -858,6 +866,7 @@ export interface MentionsToolbarProps {
   filteredMembers: Signal<FilteredMembers>;
   calendarIsOpen: Signal<boolean>;
   datePeriodClicked: Signal<string>;
+  filteredLabels:Signal<FetchedLabel[]>
 }
 export interface SearchTransactionsProps {
   menu: Signal<string | null>;

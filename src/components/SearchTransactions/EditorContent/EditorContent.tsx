@@ -24,6 +24,7 @@ import { PreventEnterCommandPlugin } from "../../../lexicalPlugins/PreventEnterC
 import { OnChangePlugin } from "../../../lexicalPlugins/OnChangePlugin";
 import { ClearEditorPlugin } from "../../../lexicalPlugins/LexicalClearEditorPlugin";
 import { EditorContentHandle, LexicalEditorProps } from "../../../interfaces";
+import { updateFiltersMentions } from "../helpers/updateFiltersMentions";
 
 export const EditorContent = forwardRef<
   EditorContentHandle,
@@ -39,7 +40,9 @@ export const EditorContent = forwardRef<
     members,
     cancelled,
     filteredMembers,
-    timeZoneId
+    timeZoneId,
+    labels,
+    filteredLabels,
   } = props;
 
   const [editor] = useLexicalComposerContext();
@@ -54,14 +57,19 @@ export const EditorContent = forwardRef<
   const removedFilter = useSignal<boolean>(false);
   const datePeriodClicked = useSignal<string>("");
 
-  const mentionItems: Record<string, BeautifulMentionsItem[]> = {
-    "payer:": [],
-    "participant:": [],
-    "sender:": [],
-    "receiver:": [],
-  };
+  const mentionItems: Record<string, BeautifulMentionsItem[]> = {};
+
+  mentionItems["payer:"] = [];
+  mentionItems["participant:"] = [];
+  mentionItems["sender:"] = [];
+  mentionItems["receiver:"] = [];
+  mentionItems["before:"] = [];
+  mentionItems["during:"] = [];
+  mentionItems["after:"] = [];
+  mentionItems["category:"] = [];
 
   updateMembersMentions(members, mentionItems);
+  updateFiltersMentions(labels, mentionItems);
 
   const clearEditor = () => {
     editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
@@ -115,7 +123,9 @@ export const EditorContent = forwardRef<
           <Menu {...props} contentEditableHeight={contentEditableHeight} />
         )}
         menuItemComponent={MenuItem}
-        onMenuItemSelect={() => (showOptions.value = true)}
+        onMenuItemSelect={() => {
+          showOptions.value = true;
+        }}
         insertOnBlur={false}
         menuItemLimit={false}
         onMenuOpen={() => (showOptions.value = false)}
@@ -137,6 +147,7 @@ export const EditorContent = forwardRef<
           removedFilter={removedFilter}
           calendarIsOpen={calendarIsOpen}
           datePeriodClicked={datePeriodClicked}
+          filteredLabels={filteredLabels}
         />
       ) : (
         <OptionsToolBar

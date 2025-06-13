@@ -13,18 +13,22 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
   filteredMembers,
   calendarIsOpen,
   datePeriodClicked,
+  filteredLabels,
 }) => {
   return (
     <>
       {showOptions.value && (
         <div className="categoryButtons">
-          {filterState.value.description!==""?
-          <CurrentSearchField
-            currentSearch={filterState.value.description}
-            filterState={filterState}
-            removedFilter={removedFilter}
-            submitButtonIsActive={submitButtonIsActive}
-          />:<></>}
+          {filterState.value.description !== "" ? (
+            <CurrentSearchField
+              currentSearch={filterState.value.description}
+              filterState={filterState}
+              removedFilter={removedFilter}
+              submitButtonIsActive={submitButtonIsActive}
+            />
+          ) : (
+            <></>
+          )}
           <SearchMemberButton
             showOptions={showOptions}
             category={"payer"}
@@ -104,8 +108,12 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
           <SearchLabelButton
             category={"category"}
             type={"label"}
-            labels={""}
+            filteredLabels={filteredLabels}
+            showOptions={showOptions}
             submitButtonIsActive={submitButtonIsActive}
+            filterState={filterState}
+            cancelled={cancelled}
+            removedFilter={removedFilter}
           />
         </div>
       )}

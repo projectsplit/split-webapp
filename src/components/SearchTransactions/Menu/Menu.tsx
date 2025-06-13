@@ -7,7 +7,7 @@ import { StyledMenu } from "./Menu.styled";
 export const Menu = React.forwardRef<HTMLDivElement, CombinedMenuProps>(
   ({ open, contentEditableHeight,loading, ...other }, ref) => {
     return (
-      <ScrollableContainer>
+      <ScrollableContainer $contentEditableHeight={contentEditableHeight}>
         <div className="items">
           <StyledMenu
             ref={ref}

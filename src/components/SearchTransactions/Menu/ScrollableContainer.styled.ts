@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-export const ScrollableContainer = styled.div`
+export const ScrollableContainer = styled.div<{ $contentEditableHeight: number}>`
   margin-top: 1rem;
-  height: calc(100vh - 240px);
+  height: calc(100vh - 18rem);
   overflow-y: auto;
   overflow-x: hidden;
   position: fixed;

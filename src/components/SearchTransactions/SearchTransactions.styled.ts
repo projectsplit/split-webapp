@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledSearchTransactions = styled.div`
+export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
   box-sizing: border-box;
   bottom: 0;
   position: fixed;
@@ -85,7 +85,7 @@ export const StyledSearchTransactions = styled.div`
 
       .trigger {
         border-radius: 5px;
-        background-color: ${({ theme }) => theme.grey};
+        background-color: ${({ theme }) => theme.grey}; 
         padding: 2px;
       }
       .value {
@@ -99,7 +99,7 @@ export const StyledSearchTransactions = styled.div`
       }
 
       .containerFocused {
-        background-color: ${({ theme }) => theme.grey};
+        background-color:${({ $bgColor, theme }) => ($bgColor ? $bgColor : theme.grey)};
         border-radius: 5px;
         padding: 2px;
       }
@@ -111,7 +111,7 @@ export const StyledSearchTransactions = styled.div`
     display: flex;
     flex-direction: column;
     position: sticky;
-    bottom: 14px;
+    bottom: 20px;
     width: calc(100% - 28px);
     left: 14px;
     gap: 10px;

@@ -83,6 +83,7 @@ export const handleSubmitButton = (
       before: filterState.value.before,
       during: filterState.value.during,
       after: filterState.value.after,
+      labels:filterState.value.labels
     });
 
     // queryClient.invalidateQueries([

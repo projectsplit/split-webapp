@@ -1,8 +1,8 @@
 import { Signal } from "@preact/signals-react";
 
 import currency from "currency.js";
-import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
-import { DateTime  } from "luxon";
+import { BeautifulMentionsItem, BeautifulMentionsItemData } from "lexical-beautiful-mentions";
+import { DateTime } from "luxon";
 
 export type RefreshTokenResponse = {
   accessToken: string;
@@ -85,9 +85,9 @@ export type FormExpense = {
   participants: Participant[];
   expenseTime: Date;
   labels: {
-    id: string,
-    text: string,
-    color: string
+    id: string;
+    text: string;
+    color: string;
   }[];
   creationTime: Date;
   lastUpdateTime: Date;
@@ -107,9 +107,9 @@ export type ExpenseResponseItem = {
   payments: Payment[];
   shares: Share[];
   labels: {
-    id: string,
-    text: string,
-    color: string
+    id: string;
+    text: string;
+    color: string;
   }[];
   location: GeoLocation | undefined;
 };
@@ -192,9 +192,9 @@ export type PickerMember = {
 };
 
 export type Label = {
-  id: string,
-  text: string,
-  color: string
+  id: string;
+  text: string;
+  color: string;
 };
 
 export type CreateExpenseRequest = {
@@ -213,8 +213,8 @@ export type CreateExpenseRequest = {
   location: GeoLocation | null;
   occurred: string;
   labels: {
-    text: string,
-    color: string
+    text: string;
+    color: string;
   }[];
 };
 
@@ -234,8 +234,8 @@ export type CreateEditExpenseRequest = {
   location: GeoLocation | null;
   occurred: string;
   labels: {
-    text: string,
-    color: string
+    text: string;
+    color: string;
   }[];
 };
 
@@ -256,10 +256,10 @@ export type ExpenseRequest = {
   location: GeoLocation | null;
   occurred: string;
   labels: {
-    text: string,
-    color: string
+    text: string;
+    color: string;
   }[];
-}
+};
 
 export type GeoLocation = {
   coordinates: Coordinates;
@@ -350,7 +350,7 @@ export type MostRecentGroupDetailsResponse = {
   id: string;
   name: string;
   details: Details;
-  isArchived: boolean
+  isArchived: boolean;
 };
 
 export type Participant = {
@@ -403,7 +403,7 @@ export type DebtsResponse = {
   debts: Debt[];
   totalSpent: Record<string, Record<string, number>>;
   totalSent: Record<string, Record<string, number>>;
-  totalReceived:Record<string, Record<string, number>>;
+  totalReceived: Record<string, Record<string, number>>;
 };
 
 export type TotalSpent = Record<string, Record<string, number>>;
@@ -439,12 +439,12 @@ export type UpdateSelectedTimeZoneRequest = {
   timeZone: string;
 };
 export type UpdateGroupNameRequest = {
-  name: string
-}
+  name: string;
+};
 
 export type ArchiveGroupRequest = {
   isArchived: boolean;
-}
+};
 export type WithCreated = {
   created: string;
 };
@@ -466,12 +466,12 @@ export type ExpenseFormState = {
     payers: string;
     description: string;
   };
-}
+};
 
 export type FetchedMember = {
   memberId: string;
   value: string;
-  isUser:boolean;
+  isUser: boolean;
 };
 
 export type FetchedMembers = FetchedMember[];
@@ -479,7 +479,7 @@ export type FetchedMembers = FetchedMember[];
 export type EnhancedMembersWithProps = {
   value: string;
   memberId: string;
-  isUser:boolean;
+  isUser: boolean;
   prop: string;
 }[];
 
@@ -490,6 +490,12 @@ export type Members = {
   receivers: FetchedMembers;
 };
 export type FilteredMembers = Members;
+
+export type FetchedLabel = {
+  id: string;
+  value: string;
+  color: string;
+};
 
 export type FilteredResultItem = {
   [key: string]: BeautifulMentionsItemData; // Dynamic properties
@@ -511,7 +517,9 @@ export type CreateFiltersRequest = {
   before: DateTime[];
   during: DateTime[];
   after: DateTime[];
+  labels: string[];
 };
+
 
 export type SerializedLexicalNode = {
   type: string;
@@ -531,4 +539,6 @@ export type FilterResponse = {
   during: DateTime[];
   after: DateTime[];
   description: string;
+  labels: FetchedLabel[];
 };
+

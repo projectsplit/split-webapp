@@ -4,7 +4,7 @@ interface StyledDateTimePickerProps {
   isSearchCalendar?:boolean
 }
 export const StyledDateTimePicker = styled.div<StyledDateTimePickerProps>`
-  z-index: 1;
+  z-index: 5;
   -webkit-tap-highlight-color: transparent;
   color: ${({ theme }) => theme.activeTabButtonTextColor};
   background-color: ${({ theme }) => theme.backgroundcolor};

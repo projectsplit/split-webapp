@@ -15,6 +15,7 @@ export function updateMembersMentions(
     mentionItems["payer:"].push({
       value: member.value,
       memberId: member.memberId,
+      
     });
 
     mentionItems["participant:"].push({
