@@ -95,7 +95,7 @@ const DateTimePicker = ({
   }, [selectedDateTime]);
 
   return (
-    <StyledDateTimePicker isSearchCalendar={calendarIsOpen?.value}>
+    <StyledDateTimePicker $isSearchCalendar={calendarIsOpen?.value}>
       <div className="top-menu">
         <div className="month-year">
           <RxChevronLeft

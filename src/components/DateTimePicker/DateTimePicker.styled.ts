@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 interface StyledDateTimePickerProps {
-  isSearchCalendar?:boolean
+  $isSearchCalendar?:boolean
 }
 export const StyledDateTimePicker = styled.div<StyledDateTimePickerProps>`
   z-index: 5;
@@ -19,7 +19,7 @@ export const StyledDateTimePicker = styled.div<StyledDateTimePickerProps>`
   user-select: none;
   position: fixed;
   box-sizing: border-box;
-   top: ${({ isSearchCalendar }) => (isSearchCalendar ? "280px" : "50%")};
+   top: ${({ $isSearchCalendar }) => ($isSearchCalendar ? "280px" : "50%")};
   left: 50%;
   transform: translate(-50%, -50%);
   margin-top: 4px;

@@ -1,7 +1,7 @@
 import { $getRoot, EditorState } from "lexical";
 import { isElementNode } from "./isElementNode";
 import { Signal } from "@preact/signals-react";
-import {  UseMutateFunction } from "@tanstack/react-query";
+import { UseMutateFunction } from "@tanstack/react-query";
 import { DateTime } from "luxon";
 import { CreateFiltersRequest } from "../../../types";
 import { AxiosError } from "axios";
@@ -9,7 +9,12 @@ import { AxiosError } from "axios";
 export const handleSubmitButton = (
   editorState: EditorState | null,
   filterState: Signal<CreateFiltersRequest>,
-  submitFilters: UseMutateFunction<any, AxiosError<unknown, any>, CreateFiltersRequest, unknown>,
+  submitFilters: UseMutateFunction<
+    any,
+    AxiosError<unknown, any>,
+    CreateFiltersRequest,
+    unknown
+  >,
   menu: Signal<string | null>
 ) => {
   if (editorState === null) return;
@@ -20,7 +25,7 @@ export const handleSubmitButton = (
   });
 
   const mentionRegex =
-    /(\S*)(payer|receiver|sender|participant|before|after):\S+/g;
+    /(\S*)(payer|receiver|sender|participant|before|after|category|during):\S+/g;
   const cleanedInput = (
     searchTerm.replace(mentionRegex, "").trim() +
     " " +
@@ -70,10 +75,27 @@ export const handleSubmitButton = (
           : (date = DateTime.invalid("Invalid date"));
         filterState.value.after.push(date);
       }
-      filterState.value.description=cleanedInput;
+      if (c.trigger === "category:") {
+        filterState.value.labels.push(c.data.id);
+      }
+      filterState.value.description = cleanedInput;
     });
+    
+    //TODO actual submit
+    // submitFilters({
+    //   groupId: filterState.value.groupId,
+    //   participantsIds: filterState.value.participantsIds,
+    //   payersIds: filterState.value.payersIds,
+    //   receiversIds: filterState.value.receiversIds,
+    //   sendersIds: filterState.value.sendersIds,
+    //   description: filterState.value.description,
+    //   before: filterState.value.before,
+    //   during: filterState.value.during,
+    //   after: filterState.value.after,
+    //   labels:filterState.value.labels
+    // });
 
-    submitFilters({
+    console.log({
       groupId: filterState.value.groupId,
       participantsIds: filterState.value.participantsIds,
       payersIds: filterState.value.payersIds,
@@ -83,7 +105,7 @@ export const handleSubmitButton = (
       before: filterState.value.before,
       during: filterState.value.during,
       after: filterState.value.after,
-      labels:filterState.value.labels
+      labels: filterState.value.labels,
     });
 
     // queryClient.invalidateQueries([

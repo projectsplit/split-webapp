@@ -41,7 +41,7 @@ export default function SearchTransactions({
   const cancelled = useSignal<boolean>(false);
   const queryClient = useQueryClient();
   const filterState = useSignal<CreateFiltersRequest>({
-    groupId: "",
+    groupId: group.id,
     participantsIds: [],
     payersIds: [],
     receiversIds: [],
@@ -74,23 +74,24 @@ export default function SearchTransactions({
     color:l.color
   }));
 
-  const {
-    isFetching,
-    data: groupFiltersData,
-    error,
-  } = useGetGroupFilters(params.groupid);
+  //TODO Uncomment
+  // const {
+  //   isFetching,
+  //   data: groupFiltersData,
+  //   error,
+  // } = useGetGroupFilters(params.groupid);
 
-  useEffect(() => {
-    if (groupFiltersData) {
-      initializeFilterState(
-        groupFiltersData,
-        params,
-        filterState,
-        filteredMembers,
-        filteredLabels
-      );
-    }
-  }, [groupFiltersData, params.groupid, cancelled.value]);
+  // useEffect(() => {
+  //   if (groupFiltersData) {
+  //     initializeFilterState(
+  //       groupFiltersData,
+  //       params,
+  //       filterState,
+  //       filteredMembers,
+  //       filteredLabels
+  //     );
+  //   }
+  // }, [groupFiltersData, params.groupid, cancelled.value]);
 
   useEffect(() => {
     queryClient.refetchQueries({
@@ -138,7 +139,7 @@ export default function SearchTransactions({
         <div className="searchBarAndCategories">
           <div className="lexicalSearch">
             <LexicalComposer initialConfig={initialConfig}>
-              {isFetching ? (
+              {false ? (//TODO isFetching
                 <SpinnerContainer>
                   <Spinner />
                 </SpinnerContainer>
@@ -148,7 +149,7 @@ export default function SearchTransactions({
                   contentEditableHeight={contentEditableHeight}
                   enhancedMembersWithProps={enhancedMembersWithProps}
                   submitButtonIsActive={submitButtonIsActive}
-                  isFetching={isFetching}
+                  isFetching={false} //TODO isFetching
                   filterState={filterState}
                   setEditorState={setEditorState}
                   members={fetchedMembers}
@@ -187,4 +188,3 @@ export default function SearchTransactions({
     </StyledSearchTransactions>
   );
 }
-//TODO: paint label mentions, fix scroll of mentions over cancel, check viewport-fit=cover fking things up (try to see if you can apply a universal bottom css)
