@@ -91,6 +91,7 @@ export default function CreateGroup({
           disabled={groupName.trim() === "" ? true : false}
           onClick={onClickHandler}
           isLoading={isPending}
+         fontSize="16"
         >
           Create Group
         </MyButton>

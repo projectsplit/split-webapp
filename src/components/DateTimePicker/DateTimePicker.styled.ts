@@ -1,7 +1,10 @@
 import styled from 'styled-components'
 
-export const StyledDateTimePicker = styled.div`
-  z-index: 1;
+interface StyledDateTimePickerProps {
+  $isSearchCalendar?:boolean
+}
+export const StyledDateTimePicker = styled.div<StyledDateTimePickerProps>`
+  z-index: 5;
   -webkit-tap-highlight-color: transparent;
   color: ${({ theme }) => theme.activeTabButtonTextColor};
   background-color: ${({ theme }) => theme.backgroundcolor};
@@ -16,7 +19,7 @@ export const StyledDateTimePicker = styled.div`
   user-select: none;
   position: fixed;
   box-sizing: border-box;
-  top: 50%;
+   top: ${({ $isSearchCalendar }) => ($isSearchCalendar ? "280px" : "50%")};
   left: 50%;
   transform: translate(-50%, -50%);
   margin-top: 4px;

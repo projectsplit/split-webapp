@@ -9,17 +9,21 @@ import { RiProhibited2Line } from "react-icons/ri";
 export default function BottomMainMenu({
   onClick,
   group,
+  menu
 }: BottomMainMenuProps) {
   const navigate = useNavigate();
   return (
-    <StyledBottomMainMenu className="bottom-bar" $groupIsArchived={group && group.isArchived}>
+    <StyledBottomMainMenu
+      className="bottom-bar"
+      $groupIsArchived={group && group.isArchived}
+    >
       <div className="bottomMainBar">
         <div className="home" onClick={() => navigate("/")}>
           <GoHomeFill />
         </div>
         {group && group.isArchived ? (
           <div className="add" onClick={onClick}>
-            <RiProhibited2Line className="prohibited"/>
+            <RiProhibited2Line className="prohibited" />
           </div>
         ) : (
           <div className="add" onClick={onClick}>
@@ -28,7 +32,13 @@ export default function BottomMainMenu({
         )}
 
         <div className="search">
-          <IoMdSearch />
+          <IoMdSearch
+            onClick={() => {
+              if (menu) {
+                menu.value = "search";
+              }
+            }}
+          />
         </div>
       </div>
     </StyledBottomMainMenu>
