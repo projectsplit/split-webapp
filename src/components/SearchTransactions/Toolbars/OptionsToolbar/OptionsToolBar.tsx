@@ -5,6 +5,7 @@ import { $getNodeByKey } from "lexical";
 import { StyledOptionsToolbar } from "./OptionsToolbar.styled";
 import Pill from "../../../Pill/Pill";
 import { FilteredResultItem, GroupedItem } from "../../../../types";
+import labelColors from "../../../../labelColors";
 
 const OptionsToolBar = ({
   editorStateString,
@@ -33,13 +34,14 @@ const OptionsToolBar = ({
                 <div className="category">{prop}</div>
                 <div className="types">
                   {results.map((result, index) => (
+                  
                     <Pill
                       key={index}
-                      $textColor="#FFFFFF"
-                      color="#131519c9"
+                      $textColor={labelColors[result.color]?"black":"FFFFF"}
+                      color={labelColors[result.color]||"FFFFF"}
                       title={result.value}
                       closeButton={false}
-                      $border={true}
+                      $border={labelColors[result.color]?false:true}
                       onClick={() => {
                         editor.update(() => {
                           const nodeMap = editor._editorState._nodeMap;

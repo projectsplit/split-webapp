@@ -495,12 +495,14 @@ export type FetchedLabel = {
   id: string;
   value: string;
   color: string;
+  prop:string;
 };
 
 export type FilteredResultItem = {
   [key: string]: BeautifulMentionsItemData; // Dynamic properties
   value: string; // `value` is explicitly required
   prop: string; // `prop` should also be explicitly defined
+  color:string;
 };
 
 export type GroupedItem = {

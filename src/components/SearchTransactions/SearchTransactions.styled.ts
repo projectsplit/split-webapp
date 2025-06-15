@@ -12,6 +12,9 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
   display: flex;
   flex-direction: column;
 
+  .catSelector{
+    padding: 10px;
+  }
   p {
     margin: 3px;
   }

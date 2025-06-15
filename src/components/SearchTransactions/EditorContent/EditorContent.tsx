@@ -50,12 +50,14 @@ export const EditorContent = forwardRef<
   const [filteredResults, setFilteredResults] = useState<
     { value: string; [key: string]: BeautifulMentionsItemData }[]
   >([]);
+
   const [editorStateString, setEditorStateString] = useState<string>();
   const contentEditableWrapRef = useRef<HTMLDivElement>(null);
   const showOptions = useSignal<boolean>(true);
   const calendarIsOpen = useSignal<boolean>(false);
   const removedFilter = useSignal<boolean>(false);
   const datePeriodClicked = useSignal<string>("");
+  const category = useSignal<string>("Expenses");
 
   const mentionItems: Record<string, BeautifulMentionsItem[]> = {};
 
@@ -113,7 +115,8 @@ export const EditorContent = forwardRef<
             setEditorStateString,
             setIsEmpty,
             calendarIsOpen,
-            datePeriodClicked
+            datePeriodClicked,
+            labels
           )
         }
       />
@@ -148,6 +151,7 @@ export const EditorContent = forwardRef<
           calendarIsOpen={calendarIsOpen}
           datePeriodClicked={datePeriodClicked}
           filteredLabels={filteredLabels}
+          category={category}
         />
       ) : (
         <OptionsToolBar

@@ -26,7 +26,6 @@ import { useSubmitFilters } from "../../api/services/useSubmitFilters";
 import { useGetGroupFilters } from "../../api/services/useGetGroupFilters";
 import { useMembers } from "./hooks/useMembers";
 
-
 export default function SearchTransactions({
   menu,
   group,
@@ -39,7 +38,9 @@ export default function SearchTransactions({
   const contentEditableWrapRef = useRef<HTMLDivElement>(null);
   const submitButtonIsActive = useSignal<boolean>(false);
   const cancelled = useSignal<boolean>(false);
+  
   const queryClient = useQueryClient();
+  
   const filterState = useSignal<CreateFiltersRequest>({
     groupId: group.id,
     participantsIds: [],
@@ -71,7 +72,8 @@ export default function SearchTransactions({
   const fetchedLabels: FetchedLabel[] = group.labels.map((l) => ({
     id: l.id,
     value: l.text,
-    color:l.color
+    color: l.color,
+    prop: "category",
   }));
 
   //TODO Uncomment
@@ -139,7 +141,7 @@ export default function SearchTransactions({
         <div className="searchBarAndCategories">
           <div className="lexicalSearch">
             <LexicalComposer initialConfig={initialConfig}>
-              {false ? (//TODO isFetching
+              {false ? ( //TODO isFetching
                 <SpinnerContainer>
                   <Spinner />
                 </SpinnerContainer>
@@ -153,12 +155,11 @@ export default function SearchTransactions({
                   filterState={filterState}
                   setEditorState={setEditorState}
                   members={fetchedMembers}
-                  labels = {fetchedLabels}
+                  labels={fetchedLabels}
                   cancelled={cancelled}
                   filteredMembers={filteredMembers}
                   timeZoneId={timeZoneId}
                   filteredLabels={filteredLabels}
-                  
                 />
               )}
             </LexicalComposer>

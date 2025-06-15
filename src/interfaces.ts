@@ -765,7 +765,7 @@ export interface LexicalEditorProps {
   cancelled: Signal<boolean>;
   filteredMembers: Signal<FilteredMembers>;
   timeZoneId: string;
-  filteredLabels:Signal<FetchedLabel[]>
+  filteredLabels:Signal<FetchedLabel[]>;
 }
 
 export interface FilterCalendarProps {
@@ -867,6 +867,7 @@ export interface MentionsToolbarProps {
   calendarIsOpen: Signal<boolean>;
   datePeriodClicked: Signal<string>;
   filteredLabels:Signal<FetchedLabel[]>
+  category:Signal<string>
 }
 export interface SearchTransactionsProps {
   menu: Signal<string | null>;
