@@ -11,7 +11,8 @@ export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
   filteredMembers,
   showOptions,
   submitButtonIsActive,
-  filterState,
+  expenseFilterState,
+  transferFilterState,
   cancelled,
   removedFilter,
 }) => {
@@ -55,39 +56,54 @@ export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
 
     switch (category) {
       case "payer":
-        filterState.value.payersIds = filterState.value.payersIds.filter(
-          (id) => id !== memberId
-        );
-        filteredMembers.value.payers = filteredMembers.value.payers.filter(
-          (member) => member.memberId !== memberId
-        );
+        if (expenseFilterState) {
+          expenseFilterState.value.payersIds =
+            expenseFilterState.value.payersIds.filter((id) => id !== memberId);
+          filteredMembers.value.payers = filteredMembers.value.payers.filter(
+            (member) => member.memberId !== memberId
+          );
+        }
         break;
       case "participant":
-        filterState.value.participantsIds =
-          filterState.value.participantsIds.filter((id) => id !== memberId);
-        filteredMembers.value.participants =
-          filteredMembers.value.participants.filter(
-            (member) => member.memberId !== memberId
-          );
+        if (expenseFilterState) {
+          expenseFilterState.value.participantsIds =
+            expenseFilterState.value.participantsIds.filter(
+              (id) => id !== memberId
+            );
+          filteredMembers.value.participants =
+            filteredMembers.value.participants.filter(
+              (member) => member.memberId !== memberId
+            );
+        }
         break;
       case "sender":
-        filterState.value.sendersIds = filterState.value.sendersIds.filter(
-          (id) => id !== memberId
-        );
-        filteredMembers.value.senders = filteredMembers.value.senders.filter(
-          (member) => member.memberId !== memberId
-        );
-        break;
-      case "receiver":
-        filterState.value.receiversIds = filterState.value.receiversIds.filter(
-          (id) => id !== memberId
-        );
-        filteredMembers.value.receivers =
-          filteredMembers.value.receivers.filter(
+        if (transferFilterState) {
+          transferFilterState.value.sendersIds =
+            transferFilterState.value.sendersIds.filter(
+              (id) => id !== memberId
+            );
+          filteredMembers.value.senders = filteredMembers.value.senders.filter(
             (member) => member.memberId !== memberId
           );
+        }
+        break;
+      case "receiver":
+        if (transferFilterState) {
+          transferFilterState.value.receiversIds =
+            transferFilterState.value.receiversIds.filter(
+              (id) => id !== memberId
+            );
+          filteredMembers.value.receivers =
+            filteredMembers.value.receivers.filter(
+              (member) => member.memberId !== memberId
+            );
+        }
+        break;
+      default:
+        // No action needed for unexpected categories
         break;
     }
+
     submitButtonIsActive.value = true;
   };
 
@@ -112,7 +128,7 @@ export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
             <div key={member.value}>
               <Pill
                 title={member.value}
-                color="#A7A7A7"
+                color="#ffffff"
                 closeButton={true}
                 onClose={() => removeFilter(member.memberId)}
                 $textColor="#000000c8"

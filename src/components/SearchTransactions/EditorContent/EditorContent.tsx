@@ -35,7 +35,8 @@ export const EditorContent = forwardRef<
     enhancedMembersWithProps,
     submitButtonIsActive,
     isFetching,
-    filterState,
+    expenseFilterState,
+    transferFilterState,
     setEditorState,
     members,
     cancelled,
@@ -43,6 +44,7 @@ export const EditorContent = forwardRef<
     timeZoneId,
     labels,
     filteredLabels,
+    category
   } = props;
 
   const [editor] = useLexicalComposerContext();
@@ -57,7 +59,7 @@ export const EditorContent = forwardRef<
   const calendarIsOpen = useSignal<boolean>(false);
   const removedFilter = useSignal<boolean>(false);
   const datePeriodClicked = useSignal<string>("");
-  const category = useSignal<string>("Expenses");
+
 
   const mentionItems: Record<string, BeautifulMentionsItem[]> = {};
 
@@ -65,9 +67,9 @@ export const EditorContent = forwardRef<
   mentionItems["participant:"] = [];
   mentionItems["sender:"] = [];
   mentionItems["receiver:"] = [];
-  mentionItems["before:"] = [];
-  mentionItems["during:"] = [];
-  mentionItems["after:"] = [];
+  // mentionItems["before:"] = [];
+  // mentionItems["during:"] = [];
+  // mentionItems["after:"] = [];
   mentionItems["category:"] = [];
 
   updateMembersMentions(members, mentionItems);
@@ -139,13 +141,15 @@ export const EditorContent = forwardRef<
           showOptions={showOptions}
           datePeriodClicked={datePeriodClicked}
           timeZoneId={timeZoneId}
+          category={category}
         />
       ) : filteredResults.length === 0 || editorStateString === "" ? (
         <MentionsToolbar
           showOptions={showOptions}
           filteredMembers={filteredMembers}
           submitButtonIsActive={submitButtonIsActive}
-          filterState={filterState}
+          expenseFilterState={expenseFilterState}
+          transferFilterState = {transferFilterState}
           cancelled={cancelled}
           removedFilter={removedFilter}
           calendarIsOpen={calendarIsOpen}

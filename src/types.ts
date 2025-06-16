@@ -1,7 +1,10 @@
 import { Signal } from "@preact/signals-react";
 
 import currency from "currency.js";
-import { BeautifulMentionsItem, BeautifulMentionsItemData } from "lexical-beautiful-mentions";
+import {
+  BeautifulMentionsItem,
+  BeautifulMentionsItemData,
+} from "lexical-beautiful-mentions";
 import { DateTime } from "luxon";
 
 export type RefreshTokenResponse = {
@@ -489,32 +492,31 @@ export type Members = {
   senders: FetchedMembers;
   receivers: FetchedMembers;
 };
+
 export type FilteredMembers = Members;
 
 export type FetchedLabel = {
   id: string;
   value: string;
   color: string;
-  prop:string;
+  prop: string;
 };
 
 export type FilteredResultItem = {
   [key: string]: BeautifulMentionsItemData; // Dynamic properties
   value: string; // `value` is explicitly required
   prop: string; // `prop` should also be explicitly defined
-  color:string;
+  color: string;
 };
 
 export type GroupedItem = {
   [key: string]: FilteredResultItem[]; // Groups items under keys by `prop`
 };
 
-export type CreateFiltersRequest = {
+export type CreateExpenseFilterRequest = {
   groupId: string;
   participantsIds: string[];
   payersIds: string[];
-  receiversIds: string[];
-  sendersIds: string[];
   description: string;
   before: DateTime[];
   during: DateTime[];
@@ -522,25 +524,63 @@ export type CreateFiltersRequest = {
   labels: string[];
 };
 
+export type CreateTransferFilterRequest = {
+  groupId: string;
+  receiversIds: string[];
+  sendersIds: string[];
+  description: string;
+  before: DateTime[];
+  during: DateTime[];
+  after: DateTime[];
+};
 
 export type SerializedLexicalNode = {
   type: string;
   [key: string]: any;
 };
 
+export type SerializedBeautifulMentionNode = SerializedLexicalNode & {
+  type: "beautifulMention";
+  trigger: string;
+  value: string;
+  data: {
+    category: string;
+    [key: string]: any; // Allow additional properties in data if needed
+  };
+  version: number;
+};
+
 export type SerializedElementNode = SerializedLexicalNode & {
   children: SerializedLexicalNode[];
 };
 
-export type FilterResponse = {
-  payers: FetchedMembers;
+// export type FilterResponse = {
+//   payers: FetchedMembers;
+//   participants: FetchedMembers;
+//   senders: FetchedMembers;
+//   receivers: FetchedMembers;
+//   before: DateTime[];
+//   during: DateTime[];
+//   after: DateTime[];
+//   description: string;
+//   labels: FetchedLabel[];
+// };
+
+export type ExpenseFilterResponse = {
+ payers: FetchedMembers;
   participants: FetchedMembers;
-  senders: FetchedMembers;
-  receivers: FetchedMembers;
   before: DateTime[];
   during: DateTime[];
   after: DateTime[];
-  description: string;
+   description: string;
   labels: FetchedLabel[];
-};
+}
 
+export type TransferFilterResponse = {
+  senders: FetchedMembers;
+  receivers: FetchedMembers;
+   before: DateTime[];
+  during: DateTime[];
+  after: DateTime[];
+   description: string;
+}

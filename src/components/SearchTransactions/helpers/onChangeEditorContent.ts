@@ -55,8 +55,8 @@ export const onChangeEditorContent = (
     new RegExp(`\\b${term}(\\s|$)`).test(searchTerm)//checks whether there is anything following the timeTerm
   );
 
-  const mentionRegex = /(\S*)(payer|receiver|sender|participant|before|after):\S+/g;
-  const cleanedInput = searchTerm.replace(mentionRegex, "").trim();
+  // const mentionRegex = /(\S*)(payer|receiver|sender|participant|before|after):\S+/g;
+  // const cleanedInput = searchTerm.replace(mentionRegex, "").trim();
 
 
   if (matchesTimeTerm) {

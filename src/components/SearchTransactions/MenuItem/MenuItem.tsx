@@ -8,7 +8,6 @@ export const MenuItem = React.forwardRef<
   BeautifulMentionsMenuItemProps
 >(({ ...props }, ref) => {
   const { label, itemValue, memberId, item, ...restProps } = props;
-
-  const bgColor = labelColors[item.data.color];
+  const bgColor = labelColors[item?.data?.color]||"#ffffff";
   return <StyledMenuItem ref={ref} {...restProps} $bgColor={bgColor}/>;
 });

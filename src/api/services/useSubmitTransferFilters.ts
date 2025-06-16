@@ -1,14 +1,14 @@
 import { useQueryClient,useMutation } from "@tanstack/react-query";
-import { CreateFiltersRequest } from "../../types";
+import {  CreateTransferFilterRequest } from "../../types";
 import { apiClient } from "../apiClients";
 import { AxiosError } from "axios";
 import { Signal } from "@preact/signals-react";
 
-export const useSubmitFilters = (submitFiltersError:Signal<string>) => {
+export const useSubmitTransferFilters = (submitFiltersError:Signal<string>) => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, AxiosError, CreateFiltersRequest>({
-    mutationFn: (req: CreateFiltersRequest) => submitFilters(req), 
+  return useMutation<any, AxiosError, CreateTransferFilterRequest>({
+    mutationFn: (req: CreateTransferFilterRequest) => submitFilters(req), 
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["groupTransfers"],
@@ -30,8 +30,8 @@ export const useSubmitFilters = (submitFiltersError:Signal<string>) => {
   });
 };
 
-const submitFilters = async (req: CreateFiltersRequest) => {
-  const response = await apiClient.post<CreateFiltersRequest>(
+const submitFilters = async (req: CreateTransferFilterRequest) => {
+  const response = await apiClient.post<CreateTransferFilterRequest>(
     `/filters/create`,
     req
   );

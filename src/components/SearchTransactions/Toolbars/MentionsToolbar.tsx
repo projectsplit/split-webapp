@@ -5,28 +5,29 @@ import SearchLabelButton from "../SearchCategoryButtons/SearchLabelButton/Search
 import CurrentSearchField from "../CurrentSearchField/CurrentSearchField";
 import { CategorySelector } from "../../CategorySelector/CategorySelector";
 
-
 const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
   showOptions,
   submitButtonIsActive,
-  filterState,
+  expenseFilterState,
+  transferFilterState,
   cancelled,
   removedFilter,
   filteredMembers,
   calendarIsOpen,
   datePeriodClicked,
   filteredLabels,
-  category
+  category,
 }) => {
-
- return (
+  return (
     <>
       {showOptions.value && (
         <div className="categoryButtons">
-          {filterState.value.description !== "" ? (
+          
+          {expenseFilterState.value.description !== "" &&
+          category.value === "Expenses" ? (
             <CurrentSearchField
-              currentSearch={filterState.value.description}
-              filterState={filterState}
+              currentSearch={expenseFilterState.value.description}
+              filterState={expenseFilterState}
               removedFilter={removedFilter}
               submitButtonIsActive={submitButtonIsActive}
             />
@@ -34,17 +35,19 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
             <></>
           )}
 
-          <div className="catSelector">
-            <CategorySelector
-              activeCat={"Expenses"}
-              categories={{
-                cat1: "Expenses",
-                cat2: "Transfers",
-              }}
-              navLinkUse={false}
-              activeCatAsState={category}
+          {transferFilterState.value.description !== "" &&
+          category.value === "Transfers" ? (
+            <CurrentSearchField
+              currentSearch={transferFilterState.value.description}
+              filterState={transferFilterState}
+              removedFilter={removedFilter}
+              submitButtonIsActive={submitButtonIsActive}
             />
-          </div>
+          ) : (
+            <></>
+          )}
+
+       
 
           {category.value === "Expenses" ? (
             <>
@@ -54,7 +57,8 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 type={"member"}
                 filteredMembers={filteredMembers}
                 submitButtonIsActive={submitButtonIsActive}
-                filterState={filterState}
+                expenseFilterState={expenseFilterState}
+                transferFilterState={transferFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
@@ -64,7 +68,8 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 type={"member"}
                 filteredMembers={filteredMembers}
                 submitButtonIsActive={submitButtonIsActive}
-                filterState={filterState}
+                expenseFilterState={expenseFilterState}
+                transferFilterState={transferFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
@@ -76,7 +81,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}
                 datePeriodClicked={datePeriodClicked}
-                filterState={filterState}
+                filterState={expenseFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
@@ -88,7 +93,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}
                 datePeriodClicked={datePeriodClicked}
-                filterState={filterState}
+                filterState={expenseFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
@@ -100,7 +105,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}
                 datePeriodClicked={datePeriodClicked}
-                filterState={filterState}
+                filterState={expenseFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
@@ -110,7 +115,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 filteredLabels={filteredLabels}
                 showOptions={showOptions}
                 submitButtonIsActive={submitButtonIsActive}
-                filterState={filterState}
+                filterState={expenseFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
@@ -123,7 +128,8 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 type={"member"}
                 filteredMembers={filteredMembers}
                 submitButtonIsActive={submitButtonIsActive}
-                filterState={filterState}
+                expenseFilterState={expenseFilterState}
+                transferFilterState={transferFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
@@ -133,7 +139,8 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 type={"member"}
                 filteredMembers={filteredMembers}
                 submitButtonIsActive={submitButtonIsActive}
-                filterState={filterState}
+                expenseFilterState={expenseFilterState}
+                transferFilterState={transferFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
@@ -145,7 +152,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}
                 datePeriodClicked={datePeriodClicked}
-                filterState={filterState}
+                filterState={transferFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
@@ -157,7 +164,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}
                 datePeriodClicked={datePeriodClicked}
-                filterState={filterState}
+                filterState={transferFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
@@ -169,7 +176,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}
                 datePeriodClicked={datePeriodClicked}
-                filterState={filterState}
+                filterState={transferFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />

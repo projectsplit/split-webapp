@@ -19,7 +19,8 @@ import {
   TransferResponseItem,
   TruncatedMember,
   UserInfo,
-  CreateFiltersRequest,
+  CreateTransferFilterRequest,
+  CreateExpenseFilterRequest,
 } from "./types";
 import { Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
@@ -116,6 +117,7 @@ export interface DateTimePickerProps {
   calendarIsOpen?: Signal<boolean>;
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
+  category:Signal<string>
 }
 
 export interface DateTimeProps {
@@ -146,6 +148,7 @@ export interface DayPickerProps {
   calendarIsOpen?: Signal<boolean>;
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
+  category:Signal<string>
 }
 
 export interface ScrollPickerProps {
@@ -736,7 +739,7 @@ export interface NameAndAmountsProps {
 
 export interface CurrentSearchFieldProps {
   currentSearch: string;
-  filterState: Signal<CreateFiltersRequest>;
+  filterState: Signal<CreateExpenseFilterRequest |CreateTransferFilterRequest>;
   removedFilter: Signal<boolean>;
   submitButtonIsActive: Signal<boolean>;
 }
@@ -758,7 +761,8 @@ export interface LexicalEditorProps {
   submitButtonIsActive: Signal<boolean>;
   isFetching: boolean;
   labels: FetchedLabel[];
-  filterState: Signal<CreateFiltersRequest>;
+  expenseFilterState: Signal<CreateExpenseFilterRequest>;
+  transferFilterState:Signal<CreateTransferFilterRequest>
   setEditorState: React.Dispatch<React.SetStateAction<EditorState | null>>;
   contentEditableHeight: number;
   members: FetchedMembers | undefined;
@@ -766,6 +770,7 @@ export interface LexicalEditorProps {
   filteredMembers: Signal<FilteredMembers>;
   timeZoneId: string;
   filteredLabels:Signal<FetchedLabel[]>;
+  category:Signal<string>
 }
 
 export interface FilterCalendarProps {
@@ -773,6 +778,7 @@ export interface FilterCalendarProps {
   showOptions: Signal<boolean>;
   datePeriodClicked: Signal<string>;
   timeZoneId: string;
+  category:Signal<string>
 }
 export interface SearchMenuProps {
   $contentEditableHeight: number;
@@ -796,7 +802,7 @@ export interface SearchDateButtonProps extends SearchCategoryButtonProps {
   showOptions: Signal<boolean>;
   calendarIsOpen: Signal<boolean>;
   datePeriodClicked: Signal<string>;
-  filterState: Signal<CreateFiltersRequest>;
+  filterState: Signal<CreateExpenseFilterRequest|CreateTransferFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
 }
@@ -806,7 +812,8 @@ export interface MembersPillsDisplayProps {
   filteredMembers: Signal<FilteredMembers>;
   showOptions: Signal<boolean>;
   submitButtonIsActive: Signal<boolean>;
-  filterState: Signal<CreateFiltersRequest>;
+  expenseFilterState: Signal<CreateExpenseFilterRequest>,
+  transferFilterState:Signal<CreateTransferFilterRequest>,
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
 }
@@ -815,7 +822,7 @@ export interface LabelsPillsDisplayProps{
   filteredLabels: Signal<FetchedLabel[]>
   showOptions: Signal<boolean>;
   submitButtonIsActive: Signal<boolean>;
-  filterState: Signal<CreateFiltersRequest>;
+  filterState: Signal<CreateExpenseFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
 }
@@ -824,7 +831,8 @@ export interface SearchMemberButtonProps extends SearchCategoryButtonProps {
   showOptions: Signal<boolean>;
   filteredMembers: Signal<FilteredMembers>;
   submitButtonIsActive: Signal<boolean>;
-  filterState: Signal<CreateFiltersRequest>;
+  expenseFilterState: Signal<CreateExpenseFilterRequest>,
+  transferFilterState:Signal<CreateTransferFilterRequest>,
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
 }
@@ -833,7 +841,7 @@ export interface SearchLabelButtonProps extends SearchCategoryButtonProps {
   showOptions: Signal<boolean>;
   filteredLabels: Signal<FetchedLabel[]>;
   submitButtonIsActive: Signal<boolean>;
-  filterState: Signal<CreateFiltersRequest>;
+  filterState: Signal<CreateExpenseFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
 }
@@ -860,7 +868,8 @@ export interface MentionsToolbarProps {
   ref?: React.Ref<HTMLDivElement>;
   // filteredMembers:Members;
   submitButtonIsActive: Signal<boolean>;
-  filterState: Signal<CreateFiltersRequest>;
+  expenseFilterState: Signal<CreateExpenseFilterRequest>;
+  transferFilterState:Signal<CreateTransferFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
   filteredMembers: Signal<FilteredMembers>;

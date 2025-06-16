@@ -11,9 +11,9 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
   padding: 0;
   display: flex;
   flex-direction: column;
+   
 
-  .catSelector{
-    padding: 10px;
+  .catSelector {
   }
   p {
     margin: 3px;
@@ -28,11 +28,18 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
     flex-shrink: 0;
 
     .closeSign {
-      display: flex;
-      align-self: center;
       font-size: 30px;
-      margin-right: 15px;
-      cursor: pointer;
+      color: #6f6f6f;
+      height: 17px;
+      margin-top: -10px;
+      margin-right: -1px;
+      &:hover {
+        color: ${({ theme }) => theme.whiteText};
+      }
+      .close {
+        cursor: pointer;
+        display: block;
+      }
     }
 
     .groupName {
@@ -42,10 +49,12 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
       margin-right: 15px;
     }
     .searchingIn {
-      font-size: 20px;
+      font-size: 18px;
+      font-weight: 400;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      color: ${({theme})=>theme.whiteText};
     }
   }
 
@@ -88,7 +97,7 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
 
       .trigger {
         border-radius: 5px;
-        background-color: ${({ theme }) => theme.grey}; 
+        background-color: ${({ theme }) => theme.grey};
         padding: 2px;
       }
       .value {
@@ -102,7 +111,8 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
       }
 
       .containerFocused {
-        background-color:${({ $bgColor, theme }) => ($bgColor ? $bgColor : theme.grey)};
+        background-color: ${({ $bgColor, theme }) =>
+          $bgColor ? $bgColor : theme.grey};
         border-radius: 5px;
         padding: 2px;
       }

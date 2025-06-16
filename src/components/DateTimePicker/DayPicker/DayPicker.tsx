@@ -14,6 +14,7 @@ const DayPicker = (props: DayPickerProps) => {
     calendarIsOpen,
     showOptions,
     withLexicalContext = false,
+    category
   } = props;
 
   const [editor] = withLexicalContext ? useLexicalComposerContext() : [null];
@@ -75,7 +76,8 @@ const DayPicker = (props: DayPickerProps) => {
         calendarIsOpen,
         showOptions,
         editor,
-        insertMention
+        insertMention,
+        category
       );
     }
   };
