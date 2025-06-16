@@ -147,6 +147,20 @@ export default function SearchTransactions({
   const { mutate: submitTransferFilters, isPending: isPendingTransfer } =
     useSubmitTransferFilters(submitFiltersError);
 
+
+  useEffect(() => {
+    const handleBackNavigation = () => {
+      if (menu.value) {
+        //handleClose();
+        menu.value = null
+      }
+    };
+    window.addEventListener("popstate", handleBackNavigation);
+    return () => {
+      window.removeEventListener("popstate", handleBackNavigation);
+    };
+  }, [menu]);
+
   return (
     <StyledSearchTransactions>
       <>
@@ -157,7 +171,7 @@ export default function SearchTransactions({
             <span className="groupName">{group.name}</span>
           </div>
           <div className="closeSign" onClick={() => (menu.value = null)}>
-            <IoClose name="close-outline" className="close"/>
+            <IoClose name="close-outline" className="close" />
           </div>
         </div>
         <div className="catSelector">
