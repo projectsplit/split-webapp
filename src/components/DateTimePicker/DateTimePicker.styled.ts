@@ -1,7 +1,7 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 interface StyledDateTimePickerProps {
-  $isSearchCalendar?:boolean
+  $isSearchCalendar?: boolean;
 }
 export const StyledDateTimePicker = styled.div<StyledDateTimePickerProps>`
   z-index: 5;
@@ -19,23 +19,23 @@ export const StyledDateTimePicker = styled.div<StyledDateTimePickerProps>`
   user-select: none;
   position: fixed;
   box-sizing: border-box;
-   top: ${({ $isSearchCalendar }) => ($isSearchCalendar ? "280px" : "50%")};
+  top: ${({ $isSearchCalendar }) => ($isSearchCalendar ? "280px" : "50%")};
   left: 50%;
   transform: translate(-50%, -50%);
   margin-top: 4px;
-  
+
   .top-menu {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-  
+
     .month-year {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
       gap: 0.5em;
-      
+
       .text {
         display: flex;
         flex-direction: row;
@@ -44,7 +44,7 @@ export const StyledDateTimePicker = styled.div<StyledDateTimePickerProps>`
         width: 2em;
         justify-content: center;
       }
-  
+
       .button {
         font-size: 1.5em;
         color: ${({ theme }) => theme.inactiveTabButtonTextColor};
@@ -52,21 +52,21 @@ export const StyledDateTimePicker = styled.div<StyledDateTimePickerProps>`
       }
     }
   }
-  
+
   .bottom-menu {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    
+
     .time {
       cursor: pointer;
     }
-    
+
     .timezone {
       color: ${({ theme }) => theme.inactiveTabButtonTextColor};
     }
-    
+
     .button {
       display: flex;
       justify-content: center;
@@ -77,14 +77,14 @@ export const StyledDateTimePicker = styled.div<StyledDateTimePickerProps>`
       border: 1px solid ${({ theme }) => theme.lineColor};
       border-radius: 5px;
       cursor: pointer;
-      
-      &.active{
+
+      &.active {
         color: ${({ theme }) => theme.activeTabButtonTextColor};
         background-color: ${({ theme }) => theme.highlightColor};
       }
     }
   }
-      
+
   .time-picker {
     background-color: ${({ theme }) => theme.backgroundcolor};
     position: absolute;
@@ -100,4 +100,4 @@ export const StyledDateTimePicker = styled.div<StyledDateTimePickerProps>`
     padding: 0.5em;
     bottom: 3em;
   }
-`
+`;

@@ -10,7 +10,8 @@ export const insertDateMention = (
   calendarIsOpen: Signal<boolean>,
   showOptions: Signal<boolean>,
   editor: ReturnType<typeof useLexicalComposerContext>[0],
-  insertMention: ReturnType<typeof useBeautifulMentions>["insertMention"]
+  insertMention: ReturnType<typeof useBeautifulMentions>["insertMention"],
+  category:Signal<string>
 ) => {
   if (!day.isValid) {
     console.warn("Invalid date provided to insertDateMention");
@@ -25,6 +26,9 @@ export const insertDateMention = (
       insertMention({
         trigger: "before" + ":",
         value: formattedDate,
+        data:{
+          category:category.value
+        }
       });
 
       break;
@@ -33,6 +37,9 @@ export const insertDateMention = (
       insertMention({
         trigger: "during" + ":",
         value: formattedDate,
+         data:{
+          category:category.value
+        }
       });
 
       break;
@@ -41,6 +48,9 @@ export const insertDateMention = (
       insertMention({
         trigger: "after" + ":",
         value: formattedDate,
+         data:{
+          category:category.value
+        }
       });
 
       break;

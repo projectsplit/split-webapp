@@ -17,7 +17,7 @@ export default function SearchDateButton({
   removedFilter,
 }: SearchDateButtonProps) {
   const { insertMention } = useBeautifulMentions();
-  const [showDate, setShowDate] = useState<DateTime[]>([]);
+  const [showDate, setShowDate] = useState<string[]>([]);
 
   const updateShowDate = () => {
     switch (category) {
@@ -46,7 +46,7 @@ export default function SearchDateButton({
     cancelled.value = false;
   }, [cancelled.value]);
 
-  const removeFilter = (dateToBeRemoved: DateTime<boolean>) => {
+  const removeFilter = (dateToBeRemoved: string) => {
     removedFilter.value = true;
     setShowDate([]);
     switch (category) {

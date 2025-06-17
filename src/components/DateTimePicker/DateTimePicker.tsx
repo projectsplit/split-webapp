@@ -18,6 +18,7 @@ const DateTimePicker = ({
   calendarIsOpen,
   showOptions,
   withLexicalContext
+  ,category
 }: DateTimePickerProps) => {
   const MINUTE_STEP = 1;
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
@@ -148,6 +149,7 @@ const DateTimePicker = ({
         calendarIsOpen={calendarIsOpen}
         showOptions={showOptions}
         withLexicalContext={withLexicalContext}
+        category={category}
       />
       {showTimeControls && timePickerUtils && (
         <div className="bottom-menu">

@@ -4,7 +4,7 @@ import { handleInputChange } from "./handleInputChange";
 import { Signal } from "@preact/signals-react";
 import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
 import { findLastTextNode } from "./findLastTextNode";
-import { EnhancedMembersWithProps } from "../../../types";
+import { EnhancedMembersWithProps, FetchedLabel } from "../../../types";
 
 export const onChangeEditorContent = (
   editorState: EditorState,
@@ -26,7 +26,8 @@ export const onChangeEditorContent = (
   ) => void,
   setIsEmpty: (value: React.SetStateAction<boolean>) => void,
   calendarIsOpen: Signal<boolean>,
-  datePeriodClicked: Signal<string>
+  datePeriodClicked: Signal<string>,
+  labels: FetchedLabel[]
 ) => {
   setEditorState(editorState);
   const excludedTerms = [
@@ -54,8 +55,8 @@ export const onChangeEditorContent = (
     new RegExp(`\\b${term}(\\s|$)`).test(searchTerm)//checks whether there is anything following the timeTerm
   );
 
-  const mentionRegex = /(\S*)(payer|receiver|sender|participant|before|after):\S+/g;
-  const cleanedInput = searchTerm.replace(mentionRegex, "").trim();
+  // const mentionRegex = /(\S*)(payer|receiver|sender|participant|before|after):\S+/g;
+  // const cleanedInput = searchTerm.replace(mentionRegex, "").trim();
 
 
   if (matchesTimeTerm) {
@@ -79,7 +80,8 @@ export const onChangeEditorContent = (
       handleInputChange(
         lastTextNode.text.trimStart(),
         setFilteredResults,
-        enhancedMembersWithProps
+        enhancedMembersWithProps,
+        labels
       );
     }
     const trimmedSearchTerm = searchTerm.trim();

@@ -11,7 +11,7 @@ export default function CurrentSearchField({
 }: CurrentSearchFieldProps) {
   
   const removeFilter = () => {
-    filterState.value.description = "";
+    filterState.value.freeText = "";
     submitButtonIsActive.value = true;
     removedFilter.value = true;
   };

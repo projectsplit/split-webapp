@@ -5,6 +5,7 @@ import { $getNodeByKey } from "lexical";
 import { StyledOptionsToolbar } from "./OptionsToolbar.styled";
 import Pill from "../../../Pill/Pill";
 import { FilteredResultItem, GroupedItem } from "../../../../types";
+import labelColors from "../../../../labelColors";
 
 const OptionsToolBar = ({
   editorStateString,
@@ -35,11 +36,15 @@ const OptionsToolBar = ({
                   {results.map((result, index) => (
                     <Pill
                       key={index}
-                      $textColor="#FFFFFF"
-                      color="#131519c9"
+                      $textColor={"#000000c8"}
+                      color={
+                        prop === "category"
+                          ? labelColors[result?.color]
+                          : "#ffffff"
+                      }
                       title={result.value}
                       closeButton={false}
-                      $border={true}
+                      $border={prop === "category" ? false : true}
                       onClick={() => {
                         editor.update(() => {
                           const nodeMap = editor._editorState._nodeMap;
@@ -55,11 +60,20 @@ const OptionsToolBar = ({
                               lastTextNode.remove();
                             }
                           }
-                          insertMention({
-                            trigger: result.prop + ":",
-                            value: result.value,
-                            data: { memberId: result.memberId },
-                          });
+                          if (result.prop === "category") {
+                            insertMention({
+                              trigger: result.prop + ":",
+                              value: result.value,
+                              data: { id: result.id },
+                            });
+                          } else { //else is going to be a member
+                            insertMention({
+                              trigger: result.prop + ":",
+                              value: result.value,
+                              data: { memberId: result.memberId },
+                            });
+                          }
+
                           setFilteredResults([]);
                         });
                       }}

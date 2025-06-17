@@ -7,6 +7,7 @@ export default function FilterCalendar({
   showOptions,
   datePeriodClicked,
   timeZoneId,
+  category
 }: FilterCalendarProps) {
   const calendarRef = useRef<HTMLDivElement>(null);
   const [selectedDateTime, setSelectedDateTime] = useState<string>(
@@ -39,6 +40,7 @@ export default function FilterCalendar({
           calendarIsOpen={calendarIsOpen}
           showOptions={showOptions}
           withLexicalContext={true}
+          category={category}
         />
       )}
     </div>

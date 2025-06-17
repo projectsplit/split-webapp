@@ -4,8 +4,7 @@ import styled from "styled-components";
 export const StyledSearchCategoryButton = styled.div`
   border: none;
   background-color: transparent;
-
-  font-size: 20px;
+  font-size: 18px;
   display: flex;
   flex-direction: row;
   margin-top: 15px;

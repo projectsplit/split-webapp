@@ -35,7 +35,8 @@ export const EditorContent = forwardRef<
     enhancedMembersWithProps,
     submitButtonIsActive,
     isFetching,
-    filterState,
+    expenseFilterState,
+    transferFilterState,
     setEditorState,
     members,
     cancelled,
@@ -43,6 +44,7 @@ export const EditorContent = forwardRef<
     timeZoneId,
     labels,
     filteredLabels,
+    category
   } = props;
 
   const [editor] = useLexicalComposerContext();
@@ -50,6 +52,7 @@ export const EditorContent = forwardRef<
   const [filteredResults, setFilteredResults] = useState<
     { value: string; [key: string]: BeautifulMentionsItemData }[]
   >([]);
+
   const [editorStateString, setEditorStateString] = useState<string>();
   const contentEditableWrapRef = useRef<HTMLDivElement>(null);
   const showOptions = useSignal<boolean>(true);
@@ -57,15 +60,16 @@ export const EditorContent = forwardRef<
   const removedFilter = useSignal<boolean>(false);
   const datePeriodClicked = useSignal<string>("");
 
+
   const mentionItems: Record<string, BeautifulMentionsItem[]> = {};
 
   mentionItems["payer:"] = [];
   mentionItems["participant:"] = [];
   mentionItems["sender:"] = [];
   mentionItems["receiver:"] = [];
-  mentionItems["before:"] = [];
-  mentionItems["during:"] = [];
-  mentionItems["after:"] = [];
+  // mentionItems["before:"] = [];
+  // mentionItems["during:"] = [];
+  // mentionItems["after:"] = [];
   mentionItems["category:"] = [];
 
   updateMembersMentions(members, mentionItems);
@@ -113,7 +117,8 @@ export const EditorContent = forwardRef<
             setEditorStateString,
             setIsEmpty,
             calendarIsOpen,
-            datePeriodClicked
+            datePeriodClicked,
+            labels
           )
         }
       />
@@ -136,18 +141,21 @@ export const EditorContent = forwardRef<
           showOptions={showOptions}
           datePeriodClicked={datePeriodClicked}
           timeZoneId={timeZoneId}
+          category={category}
         />
       ) : filteredResults.length === 0 || editorStateString === "" ? (
         <MentionsToolbar
           showOptions={showOptions}
           filteredMembers={filteredMembers}
           submitButtonIsActive={submitButtonIsActive}
-          filterState={filterState}
+          expenseFilterState={expenseFilterState}
+          transferFilterState = {transferFilterState}
           cancelled={cancelled}
           removedFilter={removedFilter}
           calendarIsOpen={calendarIsOpen}
           datePeriodClicked={datePeriodClicked}
           filteredLabels={filteredLabels}
+          category={category}
         />
       ) : (
         <OptionsToolBar

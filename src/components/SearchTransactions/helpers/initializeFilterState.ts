@@ -1,36 +1,47 @@
 import { Params } from "react-router-dom";
 import { Signal } from "@preact/signals-react";
 import {
-  CreateFiltersRequest,
+  CreateExpenseFilterRequest,
+  CreateTransferFilterRequest,
+  ExpenseFilterResponse,
   FetchedLabel,
   FilteredMembers,
-  FilterResponse,
+  TransferFilterResponse,
 } from "../../../types";
 
 export const initializeFilterState = (
-  groupFiltersData: FilterResponse,
+  groupExpenseFiltersData: ExpenseFilterResponse,
+  groupTransferFiltersData:TransferFilterResponse,
   params: Readonly<Params<string>>,
-  filterState: Signal<CreateFiltersRequest>,
+  expenseFilterState: Signal<CreateExpenseFilterRequest>,
+  transferFilterState:Signal<CreateTransferFilterRequest>,
   filteredMembers: Signal<FilteredMembers>,
   filteredLabels:Signal<FetchedLabel[]>
 ) => {
-  filterState.value = {
+  expenseFilterState.value = {
     groupId: params.groupid || "",
-    participantsIds:groupFiltersData.participants?.map( (participant) => participant.memberId) || [],
-    payersIds: groupFiltersData.payers?.map((payer) => payer.memberId) || [],
-    receiversIds:groupFiltersData.receivers?.map((receiver) => receiver.memberId) || [],
-    sendersIds: groupFiltersData.senders?.map((sender) => sender.memberId) || [],
-    description: groupFiltersData.description,
-    before: groupFiltersData.before.map((date) => date) || [],
-    during: groupFiltersData.during.map((date) => date) || [],
-    after: groupFiltersData.after.map((date) => date) || [],
-    labels: groupFiltersData.labels.map((label) => label.id) || [],
+    participantsIds:groupExpenseFiltersData.participants?.map( (participant) => participant.memberId) || [],
+    payersIds: groupExpenseFiltersData.payers?.map((payer) => payer.memberId) || [],
+    freeText: groupExpenseFiltersData.freeText,
+    before: groupExpenseFiltersData.before.map((date) => date) || [],
+    during: groupExpenseFiltersData.during.map((date) => date) || [],
+    after: groupExpenseFiltersData.after.map((date) => date) || [],
+    labels: groupExpenseFiltersData.labels.map((label) => label.id) || [],
+  };
+  transferFilterState.value = {
+    groupId: params.groupid || "",
+    receiversIds:groupTransferFiltersData.receivers?.map((receiver) => receiver.memberId) || [],
+    sendersIds: groupTransferFiltersData.senders?.map((sender) => sender.memberId) || [],
+    freeText: groupTransferFiltersData.freeText,
+    before: groupTransferFiltersData.before.map((date) => date) || [],
+    during: groupTransferFiltersData.during.map((date) => date) || [],
+    after: groupTransferFiltersData.after.map((date) => date) || [],
   };
 
-  filteredMembers.value.participants = groupFiltersData?.participants ?? [];
-  filteredMembers.value.payers = groupFiltersData?.payers ?? [];
-  filteredMembers.value.senders = groupFiltersData?.senders ?? [];
-  filteredMembers.value.receivers = groupFiltersData?.receivers ?? [];
+  filteredMembers.value.participants = groupExpenseFiltersData?.participants ?? [];
+  filteredMembers.value.payers = groupExpenseFiltersData?.payers ?? [];
+  filteredMembers.value.senders = groupTransferFiltersData?.senders ?? [];
+  filteredMembers.value.receivers = groupTransferFiltersData?.receivers ?? [];
 
-  filteredLabels.value = groupFiltersData?.labels??[]
+  filteredLabels.value = groupExpenseFiltersData?.labels??[]
 };
