@@ -26,7 +26,8 @@ export const handleSubmitButton = (
     unknown
   >,
   menu: Signal<string | null>,
-  category: Signal<string>
+  category: Signal<string>,
+
 ) => {
   if (editorState === null) return;
 
@@ -41,7 +42,7 @@ export const handleSubmitButton = (
   const cleanedInput = (
     searchTerm.replace(mentionRegex, "").trim() +
     " " +
-    (expenseFilterState.value.description || "")
+    (expenseFilterState.value.freeText || "")
   ).trim();
 
   const jsonObject = editorState.toJSON().root.children;
@@ -59,60 +60,59 @@ export const handleSubmitButton = (
         transferFilterState.value.receiversIds.push(c.data.memberId);
 
       if (c.trigger === "before:") {
-        let normalizedDate = c.value
-          .replace(/\b(\d)\b/g, "0$1")
-          .replace(/-(\d)(?!\d)/g, "-0$1");
-        let date = DateTime.fromFormat(normalizedDate, "dd-MM-yyyy");
-        date.isValid
-          ? date.toISODate()
-          : (date = DateTime.invalid("Invalid date"));
+        // let normalizedDate = c.value
+        //   .replace(/\b(\d)\b/g, "0$1")
+        //   .replace(/-(\d)(?!\d)/g, "-0$1");
+        // let date = DateTime.fromFormat(normalizedDate, "dd-MM-yyyy");
+        // date.isValid
+        //   ? date.toISODate()
+        //   : (date = DateTime.invalid("Invalid date"));
 
-        if (isBeautifulMentionNode(c) && c.data.category === "Expenses") {
-          expenseFilterState.value.before.push(date);
+        if (isBeautifulMentionNode(c) && c.data.category === "expenses") {
+          expenseFilterState.value.before.push(c.value);
         }
-        if (isBeautifulMentionNode(c) && c.data.category === "Transfers") {
-          transferFilterState.value.before.push(date);
+        if (isBeautifulMentionNode(c) && c.data.category === "transfers") {
+          transferFilterState.value.before.push(c.value);
         }
       }
       if (c.trigger === "during:") {
-        let normalizedDate = c.value
-          .replace(/\b(\d)\b/g, "0$1")
-          .replace(/-(\d)(?!\d)/g, "-0$1");
-        let date = DateTime.fromFormat(normalizedDate, "dd-MM-yyyy");
-        date.isValid
-          ? date.toISODate()
-          : (date = DateTime.invalid("Invalid date"));
-        if (isBeautifulMentionNode(c) && c.data.category === "Expenses") {
-          expenseFilterState.value.during.push(date);
+        // let normalizedDate = c.value
+        //   .replace(/\b(\d)\b/g, "0$1")
+        //   .replace(/-(\d)(?!\d)/g, "-0$1");
+        // let date = DateTime.fromFormat(normalizedDate, "dd-MM-yyyy");
+        // date.isValid
+        //   ? date.toISODate()
+        //   : (date = DateTime.invalid("Invalid date"));
+        if (isBeautifulMentionNode(c) && c.data.category === "expenses") {
+          expenseFilterState.value.during.push(c.value);
         }
-        if (isBeautifulMentionNode(c) && c.data.category === "Transfers") {
-          transferFilterState.value.during.push(date);
+        if (isBeautifulMentionNode(c) && c.data.category === "transfers") {
+          transferFilterState.value.during.push(c.value);
         }
       }
       if (c.trigger === "after:") {
-        let normalizedDate = c.value
-          .replace(/\b(\d)\b/g, "0$1")
-          .replace(/-(\d)(?!\d)/g, "-0$1");
-        let date = DateTime.fromFormat(normalizedDate, "dd-MM-yyyy");
-        date.isValid
-          ? date.toISODate()
-          : (date = DateTime.invalid("Invalid date"));
-        if (isBeautifulMentionNode(c) && c.data.after === "Expenses") {
-          expenseFilterState.value.after.push(date);
+        // let normalizedDate = c.value
+        //   .replace(/\b(\d)\b/g, "0$1")
+        //   .replace(/-(\d)(?!\d)/g, "-0$1");
+        // let date = DateTime.fromFormat(normalizedDate, "dd-MM-yyyy");
+        // date.isValid
+        //   ? date.toISODate()
+        //   : (date = DateTime.invalid("Invalid date"));
+        if (isBeautifulMentionNode(c) && c.data.after === "expenses") {
+          expenseFilterState.value.after.push(c.value);
         }
-        if (isBeautifulMentionNode(c) && c.data.category === "Transfers") {
-          transferFilterState.value.after.push(date);
+        if (isBeautifulMentionNode(c) && c.data.category === "transfers") {
+          transferFilterState.value.after.push(c.value);
         }
       }
       if (c.trigger === "category:") {
         expenseFilterState.value.labels.push(c.data.id);
       }
-      
-      if (category.value === "Expenses") {
-        expenseFilterState.value.description = cleanedInput;
+      if (category.value === "expenses") {
+        expenseFilterState.value.freeText = cleanedInput;
       }
-      if (category.value === "Transfers") {
-        transferFilterState.value.description = cleanedInput;
+      if (category.value === "transfers") {
+        transferFilterState.value.freeText = cleanedInput;
       }
     });
 
@@ -134,7 +134,7 @@ export const handleSubmitButton = (
       groupId: expenseFilterState.value.groupId,
       participantsIds: expenseFilterState.value.participantsIds,
       payersIds: expenseFilterState.value.payersIds,
-      description: expenseFilterState.value.description,
+      freeText: expenseFilterState.value.freeText,
       before: expenseFilterState.value.before,
       during: expenseFilterState.value.during,
       after: expenseFilterState.value.after,
@@ -145,7 +145,7 @@ export const handleSubmitButton = (
       groupId: transferFilterState.value.groupId,
       receiversIds: transferFilterState.value.receiversIds,
       sendersIds: transferFilterState.value.sendersIds,
-      description: transferFilterState.value.description,
+      freeText: transferFilterState.value.freeText,
       before: transferFilterState.value.before,
       during: transferFilterState.value.during,
       after: transferFilterState.value.after,
@@ -156,8 +156,6 @@ export const handleSubmitButton = (
     //   "active",
     //   params.groupid as string,
     // ]);
-
-    // queryClient.invalidateQueries(["transactions", "filters"]);
     menu.value = null;
   }
 };

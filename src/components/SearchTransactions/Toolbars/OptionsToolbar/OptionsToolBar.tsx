@@ -34,14 +34,17 @@ const OptionsToolBar = ({
                 <div className="category">{prop}</div>
                 <div className="types">
                   {results.map((result, index) => (
-                  
                     <Pill
                       key={index}
-                      $textColor={labelColors[result.color]?"black":"FFFFF"}
-                      color={labelColors[result.color]||"FFFFF"}
+                      $textColor={"#000000c8"}
+                      color={
+                        prop === "category"
+                          ? labelColors[result?.color]
+                          : "#ffffff"
+                      }
                       title={result.value}
                       closeButton={false}
-                      $border={labelColors[result.color]?false:true}
+                      $border={prop === "category" ? false : true}
                       onClick={() => {
                         editor.update(() => {
                           const nodeMap = editor._editorState._nodeMap;
@@ -57,11 +60,20 @@ const OptionsToolBar = ({
                               lastTextNode.remove();
                             }
                           }
-                          insertMention({
-                            trigger: result.prop + ":",
-                            value: result.value,
-                            data: { memberId: result.memberId },
-                          });
+                          if (result.prop === "category") {
+                            insertMention({
+                              trigger: result.prop + ":",
+                              value: result.value,
+                              data: { id: result.id },
+                            });
+                          } else { //else is going to be a member
+                            insertMention({
+                              trigger: result.prop + ":",
+                              value: result.value,
+                              data: { memberId: result.memberId },
+                            });
+                          }
+
                           setFilteredResults([]);
                         });
                       }}

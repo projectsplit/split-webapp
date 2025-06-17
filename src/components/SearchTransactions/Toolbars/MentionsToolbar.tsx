@@ -3,7 +3,6 @@ import { MentionsToolbarProps } from "../../../interfaces";
 import SearchDateButton from "../SearchCategoryButtons/SearchDateButton/SearchDateButton";
 import SearchLabelButton from "../SearchCategoryButtons/SearchLabelButton/SearchLabelButton";
 import CurrentSearchField from "../CurrentSearchField/CurrentSearchField";
-import { CategorySelector } from "../../CategorySelector/CategorySelector";
 
 const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
   showOptions,
@@ -23,10 +22,10 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
       {showOptions.value && (
         <div className="categoryButtons">
           
-          {expenseFilterState.value.description !== "" &&
-          category.value === "Expenses" ? (
+          {expenseFilterState.value.freeText !== "" &&
+          category.value === "expenses" ? (
             <CurrentSearchField
-              currentSearch={expenseFilterState.value.description}
+              currentSearch={expenseFilterState.value.freeText}
               filterState={expenseFilterState}
               removedFilter={removedFilter}
               submitButtonIsActive={submitButtonIsActive}
@@ -35,10 +34,10 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
             <></>
           )}
 
-          {transferFilterState.value.description !== "" &&
-          category.value === "Transfers" ? (
+          {transferFilterState.value.freeText !== "" &&
+          category.value === "transfers" ? (
             <CurrentSearchField
-              currentSearch={transferFilterState.value.description}
+              currentSearch={transferFilterState.value.freeText}
               filterState={transferFilterState}
               removedFilter={removedFilter}
               submitButtonIsActive={submitButtonIsActive}
@@ -46,10 +45,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
           ) : (
             <></>
           )}
-
-       
-
-          {category.value === "Expenses" ? (
+          {category.value === "expenses" ? (
             <>
               <SearchMemberButton
                 showOptions={showOptions}
@@ -120,7 +116,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 removedFilter={removedFilter}
               />
             </>
-          ) : category.value === "Transfers" ? (
+          ) : category.value === "transfers" ? (
             <>
               <SearchMemberButton
                 showOptions={showOptions}

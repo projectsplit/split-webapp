@@ -1,7 +1,6 @@
 import { Params } from "react-router-dom";
 import { Signal } from "@preact/signals-react";
 import {
-  
   CreateExpenseFilterRequest,
   CreateTransferFilterRequest,
   ExpenseFilterResponse,
@@ -23,7 +22,7 @@ export const initializeFilterState = (
     groupId: params.groupid || "",
     participantsIds:groupExpenseFiltersData.participants?.map( (participant) => participant.memberId) || [],
     payersIds: groupExpenseFiltersData.payers?.map((payer) => payer.memberId) || [],
-    description: groupExpenseFiltersData.description,
+    freeText: groupExpenseFiltersData.freeText,
     before: groupExpenseFiltersData.before.map((date) => date) || [],
     during: groupExpenseFiltersData.during.map((date) => date) || [],
     after: groupExpenseFiltersData.after.map((date) => date) || [],
@@ -33,7 +32,7 @@ export const initializeFilterState = (
     groupId: params.groupid || "",
     receiversIds:groupTransferFiltersData.receivers?.map((receiver) => receiver.memberId) || [],
     sendersIds: groupTransferFiltersData.senders?.map((sender) => sender.memberId) || [],
-    description: groupTransferFiltersData.description,
+    freeText: groupTransferFiltersData.freeText,
     before: groupTransferFiltersData.before.map((date) => date) || [],
     during: groupTransferFiltersData.during.map((date) => date) || [],
     after: groupTransferFiltersData.after.map((date) => date) || [],

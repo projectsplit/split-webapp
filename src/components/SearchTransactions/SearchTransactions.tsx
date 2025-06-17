@@ -7,7 +7,7 @@ import { IoClose } from "react-icons/io5";
 import { EditorState } from "lexical";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
 import { EditorContent } from "./EditorContent/EditorContent";
 import { handleSubmitButton } from "./helpers/handleSubmitButton";
@@ -41,14 +41,15 @@ export default function SearchTransactions({
   const contentEditableWrapRef = useRef<HTMLDivElement>(null);
   const submitButtonIsActive = useSignal<boolean>(false);
   const cancelled = useSignal<boolean>(false);
-  const category = useSignal<string>("Expenses");
+  const path = location.pathname.split("/").pop() || "";
+  const category = useSignal<string>("expenses");
   const queryClient = useQueryClient();
 
   const expenseFilterState = useSignal<CreateExpenseFilterRequest>({
     groupId: group.id,
     participantsIds: [],
     payersIds: [],
-    description: "",
+    freeText: "",
     before: [],
     during: [],
     after: [],
@@ -59,7 +60,7 @@ export default function SearchTransactions({
     groupId: group.id,
     receiversIds: [],
     sendersIds: [],
-    description: "",
+    freeText: "",
     before: [],
     during: [],
     after: [],
@@ -86,6 +87,22 @@ export default function SearchTransactions({
     color: l.color,
     prop: "category",
   }));
+
+  useEffect(() => {
+    category.value = path;
+  }, [path]);
+
+  useEffect(() => {
+    const handleBackNavigation = () => {
+      if (menu.value) {
+        menu.value=null
+      }
+    };
+    window.addEventListener("popstate", handleBackNavigation);
+    return () => {
+      window.removeEventListener("popstate", handleBackNavigation);
+    };
+  }, [menu]);
 
   //TODO Uncomment
   // const {
@@ -114,7 +131,7 @@ export default function SearchTransactions({
     }); //TODO: Might not need it - can be deleted
 
     const handleResize = () => {
-      if ((category.value = "Expenses")) {
+      if ((category.value = "expenses")) {
         expenseFilterState.value.groupId = params.groupid as string;
         if (contentEditableWrapRef.current) {
           setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
@@ -147,20 +164,6 @@ export default function SearchTransactions({
   const { mutate: submitTransferFilters, isPending: isPendingTransfer } =
     useSubmitTransferFilters(submitFiltersError);
 
-
-  useEffect(() => {
-    const handleBackNavigation = () => {
-      if (menu.value) {
-        //handleClose();
-        menu.value = null
-      }
-    };
-    window.addEventListener("popstate", handleBackNavigation);
-    return () => {
-      window.removeEventListener("popstate", handleBackNavigation);
-    };
-  }, [menu]);
-
   return (
     <StyledSearchTransactions>
       <>
@@ -176,13 +179,13 @@ export default function SearchTransactions({
         </div>
         <div className="catSelector">
           <CategorySelector
-            activeCat={"Expenses"}
+            activeCat={path}
             categories={{
               cat1: "Expenses",
               cat2: "Transfers",
             }}
-            navLinkUse={false}
-            activeCatAsState={category}
+            navLinkUse={true}
+            // activeCatAsState={category}
           />
         </div>
         <div className="searchBarAndCategories">

@@ -1,10 +1,5 @@
-import { Signal } from "@preact/signals-react";
-
 import currency from "currency.js";
-import {
-  BeautifulMentionsItem,
-  BeautifulMentionsItemData,
-} from "lexical-beautiful-mentions";
+import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
 import { DateTime } from "luxon";
 
 export type RefreshTokenResponse = {
@@ -517,10 +512,10 @@ export type CreateExpenseFilterRequest = {
   groupId: string;
   participantsIds: string[];
   payersIds: string[];
-  description: string;
-  before: DateTime[];
-  during: DateTime[];
-  after: DateTime[];
+  freeText: string;
+  before: string[];
+  during: string[];
+  after: string[];
   labels: string[];
 };
 
@@ -528,10 +523,10 @@ export type CreateTransferFilterRequest = {
   groupId: string;
   receiversIds: string[];
   sendersIds: string[];
-  description: string;
-  before: DateTime[];
-  during: DateTime[];
-  after: DateTime[];
+  freeText: string;
+  before: string[];
+  during: string[];
+  after: string[];
 };
 
 export type SerializedLexicalNode = {
@@ -567,20 +562,20 @@ export type SerializedElementNode = SerializedLexicalNode & {
 // };
 
 export type ExpenseFilterResponse = {
- payers: FetchedMembers;
+  payers: FetchedMembers;
   participants: FetchedMembers;
-  before: DateTime[];
-  during: DateTime[];
-  after: DateTime[];
-   description: string;
+  before: string[];
+  during: string[];
+  after: string[];
+  freeText: string;
   labels: FetchedLabel[];
-}
+};
 
 export type TransferFilterResponse = {
   senders: FetchedMembers;
   receivers: FetchedMembers;
-   before: DateTime[];
-  during: DateTime[];
-  after: DateTime[];
-   description: string;
-}
+  before: string[];
+  during: string[];
+  after: string[];
+  freeText: string;
+};
