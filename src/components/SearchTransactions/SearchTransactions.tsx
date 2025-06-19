@@ -89,13 +89,17 @@ export default function SearchTransactions({
   }));
 
   useEffect(() => {
-    category.value = path;
+    if (path === "debts") {
+      category.value = "expenses";
+    } else {
+      category.value = path;
+    }
   }, [path]);
 
   useEffect(() => {
     const handleBackNavigation = () => {
       if (menu.value) {
-        menu.value=null
+        menu.value = null;
       }
     };
     window.addEventListener("popstate", handleBackNavigation);
