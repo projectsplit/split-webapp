@@ -158,7 +158,7 @@ export default function ExpenseForm({
     return payers.map((m) =>
       m.id === userMemberId ? { ...m, name: "you" } : m
     );
-  }, [participants, userMemberId]);
+  }, [payers, userMemberId]);
 
   const setParticipants = (newParticipants: PickerMember[]) => {
     setParticipantsByCategory((prev) => ({

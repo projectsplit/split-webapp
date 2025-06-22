@@ -32,7 +32,7 @@ export const useSubmitExpenseFilters = (submitFiltersError:Signal<string>) => {
 
 const submitFilters = async (req: CreateExpenseFilterRequest) => {
   const response = await apiClient.post<CreateExpenseFilterRequest>(
-    `/filters/create`,
+    `/expenses/search`,
     req
   );
   return response.data;

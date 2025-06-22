@@ -117,17 +117,15 @@ export const handleSubmitButton = (
     });
 
     //TODO actual submit
-    // submitFilters({
-    //   groupId: filterState.value.groupId,
-    //   participantsIds: filterState.value.participantsIds,
-    //   payersIds: filterState.value.payersIds,
-    //   receiversIds: filterState.value.receiversIds,
-    //   sendersIds: filterState.value.sendersIds,
-    //   description: filterState.value.description,
-    //   before: filterState.value.before,
-    //   during: filterState.value.during,
-    //   after: filterState.value.after,
-    //   labels:filterState.value.labels
+    // submitExpenseFilters({
+    //   groupId: expenseFilterState.value.groupId,
+    //   participantsIds: expenseFilterState.value.participantsIds,
+    //   payersIds: expenseFilterState.value.payersIds,
+    //   freeText: expenseFilterState.value.freeText,
+    //   before: expenseFilterState.value.before,
+    //   during: expenseFilterState.value.during,
+    //   after: expenseFilterState.value.after,
+    //   labels: expenseFilterState.value.labels,
     // });
 
     console.log("expenses", {
