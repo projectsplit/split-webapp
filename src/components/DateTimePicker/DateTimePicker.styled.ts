@@ -22,7 +22,7 @@ export const StyledDateTimePicker = styled.div<StyledDateTimePickerProps>`
   top: ${({ $isSearchCalendar }) => ($isSearchCalendar ? "280px" : "50%")};
   left: 50%;
   transform: translate(-50%, -50%);
-  margin-top: 4px;
+  margin-top:10%;
 
   .top-menu {
     display: flex;

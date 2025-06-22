@@ -4,7 +4,7 @@ import {
   StyledSearchTransactions,
 } from "./SearchTransactions.styled";
 import { IoClose } from "react-icons/io5";
-import { EditorState } from "lexical";
+import { $getRoot, EditorState } from "lexical";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -91,11 +91,13 @@ export default function SearchTransactions({
   useEffect(() => {
     if (path === "debts") {
       category.value = "expenses";
+      
     } else {
       category.value = path;
     }
   }, [path]);
 
+  
   useEffect(() => {
     const handleBackNavigation = () => {
       if (menu.value) {
@@ -189,7 +191,7 @@ export default function SearchTransactions({
               cat2: "Transfers",
             }}
             navLinkUse={true}
-            // activeCatAsState={category}
+            activeCatAsState={category}
           />
         </div>
         <div className="searchBarAndCategories">
