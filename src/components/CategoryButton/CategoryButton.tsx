@@ -10,7 +10,7 @@ export const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>
       <StyledCategoryButton
         backgroundcoloronselect={backgroundcoloronselect}
         style={style}
-        ref={ref as any} // TypeScript workaround if needed
+        ref={ref as any} 
       >
         {to ? (
           <NavLink
