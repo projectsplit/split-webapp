@@ -91,13 +91,11 @@ export default function SearchTransactions({
   useEffect(() => {
     if (path === "debts") {
       category.value = "expenses";
-      
     } else {
       category.value = path;
     }
   }, [path]);
 
-  
   useEffect(() => {
     const handleBackNavigation = () => {
       if (menu.value) {
@@ -164,8 +162,12 @@ export default function SearchTransactions({
     };
   }, []);
 
-  const { mutate: submitExpenseFilters, isPending: isPendingExpense } =
-    useSubmitExpenseFilters(submitFiltersError);
+  const {
+    mutate: submitExpenseFilters,
+    isPending: isPendingExpense,
+    data: expenseFilterData,
+  } = useSubmitExpenseFilters(submitFiltersError);
+  console.log(expenseFilterData)
 
   const { mutate: submitTransferFilters, isPending: isPendingTransfer } =
     useSubmitTransferFilters(submitFiltersError);
@@ -239,6 +241,7 @@ export default function SearchTransactions({
             }
             disabled={!submitButtonIsActive.value}
             variant={submitButtonIsActive.value ? "primary" : "secondary"}
+            isLoading={isPendingExpense || isPendingTransfer}
           >
             Apply
           </MyButton>
