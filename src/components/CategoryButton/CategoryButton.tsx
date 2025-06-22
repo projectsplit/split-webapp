@@ -16,7 +16,7 @@ export const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>
           <NavLink
             to={to}
             replace
-            className={({ isActive }) => (isActive ? "active" : "inactive")}
+            className={({ isActive }) => (isActive||selected ? "active" : "inactive")}
             onClick={onClick}
           >
             {children}
