@@ -550,6 +550,7 @@ export interface PillProps {
   onClose?: (event: React.MouseEvent<HTMLDivElement>) => void;
   fontSize?: string;
   $border: boolean;
+  $closeButtonColor?:string;
 }
 export interface AddNewUserAnimationProps extends MenuProps {
   groupName: string | undefined;

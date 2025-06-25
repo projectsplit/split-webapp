@@ -23,11 +23,12 @@ export default function CurrentSearchField({
       <div className="pills">
         <Pill
           title={currentSearch}
-          color="#A7A7A7"
+          color="#ffffff"
           closeButton={true}
           onClose={() => removeFilter()}
           $textColor="#000000c8"
           $border={false}
+          fontSize="16px"
         />
       </div>
     </StyledCurrentSearchField>

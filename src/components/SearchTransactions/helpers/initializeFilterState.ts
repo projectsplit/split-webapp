@@ -3,45 +3,88 @@ import { Signal } from "@preact/signals-react";
 import {
   CreateExpenseFilterRequest,
   CreateTransferFilterRequest,
-  ExpenseFilterResponse,
+  ExpenseFilter,
   FetchedLabel,
+  FetchedMember,
   FilteredMembers,
-  TransferFilterResponse,
+  Group,
+  TransferFilter,
 } from "../../../types";
 
 export const initializeFilterState = (
-  groupExpenseFiltersData: ExpenseFilterResponse,
-  groupTransferFiltersData:TransferFilterResponse,
+  groupExpenseFiltersData: ExpenseFilter,
+  groupTransferFiltersData:TransferFilter,
   params: Readonly<Params<string>>,
   expenseFilterState: Signal<CreateExpenseFilterRequest>,
   transferFilterState:Signal<CreateTransferFilterRequest>,
   filteredMembers: Signal<FilteredMembers>,
-  filteredLabels:Signal<FetchedLabel[]>
+  filteredLabels:Signal<FetchedLabel[]>,
+  group:Group
 ) => {
+  
+  const allMembers = [...group.members, ...group.guests]
+  const allLabels = group.labels
+
+// console.log(groupExpenseFiltersData, groupTransferFiltersData)
+
   expenseFilterState.value = {
     groupId: params.groupid || "",
-    participantsIds:groupExpenseFiltersData.participants?.map( (participant) => participant.memberId) || [],
-    payersIds: groupExpenseFiltersData.payers?.map((payer) => payer.memberId) || [],
+    participantsIds:groupExpenseFiltersData.participantsIds?.map( (id) => id) || [],
+    payersIds: groupExpenseFiltersData.payersIds?.map((id) => id) || [],
     freeText: groupExpenseFiltersData.freeText,
-    before: groupExpenseFiltersData.before.map((date) => date) || [],
-    during: groupExpenseFiltersData.during.map((date) => date) || [],
-    after: groupExpenseFiltersData.after.map((date) => date) || [],
-    labels: groupExpenseFiltersData.labels.map((label) => label.id) || [],
+    before: groupExpenseFiltersData.before ? [groupExpenseFiltersData.before] : [],
+    during: groupExpenseFiltersData.during ? [groupExpenseFiltersData.during] : [],
+    after: groupExpenseFiltersData.after ? [groupExpenseFiltersData.after] : [],
+    labels: groupExpenseFiltersData.labels?.map((id) => id) || [],
   };
+
   transferFilterState.value = {
     groupId: params.groupid || "",
-    receiversIds:groupTransferFiltersData.receivers?.map((receiver) => receiver.memberId) || [],
-    sendersIds: groupTransferFiltersData.senders?.map((sender) => sender.memberId) || [],
+    receiversIds:groupTransferFiltersData.receiversIds?.map((id) => id) || [],
+    sendersIds: groupTransferFiltersData.sendersIds?.map((id) => id) || [],
     freeText: groupTransferFiltersData.freeText,
-    before: groupTransferFiltersData.before.map((date) => date) || [],
-    during: groupTransferFiltersData.during.map((date) => date) || [],
-    after: groupTransferFiltersData.after.map((date) => date) || [],
+    before: groupTransferFiltersData.before? [groupTransferFiltersData.before]:[],
+    during: groupTransferFiltersData.during? [groupTransferFiltersData.during]:[],
+    after: groupTransferFiltersData.after? [groupTransferFiltersData.after]:[],
   };
 
-  filteredMembers.value.participants = groupExpenseFiltersData?.participants ?? [];
-  filteredMembers.value.payers = groupExpenseFiltersData?.payers ?? [];
-  filteredMembers.value.senders = groupTransferFiltersData?.senders ?? [];
-  filteredMembers.value.receivers = groupTransferFiltersData?.receivers ?? [];
+  
 
-  filteredLabels.value = groupExpenseFiltersData?.labels??[]
+    const createFetchedMember = (id: string): FetchedMember | null => {
+    const member = allMembers.find((m) => m.id === id);
+    if (!member) return null; 
+    return {
+      memberId: id,
+      value: member.name,
+      isUser: 'userId' in member, 
+    };
+  };
+
+filteredMembers.value = {
+    participants: groupExpenseFiltersData.participantsIds
+      ?.map(createFetchedMember)
+      .filter((m): m is FetchedMember => m !== null) || [],
+    payers: groupExpenseFiltersData.payersIds
+      ?.map(createFetchedMember)
+      .filter((m): m is FetchedMember => m !== null) || [],
+    senders: groupTransferFiltersData.sendersIds
+      ?.map(createFetchedMember)
+      .filter((m): m is FetchedMember => m !== null) || [],
+    receivers: groupTransferFiltersData.receiversIds
+      ?.map(createFetchedMember)
+      .filter((m): m is FetchedMember => m !== null) || [],
+  };
+
+ filteredLabels.value = groupExpenseFiltersData.labels
+    ?.map((id) => {
+      const label = allLabels.find((l) => l.id === id);
+      if (!label) return null;
+      return {
+        id: label.id,
+        value: label.text, 
+        color: label.color,
+        prop: "", 
+      };
+    })
+    .filter((label): label is FetchedLabel => label !== null) || [];
 };

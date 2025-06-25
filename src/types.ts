@@ -508,7 +508,7 @@ export type GroupedItem = {
   [key: string]: FilteredResultItem[]; // Groups items under keys by `prop`
 };
 
-export type CreateExpenseFilterRequest = {
+export type CreateExpenseFilterRequest = {//Do not change
   groupId: string;
   participantsIds: string[];
   payersIds: string[];
@@ -519,7 +519,18 @@ export type CreateExpenseFilterRequest = {
   labels: string[];
 };
 
-export type CreateTransferFilterRequest = {
+export type ExpenseFilter = {
+  groupId: string;
+  participantsIds: string[];
+  payersIds: string[];
+  freeText: string;
+  before: string;
+  during: string;
+  after: string;
+  labels: string[];
+};
+
+export type CreateTransferFilterRequest = { //Do not change
   groupId: string;
   receiversIds: string[];
   sendersIds: string[];
@@ -527,6 +538,16 @@ export type CreateTransferFilterRequest = {
   before: string[];
   during: string[];
   after: string[];
+};
+
+export type TransferFilter = {
+  groupId: string;
+  receiversIds: string[];
+  sendersIds: string[];
+  freeText: string;
+  before: string;
+  during: string;
+  after: string;
 };
 
 export type SerializedLexicalNode = {

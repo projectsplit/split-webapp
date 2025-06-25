@@ -47,6 +47,7 @@ export const EditorContent = forwardRef<
     category
   } = props;
 
+
   const [editor] = useLexicalComposerContext();
   const [isEmpty, setIsEmpty] = useState(true);
   const [filteredResults, setFilteredResults] = useState<
