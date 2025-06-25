@@ -3,7 +3,7 @@ import { StyledPill } from "./Pill.styled";
 
 import { IoClose } from "react-icons/io5";
 
-export default function Pill({ title, color, closeButton, onClick, onClose, fontSize, $textColor,$border }: PillProps) {
+export default function Pill({ title, color, closeButton, onClick, onClose, fontSize, $textColor,$border,$closeButtonColor }: PillProps) {
   return (
     <StyledPill color={color} fontSize={fontSize} $textColor={$textColor} $border ={$border } >
       <div className="titleAndCloseButton" onClick={onClick}>
@@ -15,7 +15,7 @@ export default function Pill({ title, color, closeButton, onClick, onClose, font
               onClose(e);
             }
           }}>
-            <IoClose />
+            <IoClose fontSize={fontSize} color={$closeButtonColor?$closeButtonColor:"black"}/>
           </div>
         ) : (
           <></>

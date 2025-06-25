@@ -16,11 +16,13 @@ export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
   cancelled,
   removedFilter,
 }) => {
+
   const [showFilteredMembers, setShowFilteredMembers] =
     useState<FetchedMembers>([]);
   const { insertMention } = useBeautifulMentions();
 
   const updateFilteredMembers = () => {
+ 
     switch (category) {
       case "payer":
         return filteredMembers.value.payers;
@@ -34,17 +36,13 @@ export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
         return [];
     }
   };
-
-  useEffect(() => {
-    setShowFilteredMembers(updateFilteredMembers());
-  }, [cancelled.value]);
-
-  useEffect(() => {
-    if (cancelled.value === true) {
-      setShowFilteredMembers(updateFilteredMembers());
-    }
+// console.log(filteredMembers.value,showFilteredMembers)
+useEffect(() => {
+  setShowFilteredMembers(updateFilteredMembers());
+  if (cancelled.value === true) {
     cancelled.value = false;
-  }, [cancelled.value]);
+  }
+}, [filteredMembers.value, category, cancelled.value]);
 
   const removeFilter = (memberId: string) => {
     removedFilter.value = true;
@@ -133,6 +131,8 @@ export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
                 onClose={() => removeFilter(member.memberId)}
                 $textColor="#000000c8"
                 $border={false}
+                fontSize="16px"
+          
               />
             </div>
           ))

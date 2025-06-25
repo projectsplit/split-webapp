@@ -18,7 +18,7 @@ export const useMembers = (
     const fetchedMembers: FetchedMembers = allMembers.map((m) => ({
       memberId: m.id,
       value: m.name,
-      isUser: m.id === userInfo.userId,
+      isUser: group?.members?.find((m) => m.userId === userInfo?.userId)?.id===m.id,
     }));
 
     const enhancedMembersWithProps: EnhancedMembersWithProps =

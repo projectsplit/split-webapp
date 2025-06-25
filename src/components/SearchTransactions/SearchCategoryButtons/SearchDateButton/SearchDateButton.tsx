@@ -19,32 +19,31 @@ export default function SearchDateButton({
   const { insertMention } = useBeautifulMentions();
   const [showDate, setShowDate] = useState<string[]>([]);
 
-  const updateShowDate = () => {
+ const updateShowDate = () => {
     switch (category) {
-      case "before":
-        setShowDate(filterState.value.before);
+      case 'before':
+        setShowDate(filterState.value.before || []);
         break;
-      case "during":
-        setShowDate(filterState.value.during);
+      case 'during':
+        setShowDate(filterState.value.during || []);
         break;
-      case "after":
-        setShowDate(filterState.value.after);
+      case 'after':
+        setShowDate(filterState.value.after || []);
         break;
       default:
-        return [];
+        setShowDate([]);
+        break;
     }
   };
 
   useEffect(() => {
     updateShowDate();
-  }, [cancelled.value]);
-
-  useEffect(() => {
-    if (cancelled.value === true) {
-      updateShowDate();
-    }
+     if (cancelled.value === true) {
     cancelled.value = false;
-  }, [cancelled.value]);
+  }
+  }, [filterState.value, category, cancelled.value]);
+
+
 
   const removeFilter = (dateToBeRemoved: string) => {
     removedFilter.value = true;
@@ -89,21 +88,13 @@ export default function SearchDateButton({
           showDate.map((date, index) => (
             <div key={index}>
               <Pill
-                title={`${new Date(date.toString())
-                  .getUTCDate()
-                  .toString()
-                  .padStart(2, "0")}-${(
-                  new Date(date.toString()).getUTCMonth() + 1
-                )
-                  .toString()
-                  .padStart(2, "0")}-${new Date(
-                  date.toString()
-                ).getUTCFullYear()}`}
-                color="#A7A7A7"
+                title={showDate[0]}
+                color="#ffffff"
                 closeButton={true}
                 onClose={() => removeFilter(date)}
                 $textColor="#000000c8"
                 $border={false}
+                 fontSize="16px"
               />
             </div>
           ))

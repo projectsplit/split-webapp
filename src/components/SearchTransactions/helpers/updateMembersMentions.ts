@@ -10,25 +10,28 @@ export function updateMembersMentions(
   if (!fetchedMembers) {
     return; 
   }
-  
+ 
   fetchedMembers.forEach((member) => {
     mentionItems["payer:"].push({
       value: member.value,
       memberId: member.memberId,
-      
+      isUser:member.isUser
     });
 
     mentionItems["participant:"].push({
       value: member.value,
       memberId: member.memberId,
+      isUser:member.isUser
     });
     mentionItems["sender:"].push({
       value: member.value,
       memberId: member.memberId,
+      isUser:member.isUser
     });
     mentionItems["receiver:"].push({
       value: member.value,
       memberId: member.memberId,
+      isUser:member.isUser
     });
   });
 }

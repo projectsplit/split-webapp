@@ -4,6 +4,7 @@ import { StyledLabelsPillsDisplay } from "./LabelsPillsDisplay.styled";
 import Pill from "../../../../Pill/Pill";
 import { useEffect, useState } from "react";
 import { FetchedLabel } from "../../../../../types";
+import labelColors from "../../../../../labelColors";
 
 export default function LabelsPillsDisplay({
   category,
@@ -54,13 +55,14 @@ useEffect(() => {
           showFilteredLabels.map((label) => (
             <div key={label.value}>
               <Pill
-                key={label.id}
-                title={label.value}
-                color={label.color}
+                key={label?.id}
+                title={label?.value}
+                color={labelColors[label?.color]}
                 closeButton={true}
-                onClose={() => removeFilter(label.id)}
+                onClose={() => removeFilter(label?.id)}
                 $textColor="#000000c8"
                 $border={false}
+                 fontSize="16px"
               />
             </div>
           ))

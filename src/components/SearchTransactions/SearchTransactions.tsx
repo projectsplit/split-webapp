@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   SpinnerContainer,
   StyledSearchTransactions,
@@ -23,11 +23,11 @@ import {
   FilteredMembers,
 } from "../../types";
 import MyButton from "../MyButton/MyButton";
-import { useSubmitExpenseFilters } from "../../api/services/useSubmitExpenseFilters";
 import { useGetGroupFilters } from "../../api/services/useGetGroupFilters";
 import { useMembers } from "./hooks/useMembers";
-import { useSubmitTransferFilters } from "../../api/services/useSubmitTransferFilters";
+
 import { CategorySelector } from "../CategorySelector/CategorySelector";
+import { localStorageStringParser } from "./helpers/localStorageStringParser";
 
 export default function SearchTransactions({
   menu,
@@ -72,6 +72,7 @@ export default function SearchTransactions({
     senders: [],
     receivers: [],
   });
+
   const filteredLabels = useSignal<FetchedLabel[]>([]);
 
   const editorContentRef = useRef<EditorContentHandle | null>(null);
@@ -81,6 +82,7 @@ export default function SearchTransactions({
     group,
     userInfo
   );
+
   const fetchedLabels: FetchedLabel[] = group.labels.map((l) => ({
     id: l.id,
     value: l.text,
@@ -114,26 +116,27 @@ export default function SearchTransactions({
   //   data: groupFiltersData,
   //   error,
   // } = useGetGroupFilters(params.groupid);
-
-  // useEffect(() => {
-  //   if (groupFiltersData) {
-  //     initializeFilterState(
-  //       groupExpenseFiltersData, this used to be groupFiltersData from useGroupFilters. You will now have two endpoints or maybe use local storage if they won't be stored at DB from now on.
-  //       groupTransferFiltersData,
-  //       params,
-  //       filterState,
-  //       filteredMembers,
-  //       filteredLabels
-  //     );
-  //   }
-  // }, [groupFiltersData, params.groupid, cancelled.value]);
+  const { expenseFilter, transferFilter } = useMemo(() => {
+    return localStorageStringParser(
+      localStorage.getItem("expenseFilter"),
+      localStorage.getItem("transferFilter")
+    );
+  },[localStorage.getItem("expenseFilter"), localStorage.getItem("transferFilter")]);
 
   useEffect(() => {
-    queryClient.refetchQueries({
-      queryKey: ["filters"],
-      exact: false,
-    }); //TODO: Might not need it - can be deleted
+    initializeFilterState(
+      expenseFilter,
+      transferFilter,
+      params,
+      expenseFilterState,
+      transferFilterState,
+      filteredMembers,
+      filteredLabels,
+      group
+    );
+  }, [expenseFilter, transferFilter, params.groupid, cancelled.value]);
 
+  useEffect(() => {
     const handleResize = () => {
       if ((category.value = "expenses")) {
         expenseFilterState.value.groupId = params.groupid as string;
@@ -147,9 +150,6 @@ export default function SearchTransactions({
         }
       }
     };
-
-    //handleResize();
-
     const resizeObserver = new ResizeObserver(handleResize);
     if (contentEditableWrapRef.current) {
       resizeObserver.observe(contentEditableWrapRef.current);
@@ -161,16 +161,6 @@ export default function SearchTransactions({
       }
     };
   }, []);
-
-  const {
-    mutate: submitExpenseFilters,
-    isPending: isPendingExpense,
-    data: expenseFilterData,
-  } = useSubmitExpenseFilters(submitFiltersError);
-  console.log(expenseFilterData)
-
-  const { mutate: submitTransferFilters, isPending: isPendingTransfer } =
-    useSubmitTransferFilters(submitFiltersError);
 
   return (
     <StyledSearchTransactions>
@@ -199,7 +189,7 @@ export default function SearchTransactions({
         <div className="searchBarAndCategories">
           <div className="lexicalSearch">
             <LexicalComposer initialConfig={initialConfig}>
-              {false ? ( //TODO isFetching
+              {false ? ( //TODO isFetching was used when loading filters from DB
                 <SpinnerContainer>
                   <Spinner />
                 </SpinnerContainer>
@@ -209,7 +199,7 @@ export default function SearchTransactions({
                   contentEditableHeight={contentEditableHeight}
                   enhancedMembersWithProps={enhancedMembersWithProps}
                   submitButtonIsActive={submitButtonIsActive}
-                  isFetching={false} //TODO isFetching
+                  isFetching={false} //TODO isFetching was used when loading filters from DB
                   expenseFilterState={expenseFilterState}
                   transferFilterState={transferFilterState}
                   setEditorState={setEditorState}
@@ -233,15 +223,12 @@ export default function SearchTransactions({
                 editorState,
                 expenseFilterState,
                 transferFilterState,
-                submitExpenseFilters,
-                submitTransferFilters,
                 menu,
                 category
               )
             }
             disabled={!submitButtonIsActive.value}
             variant={submitButtonIsActive.value ? "primary" : "secondary"}
-            isLoading={isPendingExpense || isPendingTransfer}
           >
             Apply
           </MyButton>

@@ -15,7 +15,8 @@ export const StyledCurrentSearchField = styled.div`
   }
 
   .category{
-    color: ${({ theme }) => theme.grey};
+    font-size:18px;
+    color: white;
   }
   .pills {
     display: flex;
