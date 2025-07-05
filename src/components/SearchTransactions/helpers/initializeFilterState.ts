@@ -25,16 +25,17 @@ export const initializeFilterState = (
   const allMembers = [...group.members, ...group.guests]
   const allLabels = group.labels
 
-// console.log(groupExpenseFiltersData, groupTransferFiltersData)
+  const showExpenseDuring = groupExpenseFiltersData.before===groupExpenseFiltersData.after&&groupExpenseFiltersData.before!==null && groupExpenseFiltersData.before!==''
+  const showTransferDuring = groupTransferFiltersData.before===groupTransferFiltersData.after&&groupTransferFiltersData.before!==null && groupTransferFiltersData.before!==''
 
   expenseFilterState.value = {
     groupId: params.groupid || "",
     participantsIds:groupExpenseFiltersData.participantsIds?.map( (id) => id) || [],
     payersIds: groupExpenseFiltersData.payersIds?.map((id) => id) || [],
     freeText: groupExpenseFiltersData.freeText,
-    before: groupExpenseFiltersData.before ? [groupExpenseFiltersData.before] : [],
-    during: groupExpenseFiltersData.during ? [groupExpenseFiltersData.during] : [],
-    after: groupExpenseFiltersData.after ? [groupExpenseFiltersData.after] : [],
+    before: showExpenseDuring? [] : groupExpenseFiltersData.before ? [groupExpenseFiltersData.before] : [],
+    during: showExpenseDuring ? [groupExpenseFiltersData.after] : [],
+    after:  showExpenseDuring ? [] : groupExpenseFiltersData.after ? [groupExpenseFiltersData.after] : [],
     labels: groupExpenseFiltersData.labels?.map((id) => id) || [],
   };
 
@@ -43,9 +44,9 @@ export const initializeFilterState = (
     receiversIds:groupTransferFiltersData.receiversIds?.map((id) => id) || [],
     sendersIds: groupTransferFiltersData.sendersIds?.map((id) => id) || [],
     freeText: groupTransferFiltersData.freeText,
-    before: groupTransferFiltersData.before? [groupTransferFiltersData.before]:[],
-    during: groupTransferFiltersData.during? [groupTransferFiltersData.during]:[],
-    after: groupTransferFiltersData.after? [groupTransferFiltersData.after]:[],
+    before: showTransferDuring ? [] : groupTransferFiltersData.before? [groupTransferFiltersData.before]:[],
+    during: showTransferDuring ? [groupTransferFiltersData.after] : [],
+    after: showTransferDuring ? [] : groupTransferFiltersData.after? [groupTransferFiltersData.after]:[],
   };
 
   
