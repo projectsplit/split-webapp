@@ -35,13 +35,13 @@ export const getGroupExpenses = async (
   params.append("groupId", groupId);
   params.append("pageSize", pageSize.toString());
   if (next) params.append("next", next);
-  if (freeText) params.append("freeText", freeText);
+  if (freeText) params.append("searchTerm", freeText);
   if (before) params.append("before", reformatDate(before));
   if (after) params.append("after", reformatDate(after));
 
-  participantsIds.forEach((id) => params.append("participantsIds", id));
-  payersIds.forEach((id) => params.append("payersIds", id));
-  labels.forEach((label) => params.append("labels", label));
+  participantsIds.forEach((id) => params.append("participantIds", id));
+  payersIds.forEach((id) => params.append("payerIds", id));
+  labels.forEach((label) => params.append("labelIds", label));
 
   const response = await apiClient.get<
     void,
