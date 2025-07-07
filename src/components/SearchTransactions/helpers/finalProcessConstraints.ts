@@ -35,3 +35,14 @@ export const finalProcessConstraints = (array: DateConstraint[]) => {
     }
   }
 };
+
+//finalProcessConstraints:
+
+// input will be an array {trigger:string, value:string}[]
+// we need to use deduplicateFromEndOfArr and getDateIntersection.
+// if array length is one then check if trigger is during. In that case return before and after the date
+// if array length is 2 then calculate using getDateIntersection
+// if array length is 3
+// a) Take first two arguments and intersect. If result is length one then intersect with third
+// b) Take first two arguments and intersect. If length===2 then deduplicate with current order.
+// This will bring it down to 2. Then intersect.

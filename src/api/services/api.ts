@@ -15,6 +15,7 @@ import {
   TransferParsedFilters,
 } from "../../types";
 import { reformatDate } from "../../components/SearchTransactions/helpers/reformatDate";
+import { DateTime } from "luxon";
 
 export const getGroupExpenses = async (
   groupId: string,
@@ -37,8 +38,24 @@ export const getGroupExpenses = async (
   params.append("pageSize", pageSize.toString());
   if (next) params.append("next", next);
   if (freeText) params.append("searchTerm", freeText);
-  if (before) params.append("before", reformatDate(before));
-  if (after) params.append("after", reformatDate(after));
+
+  if (before === after && before !== null && after!==null) {
+
+    let beforeDate = DateTime.fromFormat(before, "dd-MM-yyyy");
+    let afterDate = DateTime.fromFormat(after, "dd-MM-yyyy");
+
+    beforeDate = beforeDate.plus({ days: 1 });
+
+    params.append("before", reformatDate(beforeDate.toFormat("dd-MM-yyyy")));
+    params.append("after", reformatDate(afterDate.toFormat("dd-MM-yyyy")));
+
+  } else {
+
+    if (before) params.append("before", reformatDate(before));
+    if (after) params.append("after", reformatDate(after));
+  }
+
+
 
   participantsIds.forEach((id) => params.append("participantIds", id));
   payersIds.forEach((id) => params.append("payerIds", id));
@@ -73,8 +90,21 @@ export const getGroupTransfers = async (
   params.append("pageSize", pageSize.toString());
   if (next) params.append("next", next);
   if (freeText) params.append("searchTerm", freeText);
-  if (before) params.append("before", reformatDate(before));
-  if (after) params.append("after", reformatDate(after));
+
+  if (before === after && before !== null && after!==null) {
+
+    let beforeDate = DateTime.fromFormat(before, "dd-MM-yyyy");
+    let afterDate = DateTime.fromFormat(after, "dd-MM-yyyy");
+
+    beforeDate = beforeDate.plus({ days: 1 });
+
+    params.append("before", reformatDate(beforeDate.toFormat("dd-MM-yyyy")));
+    params.append("after", reformatDate(afterDate.toFormat("dd-MM-yyyy")));
+
+  } else {
+    if (before) params.append("before", reformatDate(before));
+    if (after) params.append("after", reformatDate(after));
+  }
 
   sendersIds.forEach((id) => params.append("senderIds", id));
   receiversIds.forEach((id) => params.append("receiverIds", id));
