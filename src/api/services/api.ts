@@ -12,13 +12,14 @@ import {
   MostRecentGroupDetailsResponse,
   DebtsResponse,
   ExpenseParsedFilters,
+  TransferParsedFilters,
 } from "../../types";
 import { reformatDate } from "../../components/SearchTransactions/helpers/reformatDate";
 
 export const getGroupExpenses = async (
   groupId: string,
   pageSize: number,
-   parsedFilters: ExpenseParsedFilters = {},
+  parsedFilters: ExpenseParsedFilters = {},
   next?: string
 ): Promise<GetGroupExpensesResponse> => {
   const {
@@ -54,9 +55,30 @@ export const getGroupExpenses = async (
 export const getGroupTransfers = async (
   groupId: string,
   pageSize: number,
+  parsedFilters: TransferParsedFilters = {},
   next?: string
 ): Promise<GetGroupTransfersResponse> => {
-  const params = { groupId, pageSize, next };
+
+    const {
+    sendersIds = [],
+    receiversIds = [],
+    freeText = "",
+    before = null,
+    after = null,
+  } = parsedFilters;
+
+  // Construct query parameters manually
+  const params = new URLSearchParams();
+  params.append("groupId", groupId);
+  params.append("pageSize", pageSize.toString());
+  if (next) params.append("next", next);
+  if (freeText) params.append("searchTerm", freeText);
+  if (before) params.append("before", reformatDate(before));
+  if (after) params.append("after", reformatDate(after));
+
+  sendersIds.forEach((id) => params.append("senderIds", id));
+  receiversIds.forEach((id) => params.append("receiverIds", id));
+
   const response = await apiClient.get<
     void,
     AxiosResponse<GetGroupTransfersResponse>

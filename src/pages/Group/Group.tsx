@@ -12,6 +12,7 @@ import {
   ExpenseFilter,
   ExpenseParsedFilters,
   ExpenseResponseItem,
+  TransferParsedFilters,
   UserInfo,
 } from "../../types";
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
@@ -41,6 +42,7 @@ export default function Group() {
   const groupError = useSignal<errorObject>();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const expenseParsedFilters = useSignal<ExpenseParsedFilters>({})
+  const transferParsedFilters = useSignal<TransferParsedFilters>({})
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
@@ -129,7 +131,7 @@ export default function Group() {
             }}
             navLinkUse={true}
           />
-          <Outlet context={{ userInfo, group, showBottomBar,expenseParsedFilters }} />
+          <Outlet context={{ userInfo, group, showBottomBar,expenseParsedFilters,transferParsedFilters }} />
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}
 
           <MenuAnimationBackground menu={menu} />
@@ -162,7 +164,7 @@ export default function Group() {
             />
           )}
           <GroupQuickActionsAnimation menu={menu} />
-          {group && <SearchTransactionsAnimation menu={menu} group={group} userInfo={userInfo} timeZoneId={timeZoneId} expenseParsedFilters={expenseParsedFilters}/>}
+          {group && <SearchTransactionsAnimation menu={menu} group={group} userInfo={userInfo} timeZoneId={timeZoneId} expenseParsedFilters={expenseParsedFilters} transferParsedFilters={transferParsedFilters}/>}
           <div className="bottomMenu">
             {" "}
             <BottomMainMenu
