@@ -34,6 +34,7 @@ export default function SearchTransactions({
   group,
   userInfo,
   timeZoneId,
+  expenseParsedFilters
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
@@ -110,12 +111,7 @@ export default function SearchTransactions({
     };
   }, [menu]);
 
-  //TODO Uncomment
-  // const {
-  //   isFetching,
-  //   data: groupFiltersData,
-  //   error,
-  // } = useGetGroupFilters(params.groupid);
+
   const { expenseFilter, transferFilter } = useMemo(() => {
     return localStorageStringParser(
       localStorage.getItem("expenseFilter"),
@@ -224,7 +220,9 @@ export default function SearchTransactions({
                 expenseFilterState,
                 transferFilterState,
                 menu,
-                category
+                category,
+                queryClient,
+                expenseParsedFilters 
               )
             }
             disabled={!submitButtonIsActive.value}

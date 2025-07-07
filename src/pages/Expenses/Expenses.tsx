@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Expense from "../../components/Expense/Expense";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { ExpenseResponseItem, Group, UserInfo } from "../../types";
@@ -27,11 +27,11 @@ const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const errorMessage = useSignal<string>("");
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
-
-  const { userInfo, group, showBottomBar } = useOutletContext<{
+  const { userInfo, group, showBottomBar,expenseParsedFilters } = useOutletContext<{
     userInfo: UserInfo;
     group: Group;
     showBottomBar: Signal<boolean>;
+    expenseParsedFilters:Signal<any>;
   }>();
 
   const timeZoneId = userInfo?.timeZone;
@@ -53,16 +53,24 @@ const Expenses = () => {
   const shouldOpenMultiCurrencyTable =
     Object.keys(groupTotalsByCurrency).length > 1;
 
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
-      queryKey: ["groupExpenses", group?.id, pageSize, errorMessage.value],
+      queryKey: ["groupExpenses", group?.id, pageSize, expenseParsedFilters.value],
       queryFn: ({ pageParam: next }) =>
-        getGroupExpenses(group?.id!, pageSize, next),
+        getGroupExpenses(group?.id!, pageSize, expenseParsedFilters.value, next),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
       initialPageParam: "",
     });
 
   const expenses = data?.pages.flatMap((p) => p.expenses);
+
+    useEffect(() => {
+    const expenseFilters = localStorage.getItem("expenseFilter");
+    if (expenseFilters) {
+      expenseParsedFilters.value= JSON.parse(expenseFilters);
+    }
+  }, []);
 
   useEffect(() => {
     isFetching && !isFetchingNextPage
