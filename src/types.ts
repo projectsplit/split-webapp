@@ -618,3 +618,8 @@ export type TransferParsedFilters= {
   after?: string | null;
 
 }
+
+export type DateConstraint = {
+  trigger: "before:" | "after:" | "during:";
+  value: string; 
+};
