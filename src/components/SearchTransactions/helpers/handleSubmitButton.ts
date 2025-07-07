@@ -5,18 +5,24 @@ import {
   CreateExpenseFilterRequest,
   CreateTransferFilterRequest,
 } from "../../../types";
+import { QueryClient } from "@tanstack/react-query";
+
 
 type DateConstraint = {
   trigger: "before:" | "after:" | "during:";
   value: string; // Format: "dd-mm-yyyy"
 };
 
+
+
 export const handleSubmitButton = (
   editorState: EditorState | null,
   expenseFilterState: Signal<CreateExpenseFilterRequest>,
   transferFilterState: Signal<CreateTransferFilterRequest>,
   menu: Signal<string | null>,
-  category: Signal<string>
+  category: Signal<string>,
+  queryClient: QueryClient,
+  expenseParsedFilters:Signal<any>
 ) => {
   if (editorState === null) return;
 
@@ -173,16 +179,6 @@ export const handleSubmitButton = (
       labels: expenseFilterState.value.labels,
     };
 
-    // const expenseFilterFront = {
-    //   groupId: expenseFilterState.value.groupId,
-    //   participantsIds: expenseFilterState.value.participantsIds,
-    //   payersIds: expenseFilterState.value.payersIds,
-    //   freeText: expenseFilterState.value.freeText,
-    //   before: expenseFilterState.value.before[expenseFilterState.value.before.length - 1],
-    //   during: expenseFilterState.value.during[expenseFilterState.value.during.length - 1],
-    //   after: expenseFilterState.value.after[expenseFilterState.value.after.length - 1],
-    //   labels: expenseFilterState.value.labels,
-    // }
 
     const transferFilter = {
       groupId: transferFilterState.value.groupId,
@@ -197,32 +193,12 @@ export const handleSubmitButton = (
         null,
     };
 
-    // const transferFilterFront = {
-    //   groupId: transferFilterState.value.groupId,
-    //   receiversIds: transferFilterState.value.receiversIds,
-    //   sendersIds: transferFilterState.value.sendersIds,
-    //   freeText: transferFilterState.value.freeText,
-    //   before: transferFilterState.value.before[transferFilterState.value.before.length - 1],
-    //   during: transferFilterState.value.during[transferFilterState.value.during.length - 1],
-    //   after: transferFilterState.value.after[transferFilterState.value.after.length - 1],
-    // };
-
-    // localStorage.setItem("expenseFilterFront", JSON.stringify(expenseFilterFront));
-    // localStorage.setItem("transferFilterFront", JSON.stringify(transferFilterFront));
     localStorage.setItem("expenseFilter", JSON.stringify(expenseFilter));
     localStorage.setItem("transferFilter", JSON.stringify(transferFilter));
+    expenseParsedFilters.value = expenseFilter
+    queryClient.invalidateQueries({ queryKey: ["groupExpenses"], exact: false });
     menu.value = null;
-
-
-    // console.log(finalProcessConstraints([
-    //   { trigger: 'after:', value: '01-07-2025' },
-    //   { trigger: 'during:', value: '10-07-2025' }]))
-
-    // queryClient.invalidateQueries([
-    //   "transactions",
-    //   "active",
-    //   params.groupid as string,
-    // ]);
+   
   }
 };
 
@@ -330,7 +306,6 @@ function getDateIntersection(
       : [{ trigger: "after:", value: constraint2.value }];
   }
 
-  // Same type constraints
   if (constraint1.trigger === constraint2.trigger) {
     if (constraint1.trigger === "after:") {
       return date1 >= date2
@@ -344,19 +319,9 @@ function getDateIntersection(
     }
   }
 
-  return []; // Fallback, should not reach here with valid inputs
+  return []; 
 }
 
-//finalProcessConstraints:
-
-// input will be an array {trigger:string, value:string}[]
-// we need to use deduplicateFromEndOfArr and getDateIntersection.
-// if array length is one then check if trigger is during. In that case return before and after the date
-// if array length is 2 then calculate using getDateIntersection
-// if array length is 3
-// a) Take first two arguments and intersect. If result is length one then intersect with third
-// b) Take first two arguments and intersect. If length===2 then deduplicate with current order.
-// This will bring it down to 2. Then intersect.
 
 const finalProcessConstraints = (array: DateConstraint[]) => {
   const dedupedArray = deduplicateFromEndofArr(array);

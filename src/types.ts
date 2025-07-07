@@ -600,3 +600,12 @@ export type TransferFilterResponse = {
   after: string[];
   freeText: string;
 };
+
+export type ExpenseParsedFilters= {
+  participantsIds?: string[];
+  payersIds?: string[];
+  freeText?: string;
+  before?: string | null;
+  after?: string | null;
+  labels?: string[];
+}

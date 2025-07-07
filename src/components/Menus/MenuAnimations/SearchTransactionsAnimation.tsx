@@ -8,6 +8,7 @@ export default function SearchTransactionsAnimation({
   group,
   userInfo,
   timeZoneId,
+  expenseParsedFilters
 }: SearchTransactionAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -18,6 +19,7 @@ export default function SearchTransactionsAnimation({
           group={group}
           userInfo={userInfo}
           timeZoneId={timeZoneId}
+          expenseParsedFilters={expenseParsedFilters}
         />
       </div>
     </CSSTransition>

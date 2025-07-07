@@ -18,7 +18,7 @@ export default function CurrentSearchField({
 
   return (
     <StyledCurrentSearchField>
-      <div className="category">current search:</div>
+      <div className="category">search term:</div>
       &nbsp;
       <div className="pills">
         <Pill

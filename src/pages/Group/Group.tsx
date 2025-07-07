@@ -9,6 +9,8 @@ import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
 import {
+  ExpenseFilter,
+  ExpenseParsedFilters,
   ExpenseResponseItem,
   UserInfo,
 } from "../../types";
@@ -38,6 +40,7 @@ export default function Group() {
   const showBottomBar = useSignal<boolean>(false);
   const groupError = useSignal<errorObject>();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
+  const expenseParsedFilters = useSignal<ExpenseParsedFilters>({})
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
@@ -126,7 +129,7 @@ export default function Group() {
             }}
             navLinkUse={true}
           />
-          <Outlet context={{ userInfo, group, showBottomBar }} />
+          <Outlet context={{ userInfo, group, showBottomBar,expenseParsedFilters }} />
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}
 
           <MenuAnimationBackground menu={menu} />
@@ -139,6 +142,7 @@ export default function Group() {
               menu={menu}
               selectedExpense={selectedExpense}
               timeZoneCoordinates={timeZoneCoordinates}
+
             />
           )}
           {group && (
@@ -158,7 +162,7 @@ export default function Group() {
             />
           )}
           <GroupQuickActionsAnimation menu={menu} />
-          {group && <SearchTransactionsAnimation menu={menu} group={group} userInfo={userInfo} timeZoneId={timeZoneId}/>}
+          {group && <SearchTransactionsAnimation menu={menu} group={group} userInfo={userInfo} timeZoneId={timeZoneId} expenseParsedFilters={expenseParsedFilters}/>}
           <div className="bottomMenu">
             {" "}
             <BottomMainMenu
