@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { StyledSearchCategoryButton } from "../SearchCategoryButton.styled";
 import { useBeautifulMentions } from "lexical-beautiful-mentions";
-import { DateTime } from "luxon";
 import Pill from "../../../Pill/Pill";
 import { SearchDateButtonProps } from "../../../../interfaces";
 
