@@ -4,6 +4,8 @@ import { Signal } from "@preact/signals-react";
 import {
   CreateExpenseFilterRequest,
   CreateTransferFilterRequest,
+  ExpenseParsedFilters,
+  TransferParsedFilters,
 } from "../../../types";
 import { QueryClient } from "@tanstack/react-query";
 
@@ -22,7 +24,8 @@ export const handleSubmitButton = (
   menu: Signal<string | null>,
   category: Signal<string>,
   queryClient: QueryClient,
-  expenseParsedFilters:Signal<any>
+  expenseParsedFilters:Signal<ExpenseParsedFilters>,
+  transferParsedFilters:Signal<TransferParsedFilters>
 ) => {
   if (editorState === null) return;
 
@@ -195,8 +198,10 @@ export const handleSubmitButton = (
 
     localStorage.setItem("expenseFilter", JSON.stringify(expenseFilter));
     localStorage.setItem("transferFilter", JSON.stringify(transferFilter));
-    expenseParsedFilters.value = expenseFilter
+    expenseParsedFilters.value = expenseFilter;
+    transferParsedFilters.value = transferFilter;
     queryClient.invalidateQueries({ queryKey: ["groupExpenses"], exact: false });
+    queryClient.invalidateQueries({ queryKey: ["groupTransfers"], exact: false });
     menu.value = null;
    
   }

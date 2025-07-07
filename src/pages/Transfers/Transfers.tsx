@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
-import { Group, TransferResponseItem, UserInfo } from "../../types";
+import { Group, TransferParsedFilters, TransferResponseItem, UserInfo } from "../../types";
 import { getGroupTransfers } from "../../api/services/api";
 import { StyledTransfers } from "./Transfers.styled";
 import { BiTransfer } from "react-icons/bi";
@@ -22,10 +22,11 @@ import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimation
 const Transfers: React.FC = () => {
   const pageSize = 10;
 
-  const { userInfo, group, showBottomBar } = useOutletContext<{
+  const { userInfo, group, showBottomBar,transferParsedFilters } = useOutletContext<{
     userInfo: UserInfo;
     group: Group;
     showBottomBar: Signal<boolean>;
+    transferParsedFilters:Signal<TransferParsedFilters>;
   }>();
 
   const errorMessage = useSignal<string>("");
@@ -44,7 +45,7 @@ const Transfers: React.FC = () => {
     useInfiniteQuery({
       queryKey: ["groupTransfers", group?.id, pageSize],
       queryFn: ({ pageParam: next }) =>
-        getGroupTransfers(group?.id!, pageSize, next),
+        getGroupTransfers(group?.id!, pageSize,transferParsedFilters.value, next),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
       initialPageParam: "",
       enabled: !!group,

@@ -609,3 +609,12 @@ export type ExpenseParsedFilters= {
   after?: string | null;
   labels?: string[];
 }
+
+export type TransferParsedFilters= {
+  sendersIds?: string[];
+  receiversIds?: string[];
+  freeText?: string;
+  before?: string | null;
+  after?: string | null;
+
+}

@@ -22,6 +22,7 @@ import {
   CreateTransferFilterRequest,
   CreateExpenseFilterRequest,
   ExpenseParsedFilters,
+  TransferParsedFilters,
 } from "./types";
 import { Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
@@ -886,6 +887,7 @@ export interface SearchTransactionsProps {
   userInfo: UserInfo;
   timeZoneId: string;
   expenseParsedFilters:Signal<ExpenseParsedFilters>
+  transferParsedFilters:Signal<TransferParsedFilters>
 }
 export interface SearchTransactionAnimationProps {
   menu: Signal<string | null>;
@@ -893,4 +895,5 @@ export interface SearchTransactionAnimationProps {
   userInfo: UserInfo;
   timeZoneId: string;
   expenseParsedFilters:Signal<ExpenseParsedFilters>
+  transferParsedFilters:Signal<TransferParsedFilters>
 }

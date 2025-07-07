@@ -34,7 +34,8 @@ export default function SearchTransactions({
   group,
   userInfo,
   timeZoneId,
-  expenseParsedFilters
+  expenseParsedFilters,
+  transferParsedFilters
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
@@ -222,7 +223,8 @@ export default function SearchTransactions({
                 menu,
                 category,
                 queryClient,
-                expenseParsedFilters 
+                expenseParsedFilters,
+                transferParsedFilters 
               )
             }
             disabled={!submitButtonIsActive.value}
