@@ -4,17 +4,13 @@ import { Signal } from "@preact/signals-react";
 import {
   CreateExpenseFilterRequest,
   CreateTransferFilterRequest,
+  DateConstraint,
   ExpenseParsedFilters,
   TransferParsedFilters,
 } from "../../../types";
 import { QueryClient } from "@tanstack/react-query";
-
-
-type DateConstraint = {
-  trigger: "before:" | "after:" | "during:";
-  value: string; // Format: "dd-mm-yyyy"
-};
-
+import { addExistingTriggerElement } from "./addExistingTriggerElement";
+import { finalProcessConstraints } from "./finalProcessConstraints";
 
 
 export const handleSubmitButton = (
@@ -204,160 +200,5 @@ export const handleSubmitButton = (
     queryClient.invalidateQueries({ queryKey: ["groupTransfers"], exact: false });
     menu.value = null;
    
-  }
-};
-
-const addExistingTriggerElement = (
-  filterState: Signal<CreateExpenseFilterRequest | CreateTransferFilterRequest>,
-  arrayToAddElement: DateConstraint[]
-) => {
-  const { before, during, after } = filterState.value;
-
-  if (before.length > 0) {
-    arrayToAddElement.unshift({ trigger: "before:", value: before[0] });
-  }
-  if (during.length > 0) {
-    arrayToAddElement.unshift({ trigger: "during:", value: during[0] });
-  }
-  if (after.length > 0) {
-    arrayToAddElement.unshift({ trigger: "after:", value: after[0] });
-  }
-
-  return deduplicateFromEndofArr(arrayToAddElement);
-};
-
-const deduplicateFromEndofArr = (arr: DateConstraint[]): DateConstraint[] => {
-  const seen = new Set<string>();
-  const result: DateConstraint[] = [];
-  for (let i = arr.length - 1; i >= 0; i--) {
-    const item = arr[i].trigger;
-    if (!seen.has(item)) {
-      seen.add(item);
-      result.unshift(arr[i]);
-    }
-  }
-
-  return result;
-};
-
-function parseDate(dateStr: string): Date {
-  const [day, month, year] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day);
-}
-
-function getDateIntersection(
-  constraint1: DateConstraint,
-  constraint2: DateConstraint
-): DateConstraint[] {
-  const date1 = parseDate(constraint1.value);
-  const date2 = parseDate(constraint2.value);
-
-  // If there's no overlap (e.g., before X and after Y where Y > X)
-  if (
-    (constraint1.trigger === "before:" &&
-      constraint2.trigger === "after:" &&
-      date1 < date2) ||
-    (constraint2.trigger === "before:" &&
-      constraint1.trigger === "after:" &&
-      date2 < date1)
-  ) {
-    // Return the second constraint
-    return [{ trigger: constraint2.trigger, value: constraint2.value }];
-  }
-
-  // Handle 'during' as a single point
-  if (constraint1.trigger === "during:") {
-    if (constraint2.trigger === "after:") {
-      return date1 >= parseDate(constraint2.value)
-        ? [{ trigger: "after:", value: constraint2.value }]
-        : [{ trigger: "after:", value: constraint1.value }];
-    }
-    if (constraint2.trigger === "before:") {
-      return date1 <= parseDate(constraint2.value)
-        ? [{ trigger: "before:", value: constraint2.value }]
-        : [{ trigger: "before:", value: constraint1.value }];
-    }
-  }
-
-  if (constraint2.trigger === "during:") {
-    if (constraint1.trigger === "after:") {
-      return date2 >= parseDate(constraint1.value)
-        ? [{ trigger: "after:", value: constraint1.value }]
-        : [{ trigger: "after:", value: constraint2.value }];
-    }
-    if (constraint1.trigger === "before:") {
-      return date2 <= parseDate(constraint1.value)
-        ? [{ trigger: "before:", value: constraint1.value }]
-        : [{ trigger: "before:", value: constraint2.value }];
-    }
-  }
-
-  // Handle before + after or after + before
-  if (constraint1.trigger === "after:" && constraint2.trigger === "before:") {
-    return date1 <= date2
-      ? [
-          { trigger: "after:", value: constraint1.value },
-          { trigger: "before:", value: constraint2.value },
-        ]
-      : [{ trigger: "after:", value: constraint2.value }]; // No intersection, return second constraint
-  }
-
-  if (constraint1.trigger === "before:" && constraint2.trigger === "after:") {
-    return date2 <= date1
-      ? [
-          { trigger: "after:", value: constraint2.value },
-          { trigger: "before:", value: constraint1.value },
-        ]
-      : [{ trigger: "after:", value: constraint2.value }];
-  }
-
-  if (constraint1.trigger === constraint2.trigger) {
-    if (constraint1.trigger === "after:") {
-      return date1 >= date2
-        ? [{ trigger: "after:", value: constraint1.value }]
-        : [{ trigger: "after:", value: constraint2.value }];
-    }
-    if (constraint1.trigger === "before:") {
-      return date1 <= date2
-        ? [{ trigger: "before:", value: constraint1.value }]
-        : [{ trigger: "before:", value: constraint2.value }];
-    }
-  }
-
-  return []; 
-}
-
-
-const finalProcessConstraints = (array: DateConstraint[]) => {
-  const dedupedArray = deduplicateFromEndofArr(array);
-  if (dedupedArray.length === 1) {
-    if (dedupedArray[0].trigger === "during:") {
-      return [
-        { trigger: "before:", value: dedupedArray[0].value },
-        { trigger: "after:", value: dedupedArray[0].value },
-      ];
-    }
-    return dedupedArray;
-  }
-  if (dedupedArray.length === 2) {
-    return getDateIntersection(dedupedArray[0], dedupedArray[1]);
-  }
-  if (dedupedArray.length === 3) {
-    const firstTwoArgsResult = getDateIntersection(
-      dedupedArray[0],
-      dedupedArray[1]
-    );
-
-    if (firstTwoArgsResult.length === 1) {
-      return getDateIntersection(firstTwoArgsResult[0], dedupedArray[2]);
-    }
-    if (firstTwoArgsResult.length === 2) {
-      const deduplicatedResult = deduplicateFromEndofArr([
-        firstTwoArgsResult[0],
-        firstTwoArgsResult[1],
-        dedupedArray[2],
-      ]);
-      return getDateIntersection(deduplicatedResult[0], dedupedArray[2]);
-    }
   }
 };

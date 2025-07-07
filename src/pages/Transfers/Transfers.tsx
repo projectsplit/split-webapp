@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
-import { Group, TransferParsedFilters, TransferResponseItem, UserInfo } from "../../types";
+import {
+  Group,
+  TransferParsedFilters,
+  TransferResponseItem,
+  UserInfo,
+} from "../../types";
 import { getGroupTransfers } from "../../api/services/api";
 import { StyledTransfers } from "./Transfers.styled";
 import { BiTransfer } from "react-icons/bi";
@@ -18,16 +23,18 @@ import Spinner from "../../components/Spinner/Spinner";
 import useDebts from "../../api/services/useDebts";
 import { getCurrencyValues } from "../../helpers/getGroupTotalByCurrency";
 import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalsByCurrencyAnimation";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
 
-  const { userInfo, group, showBottomBar,transferParsedFilters } = useOutletContext<{
-    userInfo: UserInfo;
-    group: Group;
-    showBottomBar: Signal<boolean>;
-    transferParsedFilters:Signal<TransferParsedFilters>;
-  }>();
+  const { userInfo, group, showBottomBar, transferParsedFilters } =
+    useOutletContext<{
+      userInfo: UserInfo;
+      group: Group;
+      showBottomBar: Signal<boolean>;
+      transferParsedFilters: Signal<TransferParsedFilters>;
+    }>();
 
   const errorMessage = useSignal<string>("");
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
@@ -45,7 +52,12 @@ const Transfers: React.FC = () => {
     useInfiniteQuery({
       queryKey: ["groupTransfers", group?.id, pageSize],
       queryFn: ({ pageParam: next }) =>
-        getGroupTransfers(group?.id!, pageSize,transferParsedFilters.value, next),
+        getGroupTransfers(
+          group?.id!,
+          pageSize,
+          transferParsedFilters.value,
+          next
+        ),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
       initialPageParam: "",
       enabled: !!group,
@@ -94,13 +106,31 @@ const Transfers: React.FC = () => {
     );
   }
 
+  const hasAnySearchParams =
+    transferParsedFilters.value.before !== null ||
+    transferParsedFilters.value.after !== null ||
+    transferParsedFilters.value.freeText !== "" ||
+    (transferParsedFilters.value.sendersIds !== undefined &&
+      transferParsedFilters.value.sendersIds.length > 0) ||
+    (transferParsedFilters.value.receiversIds !== undefined &&
+      transferParsedFilters.value.receiversIds.length > 0);
+
   return (
     <StyledTransfers>
       {!transfers || transfers.length === 0 ? (
-        <div className="noData">
-          <div className="msg">There are currently no transfers</div>
-          <BiTransfer className="icon" />
-        </div>
+        hasAnySearchParams ? (
+          <div className="noData">
+            <div className="msg">
+              No transfers found. Have a go and refine your search! 🧐
+            </div>
+            <FaMagnifyingGlass className="icon" />
+          </div>
+        ) : (
+          <div className="noData">
+            <div className="msg">There are currently no transfers</div>
+            <BiTransfer className="icon" />
+          </div>
+        )
       ) : (
         <>
           {totalsAreFetching ? (
