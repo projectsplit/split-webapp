@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
 import {
   Group,
@@ -38,6 +38,7 @@ const Transfers: React.FC = () => {
 
   const errorMessage = useSignal<string>("");
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
+  const queryClient = useQueryClient();
 
   const timeZoneId = userInfo?.timeZone;
   const memberId = group?.members.find((x) => x.userId === userInfo?.userId)
@@ -50,7 +51,7 @@ const Transfers: React.FC = () => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
-      queryKey: ["groupTransfers", group?.id, pageSize],
+      queryKey: ["groupTransfers", group?.id, pageSize,transferParsedFilters.value],
       queryFn: ({ pageParam: next }) =>
         getGroupTransfers(
           group?.id!,
@@ -64,6 +65,21 @@ const Transfers: React.FC = () => {
     });
 
   const transfers = data?.pages.flatMap((p) => p.transfers);
+
+    useEffect(() => {
+      const transferilters = localStorage.getItem("transferFilter");
+      if (transferilters) {
+        const paresedFilter = JSON.parse(transferilters)
+        if(paresedFilter.groupId===group.id){
+          transferParsedFilters.value = JSON.parse(transferilters);
+        }else{
+          localStorage.removeItem('transferFilter');
+           queryClient.invalidateQueries({ queryKey: ["groupTransfers"], exact: false });
+        }
+      }
+    }, []);
+
+
   const groupIsArchived = group.isArchived;
   useEffect(() => {
     isFetching && !isFetchingNextPage
@@ -106,14 +122,12 @@ const Transfers: React.FC = () => {
     );
   }
 
-  const hasAnySearchParams =
-    transferParsedFilters.value.before !== null ||
-    transferParsedFilters.value.after !== null ||
-    transferParsedFilters.value.freeText !== "" ||
-    (transferParsedFilters.value.sendersIds !== undefined &&
-      transferParsedFilters.value.sendersIds.length > 0) ||
-    (transferParsedFilters.value.receiversIds !== undefined &&
-      transferParsedFilters.value.receiversIds.length > 0);
+const hasAnySearchParams =
+    (transferParsedFilters.value.before !== null && transferParsedFilters.value.before !== undefined) ||
+    (transferParsedFilters.value.after !== null && transferParsedFilters.value.after !== undefined) ||
+    (transferParsedFilters.value.freeText !== "" && transferParsedFilters.value.freeText !== undefined) ||
+    (transferParsedFilters.value.sendersIds !== undefined && transferParsedFilters.value.sendersIds.length > 0) ||
+    (transferParsedFilters.value.receiversIds !== undefined && transferParsedFilters.value.receiversIds.length > 0);
 
   return (
     <StyledTransfers>

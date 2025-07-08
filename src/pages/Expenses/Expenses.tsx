@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Expense from "../../components/Expense/Expense";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ExpenseParsedFilters,
   ExpenseResponseItem,
@@ -33,6 +33,7 @@ const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const errorMessage = useSignal<string>("");
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
+  const queryClient = useQueryClient();
   const { userInfo, group, showBottomBar, expenseParsedFilters } =
     useOutletContext<{
       userInfo: UserInfo;
@@ -67,6 +68,7 @@ const Expenses = () => {
         group?.id,
         pageSize,
         expenseParsedFilters.value,
+        
       ],
       queryFn: ({ pageParam: next }) =>
         getGroupExpenses(
@@ -84,7 +86,14 @@ const Expenses = () => {
   useEffect(() => {
     const expenseFilters = localStorage.getItem("expenseFilter");
     if (expenseFilters) {
-      expenseParsedFilters.value = JSON.parse(expenseFilters);
+      const paresedFilter = JSON.parse(expenseFilters)
+      if(paresedFilter.groupId===group.id){
+        expenseParsedFilters.value = JSON.parse(expenseFilters);
+      }else{
+        localStorage.removeItem('expenseFilter');
+         queryClient.invalidateQueries({ queryKey: ["groupExpenses"], exact: false });
+      }
+    
     }
   }, []);
 
@@ -112,18 +121,14 @@ const Expenses = () => {
       ? totalSpent[userMemberId]?.[group.currency] ?? 0
       : 0;
 
-  const hasAnySearchParams =
-    expenseParsedFilters.value.before !== null ||
-    expenseParsedFilters.value.after !== null ||
-    expenseParsedFilters.value.freeText !== "" ||
-    (expenseParsedFilters.value.labels !== undefined &&
-      expenseParsedFilters.value.labels.length > 0) ||
-    (expenseParsedFilters.value.participantsIds !== undefined &&
-      expenseParsedFilters.value.participantsIds.length > 0) ||
-    (expenseParsedFilters.value.payersIds !== undefined &&
-      expenseParsedFilters.value.payersIds.length > 0);
+const hasAnySearchParams =
+    (expenseParsedFilters.value.before !== null && expenseParsedFilters.value.before !== undefined) ||
+    (expenseParsedFilters.value.after !== null && expenseParsedFilters.value.after !== undefined) ||
+    (expenseParsedFilters.value.freeText !== "" && expenseParsedFilters.value.freeText !== undefined) ||
+    (expenseParsedFilters.value.labels !== undefined && expenseParsedFilters.value.labels.length > 0) ||
+    (expenseParsedFilters.value.participantsIds !== undefined && expenseParsedFilters.value.participantsIds.length > 0) ||
+    (expenseParsedFilters.value.payersIds !== undefined && expenseParsedFilters.value.payersIds.length > 0);
 
-  
   return (
   <StyledExpenses>
     {!expenses || expenses.length === 0 ? (
