@@ -37,11 +37,9 @@ export const getChartOptions = (
 
   const currencySymbol = getSymbolFromCurrency(currency)
 
-
-
   return {
     animation: {
-      duration: 500,
+      // duration: 500,
       onProgress: function (animation: any) { //clears the top left part of the canvas where animation of datalabel is not shown correctly when moving from 30 to 31 datapoints
         const chartInstance = animation.chart;
         const ctx = chartInstance.ctx;

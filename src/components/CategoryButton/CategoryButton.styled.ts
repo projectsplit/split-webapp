@@ -9,10 +9,10 @@ export const StyledCategoryButton = styled.div.withConfig({
   font-size:14px;
 
   .active,.selected {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    padding-left: 1.4rem;
+    padding-right: 1.4rem;
     cursor: pointer;
     border-radius: 8px;
     background-color: ${(props) => props.backgroundcoloronselect ? props.backgroundcoloronselect : ({ theme }) => theme.greySelect};
