@@ -4,9 +4,9 @@ import { StyledMiddleScreenMenu } from "../Menus/Layouts/MiddleScreenMenu/Middle
 export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
   display: flex;
   flex-direction: column;
-  height: 99%;
+  height: 99vh;
   top: 0.3%;
-  //overflow: auto;
+  overflow: auto;
   scrollbar-width: thin;
   margin: 2px;
   box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`};
