@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, MouseEventHandler } from "react";
 import {
   Coordinates,
   Debt,
@@ -896,4 +896,70 @@ export interface SearchTransactionAnimationProps {
   timeZoneId: string;
   expenseParsedFilters:Signal<ExpenseParsedFilters>
   transferParsedFilters:Signal<TransferParsedFilters>
+}
+
+export interface CycleSelectionProps {
+  children: any;
+  header: string;
+}
+
+export interface AnalyticsSelectionAnimationProps {
+  menu: Signal<string | null>;
+  header: string;
+  children: any;
+}
+
+export interface AnalyticsYearSelectionAnimationProps
+  extends AnalyticsSelectionAnimationProps {}
+
+export interface AnalyticsTimePeriodSelectionAnimationProps
+  extends AnalyticsSelectionAnimationProps {}
+  
+export interface TopBarWithBackButtonProps {
+  header: string;
+  onClick: MouseEventHandler<SVGElement>;
+}
+
+export interface CarouselProps {
+  carouselItems: string[] | string[][];
+  selectedTimeCycleIndex: Signal<number>;
+  selectedCycle: Signal<Frequency>;
+  cyclehaschanged: Signal<boolean>;
+  menu: Signal<string | null>;
+  selectedYear: Signal<number>;
+}
+
+export interface CycleOptionProps {
+  selectedCycle: Signal<Frequency>;
+  menu: Signal<React.SetStateAction<string | null>>;
+  cyclehaschanged: Signal<boolean>;
+}
+
+export interface YearOptionProps {
+  selectedYear: Signal<number>;
+  menu: Signal<React.SetStateAction<string | null>>;
+  selectedTimeCycleIndex: Signal<number>;
+}
+
+export interface CumulativeSpendingProps {
+  selectedCycle: Signal<Frequency>;
+  selectedYear: Signal<number>;
+  currentWeekIndex: number;
+  monthsAndDaysArrays: string[][];
+  cyclehaschanged: Signal<boolean>;
+  allWeeksPerYear: Date[][];
+  menu: Signal<string | null>;
+  selectedTimeCycleIndex: Signal<number>;
+  startDate: Signal<string>;
+  endDate: Signal<string>;
+  currency: string;
+}
+
+export interface BarChartProps extends CumulativeSpendingProps {}
+export interface TotalLentBorrowedProps extends CumulativeSpendingProps {}
+export interface PeriodOptionProps {
+  menu: Signal<string | null>;
+  selectedCycle: Signal<Frequency>;
+  selectedTimeCycleIndex: Signal<number>;
+  monthsAndDaysArrays: string[][];
 }

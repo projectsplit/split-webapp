@@ -24,11 +24,12 @@ const Protected: React.FC = () => {
   const menu = useSignal<string | null>(null);
   const openGroupOptionsMenu = useSignal<boolean>(false);
   const activeGroupCatAsState = useSignal<string>("Active");
-  const confirmUnarchiveMenu =useSignal<string | null>(null);
-
+  const confirmUnarchiveMenu = useSignal<string | null>(null);
+  const excludeTopMenu = shouldExcludeTopMenu (['/analytics'])
+  
   return isUserAuthenticated() ? (
     <StyledProtected $shouldStyleBorder={groupIsArchived.value}>
-      <TopMenu
+      {!excludeTopMenu&&<TopMenu
         title={topMenuTitle.value}
         menu={menu}
         username={userInfo?.username}
@@ -36,7 +37,7 @@ const Protected: React.FC = () => {
         openGroupOptionsMenu={openGroupOptionsMenu}
         groupIsArchived={groupIsArchived.value}
         confirmUnarchiveMenu={confirmUnarchiveMenu}
-      />
+      />}
       <Outlet context={{ userInfo, topMenuTitle,openGroupOptionsMenu,activeGroupCatAsState,groupIsArchived,confirmUnarchiveMenu }} />
       <MenuAnimationBackground menu={menu} />
       <NotificationsMenuAnimation
@@ -61,3 +62,10 @@ const isUserAuthenticated = () => {
   return !!localStorage.getItem("accessToken");
 };
 
+const shouldExcludeTopMenu = (excludeRoutes: string[]): boolean => {
+  const location = useLocation();
+  return excludeRoutes.some(
+    (route) =>
+      location.pathname === route || location.pathname.startsWith(`${route}/`)
+  );
+};

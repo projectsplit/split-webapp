@@ -11,6 +11,8 @@ import Transfers from "./pages/Transfers/Transfers";
 import Members from "./pages/Members/Members";
 import Join from "./pages/Join";
 import Protected from "./pages/Protected/Protected";
+import Analytics from "./pages/Analytics/Analytics";
+import RedirectToAnalytics from "./routes/RedirectToAnalytics";
 
 const App = () => {
   return (
@@ -29,6 +31,10 @@ const App = () => {
             <Route path="debts" element={<Members />} />
             <Route path="*" element={<RedirectToExpenses />} />
           </Route>
+
+          <Route path="/analytics/*" element={<RedirectToAnalytics />} />
+          <Route path="/analytics" element={<Analytics />} />
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
         <Route path="*" element={<h1>Lost ?</h1>} />

@@ -42,8 +42,6 @@ export const StyledCategoryButton = styled.div.withConfig({
     color: ${({ theme }) => theme.whiteText};
     font-weight: 600;
     text-decoration: none;
-
-
   }
 
   ${(props) => `
