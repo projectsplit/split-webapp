@@ -10,10 +10,10 @@ import { DateTime } from "../DateTime";
 import MyButton from "../MyButton/MyButton";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import CurrencyOptionsAnimation from "../Menus/MenuAnimations/CurrencyOptionsAnimation";
-import Input_old from "../FormInput/FormInput";
 import { useOutletContext } from "react-router-dom";
 import { CreateTransferRequest, UserInfo } from "../../types";
 import { useTransfer } from "../../api/services/useTransfers";
+import FormInput from "../FormInput/FormInput";
 
 export default function TransferForm({
   group,
@@ -208,7 +208,7 @@ export default function TransferForm({
           {idError.isReceiverError && showIdError ? idError.error : ""}
         </span>
       </div>
-      <Input_old
+      <FormInput
         description="Description"
         placeholder="e.g. Settle up"
         value={description}

@@ -23,7 +23,6 @@ import {
   FilteredMembers,
 } from "../../types";
 import MyButton from "../MyButton/MyButton";
-import { useGetGroupFilters } from "../../api/services/useGetGroupFilters";
 import { useMembers } from "./hooks/useMembers";
 
 import { CategorySelector } from "../CategorySelector/CategorySelector";

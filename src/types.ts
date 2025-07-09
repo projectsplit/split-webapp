@@ -623,3 +623,9 @@ export type DateConstraint = {
   trigger: "before:" | "after:" | "during:";
   value: string; 
 };
+
+
+export type GetTotalLentTotalBorrowedResponse = {
+  totalBorrowed: number[];
+  totalLent: number[];
+};
