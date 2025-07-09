@@ -34,7 +34,7 @@ export const StyledTopBarWithBackButton = styled.div`
   .descr {
     flex: 1;
     text-align: center;
-
+    margin-right:30px;
     font-weight: bold;
   }
 `;
