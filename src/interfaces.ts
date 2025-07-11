@@ -762,7 +762,7 @@ export type EnhancedMembersWithProps = {
 export interface LexicalEditorProps {
   enhancedMembersWithProps: EnhancedMembersWithProps;
   submitButtonIsActive: Signal<boolean>;
-  isFetching: boolean;
+
   labels: FetchedLabel[];
   expenseFilterState: Signal<CreateExpenseFilterRequest>;
   transferFilterState:Signal<CreateTransferFilterRequest>

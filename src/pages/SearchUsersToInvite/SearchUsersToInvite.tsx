@@ -192,6 +192,7 @@ const SearchResultItem: React.FC<{
   groupId,
   onInviteSuccess,
 }) => {
+  
   const { mutate, isPending, isError } = isAlreadyInvited
     ? useRevokeInvitation()
     : useSendInvitation();

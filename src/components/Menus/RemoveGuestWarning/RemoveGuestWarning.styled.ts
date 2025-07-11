@@ -5,7 +5,7 @@ export const StyledRemoveGuestWarning = styled(StyledMiddleScreenMenu)`
   .headerSeparator {
     position: sticky;
     top: 0;
-    z-index: 5;
+    z-index:5;
     background-color: ${({ theme }) => theme.layer2};
 
     .separator {
