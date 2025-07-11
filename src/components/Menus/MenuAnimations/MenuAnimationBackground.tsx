@@ -23,6 +23,7 @@ export default function MenuAnimationBackground({
           width: "100%",
           backgroundColor: "black",
           opacity: "0.7",
+ 
           
         }}
         onClick={() => (menu.value = null)}

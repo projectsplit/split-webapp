@@ -34,7 +34,6 @@ export const EditorContent = forwardRef<
     contentEditableHeight,
     enhancedMembersWithProps,
     submitButtonIsActive,
-    isFetching,
     expenseFilterState,
     transferFilterState,
     setEditorState,

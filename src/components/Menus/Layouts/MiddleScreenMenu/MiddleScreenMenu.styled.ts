@@ -11,7 +11,7 @@ export const StyledMiddleScreenMenu = styled.div`
   border-radius: 12px 12px 12px 12px;
   display: flex;
   flex-direction: column;
-  z-index: 2;
+  z-index: 999;
   gap: 14px;
   padding: 20px;
 `;

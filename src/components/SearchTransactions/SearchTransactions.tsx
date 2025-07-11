@@ -1,20 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  SpinnerContainer,
   StyledSearchTransactions,
 } from "./SearchTransactions.styled";
 import { IoClose } from "react-icons/io5";
-import { $getRoot, EditorState } from "lexical";
+import { EditorState } from "lexical";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
 import { EditorContent } from "./EditorContent/EditorContent";
 import { handleSubmitButton } from "./helpers/handleSubmitButton";
 import { handleCancelClick } from "./helpers/handleCancelClick";
 import { initializeFilterState } from "./helpers/initializeFilterState";
 import { initialConfig } from "./utils/lexicalThemeConfiguration";
-import Spinner from "../Spinner/Spinner";
 import { EditorContentHandle, SearchTransactionsProps } from "../../interfaces";
 import {
   CreateExpenseFilterRequest,
@@ -38,7 +36,7 @@ export default function SearchTransactions({
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
-  const submitFiltersError = useSignal<string>("");
+  // const submitFiltersError = useSignal<string>("");
   const contentEditableWrapRef = useRef<HTMLDivElement>(null);
   const submitButtonIsActive = useSignal<boolean>(false);
   const cancelled = useSignal<boolean>(false);
@@ -185,17 +183,11 @@ export default function SearchTransactions({
         <div className="searchBarAndCategories">
           <div className="lexicalSearch">
             <LexicalComposer initialConfig={initialConfig}>
-              {false ? ( //TODO isFetching was used when loading filters from DB
-                <SpinnerContainer>
-                  <Spinner />
-                </SpinnerContainer>
-              ) : (
                 <EditorContent
                   ref={editorContentRef}
                   contentEditableHeight={contentEditableHeight}
                   enhancedMembersWithProps={enhancedMembersWithProps}
                   submitButtonIsActive={submitButtonIsActive}
-                  isFetching={false} //TODO isFetching was used when loading filters from DB
                   expenseFilterState={expenseFilterState}
                   transferFilterState={transferFilterState}
                   setEditorState={setEditorState}
@@ -207,7 +199,6 @@ export default function SearchTransactions({
                   filteredLabels={filteredLabels}
                   category={category}
                 />
-              )}
             </LexicalComposer>
           </div>
         </div>

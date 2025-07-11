@@ -68,7 +68,7 @@ const Expenses = () => {
         group?.id,
         pageSize,
         expenseParsedFilters.value,
-        
+        timeZoneId
       ],
       queryFn: ({ pageParam: next }) =>
         getGroupExpenses(
@@ -134,7 +134,10 @@ const hasAnySearchParams =
     {!expenses || expenses.length === 0 ? (
       hasAnySearchParams ? (
         <div className="noData">
-          <div className="msg">No expenses found. Have a go and refine your search! 🧐</div>
+          <div className="emojiMessage">
+          <div className="msgExp">No expenses found. Have a go and refine your search! </div>
+          <div className="emoji">🧐</div>
+          </div>
           <FaMagnifyingGlass className="icon" />
         </div>
       ) : (

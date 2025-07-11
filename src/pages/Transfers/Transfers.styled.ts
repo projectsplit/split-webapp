@@ -15,16 +15,21 @@ export const StyledTransfers = styled.div`
     align-items: center;
     justify-content: center;
     flex: 1;
-    .msg {
-      opacity: 0.4;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .emojiMessage {
+      display:flex;
+      flex-direction:row;
+      gap:5px;
+      align-items:center;
+      .msgExp {
+        opacity: 0.4;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
     .icon {
       display: flex;
       font-size: 100px;
-      opacity: 0.4;
     }
   }
   .same-date-container {

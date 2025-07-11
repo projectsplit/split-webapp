@@ -51,7 +51,7 @@ const Transfers: React.FC = () => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
-      queryKey: ["groupTransfers", group?.id, pageSize,transferParsedFilters.value],
+      queryKey: ["groupTransfers", group?.id, pageSize,transferParsedFilters.value,timeZoneId],
       queryFn: ({ pageParam: next }) =>
         getGroupTransfers(
           group?.id!,
@@ -134,11 +134,12 @@ const hasAnySearchParams =
       {!transfers || transfers.length === 0 ? (
         hasAnySearchParams ? (
           <div className="noData">
-            <div className="msg">
-              No transfers found. Have a go and refine your search! 🧐
-            </div>
-            <FaMagnifyingGlass className="icon" />
+          <div className="emojiMessage">
+          <div className="msgExp">No transfers found. Have a go and refine your search! </div>
+          <div className="emoji">🧐</div>
           </div>
+          <FaMagnifyingGlass className="icon" />
+        </div>
         ) : (
           <div className="noData">
             <div className="msg">There are currently no transfers</div>
