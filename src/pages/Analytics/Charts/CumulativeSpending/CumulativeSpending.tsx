@@ -27,6 +27,7 @@ import { enhanceNumberArray } from "../../../../helpers/enhanceNumberArray";
 import { isCurrentPeriod } from "../../helpers/isCurrentPeriod";
 import { useCumulativeSpendingArray } from "../../../../api/services/useCumulativeSpendingArray";
 import { months } from "../../../../constants";
+import { significantDigitsFromTicker } from "../../../../helpers/openExchangeRates";
 
 ChartJS.register(
   CategoryScale,
@@ -89,7 +90,8 @@ export function CumulativeSpending({
 
   const projectionArray = (
     cumulArrayData: number[] | undefined,
-    cycle: Frequency
+    cycle: Frequency,
+    currency:string
   ) => {
     if (cumulArrayData === undefined) return [];
     if (cumulArrayData.length === 0) return [];
@@ -111,7 +113,7 @@ export function CumulativeSpending({
       enhancedCumulArray.push(NaN);
       enhancedCumulArrayLength = enhancedCumulArray?.length;
     }
-    const forecastValue = calculateForcastValue(cumulArrayData, upLimit);
+    const forecastValue = calculateForcastValue(cumulArrayData, upLimit,currency);
 
     enhancedCumulArray.push(forecastValue);
     const enhancedCumulArrayWithMidPoints = enhanceNumberArray(
@@ -130,7 +132,8 @@ export function CumulativeSpending({
 
   const calculateForcastValue = (
     cumulArrayData: number[] | undefined,
-    upLimit: number
+    upLimit: number,
+    currency:string
   ) => {
     const spendingArray = deCumulArray(cumulArrayData);
     const total = spendingArray.reduce(
@@ -139,7 +142,8 @@ export function CumulativeSpending({
     );
     const average = total / spendingArray.length;
     const forecastValue = average * upLimit;
-    return Number(forecastValue.toFixed(2));
+    
+    return Number(forecastValue.toFixed(significantDigitsFromTicker(currency)));
   };
 
   const findLastNumberBeforeNaN = (arr: any) => {
@@ -158,7 +162,7 @@ export function CumulativeSpending({
     1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222,222,222,222,222,222,222,222,222,222,230,250,260
   ];
   const expensePoints = cumulArrayData === undefined ? [] : cumulArrayData;
-  const projectedArray = projectionArray(cumulArrayData, selectedCycle.value);
+  const projectedArray = projectionArray(cumulArrayData, selectedCycle.value,currency);
 
   const lastNumberBeforeNaN = findLastNumberBeforeNaN(projectedArray);
 
