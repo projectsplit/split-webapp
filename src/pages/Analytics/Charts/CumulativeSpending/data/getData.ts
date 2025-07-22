@@ -79,7 +79,7 @@ export const getData = (
         pointRadius: pointRadiusProjection,
         pointBackgroundColor: pointBackgroundColorProjection,
       },
-      isCurrentPeriod(selectedCycle.value, selectedTimeCycleIndex.value, isSuccess, cumulArrayData, currentWeekIndex)//show forecast legend
+      isCurrentPeriod(selectedCycle.value, selectedTimeCycleIndex.value, isSuccess, cumulArrayData, currentWeekIndex, selectedYear)//show forecast legend
         ? {
           label: "Forecast",
           data: [],

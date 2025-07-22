@@ -183,7 +183,8 @@ export function CumulativeSpending({
           selectedTimeCycleIndex.value,
           isSuccess,
           expensePoints,
-          currentWeekIndex
+          currentWeekIndex,
+          selectedYear.value
         )) || //does not affect annual or weekly as they are 12 and 7 rsptctvly
       indx === lastNumberBeforeNaN
     ) {

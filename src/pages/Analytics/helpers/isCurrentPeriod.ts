@@ -6,17 +6,19 @@ export const isCurrentPeriod = (
     selectedTimeCycleIndex: number,
     isSuccess: boolean,
     cumulArrayData: number[],
-    currentWeekIndex: number) => {
+    currentWeekIndex: number,
+    selectedYear:number) => {
 
+       const currentYear = new Date().getFullYear()
     switch (cycle) {
         case Frequency.Monthly:
-            return selectedTimeCycleIndex === new Date().getMonth() && isSuccess && cumulArrayData?.length !== 0
+            return selectedTimeCycleIndex === new Date().getMonth() && isSuccess && cumulArrayData?.length !== 0 && currentYear===selectedYear
 
         case Frequency.Weekly:
             return selectedTimeCycleIndex === currentWeekIndex && isSuccess && cumulArrayData?.length !== 0
 
         case Frequency.Annually:
-            const currentYear = new Date().getFullYear()
+         
             return selectedTimeCycleIndex === generateYearsArray().indexOf(currentYear) && isSuccess && cumulArrayData?.length !== 0
 
         default:
