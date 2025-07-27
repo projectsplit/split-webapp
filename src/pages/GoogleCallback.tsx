@@ -1,39 +1,42 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import routes from "../routes";
-import { SendGoogleCodeRequest, SendGoogleAccessTokenResponse } from "../types";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendGoogleAccessToken } from "../api/auth/api";
 import Spinner from "../components/Spinner/Spinner";
 
 const GoogleCallback: React.FC = () => {
+    
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const mutation = useMutation<
-    SendGoogleAccessTokenResponse,
-    Error,
-    SendGoogleCodeRequest
-  >({
+  const mutation = useMutation({
     mutationFn: sendGoogleAccessToken,
     onSuccess: (res) => {
       localStorage.setItem("accessToken", res.accessToken);
-      navigate(routes.ROOT);
+      navigate(routes.ROOT, { replace: true });
+    },
+    onError: () => {
+      navigate(routes.ROOT, { replace: true });
     },
   });
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-
-    if (code && mutation.status === "idle") {
+  const handleAuthCode = useCallback(() => {
+    const code = searchParams.get("code");
+    if (code && mutation.isIdle) {
       mutation.mutate({ code });
+      setSearchParams({}, { replace: true });
     }
-  }, [mutation]);
+  }, [mutation, searchParams, setSearchParams]);
+
+  useEffect(() => {
+    handleAuthCode();
+  }, [handleAuthCode]);
 
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
-      {mutation.status === "pending" && <Spinner />}
-      {mutation.status === "success" && (
+      {mutation.isPending && <Spinner />}
+      {mutation.isSuccess && (
         <div>
           <h1>Login successful!</h1>
           <button onClick={() => (window.location.href = routes.ROOT)}>
@@ -41,7 +44,7 @@ const GoogleCallback: React.FC = () => {
           </button>
         </div>
       )}
-      {mutation.status === "error" && (
+      {mutation.isError && (
         <div>
           <h1>Login failed. Please try again.</h1>
           <button onClick={() => (window.location.href = routes.ROOT)}>
