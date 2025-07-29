@@ -629,3 +629,16 @@ export type GetTotalLentTotalBorrowedResponse = {
   totalBorrowed: number[];
   totalLent: number[];
 };
+
+export type CreateBudgetRequest = {
+  amount: string;
+  currency: string;
+  budgetType: Frequency;
+  day: string | null;
+};
+
+export type SpendingInfoResponse = {
+  budgetSubmitted: boolean;
+  totalAmountSpent: string;
+  currency: string;
+};

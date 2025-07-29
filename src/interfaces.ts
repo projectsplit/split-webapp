@@ -23,6 +23,7 @@ import {
   CreateExpenseFilterRequest,
   ExpenseParsedFilters,
   TransferParsedFilters,
+  BudgetInfoResponse,
 } from "./types";
 import { Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
@@ -263,7 +264,7 @@ export interface SelectionButtonProps {
 }
 export interface OptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  username: string | undefined;
+  username?: string | undefined;
   children?: any;
 }
 
@@ -350,7 +351,7 @@ export interface MenuProps {
 
 export interface MenuAnimationBackgroundProps extends MenuProps {}
 export interface SettingsMenuAnimationProps extends MenuProps {
-  userInfo: UserInfo | undefined;
+  userInfo: UserInfo|undefined;
 }
 export interface LogoStripeProps extends MenuProps {}
 
@@ -366,7 +367,7 @@ export interface CreateGroupProps extends MenuProps {
 export interface SettingsMenuProps {
   menu: Signal<string | null>;
   nodeRef: React.MutableRefObject<null>;
-  userInfo: UserInfo;
+  userInfo: UserInfo|undefined;
 }
 
 export interface TopMenuProps {
@@ -682,7 +683,7 @@ export interface RenameGroupAnimationProps extends MenuProps {
 export interface RemoveUserFromGroupMenuProps {
   openRemoveUserMenu: Signal<boolean>;
   groupId: string | undefined;
-  userInfo: UserInfo;
+  userInfo: UserInfo|undefined;
 }
 
 export interface GroupTotalsByCurrencyAnimationProps extends MenuProps {
@@ -712,12 +713,12 @@ export interface BarsAndAmountsProps {
 }
 
 export interface EditUsernameProps {
-  existingUsername: string;
+  existingUsername: string|undefined;
   editUsernameMenu: Signal<string | null>;
 }
 
 export interface EditUsernameAnimationProps {
-  existingUsername: string;
+  existingUsername: string|undefined;
   editUsernameMenu: Signal<string | null>;
 }
 
@@ -884,7 +885,7 @@ export interface MentionsToolbarProps {
 export interface SearchTransactionsProps {
   menu: Signal<string | null>;
   group: Group;
-  userInfo: UserInfo;
+  userInfo: UserInfo|undefined;
   timeZoneId: string;
   expenseParsedFilters:Signal<ExpenseParsedFilters>
   transferParsedFilters:Signal<TransferParsedFilters>
@@ -892,7 +893,7 @@ export interface SearchTransactionsProps {
 export interface SearchTransactionAnimationProps {
   menu: Signal<string | null>;
   group: Group;
-  userInfo: UserInfo;
+  userInfo: UserInfo|undefined;
   timeZoneId: string;
   expenseParsedFilters:Signal<ExpenseParsedFilters>
   transferParsedFilters:Signal<TransferParsedFilters>
@@ -962,4 +963,76 @@ export interface PeriodOptionProps {
   selectedCycle: Signal<Frequency>;
   selectedTimeCycleIndex: Signal<number>;
   monthsAndDaysArrays: string[][];
+}
+
+export interface SpendingCycleSelectorProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  error?: boolean;
+  children: any;
+  open: boolean;
+  inputError?: boolean;
+}
+export interface SpendingCycleInfoProps {
+  menu: Signal<React.SetStateAction<string | null>>;
+}
+
+export interface ProgressBarProps {
+  data: BudgetInfoResponse | undefined;
+}
+export interface ManageBudgetMenuProps {
+  menu: Signal<string | null>;
+}
+
+export interface DeleteBudgetConfirmationAnimationProps {
+  menu: Signal<string | null>;
+ removeBudget: () => Promise<void>
+}
+
+export interface ConfirmationForBudgetDeletionProps extends DeleteBudgetConfirmationAnimationProps{};
+export interface ManageBudgetAnimationProps {
+    menu: Signal<string | null>;
+}
+
+
+export interface CalendarProps {
+  children: any;
+  budgettype: Signal<Frequency>;
+  calendarDay: Signal<string>;
+}
+
+export interface CalendarOptionsButtonProps {
+  isactive: boolean;
+}
+
+export interface ConfirmationForBudgetSubmissionProps {
+  submitBudget: () => Promise<void>;
+  menu: Signal<React.SetStateAction<string | null>>;
+}
+
+export interface SetUpSpendingGoalProps {
+  menu: Signal<string | null>;
+  displayedAmount: Signal<string>;
+  currency: string;
+  submitBudgetErrors: Signal<any[]>;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface SpendingCycleProps {
+  menu: Signal<React.SetStateAction<string | null>>;
+  submitBudgetErrors: Signal<any[]>;
+  calendarDay: Signal<string>;
+  budgettype: Signal<Frequency>;
+  isStale: boolean;
+  openCalendar: Signal<boolean>;
+  hasSwitchedBudgetType: Signal<boolean>;
+}
+
+export interface InfoBoxAnimationProps {
+  menu: Signal<string | null>;
+}
+
+export interface CreateBudgetConfirmationAnimationProps {
+  submitBudget: () => Promise<void>;
+  menu: Signal<string | null>;
 }

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { BudgetInfoResponse } from "../../types";
-import { getBudgetInfo } from "./api";
+import { apiClient } from "../apiClients";
 
 const useBudgetInfo = () => {
   return useQuery<BudgetInfoResponse>({
@@ -12,5 +12,14 @@ const useBudgetInfo = () => {
     enabled: true,
   });
 };
+
+
+ const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
+  const response = await apiClient.get<BudgetInfoResponse>(
+    `/budget/budgetinfo`
+  );
+  return response.data;
+};
+
 
 export default useBudgetInfo;

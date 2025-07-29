@@ -41,8 +41,8 @@ export const BudgetInfoMessage = (
           onClick={onclick}
           closeButton={closeButton}
           style={{
-            backgroundColor: theme?.colors.layer2,
-            borderColor: theme?.colors.layer2,
+            backgroundColor: theme?.layer2,
+            borderColor: theme?.layer2,
             borderStyle: "solid",
             boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
             borderRadius: "6px",
@@ -60,8 +60,8 @@ export const BudgetInfoMessage = (
           closeButton={closeButton}
           budgetType={data.budgetType}
           style={{
-            backgroundColor: theme?.colors.layer2,
-            borderColor: theme?.colors.layer2,
+            backgroundColor: theme?.layer2,
+            borderColor: theme?.layer2,
             borderStyle: "solid",
             boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
             borderRadius: "6px",
@@ -82,8 +82,8 @@ export const BudgetInfoMessage = (
           closeButton={closeButton}
           budgetType={data.budgetType}
           style={{
-            backgroundColor: theme?.colors.layer2,
-            borderColor: theme?.colors.layer2,
+            backgroundColor: theme?.layer2,
+            borderColor: theme?.layer2,
             borderStyle: "solid",
             // boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
             borderRadius: "6px",
@@ -115,8 +115,8 @@ export const BudgetInfoMessage = (
             closeButton={closeButton}
             budgetType={data.budgetType}
             style={{
-              backgroundColor: theme?.colors.layer2,
-              borderColor: theme?.colors.layer2,
+              backgroundColor: theme?.layer2,
+              borderColor: theme?.layer2,
               borderStyle: "solid",
               //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
               borderRadius: "6px",
@@ -134,8 +134,8 @@ export const BudgetInfoMessage = (
             closeButton={closeButton}
             budgetType={data.budgetType}
             style={{
-              backgroundColor: theme?.colors.layer2,
-              borderColor: theme?.colors.layer2,
+              backgroundColor: theme?.layer2,
+              borderColor: theme?.layer2,
               borderStyle: "solid",
               //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
               borderRadius: "6px",

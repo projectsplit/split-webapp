@@ -160,7 +160,7 @@ export default function SettingsMenu({
         clickHandler={handldeCurrencyOptionsClick}
         selectedCurrency={userCurrency}
       />
-     <EditUsernameAnimation editUsernameMenu={editUsernameMenu} existingUsername={userInfo.username}/>
+     <EditUsernameAnimation editUsernameMenu={editUsernameMenu} existingUsername={userInfo?.username}/>
     </StyledSettingsMenu>
   );
 }
