@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const StyledGroup = styled.div`
-  overflow: auto;
+  overflow: hidden;
   box-sizing: border-box;
   width: 100%;
   height: 100vh;
