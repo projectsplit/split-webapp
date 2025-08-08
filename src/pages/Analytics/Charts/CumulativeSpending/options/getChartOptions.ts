@@ -144,7 +144,7 @@ export const getChartOptions = (
 
         align: (context: any) => {
           if (
-            isCurrentPeriod(selectedCycle, selectedTimeCycleIndex, isSuccess, expensePoints, currentWeekIndex)
+            isCurrentPeriod(selectedCycle, selectedTimeCycleIndex, isSuccess, expensePoints, currentWeekIndex,selectedYear)
             &&
             isNaN(context.dataset.data[context.dataIndex - 1])
             &&
@@ -165,7 +165,7 @@ export const getChartOptions = (
             context.dataIndex === 0 ||
             context.dataIndex === context.dataset.data.length - 1 ||
             (enhancedDatesToNumbers[context.dataIndex] === 15
-              && !isCurrentPeriod(selectedCycle, selectedTimeCycleIndex, isSuccess, expensePoints, currentWeekIndex)) ||
+              && !isCurrentPeriod(selectedCycle, selectedTimeCycleIndex, isSuccess, expensePoints, currentWeekIndex,selectedYear)) ||
             lastNumberBeforeNaN === context.dataIndex
           ) {
             if (value < 0) {

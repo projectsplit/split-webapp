@@ -14,8 +14,6 @@ export const useTotalLentBorrowedArrays = (startDate: string, endDate: string, c
   });
 };
 
-
-
 const getTotalLentBorrowedArrays = async (
   startDate: string,
   endDate: string,

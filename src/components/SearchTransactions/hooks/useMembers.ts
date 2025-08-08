@@ -8,8 +8,9 @@ import {
 
 export const useMembers = (
   group: { guests: Guest[]; members: Member[] } | undefined,
-  userInfo: { userId: string }
+  userInfo: { userId: string }|undefined
 ) => {
+  if (!userInfo) return { fetchedMembers: [], enhancedMembersWithProps: [] };
   const memberProps: string[] = ["participant", "payer", "sender", "receiver"];
 
   const { fetchedMembers, enhancedMembersWithProps } = useMemo(() => {

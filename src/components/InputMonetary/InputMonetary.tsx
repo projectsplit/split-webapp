@@ -43,8 +43,8 @@ export default React.forwardRef(function InputMonetary(
      
         <StyledInput
           type="text"
-          inputMode="numeric"
-          pattern="[0-9]*"
+          inputMode="decimal"
+          pattern="[0-9]*[.]?[0-9]*"
           placeholder={getSymbolFromCurrency(selectedCurrency?.symbol) + "0"}
           spellCheck="false"
           autoComplete="off"

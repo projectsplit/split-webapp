@@ -52,7 +52,7 @@ export default function EditUsername({ existingUsername ,editUsernameMenu}: Edit
   const handleConfirm = (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    editUsername(username, {
+    editUsername(username ||'', {
       onSuccess: () => {
         editUsernameMenu.value = null;
       }
@@ -70,7 +70,7 @@ export default function EditUsername({ existingUsername ,editUsernameMenu}: Edit
             onChange={handleInputChange}
             autoFocus={true}
           />
-          {username.length > 0 && (!usernameStatus.isSuccess ? <Spinner fontSize={"25px"} /> : !errorMessage ? <GrFormCheckmark className="checkmark"/> : <FiAlertTriangle className="warning"/>)}
+          {username&&username.length > 0 && (!usernameStatus.isSuccess ? <Spinner fontSize={"25px"} /> : !errorMessage ? <GrFormCheckmark className="checkmark"/> : <FiAlertTriangle className="warning"/>)}
         </div>
         <div className="separator">
           <Separator />

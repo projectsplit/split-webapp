@@ -5,7 +5,6 @@ import {
   GetGroupsResponse,
   UserInfo,
   GetGroupTransfersResponse,
-  BudgetInfoResponse,
   GroupsTotalAmountsResponse,
   GroupsAllBalancesResponse,
   GroupRequest,
@@ -160,14 +159,6 @@ export const getGroups = async (
 
 export const getUserId = async () => {
   const response = await apiClient.get("/");
-  return response.data;
-};
-
-
-export const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
-  const response = await apiClient.get<BudgetInfoResponse>(
-    `/budget/budgetinfo`
-  );
   return response.data;
 };
 

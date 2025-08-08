@@ -16,6 +16,7 @@ const Protected: React.FC = () => {
     queryFn: getMe,
     enabled: isUserAuthenticated(),
   });
+  
   const groupIsArchived = useSignal<boolean>(false)
   
   const hasNewerNotifications = userInfo?.hasNewerNotifications;
@@ -25,7 +26,7 @@ const Protected: React.FC = () => {
   const openGroupOptionsMenu = useSignal<boolean>(false);
   const activeGroupCatAsState = useSignal<string>("Active");
   const confirmUnarchiveMenu = useSignal<string | null>(null);
-  const excludeTopMenu = shouldExcludeTopMenu (['/analytics'])
+  const excludeTopMenu = shouldExcludeTopMenu (['/analytics','/budget'])
   
   return isUserAuthenticated() ? (
     <StyledProtected $shouldStyleBorder={groupIsArchived.value}>
