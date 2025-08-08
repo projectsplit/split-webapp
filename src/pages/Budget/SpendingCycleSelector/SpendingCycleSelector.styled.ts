@@ -28,7 +28,7 @@ export const StyledSpendingCycleSelector = styled.button<SpendingCycleSelectorPr
     align-items: center;
     right: 14px;
   }
-  .icon {
+  .angle {
     font-size: 25px;
   }
 

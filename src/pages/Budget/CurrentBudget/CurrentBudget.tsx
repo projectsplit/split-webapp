@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BudgetInfoResponse, Frequency } from "../../../types";
 import ProgressBar from "./../ProgressBar/ProgressBar";
 import { useTheme } from "styled-components";
-import "../../styles/freakflags/freakflags.css";
+import "../../../styles/freakflags/freakflags.css";
 import { StyledCurrentBudget } from "./CurrentBudget.styled";
 // import useBudgetInfo from "../../../hooks/useBudgetInfo";
 
@@ -15,8 +15,9 @@ import { BudgetInfoMessage } from "../../../components/BudgetMessages/BudgetInfo
 import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import { useSignal } from "@preact/signals-react";
 import DeleteBudgetConfirmationAnimation from "../../../components/Menus/MenuAnimations/BudgetAnimations/DeleteBudgetConfirmationAnimation";
-import ManageBudgetAnimation from "../../../components/Menus/MenuAnimations/BudgetAnimations/manageBudgetAnimation";
+
 import Spinner from "../../../components/Spinner/Spinner";
+import ManageBudgetAnimation from "../../../components/Menus/MenuAnimations/BudgetAnimations/ManageBudgetAnimation";
 
 export default function CurrentBudget() {
   const menu = useSignal<string | null>(null);
@@ -45,7 +46,8 @@ export default function CurrentBudget() {
   useEffect(() => {
     //prevents user from landing on this component after budget is deleted using <- of browser
     if (!isFetching && !data?.budgetSubmitted) {
-      navigate("/budget/create");
+     //navigate("/budget/create");
+      navigate("/");
     }
   }, []);
 
@@ -98,7 +100,7 @@ export default function CurrentBudget() {
           )}
 
           <div className="submitButton">
-            <MyButton onClick={() => (menu.value = "manageBudgetMenu")}>
+            <MyButton onClick={() => (menu.value = "manageBudgetMenu")}  fontSize="16">
               Manage Budget
             </MyButton>
           </div>

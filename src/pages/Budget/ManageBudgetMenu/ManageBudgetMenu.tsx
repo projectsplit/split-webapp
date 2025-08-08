@@ -14,16 +14,17 @@ export default function ManageBudgetMenu({ menu }: ManageBudgetMenuProps) {
         <strong>Manage Budget</strong>
       </div>
 
-      <MyButton onClick={() => navigate("/budget/create")} >
+      <MyButton onClick={() => navigate("/budget/create")} fontSize="16">
         <AiFillEdit className="icon" />
         <div className="text">Edit Budget</div>
       </MyButton>
 
       <MyButton
-        onClick={() => menu.value =("deleteBudgetConfirmation")}
+        fontSize="16"
+        onClick={() => (menu.value = "deleteBudgetConfirmation")}
       >
         <AiFillDelete className="icon" />
-         <div className="text">Remove Budget</div>
+        <div className="text">Remove Budget</div>
       </MyButton>
     </StyledManageBudgetMenu>
   );

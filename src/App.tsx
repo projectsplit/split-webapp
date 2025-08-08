@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Auth from "./pages/Auth/AuthPage";
 import routes from "./routes";
 import GoogleCallback from "./pages/GoogleCallback";
@@ -13,6 +18,10 @@ import Join from "./pages/Join";
 import Protected from "./pages/Protected/Protected";
 import Analytics from "./pages/Analytics/Analytics";
 import RedirectToAnalytics from "./routes/RedirectToAnalytics";
+import CurrentBudget from "./pages/Budget/CurrentBudget/CurrentBudget";
+import CreateBudget from "./pages/Budget/CreateBudget/CreateBudget";
+import Budget from "./pages/Budget/Budget";
+import RedirectToBudget from "./routes/RedirectToBudget";
 
 const App = () => {
   return (
@@ -34,6 +43,13 @@ const App = () => {
 
           <Route path="/analytics/*" element={<RedirectToAnalytics />} />
           <Route path="/analytics" element={<Analytics />} />
+
+          <Route path="/budget" element={<Budget />}>
+            <Route index element={<RedirectToBudget />} />
+            <Route path="current" element={<CurrentBudget />} />
+            <Route path="create" element={<CreateBudget />} />
+            <Route path="*" element={<RedirectToBudget />} />
+          </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

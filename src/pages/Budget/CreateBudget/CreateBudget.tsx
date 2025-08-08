@@ -9,7 +9,7 @@ import {
   UserInfo,
 } from "../../../types";
 import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import "../../styles/freakflags/freakflags.css";
+import "../../../styles/freakflags/freakflags.css";
 import { StyledCreateBudget } from "./CreateBudget.styled";
 import SetUpSpendingGoal from "./SetUpSpendingGoal/SetUpSpendingGoal";
 import SpendingCycle from "./SpendingCycle/SpendingCycle";
@@ -33,20 +33,23 @@ export default function CreateBudget() {
   const hasSwitchedBudgetType = useSignal<boolean>(false);
   const submitBudgetErrors = useSignal<any[]>([]);
   const menu = useSignal<string | null>(null);
-
    const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
 
-
-  const userCurrency = userInfo?.currency;
-  const [currencySymbol, setCurrencySymbol] = useState<string>(userCurrency);
+  const [currencySymbol, setCurrencySymbol] = useState<string>('');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const budgetInfoQueryKey = ["budget"];
   const spendingInfoQueryKey = ["spending", budgettype.value, currencySymbol];
 
   const createBudget = useCreateBudget(navigate,submitBudgetErrors)
+
+  useEffect(() => {
+    if (userInfo?.currency) {
+      setCurrencySymbol(userInfo.currency);
+    }
+  }, [userInfo]);
 
   // const { data, isFetching, isStale } = useSpendingInfo(
   //   budgettype.value,
@@ -165,6 +168,7 @@ export default function CreateBudget() {
 
       <div className="submitButton">
         <MyButton
+        fontSize="16"
           onClick={() => {
             if (querydata.budgetSubmitted) {
               menu.value = "createBudgetConfirmation";

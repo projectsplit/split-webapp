@@ -5,8 +5,11 @@ export const StyledCreateBudget = styled.div`
   flex-direction: column;
   color: ${({ theme }) => theme.lightColor};
   box-sizing: border-box;
-  min-height: 100vh;
-  width: 100%;
+ width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  margin: 0;
   padding: 14px;
   gap: 20px;
   position: relative;

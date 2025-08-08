@@ -26,7 +26,7 @@ const Protected: React.FC = () => {
   const openGroupOptionsMenu = useSignal<boolean>(false);
   const activeGroupCatAsState = useSignal<string>("Active");
   const confirmUnarchiveMenu = useSignal<string | null>(null);
-  const excludeTopMenu = shouldExcludeTopMenu (['/analytics'])
+  const excludeTopMenu = shouldExcludeTopMenu (['/analytics','/budget'])
   
   return isUserAuthenticated() ? (
     <StyledProtected $shouldStyleBorder={groupIsArchived.value}>

@@ -1,5 +1,6 @@
 import { StyledSpendingCycleSelector } from "./SpendingCycleSelector.styled";
 import { SpendingCycleSelectorProps } from "../../../interfaces";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 
 export default function SpendingCycleSelector({
   onClick,
@@ -12,9 +13,9 @@ export default function SpendingCycleSelector({
     <StyledSpendingCycleSelector error={error} onClick={onClick} open={open} inputError={inputError}>
       <div className="currencyOption">
         {open ? (
-          <i className="angle up icon"></i>
+          <FaAngleUp className="angle" />
         ) : (
-          <i className="angle down icon"></i>
+           <FaAngleDown className="angle" />
         )}
       </div>
       {children}

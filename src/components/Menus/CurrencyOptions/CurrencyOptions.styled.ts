@@ -12,7 +12,7 @@ export const StyledCurrencyOptions = styled(StyledBottomMenu)`
     padding: 10px;
     position: sticky;
     top: 0;
-    z-index: 5;
+    z-index: 10;
     background-color: ${({ theme }) => theme.layer2};
 
     .searchBar {

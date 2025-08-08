@@ -15,7 +15,7 @@ export const useCreateBudget = ( navigate: NavigateFunction,submitBudgetErrors: 
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budget"], exact: false });
-      navigate("/budget/current");
+      navigate("/budget/current", { replace: true });
     },
   });
 };

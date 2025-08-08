@@ -13,7 +13,7 @@ export const StyledMyButton = styled.button.withConfig({
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   position: relative;
-  z-index: 5;
+  /* z-index: 5; */
   background-color: ${({ variant }) => buttonVariants[variant].background};
   color: ${({ variant }) => buttonVariants[variant].color};
   display: flex;
