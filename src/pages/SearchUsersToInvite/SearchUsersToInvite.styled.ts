@@ -7,13 +7,13 @@ export const StyledSearchUsersToInvite = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  height: -webkit-fill-available;
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.layer2};
   z-index: 10;
   display: flex;
   flex-direction: column;
-
+  overflow: hidden;
+  
   .fixed-header-container {
     position: sticky;
     top: 0;
