@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { StyledSearchUsersToInvite } from "./SearchUsersToInvite.styled";
 import { useSearchUsersToInvite } from "../../api/services/useSearchUsersToInvite";
-import useSentinel from "../../hooks/useSentinel";
 import Input from "../../components/Input/Input";
 import useDebounce from "../../hooks/useDebounce";
 import { useSendInvitation } from "../../api/services/useSendInvitation";
@@ -10,7 +9,6 @@ import { useRevokeInvitation } from "../../api/services/useRevokeInvitation";
 import { useParams } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import { SearchUsersToInviteProps } from "../../interfaces";
-import Spinner from "../../components/Spinner/Spinner";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { useSignal } from "@preact/signals-react";
 import { useCreateGuest } from "../../api/services/useCreateGuest";
@@ -46,11 +44,6 @@ const SearchUsersToInvite = ({ menu }: SearchUsersToInviteProps) => {
     updateUserInvitationStatus,
   } = useSearchUsersToInvite(groupId, debouncedKeyword, pageSize);
 
-  const sentinelRef = useSentinel(
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage
-  );
   const {
     mutate: createGuestExpenseMutation,
     isPending: isPendingCreateGuest,
