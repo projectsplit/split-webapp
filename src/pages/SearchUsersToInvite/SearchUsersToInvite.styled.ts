@@ -3,9 +3,11 @@ import styled from "styled-components";
 export const StyledSearchUsersToInvite = styled.div`
   position: fixed;
   font-size: 1.125rem;
-  bottom: 0;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  height: -webkit-fill-available;
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.layer2};
   z-index: 3;
@@ -66,6 +68,7 @@ export const StyledSearchUsersToInvite = styled.div`
   .scrollable-content {
     overflow-y: auto;
     flex: 1;
+    padding-top: 1rem;
     .members {
       display: flex;
       flex-direction: column;
