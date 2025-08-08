@@ -10,7 +10,7 @@ export const StyledSearchUsersToInvite = styled.div`
   height: -webkit-fill-available;
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.layer2};
-  z-index: 3;
+  z-index: 10;
   display: flex;
   flex-direction: column;
 
