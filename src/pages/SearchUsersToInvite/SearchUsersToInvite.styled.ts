@@ -69,6 +69,7 @@ export const StyledSearchUsersToInvite = styled.div`
     overflow-y: auto;
     flex: 1;
     padding-top: 1rem;
+    padding-bottom: 180px;
     .members {
       display: flex;
       flex-direction: column;
