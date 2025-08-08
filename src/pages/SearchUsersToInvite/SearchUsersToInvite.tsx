@@ -19,6 +19,7 @@ import useGroup from "../../api/services/useGroup";
 import MemberItem from "../../components/Menus/RemoveUserFromGroupMenu/MemberItem/MemberItem";
 import RemoveGuestWarningAnimation from "../../components/Menus/MenuAnimations/RemoveGuestWarningAnimation";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import Sentinel from "../../components/Sentinel";
 
 const SearchUsersToInvite = ({ menu }: SearchUsersToInviteProps) => {
   const params = useParams();
@@ -124,12 +125,11 @@ const SearchUsersToInvite = ({ menu }: SearchUsersToInviteProps) => {
               />
             ))
           )}
-          <div
-            ref={sentinelRef}
-            className="sentinel"
-            style={{ height: "1px" }}
-          ></div>
-          {isFetchingNextPage && <Spinner />}
+           <Sentinel
+              fetchNextPage={fetchNextPage}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+            />
         </div>
       ) : (
         <div className="scrollable-content">
