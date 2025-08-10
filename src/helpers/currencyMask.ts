@@ -10,11 +10,11 @@ export const currencyMask = (
   // console.log('old pos', oldCursorPosition)
 
   const valueBeforeCursor = oldValue.substring(0, oldCursorPosition ?? 0);
-  const commasCountBeforeCursor = (valueBeforeCursor.match(/,/g) || []).length;
+  const commasCountBeforeCursor = (valueBeforeCursor.match(/,./g) || []).length;
   let value = oldValue;
 
   const decimalPoints = significantDigitsFromTicker(ticker.toUpperCase());
-
+  value = value.replace(/,/g, ".");
   // Prevent multiple dots (decimal points)
   if (
     (value.match(/\./g) || []).length > 1 ||
