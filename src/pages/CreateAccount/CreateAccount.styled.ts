@@ -36,7 +36,6 @@ export const StyledCreateAccount = styled.div`
       .inputBox {
         display: flex;
         flex-direction: column;
-        padding: 0 0 0.5rem 0;
         margin-bottom: 15px;
       }
     }
