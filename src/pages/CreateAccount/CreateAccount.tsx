@@ -66,7 +66,13 @@ export default function CreateAccount() {
               placeholder="New Username"
               onChange={(e) => setUsername(e.target.value)}
             />
-            <div className="errormsg">{requestError}&nbsp;</div>
+            {requestError ? (
+              <div className="errormsg">{requestError}&nbsp;</div>
+            ) : (
+              ""
+            )}
+          </div>
+          <div className="inputBox">
             <Input
               type="password"
               value={password}

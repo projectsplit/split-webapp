@@ -28,7 +28,6 @@ export const StyledCreateAccount = styled.div`
       flex-direction: column;
 
       .errormsg {
-        margin-top: 3px;
         white-space: initial;
         color: ${({ theme }) => theme.pink};
         font-size: 12px;
@@ -37,7 +36,6 @@ export const StyledCreateAccount = styled.div`
       .inputBox {
         display: flex;
         flex-direction: column;
-        gap:15px;
         padding: 0 0 0.5rem 0;
         margin-bottom: 15px;
       }
