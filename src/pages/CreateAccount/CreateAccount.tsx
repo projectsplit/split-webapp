@@ -14,6 +14,7 @@ export default function CreateAccount() {
   const [password, setPassword] = useState("");
   const [networkError, setNetworkError] = useState<string>("");
   const [requestError, setRequestError] = useState<string>("");
+  const [passwordError, setPasswordError]=useState<string>('');
   const navigate = useNavigate();
 
   const redirect =
@@ -28,8 +29,14 @@ export default function CreateAccount() {
   });
 
   const handleSignUp = () => {
+    if(password.length<9){
+      setPasswordError('Password should contain at least 10 characters')
+      return
+    }
     if (!username || !password) return;
     setNetworkError("");
+    setRequestError("")
+    setPasswordError("")
 
     signUpWithCredentialsMutation(
       { username, password },
@@ -76,11 +83,11 @@ export default function CreateAccount() {
             <Input
               type="password"
               value={password}
-              //error={signInError ? true : false}
+              error={passwordError ? true : false}
               placeholder="New Password"
               onChange={(e) => setPassword(e.target.value)}
             />
-            {/* <div className="mailmsg">{signInError}&nbsp;</div> */}
+           {passwordError? <div className="errormsg">{passwordError}&nbsp;</div>:''}
           </div>
 
           <MyButton fontSize="18" onClick={handleSignUp}>
