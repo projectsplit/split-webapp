@@ -15,6 +15,16 @@ export type PasswordSignInResponse = {
   accessToken: string;
 };
 
+export type PasswordSignUpRequest = {
+  username: string;
+  password: string;
+};
+
+export type PasswordSignUpResponse = {
+  accessToken: string;
+};
+
+
 export type SendGoogleCodeRequest = {
   code: string;
 };

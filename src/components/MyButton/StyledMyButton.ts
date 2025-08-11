@@ -6,7 +6,7 @@ export const StyledMyButton = styled.button.withConfig({
 })<StyledMyButtonProps>`
   font-family: "Roboto";
   padding: 0.5em 1em;
-  font-weight: 500;
+  font-weight: 400;
   border: none;
   border-radius: 10px;
   font-size: ${({fontSize})=>fontSize?`${fontSize}px`:"14px"};

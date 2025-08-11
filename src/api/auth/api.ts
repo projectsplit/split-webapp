@@ -1,5 +1,5 @@
 
-import { PasswordSignInRequest, RefreshTokenResponse, SendGoogleCodeRequest } from "../../types";
+import { PasswordSignInRequest, PasswordSignUpRequest, RefreshTokenResponse, SendGoogleCodeRequest } from "../../types";
 import { authApiClient } from "../apiClients";
 
 export const sendGoogleAccessToken = async (request: SendGoogleCodeRequest) => {
@@ -13,6 +13,14 @@ export const sendGoogleAccessToken = async (request: SendGoogleCodeRequest) => {
 export const sendPasswordCredentials = async (request: PasswordSignInRequest) => {
   const response = await authApiClient.post(
     "/auth/password/sign-in",
+    request
+  );
+  return response.data;
+};
+
+export const createPasswordCredentials = async (request: PasswordSignUpRequest) => {
+  const response = await authApiClient.post(
+    "/auth/password/sign-up",
     request
   );
   return response.data;
