@@ -8,10 +8,25 @@ export const handleInputChange = (
   displayedAmount: Signal<string>,
   setAmount: (value: React.SetStateAction<string>) => void
 ) => {
-  const newValue = currencyMask(e, currencySymbol).target.value;
-  const numericValue = Number(removeCommas(newValue));
-  if (numericValue <= 999999999999.99) {
+  const oldDisplayedLength = displayedAmount.value.length;
+  const rawLength = e.target.value.length;
+  const isAddition = rawLength > oldDisplayedLength;
+  const isDeletion = rawLength < oldDisplayedLength;
+  const newValue = currencyMask(e, currencySymbol, displayedAmount.value).target.value;
+  const clean = removeCommas(newValue);
+  let numericValue = Number(clean);
+  if (isNaN(numericValue)) {
+    if (clean === '.' || clean === '') {
+      if (isDeletion || clean === '') {
+        displayedAmount.value = '';
+        setAmount('');
+      } else if (isAddition) {
+        displayedAmount.value = '.';
+        setAmount('0.');
+      }
+    }
+  } else if (numericValue <= 999999999999.99) {
     displayedAmount.value = newValue;
-    setAmount(removeCommas(newValue));
+    setAmount(clean.startsWith('.') ? '0' + clean : clean);
   }
 };
