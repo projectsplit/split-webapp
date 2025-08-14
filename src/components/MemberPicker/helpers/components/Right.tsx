@@ -11,13 +11,14 @@ interface RightProps {
   locked: boolean;
   selectedCurrency: string;
   handleInputBlur: (id: string) => void;
-  changeAmount: (id: string, amount: string) => void;
+  changeAmount: (id: string, e: React.ChangeEvent<HTMLInputElement>) => void;
   toggleLock: (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: string
   ) => void;
   category: Signal<string>;
   memberAmounts: PickerMember[];
+  inputRef: (el: HTMLInputElement | null) => void;
 }
 
 const Right: React.FC<RightProps> = ({
@@ -30,6 +31,7 @@ const Right: React.FC<RightProps> = ({
   toggleLock,
   category,
   memberAmounts,
+  inputRef,
 }) => {
   const totalSharesValue = memberAmounts.reduce(
     (sum, member) => sum + Number(member.screenQuantity),
@@ -52,9 +54,10 @@ const Right: React.FC<RightProps> = ({
               inputMode="decimal"
               value={screenQuantity}
               onBlur={() => handleInputBlur(id)}
-              onChange={(e) => changeAmount(id, e.target.value)}
+              onChange={(e) => changeAmount(id, e)}
               onClick={(e) => e.stopPropagation()}
               category={category.value}
+              ref={inputRef}
             />
           </div>
           <div onClick={(e) => toggleLock(e, id)}>
@@ -75,9 +78,10 @@ const Right: React.FC<RightProps> = ({
               inputMode="decimal"
               value={screenQuantity}
               onBlur={() => handleInputBlur(id)}
-              onChange={(e) => changeAmount(id, e.target.value)}
+              onChange={(e) => changeAmount(id, e)}
               onClick={(e) => e.stopPropagation()}
               category={category.value}
+              ref={inputRef}
             />
             <div className="shares">
               <div className="fraction">
@@ -111,9 +115,10 @@ const Right: React.FC<RightProps> = ({
               inputMode="decimal"
               value={screenQuantity}
               onBlur={() => handleInputBlur(id)}
-              onChange={(e) => changeAmount(id, e.target.value)}
+              onChange={(e) => changeAmount(id, e)}
               onClick={(e) => e.stopPropagation()}
               category={category.value}
+              ref={inputRef}
             />
           </div>
           <div onClick={(e) => toggleLock(e, id)}>
