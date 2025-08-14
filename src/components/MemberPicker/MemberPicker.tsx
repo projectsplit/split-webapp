@@ -123,10 +123,10 @@ const MemberPicker = ({
     );
   };
 
-  const changeAmount = (id: string, screenQuantity: string): void => {
+  const changeAmount = (id: string, e: React.ChangeEvent<HTMLInputElement>): void => {//screenQuantity is e.target.value
     const updatedMembers = memberAmounts.map((m) => {
       if (m.id === id) {
-        return { ...m, screenQuantity, locked: true };
+        return { ...m, screenQuantity: e.target.value, locked: true };//currencyMask(e, currencySymbol, displayedAmount.value).target.value;
       }
       return m;
     });

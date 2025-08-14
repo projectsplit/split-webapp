@@ -11,7 +11,7 @@ interface RightProps {
   locked: boolean;
   selectedCurrency: string;
   handleInputBlur: (id: string) => void;
-  changeAmount: (id: string, amount: string) => void;
+  changeAmount: (id: string, e: React.ChangeEvent<HTMLInputElement>) => void;
   toggleLock: (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: string
@@ -52,7 +52,7 @@ const Right: React.FC<RightProps> = ({
               inputMode="decimal"
               value={screenQuantity}
               onBlur={() => handleInputBlur(id)}
-              onChange={(e) => changeAmount(id, e.target.value)}
+              onChange={(e) => changeAmount(id, e)}
               onClick={(e) => e.stopPropagation()}
               category={category.value}
             />
@@ -75,7 +75,7 @@ const Right: React.FC<RightProps> = ({
               inputMode="decimal"
               value={screenQuantity}
               onBlur={() => handleInputBlur(id)}
-              onChange={(e) => changeAmount(id, e.target.value)}
+              onChange={(e) => changeAmount(id, e)}
               onClick={(e) => e.stopPropagation()}
               category={category.value}
             />
@@ -111,7 +111,7 @@ const Right: React.FC<RightProps> = ({
               inputMode="decimal"
               value={screenQuantity}
               onBlur={() => handleInputBlur(id)}
-              onChange={(e) => changeAmount(id, e.target.value)}
+              onChange={(e) => changeAmount(id, e)}
               onClick={(e) => e.stopPropagation()}
               category={category.value}
             />

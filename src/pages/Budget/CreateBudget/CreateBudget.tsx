@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { currencyMask } from "../../../helpers/currencyMask";
 import { removeCommas } from "../../../helpers/removeCommas";
@@ -22,6 +22,7 @@ import { useSpendingInfo } from "../../../api/services/useSpengindInfo";
 import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import InfoBoxAnimation from "../../../components/Menus/MenuAnimations/InfoBoxAnimation";
 import CreateBudgetConfirmationAnimation from "../../../components/Menus/MenuAnimations/BudgetAnimations/CreateBudgetConfirmationAnimation";
+import { handleInputChange } from "../../../helpers/handleInputChange";
 
 export default function CreateBudget() {
 
@@ -65,10 +66,13 @@ export default function CreateBudget() {
   const isStale=false;
 
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    displayedAmount.value = currencyMask(e,currencySymbol).target.value;
-    setAmount(removeCommas(e.target.value));
-  };
+  const handleInputChangeCallback = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      handleInputChange(e, currencySymbol, displayedAmount, setAmount);
+  
+    },
+    [currencySymbol, displayedAmount, setAmount]
+  );
 
   const getDayNumber = (day: string): string | null => {
     const index = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].indexOf(day);
@@ -136,7 +140,7 @@ export default function CreateBudget() {
         displayedAmount={displayedAmount}
         currency={currencySymbol}
         submitBudgetErrors={submitBudgetErrors}
-        onChange={(e) => handleInputChange(e)}
+        onChange={handleInputChangeCallback}
       />
 
       <SpendingCycle

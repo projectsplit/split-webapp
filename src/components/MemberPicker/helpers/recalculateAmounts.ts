@@ -41,7 +41,7 @@ export const recalculateAmounts = (
         if (m.selected && !m.locked) {
           return {
             ...m,
-            screenQuantity: screenArray.shift()?.toFixed(decimalDigits) || "",
+            screenQuantity:screenArray.shift()?.toFixed(decimalDigits) || "",
             actualAmount:
               actualAmountsArray.shift()?.toFixed(decimalDigits) || "",
           };
