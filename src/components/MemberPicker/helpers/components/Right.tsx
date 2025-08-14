@@ -18,6 +18,7 @@ interface RightProps {
   ) => void;
   category: Signal<string>;
   memberAmounts: PickerMember[];
+  inputRef: (el: HTMLInputElement | null) => void;
 }
 
 const Right: React.FC<RightProps> = ({
@@ -30,6 +31,7 @@ const Right: React.FC<RightProps> = ({
   toggleLock,
   category,
   memberAmounts,
+  inputRef,
 }) => {
   const totalSharesValue = memberAmounts.reduce(
     (sum, member) => sum + Number(member.screenQuantity),
@@ -55,6 +57,7 @@ const Right: React.FC<RightProps> = ({
               onChange={(e) => changeAmount(id, e)}
               onClick={(e) => e.stopPropagation()}
               category={category.value}
+              ref={inputRef}
             />
           </div>
           <div onClick={(e) => toggleLock(e, id)}>
@@ -78,6 +81,7 @@ const Right: React.FC<RightProps> = ({
               onChange={(e) => changeAmount(id, e)}
               onClick={(e) => e.stopPropagation()}
               category={category.value}
+              ref={inputRef}
             />
             <div className="shares">
               <div className="fraction">
@@ -114,6 +118,7 @@ const Right: React.FC<RightProps> = ({
               onChange={(e) => changeAmount(id, e)}
               onClick={(e) => e.stopPropagation()}
               category={category.value}
+              ref={inputRef}
             />
           </div>
           <div onClick={(e) => toggleLock(e, id)}>
