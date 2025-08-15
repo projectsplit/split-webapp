@@ -1,4 +1,4 @@
-import { useEffect,useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { MemberPickerProps } from "../../interfaces";
 import { useSignal } from "@preact/signals-react";
@@ -126,6 +126,19 @@ const MemberPicker = ({
   };
 
   const changeAmount = (id: string, e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (category.value !== "Amounts") {
+      const updatedMembers = memberAmounts.map((m) => {
+        if (m.id === id) {
+          return { ...m, screenQuantity: e.target.value, locked: true };
+        }
+        return m;
+      });
+      setMemberAmounts(
+        recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency)
+      );
+      return
+    }
+
     const oldMember = memberAmounts.find((m) => m.id === id);
     const oldDisplayed = oldMember ? oldMember.screenQuantity : '';
     const originalValue = e.target.value;
@@ -176,44 +189,44 @@ const MemberPicker = ({
   };
 
 
-const handleInputBlur = (id: string) => {
-  const updatedMembers = memberAmounts.map((m) => {
-    if (m.id === id) {
-      const cleanedValue = m.screenQuantity
-        .replace(/^0+(?=\d*\.?\d+)/, (match) => (match.includes(".") ? "0" : ""))
-        .replace(/\.$/, ""); // Remove trailing decimal point
-      const numericValue = Number(cleanedValue);
-      const isZero = numericValue === 0 || isNaN(numericValue);
+  const handleInputBlur = (id: string) => {
+    const updatedMembers = memberAmounts.map((m) => {
+      if (m.id === id) {
+        const cleanedValue = m.screenQuantity
+          .replace(/^0+(?=\d*\.?\d+)/, (match) => (match.includes(".") ? "0" : ""))
+          .replace(/\.$/, ""); // Remove trailing decimal point
+        const numericValue = Number(cleanedValue);
+        const isZero = numericValue === 0 || isNaN(numericValue);
 
-      switch (category.value) {
-        case "Amounts":
-          return {
-            ...m,
-            screenQuantity: isZero ? "0.00" : cleanedValue,
-            locked: isZero ? false : m.locked,
-          };
-        case "Shares":
-          return {
-            ...m,
-            screenQuantity: isZero ? "" : cleanedValue,
-            locked: isZero ? false : m.locked,
-          };
-        case "Percentages":
-          return {
-            ...m,
-            screenQuantity: isZero ? "0.00" : cleanedValue,
-            locked: isZero ? false : m.locked,
-          };
-        default:
-          return m;
+        switch (category.value) {
+          case "Amounts":
+            return {
+              ...m,
+              screenQuantity: isZero ? "0.00" : cleanedValue,
+              locked: isZero ? false : m.locked,
+            };
+          case "Shares":
+            return {
+              ...m,
+              screenQuantity: isZero ? "" : cleanedValue,
+              locked: isZero ? false : m.locked,
+            };
+          case "Percentages":
+            return {
+              ...m,
+              screenQuantity: isZero ? "0.00" : cleanedValue,
+              locked: isZero ? false : m.locked,
+            };
+          default:
+            return m;
+        }
       }
-    }
-    return m;
-  });
-  setMemberAmounts(
-    recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency)
-  );
-};
+      return m;
+    });
+    setMemberAmounts(
+      recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency)
+    );
+  };
 
   const selectedCount = memberAmounts.filter((m) => m.selected).length;
 
@@ -269,7 +282,7 @@ const handleInputBlur = (id: string) => {
             />
           </div>
           <div className="member-list">
-            
+
             {sortedMemberAmounts
               .filter((m) => m.selected)
               .map((m) => (
@@ -290,7 +303,7 @@ const handleInputBlur = (id: string) => {
                     selectedCurrency={selectedCurrency}
                     toggleLock={toggleLock}
                     memberAmounts={memberAmounts}
-                    inputRef={(el:any) => {
+                    inputRef={(el: any) => {
                       if (el) {
                         inputRefs.current.set(m.id, el);
                       } else {
