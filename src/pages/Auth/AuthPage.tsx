@@ -14,6 +14,7 @@ const AuthPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [networkError, setNetworkError] = useState<string>("");
+  const [requestError, setRequestError]= useState<string>("")
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,6 +32,7 @@ const AuthPage: React.FC = () => {
   const handleSignIn = () => {
     if (!username || !password) return;
     setNetworkError("");
+    setRequestError("")
 
     signInWithCredentialsMutation(
       { username, password },
@@ -42,6 +44,9 @@ const AuthPage: React.FC = () => {
         onError: (error) => {
           if (error.code === "ERR_NETWORK") {
             setNetworkError(error.message + ": Check your internet connection");
+          }
+          if ((error.code = "ERR_BAD_REQUEST")) {
+            setRequestError(error.response.data);
           }
           console.error("Sign-in failed", error.message);
         },
@@ -61,14 +66,21 @@ const AuthPage: React.FC = () => {
               value={username}
               //error={signInError ? true : false}
               placeholder="Username"
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {setUsername(e.target.value); setRequestError("")}}
             />
+             {requestError ? (
+              <div className="errormsg">{requestError}&nbsp;</div>
+            ) : (
+              ""
+            )}
+          </div>
+          <div className="inputBox">
             <Input
               type="password"
               value={password}
               //error={signInError ? true : false}
               placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {setPassword(e.target.value); setRequestError("")}}
             />
             {/* <div className="mailmsg">{signInError}&nbsp;</div> */}
           </div>

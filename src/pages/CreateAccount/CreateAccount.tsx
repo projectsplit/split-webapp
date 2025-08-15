@@ -14,7 +14,7 @@ export default function CreateAccount() {
   const [password, setPassword] = useState("");
   const [networkError, setNetworkError] = useState<string>("");
   const [requestError, setRequestError] = useState<string>("");
-  const [passwordError, setPasswordError]=useState<string>('');
+  const [passwordError, setPasswordError] = useState<string>('');
   const navigate = useNavigate();
 
   const redirect =
@@ -29,7 +29,7 @@ export default function CreateAccount() {
   });
 
   const handleSignUp = () => {
-    if(password.length<9){
+    if (password.length < 9) {
       setPasswordError('Password should contain at least 10 characters')
       return
     }
@@ -59,6 +59,11 @@ export default function CreateAccount() {
     );
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRequestError("")
+    setUsername(e.target.value)
+  }
+
   return (
     <StyledCreateAccount>
       <WelcomeHeader />
@@ -71,7 +76,7 @@ export default function CreateAccount() {
               value={username}
               error={requestError ? true : false}
               placeholder="New Username"
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => handleChange(e)}
             />
             {requestError ? (
               <div className="errormsg">{requestError}&nbsp;</div>
@@ -87,10 +92,10 @@ export default function CreateAccount() {
               placeholder="New Password"
               onChange={(e) => setPassword(e.target.value)}
             />
-           {passwordError? <div className="errormsg">{passwordError}&nbsp;</div>:''}
+            {passwordError ? <div className="errormsg">{passwordError}&nbsp;</div> : ''}
           </div>
 
-          <MyButton fontSize="18" onClick={handleSignUp}>
+          <MyButton fontSize="18" onClick={handleSignUp} isLoading={isPending}>
             Sign Up
           </MyButton>
           <div className="errormsg">{networkError}</div>

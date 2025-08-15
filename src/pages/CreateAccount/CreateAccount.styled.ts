@@ -29,7 +29,7 @@ export const StyledCreateAccount = styled.div`
 
       .errormsg {
         white-space: initial;
-        color: ${({ theme }) => theme.pink};
+        color: ${({ theme }) => theme.redish};
         font-size: 12px;
       }
 

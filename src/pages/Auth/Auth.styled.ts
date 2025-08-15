@@ -31,23 +31,15 @@ export const StyledAuthPage = styled.div`
       gap:20px;
     }
       .errormsg {
-        margin-top: 3px;
         white-space: initial;
-        color: ${({ theme }) => theme.pink};
+        color: ${({ theme }) => theme.redish};
         font-size: 12px;
       }
 
-      .inputBox {
+       .inputBox {
         display: flex;
         flex-direction: column;
-        gap:15px;
-        padding: 0 0 0.5rem 0;
         margin-bottom: 15px;
-        .mailmsg {
-          white-space: initial;
-          color: ${({ theme }) => theme.pink};
-          font-size: 12px;
-        }
       }
 
       .or {
