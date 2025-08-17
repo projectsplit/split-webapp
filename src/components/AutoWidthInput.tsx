@@ -3,7 +3,7 @@ import React, { useRef, useEffect, forwardRef } from "react";
 interface AutoWidthInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   category?: "Amounts" | "Shares" | "Percentages";
-  isText?:boolean
+  isText?: boolean;
 }
 
 const AutoWidthInput = forwardRef<HTMLInputElement, AutoWidthInputProps>(
@@ -37,8 +37,17 @@ const AutoWidthInput = forwardRef<HTMLInputElement, AutoWidthInputProps>(
     }, [value]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if(isText &&onChange) return onChange(e)
+      if (isText && onChange) return onChange(e);
+
       let inputValue = e.target.value;
+
+      if (category === "Amounts") {
+        // Skip validation for Amounts; let mask handle it
+        if (onChange) {
+          onChange(e);
+        }
+        return;
+      }
 
       // Allow empty string, digits, decimal point, and optional negative sign
       const isValid = /^-?\d*\.?\d*$/.test(inputValue);
@@ -98,7 +107,7 @@ const AutoWidthInput = forwardRef<HTMLInputElement, AutoWidthInputProps>(
           value={value}
           onChange={handleChange}
           onFocus={handleFocus}
-          placeholder={isText?"":"0"}
+          placeholder={isText ? "" : "0"}
           style={{
             ...style,
             borderRadius: "0",

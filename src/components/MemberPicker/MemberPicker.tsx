@@ -1,4 +1,4 @@
-import { useEffect,useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { MemberPickerProps } from "../../interfaces";
 import { useSignal } from "@preact/signals-react";
@@ -11,6 +11,8 @@ import NameAndAmounts from "./helpers/components/NameAndAmounts";
 import { isEquallySplitFn } from "./helpers/isEquallySplitFn";
 import { recalculateAmounts } from "./helpers/recalculateAmounts";
 import { useRecalculateAmounts } from "./helpers/hooks/useRecalculateAmounts";
+import { applyCurrencyMask } from "../../helpers/applyCurrencyMask";
+import { removeCommas } from "../../helpers/removeCommas";
 
 const MemberPicker = ({
   memberAmounts,
@@ -27,7 +29,7 @@ const MemberPicker = ({
   const mainRef = useRef<HTMLDivElement>(null);
   const renderCounter = useRef<number>(0);
   const isEquallySplit = useSignal<boolean>(true);
-
+  const inputRefs = useRef<Map<string, HTMLInputElement>>(new Map());
 
   const [decimalDigits, setDecimalDigits] = useState<number>(2);
 
@@ -83,7 +85,7 @@ const MemberPicker = ({
     });
 
     setMemberAmounts(
-      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category)
+      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category, selectedCurrency)
     );
   };
 
@@ -102,7 +104,7 @@ const MemberPicker = ({
     });
 
     setMemberAmounts(
-      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category)
+      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category, selectedCurrency)
     );
   };
 
@@ -119,67 +121,118 @@ const MemberPicker = ({
       return m;
     });
     setMemberAmounts(
-      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category)
+      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category, selectedCurrency)
     );
   };
 
-  const changeAmount = (id: string, screenQuantity: string): void => {
+  const changeAmount = (id: string, e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (category.value !== "Amounts") {
+      const updatedMembers = memberAmounts.map((m) => {
+        if (m.id === id) {
+          return { ...m, screenQuantity: e.target.value, locked: true };
+        }
+        return m;
+      });
+      setMemberAmounts(
+        recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency)
+      );
+      return
+    }
+
+    const oldMember = memberAmounts.find((m) => m.id === id);
+    const oldDisplayed = oldMember ? oldMember.screenQuantity : '';
+    const originalValue = e.target.value;
+    const cursorPos = e.target.selectionStart ?? 0;
+    let { formattedValue, newCursorPosition } = applyCurrencyMask(
+      originalValue,
+      cursorPos,
+      selectedCurrency,
+      oldDisplayed
+    );
+    let clean = removeCommas(formattedValue);
+    let actualAmount: string = clean;
+    const oldLength = oldDisplayed.length;
+    const rawLength = originalValue.length;
+    const isAddition = rawLength > oldLength;
+    const isDeletion = rawLength < oldLength;
+    if (isNaN(Number(clean))) {
+      if (clean === '.' || clean === '') {
+        if (isDeletion || clean === '') {
+          formattedValue = '';
+          actualAmount = '';
+        } else if (isAddition) {
+          formattedValue = '.';
+          actualAmount = '0.';
+        }
+      }
+    } else {
+      if (clean.startsWith('.')) {
+        actualAmount = '0' + clean;
+      }
+    }
+
     const updatedMembers = memberAmounts.map((m) => {
       if (m.id === id) {
-        return { ...m, screenQuantity, locked: true };
+        return { ...m, screenQuantity: formattedValue, actualAmount, locked: true };
       }
       return m;
     });
     setMemberAmounts(
-      recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category)
+      recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency)
     );
+    setTimeout(() => {
+      const input = inputRefs.current.get(id);
+      if (input) {
+        input.setSelectionRange(newCursorPosition, newCursorPosition);
+      }
+    }, 0);
   };
 
 
-const handleInputBlur = (id: string) => {
-  const updatedMembers = memberAmounts.map((m) => {
-    if (m.id === id) {
-      const cleanedValue = m.screenQuantity
-        .replace(/^0+(?=\d*\.?\d+)/, (match) => (match.includes(".") ? "0" : ""))
-        .replace(/\.$/, ""); // Remove trailing decimal point
-      const numericValue = Number(cleanedValue);
-      const isZero = numericValue === 0 || isNaN(numericValue);
+  const handleInputBlur = (id: string) => {
+    const updatedMembers = memberAmounts.map((m) => {
+      if (m.id === id) {
+        const cleanedValue = m.screenQuantity
+          .replace(/^0+(?=\d*\.?\d+)/, (match) => (match.includes(".") ? "0" : ""))
+          .replace(/\.$/, ""); // Remove trailing decimal point
+        const numericValue = Number(cleanedValue);
+        const isZero = numericValue === 0 || isNaN(numericValue);
 
-      switch (category.value) {
-        case "Amounts":
-          return {
-            ...m,
-            screenQuantity: isZero ? "0.00" : cleanedValue,
-            locked: isZero ? false : m.locked,
-          };
-        case "Shares":
-          return {
-            ...m,
-            screenQuantity: isZero ? "" : cleanedValue,
-            locked: isZero ? false : m.locked,
-          };
-        case "Percentages":
-          return {
-            ...m,
-            screenQuantity: isZero ? "0.00" : cleanedValue,
-            locked: isZero ? false : m.locked,
-          };
-        default:
-          return m;
+        switch (category.value) {
+          case "Amounts":
+            return {
+              ...m,
+              screenQuantity: isZero ? "0.00" : cleanedValue,
+              locked: isZero ? false : m.locked,
+            };
+          case "Shares":
+            return {
+              ...m,
+              screenQuantity: isZero ? "" : cleanedValue,
+              locked: isZero ? false : m.locked,
+            };
+          case "Percentages":
+            return {
+              ...m,
+              screenQuantity: isZero ? "0.00" : cleanedValue,
+              locked: isZero ? false : m.locked,
+            };
+          default:
+            return m;
+        }
       }
-    }
-    return m;
-  });
-  setMemberAmounts(
-    recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category)
-  );
-};
+      return m;
+    });
+    setMemberAmounts(
+      recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency)
+    );
+  };
 
   const selectedCount = memberAmounts.filter((m) => m.selected).length;
 
   const handleMainClick = () => {
     setMemberAmounts(
-      recalculateAmounts(memberAmounts, totalAmount, decimalDigits, category)
+      recalculateAmounts(memberAmounts, totalAmount, decimalDigits, category, selectedCurrency)
     );
     setIsMenuOpen(!isMenuOpen);
   };
@@ -229,7 +282,7 @@ const handleInputBlur = (id: string) => {
             />
           </div>
           <div className="member-list">
-            
+
             {sortedMemberAmounts
               .filter((m) => m.selected)
               .map((m) => (
@@ -250,6 +303,13 @@ const handleInputBlur = (id: string) => {
                     selectedCurrency={selectedCurrency}
                     toggleLock={toggleLock}
                     memberAmounts={memberAmounts}
+                    inputRef={(el: any) => {
+                      if (el) {
+                        inputRefs.current.set(m.id, el);
+                      } else {
+                        inputRefs.current.delete(m.id);
+                      }
+                    }}
                   />
                 </div>
               ))}
@@ -278,3 +338,6 @@ const handleInputBlur = (id: string) => {
 };
 
 export default MemberPicker;
+
+
+

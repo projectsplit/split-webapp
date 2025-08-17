@@ -1,13 +1,12 @@
+import { findAddedChar } from "./currencyMask";
 import { significantDigitsFromTicker } from "./openExchangeRates";
 
-export const currencyMask = (
-  e: React.ChangeEvent<HTMLInputElement>,
+export function applyCurrencyMask(
+  originalValue: string,
+  cursorPosition: number,
   ticker: string,
   oldDisplayed: string
-) => {
-  const input = e.target;
-  const originalValue = input.value;
-  let cursorPosition = input.selectionStart ?? 0;
+): { formattedValue: string; newCursorPosition: number } {
   let processingValue = originalValue;
   let isReplaced = false;
   let addedPos = -1;
@@ -71,8 +70,6 @@ export const currencyMask = (
     isHiddenLeading = true;
   }
 
-  input.value = value;
-
   const beforeCursor = oldValue.substring(0, cursorPosition);
   const commasBefore = (beforeCursor.match(/,/g) || []).length;
   const logicalPos = cursorPosition - commasBefore;
@@ -101,15 +98,5 @@ export const currencyMask = (
 
   newCursorPosition = Math.max(0, Math.min(newCursorPosition, value.length));
 
-  input.setSelectionRange(newCursorPosition, newCursorPosition);
-
-  return e;
-};
-
-export function findAddedChar(oldStr: string, newStr: string): { pos: number; char: string } | null {
-  if (newStr.length !== oldStr.length + 1) return null;
-  for (let i = 0; i < oldStr.length; i++) {
-    if (oldStr[i] !== newStr[i]) return { pos: i, char: newStr[i] };
-  }
-  return { pos: oldStr.length, char: newStr[oldStr.length] };
+  return { formattedValue: value, newCursorPosition };
 }
