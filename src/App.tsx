@@ -22,12 +22,14 @@ import CurrentBudget from "./pages/Budget/CurrentBudget/CurrentBudget";
 import CreateBudget from "./pages/Budget/CreateBudget/CreateBudget";
 import Budget from "./pages/Budget/Budget";
 import RedirectToBudget from "./routes/RedirectToBudget";
+import CreateAccount from "./pages/CreateAccount/CreateAccount";
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path={routes.AUTH} element={<Auth />} />
+        <Route path = {routes.CREATE} element={<CreateAccount/>}/>
         <Route path={routes.GOOGLE_REDIRECT} element={<GoogleCallback />} />
         <Route element={<Protected />}>
           <Route path={routes.ROOT} element={<Home />} />

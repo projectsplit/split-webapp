@@ -26,7 +26,7 @@ export default function RemoveUserFromGroupMenu({
 
   const { data: group } = useGroup(groupId);
   
-  const groupUsers = group?.members.filter((m) => m.userId !== userInfo.userId)?? [];
+  const groupUsers = group?.members.filter((m) => m.userId !== userInfo?.userId)?? [];
   const groupGuests = group?.guests?? [];
   const combinedMembers: GroupMember[] = [...groupUsers, ...groupGuests];
 

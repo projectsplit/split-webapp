@@ -12,6 +12,6 @@ export const StyledInput = styled.input.withConfig({
   background-color: ${({ theme, backgroundcolor }) => backgroundcolor || theme.layer2};
   border-style: none;
   font-size: 18px;
-  border: ${({ error, theme }) => (error ? `1px solid  ${theme.pink}` : 'none')};
+  border: ${({ error, theme }) => (error ? `1px solid  ${theme.redish}` : 'none')};
  
 `
