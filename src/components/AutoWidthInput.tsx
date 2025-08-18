@@ -39,7 +39,8 @@ const AutoWidthInput = forwardRef<HTMLInputElement, AutoWidthInputProps>(
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (isText && onChange) return onChange(e);
 
-      let inputValue = e.target.value;
+      let inputValue = e.target.value.replace(/,/g, '.'); 
+      e.target.value = inputValue;
 
       if (category === "Amounts") {
         // Skip validation for Amounts; let mask handle it

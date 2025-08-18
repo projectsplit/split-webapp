@@ -39,9 +39,7 @@ const Right: React.FC<RightProps> = ({
   );
   const formattedTotalShares = totalSharesValue === 0
     ? ""
-    : Number.isInteger(totalSharesValue)
-    ? totalSharesValue.toString()
-    : totalSharesValue.toString().replace(/\.?0+$/, "");
+    : Number(totalSharesValue).toFixed(2).replace(/\.?0+$/, "");
 
   switch (category.value) {
     case "Amounts":
@@ -86,18 +84,18 @@ const Right: React.FC<RightProps> = ({
             <div className="shares">
               <div className="fraction">
                 <div className="nominatorDenominator">
-                {screenQuantity === formattedTotalShares ?"":<>
-                {screenQuantity === "" || screenQuantity === "0" ? (
-                  <span className="numerator"></span>
-                ) : screenQuantity === formattedTotalShares ? (
-                  <span className="numerator">1</span>
-                ) : (
-                  <>
-                    <span className="numerator">{screenQuantity}</span>/
-                    <span className="denominator">{formattedTotalShares}</span>
-                  </>
-                )}
-                </>}
+                  {screenQuantity === formattedTotalShares ? "" : <>
+                    {screenQuantity === "" || screenQuantity === "0" ? (
+                      <span className="numerator"></span>
+                    ) : screenQuantity === formattedTotalShares ? (
+                      <span className="numerator">1</span>
+                    ) : (
+                      <>
+                        <span className="numerator">{screenQuantity}</span>/
+                        <span className="denominator">{formattedTotalShares}</span>
+                      </>
+                    )}
+                  </>}
                 </div>
                 <span className="shares-label">shares</span>
               </div>

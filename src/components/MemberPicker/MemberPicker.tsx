@@ -126,6 +126,7 @@ const MemberPicker = ({
   };
 
   const changeAmount = (id: string, e: React.ChangeEvent<HTMLInputElement>): void => {
+    
     if (category.value !== "Amounts") {
       const updatedMembers = memberAmounts.map((m) => {
         if (m.id === id) {
