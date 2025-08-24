@@ -69,6 +69,8 @@ export default function NotificationsMenu({
                     groupName: x.groupName,
                     receiverId: x.receiverId,
                     senderId: x.senderId,
+                    guestName:x.guestName
+
                   }}
                   timeZoneId={timeZoneId}
                 />

@@ -10,11 +10,13 @@ import MemberFC from "./Member/MemberFC";
 import SettleUpAnimation from "../../components/Menus/MenuAnimations/SettleUpAnimation";
 import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
 import Spinner from "../../components/Spinner/Spinner";
+import AddNewUserAnimation from "../../components/Menus/MenuAnimations/AddNewUserAnimation";
 
 export default function Members() {
   const memberIdSelectedToSettleUp = useSignal<string>("");
   const menu = useSignal<string | null>(null);
-
+  const guestToBeReplaced = useSignal<{ guestId: string; guestName: string }>({ guestId: "", guestName: "" });
+  
   const { groupid } = useParams();
   const { userInfo, group, showBottomBar } = useOutletContext<{
     userInfo: UserInfo;
@@ -77,6 +79,7 @@ export default function Members() {
             memberIdSelectedToSettleUp={memberIdSelectedToSettleUp}
             members={allParticipants || []}
             totalSpent={totalSpent}
+            guestToBeReplaced={guestToBeReplaced}
           />
         ))
       )}
@@ -88,6 +91,7 @@ export default function Members() {
         memberIdSelectedToSettleUp={memberIdSelectedToSettleUp}
         members={allParticipants || []}
       />
+       <AddNewUserAnimation menu={menu} groupName={group.name} guestToBeReplaced={guestToBeReplaced.value} />
     </StyledMembers>
   );
 }

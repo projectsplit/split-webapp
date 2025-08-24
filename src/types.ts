@@ -424,6 +424,7 @@ export type GetUserInvitationsResponseItem = {
   groupId: string;
   groupName: string;
   guestId: string | null;
+  guestName:string
 };
 
 export type DeleteExpenseRequest = {

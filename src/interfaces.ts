@@ -476,6 +476,7 @@ export interface MemberProps {
   isGuest: boolean;
   totalSpent: Record<string, Record<string, number>>;
   group: Group;
+ guestToBeReplaced:Signal<{ guestId: string; guestName: string }>
 }
 
 export interface RenderScenariosProps {
@@ -530,6 +531,7 @@ export interface DescriptionAndTreeProps {
 
 export interface SettleUpButtonProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+  children:any
 }
 
 export interface SettleUpAnimationProps {
@@ -557,10 +559,12 @@ export interface PillProps {
 }
 export interface AddNewUserAnimationProps extends MenuProps {
   groupName: string | undefined;
+  guestToBeReplaced?:{ guestId: string; guestName: string }
 }
 
 export interface SearchUsersToInviteProps extends MenuProps {
   groupName: string | undefined;
+  guestToBeReplaced?:{ guestId: string; guestName: string }
 }
 export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
 

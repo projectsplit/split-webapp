@@ -2,10 +2,10 @@ import { StyledSettleUpButton } from "./SettleUpButton.Styled";
 import { SettleUpButtonProps } from "../../../../interfaces";
 
 
-export default function SettleUpButton({ onClick }: SettleUpButtonProps) {
+export default function SettleUpButton({ onClick,children }: SettleUpButtonProps) {
   return (
     <StyledSettleUpButton onClick={onClick}>
-      <div>Settle Up</div>
+      <div>{children}</div>
     </StyledSettleUpButton>
   );
 }

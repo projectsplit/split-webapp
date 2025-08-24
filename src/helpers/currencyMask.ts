@@ -3,8 +3,8 @@ import { significantDigitsFromTicker } from "./openExchangeRates";
 export const currencyMask = (
   e: React.ChangeEvent<HTMLInputElement>,
   ticker: string,
-  oldDisplayed: string
-) => {
+  oldDisplayed: string,
+):React.ChangeEvent<HTMLInputElement> => {
   const input = e.target;
   const originalValue = input.value;
   let cursorPosition = input.selectionStart ?? 0;
