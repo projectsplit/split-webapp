@@ -19,7 +19,7 @@ import RemoveGuestWarningAnimation from "../../components/Menus/MenuAnimations/R
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import Sentinel from "../../components/Sentinel";
 
-const SearchUsersToInvite = ({ menu }: SearchUsersToInviteProps) => {
+const SearchUsersToInvite = ({ menu, guestId }: SearchUsersToInviteProps) => {
   const params = useParams();
   const groupId = params.groupid!;
   const pageSize = 10;
@@ -28,7 +28,7 @@ const SearchUsersToInvite = ({ menu }: SearchUsersToInviteProps) => {
   const category = useSignal<string>("Invite User");
   const cannotBeRemovedClickedWarning = useSignal<string>("");
   const [guestName, setGuestName] = useState<string>("");
- 
+
   const noGroupError = useSignal<string>("");
   const noMemberError = useSignal<string>("");
   const [debouncedKeyword, _isDebouncing] = useDebounce<string>(
@@ -109,6 +109,7 @@ const SearchUsersToInvite = ({ menu }: SearchUsersToInviteProps) => {
                 isAlreadyInvited={user.isAlreadyInvited}
                 isGroupMember={user.isGroupMember}
                 groupId={groupId}
+                guestId={guestId}
                 onInviteSuccess={() =>
                   updateUserInvitationStatus(
                     user.userId,
@@ -118,11 +119,11 @@ const SearchUsersToInvite = ({ menu }: SearchUsersToInviteProps) => {
               />
             ))
           )}
-           <Sentinel
-              fetchNextPage={fetchNextPage}
-              hasNextPage={hasNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-            />
+          <Sentinel
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
         </div>
       ) : (
         <div className="scrollable-content">
@@ -177,6 +178,7 @@ const SearchResultItem: React.FC<{
   isGroupMember: boolean;
   groupId: string;
   onInviteSuccess: () => void;
+  guestId?: string;
 }> = ({
   userId,
   username,
@@ -184,44 +186,45 @@ const SearchResultItem: React.FC<{
   isGroupMember,
   groupId,
   onInviteSuccess,
+  guestId
 }) => {
-  
-  const { mutate, isPending, isError } = isAlreadyInvited
-    ? useRevokeInvitation()
-    : useSendInvitation();
 
-  if (isGroupMember) {
+    const { mutate, isPending, isError } = isAlreadyInvited
+      ? useRevokeInvitation()
+      : useSendInvitation();
+
+    if (isGroupMember) {
+      return (
+        <div className="search-result">
+          <div className="top-row">
+            <div>{username}</div>
+          </div>
+          <div className="bottom-row">already a member</div>
+        </div>
+      );
+    }
+
+    const onClick = () =>
+      mutate({
+        groupId,
+        guestId: (guestId && guestId != "" )? guestId : null,
+        receiverId: userId,
+        onSuccess: onInviteSuccess,
+      });
+
     return (
       <div className="search-result">
         <div className="top-row">
           <div>{username}</div>
+          <MyButton
+            isLoading={isPending}
+            variant={isAlreadyInvited ? "secondary" : "primary"}
+            onClick={isPending ? undefined : onClick}
+            hasFailed={isError}
+          >
+            {isAlreadyInvited ? "Uninvite" : "Invite"}
+          </MyButton>
         </div>
-        <div className="bottom-row">already a member</div>
       </div>
     );
-  }
-
-  const onClick = () =>
-    mutate({
-      groupId,
-      guestId: null,
-      receiverId: userId,
-      onSuccess: onInviteSuccess,
-    });
-
-  return (
-    <div className="search-result">
-      <div className="top-row">
-        <div>{username}</div>
-        <MyButton
-          isLoading={isPending}
-          variant={isAlreadyInvited ? "secondary" : "primary"}
-          onClick={isPending ? undefined : onClick}
-          hasFailed={isError}
-        >
-          {isAlreadyInvited ? "Uninvite" : "Invite"}
-        </MyButton>
-      </div>
-    </div>
-  );
-};
+  };

@@ -23,15 +23,16 @@ export default function MemberFC({
   memberIdSelectedToSettleUp,
   members,
   totalSpent,
-  group
+  group,
+  guestToBeReplacedMemberId
 }: MemberProps) {
-  const totalsSpent = totalSpent[memberId]|| {};
+  const totalsSpent = totalSpent[memberId] || {};
   const removeZeroesValuesFromTotalSpent = Object.fromEntries(
     Object.entries(totalsSpent).filter(([_, amount]) => amount !== 0)
   );
 
   const showSettleUpButton =
-    (isGuest || isLogedUser) &&  pendingTransactions.filter((p) => p.debtor === memberId).length > 0&&!group.isArchived;
+    (isGuest || isLogedUser) && pendingTransactions.filter((p) => p.debtor === memberId).length > 0 && !group.isArchived;
 
   const memberOwesItems = pendingTransactions
     .filter((p) => p.debtor === memberId)
@@ -176,13 +177,13 @@ export default function MemberFC({
             })()}
           </div>
 
-         { Object.keys(removeZeroesValuesFromTotalSpent).length === 0? <div className="totalSpent">No recorded spending 💰</div>:
-          <div className="totalSpent">
-            Total spent:{" "}
-            <span className="amounts">
-            {" "} {joinAmounts(Object.entries(removeZeroesValuesFromTotalSpent))}
-            </span>
-          </div>}
+          {Object.keys(removeZeroesValuesFromTotalSpent).length === 0 ? <div className="totalSpent">No recorded spending 💰</div> :
+            <div className="totalSpent">
+              Total spent:{" "}
+              <span className="amounts">
+                {" "} {joinAmounts(Object.entries(removeZeroesValuesFromTotalSpent))}
+              </span>
+            </div>}
         </div>
 
         {showSettleUpButton ? (
@@ -192,11 +193,16 @@ export default function MemberFC({
                 menu.value = "SettleUp";
                 memberIdSelectedToSettleUp.value = memberId;
               }}
-            />
+            >Settle Up</SettleUpButton>
           </div>
         ) : null}
       </div>
-      <div className="guest">{isGuest ? "Guest*" : null}</div>
+      <div className="guest">{isGuest ? <SettleUpButton
+        onClick={() => {
+           menu.value = "newUser";
+           guestToBeReplacedMemberId.value=memberId
+        }}
+      >Invite</SettleUpButton> : null}</div>
     </StyledMemberFC>
   );
 }

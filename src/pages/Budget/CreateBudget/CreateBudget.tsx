@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { currencyMask } from "../../../helpers/currencyMask";
-import { removeCommas } from "../../../helpers/removeCommas";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Frequency,

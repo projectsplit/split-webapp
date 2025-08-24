@@ -11,8 +11,8 @@ import NameAndAmounts from "./helpers/components/NameAndAmounts";
 import { isEquallySplitFn } from "./helpers/isEquallySplitFn";
 import { recalculateAmounts } from "./helpers/recalculateAmounts";
 import { useRecalculateAmounts } from "./helpers/hooks/useRecalculateAmounts";
-import { applyCurrencyMask } from "../../helpers/applyCurrencyMask";
 import { removeCommas } from "../../helpers/removeCommas";
+import { currencyMask } from "../../helpers/currencyMask";
 
 const MemberPicker = ({
   memberAmounts,
@@ -143,13 +143,11 @@ const MemberPicker = ({
     const oldMember = memberAmounts.find((m) => m.id === id);
     const oldDisplayed = oldMember ? oldMember.screenQuantity : '';
     const originalValue = e.target.value;
-    const cursorPos = e.target.selectionStart ?? 0;
-    let { formattedValue, newCursorPosition } = applyCurrencyMask(
-      originalValue,
-      cursorPos,
+    let formattedValue = currencyMask(
+      e,
       selectedCurrency,
       oldDisplayed
-    );
+    ).target.value ;
     let clean = removeCommas(formattedValue);
     let actualAmount: string = clean;
     const oldLength = oldDisplayed.length;
@@ -181,12 +179,6 @@ const MemberPicker = ({
     setMemberAmounts(
       recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency)
     );
-    setTimeout(() => {
-      const input = inputRefs.current.get(id);
-      if (input) {
-        input.setSelectionRange(newCursorPosition, newCursorPosition);
-      }
-    }, 0);
   };
 
 
