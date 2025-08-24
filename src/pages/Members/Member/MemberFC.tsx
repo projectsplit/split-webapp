@@ -24,7 +24,7 @@ export default function MemberFC({
   members,
   totalSpent,
   group,
-  guestToBeReplacedMemberId
+  guestToBeReplaced
 }: MemberProps) {
   const totalsSpent = totalSpent[memberId] || {};
   const removeZeroesValuesFromTotalSpent = Object.fromEntries(
@@ -200,7 +200,8 @@ export default function MemberFC({
       <div className="guest">{isGuest ? <SettleUpButton
         onClick={() => {
            menu.value = "newUser";
-           guestToBeReplacedMemberId.value=memberId
+           guestToBeReplaced.value.guestId=memberId
+           guestToBeReplaced.value.guestName=name
         }}
       >Invite</SettleUpButton> : null}</div>
     </StyledMemberFC>

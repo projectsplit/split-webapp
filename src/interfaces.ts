@@ -476,7 +476,7 @@ export interface MemberProps {
   isGuest: boolean;
   totalSpent: Record<string, Record<string, number>>;
   group: Group;
-  guestToBeReplacedMemberId:Signal<string>
+ guestToBeReplaced:Signal<{ guestId: string; guestName: string }>
 }
 
 export interface RenderScenariosProps {
@@ -559,12 +559,12 @@ export interface PillProps {
 }
 export interface AddNewUserAnimationProps extends MenuProps {
   groupName: string | undefined;
-  guestId?:string;
+  guestToBeReplaced?:{ guestId: string; guestName: string }
 }
 
 export interface SearchUsersToInviteProps extends MenuProps {
   groupName: string | undefined;
-  guestId?:string;
+  guestToBeReplaced?:{ guestId: string; guestName: string }
 }
 export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
 

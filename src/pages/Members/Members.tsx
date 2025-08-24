@@ -15,7 +15,7 @@ import AddNewUserAnimation from "../../components/Menus/MenuAnimations/AddNewUse
 export default function Members() {
   const memberIdSelectedToSettleUp = useSignal<string>("");
   const menu = useSignal<string | null>(null);
-  const guestToBeReplacedMemberId = useSignal<string>("")
+  const guestToBeReplaced = useSignal<{ guestId: string; guestName: string }>({ guestId: "", guestName: "" });
   
   const { groupid } = useParams();
   const { userInfo, group, showBottomBar } = useOutletContext<{
@@ -79,7 +79,7 @@ export default function Members() {
             memberIdSelectedToSettleUp={memberIdSelectedToSettleUp}
             members={allParticipants || []}
             totalSpent={totalSpent}
-            guestToBeReplacedMemberId={guestToBeReplacedMemberId}
+            guestToBeReplaced={guestToBeReplaced}
           />
         ))
       )}
@@ -91,7 +91,7 @@ export default function Members() {
         memberIdSelectedToSettleUp={memberIdSelectedToSettleUp}
         members={allParticipants || []}
       />
-       <AddNewUserAnimation menu={menu} groupName={group.name} guestId={guestToBeReplacedMemberId.value} />
+       <AddNewUserAnimation menu={menu} groupName={group.name} guestToBeReplaced={guestToBeReplaced.value} />
     </StyledMembers>
   );
 }

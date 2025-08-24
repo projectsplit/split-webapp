@@ -1,8 +1,9 @@
 import { AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
 import { useMutation } from "@tanstack/react-query";
+import { Signal } from "@preact/signals-react";
 
-export const useSendInvitation = () => {
+export const useSendInvitation = (userInvitationSent: Signal<boolean>) => {
   return useMutation<
     any,
     Error,
@@ -10,13 +11,15 @@ export const useSendInvitation = () => {
       receiverId: string;
       groupId: string;
       guestId: string | null;
+      guestName:string | null;
       onSuccess: () => void;
     }
   >({
-    mutationFn: ({ receiverId, groupId, guestId }) =>
-      sendInvitation({ receiverId, groupId, guestId }),
+    mutationFn: ({ receiverId, groupId, guestId,guestName }) =>
+      sendInvitation({ receiverId, groupId, guestId,guestName }),
     onSuccess: (_, variables) => {
       variables.onSuccess();
+      userInvitationSent.value=true
     },
     onError: (error) => {
       console.error("Failed to send invitation", error);
@@ -32,4 +35,5 @@ type SendInvitationRequest = {
   receiverId: string;
   groupId: string;
   guestId: string | null;
+  guestName:string| null
 };

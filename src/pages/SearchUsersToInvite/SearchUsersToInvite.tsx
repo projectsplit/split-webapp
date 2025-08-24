@@ -3,9 +3,7 @@ import { StyledSearchUsersToInvite } from "./SearchUsersToInvite.styled";
 import { useSearchUsersToInvite } from "../../api/services/useSearchUsersToInvite";
 import Input from "../../components/Input/Input";
 import useDebounce from "../../hooks/useDebounce";
-import { useSendInvitation } from "../../api/services/useSendInvitation";
 import MyButton from "../../components/MyButton/MyButton";
-import { useRevokeInvitation } from "../../api/services/useRevokeInvitation";
 import { useParams } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import { SearchUsersToInviteProps } from "../../interfaces";
@@ -18,8 +16,9 @@ import MemberItem from "../../components/Menus/RemoveUserFromGroupMenu/MemberIte
 import RemoveGuestWarningAnimation from "../../components/Menus/MenuAnimations/RemoveGuestWarningAnimation";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import Sentinel from "../../components/Sentinel";
+import { SearchResultItem } from "./SearchResultItem/SearchResultItem";
 
-const SearchUsersToInvite = ({ menu, guestId }: SearchUsersToInviteProps) => {
+const SearchUsersToInvite = ({ menu, guestToBeReplaced }: SearchUsersToInviteProps) => {
   const params = useParams();
   const groupId = params.groupid!;
   const pageSize = 10;
@@ -28,13 +27,16 @@ const SearchUsersToInvite = ({ menu, guestId }: SearchUsersToInviteProps) => {
   const category = useSignal<string>("Invite User");
   const cannotBeRemovedClickedWarning = useSignal<string>("");
   const [guestName, setGuestName] = useState<string>("");
-
+  const userInvitationSent = useSignal<boolean>(false)
   const noGroupError = useSignal<string>("");
   const noMemberError = useSignal<string>("");
   const [debouncedKeyword, _isDebouncing] = useDebounce<string>(
     keyword.length > 1 ? keyword : "",
     500
   );
+ const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+ const hideMembers = guestToBeReplaced?.guestId&& guestToBeReplaced?.guestId!=''&&userInvitationSent.value
+
 
   const {
     data,
@@ -60,7 +62,7 @@ const SearchUsersToInvite = ({ menu, guestId }: SearchUsersToInviteProps) => {
       <div className="fixed-header-container">
         <div className="header">
           <div className="gap"></div>
-          <div className="title">
+          {(guestToBeReplaced?.guestId&& guestToBeReplaced?.guestId!='')?'':<div className="title">
             <CategorySelector
               activeCat={"Invite User"}
               categories={{
@@ -70,7 +72,7 @@ const SearchUsersToInvite = ({ menu, guestId }: SearchUsersToInviteProps) => {
               navLinkUse={false}
               activeCatAsState={category}
             />
-          </div>
+          </div>}
           <div
             className="closeButtonContainer"
             onClick={async () => {
@@ -100,24 +102,26 @@ const SearchUsersToInvite = ({ menu, guestId }: SearchUsersToInviteProps) => {
             />
           </div>
 
-          {data?.pages.flatMap((x) =>
-            x.users.map((user) => (
-              <SearchResultItem
-                key={user.userId}
-                userId={user.userId}
-                username={user.username}
-                isAlreadyInvited={user.isAlreadyInvited}
-                isGroupMember={user.isGroupMember}
-                groupId={groupId}
-                guestId={guestId}
-                onInviteSuccess={() =>
-                  updateUserInvitationStatus(
-                    user.userId,
-                    !user.isAlreadyInvited
-                  )
-                }
-              />
-            ))
+           {data?.pages.flatMap((x) =>
+            x.users
+              .filter((user) => !hideMembers || user.userId === selectedUserId)
+              .map((user) => (
+                <SearchResultItem
+                  key={user.userId}
+                  userId={user.userId}
+                  username={user.username}
+                  isAlreadyInvited={user.isAlreadyInvited}
+                  isGroupMember={user.isGroupMember}
+                  groupId={groupId}
+                  guestId={guestToBeReplaced?.guestId}
+                  guestName={guestToBeReplaced?.guestName}
+                  onInviteSuccess={() => {
+                    updateUserInvitationStatus(user.userId, !user.isAlreadyInvited);
+                    setSelectedUserId(user.userId);
+                  }}
+                  userInvitationSent={userInvitationSent}
+                />
+              ))
           )}
           <Sentinel
             fetchNextPage={fetchNextPage}
@@ -171,60 +175,4 @@ const SearchUsersToInvite = ({ menu, guestId }: SearchUsersToInviteProps) => {
 
 export default SearchUsersToInvite;
 
-const SearchResultItem: React.FC<{
-  userId: string;
-  username: string;
-  isAlreadyInvited: boolean;
-  isGroupMember: boolean;
-  groupId: string;
-  onInviteSuccess: () => void;
-  guestId?: string;
-}> = ({
-  userId,
-  username,
-  isAlreadyInvited,
-  isGroupMember,
-  groupId,
-  onInviteSuccess,
-  guestId
-}) => {
 
-    const { mutate, isPending, isError } = isAlreadyInvited
-      ? useRevokeInvitation()
-      : useSendInvitation();
-
-    if (isGroupMember) {
-      return (
-        <div className="search-result">
-          <div className="top-row">
-            <div>{username}</div>
-          </div>
-          <div className="bottom-row">already a member</div>
-        </div>
-      );
-    }
-
-    const onClick = () =>
-      mutate({
-        groupId,
-        guestId: (guestId && guestId != "" )? guestId : null,
-        receiverId: userId,
-        onSuccess: onInviteSuccess,
-      });
-
-    return (
-      <div className="search-result">
-        <div className="top-row">
-          <div>{username}</div>
-          <MyButton
-            isLoading={isPending}
-            variant={isAlreadyInvited ? "secondary" : "primary"}
-            onClick={isPending ? undefined : onClick}
-            hasFailed={isError}
-          >
-            {isAlreadyInvited ? "Uninvite" : "Invite"}
-          </MyButton>
-        </div>
-      </div>
-    );
-  };

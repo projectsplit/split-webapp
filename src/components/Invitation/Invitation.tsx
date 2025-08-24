@@ -8,6 +8,7 @@ const Invitation: React.FC<InvitationProps> = ({ invitation }) => {
   const accept = useAcceptInvitation();
   const decline = useDeclineInvitation();
 
+
   return (
     <StyledInvitation>
       {/* <div className="message">
@@ -24,13 +25,13 @@ const Invitation: React.FC<InvitationProps> = ({ invitation }) => {
         <div className="message">
           You have been invited to join <strong>{invitation.groupName}</strong>{" "}
           {!!invitation.guestId && (
-            <span> to replace "{invitation.guestId}"</span>
+            <span> to replace "{invitation.guestName}"</span>
           )}
         </div>
         &nbsp;
-        {!!invitation.guestId && (
+        {/* {!!invitation.guestId && (
           <span className="highlighted"> {invitation.guestId}</span>
-        )}
+        )} */}
       </div>
       <div className="actions">
         <MyButton
@@ -64,6 +65,7 @@ type InvitationProps = {
     groupId: string;
     groupName: string;
     guestId: string | null;
+    guestName:string| null;
   };
-  timeZoneId: string|undefined;
+  timeZoneId: string | undefined;
 };
