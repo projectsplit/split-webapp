@@ -18,7 +18,10 @@ import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuA
 import Sentinel from "../../components/Sentinel";
 import { SearchResultItem } from "./SearchResultItem/SearchResultItem";
 
-const SearchUsersToInvite = ({ menu, guestToBeReplaced }: SearchUsersToInviteProps) => {
+const SearchUsersToInvite = ({
+  menu,
+  guestToBeReplaced,
+}: SearchUsersToInviteProps) => {
   const params = useParams();
   const groupId = params.groupid!;
   const pageSize = 10;
@@ -27,16 +30,13 @@ const SearchUsersToInvite = ({ menu, guestToBeReplaced }: SearchUsersToInvitePro
   const category = useSignal<string>("Invite User");
   const cannotBeRemovedClickedWarning = useSignal<string>("");
   const [guestName, setGuestName] = useState<string>("");
-  const userInvitationSent = useSignal<boolean>(false)
+  const userInvitationSent = useSignal<boolean>(false);
   const noGroupError = useSignal<string>("");
   const noMemberError = useSignal<string>("");
   const [debouncedKeyword, _isDebouncing] = useDebounce<string>(
     keyword.length > 1 ? keyword : "",
     500
   );
- const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
- const hideMembers = guestToBeReplaced?.guestId&& guestToBeReplaced?.guestId!=''&&userInvitationSent.value
-
 
   const {
     data,
@@ -44,7 +44,7 @@ const SearchUsersToInvite = ({ menu, guestToBeReplaced }: SearchUsersToInvitePro
     hasNextPage,
     isFetchingNextPage,
     updateUserInvitationStatus,
-  } = useSearchUsersToInvite(groupId, debouncedKeyword, pageSize);
+  } = useSearchUsersToInvite(groupId, debouncedKeyword, pageSize, guestToBeReplaced?.guestId);
 
   const {
     mutate: createGuestExpenseMutation,
@@ -62,17 +62,21 @@ const SearchUsersToInvite = ({ menu, guestToBeReplaced }: SearchUsersToInvitePro
       <div className="fixed-header-container">
         <div className="header">
           <div className="gap"></div>
-          {(guestToBeReplaced?.guestId&& guestToBeReplaced?.guestId!='')?'':<div className="title">
-            <CategorySelector
-              activeCat={"Invite User"}
-              categories={{
-                cat1: "Invite User",
-                cat2: "Create Guest",
-              }}
-              navLinkUse={false}
-              activeCatAsState={category}
-            />
-          </div>}
+          {guestToBeReplaced?.guestId && guestToBeReplaced?.guestId != "" ? (
+            ""
+          ) : (
+            <div className="title">
+              <CategorySelector
+                activeCat={"Invite User"}
+                categories={{
+                  cat1: "Invite User",
+                  cat2: "Create Guest",
+                }}
+                navLinkUse={false}
+                activeCatAsState={category}
+              />
+            </div>
+          )}
           <div
             className="closeButtonContainer"
             onClick={async () => {
@@ -102,26 +106,26 @@ const SearchUsersToInvite = ({ menu, guestToBeReplaced }: SearchUsersToInvitePro
             />
           </div>
 
-           {data?.pages.flatMap((x) =>
-            x.users
-              .filter((user) => !hideMembers || user.userId === selectedUserId)
-              .map((user) => (
-                <SearchResultItem
-                  key={user.userId}
-                  userId={user.userId}
-                  username={user.username}
-                  isAlreadyInvited={user.isAlreadyInvited}
-                  isGroupMember={user.isGroupMember}
-                  groupId={groupId}
-                  guestId={guestToBeReplaced?.guestId}
-                  guestName={guestToBeReplaced?.guestName}
-                  onInviteSuccess={() => {
-                    updateUserInvitationStatus(user.userId, !user.isAlreadyInvited);
-                    setSelectedUserId(user.userId);
-                  }}
-                  userInvitationSent={userInvitationSent}
-                />
-              ))
+          {data?.pages.flatMap((x) =>
+            x.users.map((user) => (
+              <SearchResultItem
+                key={user.userId}
+                userId={user.userId}
+                username={user.username}
+                isAlreadyInvited={user.isAlreadyInvited}
+                isGroupMember={user.isGroupMember}
+                groupId={groupId}
+                guestId={guestToBeReplaced?.guestId}
+                guestName={guestToBeReplaced?.guestName}
+                onInviteSuccess={() => {
+                  updateUserInvitationStatus(
+                    user.userId,
+                    !user.isAlreadyInvited
+                  );
+                }}
+                userInvitationSent={userInvitationSent}
+              />
+            ))
           )}
           <Sentinel
             fetchNextPage={fetchNextPage}
@@ -174,5 +178,3 @@ const SearchUsersToInvite = ({ menu, guestToBeReplaced }: SearchUsersToInvitePro
 };
 
 export default SearchUsersToInvite;
-
-
