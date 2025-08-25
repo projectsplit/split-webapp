@@ -16,7 +16,7 @@ export default function Members() {
   const memberIdSelectedToSettleUp = useSignal<string>("");
   const menu = useSignal<string | null>(null);
   const guestToBeReplaced = useSignal<{ guestId: string; guestName: string }>({ guestId: "", guestName: "" });
-  
+
   const { groupid } = useParams();
   const { userInfo, group, showBottomBar } = useOutletContext<{
     userInfo: UserInfo;
