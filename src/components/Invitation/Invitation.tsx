@@ -8,7 +8,6 @@ const Invitation: React.FC<InvitationProps> = ({ invitation }) => {
   const accept = useAcceptInvitation();
   const decline = useDeclineInvitation();
 
-
   return (
     <StyledInvitation>
       {/* <div className="message">

@@ -42,7 +42,8 @@ const UserInvitations: React.FC<UserInvitationsProps> = ({ timeZoneId }) => {
               guestId: x.guestId,
               groupName: x.groupName,
               receiverId: x.receiverId,
-              senderId: x.senderId
+              senderId: x.senderId,
+              guestName:x.guestName
             }}
             timeZoneId={timeZoneId}
           />
