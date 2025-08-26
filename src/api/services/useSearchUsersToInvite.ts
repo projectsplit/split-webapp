@@ -20,25 +20,34 @@ export const useSearchUsersToInvite = (
   });
 
   const updateUserInvitationStatus = (userId: string, isInvited: boolean) => {
-    queryClient.setQueryData(queryKey, (oldData: any) => {
-      if (!oldData) return oldData;
+    // Get all query keys for "searchUsersToInvite" with matching groupId
+    const queryKeys = queryClient
+      .getQueryCache()
+      .getAll()
+      .map((query) => query.queryKey)
+      .filter((key) => key[0] === "searchUsersToInvite" && key[1] === groupId);
 
-      const updateUsers = (users: any[]) =>
-        users.map((user) =>
-          guestId && guestId !== "" && isInvited
-            ? { ...user, isAlreadyInvited: user.userId === userId }
-            : user.userId === userId
-            ? { ...user, isAlreadyInvited: isInvited }
-            : user
-        );
+    queryKeys.forEach((queryKey) => {
+      queryClient.setQueryData(queryKey, (oldData: any) => {
+        if (!oldData) return oldData;
 
-      return {
-        ...oldData,
-        pages: oldData.pages.map((page: any) => ({
-          ...page,
-          users: updateUsers(page.users),
-        })),
-      };
+        const updateUsers = (users: any[]) =>
+          users.map((user) =>
+            guestId && guestId !== "" && isInvited
+              ? { ...user, isAlreadyInvited: user.userId === userId }
+              : user.userId === userId
+              ? { ...user, isAlreadyInvited: isInvited }
+              : user
+          );
+
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => ({
+            ...page,
+            users: updateUsers(page.users),
+          })),
+        };
+      });
     });
   };
 
