@@ -45,7 +45,7 @@ const SearchUsersToInvite = ({
     isFetchingNextPage,
     updateUserInvitationStatus,
   } = useSearchUsersToInvite(groupId, debouncedKeyword, pageSize, guestToBeReplaced?.guestId);
-console.log(data)
+
   const {
     mutate: createGuestExpenseMutation,
     isPending: isPendingCreateGuest,
