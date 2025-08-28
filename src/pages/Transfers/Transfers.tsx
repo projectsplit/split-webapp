@@ -52,7 +52,13 @@ const Transfers: React.FC = () => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
-      queryKey: ["groupTransfers", group?.id, pageSize,transferParsedFilters.value,timeZoneId],
+      queryKey: [
+        "groupTransfers",
+        group?.id,
+        pageSize,
+        transferParsedFilters.value,
+        timeZoneId,
+      ],
       queryFn: ({ pageParam: next }) =>
         getGroupTransfers(
           group?.id!,
@@ -67,19 +73,21 @@ const Transfers: React.FC = () => {
 
   const transfers = data?.pages.flatMap((p) => p.transfers);
 
-    useEffect(() => {
-      const transferilters = localStorage.getItem("transferFilter");
-      if (transferilters) {
-        const paresedFilter = JSON.parse(transferilters)
-        if(paresedFilter.groupId===group.id){
-          transferParsedFilters.value = JSON.parse(transferilters);
-        }else{
-          localStorage.removeItem('transferFilter');
-           queryClient.invalidateQueries({ queryKey: ["groupTransfers"], exact: false });
-        }
+  useEffect(() => {
+    const transferilters = localStorage.getItem("transferFilter");
+    if (transferilters) {
+      const paresedFilter = JSON.parse(transferilters);
+      if (paresedFilter.groupId === group.id) {
+        transferParsedFilters.value = JSON.parse(transferilters);
+      } else {
+        localStorage.removeItem("transferFilter");
+        queryClient.invalidateQueries({
+          queryKey: ["groupTransfers"],
+          exact: false,
+        });
       }
-    }, []);
-
+    }
+  }, []);
 
   const groupIsArchived = group.isArchived;
   useEffect(() => {
@@ -123,24 +131,32 @@ const Transfers: React.FC = () => {
     );
   }
 
-const hasAnySearchParams =
-    (transferParsedFilters.value.before !== null && transferParsedFilters.value.before !== undefined) ||
-    (transferParsedFilters.value.after !== null && transferParsedFilters.value.after !== undefined) ||
-    (transferParsedFilters.value.freeText !== "" && transferParsedFilters.value.freeText !== undefined) ||
-    (transferParsedFilters.value.sendersIds !== undefined && transferParsedFilters.value.sendersIds.length > 0) ||
-    (transferParsedFilters.value.receiversIds !== undefined && transferParsedFilters.value.receiversIds.length > 0);
+  const hasAnySearchParams =
+    (transferParsedFilters.value.before !== null &&
+      transferParsedFilters.value.before !== undefined) ||
+    (transferParsedFilters.value.after !== null &&
+      transferParsedFilters.value.after !== undefined) ||
+    (transferParsedFilters.value.freeText !== "" &&
+      transferParsedFilters.value.freeText !== undefined) ||
+    (transferParsedFilters.value.sendersIds !== undefined &&
+      transferParsedFilters.value.sendersIds.length > 0) ||
+    (transferParsedFilters.value.receiversIds !== undefined &&
+      transferParsedFilters.value.receiversIds.length > 0);
 
   return (
     <StyledTransfers>
       {!transfers || transfers.length === 0 ? (
         hasAnySearchParams ? (
           <div className="noData">
-          <div className="emojiMessage">
-          <div className="msgExp">No transfers found. Have a go and refine your search! </div>
-          <div className="emoji">🧐</div>
+            <div className="emojiMessage">
+              <span className="msgExp">
+                <span className="text">
+                  No transfers found. Have a go and refine your search!{" "}
+                </span>
+              </span>
+            </div>
+            <FaMagnifyingGlass className="icon" />
           </div>
-          <FaMagnifyingGlass className="icon" />
-        </div>
         ) : (
           <div className="noData">
             <div className="msg">There are currently no transfers</div>
@@ -155,22 +171,29 @@ const hasAnySearchParams =
             </div>
           ) : (
             <div className="filtersAndBars">
-            <div className="pills"> {renderTransferFilterPills(transferParsedFilters,group,queryClient)}</div>
-            <BarsWithLegends
-              bar1Legend="Total Sent"
-              bar2Legend="Total Received"
-              bar1Total={usertotalSent || 0}
-              bar2Total={usertotalReceived || 0}
-              currency={group.currency}
-              bar1Color="#0CA0A0"
-              bar2Color="#D79244"
-              onClick={() => {
-                if (shouldOpenMultiCurrencyTable) {
-                  menu.value = "epensesByCurrency";
-                } else null;
-              }}
-            />
-             </div>
+              <div className="pills">
+                {" "}
+                {renderTransferFilterPills(
+                  transferParsedFilters,
+                  group,
+                  queryClient
+                )}
+              </div>
+              <BarsWithLegends
+                bar1Legend="Total Sent"
+                bar2Legend="Total Received"
+                bar1Total={usertotalSent || 0}
+                bar2Total={usertotalReceived || 0}
+                currency={group.currency}
+                bar1Color="#0CA0A0"
+                bar2Color="#D79244"
+                onClick={() => {
+                  if (shouldOpenMultiCurrencyTable) {
+                    menu.value = "epensesByCurrency";
+                  } else null;
+                }}
+              />
+            </div>
           )}
           {Object.entries(
             groupBy(transfers, (x) => DateOnly(x.occurred, timeZoneId))
