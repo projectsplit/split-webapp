@@ -28,6 +28,7 @@ import {
 import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalsByCurrencyAnimation";
 import Spinner from "../../components/Spinner/Spinner";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import { renderExpenseFilterPills } from "../../helpers/renderExpenseFilterPills";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -68,7 +69,7 @@ const Expenses = () => {
         group?.id,
         pageSize,
         expenseParsedFilters.value,
-        timeZoneId
+        timeZoneId,
       ],
       queryFn: ({ pageParam: next }) =>
         getGroupExpenses(
@@ -86,14 +87,16 @@ const Expenses = () => {
   useEffect(() => {
     const expenseFilters = localStorage.getItem("expenseFilter");
     if (expenseFilters) {
-      const paresedFilter = JSON.parse(expenseFilters)
-      if(paresedFilter.groupId===group.id){
+      const paresedFilter = JSON.parse(expenseFilters);
+      if (paresedFilter.groupId === group.id) {
         expenseParsedFilters.value = JSON.parse(expenseFilters);
-      }else{
-        localStorage.removeItem('expenseFilter');
-         queryClient.invalidateQueries({ queryKey: ["groupExpenses"], exact: false });
+      } else {
+        localStorage.removeItem("expenseFilter");
+        queryClient.invalidateQueries({
+          queryKey: ["groupExpenses"],
+          exact: false,
+        });
       }
-    
     }
   }, []);
 
@@ -121,124 +124,137 @@ const Expenses = () => {
       ? totalSpent[userMemberId]?.[group.currency] ?? 0
       : 0;
 
-const hasAnySearchParams =
-    (expenseParsedFilters.value.before !== null && expenseParsedFilters.value.before !== undefined) ||
-    (expenseParsedFilters.value.after !== null && expenseParsedFilters.value.after !== undefined) ||
-    (expenseParsedFilters.value.freeText !== "" && expenseParsedFilters.value.freeText !== undefined) ||
-    (expenseParsedFilters.value.labels !== undefined && expenseParsedFilters.value.labels.length > 0) ||
-    (expenseParsedFilters.value.participantsIds !== undefined && expenseParsedFilters.value.participantsIds.length > 0) ||
-    (expenseParsedFilters.value.payersIds !== undefined && expenseParsedFilters.value.payersIds.length > 0);
+  const hasAnySearchParams =
+    (expenseParsedFilters.value.before !== null &&
+      expenseParsedFilters.value.before !== undefined) ||
+    (expenseParsedFilters.value.after !== null &&
+      expenseParsedFilters.value.after !== undefined) ||
+    (expenseParsedFilters.value.freeText !== "" &&
+      expenseParsedFilters.value.freeText !== undefined) ||
+    (expenseParsedFilters.value.labels !== undefined &&
+      expenseParsedFilters.value.labels.length > 0) ||
+    (expenseParsedFilters.value.participantsIds !== undefined &&
+      expenseParsedFilters.value.participantsIds.length > 0) ||
+    (expenseParsedFilters.value.payersIds !== undefined &&
+      expenseParsedFilters.value.payersIds.length > 0);
 
   return (
-  <StyledExpenses>
-    {!expenses || expenses.length === 0 ? (
-      hasAnySearchParams ? (
-        <div className="noData">
-          <div className="emojiMessage">
-          <div className="msgExp">No expenses found. Have a go and refine your search! </div>
-          <div className="emoji">🧐</div>
-          </div>
-          <FaMagnifyingGlass className="icon" />
-        </div>
-      ) : (
-        <div className="noData">
-          <div className="msg">There are currently no expenses</div>
-          <CiReceipt className="icon" />
-        </div>
-      )
-    ) : (
-      <>
-        {totalsAreFetching ? (
-          <div className="spinnerTotals">
-            <Spinner />
+    <StyledExpenses>
+      {!expenses || expenses.length === 0 ? (
+        hasAnySearchParams ? (
+          <div className="noData">
+            <div className="emojiMessage">
+              <div className="msgExp">
+                No expenses found. Have a go and refine your search!{" "}
+              </div>
+              <div className="emoji">🧐</div>
+            </div>
+            <FaMagnifyingGlass className="icon" />
           </div>
         ) : (
-          <BarsWithLegends
-            bar1Legend="Group Total"
-            bar2Legend="Your Share"
-            bar1Total={totalExpense || 0}
-            bar2Total={userExpense || 0}
-            currency={group.currency}
-            bar2Color="#e151ee"
-            bar1Color="#5183ee"
-            onClick={() => {
-              if (shouldOpenMultiCurrencyTable) {
-                menu.value = "epensesByCurrency";
-              }
-            }}
-          />
-        )}
-        {Object.entries(
-          groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))
-        ).map(([date, expenses]) => (
-          <div key={date} className="same-date-container">
-            <div className="date-only">{date}</div>
-            <div className="expenses">
-              {expenses.map((e) => (
-                <div className="expense" key={e.id}>
-                  <Expense
-                    amount={e.amount}
-                    currency={e.currency}
-                    occurred={e.occurred}
-                    description={e.description}
-                    location={e.location}
-                    timeZoneId={timeZoneId}
-                    onClick={() => (selectedExpense.value = e)}
-                    userAmount={
-                      e.shares.find((x) => x.memberId === userMemberId)?.amount ?? 0
-                    }
-                    labels={e.labels}
-                  />
-                </div>
-              ))}
-            </div>
+          <div className="noData">
+            <div className="msg">There are currently no expenses</div>
+            <CiReceipt className="icon" />
           </div>
-        ))}
-      </>
-    )}
-    <Sentinel
-      fetchNextPage={fetchNextPage}
-      hasNextPage={hasNextPage}
-      isFetchingNextPage={isFetchingNextPage}
-    />
-    {selectedExpense.value && (
-      <DetailedExpense
-        selectedExpense={selectedExpense}
-        amount={selectedExpense.value.amount}
-        currency={selectedExpense.value.currency}
-        description={selectedExpense.value.description}
-        labels={selectedExpense.value.labels}
-        location={selectedExpense.value.location}
-        occurred={selectedExpense.value.occurred}
-        payments={selectedExpense.value.payments}
-        shares={selectedExpense.value.shares}
-        timeZoneId={timeZoneId}
-        timeZoneCoordinates={userInfo.timeZoneCoordinates}
-        creator={selectedExpense.value.creatorId}
-        created={selectedExpense.value.created}
-        members={allParticipants}
-        errorMessage={errorMessage}
-        userMemberId={userMemberId || ""}
-        group={group}
+        )
+      ) : (
+        <>
+          {totalsAreFetching ? (
+            <div className="spinnerTotals">
+              <Spinner />
+            </div>
+          ) : (
+            <div className="filtersAndBars">
+              <div className="pills"> {renderExpenseFilterPills(expenseParsedFilters,group,queryClient)}</div>
+
+              <BarsWithLegends
+                bar1Legend="Group Total"
+                bar2Legend="Your Share"
+                bar1Total={totalExpense || 0}
+                bar2Total={userExpense || 0}
+                currency={group.currency}
+                bar2Color="#e151ee"
+                bar1Color="#5183ee"
+                onClick={() => {
+                  if (shouldOpenMultiCurrencyTable) {
+                    menu.value = "epensesByCurrency";
+                  }
+                }}
+              />
+            </div>
+          )}
+          {Object.entries(
+            groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))
+          ).map(([date, expenses]) => (
+            <div key={date} className="same-date-container">
+              <div className="date-only">{date}</div>
+              <div className="expenses">
+                {expenses.map((e) => (
+                  <div className="expense" key={e.id}>
+                    <Expense
+                      amount={e.amount}
+                      currency={e.currency}
+                      occurred={e.occurred}
+                      description={e.description}
+                      location={e.location}
+                      timeZoneId={timeZoneId}
+                      onClick={() => (selectedExpense.value = e)}
+                      userAmount={
+                        e.shares.find((x) => x.memberId === userMemberId)
+                          ?.amount ?? 0
+                      }
+                      labels={e.labels}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+      <Sentinel
+        fetchNextPage={fetchNextPage}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
       />
-    )}
-    <MenuAnimationBackground menu={menu} />
-    <ErrorMenuAnimation
-      menu={menu}
-      message={errorMessage.value}
-      type="expense"
-    />
-    <GroupTotalsByCurrencyAnimation
-      menu={menu}
-      bar1Legend="Group Total"
-      bar2Legend="Your Share"
-      bar2Color="#e151ee"
-      bar1Color="#5183ee"
-      groupTotalsByCurrency={groupTotalsByCurrency}
-      userTotalsByCurrency={userTotalsByCurrency}
-    />
-  </StyledExpenses>
-);
+      {selectedExpense.value && (
+        <DetailedExpense
+          selectedExpense={selectedExpense}
+          amount={selectedExpense.value.amount}
+          currency={selectedExpense.value.currency}
+          description={selectedExpense.value.description}
+          labels={selectedExpense.value.labels}
+          location={selectedExpense.value.location}
+          occurred={selectedExpense.value.occurred}
+          payments={selectedExpense.value.payments}
+          shares={selectedExpense.value.shares}
+          timeZoneId={timeZoneId}
+          timeZoneCoordinates={userInfo.timeZoneCoordinates}
+          creator={selectedExpense.value.creatorId}
+          created={selectedExpense.value.created}
+          members={allParticipants}
+          errorMessage={errorMessage}
+          userMemberId={userMemberId || ""}
+          group={group}
+        />
+      )}
+      <MenuAnimationBackground menu={menu} />
+      <ErrorMenuAnimation
+        menu={menu}
+        message={errorMessage.value}
+        type="expense"
+      />
+      <GroupTotalsByCurrencyAnimation
+        menu={menu}
+        bar1Legend="Group Total"
+        bar2Legend="Your Share"
+        bar2Color="#e151ee"
+        bar1Color="#5183ee"
+        groupTotalsByCurrency={groupTotalsByCurrency}
+        userTotalsByCurrency={userTotalsByCurrency}
+      />
+    </StyledExpenses>
+  );
 };
 
 export default Expenses;

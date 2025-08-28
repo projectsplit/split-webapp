@@ -9,6 +9,18 @@ export const StyledTransfers = styled.div`
   overflow-y: auto;
   height: 100%;
   gap: 16px;
+   .filtersAndBars {
+    .pills {
+      padding-left:0.7rem;
+      padding-right:0.7rem;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      overflow-x: auto;
+      text-align: center;
+      scrollbar-width: none;
+    }
+  }
   .noData {
     display: flex;
     flex-direction: column;

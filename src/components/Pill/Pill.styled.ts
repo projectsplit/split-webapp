@@ -49,7 +49,7 @@ export const StyledPill = styled.div<StyledPillOptions>`
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 100px;
+      max-width: 150px;
     }
     .closeSign {
       display: flex;

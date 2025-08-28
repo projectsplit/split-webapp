@@ -10,7 +10,19 @@ export const StyledExpenses = styled.div`
   height: 100%;
   gap: 16px;
   flex: 1;
-
+  .filtersAndBars {
+    
+    .pills {
+      padding-left:0.7rem;
+      padding-right:0.7rem;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      overflow-x: auto;
+      text-align: center;
+      scrollbar-width: none;
+    }
+  }
   .noData {
     display: flex;
     flex-direction: column;
@@ -18,10 +30,10 @@ export const StyledExpenses = styled.div`
     justify-content: center;
     flex: 1;
     .emojiMessage {
-      display:flex;
-      flex-direction:row;
-      gap:5px;
-      align-items:center;
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      align-items: center;
       .msgExp {
         opacity: 0.4;
         white-space: nowrap;
