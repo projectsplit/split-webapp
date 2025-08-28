@@ -144,10 +144,11 @@ const Expenses = () => {
         hasAnySearchParams ? (
           <div className="noData">
             <div className="emojiMessage">
-              <div className="msgExp">
-                No expenses found. Have a go and refine your search!{" "}
-              </div>
-              <div className="emoji">🧐</div>
+              <span className="msgExp">
+                <span className="text">
+                  No expenses found. Have a go and refine your search!{" "}
+                </span>
+              </span>
             </div>
             <FaMagnifyingGlass className="icon" />
           </div>
@@ -165,7 +166,14 @@ const Expenses = () => {
             </div>
           ) : (
             <div className="filtersAndBars">
-              <div className="pills"> {renderExpenseFilterPills(expenseParsedFilters,group,queryClient)}</div>
+              <div className="pills">
+                {" "}
+                {renderExpenseFilterPills(
+                  expenseParsedFilters,
+                  group,
+                  queryClient
+                )}
+              </div>
 
               <BarsWithLegends
                 bar1Legend="Group Total"

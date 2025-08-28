@@ -5,14 +5,13 @@ export const StyledTransfers = styled.div`
   display: flex;
   padding: 16px 8px;
   flex-direction: column;
-  /* align-items: center; */
   overflow-y: auto;
   height: 100%;
   gap: 16px;
-   .filtersAndBars {
+
+  .filtersAndBars {
     .pills {
-      padding-left:0.7rem;
-      padding-right:0.7rem;
+      padding: 0 0.7rem;
       display: flex;
       flex-direction: row;
       gap: 10px;
@@ -21,29 +20,41 @@ export const StyledTransfers = styled.div`
       scrollbar-width: none;
     }
   }
+
   .noData {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     flex: 1;
+
     .emojiMessage {
-      display:flex;
-      flex-direction:row;
-      gap:5px;
-      align-items:center;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      align-items: baseline;
+      justify-content: center;
+      max-width: 100%;
+
       .msgExp {
-        opacity: 0.4;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .text {
+          opacity: 0.4;
+          white-space: normal;
+          text-align: center;
+        }
       }
     }
+
     .icon {
-      display: flex;
       font-size: 100px;
     }
   }
+
   .same-date-container {
     display: flex;
     flex-direction: column;
@@ -56,8 +67,8 @@ export const StyledTransfers = styled.div`
       position: sticky;
       top: 0;
       font-size: 14px;
-      margin: 0px 0px 1px 0px;
-      padding: 0px 8px 0px 8px;
+      margin: 0 0 1px 0;
+      padding: 0 8px;
       border-radius: 4px;
       color: ${({ theme }) => theme.secondaryTextColor};
       font-weight: 600;
@@ -70,19 +81,9 @@ export const StyledTransfers = styled.div`
     }
   }
 
-  .spinner {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2rem;
-    height: 100%;
-  }
   .spinnerTotals {
     display: flex;
     flex-direction: column;
-    flex: 1;
     align-items: center;
     justify-content: center;
     margin-top: 0.5rem;
