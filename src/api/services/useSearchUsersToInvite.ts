@@ -20,7 +20,7 @@ export const useSearchUsersToInvite = (
   });
 
   const updateUserInvitationStatus = (userId: string, isInvited: boolean) => {
-    // Get all query keys for "searchUsersToInvite" with matching groupId
+    // Update cache for all query keys. 
     const queryKeys = queryClient
       .getQueryCache()
       .getAll()

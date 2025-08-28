@@ -456,6 +456,7 @@ export interface BarsWithLegendsProps {
   bar1Color: string;
   bar2Color: string;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+
 }
 
 export interface TransfersProps {

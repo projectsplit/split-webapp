@@ -24,6 +24,7 @@ import useDebts from "../../api/services/useDebts";
 import { getCurrencyValues } from "../../helpers/getGroupTotalByCurrency";
 import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalsByCurrencyAnimation";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import { renderTransferFilterPills } from "../../helpers/renderTransferFilterPills";
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
@@ -153,6 +154,8 @@ const hasAnySearchParams =
               <Spinner />
             </div>
           ) : (
+            <div className="filtersAndBars">
+            <div className="pills"> {renderTransferFilterPills(transferParsedFilters,group,queryClient)}</div>
             <BarsWithLegends
               bar1Legend="Total Sent"
               bar2Legend="Total Received"
@@ -167,6 +170,7 @@ const hasAnySearchParams =
                 } else null;
               }}
             />
+             </div>
           )}
           {Object.entries(
             groupBy(transfers, (x) => DateOnly(x.occurred, timeZoneId))
