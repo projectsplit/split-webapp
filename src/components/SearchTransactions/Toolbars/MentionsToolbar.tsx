@@ -4,6 +4,7 @@ import SearchDateButton from "../SearchCategoryButtons/SearchDateButton/SearchDa
 import SearchLabelButton from "../SearchCategoryButtons/SearchLabelButton/SearchLabelButton";
 import CurrentSearchField from "../CurrentSearchField/CurrentSearchField";
 
+
 const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
   showOptions,
   submitButtonIsActive,
@@ -16,31 +17,36 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
   datePeriodClicked,
   filteredLabels,
   category,
+  showFreeTextPill
 }) => {
+
+
   return (
     <>
       {showOptions.value && (
         <div className="categoryButtons">
           
           {expenseFilterState.value.freeText !== "" &&
-          category.value === "expenses" ? (
+          category.value === "expenses"&&showFreeTextPill.value ? (
             <CurrentSearchField
               currentSearch={expenseFilterState.value.freeText}
               filterState={expenseFilterState}
               removedFilter={removedFilter}
               submitButtonIsActive={submitButtonIsActive}
+              showFreeTextPill={showFreeTextPill}
             />
           ) : (
             <></>
           )}
 
           {transferFilterState.value.freeText !== "" &&
-          category.value === "transfers" ? (
+          category.value === "transfers" &&showFreeTextPill.value? (
             <CurrentSearchField
               currentSearch={transferFilterState.value.freeText}
               filterState={transferFilterState}
               removedFilter={removedFilter}
               submitButtonIsActive={submitButtonIsActive}
+              showFreeTextPill={showFreeTextPill}
             />
           ) : (
             <></>

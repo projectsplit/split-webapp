@@ -59,6 +59,7 @@ export const EditorContent = forwardRef<
   const calendarIsOpen = useSignal<boolean>(false);
   const removedFilter = useSignal<boolean>(false);
   const datePeriodClicked = useSignal<string>("");
+  const showFreeTextPill = useSignal<boolean>(true)
 
 
   const mentionItems: Record<string, BeautifulMentionsItem[]> = {};
@@ -156,6 +157,7 @@ export const EditorContent = forwardRef<
           datePeriodClicked={datePeriodClicked}
           filteredLabels={filteredLabels}
           category={category}
+          showFreeTextPill={showFreeTextPill}
         />
       ) : (
         <OptionsToolBar

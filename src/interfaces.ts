@@ -751,6 +751,7 @@ export interface CurrentSearchFieldProps {
   filterState: Signal<CreateExpenseFilterRequest |CreateTransferFilterRequest>;
   removedFilter: Signal<boolean>;
   submitButtonIsActive: Signal<boolean>;
+  showFreeTextPill:Signal<boolean>
 }
 
 
@@ -886,6 +887,7 @@ export interface MentionsToolbarProps {
   datePeriodClicked: Signal<string>;
   filteredLabels:Signal<FetchedLabel[]>
   category:Signal<string>
+  showFreeTextPill:Signal<boolean>
 }
 export interface SearchTransactionsProps {
   menu: Signal<string | null>;
