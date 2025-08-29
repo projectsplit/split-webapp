@@ -142,18 +142,26 @@ const Expenses = () => {
     <StyledExpenses>
       {!expenses || expenses.length === 0 ? (
         hasAnySearchParams ? (
-          <div className="noData">
-            <div className="emojiMessage">
-              <span className="msgExp">
-                <span className="text">
-                  No expenses found. Have a go and refine your search!{" "}
-                </span>
-              </span>
+          <div className="noFilteredData">
+            <div className="pills">
+              {" "}
+              {renderExpenseFilterPills(
+                expenseParsedFilters,
+                group,
+                queryClient
+              )}
             </div>
-            <FaMagnifyingGlass className="icon" />
+            <div className="textAndIcon">
+              <span className="text">
+                No expenses found. Have a go and refine your search!{" "}
+              </span>
+              <span className="emoji">🧐</span>
+              <FaMagnifyingGlass className="icon" />
+            </div>
+            <div/>
           </div>
         ) : (
-          <div className="noData">
+          <div className="text">
             <div className="msg">There are currently no expenses</div>
             <CiReceipt className="icon" />
           </div>

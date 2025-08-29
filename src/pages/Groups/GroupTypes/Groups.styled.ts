@@ -20,7 +20,7 @@ export const StyledGroups = styled.div`
     flex:1;
     margin-top:100px;
     .msg {
-      opacity: 0.4;
+      opacity: 0.5;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -29,7 +29,7 @@ export const StyledGroups = styled.div`
     .icon {
       display: flex;
       font-size: 100px;
-      opacity: 0.4;
+      opacity: 0.5;
       margin-top: 20px;
     }
   }

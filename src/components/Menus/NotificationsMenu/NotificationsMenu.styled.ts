@@ -77,13 +77,13 @@ export const StyledNotificationsMenu = styled(StyledMiddleScreenMenu)`
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        opacity: 0.4;
+        opacity: 0.5;
       }
 
       .icon {
         display: flex;
         font-size: 100px;
-        opacity: 0.4;
+        opacity: 0.5;
       }
     }
   }

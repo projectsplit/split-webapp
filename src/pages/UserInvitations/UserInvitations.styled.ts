@@ -18,7 +18,7 @@ export const StyledUserInvitations = styled.div`
     flex:1;
     
     .msg {
-      opacity: 0.4;
+      opacity: 0.5;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -27,7 +27,7 @@ export const StyledUserInvitations = styled.div`
     .icon {
       display: flex;
       font-size: 100px;
-      opacity: 0.4;
+      opacity: 0.5;
     }
   }
     
