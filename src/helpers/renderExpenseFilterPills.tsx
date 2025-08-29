@@ -190,7 +190,7 @@ export const renderExpenseFilterPills = (
       pills.push(
         <Pill
           key={`label-${index}`}
-          title={`label: ${labelTitle}`}
+          title={`${labelTitle}`}
           color={labelColors[labelColor || "#e0e0e0"]}
           closeButton={true}
           fontSize="14px"

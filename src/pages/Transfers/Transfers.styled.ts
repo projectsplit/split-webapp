@@ -21,40 +21,45 @@ export const StyledTransfers = styled.div`
     }
   }
 
-  .noData {
+  .noFilteredData {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     flex: 1;
+    .pills {
+      padding-left: 0.7rem;
+      padding-right: 0.7rem;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      overflow-x: auto;
+      text-align: center;
+      scrollbar-width: none;
+    }
+    .textAndIcon {
+      white-space: normal;
+      text-align: center;
+      margin-top: 10rem;
 
-    .emojiMessage {
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      align-items: baseline;
-      justify-content: center;
-      max-width: 100%;
-
-      .msgExp {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        .text {
-          opacity: 0.4;
-          white-space: normal;
-          text-align: center;
+      .text {
+        opacity: 0.5;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        text-align: center;
+        .emoji{
+          opacity:1
         }
       }
     }
 
     .icon {
+      display: flex;
+      justify-self: center;
       font-size: 100px;
+      opacity: 0.5;
+      margin-top: 10px;
     }
   }
-
   .same-date-container {
     display: flex;
     flex-direction: column;

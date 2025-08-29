@@ -147,15 +147,23 @@ const Transfers: React.FC = () => {
     <StyledTransfers>
       {!transfers || transfers.length === 0 ? (
         hasAnySearchParams ? (
-          <div className="noData">
-            <div className="emojiMessage">
-              <span className="msgExp">
-                <span className="text">
-                  No transfers found. Have a go and refine your search!{" "}
-                </span>
-              </span>
+          <div className="noFilteredData">
+            <div className="pills">
+              {" "}
+              {renderTransferFilterPills(
+                transferParsedFilters,
+                group,
+                queryClient
+              )}
             </div>
-            <FaMagnifyingGlass className="icon" />
+            <div className="textAndIcon">
+              <span className="text">
+                No transfers found. Have a go and refine your search!{" "}
+              </span>
+              <span className="emoji">🧐</span>
+              <FaMagnifyingGlass className="icon" />
+            </div>
+            <div />
           </div>
         ) : (
           <div className="noData">

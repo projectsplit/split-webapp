@@ -25,7 +25,7 @@ export const StyledGroup = styled.div`
       margin-top: 100px;
 
       .msg {
-        opacity: 0.4;
+        opacity: 0.5;
         white-space: normal;
         text-align: center;
         max-width: 90%;
@@ -34,7 +34,7 @@ export const StyledGroup = styled.div`
       .icon {
         display: flex;
         font-size: 100px;
-        opacity: 0.4;
+        opacity: 0.5;
         margin-top: 20px;
       }
     }
