@@ -36,7 +36,7 @@ export const renderExpenseFilterPills = (
   if (freeText && freeText != "") {
     pills.push(
       <Pill
-        key="before"
+        key="freeTextExpense"
         title={`search term: ${freeText}`}
         color="#e0e0e0"
         closeButton={true}

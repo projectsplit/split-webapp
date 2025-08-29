@@ -36,7 +36,7 @@ export const renderTransferFilterPills = (
   if (freeText && freeText != "") {
     pills.push(
       <Pill
-        key="before"
+        key="freeText"
         title={`search term: ${freeText}`}
         color="#e0e0e0"
         closeButton={true}
