@@ -1,7 +1,6 @@
-import React, { useRef, useEffect, forwardRef } from "react";
+import { forwardRef, useRef, useEffect } from 'react';
 
-interface AutoWidthInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+interface AutoWidthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   category?: "Amounts" | "Shares" | "Percentages";
   isText?: boolean;
 }
@@ -15,8 +14,7 @@ const AutoWidthInput = forwardRef<HTMLInputElement, AutoWidthInputProps>(
       if (typeof ref === "function") {
         ref(inputRef.current);
       } else if (ref) {
-        (ref as React.MutableRefObject<HTMLInputElement | null>).current =
-          inputRef.current;
+        (ref as React.MutableRefObject<HTMLInputElement | null>).current = inputRef.current;
       }
     }, [ref]);
 
@@ -31,7 +29,7 @@ const AutoWidthInput = forwardRef<HTMLInputElement, AutoWidthInputProps>(
 
     useEffect(() => {
       if (textRef.current && inputRef.current) {
-        const newWidth = textRef.current.offsetWidth + 1; // Add a small buffer
+        const newWidth = textRef.current.offsetWidth + 1;
         inputRef.current.style.width = `${newWidth}px`;
       }
     }, [value]);
@@ -39,40 +37,31 @@ const AutoWidthInput = forwardRef<HTMLInputElement, AutoWidthInputProps>(
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (isText && onChange) return onChange(e);
 
-      let inputValue = e.target.value.replace(/,/g, '.'); 
-      e.target.value = inputValue;
-
       if (category === "Amounts") {
-        // Skip validation for Amounts; let mask handle it
         if (onChange) {
           onChange(e);
         }
         return;
       }
 
-      // Allow empty string, digits, decimal point, and optional negative sign
+      let inputValue = e.target.value;
       const isValid = /^-?\d*\.?\d*$/.test(inputValue);
-      if (!isValid && inputValue !== "") return; // Ignore invalid input
+      if (!isValid && inputValue !== "") return;
 
-      // For Shares and Percentages, limit to two decimal places during input
       if (category === "Shares" || category === "Percentages") {
         const parts = inputValue.split(".");
         if (parts[1] && parts[1].length > 2) {
-          // Truncate to two decimal places
           inputValue = `${parts[0]}.${parts[1].slice(0, 2)}`;
           e.target.value = inputValue;
         }
 
-        // For Shares, limit the integer part to six digits (max 999999)
         if (category === "Shares") {
-          const integerPart = parts[0].replace(/^-/, ""); // Remove negative sign for validation
+          const integerPart = parts[0].replace(/^-/, "");
           if (integerPart && integerPart.length > 6) {
-            // Clamp to six digits, preserving decimal part if present
             const decimalPart = parts[1] ? `.${parts[1].slice(0, 2)}` : "";
             inputValue = `${integerPart.slice(0, 6)}${decimalPart}`;
             e.target.value = inputValue;
           } else if (parseFloat(inputValue) < 0) {
-            // Prevent negative values for Shares
             inputValue = "";
             e.target.value = inputValue;
           }

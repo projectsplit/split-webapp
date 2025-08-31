@@ -45,11 +45,13 @@ export const recalculateAmounts = (
 
   switch (category.value) {
     case "Amounts":
+      console.log(totalAmount, lockedTotalAmount)
       screenArray = split(
         totalAmount - lockedTotalAmount,
         unlockedSelectedMembers.length,
         decimalDigits
       );
+      console.log(screenArray)
       actualAmountsArray = [...screenArray];
       return synchronizedFormMembers.map((m) => {
         if (m.selected && !m.locked) {
@@ -57,6 +59,7 @@ export const recalculateAmounts = (
           return {
             ...m,
             screenQuantity: formatCurrency(screenValue, ticker),
+            //screenQuantity:screenValue,
             actualAmount:
               actualAmountsArray.shift()?.toFixed(decimalDigits) || "",
           };
@@ -149,6 +152,12 @@ export const recalculateAmounts = (
 };
 
 function formatCurrency(value: string, ticker: string): string {
+  let sign = '';
+  if (value.startsWith('-')) {
+    sign = '-';
+    value = value.slice(1);
+  }
+
   let formattedValue = value.replace(/[^\d.]/g, "").replace(/^0+(?=\d)/, "");
 
   const decimalPoints = significantDigitsFromTicker(ticker?.toUpperCase());
@@ -175,5 +184,5 @@ function formatCurrency(value: string, ticker: string): string {
     formattedValue = '.';
   }
 
-  return formattedValue;
+  return sign + formattedValue;
 }
