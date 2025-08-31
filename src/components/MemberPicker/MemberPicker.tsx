@@ -66,7 +66,7 @@ const MemberPicker = ({
     description,
     renderCounter,
     category,
-    "USD"
+    selectedCurrency
   );
 
   useEffect(() => {

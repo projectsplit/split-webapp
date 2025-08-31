@@ -45,7 +45,6 @@ export const recalculateAmounts = (
 
   switch (category.value) {
     case "Amounts":
-      console.log(totalAmount, lockedTotalAmount)
       screenArray = split(
         totalAmount - lockedTotalAmount,
         unlockedSelectedMembers.length,
