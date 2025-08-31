@@ -65,7 +65,8 @@ const MemberPicker = ({
     decimalDigits,
     description,
     renderCounter,
-    category
+    category,
+    "USD"
   );
 
   useEffect(() => {
@@ -85,7 +86,13 @@ const MemberPicker = ({
     });
 
     setMemberAmounts(
-      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category, selectedCurrency)
+      recalculateAmounts(
+        newFormMembers,
+        totalAmount,
+        decimalDigits,
+        category,
+        selectedCurrency
+      )
     );
   };
 
@@ -104,7 +111,13 @@ const MemberPicker = ({
     });
 
     setMemberAmounts(
-      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category, selectedCurrency)
+      recalculateAmounts(
+        newFormMembers,
+        totalAmount,
+        decimalDigits,
+        category,
+        selectedCurrency
+      )
     );
   };
 
@@ -121,12 +134,20 @@ const MemberPicker = ({
       return m;
     });
     setMemberAmounts(
-      recalculateAmounts(newFormMembers, totalAmount, decimalDigits, category, selectedCurrency)
+      recalculateAmounts(
+        newFormMembers,
+        totalAmount,
+        decimalDigits,
+        category,
+        selectedCurrency
+      )
     );
   };
 
-  const changeAmount = (id: string, e: React.ChangeEvent<HTMLInputElement>): void => {
-    
+  const changeAmount = (
+    id: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     if (category.value !== "Amounts") {
       const updatedMembers = memberAmounts.map((m) => {
         if (m.id === id) {
@@ -135,58 +156,79 @@ const MemberPicker = ({
         return m;
       });
       setMemberAmounts(
-        recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency)
+        recalculateAmounts(
+          updatedMembers,
+          totalAmount,
+          decimalDigits,
+          category,
+          selectedCurrency
+        )
       );
-      return
+      return;
     }
 
     const oldMember = memberAmounts.find((m) => m.id === id);
-    const oldDisplayed = oldMember ? oldMember.screenQuantity : '';
-    const originalValue = e.target.value;
-    let formattedValue = currencyMask(
-      e,
-      selectedCurrency,
-      oldDisplayed
-    ).target.value ;
-    let clean = removeCommas(formattedValue);
+    const oldDisplayed = oldMember ? oldMember.screenQuantity : "";
+    const oldDisplayedLength = oldDisplayed.length;
+    const rawLength = e.target.value.length;
+    const isAddition = rawLength > oldDisplayedLength;
+    const isDeletion = rawLength < oldDisplayedLength;
+    let formattedValue = currencyMask(e, selectedCurrency, oldDisplayed, true)
+      .target.value;
+    const clean = removeCommas(formattedValue);
     let actualAmount: string = clean;
-    const oldLength = oldDisplayed.length;
-    const rawLength = originalValue.length;
-    const isAddition = rawLength > oldLength;
-    const isDeletion = rawLength < oldLength;
+
     if (isNaN(Number(clean))) {
-      if (clean === '.' || clean === '') {
-        if (isDeletion || clean === '') {
-          formattedValue = '';
-          actualAmount = '';
+      if (clean === "." || clean === "") {
+        if (isDeletion || clean === "") {
+          formattedValue = "";
+          actualAmount = "";
         } else if (isAddition) {
-          formattedValue = '.';
-          actualAmount = '0.';
+          formattedValue = ".";
+          actualAmount = "0.";
         }
       }
     } else {
-      if (clean.startsWith('.')) {
-        actualAmount = '0' + clean;
+      if (clean.startsWith(".")) {
+        actualAmount = "0" + clean;
       }
     }
-
     const updatedMembers = memberAmounts.map((m) => {
       if (m.id === id) {
-        return { ...m, screenQuantity: formattedValue, actualAmount, locked: true };
+        return {
+          ...m,
+          screenQuantity: formattedValue
+            .replace(/\./g, (match, offset, string) =>
+              string.indexOf(".") === offset ? "." : ""
+            ) // Keep only first dot
+            .replace(/^0+(?=\d*\.?\d+)/, (match) =>
+              match.includes(".") ? "0" : ""
+            ) // Handle leading zeros
+            .replace(/\.$/, ""), // Remove trailing dot
+          actualAmount,
+          locked: true,
+        };
       }
       return m;
     });
     setMemberAmounts(
-      recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency)
+      recalculateAmounts(
+        updatedMembers,
+        totalAmount,
+        decimalDigits,
+        category,
+        selectedCurrency
+      )
     );
   };
-
 
   const handleInputBlur = (id: string) => {
     const updatedMembers = memberAmounts.map((m) => {
       if (m.id === id) {
         const cleanedValue = m.screenQuantity
-          .replace(/^0+(?=\d*\.?\d+)/, (match) => (match.includes(".") ? "0" : ""))
+          .replace(/^0+(?=\d*\.?\d+)/, (match) =>
+            match.includes(".") ? "0" : ""
+          )
           .replace(/\.$/, ""); // Remove trailing decimal point
         const numericValue = Number(cleanedValue);
         const isZero = numericValue === 0 || isNaN(numericValue);
@@ -217,7 +259,13 @@ const MemberPicker = ({
       return m;
     });
     setMemberAmounts(
-      recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency)
+      recalculateAmounts(
+        updatedMembers,
+        totalAmount,
+        decimalDigits,
+        category,
+        selectedCurrency
+      )
     );
   };
 
@@ -225,7 +273,13 @@ const MemberPicker = ({
 
   const handleMainClick = () => {
     setMemberAmounts(
-      recalculateAmounts(memberAmounts, totalAmount, decimalDigits, category, selectedCurrency)
+      recalculateAmounts(
+        memberAmounts,
+        totalAmount,
+        decimalDigits,
+        category,
+        selectedCurrency
+      )
     );
     setIsMenuOpen(!isMenuOpen);
   };
@@ -275,7 +329,6 @@ const MemberPicker = ({
             />
           </div>
           <div className="member-list">
-
             {sortedMemberAmounts
               .filter((m) => m.selected)
               .map((m) => (
@@ -331,6 +384,3 @@ const MemberPicker = ({
 };
 
 export default MemberPicker;
-
-
-

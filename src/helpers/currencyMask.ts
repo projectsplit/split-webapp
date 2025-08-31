@@ -4,7 +4,8 @@ export const currencyMask = (
   e: React.ChangeEvent<HTMLInputElement>,
   ticker: string,
   oldDisplayed: string,
-):React.ChangeEvent<HTMLInputElement> => {
+  allowNegative: boolean,
+): React.ChangeEvent<HTMLInputElement> => {
   const input = e.target;
   const originalValue = input.value;
   let cursorPosition = input.selectionStart ?? 0;
@@ -12,6 +13,7 @@ export const currencyMask = (
   let isReplaced = false;
   let addedPos = -1;
 
+  // Handle comma replacement with period
   if (originalValue.length === oldDisplayed.length + 1) {
     const added = findAddedChar(oldDisplayed, originalValue);
     if (added && added.char === ',') {
@@ -29,20 +31,29 @@ export const currencyMask = (
     commasCountBeforeCursor -= 1;
   }
 
-  let value = oldValue;
+  let sign = '';
+  if (allowNegative && oldValue.startsWith('-')) {
+    sign = '-';
+  }
+  let value = sign ? oldValue.slice(1) : oldValue;
+  const signLength = sign.length;
+  const unsignedCursorPosition = cursorPosition - signLength;
 
-  if (
-    (value.match(/\./g) || []).length > 1 ||
-    (value.match(/110/g) || []).length > 1
-  ) {
-    value = value.replace(/\.(?=[^.]*$)/, "").replace(/110(?=[^.]*$)/, "");
+  // Handle multiple dots
+  if ((value.match(/\./g) || []).length > 1) {
+    value = value.replace(/\.(?=[^.]*$)/, "");
   }
 
+  // Remove non-numeric characters except dot and handle negative sign
   value = value.replace(/[^\d.]/g, "");
+  if (!allowNegative) {
+    value = value.replace(/^-/, "");
+  }
   value = value.replace(/^0+(?=\d)/, "");
 
   const decimalPoints = significantDigitsFromTicker(ticker.toUpperCase());
 
+  // Restrict decimal places without truncating integer part
   const decimalIndex = value.indexOf(".");
   if (decimalIndex !== -1) {
     if (decimalPoints === 0) {
@@ -54,13 +65,10 @@ export const currencyMask = (
 
   const cleanValue = value;
 
-  if (decimalPoints >= 3) {
-    const parts = value.split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    value = parts.join(".");
-  } else {
-    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
+  // Add commas for thousands
+  const parts = value.split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  value = parts.join(".");
 
   let isHiddenLeading = false;
   if (value.startsWith('0.') && value.length > 2) {
@@ -71,35 +79,32 @@ export const currencyMask = (
     isHiddenLeading = true;
   }
 
-  input.value = value;
+  input.value = sign + value;
 
-  const beforeCursor = oldValue.substring(0, cursorPosition);
-  const commasBefore = (beforeCursor.match(/,/g) || []).length;
-  const logicalPos = cursorPosition - commasBefore;
-
-  const hasDot = cleanValue.includes('.');
-  const cleanInt = hasDot ? cleanValue.slice(0, cleanValue.indexOf('.')) : cleanValue;
+  // Calculate new cursor position
+  const cleanInt = cleanValue.includes('.') ? cleanValue.slice(0, cleanValue.indexOf('.')) : cleanValue;
   const cleanIntLength = cleanInt.length;
+  const newValueInt = value.includes('.') ? value.slice(0, value.indexOf('.')) : value;
+  const newCommas = (newValueInt.match(/,/g) || []).length;
 
-  let commasBeforePos = 0;
-  const maxK = Math.floor((cleanIntLength - 1) / 3);
-  for (let k = 1; k <= maxK; k++) {
-    const insertPos = cleanIntLength - 3 * k;
-    if (insertPos < logicalPos) {
-      commasBeforePos++;
-    }
-  }
+  // Adjust cursor position based on the difference in commas
+  let newCursorPosition = unsignedCursorPosition;
 
-  let newCursorPosition = logicalPos + commasBeforePos;
-  if (hasDot && logicalPos > cleanIntLength) {
-    newCursorPosition = cleanIntLength + commasBeforePos + (logicalPos - cleanIntLength);
-  }
+  // If cursor is before a comma that was added, adjust it
+  const newValueBeforeCursor = (sign + value).substring(0, newCursorPosition + signLength);
+  const newCommasBeforeCursor = (newValueBeforeCursor.match(/,/g) || []).length;
+  newCursorPosition += newCommasBeforeCursor - commasCountBeforeCursor;
 
   if (isHiddenLeading && newCursorPosition > 0) {
     newCursorPosition -= 1;
   }
 
-  newCursorPosition = Math.max(0, Math.min(newCursorPosition, value.length));
+  if (cleanValue.includes('.') && unsignedCursorPosition > cleanIntLength) {
+    newCursorPosition = cleanIntLength + newCommas + (unsignedCursorPosition - cleanIntLength);
+  }
+
+  newCursorPosition += signLength;
+  newCursorPosition = Math.max(0, Math.min(newCursorPosition, input.value.length));
 
   input.setSelectionRange(newCursorPosition, newCursorPosition);
 

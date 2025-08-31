@@ -11,7 +11,8 @@ export const useRecalculateAmounts = (
   decimalDigits: number,
   description: string,
   renderCounter: React.MutableRefObject<number>,
-  category: Signal<string>
+  category: Signal<string>,
+  ticker:string
 ) => {
   useEffect(() => {
 
@@ -20,7 +21,8 @@ setMemberAmounts(
     memberAmounts,
     totalAmount,
     decimalDigits,
-    category
+    category,
+    ticker
   )
 );
 
@@ -39,7 +41,8 @@ if (totalAmount > 0) {
         newFormMembers,
         totalAmount,
         decimalDigits,
-        category
+        category,
+        ticker
       )
     );
   }
@@ -57,7 +60,8 @@ if (totalAmount > 0) {
         newFormMembers,
         totalAmount,
         decimalDigits,
-        category
+        category,
+        ticker
       )
     );
   }

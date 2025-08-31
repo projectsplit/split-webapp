@@ -4,6 +4,7 @@ export const split = (
     maxDecimals: number
   ): number[] => {
     if (
+ 
       splits <= 0 ||
       !Number.isInteger(splits) ||
       maxDecimals < 0 ||
