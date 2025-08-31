@@ -50,7 +50,6 @@ export const recalculateAmounts = (
         unlockedSelectedMembers.length,
         decimalDigits
       );
-      console.log(screenArray)
       actualAmountsArray = [...screenArray];
       return synchronizedFormMembers.map((m) => {
         if (m.selected && !m.locked) {

@@ -66,7 +66,7 @@ const MemberPicker = ({
     description,
     renderCounter,
     category,
-    selectedCurrency
+    "USD"
   );
 
   useEffect(() => {
@@ -144,7 +144,7 @@ const MemberPicker = ({
     );
   };
 
-  const changeAmount = (
+const changeAmount = (
     id: string,
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -189,22 +189,29 @@ const MemberPicker = ({
         }
       }
     } else {
-      if (clean.startsWith(".")) {
-        actualAmount = "0" + clean;
+      const numericValue = Number(clean);
+      if (numericValue <= 999999999999.99) {
+        if (clean.startsWith(".")) {
+          actualAmount = "0" + clean;
+        }
+        formattedValue = formattedValue
+          .replace(/\./g, (match, offset, string) =>
+            string.indexOf(".") === offset ? "." : ""
+          ) // Keep only first dot
+          .replace(/^0+(?=\d*\.?\d+)/, (match) =>
+            match.includes(".") ? "0" : ""
+          ) // Handle leading zeros
+          .replace(/\.$/, ""); // Remove trailing dot
+      } else {
+        formattedValue = oldDisplayed;
+        actualAmount = removeCommas(oldDisplayed);
       }
     }
     const updatedMembers = memberAmounts.map((m) => {
       if (m.id === id) {
         return {
           ...m,
-          screenQuantity: formattedValue
-            .replace(/\./g, (match, offset, string) =>
-              string.indexOf(".") === offset ? "." : ""
-            ) // Keep only first dot
-            .replace(/^0+(?=\d*\.?\d+)/, (match) =>
-              match.includes(".") ? "0" : ""
-            ) // Handle leading zeros
-            .replace(/\.$/, ""), // Remove trailing dot
+          screenQuantity: formattedValue,
           actualAmount,
           locked: true,
         };
