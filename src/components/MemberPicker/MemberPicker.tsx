@@ -66,7 +66,7 @@ const MemberPicker = ({
     description,
     renderCounter,
     category,
-    "USD"
+    selectedCurrency
   );
 
   useEffect(() => {
@@ -233,11 +233,7 @@ const changeAmount = (
     const updatedMembers = memberAmounts.map((m) => {
       if (m.id === id) {
         const cleanedValue = m.screenQuantity
-          .replace(/^0+(?=\d*\.?\d+)/, (match) =>
-            match.includes(".") ? "0" : ""
-          )
-          .replace(/\.$/, ""); // Remove trailing decimal point
-        const numericValue = Number(cleanedValue);
+        const numericValue = Number(m.actualAmount);
         const isZero = numericValue === 0 || isNaN(numericValue);
 
         switch (category.value) {
