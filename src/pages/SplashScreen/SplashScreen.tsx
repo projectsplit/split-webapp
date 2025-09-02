@@ -1,5 +1,5 @@
 import { Logo, StyledSplashScreen } from "./SplashScreen.styled";
-import logo from '../../styles/logo/logo.png'
+import logo from '../../styles/logo/logoRounded.png'
 
 export default function SplashScreen() {
   return (

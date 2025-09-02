@@ -7,7 +7,6 @@ import NotificationsMenuAnimation from "../../components/Menus/MenuAnimations/No
 import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
 import { getMe } from "../../api/services/api";
 import TopMenu from "../../components/Menus/TopMenu/TopMenu";
-import { GroupsWithDetails } from "../../types";
 
 const Protected: React.FC = () => {
   const location = useLocation();

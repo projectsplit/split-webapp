@@ -71,8 +71,17 @@ export const StyledGenerateInvitationCode = styled.div`
     overflow-wrap: break-word;
     text-align: center;
     margin-top: 50px;
-    .code{
-        margin-top:10px;
+    .code {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 10px;
+      .copy {
+        display:flex;
+        align-self:center;
+        font-size:18px;
+      }
     }
   }
 `;
