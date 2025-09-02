@@ -3,7 +3,7 @@ import { TransferFormProps } from "../../interfaces";
 import { StyledTransferForm } from "./TransferForm.styled";
 import InputMonetary from "../InputMonetary/InputMonetary";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSignal } from "@preact/signals-react";
+import { signal, useSignal } from "@preact/signals-react";
 import { handleInputChange } from "../../helpers/handleInputChange";
 import { amountIsValid } from "../../helpers/amountIsValid";
 import { DateTime } from "../DateTime";
@@ -219,6 +219,7 @@ export default function TransferForm({
         setSelectedDateTime={setTransferTime}
         timeZoneId={timeZoneId}
         isEdit={false}
+        category={signal("Transfers")}
        
       />
       <div className="spacer"></div>

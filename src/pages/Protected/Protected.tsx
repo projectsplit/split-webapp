@@ -7,6 +7,7 @@ import NotificationsMenuAnimation from "../../components/Menus/MenuAnimations/No
 import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
 import { getMe } from "../../api/services/api";
 import TopMenu from "../../components/Menus/TopMenu/TopMenu";
+import { GroupsWithDetails } from "../../types";
 
 const Protected: React.FC = () => {
   const location = useLocation();
@@ -26,7 +27,9 @@ const Protected: React.FC = () => {
   const openGroupOptionsMenu = useSignal<boolean>(false);
   const activeGroupCatAsState = useSignal<string>("Active");
   const confirmUnarchiveMenu = useSignal<string | null>(null);
-  const excludeTopMenu = shouldExcludeTopMenu (['/analytics','/budget'])
+
+
+  const excludeTopMenu = shouldExcludeTopMenu (['/analytics','/budget','/groups/generatecode'])
   
   return isUserAuthenticated() ? (
     <StyledProtected $shouldStyleBorder={groupIsArchived.value}>

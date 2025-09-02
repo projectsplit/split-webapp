@@ -129,6 +129,7 @@ export interface DateTimeProps {
   timeZoneId: string;
   isEdit: boolean;
   withLexicalContext?: boolean;
+  category:Signal<string>
 }
 
 export interface MemberPickerProps {

@@ -23,7 +23,7 @@ import { handleInputChange } from "../../helpers/handleInputChange";
 import InputMonetary from "../InputMonetary/InputMonetary";
 import { IoClose } from "react-icons/io5";
 import { amountIsValid } from "../../helpers/amountIsValid";
-import { useSignal } from "@preact/signals-react";
+import { signal, useSignal } from "@preact/signals-react";
 import FormInput from "../FormInput/FormInput";
 import { ExpenseFormProps } from "../../interfaces";
 import { useExpense } from "../../api/services/useExpense";
@@ -346,6 +346,8 @@ export default function ExpenseForm({
         setSelectedDateTime={setExpenseTime}
         timeZoneId={timeZoneId}
         isEdit={!isCreateExpense}
+        category={signal("Expense")}
+
       />
       <div className="spacer"></div>
       <MyButton
