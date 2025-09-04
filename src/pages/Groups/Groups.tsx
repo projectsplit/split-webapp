@@ -17,7 +17,6 @@ import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu
 import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import Spinner from "../../components/Spinner/Spinner";
-import { GroupsWithDetails } from "../../types";
 
 export default function Groups() {
   const queryClient = useQueryClient();
