@@ -9,6 +9,7 @@ export const StyledShareGroup = styled.div`
   overflow-wrap: break-word;
   display: flex;
   flex-direction: column;
+
   .qrCodeContainer {
     display: flex;
     justify-content: center;
@@ -22,6 +23,7 @@ export const StyledShareGroup = styled.div`
     overflow-wrap: break-word;
     text-align: center;
     margin-top: 50px;
+    flex-grow: 1;
     .code {
       margin-top: 10px;
       display: flex;
@@ -34,5 +36,18 @@ export const StyledShareGroup = styled.div`
         font-size: 18px;
       }
     }
+  }
+  .buttonContainer {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    padding: 0 10px; /* Optional: add padding for better spacing */
+  }
+  .buttonContainer > button {
+    width: 100%;
+    max-width: 100%; /* Ensure button spans full width */
   }
 `;

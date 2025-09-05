@@ -32,6 +32,8 @@ import {
   BeautifulMentionsItemData,
   BeautifulMentionsMenuProps,
 } from "lexical-beautiful-mentions";
+import { UseMutateFunction } from "@tanstack/react-query";
+import { NavigateFunction } from "react-router-dom";
 
 export interface ExpenseProps {
   timeZoneId: string;
@@ -1048,10 +1050,31 @@ export interface ShareGroupProps {
   isPending: boolean;
   qrRef: React.RefObject<HTMLDivElement>;
   invitationCode: string | null;
+  mutate: UseMutateFunction<
+    any,
+    Error,
+    {
+      groupId: string;
+    },
+    unknown
+  >;
+  groupId: string;
+  navigate: NavigateFunction;
+  setInvitationCode: React.Dispatch<React.SetStateAction<string | null>>;
 }
 export interface RevokeAccessProps {
   groupId: string;
   groupName: string;
+  category: Signal<string>;
+  mutate: UseMutateFunction<
+    any,
+    Error,
+    {
+      code: string;
+    },
+    unknown
+  >;
+  categorySwitched: Signal<boolean>;
 }
 
 export interface RevokeAccessItemProps {
@@ -1060,4 +1083,12 @@ export interface RevokeAccessItemProps {
   maxUses: number;
   timesUsed: number;
   timeZone: string;
+  mutate: UseMutateFunction<
+    any,
+    Error,
+    {
+      code: string;
+    },
+    unknown
+  >;
 }

@@ -4,15 +4,19 @@ import { ShareGroupProps } from "../../../interfaces";
 import { IoCopy } from "react-icons/io5";
 import { useEffect } from "react";
 import QRCodeStyling from "qr-code-styling";
-import logo from "../../../styles/logo/logoRounded.png"
+import logo from "../../../styles/logo/logoRounded.png";
+import MyButton from "../../../components/MyButton/MyButton";
 
 export default function ShareGroup({
   groupName,
   isPending,
   qrRef,
   invitationCode,
+  mutate,
+  groupId,
+  navigate,
+  setInvitationCode
 }: ShareGroupProps) {
-
 
   useEffect(() => {
     if (invitationCode && qrRef.current) {
@@ -46,13 +50,17 @@ export default function ShareGroup({
   return (
     <StyledShareGroup>
       {" "}
-      <div className="promptMessage">
-        <div className="prompt"></div>Scan this QR code with another device to
-        join <strong className="groupName">{groupName}</strong>
-      </div>
-      <div className="qrCodeContainer">
-        {isPending ? <Spinner /> : <div className="qrCode" ref={qrRef} />}
-      </div>
+      {invitationCode ? (
+        <div>
+          <div className="promptMessage">
+            <div className="prompt"></div>Scan this QR code with another device
+            to join <strong className="groupName">{groupName}</strong>
+          </div>
+          <div className="qrCodeContainer">
+            {isPending ? <Spinner /> : <div className="qrCode" ref={qrRef} />}
+          </div>
+        </div>
+      ) : null}
       {isPending ? null : (
         <div className="codentext">
           {invitationCode ? (
@@ -92,6 +100,28 @@ export default function ShareGroup({
           ) : (
             <div className="text">Invitation code does not exist</div>
           )}
+          <div className="buttonContainer">
+            <MyButton
+              onClick={() =>
+                mutate(
+                  { groupId: groupId  },
+                  {
+                    onSuccess: (code: string) => {
+                      setInvitationCode(code);
+                      const searchParams = new URLSearchParams(location.search);
+                      searchParams.set("invitationCode", code);
+                      navigate(
+                        `${location.pathname}?${searchParams.toString()}`,
+                        { replace: true }
+                      );
+                    },
+                  }
+                )
+              }
+            >
+              Generate New Code
+            </MyButton>
+          </div>
         </div>
       )}
     </StyledShareGroup>

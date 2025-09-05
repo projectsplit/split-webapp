@@ -6,17 +6,28 @@ import RevokeAccessItem from "./RevokeAccessItem/RevokeAccessItem";
 import Spinner from "../../../components/Spinner/Spinner";
 import { UserInfo } from "../../../types";
 import { useOutletContext } from "react-router-dom";
+import { useEffect } from "react";
 
-export default function RevokeAccess({ groupId,groupName }: RevokeAccessProps) {
+export default function RevokeAccess({
+  groupId,
+  groupName,
+  category,
+  mutate,
+  categorySwitched
+}: RevokeAccessProps) {
+
   const pageSize = 10;
 
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useGetGroupJoinCodes(groupId, pageSize);
+  useEffect(() => {
+    categorySwitched.value = category.value === "Revoke Access";
+  }, [category.value,mutate]);
 
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
+    useGetGroupJoinCodes(groupId, pageSize, categorySwitched);
 
   if (isFetching && !isFetchingNextPage) {
     return (
@@ -31,8 +42,8 @@ export default function RevokeAccess({ groupId,groupName }: RevokeAccessProps) {
     <StyledRevokeAccess>
       <div className="promptText">
         Select the passcode you wish to revoke. Members who have already joined
-        “{groupName}” using it will remain, but the code will no longer be valid for
-        future use.
+        “{groupName}” using it will remain, but the code will no longer be valid
+        for future use.
       </div>
 
       <div className="scrollable-content">
@@ -44,7 +55,8 @@ export default function RevokeAccess({ groupId,groupName }: RevokeAccessProps) {
               id={code.id}
               maxUses={code.maxUses}
               timesUsed={code.timesUsed}
-              timeZone = {userInfo?.timeZone}
+              timeZone={userInfo?.timeZone}
+              mutate={mutate}
             />
           ))
         )}

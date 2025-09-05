@@ -653,3 +653,19 @@ export type SpendingInfoResponse = {
   totalAmountSpent: string;
   currency: string;
 };
+
+export type JoinCode = {
+  created: string;
+  creatorId: string;
+  expires: string;
+  groupId: string;
+  id: string;
+  maxUses: number;
+  timesUsed: number;
+  updated: string;
+};
+
+export type GetJoinCodesResponse = {
+  codes: JoinCode[];
+  next: string | null;
+};

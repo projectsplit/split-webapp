@@ -1,9 +1,11 @@
 import { AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { Signal } from "@preact/signals-react";
+import { GetJoinCodesResponse } from "../../types";
 
-export const useGetGroupJoinCodes = (groupId: string, pageSize: number) => {
-  const queryKey = ["getGroupJoinCodes", groupId, pageSize];
+export const useGetGroupJoinCodes = (groupId: string, pageSize: number, categorySwitched:Signal<boolean>) => {
+  const queryKey = ["getGroupJoinCodes", groupId, pageSize, categorySwitched.value];
 
   const query = useInfiniteQuery({
     queryKey,
@@ -11,6 +13,7 @@ export const useGetGroupJoinCodes = (groupId: string, pageSize: number) => {
       getGroupJoinCodes(groupId, pageSize, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: "",
+    refetchOnMount: "always",
   });
 
   return { ...query };
@@ -29,18 +32,4 @@ const getGroupJoinCodes = async (
   return response.data;
 };
 
-type GetJoinCodesResponse = {
-  codes: JoinCode[];
-  next: string | null;
-};
 
-type JoinCode = {
-  created: string;
-  creatorId: string;
-  expires: string;
-  groupId: string;
-  id: string;
-  maxUses: number;
-  timesUsed: number;
-  updated: string;
-};
