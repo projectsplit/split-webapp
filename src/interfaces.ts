@@ -1066,15 +1066,9 @@ export interface RevokeAccessProps {
   groupId: string;
   groupName: string;
   category: Signal<string>;
-  mutate: UseMutateFunction<
-    any,
-    Error,
-    {
-      code: string;
-    },
-    unknown
-  >;
   categorySwitched: Signal<boolean>;
+  invitationCode: string|null;
+  mostRecentCodeHasBeenRevoked: Signal<boolean>;
 }
 
 export interface RevokeAccessItemProps {
@@ -1083,12 +1077,8 @@ export interface RevokeAccessItemProps {
   maxUses: number;
   timesUsed: number;
   timeZone: string;
-  mutate: UseMutateFunction<
-    any,
-    Error,
-    {
-      code: string;
-    },
-    unknown
-  >;
+  groupId: string;
+  categorySwitched: Signal<boolean>;
+  invitationCode: string|null;
+  mostRecentCodeHasBeenRevoked: Signal<boolean>;
 }

@@ -2,6 +2,7 @@ import { StyledRevokeAccessItem } from "./RevokeAccessItem.styled";
 import MyButton from "../../../../components/MyButton/MyButton";
 import { RevokeAccessItemProps } from "../../../../interfaces";
 import { FormatDateTime } from "../../../../helpers/timeHelpers";
+import { useRevokeInvitationCode } from "../../../../api/services/useRevokeInvitationCode";
 
 
 export default function RevokeAccessItem({
@@ -10,10 +11,21 @@ export default function RevokeAccessItem({
   maxUses,
   timesUsed,
   timeZone,
-  mutate,
+  groupId,
+  categorySwitched,
+  invitationCode,
+  mostRecentCodeHasBeenRevoked
 }: RevokeAccessItemProps) {
 
-  
+    const { mutate: mutateRevoke, isPending: isPendingRevoke } =
+      useRevokeInvitationCode(
+        groupId || "",
+        10,
+        categorySwitched,
+        invitationCode,
+        mostRecentCodeHasBeenRevoked
+      );
+      
   return (
     <StyledRevokeAccessItem>
       {" "}
@@ -32,7 +44,7 @@ export default function RevokeAccessItem({
           </div>
         </div>
         <div className="revokeButton">
-          <MyButton onClick={() => mutate({ code: id })}>Revoke</MyButton>
+          <MyButton onClick={() => mutateRevoke({ code: id })} isLoading={isPendingRevoke}>Revoke</MyButton>
         </div>
       </div>
     </StyledRevokeAccessItem>

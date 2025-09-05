@@ -7,7 +7,6 @@ import { CategorySelector } from "../../components/CategorySelector/CategorySele
 import { useSignal } from "@preact/signals-react";
 import ShareGroup from "./ShareGroup/ShareGroup";
 import RevokeAccess from "./RevokeAccess/RevokeAcces";
-import { useRevokeInvitationCode } from "../../api/services/useRevokeInvitationCode";
 
 export default function GenerateInvitationCode() {
   const params = useParams();
@@ -23,14 +22,7 @@ export default function GenerateInvitationCode() {
   const isFirstRender = useRef(true);
   const { mutate: mutateGenerate, isPending: isPendingGenerate } =
     useGenerateInvitationCode();
-  const { mutate: mutateRevoke, isPending: isPendingRevoke } =
-    useRevokeInvitationCode(
-      params.groupid || "",
-      10,
-      categorySwitched,
-      invitationCode,
-      mostRecentCodeHasBeenRevoked
-    );
+
 
   useEffect(() => {
     if (mostRecentCodeHasBeenRevoked.value ||isFirstRender.current) {
@@ -93,8 +85,9 @@ export default function GenerateInvitationCode() {
           groupId={params.groupid || ""}
           groupName={groupName}
           category={category}
-          mutate={mutateRevoke}
           categorySwitched={categorySwitched}
+          mostRecentCodeHasBeenRevoked={mostRecentCodeHasBeenRevoked}
+          invitationCode={invitationCode}
         />
       )}
     </StyledGenerateInvitationCode>

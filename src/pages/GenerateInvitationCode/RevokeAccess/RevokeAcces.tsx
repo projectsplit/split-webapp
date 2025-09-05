@@ -12,8 +12,9 @@ export default function RevokeAccess({
   groupId,
   groupName,
   category,
-  mutate,
-  categorySwitched
+  categorySwitched,
+  invitationCode,
+  mostRecentCodeHasBeenRevoked
 }: RevokeAccessProps) {
 
   const pageSize = 10;
@@ -24,7 +25,7 @@ export default function RevokeAccess({
 
   useEffect(() => {
     categorySwitched.value = category.value === "Revoke Access";
-  }, [category.value,mutate]);
+  }, [category.value]);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useGetGroupJoinCodes(groupId, pageSize, categorySwitched);
@@ -56,7 +57,11 @@ export default function RevokeAccess({
               maxUses={code.maxUses}
               timesUsed={code.timesUsed}
               timeZone={userInfo?.timeZone}
-              mutate={mutate}
+              groupId={groupId}
+              categorySwitched={categorySwitched}
+              invitationCode={invitationCode}
+              mostRecentCodeHasBeenRevoked={mostRecentCodeHasBeenRevoked}
+
             />
           ))
         )}
