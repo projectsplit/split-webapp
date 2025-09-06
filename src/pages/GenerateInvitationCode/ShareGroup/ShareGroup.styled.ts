@@ -24,12 +24,14 @@ export const StyledShareGroup = styled.div`
     text-align: center;
     margin-top: 50px;
     flex-grow: 1;
+
     .code {
       margin-top: 10px;
       display: flex;
       flex-direction: row;
       justify-content: center;
       gap: 10px;
+          cursor:pointer;
       .copy {
         display: flex;
         align-self: center;
@@ -44,10 +46,10 @@ export const StyledShareGroup = styled.div`
     right: 0;
     display: flex;
     justify-content: center;
-    padding: 0 10px; /* Optional: add padding for better spacing */
+    padding: 0 10px; 
   }
   .buttonContainer > button {
     width: 100%;
-    max-width: 100%; /* Ensure button spans full width */
+    max-width: 100%; 
   }
 `;

@@ -7,6 +7,7 @@ import Spinner from "../../../components/Spinner/Spinner";
 import { UserInfo } from "../../../types";
 import { useOutletContext } from "react-router-dom";
 import { useEffect } from "react";
+import { TbQrcodeOff } from "react-icons/tb";
 
 export default function RevokeAccess({
   groupId,
@@ -14,9 +15,8 @@ export default function RevokeAccess({
   category,
   categorySwitched,
   invitationCode,
-  mostRecentCodeHasBeenRevoked
+  mostRecentCodeHasBeenRevoked,
 }: RevokeAccessProps) {
-
   const pageSize = 10;
 
   const { userInfo } = useOutletContext<{
@@ -41,11 +41,21 @@ export default function RevokeAccess({
   }
   return (
     <StyledRevokeAccess>
-      <div className="promptText">
-        Select the passcode you wish to revoke. Members who have already joined
-        “{groupName}” using it will remain, but the code will no longer be valid
-        for future use.
-      </div>
+      {data?.pages.flatMap((x) => x.codes).length === 0 ? (
+        <div className="textAndIcon">
+          <div className="textEmoji">
+            <span className="text">
+              No passcodes to revoke for "{groupName}"{" "}
+            </span>
+            <span className="emoji">🧐</span>
+          </div>
+          <TbQrcodeOff className="icon" />
+        </div>
+      ) : (
+        <div className="promptText">
+       Select the passcode you’d like to revoke. Members who have already joined “{groupName}” with this code will remain in the group, but it will no longer work for new members.
+        </div>
+      )}
 
       <div className="scrollable-content">
         {data?.pages.flatMap((x) =>
@@ -61,7 +71,6 @@ export default function RevokeAccess({
               categorySwitched={categorySwitched}
               invitationCode={invitationCode}
               mostRecentCodeHasBeenRevoked={mostRecentCodeHasBeenRevoked}
-
             />
           ))
         )}

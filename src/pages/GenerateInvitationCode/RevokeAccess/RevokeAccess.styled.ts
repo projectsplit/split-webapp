@@ -21,14 +21,36 @@ export const StyledRevokeAccess = styled.div`
 
   .promptText {
     padding: 10px;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     display: flex;
     flex-direction: column;
     word-break: break-word;
     overflow-wrap: break-word;
     text-align: center;
   }
-  
+
+  .textAndIcon {
+    white-space: normal;
+    text-align: center;
+    margin-top: 10rem;
+
+    .text {
+      opacity: 0.5;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      text-align: center;
+      .emoji {
+        opacity: 1;
+      }
+    }
+    .icon{
+ 
+      font-size: 100px;
+      opacity: 0.5;
+
+    }
+  }
   .spinner {
     display: flex;
     flex-direction: column;

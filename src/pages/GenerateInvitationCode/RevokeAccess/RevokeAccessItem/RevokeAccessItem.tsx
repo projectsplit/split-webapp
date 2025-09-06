@@ -3,7 +3,8 @@ import MyButton from "../../../../components/MyButton/MyButton";
 import { RevokeAccessItemProps } from "../../../../interfaces";
 import { FormatDateTime } from "../../../../helpers/timeHelpers";
 import { useRevokeInvitationCode } from "../../../../api/services/useRevokeInvitationCode";
-
+import { IoCopy } from "react-icons/io5";
+import { copyToClipboard } from "../../../../helpers/copyToClipboars";
 
 export default function RevokeAccessItem({
   expires,
@@ -14,22 +15,24 @@ export default function RevokeAccessItem({
   groupId,
   categorySwitched,
   invitationCode,
-  mostRecentCodeHasBeenRevoked
+  mostRecentCodeHasBeenRevoked,
 }: RevokeAccessItemProps) {
+  const { mutate: mutateRevoke, isPending: isPendingRevoke } =
+    useRevokeInvitationCode(
+      groupId || "",
+      10,
+      categorySwitched,
+      invitationCode,
+      mostRecentCodeHasBeenRevoked
+    );
 
-    const { mutate: mutateRevoke, isPending: isPendingRevoke } =
-      useRevokeInvitationCode(
-        groupId || "",
-        10,
-        categorySwitched,
-        invitationCode,
-        mostRecentCodeHasBeenRevoked
-      );
-      
   return (
     <StyledRevokeAccessItem>
       {" "}
-      <div className="code">{id}</div>
+      <div className="codeAndCopy" onClick={()=>copyToClipboard(id,"https://yourapp.com/join/")}>
+        <div className="code"> {id} </div>
+        <IoCopy />
+      </div>
       <div className="infoAndRevokeButton">
         <div className="infoContainer">
           <div className="infoAndData">
@@ -44,7 +47,12 @@ export default function RevokeAccessItem({
           </div>
         </div>
         <div className="revokeButton">
-          <MyButton onClick={() => mutateRevoke({ code: id })} isLoading={isPendingRevoke}>Revoke</MyButton>
+          <MyButton
+            onClick={() => mutateRevoke({ code: id })}
+            isLoading={isPendingRevoke}
+          >
+            Revoke
+          </MyButton>
         </div>
       </div>
     </StyledRevokeAccessItem>

@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import QRCodeStyling from "qr-code-styling";
 import logo from "../../../styles/logo/logoRounded.png";
 import MyButton from "../../../components/MyButton/MyButton";
+import { copyToClipboard } from "../../../helpers/copyToClipboars";
 
 export default function ShareGroup({
   groupName,
@@ -66,32 +67,13 @@ export default function ShareGroup({
           {invitationCode ? (
             <>
               <div className="text">
-                Alternatively, share this code with a user:
+                Alternatively, share this code:
               </div>
               <div className="code">
                 <strong>{invitationCode}</strong>
                 <div
                   className="copy"
-                  onClick={() => {
-                    if (!invitationCode) return;
-
-                    if (navigator.clipboard) {
-                      navigator.clipboard
-                        .writeText(invitationCode)
-                        .catch((err) => console.error("Failed to copy: ", err));
-                    } else {
-                      const textarea = document.createElement("textarea");
-                      textarea.value = invitationCode;
-                      document.body.appendChild(textarea);
-                      textarea.select();
-                      try {
-                        document.execCommand("copy");
-                      } catch (err) {
-                        console.error("Fallback copy failed: ", err);
-                      }
-                      document.body.removeChild(textarea);
-                    }
-                  }}
+                  onClick={() => copyToClipboard(invitationCode,"https://yourapp.com/join/")}
                 >
                   <IoCopy />
                 </div>

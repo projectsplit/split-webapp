@@ -161,7 +161,7 @@ const Expenses = () => {
             <div/>
           </div>
         ) : (
-          <div className="text">
+          <div className="noData">
             <div className="msg">There are currently no expenses</div>
             <CiReceipt className="icon" />
           </div>
