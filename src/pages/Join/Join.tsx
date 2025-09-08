@@ -15,7 +15,7 @@ const Join: React.FC = () => {
   const navigate = useNavigate();
 
   if (!code) {
-    navigate(routes.ROOT);
+    navigate(routes.ROOT, { replace: true });
     return null;
   }
 
@@ -33,23 +33,12 @@ const Join: React.FC = () => {
     }
   }, [data, navigate]);
 
-  
-  if (getJoinCodeLoading|| !data) {
-    return (
-      <StyledJoin>
-        <div className="spinner">
-          <Spinner />
-        </div>
-      </StyledJoin>
-    );
-  }
-
   if (isError) {
     return (
       <StyledJoin>
         <div className="errors">
           <div className="text">
-            <div>Snap! Something went wrong! 😵</div>
+            <div>Ah Snap! 😵 This invitation has either expired or has been revoked.</div>
           </div>
           <div className="buttons">
             <MyButton
@@ -64,8 +53,18 @@ const Join: React.FC = () => {
     );
   }
 
-   if (data.isAlreadyMember) {
-    return null; 
+  if (getJoinCodeLoading || !data) {
+    return (
+      <StyledJoin>
+        <div className="spinner">
+          <Spinner />
+        </div>
+      </StyledJoin>
+    );
+  }
+
+  if (data.isAlreadyMember) {
+    return null;
   }
 
   return (
