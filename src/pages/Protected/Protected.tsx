@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
 import { StyledProtected } from "./Protected.styled";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
@@ -7,18 +7,19 @@ import NotificationsMenuAnimation from "../../components/Menus/MenuAnimations/No
 import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
 import { getMe } from "../../api/services/api";
 import TopMenu from "../../components/Menus/TopMenu/TopMenu";
+import { JoinOverlay } from "../Join/JoinOverslay";
 
 const Protected: React.FC = () => {
   const location = useLocation();
-
+  const { code } = useParams<{ code?: string }>();
   const { data: userInfo } = useQuery({
     queryKey: ["getMe"],
     queryFn: getMe,
     enabled: isUserAuthenticated(),
   });
-  
-  const groupIsArchived = useSignal<boolean>(false)
-  
+
+  const groupIsArchived = useSignal<boolean>(false);
+
   const hasNewerNotifications = userInfo?.hasNewerNotifications;
 
   const topMenuTitle = useSignal<string>("");
@@ -27,21 +28,36 @@ const Protected: React.FC = () => {
   const activeGroupCatAsState = useSignal<string>("Active");
   const confirmUnarchiveMenu = useSignal<string | null>(null);
 
+  const excludeTopMenu = shouldExcludeTopMenu([
+    "/analytics",
+    "/budget",
+    "/groups/generatecode",
+  ]);
 
-  const excludeTopMenu = shouldExcludeTopMenu (['/analytics','/budget','/groups/generatecode'])
-  
   return isUserAuthenticated() ? (
     <StyledProtected $shouldStyleBorder={groupIsArchived.value}>
-      {!excludeTopMenu&&<TopMenu
-        title={topMenuTitle.value}
-        menu={menu}
-        username={userInfo?.username}
-        hasNewerNotifications={hasNewerNotifications || false}
-        openGroupOptionsMenu={openGroupOptionsMenu}
-        groupIsArchived={groupIsArchived.value}
-        confirmUnarchiveMenu={confirmUnarchiveMenu}
-      />}
-      <Outlet context={{ userInfo, topMenuTitle,openGroupOptionsMenu,activeGroupCatAsState,groupIsArchived,confirmUnarchiveMenu }} />
+      {!excludeTopMenu && (
+        <TopMenu
+          title={topMenuTitle.value}
+          menu={menu}
+          username={userInfo?.username}
+          hasNewerNotifications={hasNewerNotifications || false}
+          openGroupOptionsMenu={openGroupOptionsMenu}
+          groupIsArchived={groupIsArchived.value}
+          confirmUnarchiveMenu={confirmUnarchiveMenu}
+        />
+      )}
+      <Outlet
+        context={{
+          userInfo,
+          topMenuTitle,
+          openGroupOptionsMenu,
+          activeGroupCatAsState,
+          groupIsArchived,
+          confirmUnarchiveMenu,
+        }}
+      />
+      {code && <JoinOverlay />}
       <MenuAnimationBackground menu={menu} />
       <NotificationsMenuAnimation
         menu={menu}

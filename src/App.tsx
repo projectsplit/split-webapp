@@ -14,7 +14,6 @@ import Group from "./pages/Group/Group";
 import Expenses from "./pages/Expenses/Expenses";
 import Transfers from "./pages/Transfers/Transfers";
 import Members from "./pages/Members/Members";
-import Join from "./pages/Join";
 import Protected from "./pages/Protected/Protected";
 import Analytics from "./pages/Analytics/Analytics";
 import RedirectToAnalytics from "./routes/RedirectToAnalytics";
@@ -34,7 +33,7 @@ const App = () => {
         <Route path={routes.GOOGLE_REDIRECT} element={<GoogleCallback />} />
         <Route element={<Protected />}>
           <Route path={routes.ROOT} element={<Home />} />
-          <Route path={routes.JOIN} element={<Join />} />
+          <Route path={routes.JOIN} element={<Home />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/groups/generatecode/:groupid" element={<GenerateInvitationCode/>}/>
           <Route path="/groups/:groupid" element={<Group />}>

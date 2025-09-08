@@ -73,7 +73,7 @@ export default function ShareGroup({
                 <strong>{invitationCode}</strong>
                 <div
                   className="copy"
-                  onClick={() => copyToClipboard(invitationCode,"https://yourapp.com/join/")}
+                  onClick={() => copyToClipboard(invitationCode,"http://192.168.2.2:5173/j/")}
                 >
                   <IoCopy />
                 </div>

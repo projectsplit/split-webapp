@@ -29,7 +29,7 @@ export default function RevokeAccessItem({
   return (
     <StyledRevokeAccessItem>
       {" "}
-      <div className="codeAndCopy" onClick={()=>copyToClipboard(id,"https://yourapp.com/join/")}>
+      <div className="codeAndCopy" onClick={()=>copyToClipboard(id,"http://192.168.2.2:5173/j/")}>
         <div className="code"> {id} </div>
         <IoCopy />
       </div>
