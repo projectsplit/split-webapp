@@ -19,7 +19,7 @@ export const insertDateMention = (
   }
 
   const formattedDate = day.toFormat("dd-MM-yyyy");
-
+  
   switch (datePeriodClicked.value) {
     case "before":
       removeWordFromEditor(editor, "before:");
@@ -30,7 +30,6 @@ export const insertDateMention = (
           category:category.value
         }
       });
-
       break;
     case "during":
       removeWordFromEditor(editor, "during:");

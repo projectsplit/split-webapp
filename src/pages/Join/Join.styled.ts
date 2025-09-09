@@ -1,36 +1,90 @@
 import styled from "styled-components";
+import { StyledMiddleScreenMenu } from "../../components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
 
-export const StyledJoin = styled.div`
-  min-width: 100%;
+export const StyledJoin = styled(StyledMiddleScreenMenu)`
   display: flex;
-  padding: 16px 16px;
   flex-direction: column;
-  align-items: center;
-  overflow-y: auto;
-  height: 100%;
-  gap: 16px;
-  
-  .noData {
+  overflow: auto;
+  box-sizing: border-box;
+  max-height: 50%;
+  padding: 0px;
+  background-color: ${({ theme }) => theme.layer2};
+  padding-bottom: 20px;
+
+  .spinner {
     display: flex;
     flex-direction: column;
+    flex: 1;
     align-items: center;
     justify-content: center;
-    flex:1;
-    
-    .msg {
-      opacity: 0.5;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    margin-top: 0.5rem;
+    height: 100%;
+  }
+  
+  .headerSeparator {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background-color: ${({ theme }) => theme.layer2};
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1rem;
+    .separator {
+      transform: translateZ(0);
+      position: sticky;
     }
-    
-    .icon {
+    .header {
       display: flex;
-      font-size: 100px;
-      opacity: 0.5;
+      justify-content: center;
+      align-items: center;
+      padding-bottom: 10px;
+
+      .info {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
-    
+  .NoErrors {
+    .text {
+      padding: 15px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      font-size: 0.9rem;
+      gap: 5px;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+    .buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 15px;
+    }
+  }
+  .errors {
+    .text {
+      padding: 15px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      font-size: 0.9rem;
+      gap: 5px;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      color: ${({ theme }) => theme.redish};
+    }
+    .buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 15px;
+    }
+  }
+
   .invitations {
     display: flex;
     flex-direction: column;

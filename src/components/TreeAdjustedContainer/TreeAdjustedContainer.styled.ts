@@ -3,7 +3,7 @@ import { OptionsContainerProps } from "../../interfaces";
 
 export const StyledTreeAdjustedContainer = styled.div.withConfig({
   shouldForwardProp: (prop) =>
-    !["hasOption", "iconfontsize,optionname"].includes(prop),
+    !["hasOption", "iconfontsize,optionname","$optionColor"].includes(prop),
 })<OptionsContainerProps>`
   position: relative;
   display: flex;
@@ -30,6 +30,7 @@ export const StyledTreeAdjustedContainer = styled.div.withConfig({
     right: ${({ right }) => `${right ? right : 0}rem`};
     font-size: ${({ iconfontsize }) => `${iconfontsize ? iconfontsize : 30}px`};
     z-index: 2;
+    color: ${({ $optionColor }) => $optionColor || "inherit"}
   }
 
   .checkmark {

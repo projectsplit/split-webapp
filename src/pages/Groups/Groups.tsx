@@ -24,12 +24,17 @@ export default function Groups() {
   const currencyMenu = useSignal<string | null>(null);
   const groupIdClicked = useSignal<string>("");
 
-  const { topMenuTitle, activeGroupCatAsState, openGroupOptionsMenu } =
-    useOutletContext<{
-      topMenuTitle: Signal<string>;
-      openGroupOptionsMenu: Signal<boolean>;
-      activeGroupCatAsState: Signal<string>;
-    }>();
+  const {
+    topMenuTitle,
+    activeGroupCatAsState,
+    openGroupOptionsMenu,
+
+  } = useOutletContext<{
+    topMenuTitle: Signal<string>;
+    openGroupOptionsMenu: Signal<boolean>;
+    activeGroupCatAsState: Signal<string>;
+
+  }>();
 
   const navigate = useNavigate();
   const pageSize = 10;
@@ -45,8 +50,13 @@ export default function Groups() {
         ),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
       initialPageParam: "",
-      staleTime: 0
+      staleTime: 0,
     });
+
+  const groups = data?.pages.flatMap((p) => p.groups);
+  const filteredGroups = groups?.filter((g) =>
+    activeGroupCatAsState.value === "Active" ? !g.isArchived : g.isArchived
+  );
 
   useEffect(() => {
     topMenuTitle.value = "Groups";
@@ -56,8 +66,7 @@ export default function Groups() {
     });
   }, [activeGroupCatAsState.value]);
 
-  const groups = data?.pages.flatMap((p) => p.groups);
- 
+
   const updateMostRecentGroupId = useMostRecentGroup();
 
   const onGroupClickHandler = (id: string, groupName: string) => {
@@ -65,17 +74,20 @@ export default function Groups() {
     updateMostRecentGroupId.mutate(id);
   };
 
-  const filteredGroups = groups?.filter((g) =>
-    activeGroupCatAsState.value === "Active" ? !g.isArchived : g.isArchived
-  );
-
   const onIconClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    groupId: string
+    groupId: string,
+    isGroupArchived: boolean,
+    groupName:string
   ) => {
-    e.stopPropagation();
-    groupIdClicked.value = groupId;
-    menu.value = "unarchiveGroup";
+    if (!isGroupArchived) {
+      e.stopPropagation();
+      navigate(`/groups/generatecode/${groupId}?groupname=${encodeURIComponent(groupName)}`);
+    } else {
+      e.stopPropagation();
+      groupIdClicked.value = groupId;
+      menu.value = "unarchiveGroup";
+    }
   };
 
   return (
@@ -115,13 +127,11 @@ export default function Groups() {
               <div key={g.id}>
                 <TreeAdjustedContainer
                   onClick={() => onGroupClickHandler(g.id, g.name)}
-                  hasOption={
-                    activeGroupCatAsState.value === "Archived" ? true : false
-                  }
+                  hasOption={true}
                   optionname={
                     activeGroupCatAsState.value === "Archived"
                       ? "arrow-undo-outline"
-                      : null
+                      : "qr-code"
                   }
                   iconfontsize={30}
                   right={0.8}
@@ -132,9 +142,12 @@ export default function Groups() {
                   onIconClick={(
                     e: React.MouseEvent<HTMLDivElement, MouseEvent>
                   ) =>
-                    activeGroupCatAsState.value === "Archived"
-                      ? onIconClick(e, g.id)
-                      : null
+                    onIconClick(
+                      e,
+                      g.id,
+                      activeGroupCatAsState.value === "Archived",
+                      g.name
+                    )
                   }
                 >
                   <div className="groupName">{g.name}</div>

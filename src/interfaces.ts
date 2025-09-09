@@ -32,6 +32,8 @@ import {
   BeautifulMentionsItemData,
   BeautifulMentionsMenuProps,
 } from "lexical-beautiful-mentions";
+import { UseMutateFunction } from "@tanstack/react-query";
+import { NavigateFunction } from "react-router-dom";
 
 export interface ExpenseProps {
   timeZoneId: string;
@@ -120,7 +122,7 @@ export interface DateTimePickerProps {
   calendarIsOpen?: Signal<boolean>;
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
-  category:Signal<string>
+  category: Signal<string>;
 }
 
 export interface DateTimeProps {
@@ -129,6 +131,7 @@ export interface DateTimeProps {
   timeZoneId: string;
   isEdit: boolean;
   withLexicalContext?: boolean;
+  category: Signal<string>;
 }
 
 export interface MemberPickerProps {
@@ -151,7 +154,7 @@ export interface DayPickerProps {
   calendarIsOpen?: Signal<boolean>;
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
-  category:Signal<string>
+  category: Signal<string>;
 }
 
 export interface ScrollPickerProps {
@@ -351,7 +354,7 @@ export interface MenuProps {
 
 export interface MenuAnimationBackgroundProps extends MenuProps {}
 export interface SettingsMenuAnimationProps extends MenuProps {
-  userInfo: UserInfo|undefined;
+  userInfo: UserInfo | undefined;
 }
 export interface LogoStripeProps extends MenuProps {}
 
@@ -367,7 +370,7 @@ export interface CreateGroupProps extends MenuProps {
 export interface SettingsMenuProps {
   menu: Signal<string | null>;
   nodeRef: React.MutableRefObject<null>;
-  userInfo: UserInfo|undefined;
+  userInfo: UserInfo | undefined;
 }
 
 export interface TopMenuProps {
@@ -456,7 +459,6 @@ export interface BarsWithLegendsProps {
   bar1Color: string;
   bar2Color: string;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-
 }
 
 export interface TransfersProps {
@@ -477,7 +479,7 @@ export interface MemberProps {
   isGuest: boolean;
   totalSpent: Record<string, Record<string, number>>;
   group: Group;
- guestToBeReplaced:Signal<{ guestId: string; guestName: string }>
+  guestToBeReplaced: Signal<{ guestId: string; guestName: string }>;
 }
 
 export interface RenderScenariosProps {
@@ -532,7 +534,7 @@ export interface DescriptionAndTreeProps {
 
 export interface SettleUpButtonProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
-  children:any
+  children: any;
 }
 
 export interface SettleUpAnimationProps {
@@ -556,16 +558,16 @@ export interface PillProps {
   onClose?: (event: React.MouseEvent<HTMLDivElement>) => void;
   fontSize?: string;
   $border: boolean;
-  $closeButtonColor?:string;
+  $closeButtonColor?: string;
 }
 export interface AddNewUserAnimationProps extends MenuProps {
   groupName: string | undefined;
-  guestToBeReplaced?:{ guestId: string; guestName: string }
+  guestToBeReplaced?: { guestId: string; guestName: string };
 }
 
 export interface SearchUsersToInviteProps extends MenuProps {
   groupName: string | undefined;
-  guestToBeReplaced?:{ guestId: string; guestName: string }
+  guestToBeReplaced?: { guestId: string; guestName: string };
 }
 export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
 
@@ -688,7 +690,7 @@ export interface RenameGroupAnimationProps extends MenuProps {
 export interface RemoveUserFromGroupMenuProps {
   openRemoveUserMenu: Signal<boolean>;
   groupId: string | undefined;
-  userInfo: UserInfo|undefined;
+  userInfo: UserInfo | undefined;
 }
 
 export interface GroupTotalsByCurrencyAnimationProps extends MenuProps {
@@ -718,12 +720,12 @@ export interface BarsAndAmountsProps {
 }
 
 export interface EditUsernameProps {
-  existingUsername: string|undefined;
+  existingUsername: string | undefined;
   editUsernameMenu: Signal<string | null>;
 }
 
 export interface EditUsernameAnimationProps {
-  existingUsername: string|undefined;
+  existingUsername: string | undefined;
   editUsernameMenu: Signal<string | null>;
 }
 
@@ -748,12 +750,11 @@ export interface NameAndAmountsProps {
 
 export interface CurrentSearchFieldProps {
   currentSearch: string;
-  filterState: Signal<CreateExpenseFilterRequest |CreateTransferFilterRequest>;
+  filterState: Signal<CreateExpenseFilterRequest | CreateTransferFilterRequest>;
   removedFilter: Signal<boolean>;
   submitButtonIsActive: Signal<boolean>;
-  showFreeTextPill:Signal<boolean>
+  showFreeTextPill: Signal<boolean>;
 }
-
 
 export interface EditorContentHandle {
   clearEditor: () => void;
@@ -772,15 +773,15 @@ export interface LexicalEditorProps {
 
   labels: FetchedLabel[];
   expenseFilterState: Signal<CreateExpenseFilterRequest>;
-  transferFilterState:Signal<CreateTransferFilterRequest>
+  transferFilterState: Signal<CreateTransferFilterRequest>;
   setEditorState: React.Dispatch<React.SetStateAction<EditorState | null>>;
   contentEditableHeight: number;
   members: FetchedMembers | undefined;
   cancelled: Signal<boolean>;
   filteredMembers: Signal<FilteredMembers>;
   timeZoneId: string;
-  filteredLabels:Signal<FetchedLabel[]>;
-  category:Signal<string>
+  filteredLabels: Signal<FetchedLabel[]>;
+  category: Signal<string>;
 }
 
 export interface FilterCalendarProps {
@@ -788,7 +789,7 @@ export interface FilterCalendarProps {
   showOptions: Signal<boolean>;
   datePeriodClicked: Signal<string>;
   timeZoneId: string;
-  category:Signal<string>
+  category: Signal<string>;
 }
 export interface SearchMenuProps {
   $contentEditableHeight: number;
@@ -812,7 +813,7 @@ export interface SearchDateButtonProps extends SearchCategoryButtonProps {
   showOptions: Signal<boolean>;
   calendarIsOpen: Signal<boolean>;
   datePeriodClicked: Signal<string>;
-  filterState: Signal<CreateExpenseFilterRequest|CreateTransferFilterRequest>;
+  filterState: Signal<CreateExpenseFilterRequest | CreateTransferFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
 }
@@ -822,14 +823,14 @@ export interface MembersPillsDisplayProps {
   filteredMembers: Signal<FilteredMembers>;
   showOptions: Signal<boolean>;
   submitButtonIsActive: Signal<boolean>;
-  expenseFilterState: Signal<CreateExpenseFilterRequest>,
-  transferFilterState:Signal<CreateTransferFilterRequest>,
+  expenseFilterState: Signal<CreateExpenseFilterRequest>;
+  transferFilterState: Signal<CreateTransferFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
 }
-export interface LabelsPillsDisplayProps{
+export interface LabelsPillsDisplayProps {
   category: string;
-  filteredLabels: Signal<FetchedLabel[]>
+  filteredLabels: Signal<FetchedLabel[]>;
   showOptions: Signal<boolean>;
   submitButtonIsActive: Signal<boolean>;
   filterState: Signal<CreateExpenseFilterRequest>;
@@ -841,8 +842,8 @@ export interface SearchMemberButtonProps extends SearchCategoryButtonProps {
   showOptions: Signal<boolean>;
   filteredMembers: Signal<FilteredMembers>;
   submitButtonIsActive: Signal<boolean>;
-  expenseFilterState: Signal<CreateExpenseFilterRequest>,
-  transferFilterState:Signal<CreateTransferFilterRequest>,
+  expenseFilterState: Signal<CreateExpenseFilterRequest>;
+  transferFilterState: Signal<CreateTransferFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
 }
@@ -879,31 +880,31 @@ export interface MentionsToolbarProps {
   // filteredMembers:Members;
   submitButtonIsActive: Signal<boolean>;
   expenseFilterState: Signal<CreateExpenseFilterRequest>;
-  transferFilterState:Signal<CreateTransferFilterRequest>;
+  transferFilterState: Signal<CreateTransferFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
   filteredMembers: Signal<FilteredMembers>;
   calendarIsOpen: Signal<boolean>;
   datePeriodClicked: Signal<string>;
-  filteredLabels:Signal<FetchedLabel[]>
-  category:Signal<string>
-  showFreeTextPill:Signal<boolean>
+  filteredLabels: Signal<FetchedLabel[]>;
+  category: Signal<string>;
+  showFreeTextPill: Signal<boolean>;
 }
 export interface SearchTransactionsProps {
   menu: Signal<string | null>;
   group: Group;
-  userInfo: UserInfo|undefined;
+  userInfo: UserInfo | undefined;
   timeZoneId: string;
-  expenseParsedFilters:Signal<ExpenseParsedFilters>
-  transferParsedFilters:Signal<TransferParsedFilters>
+  expenseParsedFilters: Signal<ExpenseParsedFilters>;
+  transferParsedFilters: Signal<TransferParsedFilters>;
 }
 export interface SearchTransactionAnimationProps {
   menu: Signal<string | null>;
   group: Group;
-  userInfo: UserInfo|undefined;
+  userInfo: UserInfo | undefined;
   timeZoneId: string;
-  expenseParsedFilters:Signal<ExpenseParsedFilters>
-  transferParsedFilters:Signal<TransferParsedFilters>
+  expenseParsedFilters: Signal<ExpenseParsedFilters>;
+  transferParsedFilters: Signal<TransferParsedFilters>;
 }
 
 export interface CycleSelectionProps {
@@ -922,7 +923,7 @@ export interface AnalyticsYearSelectionAnimationProps
 
 export interface AnalyticsTimePeriodSelectionAnimationProps
   extends AnalyticsSelectionAnimationProps {}
-  
+
 export interface TopBarWithBackButtonProps {
   header: string;
   onClick: MouseEventHandler<SVGElement>;
@@ -993,14 +994,14 @@ export interface ManageBudgetMenuProps {
 
 export interface DeleteBudgetConfirmationAnimationProps {
   menu: Signal<string | null>;
- removeBudget: () => Promise<void>
+  removeBudget: () => Promise<void>;
 }
 
-export interface ConfirmationForBudgetDeletionProps extends DeleteBudgetConfirmationAnimationProps{};
+export interface ConfirmationForBudgetDeletionProps
+  extends DeleteBudgetConfirmationAnimationProps {}
 export interface ManageBudgetAnimationProps {
-    menu: Signal<string | null>;
+  menu: Signal<string | null>;
 }
-
 
 export interface CalendarProps {
   children: any;
@@ -1042,4 +1043,41 @@ export interface InfoBoxAnimationProps {
 export interface CreateBudgetConfirmationAnimationProps {
   submitBudget: () => Promise<void>;
   menu: Signal<string | null>;
+}
+
+export interface ShareGroupProps {
+  groupName: string;
+  isPending: boolean;
+  qrRef: React.RefObject<HTMLDivElement>;
+  invitationCode: string | null;
+  mutate: UseMutateFunction<
+    any,
+    Error,
+    {
+      groupId: string;
+    },
+    unknown
+  >;
+  groupId: string;
+  navigate: NavigateFunction;
+  setInvitationCode: React.Dispatch<React.SetStateAction<string | null>>;
+}
+export interface RevokeAccessProps {
+  groupId: string;
+  groupName: string;
+
+  invitationCode: string|null;
+  mostRecentCodeHasBeenRevoked: Signal<boolean>;
+}
+
+export interface RevokeAccessItemProps {
+  expires: string;
+  id: string;
+  maxUses: number;
+  timesUsed: number;
+  timeZone: string;
+  groupId: string;
+
+  invitationCode: string|null;
+  mostRecentCodeHasBeenRevoked: Signal<boolean>;
 }

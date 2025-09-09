@@ -4,7 +4,6 @@ import { RenameGroupMenuProps } from "../../../interfaces";
 import MyButton from "../../MyButton/MyButton";
 import Separator from "../../Separator/Separator";
 import IonIcon from "@reacticons/ionicons";
-import { MdEdit } from "react-icons/md";
 import { useUpdateGroupName } from "../../../api/services/useUpdateGroupName";
 import { useSignal } from "@preact/signals-react";
 

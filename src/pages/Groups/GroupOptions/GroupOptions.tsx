@@ -1,6 +1,6 @@
-import { IoClose, IoExit, IoPersonRemove } from "react-icons/io5";
+import { IoClose, IoExit, IoPersonRemove, IoQrCode } from "react-icons/io5";
 import { StyledGroupOptions } from "./GroupOptions.styled";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
 import Separator from "../../../components/Separator/Separator";
 import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
@@ -19,6 +19,7 @@ import RemoveUserFromGroupMenu from "../../../components/Menus/RemoveUserFromGro
 import { useEffect } from "react";
 
 export default function GroupOptions({ group }: GroupOptionsProps) {
+  const navigate=useNavigate()
   const { userInfo, openGroupOptionsMenu } = useOutletContext<{
     openGroupOptionsMenu: Signal<boolean>;
     userInfo: UserInfo;
@@ -85,7 +86,6 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
     };
   }, [openGroupOptionsMenu]);
 
- 
   return (
     <StyledGroupOptions>
       {" "}
@@ -131,6 +131,20 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
         >
           <IoPersonRemove className="icon" />
           <div className="description">Remove Member </div>
+        </div>
+
+        <div
+          className="option"
+          onClick={() => {
+            const searchParams = new URLSearchParams(location.search);
+            searchParams.set("in", 'true');
+           navigate(`/groups/generatecode/${group?.id}?${searchParams.toString()}`, {
+              replace: true,
+            });
+          }}
+        >
+          <IoQrCode className="icon" />
+          <div className="description">Share Group </div>
         </div>
 
         <div
