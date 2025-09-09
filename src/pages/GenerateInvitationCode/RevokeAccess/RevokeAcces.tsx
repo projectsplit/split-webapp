@@ -6,7 +6,6 @@ import RevokeAccessItem from "./RevokeAccessItem/RevokeAccessItem";
 import Spinner from "../../../components/Spinner/Spinner";
 import { UserInfo } from "../../../types";
 import { useOutletContext } from "react-router-dom";
-import { useEffect } from "react";
 import { TbQrcodeOff } from "react-icons/tb";
 
 export default function RevokeAccess({
@@ -21,9 +20,6 @@ export default function RevokeAccess({
     userInfo: UserInfo;
   }>();
 
-  // useEffect(() => {
-  //   categorySwitched.value = category.value === "Revoke Access";
-  // }, [category.value]);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useGetGroupJoinCodes(groupId, pageSize);

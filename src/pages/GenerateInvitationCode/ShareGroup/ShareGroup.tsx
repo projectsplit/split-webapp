@@ -23,7 +23,7 @@ export default function ShareGroup({
       const qrCode = new QRCodeStyling({
         width: 250,
         height: 250,
-        data: `http://192.168.2.2:5173/j/${invitationCode}`,
+        data: `https://abcsplit.uk/j/${invitationCode}`,
         dotsOptions: {
           color: "#000000",
           type: "rounded", // Trendy: rounded dots
@@ -75,7 +75,7 @@ export default function ShareGroup({
                   onClick={() =>
                     copyToClipboard(
                       invitationCode,
-                      "http://192.168.2.2:5173/j/"
+                      "https://abcsplit.uk/j/"
                     )
                   }
                 >
