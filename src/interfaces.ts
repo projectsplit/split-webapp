@@ -1065,8 +1065,7 @@ export interface ShareGroupProps {
 export interface RevokeAccessProps {
   groupId: string;
   groupName: string;
-  category: Signal<string>;
-  categorySwitched: Signal<boolean>;
+
   invitationCode: string|null;
   mostRecentCodeHasBeenRevoked: Signal<boolean>;
 }
@@ -1078,7 +1077,7 @@ export interface RevokeAccessItemProps {
   timesUsed: number;
   timeZone: string;
   groupId: string;
-  categorySwitched: Signal<boolean>;
+
   invitationCode: string|null;
   mostRecentCodeHasBeenRevoked: Signal<boolean>;
 }

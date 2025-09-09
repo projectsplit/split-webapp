@@ -7,32 +7,47 @@ import { CategorySelector } from "../../components/CategorySelector/CategorySele
 import { useSignal } from "@preact/signals-react";
 import ShareGroup from "./ShareGroup/ShareGroup";
 import RevokeAccess from "./RevokeAccess/RevokeAcces";
+import useGroup from "../../api/services/useGroup";
 
 export default function GenerateInvitationCode() {
   const params = useParams();
   const navigate = useNavigate();
   const [invitationCode, setInvitationCode] = useState<string | null>(
-    new URLSearchParams(location.search).get("invitationCode")
+    new URLSearchParams(location.search).get("invitationcode")
   );
-  const groupName = new URLSearchParams(location.search).get("groupName") || "";
+  const [groupName, setGroupName] = useState<string>(
+    new URLSearchParams(location.search).get("groupname") || ""
+  );
   const qrRef = useRef<HTMLDivElement>(null);
   const category = useSignal<string>("Share Group");
-  const categorySwitched = useSignal(category.value === "Revoke Access");
   const mostRecentCodeHasBeenRevoked = useSignal<boolean>(true);
   const isFirstRender = useRef(true);
+  const landedFromGroup = new URLSearchParams(location.search).get("in");
   const { mutate: mutateGenerate, isPending: isPendingGenerate } =
     useGenerateInvitationCode();
 
+  const group = useGroup(params.groupid);
 
   useEffect(() => {
-    if (mostRecentCodeHasBeenRevoked.value ||isFirstRender.current) {
+    if (group?.data?.name && !groupName) {
+      setGroupName(group.data.name);
+      const searchParams = new URLSearchParams(location.search);
+      searchParams.set("groupname", encodeURIComponent(group.data.name));
+      navigate(`${location.pathname}?${searchParams.toString()}`, {
+        replace: true,
+      });
+    }
+  }, [group?.data?.name, groupName, navigate]);
+
+  useEffect(() => {
+    if (mostRecentCodeHasBeenRevoked.value || isFirstRender.current) {
       mutateGenerate(
         { groupId: params.groupid || "" },
         {
           onSuccess: (code: string) => {
             setInvitationCode(code);
             const searchParams = new URLSearchParams(location.search);
-            searchParams.set("invitationCode", code);
+            searchParams.set("invitationcode", code);
             navigate(`${location.pathname}?${searchParams.toString()}`, {
               replace: true,
             });
@@ -63,7 +78,13 @@ export default function GenerateInvitationCode() {
 
           <div
             className="closeButtonContainer"
-            onClick={() => navigate("/groups")}
+            onClick={() => {
+              if (landedFromGroup === "true") {
+                navigate(`/groups/${params.groupid}`,{replace:true});
+              } else {
+                navigate("/groups",{replace:true});
+              }
+            }}
           >
             <IoClose className="closeButton" />
           </div>
@@ -84,8 +105,6 @@ export default function GenerateInvitationCode() {
         <RevokeAccess
           groupId={params.groupid || ""}
           groupName={groupName}
-          category={category}
-          categorySwitched={categorySwitched}
           mostRecentCodeHasBeenRevoked={mostRecentCodeHasBeenRevoked}
           invitationCode={invitationCode}
         />

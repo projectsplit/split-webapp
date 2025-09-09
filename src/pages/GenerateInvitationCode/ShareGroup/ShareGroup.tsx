@@ -16,15 +16,14 @@ export default function ShareGroup({
   mutate,
   groupId,
   navigate,
-  setInvitationCode
+  setInvitationCode,
 }: ShareGroupProps) {
-
   useEffect(() => {
     if (invitationCode && qrRef.current) {
       const qrCode = new QRCodeStyling({
         width: 250,
         height: 250,
-        data: `https://yourapp.com/join/${invitationCode}`,
+        data: `http://192.168.2.2:5173/j/${invitationCode}`,
         dotsOptions: {
           color: "#000000",
           type: "rounded", // Trendy: rounded dots
@@ -53,10 +52,12 @@ export default function ShareGroup({
       {" "}
       {invitationCode ? (
         <div>
-          <div className="promptMessage">
-            <div className="prompt"></div>Scan this QR code with another device
-            to join <strong className="groupName">{groupName}</strong>
-          </div>
+          {groupName.length>0?<div className="promptMessage">
+            Scan this QR code with another device to join{" "}
+            <strong className="groupName">{groupName}</strong>
+          </div>:<div className="promptMessage">
+            Scan this QR code with another device
+          </div>}
           <div className="qrCodeContainer">
             {isPending ? <Spinner /> : <div className="qrCode" ref={qrRef} />}
           </div>
@@ -66,14 +67,17 @@ export default function ShareGroup({
         <div className="codentext">
           {invitationCode ? (
             <>
-              <div className="text">
-                Alternatively, share this code:
-              </div>
+              <div className="text">Alternatively, share this code:</div>
               <div className="code">
                 <strong>{invitationCode}</strong>
                 <div
                   className="copy"
-                  onClick={() => copyToClipboard(invitationCode,"http://192.168.2.2:5173/j/")}
+                  onClick={() =>
+                    copyToClipboard(
+                      invitationCode,
+                      "http://192.168.2.2:5173/j/"
+                    )
+                  }
                 >
                   <IoCopy />
                 </div>
@@ -86,12 +90,12 @@ export default function ShareGroup({
             <MyButton
               onClick={() =>
                 mutate(
-                  { groupId: groupId  },
+                  { groupId: groupId },
                   {
                     onSuccess: (code: string) => {
                       setInvitationCode(code);
                       const searchParams = new URLSearchParams(location.search);
-                      searchParams.set("invitationCode", code);
+                      searchParams.set("invitationcode", code);
                       navigate(
                         `${location.pathname}?${searchParams.toString()}`,
                         { replace: true }

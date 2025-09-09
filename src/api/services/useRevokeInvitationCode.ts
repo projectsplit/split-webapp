@@ -7,7 +7,6 @@ import { GetJoinCodesResponse } from "../../types";
 export const useRevokeInvitationCode = (
   groupId: string,
   pageSize: number,
-  categorySwitched: Signal<boolean>,
   invitationCode: string | null,
   mostRecentCodeHasBeenRevoked:Signal<boolean>
 ) => {
@@ -17,12 +16,12 @@ export const useRevokeInvitationCode = (
     onSuccess: (_, { code }) => {
       const url = new URL(window.location.href);
       if (code === invitationCode) {
-        url.searchParams.delete("invitationCode");
+        url.searchParams.delete("invitationcode");
         window.history.replaceState({}, "", url);
         mostRecentCodeHasBeenRevoked.value=true
       }
       queryClient.setQueryData(
-        ["getGroupJoinCodes", groupId, pageSize, categorySwitched.value],
+        ["getGroupJoinCodes", groupId, pageSize],
         (oldData: { pages: GetJoinCodesResponse[] } | undefined) => {
           if (!oldData) return oldData;
           return {

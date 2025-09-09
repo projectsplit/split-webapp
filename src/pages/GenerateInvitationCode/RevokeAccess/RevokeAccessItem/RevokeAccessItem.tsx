@@ -13,7 +13,6 @@ export default function RevokeAccessItem({
   timesUsed,
   timeZone,
   groupId,
-  categorySwitched,
   invitationCode,
   mostRecentCodeHasBeenRevoked,
 }: RevokeAccessItemProps) {
@@ -21,7 +20,6 @@ export default function RevokeAccessItem({
     useRevokeInvitationCode(
       groupId || "",
       10,
-      categorySwitched,
       invitationCode,
       mostRecentCodeHasBeenRevoked
     );

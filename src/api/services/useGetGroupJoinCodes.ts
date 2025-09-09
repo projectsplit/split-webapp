@@ -4,8 +4,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Signal } from "@preact/signals-react";
 import { GetJoinCodesResponse } from "../../types";
 
-export const useGetGroupJoinCodes = (groupId: string, pageSize: number, categorySwitched:Signal<boolean>) => {
-  const queryKey = ["getGroupJoinCodes", groupId, pageSize, categorySwitched.value];
+export const useGetGroupJoinCodes = (groupId: string, pageSize: number) => {
+  const queryKey = ["getGroupJoinCodes", groupId, pageSize];
 
   const query = useInfiniteQuery({
     queryKey,

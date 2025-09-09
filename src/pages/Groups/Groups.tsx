@@ -82,7 +82,7 @@ export default function Groups() {
   ) => {
     if (!isGroupArchived) {
       e.stopPropagation();
-      navigate(`/groups/generatecode/${groupId}?groupName=${encodeURIComponent(groupName)}`);
+      navigate(`/groups/generatecode/${groupId}?groupname=${encodeURIComponent(groupName)}`);
     } else {
       e.stopPropagation();
       groupIdClicked.value = groupId;
@@ -131,7 +131,7 @@ export default function Groups() {
                   optionname={
                     activeGroupCatAsState.value === "Archived"
                       ? "arrow-undo-outline"
-                      : "qr-code-sharp"
+                      : "qr-code"
                   }
                   iconfontsize={30}
                   right={0.8}
