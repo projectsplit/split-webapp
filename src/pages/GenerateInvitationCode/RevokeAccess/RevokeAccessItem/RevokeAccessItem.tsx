@@ -21,13 +21,13 @@ export default function RevokeAccessItem({
       groupId || "",
       10,
       invitationCode,
-      mostRecentCodeHasBeenRevoked
+      mostRecentCodeHasBeenRevoked,
     );
 
   return (
     <StyledRevokeAccessItem>
       {" "}
-      <div className="codeAndCopy" onClick={()=>copyToClipboard(id,"https://abcsplit.uk/j/")}>
+      <div className="codeAndCopy" onClick={()=>copyToClipboard(id,"http://192.168.2.2:5173/j/")}>
         <div className="code"> {id} </div>
         <IoCopy />
       </div>

@@ -8,8 +8,12 @@ import { useSignal } from "@preact/signals-react";
 import ShareGroup from "./ShareGroup/ShareGroup";
 import RevokeAccess from "./RevokeAccess/RevokeAcces";
 import useGroup from "../../api/services/useGroup";
+import { useGetGroupJoinCodes } from "../../api/services/useGetGroupJoinCodes";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function GenerateInvitationCode() {
+  const pageSize = 10;
+  const queryClient = useQueryClient();
   const params = useParams();
   const navigate = useNavigate();
   const [invitationCode, setInvitationCode] = useState<string | null>(
@@ -23,24 +27,28 @@ export default function GenerateInvitationCode() {
   const mostRecentCodeHasBeenRevoked = useSignal<boolean>(true);
   const isFirstRender = useRef(true);
   const landedFromGroup = new URLSearchParams(location.search).get("in");
+
   const { mutate: mutateGenerate, isPending: isPendingGenerate } =
     useGenerateInvitationCode();
 
-  const group = useGroup(params.groupid);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
+    useGetGroupJoinCodes(params.groupid || "", pageSize);
+
+  const codesData = data?.pages.flatMap((x) => x.codes) || [];
+  const group=useGroup(params.groupid)
 
   useEffect(() => {
     if (group?.data?.name && !groupName) {
       setGroupName(group.data.name);
       const searchParams = new URLSearchParams(location.search);
       searchParams.set("groupname", encodeURIComponent(group.data.name));
-      navigate(`${location.pathname}?${searchParams.toString()}`, {
-        replace: true,
-      });
+     
     }
-  }, [group?.data?.name, groupName, navigate]);
+  }, [group?.data?.name, groupName]);
 
   useEffect(() => {
-    if (mostRecentCodeHasBeenRevoked.value || isFirstRender.current) {
+
+if (mostRecentCodeHasBeenRevoked.value || isFirstRender.current) {
       mutateGenerate(
         { groupId: params.groupid || "" },
         {
@@ -53,6 +61,10 @@ export default function GenerateInvitationCode() {
             });
             mostRecentCodeHasBeenRevoked.value = false;
             isFirstRender.current = false;
+
+            queryClient.invalidateQueries({
+              queryKey: ["getGroupJoinCodes", params.groupid || "", pageSize],
+            });
           },
         }
       );
@@ -80,9 +92,9 @@ export default function GenerateInvitationCode() {
             className="closeButtonContainer"
             onClick={() => {
               if (landedFromGroup === "true") {
-                navigate(`/groups/${params.groupid}`,{replace:true});
+                navigate(`/groups/${params.groupid}`, { replace: true });
               } else {
-                navigate("/groups",{replace:true});
+                navigate("/groups", { replace: true });
               }
             }}
           >
@@ -103,7 +115,13 @@ export default function GenerateInvitationCode() {
         />
       ) : (
         <RevokeAccess
+          category={category}
           groupId={params.groupid || ""}
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
+          isFetching={isFetching}
+          isFetchingNextPage={isFetchingNextPage}
+          data={data}
           groupName={groupName}
           mostRecentCodeHasBeenRevoked={mostRecentCodeHasBeenRevoked}
           invitationCode={invitationCode}

@@ -7,6 +7,7 @@ import QRCodeStyling from "qr-code-styling";
 import logo from "../../../styles/logo/logoRounded.png";
 import MyButton from "../../../components/MyButton/MyButton";
 import { copyToClipboard } from "../../../helpers/copyToClipboars";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ShareGroup({
   groupName,
@@ -18,12 +19,15 @@ export default function ShareGroup({
   navigate,
   setInvitationCode,
 }: ShareGroupProps) {
+  const pageSize = 10;
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     if (invitationCode && qrRef.current) {
       const qrCode = new QRCodeStyling({
         width: 250,
         height: 250,
-        data: `https://abcsplit.uk/j/${invitationCode}`,
+        data: `http://192.168.2.2:5173/j/${invitationCode}`,
         dotsOptions: {
           color: "#000000",
           type: "rounded", // Trendy: rounded dots
@@ -52,12 +56,16 @@ export default function ShareGroup({
       {" "}
       {invitationCode ? (
         <div>
-          {groupName.length>0?<div className="promptMessage">
-            Scan this QR code with another device to join{" "}
-            <strong className="groupName">{groupName}</strong>
-          </div>:<div className="promptMessage">
-            Scan this QR code with another device
-          </div>}
+          {groupName.length > 0 ? (
+            <div className="promptMessage">
+              Scan this QR code with another device to join{" "}
+              <strong className="groupName">{groupName}</strong>
+            </div>
+          ) : (
+            <div className="promptMessage">
+              Scan this QR code with another device
+            </div>
+          )}
           <div className="qrCodeContainer">
             {isPending ? <Spinner /> : <div className="qrCode" ref={qrRef} />}
           </div>
@@ -75,7 +83,7 @@ export default function ShareGroup({
                   onClick={() =>
                     copyToClipboard(
                       invitationCode,
-                      "https://abcsplit.uk/j/"
+                      "http://192.168.2.2:5173/j/"
                     )
                   }
                 >
@@ -93,6 +101,9 @@ export default function ShareGroup({
                   { groupId: groupId },
                   {
                     onSuccess: (code: string) => {
+                      queryClient.invalidateQueries({
+                        queryKey: ["getGroupJoinCodes", groupId, pageSize],
+                      });
                       setInvitationCode(code);
                       const searchParams = new URLSearchParams(location.search);
                       searchParams.set("invitationcode", code);

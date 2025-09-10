@@ -9,20 +9,20 @@ import { useOutletContext } from "react-router-dom";
 import { TbQrcodeOff } from "react-icons/tb";
 
 export default function RevokeAccess({
+  category,
   groupId,
+  hasNextPage,
+  fetchNextPage,
+  isFetching,
+  isFetchingNextPage,
+  data,
   groupName,
   invitationCode,
   mostRecentCodeHasBeenRevoked,
 }: RevokeAccessProps) {
-  const pageSize = 10;
-
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
-
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useGetGroupJoinCodes(groupId, pageSize);
 
   if (isFetching && !isFetchingNextPage) {
     return (
@@ -70,7 +70,6 @@ export default function RevokeAccess({
               timesUsed={code.timesUsed}
               timeZone={userInfo?.timeZone}
               groupId={groupId}
-      
               invitationCode={invitationCode}
               mostRecentCodeHasBeenRevoked={mostRecentCodeHasBeenRevoked}
             />

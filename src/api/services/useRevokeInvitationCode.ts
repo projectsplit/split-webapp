@@ -8,16 +8,18 @@ export const useRevokeInvitationCode = (
   groupId: string,
   pageSize: number,
   invitationCode: string | null,
-  mostRecentCodeHasBeenRevoked:Signal<boolean>
+  mostRecentCodeHasBeenRevoked:Signal<boolean>,
 ) => {
   const queryClient = useQueryClient();
   return useMutation<any, Error, { code: string }>({
     mutationFn: ({ code }) => revokeInvitationCode({ code }),
     onSuccess: (_, { code }) => {
+      
       const url = new URL(window.location.href);
       if (code === invitationCode) {
         url.searchParams.delete("invitationcode");
         window.history.replaceState({}, "", url);
+        console.log("most recent revoked")
         mostRecentCodeHasBeenRevoked.value=true
       }
       queryClient.setQueryData(
@@ -33,7 +35,9 @@ export const useRevokeInvitationCode = (
           };
         }
       );
+
     },
+    
     onError: (error) => {
       console.error(error);
     },
