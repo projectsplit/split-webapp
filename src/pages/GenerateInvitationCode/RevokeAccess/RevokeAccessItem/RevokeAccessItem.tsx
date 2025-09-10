@@ -16,6 +16,7 @@ export default function RevokeAccessItem({
   invitationCode,
   mostRecentCodeHasBeenRevoked,
 }: RevokeAccessItemProps) {
+  
   const { mutate: mutateRevoke, isPending: isPendingRevoke } =
     useRevokeInvitationCode(
       groupId || "",

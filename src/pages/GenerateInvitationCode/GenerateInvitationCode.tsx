@@ -35,30 +35,39 @@ export default function GenerateInvitationCode() {
     useGetGroupJoinCodes(params.groupid || "", pageSize);
 
   const codesData = data?.pages.flatMap((x) => x.codes) || [];
-  const group=useGroup(params.groupid)
+
+  const validCodeAlreadyExists =
+    codesData &&
+    codesData.length > 0 &&
+    codesData[0].timesUsed < codesData[0].maxUses &&
+    new Date(codesData[0].expires) >= new Date();
+
+  const group = useGroup(params.groupid);
 
   useEffect(() => {
     if (group?.data?.name && !groupName) {
       setGroupName(group.data.name);
       const searchParams = new URLSearchParams(location.search);
       searchParams.set("groupname", encodeURIComponent(group.data.name));
-     
     }
   }, [group?.data?.name, groupName]);
 
   useEffect(() => {
+    if (isFetching) return;
+    const searchParams = new URLSearchParams(location.search);
 
-if (mostRecentCodeHasBeenRevoked.value || isFirstRender.current) {
+    if (validCodeAlreadyExists) {
+      setInvitationCode(codesData[0].id);
+      searchParams.set("invitationcode", codesData[0].id);
+      mostRecentCodeHasBeenRevoked.value = false;
+      isFirstRender.current = false;
+    } else if (mostRecentCodeHasBeenRevoked.value || isFirstRender.current) {
       mutateGenerate(
         { groupId: params.groupid || "" },
         {
           onSuccess: (code: string) => {
             setInvitationCode(code);
-            const searchParams = new URLSearchParams(location.search);
             searchParams.set("invitationcode", code);
-            navigate(`${location.pathname}?${searchParams.toString()}`, {
-              replace: true,
-            });
             mostRecentCodeHasBeenRevoked.value = false;
             isFirstRender.current = false;
 
@@ -69,7 +78,7 @@ if (mostRecentCodeHasBeenRevoked.value || isFirstRender.current) {
         }
       );
     }
-  }, [mutateGenerate, category.value]);
+  }, [mutateGenerate, category.value, isFetching]);
 
   return (
     <StyledGenerateInvitationCode>
@@ -115,7 +124,6 @@ if (mostRecentCodeHasBeenRevoked.value || isFirstRender.current) {
         />
       ) : (
         <RevokeAccess
-          category={category}
           groupId={params.groupid || ""}
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}

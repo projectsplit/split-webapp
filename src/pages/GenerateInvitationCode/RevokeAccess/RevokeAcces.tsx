@@ -1,7 +1,6 @@
 import { StyledRevokeAccess } from "./RevokeAccess.styled";
 import Sentinel from "../../../components/Sentinel";
 import { RevokeAccessProps } from "../../../interfaces";
-import { useGetGroupJoinCodes } from "../../../api/services/useGetGroupJoinCodes";
 import RevokeAccessItem from "./RevokeAccessItem/RevokeAccessItem";
 import Spinner from "../../../components/Spinner/Spinner";
 import { UserInfo } from "../../../types";
@@ -9,7 +8,6 @@ import { useOutletContext } from "react-router-dom";
 import { TbQrcodeOff } from "react-icons/tb";
 
 export default function RevokeAccess({
-  category,
   groupId,
   hasNextPage,
   fetchNextPage,

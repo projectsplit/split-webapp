@@ -107,10 +107,6 @@ export default function ShareGroup({
                       setInvitationCode(code);
                       const searchParams = new URLSearchParams(location.search);
                       searchParams.set("invitationcode", code);
-                      navigate(
-                        `${location.pathname}?${searchParams.toString()}`,
-                        { replace: true }
-                      );
                     },
                   }
                 )

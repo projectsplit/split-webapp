@@ -1064,7 +1064,6 @@ export interface ShareGroupProps {
   setInvitationCode: React.Dispatch<React.SetStateAction<string | null>>;
 }
 export interface RevokeAccessProps {
-  category: Signal<string>
   groupId:string;
   hasNextPage: boolean;
   fetchNextPage: (options?: FetchNextPageOptions) => Promise<InfiniteQueryObserverResult<InfiniteData<GetJoinCodesResponse, unknown>, Error>>;
