@@ -24,6 +24,7 @@ import {
   ExpenseParsedFilters,
   TransferParsedFilters,
   BudgetInfoResponse,
+  GetJoinCodesResponse,
 } from "./types";
 import { Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
@@ -32,7 +33,7 @@ import {
   BeautifulMentionsItemData,
   BeautifulMentionsMenuProps,
 } from "lexical-beautiful-mentions";
-import { UseMutateFunction } from "@tanstack/react-query";
+import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult, UseMutateFunction } from "@tanstack/react-query";
 import { NavigateFunction } from "react-router-dom";
 
 export interface ExpenseProps {
@@ -1059,14 +1060,18 @@ export interface ShareGroupProps {
     unknown
   >;
   groupId: string;
-  navigate: NavigateFunction;
   setInvitationCode: React.Dispatch<React.SetStateAction<string | null>>;
 }
 export interface RevokeAccessProps {
-  groupId: string;
+  groupId:string;
+  hasNextPage: boolean;
+  fetchNextPage: (options?: FetchNextPageOptions) => Promise<InfiniteQueryObserverResult<InfiniteData<GetJoinCodesResponse, unknown>, Error>>;
+  isFetching: boolean;
+  isFetchingNextPage: boolean;
+  data: InfiniteData<GetJoinCodesResponse, unknown> | undefined;
   groupName: string;
 
-  invitationCode: string|null;
+  invitationCode: string | null;
   mostRecentCodeHasBeenRevoked: Signal<boolean>;
 }
 
@@ -1078,6 +1083,6 @@ export interface RevokeAccessItemProps {
   timeZone: string;
   groupId: string;
 
-  invitationCode: string|null;
+  invitationCode: string | null;
   mostRecentCodeHasBeenRevoked: Signal<boolean>;
 }

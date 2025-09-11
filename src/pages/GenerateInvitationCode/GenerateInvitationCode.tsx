@@ -8,16 +8,16 @@ import { useSignal } from "@preact/signals-react";
 import ShareGroup from "./ShareGroup/ShareGroup";
 import RevokeAccess from "./RevokeAccess/RevokeAcces";
 import useGroup from "../../api/services/useGroup";
+import { useGetGroupJoinCodes } from "../../api/services/useGetGroupJoinCodes";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function GenerateInvitationCode() {
+  const pageSize = 10;
+  const queryClient = useQueryClient();
   const params = useParams();
   const navigate = useNavigate();
-  const [invitationCode, setInvitationCode] = useState<string | null>(
-    new URLSearchParams(location.search).get("invitationcode")
-  );
-  const [groupName, setGroupName] = useState<string>(
-    new URLSearchParams(location.search).get("groupname") || ""
-  );
+  const [invitationCode, setInvitationCode] = useState<string | null>(null);
+  const [groupName, setGroupName] = useState<string>("");
   const qrRef = useRef<HTMLDivElement>(null);
   const category = useSignal<string>("Share Group");
   const mostRecentCodeHasBeenRevoked = useSignal<boolean>(true);
@@ -26,38 +26,48 @@ export default function GenerateInvitationCode() {
   const { mutate: mutateGenerate, isPending: isPendingGenerate } =
     useGenerateInvitationCode();
 
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
+    useGetGroupJoinCodes(params.groupid || "", pageSize);
+
+  const codesData = data?.pages.flatMap((x) => x.codes) || [];
+
+  const validCodeAlreadyExists =
+    codesData &&
+    codesData.length > 0 &&
+    codesData[0].timesUsed < codesData[0].maxUses &&
+    new Date(codesData[0].expires) >= new Date();
+
   const group = useGroup(params.groupid);
 
   useEffect(() => {
     if (group?.data?.name && !groupName) {
       setGroupName(group.data.name);
-      const searchParams = new URLSearchParams(location.search);
-      searchParams.set("groupname", encodeURIComponent(group.data.name));
-      navigate(`${location.pathname}?${searchParams.toString()}`, {
-        replace: true,
-      });
     }
-  }, [group?.data?.name, groupName, navigate]);
+  }, [group?.data?.name, groupName]);
 
   useEffect(() => {
-    if (mostRecentCodeHasBeenRevoked.value || isFirstRender.current) {
+    if (isFetching) return;
+    if (validCodeAlreadyExists) {
+      setInvitationCode(codesData[0].id);
+      mostRecentCodeHasBeenRevoked.value = false;
+      isFirstRender.current = false;
+    } else if (mostRecentCodeHasBeenRevoked.value || isFirstRender.current) {
       mutateGenerate(
         { groupId: params.groupid || "" },
         {
           onSuccess: (code: string) => {
             setInvitationCode(code);
-            const searchParams = new URLSearchParams(location.search);
-            searchParams.set("invitationcode", code);
-            navigate(`${location.pathname}?${searchParams.toString()}`, {
-              replace: true,
-            });
             mostRecentCodeHasBeenRevoked.value = false;
             isFirstRender.current = false;
+
+            queryClient.invalidateQueries({
+              queryKey: ["getGroupJoinCodes", params.groupid || "", pageSize],
+            });
           },
         }
       );
     }
-  }, [mutateGenerate, category.value]);
+  }, [mutateGenerate, category.value, isFetching]);
 
   return (
     <StyledGenerateInvitationCode>
@@ -80,9 +90,9 @@ export default function GenerateInvitationCode() {
             className="closeButtonContainer"
             onClick={() => {
               if (landedFromGroup === "true") {
-                navigate(`/groups/${params.groupid}`,{replace:true});
+                navigate(`/groups/${params.groupid}`, { replace: true });
               } else {
-                navigate("/groups",{replace:true});
+                navigate("/groups", { replace: true });
               }
             }}
           >
@@ -93,17 +103,21 @@ export default function GenerateInvitationCode() {
       {category.value === "Share Group" ? (
         <ShareGroup
           groupName={groupName}
-          isPending={isPendingGenerate}
+          isPending={isPendingGenerate || isFetching}
           qrRef={qrRef}
           invitationCode={invitationCode}
           mutate={mutateGenerate}
           groupId={params.groupid || ""}
-          navigate={navigate}
           setInvitationCode={setInvitationCode}
         />
       ) : (
         <RevokeAccess
           groupId={params.groupid || ""}
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
+          isFetching={isFetching}
+          isFetchingNextPage={isFetchingNextPage}
+          data={data}
           groupName={groupName}
           mostRecentCodeHasBeenRevoked={mostRecentCodeHasBeenRevoked}
           invitationCode={invitationCode}

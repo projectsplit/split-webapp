@@ -7,6 +7,7 @@ import QRCodeStyling from "qr-code-styling";
 import logo from "../../../styles/logo/logoRounded.png";
 import MyButton from "../../../components/MyButton/MyButton";
 import { copyToClipboard } from "../../../helpers/copyToClipboars";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ShareGroup({
   groupName,
@@ -15,9 +16,11 @@ export default function ShareGroup({
   invitationCode,
   mutate,
   groupId,
-  navigate,
   setInvitationCode,
 }: ShareGroupProps) {
+  const pageSize = 10;
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     if (invitationCode && qrRef.current) {
       const qrCode = new QRCodeStyling({
@@ -26,10 +29,10 @@ export default function ShareGroup({
         data: `https://abcsplit.uk/j/${invitationCode}`,
         dotsOptions: {
           color: "#000000",
-          type: "rounded", // Trendy: rounded dots
+          type: "rounded",
         },
         cornersSquareOptions: {
-          type: "extra-rounded", // Trendy: rounded corners
+          type: "extra-rounded",
         },
         backgroundOptions: {
           color: "#c5a1ff",
@@ -45,71 +48,75 @@ export default function ShareGroup({
       qrRef.current.innerHTML = "";
       qrCode.append(qrRef.current);
     }
-  }, [invitationCode]);
+  }, [invitationCode,isPending]);
 
-  return (
+
+
+return (
     <StyledShareGroup>
-      {" "}
-      {invitationCode ? (
+      {invitationCode && !isPending ? (
         <div>
-          {groupName.length>0?<div className="promptMessage">
-            Scan this QR code with another device to join{" "}
-            <strong className="groupName">{groupName}</strong>
-          </div>:<div className="promptMessage">
-            Scan this QR code with another device
-          </div>}
-          <div className="qrCodeContainer">
-            {isPending ? <Spinner /> : <div className="qrCode" ref={qrRef} />}
-          </div>
-        </div>
-      ) : null}
-      {isPending ? null : (
-        <div className="codentext">
-          {invitationCode ? (
-            <>
-              <div className="text">Alternatively, share this code:</div>
-              <div className="code">
-                <strong>{invitationCode}</strong>
-                <div
-                  className="copy"
-                  onClick={() =>
-                    copyToClipboard(
-                      invitationCode,
-                      "https://abcsplit.uk/j/"
-                    )
-                  }
-                >
-                  <IoCopy />
-                </div>
-              </div>
-            </>
+          {groupName.length > 0 ? (
+            <div className="promptMessage">
+              Scan this QR code with another device to join{" "}
+              <strong className="groupName">{groupName}</strong>
+            </div>
           ) : (
-            <div className="text">Invitation code does not exist</div>
+            <div className="promptMessage">
+              Scan this QR code with another device
+            </div>
           )}
-          <div className="buttonContainer">
-            <MyButton
-              onClick={() =>
-                mutate(
-                  { groupId: groupId },
-                  {
-                    onSuccess: (code: string) => {
-                      setInvitationCode(code);
-                      const searchParams = new URLSearchParams(location.search);
-                      searchParams.set("invitationcode", code);
-                      navigate(
-                        `${location.pathname}?${searchParams.toString()}`,
-                        { replace: true }
-                      );
-                    },
-                  }
-                )
-              }
-            >
-              Generate New Code
-            </MyButton>
+          <div className="qrCodeContainer">
+            <div className="qrCode" ref={qrRef} />
           </div>
         </div>
+      ) : isPending ? (
+        <div className="qrCodeContainer">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="text">Invitation code does not exist</div>
       )}
+      <div className="codentext">
+        {invitationCode && !isPending ? (
+          <>
+            <div className="text">Alternatively, share this code:</div>
+            <div className="code">
+              <strong>{invitationCode}</strong>
+              <div
+                className="copy"
+                onClick={() =>
+                  copyToClipboard(
+                    invitationCode,
+                    "https://abcsplit.uk/j/"
+                  )
+                }
+              >
+                <IoCopy />
+              </div>
+            </div>
+          </>
+        ) : null}
+        <div className="buttonContainer">
+          <MyButton
+            onClick={() =>
+              mutate(
+                { groupId: groupId },
+                {
+                  onSuccess: (code: string) => {
+                    queryClient.invalidateQueries({
+                      queryKey: ["getGroupJoinCodes", groupId, pageSize],
+                    });
+                    setInvitationCode(code);
+                  },
+                }
+              )
+            }
+          >
+            Generate New Code
+          </MyButton>
+        </div>
+      </div>
     </StyledShareGroup>
   );
 }

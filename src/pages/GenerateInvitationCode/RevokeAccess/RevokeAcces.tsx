@@ -1,7 +1,6 @@
 import { StyledRevokeAccess } from "./RevokeAccess.styled";
 import Sentinel from "../../../components/Sentinel";
 import { RevokeAccessProps } from "../../../interfaces";
-import { useGetGroupJoinCodes } from "../../../api/services/useGetGroupJoinCodes";
 import RevokeAccessItem from "./RevokeAccessItem/RevokeAccessItem";
 import Spinner from "../../../components/Spinner/Spinner";
 import { UserInfo } from "../../../types";
@@ -10,19 +9,18 @@ import { TbQrcodeOff } from "react-icons/tb";
 
 export default function RevokeAccess({
   groupId,
+  hasNextPage,
+  fetchNextPage,
+  isFetching,
+  isFetchingNextPage,
+  data,
   groupName,
   invitationCode,
   mostRecentCodeHasBeenRevoked,
 }: RevokeAccessProps) {
-  const pageSize = 10;
-
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
-
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useGetGroupJoinCodes(groupId, pageSize);
 
   if (isFetching && !isFetchingNextPage) {
     return (
@@ -70,7 +68,6 @@ export default function RevokeAccess({
               timesUsed={code.timesUsed}
               timeZone={userInfo?.timeZone}
               groupId={groupId}
-      
               invitationCode={invitationCode}
               mostRecentCodeHasBeenRevoked={mostRecentCodeHasBeenRevoked}
             />
