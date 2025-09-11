@@ -16,18 +16,13 @@ export default function GenerateInvitationCode() {
   const queryClient = useQueryClient();
   const params = useParams();
   const navigate = useNavigate();
-  const [invitationCode, setInvitationCode] = useState<string | null>(
-    new URLSearchParams(location.search).get("invitationcode")
-  );
-  const [groupName, setGroupName] = useState<string>(
-    new URLSearchParams(location.search).get("groupname") || ""
-  );
+  const [invitationCode, setInvitationCode] = useState<string | null>(null);
+  const [groupName, setGroupName] = useState<string>("");
   const qrRef = useRef<HTMLDivElement>(null);
   const category = useSignal<string>("Share Group");
   const mostRecentCodeHasBeenRevoked = useSignal<boolean>(true);
   const isFirstRender = useRef(true);
   const landedFromGroup = new URLSearchParams(location.search).get("in");
-
   const { mutate: mutateGenerate, isPending: isPendingGenerate } =
     useGenerateInvitationCode();
 
@@ -47,18 +42,13 @@ export default function GenerateInvitationCode() {
   useEffect(() => {
     if (group?.data?.name && !groupName) {
       setGroupName(group.data.name);
-      const searchParams = new URLSearchParams(location.search);
-      searchParams.set("groupname", encodeURIComponent(group.data.name));
     }
   }, [group?.data?.name, groupName]);
 
   useEffect(() => {
     if (isFetching) return;
-    const searchParams = new URLSearchParams(location.search);
-
     if (validCodeAlreadyExists) {
       setInvitationCode(codesData[0].id);
-      searchParams.set("invitationcode", codesData[0].id);
       mostRecentCodeHasBeenRevoked.value = false;
       isFirstRender.current = false;
     } else if (mostRecentCodeHasBeenRevoked.value || isFirstRender.current) {
@@ -67,7 +57,6 @@ export default function GenerateInvitationCode() {
         {
           onSuccess: (code: string) => {
             setInvitationCode(code);
-            searchParams.set("invitationcode", code);
             mostRecentCodeHasBeenRevoked.value = false;
             isFirstRender.current = false;
 
@@ -114,12 +103,11 @@ export default function GenerateInvitationCode() {
       {category.value === "Share Group" ? (
         <ShareGroup
           groupName={groupName}
-          isPending={isPendingGenerate}
+          isPending={isPendingGenerate || isFetching}
           qrRef={qrRef}
           invitationCode={invitationCode}
           mutate={mutateGenerate}
           groupId={params.groupid || ""}
-          navigate={navigate}
           setInvitationCode={setInvitationCode}
         />
       ) : (

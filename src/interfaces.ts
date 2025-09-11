@@ -1060,7 +1060,6 @@ export interface ShareGroupProps {
     unknown
   >;
   groupId: string;
-  navigate: NavigateFunction;
   setInvitationCode: React.Dispatch<React.SetStateAction<string | null>>;
 }
 export interface RevokeAccessProps {

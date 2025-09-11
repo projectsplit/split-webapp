@@ -78,11 +78,10 @@ export default function Groups() {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     groupId: string,
     isGroupArchived: boolean,
-    groupName:string
   ) => {
     if (!isGroupArchived) {
       e.stopPropagation();
-      navigate(`/groups/generatecode/${groupId}?groupname=${encodeURIComponent(groupName)}`);
+      navigate(`/groups/generatecode/${groupId}`);
     } else {
       e.stopPropagation();
       groupIdClicked.value = groupId;
@@ -146,7 +145,6 @@ export default function Groups() {
                       e,
                       g.id,
                       activeGroupCatAsState.value === "Archived",
-                      g.name
                     )
                   }
                 >
