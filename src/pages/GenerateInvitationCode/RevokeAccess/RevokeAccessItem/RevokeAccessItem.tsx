@@ -40,7 +40,9 @@ export default function RevokeAccessItem({
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
         // setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
-        if (minutes === 0) {
+       if (isNaN(minutes) || isNaN(seconds)) {
+          setTimeLeft("NaN");
+        } else if (minutes === 0) {
           setTimeLeft(`${seconds}s`);
         } else {
           setTimeLeft(`${minutes}m ${seconds}s`);
@@ -63,7 +65,7 @@ export default function RevokeAccessItem({
       <div className="infoAndRevokeButton">
         <div className="infoContainer">
           <div className="infoAndData">
-            {!timeLeft.length ? (
+            {!timeLeft.length  || timeLeft === "NaN" ? (
            <ShimerPlaceholder/>
             ) : (
               <div className="expires">

@@ -38,7 +38,9 @@ export default function ShareGroup({
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
         // setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
-        if (minutes === 0) {
+        if (isNaN(minutes) || isNaN(seconds)) {
+          setTimeLeft("NaN");
+        } else if (minutes === 0) {
           setTimeLeft(`${seconds}s`);
         } else {
           setTimeLeft(`${minutes}m ${seconds}s`);
@@ -78,78 +80,78 @@ export default function ShareGroup({
   }, [invitationCode, isPending]);
 
   return (
-  <StyledShareGroup>
-    {invitationCode && !isPending ? (
-      <div>
-        {groupName.length > 0 ? (
-          <div className="promptMessage">
-            Scan this QR code with another device to join{" "}
-            <strong className="groupName">{groupName}</strong>
+    <StyledShareGroup>
+      {invitationCode && !isPending ? (
+        <div>
+          {groupName.length > 0 ? (
+            <div className="promptMessage">
+              Scan this QR code with another device to join{" "}
+              <strong className="groupName">{groupName}</strong>
+            </div>
+          ) : (
+            <div className="promptMessage">
+              Scan this QR code with another device
+            </div>
+          )}
+          <div className="qrCodeContainer">
+            <div className="qrCode" ref={qrRef} />
           </div>
-        ) : (
-          <div className="promptMessage">
-            Scan this QR code with another device
-          </div>
-        )}
+        </div>
+      ) : isPending ? (
         <div className="qrCodeContainer">
-          <div className="qrCode" ref={qrRef} />
+          <Spinner />
+        </div>
+      ) : (
+        <div className="text">Invitation code does not exist</div>
+      )}
+      <div className="codentext">
+        {invitationCode && !isPending ? (
+          <>
+            <div className="text">Alternatively, share this code:</div>
+            <div className="code">
+              <strong>{invitationCode}</strong>
+              <div
+                className="copy"
+                onClick={() =>
+                  copyToClipboard(invitationCode, "https://abcsplit.uk/j/")
+                }
+              >
+                <IoCopy />
+              </div>
+            </div>
+            <div className="expires">
+              {!timeLeft.length || timeLeft === "NaN"  ? (
+                <ShimerPlaceholder />
+              ) : timeLeft && timeLeft === "Expired" ? (
+                <span className="text">
+                  <IoIosWarning /> Expired
+                </span>
+              ) : timeLeft && timeLeft.length > 0 ? (
+                <span>Expires in: {timeLeft}</span>
+              ) : null}
+            </div>
+          </>
+        ) : null}
+        <div className="buttonContainer">
+          <MyButton
+            onClick={() =>
+              mutate(
+                { groupId: groupId },
+                {
+                  onSuccess: (code: string) => {
+                    queryClient.invalidateQueries({
+                      queryKey: ["getGroupJoinCodes", groupId, pageSize],
+                    });
+                    setInvitationCode(code);
+                  },
+                }
+              )
+            }
+          >
+            Generate New Code
+          </MyButton>
         </div>
       </div>
-    ) : isPending ? (
-      <div className="qrCodeContainer">
-        <Spinner />
-      </div>
-    ) : (
-      <div className="text">Invitation code does not exist</div>
-    )}
-    <div className="codentext">
-      {invitationCode && !isPending ? (
-        <>
-          <div className="text">Alternatively, share this code:</div>
-          <div className="code">
-            <strong>{invitationCode}</strong>
-            <div
-              className="copy"
-              onClick={() =>
-                copyToClipboard(invitationCode, "https://abcsplit.uk/j/")
-              }
-            >
-              <IoCopy />
-            </div>
-          </div>
-          <div className="expires">
-            {!timeLeft.length ? (
-              <ShimerPlaceholder />
-            ) : timeLeft && timeLeft === "Expired" ? (
-              <span className="text">
-                <IoIosWarning /> Expired
-              </span>
-            ) : timeLeft && timeLeft.length > 0 ? (
-              <span>Expires in: {timeLeft}</span>
-            ) : null}
-          </div>
-        </>
-      ) : null}
-      <div className="buttonContainer">
-        <MyButton
-          onClick={() =>
-            mutate(
-              { groupId: groupId },
-              {
-                onSuccess: (code: string) => {
-                  queryClient.invalidateQueries({
-                    queryKey: ["getGroupJoinCodes", groupId, pageSize],
-                  });
-                  setInvitationCode(code);
-                },
-              }
-            )
-          }
-        >
-          Generate New Code
-        </MyButton>
-      </div>
-    </div>
-  </StyledShareGroup>
-);
+    </StyledShareGroup>
+  );
 }
