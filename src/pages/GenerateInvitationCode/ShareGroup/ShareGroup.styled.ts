@@ -38,6 +38,15 @@ export const StyledShareGroup = styled.div`
         font-size: 18px;
       }
     }
+    .expires{
+      display:flex;
+      flex-direction:row;
+      justify-content:center;
+       margin-top:50px;
+      .text{
+        color:${({theme})=>theme.redish}
+      }
+    }
   }
   .buttonContainer {
     position: fixed;

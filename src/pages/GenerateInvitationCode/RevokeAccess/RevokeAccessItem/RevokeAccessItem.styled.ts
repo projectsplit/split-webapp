@@ -8,17 +8,18 @@ export const StyledRevokeAccessItem = styled.div`
   padding: 10px;
   background-color: ${({ theme }) => theme.layer2};
   gap: 1rem;
+
   .codeAndCopy {
     display: flex;
     flex-direction: row;
     align-self: center;
-    align-items:center;
+    align-items: center;
     background: linear-gradient(180deg, #373669 0%, #3b3a7aff 100%);
     color: white;
     padding: 6px 12px;
     border-radius: 16px;
-    gap:10px;
-    cursor:pointer;
+    gap: 10px;
+    cursor: pointer;
   }
 
   .infoAndRevokeButton {
@@ -35,6 +36,20 @@ export const StyledRevokeAccessItem = styled.div`
         display: flex;
         flex-direction: row;
         gap: 5px;
+        .expires {
+          .expiresInAndTimeLeft {
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+          }
+          .text {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            color: ${({ theme }) => theme.redish};
+          }
+        }
       }
       .info {
         /* color: ${({ theme }) => theme.greySelect}; */
