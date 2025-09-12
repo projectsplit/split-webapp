@@ -66,7 +66,6 @@ export default function RevokeAccess({
               id={code.id}
               maxUses={code.maxUses}
               timesUsed={code.timesUsed}
-              timeZone={userInfo?.timeZone}
               groupId={groupId}
               invitationCode={invitationCode}
               mostRecentCodeHasBeenRevoked={mostRecentCodeHasBeenRevoked}

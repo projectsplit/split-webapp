@@ -1061,6 +1061,7 @@ export interface ShareGroupProps {
   >;
   groupId: string;
   setInvitationCode: React.Dispatch<React.SetStateAction<string | null>>;
+  expires:string;
 }
 export interface RevokeAccessProps {
   groupId:string;
@@ -1080,9 +1081,8 @@ export interface RevokeAccessItemProps {
   id: string;
   maxUses: number;
   timesUsed: number;
-  timeZone: string;
-  groupId: string;
 
+  groupId: string;
   invitationCode: string | null;
   mostRecentCodeHasBeenRevoked: Signal<boolean>;
 }

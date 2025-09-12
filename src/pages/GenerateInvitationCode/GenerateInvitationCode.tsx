@@ -109,6 +109,7 @@ export default function GenerateInvitationCode() {
           mutate={mutateGenerate}
           groupId={params.groupid || ""}
           setInvitationCode={setInvitationCode}
+          expires ={codesData[0]?.expires}
         />
       ) : (
         <RevokeAccess
