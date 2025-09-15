@@ -35,8 +35,9 @@ const AutoWidthInput = forwardRef<HTMLInputElement, AutoWidthInputProps>(
     }, [value]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    
       if (isText && onChange) return onChange(e);
-
+   
       if (category === "Amounts") {
         if (onChange) {
           onChange(e);
