@@ -144,90 +144,50 @@ const MemberPicker = ({
     );
   };
 
-const changeAmount = (
-    id: string,
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    if (category.value !== "Amounts") {
-      const updatedMembers = memberAmounts.map((m) => {
-        if (m.id === id) {
-          return { ...m, screenQuantity: e.target.value, locked: true };
-        }
-        return m;
-      });
-      setMemberAmounts(
-        recalculateAmounts(
-          updatedMembers,
-          totalAmount,
-          decimalDigits,
-          category,
-          selectedCurrency
-        )
-      );
-      return;
-    }
-
-    const oldMember = memberAmounts.find((m) => m.id === id);
-    const oldDisplayed = oldMember ? oldMember.screenQuantity : "";
-    const oldDisplayedLength = oldDisplayed.length;
-    const rawLength = e.target.value.length;
-    const isAddition = rawLength > oldDisplayedLength;
-    const isDeletion = rawLength < oldDisplayedLength;
-    let formattedValue = currencyMask(e, selectedCurrency, oldDisplayed, true)
-      .target.value;
-    const clean = removeCommas(formattedValue);
-    let actualAmount: string = clean;
-
-    if (isNaN(Number(clean))) {
-      if (clean === "." || clean === "") {
-        if (isDeletion || clean === "") {
-          formattedValue = "";
-          actualAmount = "";
-        } else if (isAddition) {
-          formattedValue = ".";
-          actualAmount = "0.";
-        }
-      }
-    } else {
-      const numericValue = Number(clean);
-      if (numericValue <= 999999999999.99) {
-        if (clean.startsWith(".")) {
-          actualAmount = "0" + clean;
-        }
-        formattedValue = formattedValue
-          .replace(/\./g, (match, offset, string) =>
-            string.indexOf(".") === offset ? "." : ""
-          ) // Keep only first dot
-          .replace(/^0+(?=\d*\.?\d+)/, (match) =>
-            match.includes(".") ? "0" : ""
-          ) // Handle leading zeros
-          .replace(/\.$/, ""); // Remove trailing dot
-      } else {
-        formattedValue = oldDisplayed;
-        actualAmount = removeCommas(oldDisplayed);
-      }
-    }
-    const updatedMembers = memberAmounts.map((m) => {
-      if (m.id === id) {
-        return {
-          ...m,
-          screenQuantity: formattedValue,
-          actualAmount,
-          locked: true,
-        };
-      }
-      return m;
-    });
-    setMemberAmounts(
-      recalculateAmounts(
-        updatedMembers,
-        totalAmount,
-        decimalDigits,
-        category,
-        selectedCurrency
-      )
+const changeAmount = (id: string, e: React.ChangeEvent<HTMLInputElement>): void => {
+  if (category.value !== "Amounts") {
+    const updatedMembers = memberAmounts.map(m => 
+      m.id === id ? { ...m, screenQuantity: e.target.value, locked: true } : m
     );
-  };
+    setMemberAmounts(recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency));
+    return;
+  }
+
+  const oldMember = memberAmounts.find(m => m.id === id);
+  const oldDisplayed = oldMember ? oldMember.screenQuantity : "";
+  const oldDisplayedLength = oldDisplayed.length;
+  const rawLength = e.target.value.length;
+  const isAddition = rawLength > oldDisplayedLength;
+  const isDeletion = rawLength < oldDisplayedLength;
+  let formattedValue = currencyMask(e, selectedCurrency, oldDisplayed, true).target.value;
+  const clean = removeCommas(formattedValue);
+  let actualAmount = clean;
+
+  if (isNaN(Number(clean))) {
+    if (clean === "." || clean === "") {
+      if (isDeletion || clean === "") {
+        formattedValue = "";
+        actualAmount = "";
+      } else if (isAddition) {
+        formattedValue = ".";
+        actualAmount = "0.";
+      }
+    }
+  } else {
+    const numericValue = Number(clean);
+    if (numericValue > 999999999999.99) {
+      formattedValue = oldDisplayed;
+      actualAmount = removeCommas(oldDisplayed);
+    } else if (clean.startsWith(".")) {
+      actualAmount = "0" + clean;
+    }
+  }
+
+  const updatedMembers = memberAmounts.map(m => 
+    m.id === id ? { ...m, screenQuantity: formattedValue, actualAmount, locked: true } : m
+  );
+  setMemberAmounts(recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency));
+};
 
   const handleInputBlur = (id: string) => {
     const updatedMembers = memberAmounts.map((m) => {

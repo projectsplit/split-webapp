@@ -33,6 +33,7 @@ const Right: React.FC<RightProps> = ({
   memberAmounts,
   inputRef,
 }) => {
+  
   const totalSharesValue = memberAmounts.reduce(
     (sum, member) => sum + Number(member.screenQuantity),
     0
