@@ -669,3 +669,16 @@ export type GetJoinCodesResponse = {
   codes: JoinCode[];
   next: string | null;
 };
+
+export type SpendingChartsResponse = {
+  items: SpendingChartsResponseItem[];
+};
+
+export type SpendingChartsResponseItem = {
+  shareAmount: number;
+  accumulativeShareAmount: number;
+  paymentAmount: number;
+  accumulativePaymentAmount: number;
+  from: Date;
+  to: Date;
+};

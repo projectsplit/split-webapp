@@ -24,6 +24,7 @@ import { useWeeklyDatesMemo } from "../../components/SearchTransactions/hooks/us
 import { CategoryButton } from "../../components/CategoryButton/CategoryButton";
 import TopBarWithBackButton from "../../components/TopBarWithBackButton/TopBarWithBackButton";
 import Spinner from "../../components/Spinner/Spinner";
+import { useCumulativeSpendingArray } from "../../api/services/useCumulativeSpendingArray";
 
 export default function Analytics() {
   const [selectedChart, setSelectedChart] =
@@ -36,7 +37,7 @@ export default function Analytics() {
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
-  const [currency, setCurrency] = useState<string>('');
+  const [currency, setCurrency] = useState<string>("");
 
   const queryClient = useQueryClient();
   const [
@@ -59,7 +60,8 @@ export default function Analytics() {
       selectedCycle.value,
       selectedTimeCycleIndex.value,
       selectedYear.value,
-      allWeeksPerYear
+      allWeeksPerYear,
+      userInfo?.timeZone
     )[0]
   );
 
@@ -68,12 +70,12 @@ export default function Analytics() {
       selectedCycle.value,
       selectedTimeCycleIndex.value,
       selectedYear.value,
-      allWeeksPerYear
+      allWeeksPerYear,
+      userInfo?.timeZone
     )[1]
   );
 
   const navigate = useNavigate();
-
   const handleBackButtonClick = () => {
     navigate(`/`);
   };
@@ -93,170 +95,179 @@ export default function Analytics() {
   }, [userInfo]);
 
   const handleCurrencyOptionsClick = (curr: string) => {
-    // currency.value = curr;
-     setCurrency(curr);
-    if (
-      selectedChart === "cumulativeSpending" ||
-      selectedChart === "barChart"
-    ) {
-      queryClient.invalidateQueries({
-        queryKey: ["cumulativeSpending", startDate, endDate, currency],
-      });
-    }
-    if (selectedChart === "totalLentBorrowed") {
-      queryClient.invalidateQueries({
-        queryKey: ["totalLentBorrowed", startDate, endDate, currency],
-      });
-    }
+    setCurrency(curr);
+
+    queryClient.invalidateQueries({
+      queryKey: [
+        "cumulativeArray",
+        startDate,
+        endDate,
+        currency,
+        selectedCycle.value,
+      ],
+    });
     menu.value = null;
   };
 
-return (
-  <StyledAnalytics>
-    {!userInfo?.currency ? (
-      <div className="spinner">
-        <Spinner />
-      </div>
-    ) : (
-      <>
-        <TopBarWithBackButton
-          header="Spending Trends"
-          onClick={() => handleBackButtonClick()}
-        />
-        <div className="buttons">
-          <div className="groupCategories">
-            <CategoryButton
-              selected={selectedChart === "cumulativeSpending"}
-              onClick={() => setSelectedChart("cumulativeSpending")}
-            >
-              <MdOutlineShowChart className="buttonChart" />
-            </CategoryButton>
+  const { data, isSuccess, isFetching } = useCumulativeSpendingArray(
+    startDate.value,
+    endDate.value,
+    currency || userInfo?.currency,
+    selectedCycle.value
+  );
 
-            <CategoryButton
-              selected={selectedChart === "barChart"}
-              onClick={() => setSelectedChart("barChart")}
-            >
-              <MdBarChart className="buttonChart" />
-            </CategoryButton>
+  return (
+    <StyledAnalytics>
+      {!userInfo?.currency ? (
+        <div className="spinner">
+          <Spinner />
+        </div>
+      ) : (
+        <>
+          <TopBarWithBackButton
+            header="Spending Trends"
+            onClick={() => handleBackButtonClick()}
+          />
+          <div className="buttons">
+            <div className="groupCategories">
+              <CategoryButton
+                selected={selectedChart === "cumulativeSpending"}
+                onClick={() => setSelectedChart("cumulativeSpending")}
+              >
+                <MdOutlineShowChart className="buttonChart" />
+              </CategoryButton>
 
-            <CategoryButton
-              selected={selectedChart === "totalLentBorrowed"}
-              onClick={() => setSelectedChart("totalLentBorrowed")}
-            >
-              <MdSsidChart className="buttonChart" />
+              <CategoryButton
+                selected={selectedChart === "barChart"}
+                onClick={() => setSelectedChart("barChart")}
+              >
+                <MdBarChart className="buttonChart" />
+              </CategoryButton>
+
+              <CategoryButton
+                selected={selectedChart === "totalLentBorrowed"}
+                onClick={() => setSelectedChart("totalLentBorrowed")}
+              >
+                <MdSsidChart className="buttonChart" />
+              </CategoryButton>
+            </div>
+          </div>
+
+          <div className="dateOptions">
+            <CategoryButton onClick={() => (menu.value = "cycle")}>
+              <div className="height"></div>
+              <span>{Frequency[selectedCycle.value]}</span>
+              <div className="height"></div>
+            </CategoryButton>
+            <CategoryButton onClick={() => (menu.value = "year")}>
+              <div className="height"></div>
+              <span>{selectedYear.value}</span>
+              <div className="height"></div>
+            </CategoryButton>
+            <CategoryButton onClick={() => (menu.value = "currencyOptions")}>
+              <div className="height"></div>
+              <span>{currency}</span>
+              <div className="height"></div>
             </CategoryButton>
           </div>
-        </div>
 
-        <div className="dateOptions">
-          <CategoryButton onClick={() => (menu.value = "cycle")} >
-            <div className="height"></div>
-            <span>{Frequency[selectedCycle.value]}</span>
-            <div className="height"></div>
-          </CategoryButton>
-          <CategoryButton onClick={() => (menu.value = "year")}>
-            <div className="height"></div>
-            <span>{selectedYear.value}</span>
-            <div className="height"></div>
-          </CategoryButton>
-          <CategoryButton onClick={() => (menu.value = "currencyOptions")}>
-            <div className="height"></div>
-            <span>{currency}</span>
-            <div className="height"></div>
-          </CategoryButton>
-        </div>
-
-        <div className="chartWrapper">
-          <div className="chart">
-            {selectedChart === "cumulativeSpending" && (
-              <CumulativeSpending
-                selectedCycle={selectedCycle}
-                selectedYear={selectedYear}
-                currentWeekIndex={currentWeekIndex}
-                monthsAndDaysArrays={monthsAndDaysArrays}
-                cyclehaschanged={cyclehaschanged}
-                allWeeksPerYear={allWeeksPerYear}
-                menu={menu}
-                selectedTimeCycleIndex={selectedTimeCycleIndex}
-                startDate={startDate}
-                endDate={endDate}
-                currency={currency}
-              />
-            )}
-            {selectedChart === "barChart" && (
-              <BarChart
-                selectedCycle={selectedCycle}
-                selectedYear={selectedYear}
-                currentWeekIndex={currentWeekIndex}
-                monthsAndDaysArrays={monthsAndDaysArrays}
-                cyclehaschanged={cyclehaschanged}
-                allWeeksPerYear={allWeeksPerYear}
-                menu={menu}
-                selectedTimeCycleIndex={selectedTimeCycleIndex}
-                startDate={startDate}
-                endDate={endDate}
-                currency={currency}
-              />
-            )}
-            {selectedChart === "totalLentBorrowed" && (
-              <TotalLentBorrowed
-                selectedCycle={selectedCycle}
-                selectedYear={selectedYear}
-                currentWeekIndex={currentWeekIndex}
-                monthsAndDaysArrays={monthsAndDaysArrays}
-                cyclehaschanged={cyclehaschanged}
-                allWeeksPerYear={allWeeksPerYear}
-                menu={menu}
-                selectedTimeCycleIndex={selectedTimeCycleIndex}
-                startDate={startDate}
-                endDate={endDate}
-                currency={currency}
-              />
-            )}
+          <div className="chartWrapper">
+            <div className="chart">
+              {selectedChart === "cumulativeSpending" && (
+                <CumulativeSpending
+                  selectedCycle={selectedCycle}
+                  selectedYear={selectedYear}
+                  currentWeekIndex={currentWeekIndex}
+                  monthsAndDaysArrays={monthsAndDaysArrays}
+                  cyclehaschanged={cyclehaschanged}
+                  allWeeksPerYear={allWeeksPerYear}
+                  menu={menu}
+                  selectedTimeCycleIndex={selectedTimeCycleIndex}
+                  startDate={startDate}
+                  endDate={endDate}
+                  currency={currency}
+                  backendData={data}
+                  isSuccess={isSuccess}
+                />
+              )}
+              {selectedChart === "barChart" && (
+                <BarChart
+                  selectedCycle={selectedCycle}
+                  selectedYear={selectedYear}
+                  currentWeekIndex={currentWeekIndex}
+                  monthsAndDaysArrays={monthsAndDaysArrays}
+                  cyclehaschanged={cyclehaschanged}
+                  allWeeksPerYear={allWeeksPerYear}
+                  menu={menu}
+                  selectedTimeCycleIndex={selectedTimeCycleIndex}
+                  startDate={startDate}
+                  endDate={endDate}
+                  currency={currency}
+                  backendData={data}
+                  isSuccess={isSuccess}
+                />
+              )}
+              {selectedChart === "totalLentBorrowed" && (
+                <TotalLentBorrowed
+                  selectedCycle={selectedCycle}
+                  selectedYear={selectedYear}
+                  currentWeekIndex={currentWeekIndex}
+                  monthsAndDaysArrays={monthsAndDaysArrays}
+                  cyclehaschanged={cyclehaschanged}
+                  allWeeksPerYear={allWeeksPerYear}
+                  menu={menu}
+                  selectedTimeCycleIndex={selectedTimeCycleIndex}
+                  startDate={startDate}
+                  endDate={endDate}
+                  currency={currency}
+                  backendData={data}
+                  isSuccess={isSuccess}
+                />
+              )}
+            </div>
           </div>
-        </div>
 
-        <MenuAnimationBackground menu={menu} />
+          <MenuAnimationBackground menu={menu} />
 
-        <AnalyticsCycleSelectionAnimation menu={menu} header="Select Cycle">
-          <CycleOptions
+          <AnalyticsCycleSelectionAnimation menu={menu} header="Select Cycle">
+            <CycleOptions
+              menu={menu}
+              selectedCycle={selectedCycle}
+              cyclehaschanged={cyclehaschanged}
+            />
+          </AnalyticsCycleSelectionAnimation>
+
+          <AnalyticsYearSelectionAnimation menu={menu} header="Select Year">
+            <Years
+              menu={menu}
+              selectedYear={selectedYear}
+              selectedTimeCycleIndex={selectedTimeCycleIndex}
+            />
+          </AnalyticsYearSelectionAnimation>
+
+          <AnalyticsTimePeriodSelectionAnimation
             menu={menu}
-            selectedCycle={selectedCycle}
-            cyclehaschanged={cyclehaschanged}
-          />
-        </AnalyticsCycleSelectionAnimation>
+            header={
+              selectedCycle.value === Frequency.Monthly
+                ? "Select Month"
+                : "Select Week"
+            }
+          >
+            <PeriodOption
+              menu={menu}
+              selectedCycle={selectedCycle}
+              selectedTimeCycleIndex={selectedTimeCycleIndex}
+              monthsAndDaysArrays={monthsAndDaysArrays}
+            />
+          </AnalyticsTimePeriodSelectionAnimation>
 
-        <AnalyticsYearSelectionAnimation menu={menu} header="Select Year">
-          <Years
-            menu={menu}
-            selectedYear={selectedYear}
-            selectedTimeCycleIndex={selectedTimeCycleIndex}
+          <CurrencyOptionsAnimation
+            currencyMenu={menu}
+            selectedCurrency={currency}
+            clickHandler={handleCurrencyOptionsClick}
           />
-        </AnalyticsYearSelectionAnimation>
-
-        <AnalyticsTimePeriodSelectionAnimation
-          menu={menu}
-          header={
-            selectedCycle.value === Frequency.Monthly
-              ? "Select Month"
-              : "Select Week"
-          }
-        >
-          <PeriodOption
-            menu={menu}
-            selectedCycle={selectedCycle}
-            selectedTimeCycleIndex={selectedTimeCycleIndex}
-            monthsAndDaysArrays={monthsAndDaysArrays}
-          />
-        </AnalyticsTimePeriodSelectionAnimation>
-
-        <CurrencyOptionsAnimation
-          currencyMenu={menu}
-          selectedCurrency={currency}
-          clickHandler={handleCurrencyOptionsClick} 
-        />
-      </>
-    )}
-  </StyledAnalytics>
-);
+        </>
+      )}
+    </StyledAnalytics>
+  );
 }

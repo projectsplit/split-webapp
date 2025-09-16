@@ -25,6 +25,7 @@ import {
   TransferParsedFilters,
   BudgetInfoResponse,
   GetJoinCodesResponse,
+  SpendingChartsResponse,
 } from "./types";
 import { Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
@@ -963,6 +964,8 @@ export interface CumulativeSpendingProps {
   startDate: Signal<string>;
   endDate: Signal<string>;
   currency: string;
+  backendData:SpendingChartsResponse |undefined;
+  isSuccess:boolean
 }
 
 export interface BarChartProps extends CumulativeSpendingProps {}

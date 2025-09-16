@@ -26,8 +26,8 @@ import { Frequency } from "../../../../types";
 import { deCumulArray } from "../../helpers/deCumulArray";
 import { horizontalLine } from "../plugins/horizontalLine";
 import { months, shortWeekdays } from "../../../../constants";
-import { useCumulativeSpendingArray } from "../../../../api/services/useCumulativeSpendingArray";
 import { BarChartProps } from "../../../../interfaces";
+import { getCumulativeShares } from "../../helpers/getCumulativeArray";
 
 ChartJS.register(
   CategoryScale,
@@ -50,19 +50,14 @@ export function BarChart({
   selectedTimeCycleIndex,
   startDate,
   endDate,
-  currency
+  currency,
+  backendData,
+   isSuccess
 }: BarChartProps) {
 
 
-  // const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
-  //   startDate.value,
-  //   endDate.value,
-  //   currency
-  // );
-  const isSuccess=true;
-  const cumulArrayData = [
-    1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222,222,222,222,222,222,222,222,222,222,230,250,260
-  ];
+ const cumulArrayData = getCumulativeShares(backendData);
+
   const expenseDataPoints = deCumulArray(cumulArrayData); //getRandomNumbers(31, -500, 1000); // This is supposed to be the total amount spent per calendar day
 
   const allDaysInMonth = getAllDaysInMonth(
