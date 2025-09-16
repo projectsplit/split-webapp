@@ -10,11 +10,18 @@ export const getTotalLentBorrowed = (
   const digits = significantDigitsFromTicker(currency);
 
   if (!backendData?.items) return { totalLent, totalBorrowed };
-
+  if (
+    backendData.items[0]?.shareAmount === 0 &&
+    backendData.items[backendData.items.length - 1]?.shareAmount === 0 &&
+    backendData.items[0]?.paymentAmount === 0 &&
+    backendData.items[backendData.items.length - 1]?.paymentAmount === 0
+  )
+    return { totalLent: [], totalBorrowed: [] };
+    
   let prevLent = 0;
   let prevBorrowed = 0;
 
-backendData.items.forEach((b) => {
+  backendData.items.forEach((b) => {
     const diff = b.shareAmount - b.paymentAmount;
     if (diff < 0) {
       prevLent += Number(Math.abs(diff).toFixed(digits));
