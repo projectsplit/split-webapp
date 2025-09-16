@@ -11,10 +11,8 @@ export const getTotalLentBorrowed = (
 
   if (!backendData?.items) return { totalLent, totalBorrowed };
   if (
-    backendData.items[0]?.shareAmount === 0 &&
-    backendData.items[backendData.items.length - 1]?.shareAmount === 0 &&
-    backendData.items[0]?.paymentAmount === 0 &&
-    backendData.items[backendData.items.length - 1]?.paymentAmount === 0
+    backendData.items[backendData.items.length - 1]?.accumulativeShareAmount === 0 &&
+    backendData.items[backendData.items.length - 1]?.accumulativePaymentAmount === 0
   )
     return { totalLent: [], totalBorrowed: [] };
     

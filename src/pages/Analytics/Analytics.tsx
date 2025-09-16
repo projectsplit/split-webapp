@@ -112,7 +112,7 @@ export default function Analytics() {
   const { data, isSuccess, isFetching } = useCumulativeSpendingArray(
     startDate.value,
     endDate.value,
-    currency || userInfo?.currency,
+    currency || userInfo?.currency, //TODO undefined first render values
     selectedCycle.value
   );
 

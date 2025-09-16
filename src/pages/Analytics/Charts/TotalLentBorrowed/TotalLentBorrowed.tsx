@@ -55,8 +55,7 @@ export function TotalLentBorrowed({
   const fractalFactor = 4;
 
   const totalLentBorrowed = getTotalLentBorrowed(backendData,currency);
-console.log(backendData)
-console.log(totalLentBorrowed)
+
   const allDaysInMonth = getAllDaysInMonth(
     selectedTimeCycleIndex.value + 1,
     selectedYear.value
