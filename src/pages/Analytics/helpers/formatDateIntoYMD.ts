@@ -1,7 +1,10 @@
-export function formatDateIntoYMD(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
-    const day = date.getDate().toString().padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  }
+export function formatDateIntoYMD(date: Date, timeZone: string): string {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone,
+    };
+    const formatter = new Intl.DateTimeFormat('en-CA', options);
+    return formatter.format(date);
+}

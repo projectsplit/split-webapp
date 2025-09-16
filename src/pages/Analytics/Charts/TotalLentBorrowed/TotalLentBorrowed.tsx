@@ -1,4 +1,3 @@
-import React from "react";
 import { StyledTotalLentBorrowed } from "./TotalLentBorrowe.styled";
 import {
   Chart as ChartJS,
@@ -23,9 +22,9 @@ import { getChartOptions } from "./options/getChartOptions";
 import { getData } from "./data/getData";
 import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
 import { buildLabels } from "../../helpers/buildLabels";
-
 import { months } from "../../../../constants";
-import { useTotalLentBorrowedArrays } from "../../../../api/services/useTotalLentBorrowedArrays";
+import { getTotalLentBorrowed } from "../../helpers/getTotalLentBorrowed";
+
 //TODO fast click to the left by choosing weekly. Legends are flashing
 ChartJS.register(
   CategoryScale,
@@ -49,9 +48,13 @@ export function TotalLentBorrowed({
   selectedTimeCycleIndex,
   currency,
   endDate,
-  startDate
+  startDate,
+  backendData,
+  isSuccess,
 }: TotalLentBorrowedProps) {
   const fractalFactor = 4;
+
+  const totalLentBorrowed = getTotalLentBorrowed(backendData,currency);
 
 
   const allDaysInMonth = getAllDaysInMonth(
@@ -72,13 +75,6 @@ export function TotalLentBorrowed({
     fractalFactor
   );
 
-
-const totalLentBorrowed = {
-    totalLent: [1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222, 250.36, 310, 400, 420, 450, 500, 540, 690, 940, 952, 1000, 1045.36],
-    totalBorrowed: [2, 15.0, 16.5, 20.0, 80.0, 175.0, 195.0, 205.0, 325.0, 435.0, 560.0, 690.0, 700.0, 810.0, 920.0, 1030.0, 1160.0, 1220.0, 1310.0, 1430.0, 1560.0, 1610.0, 1750.0,1800.0, 1960.0, 2075.0, 2020.0,2065.0]
-};
-  const isSuccess=true;
-
   useStartAndEndDatesEffect(
     selectedCycle,
     selectedTimeCycleIndex,
@@ -87,15 +83,6 @@ const totalLentBorrowed = {
     startDate,
     endDate
   );
-
-  const totalLent2 = [2, 50, 100, 750, 800, 800, 1000];
-  const totalBorrowed2 = [7, 150, 10, 15, 25, 35, 150];
-
-  // const { data: totalLentBorrowed, isSuccess } = useTotalLentBorrowedArrays(
-  //   startDate.value,
-  //   endDate.value, 
-  //   currency
-  // );
 
   const totalLent =
     totalLentBorrowed?.totalLent === undefined
@@ -106,9 +93,13 @@ const totalLentBorrowed = {
       ? []
       : totalLentBorrowed.totalBorrowed;
 
-  const totalLentExt = enhanceNumberArray(totalLent, fractalFactor).filter((element) => element !== undefined);
-  const totalBorrowedExt = enhanceNumberArray(totalBorrowed, fractalFactor).filter((element) => element !== undefined);
-
+  const totalLentExt = enhanceNumberArray(totalLent, fractalFactor).filter(
+    (element) => element !== undefined
+  );
+  const totalBorrowedExt = enhanceNumberArray(
+    totalBorrowed,
+    fractalFactor
+  ).filter((element) => element !== undefined);
 
   const pointRadius: number[] = [];
   const hitRadius: number[] = []; //determines which cicles will be highlited on hover.

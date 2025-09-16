@@ -25,9 +25,9 @@ import { Frequency } from "../../../../types";
 import { deCumulArray } from "../../helpers/deCumulArray";
 import { enhanceNumberArray } from "../../../../helpers/enhanceNumberArray";
 import { isCurrentPeriod } from "../../helpers/isCurrentPeriod";
-import { useCumulativeSpendingArray } from "../../../../api/services/useCumulativeSpendingArray";
 import { months } from "../../../../constants";
 import { significantDigitsFromTicker } from "../../../../helpers/openExchangeRates";
+import { getCumulativeShares } from "../../helpers/getCumulativeArray";
 
 ChartJS.register(
   CategoryScale,
@@ -52,8 +52,12 @@ export function CumulativeSpending({
   startDate,
   endDate,
   currency,
+  backendData,
+  isSuccess,
 }: CumulativeSpendingProps) {
   const fractalFactor = 1;
+
+  const cumulArrayData = getCumulativeShares(backendData);
 
   useStartAndEndDatesEffect(
     selectedCycle,
@@ -82,16 +86,10 @@ export function CumulativeSpending({
     fractalFactor
   );
 
-  // const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
-  //   startDate.value,
-  //   endDate.value,
-  //   currency
-  // );
-
   const projectionArray = (
     cumulArrayData: number[] | undefined,
     cycle: Frequency,
-    currency:string
+    currency: string
   ) => {
     if (cumulArrayData === undefined) return [];
     if (cumulArrayData.length === 0) return [];
@@ -113,7 +111,11 @@ export function CumulativeSpending({
       enhancedCumulArray.push(NaN);
       enhancedCumulArrayLength = enhancedCumulArray?.length;
     }
-    const forecastValue = calculateForcastValue(cumulArrayData, upLimit,currency);
+    const forecastValue = calculateForcastValue(
+      cumulArrayData,
+      upLimit,
+      currency
+    );
 
     enhancedCumulArray.push(forecastValue);
     const enhancedCumulArrayWithMidPoints = enhanceNumberArray(
@@ -133,7 +135,7 @@ export function CumulativeSpending({
   const calculateForcastValue = (
     cumulArrayData: number[] | undefined,
     upLimit: number,
-    currency:string
+    currency: string
   ) => {
     const spendingArray = deCumulArray(cumulArrayData);
     const total = spendingArray.reduce(
@@ -142,7 +144,7 @@ export function CumulativeSpending({
     );
     const average = total / spendingArray.length;
     const forecastValue = average * upLimit;
-    
+
     return Number(forecastValue.toFixed(significantDigitsFromTicker(currency)));
   };
 
@@ -156,13 +158,12 @@ export function CumulativeSpending({
     }
   };
 
-  const isSuccess = true;
-  // const cumulArrayData = [30, 30, 30, 33, 34,]
-  const cumulArrayData = [
-    1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222,222,222,222,222,222,222,222,222,222,230,250,260
-  ];
   const expensePoints = cumulArrayData === undefined ? [] : cumulArrayData;
-  const projectedArray = projectionArray(cumulArrayData, selectedCycle.value,currency);
+  const projectedArray = projectionArray(
+    cumulArrayData,
+    selectedCycle.value,
+    currency
+  );
 
   const lastNumberBeforeNaN = findLastNumberBeforeNaN(projectedArray);
 
