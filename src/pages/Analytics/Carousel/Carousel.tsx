@@ -49,7 +49,7 @@ export default function Carousel({
   };
 
   return (
-    <StyledCarousel cyclehaschanged={cyclehaschanged}>
+    <StyledCarousel $cyclehaschanged={cyclehaschanged}>
       <div className="carousel-container">
         <div className="arrow-btn left" onClick={prevItem}>
           <SlArrowLeft className="arrow" />
