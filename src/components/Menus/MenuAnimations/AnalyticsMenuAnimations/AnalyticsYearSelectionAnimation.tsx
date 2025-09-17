@@ -11,7 +11,7 @@ export default function AnalyticsYearSelectionAnimation({
   const nodeRef = useRef(null);
   return (
     <CSSTransition
-    nodeRef={nodeRef}
+      nodeRef={nodeRef}
       in={menu.value === "year"}
       timeout={100}
       classNames="bottomslide"
