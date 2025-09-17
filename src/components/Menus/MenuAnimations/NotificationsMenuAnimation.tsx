@@ -9,7 +9,7 @@ export default function NotificationsMenuAnimation({
   // hasNextPage,
   // isFetchingNextPage,
   // userInvitations,
-  userInfo
+  userInfo,
 }: NotificationsMenuAnimationProps) {
   const nodeRef = useRef(null);
   return (
