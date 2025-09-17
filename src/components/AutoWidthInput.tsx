@@ -34,45 +34,44 @@ const AutoWidthInput = forwardRef<HTMLInputElement, AutoWidthInputProps>(
       }
     }, [value]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    
-      if (isText && onChange) return onChange(e);
-   
-      if (category === "Amounts") {
-        if (onChange) {
-          onChange(e);
-        }
-        return;
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (isText && onChange) return onChange(e);
+
+  if (category === "Amounts") {
+    if (onChange) {
+      onChange(e);
+    }
+    return;
+  }
+
+  let inputValue = e.target.value.replace(/[,]/g, '.'); // Replace comma with dot
+  const isValid = /^-?\d*\.?\d*$/.test(inputValue);
+  if (!isValid && inputValue !== "") return;
+
+  if (category === "Shares" || category === "Percentages") {
+    const parts = inputValue.split(".");
+    if (parts[1] && parts[1].length > 2) {
+      inputValue = `${parts[0]}.${parts[1].slice(0, 2)}`;
+      e.target.value = inputValue;
+    }
+
+    if (category === "Shares") {
+      const integerPart = parts[0].replace(/^-/, "");
+      if (integerPart && integerPart.length > 6) {
+        const decimalPart = parts[1] ? `.${parts[1].slice(0, 2)}` : "";
+        inputValue = `${integerPart.slice(0, 6)}${decimalPart}`;
+        e.target.value = inputValue;
+      } else if (parseFloat(inputValue) < 0) {
+        inputValue = "";
+        e.target.value = inputValue;
       }
+    }
+  }
 
-      let inputValue = e.target.value;
-      const isValid = /^-?\d*\.?\d*$/.test(inputValue);
-      if (!isValid && inputValue !== "") return;
-
-      if (category === "Shares" || category === "Percentages") {
-        const parts = inputValue.split(".");
-        if (parts[1] && parts[1].length > 2) {
-          inputValue = `${parts[0]}.${parts[1].slice(0, 2)}`;
-          e.target.value = inputValue;
-        }
-
-        if (category === "Shares") {
-          const integerPart = parts[0].replace(/^-/, "");
-          if (integerPart && integerPart.length > 6) {
-            const decimalPart = parts[1] ? `.${parts[1].slice(0, 2)}` : "";
-            inputValue = `${integerPart.slice(0, 6)}${decimalPart}`;
-            e.target.value = inputValue;
-          } else if (parseFloat(inputValue) < 0) {
-            inputValue = "";
-            e.target.value = inputValue;
-          }
-        }
-      }
-
-      if (onChange) {
-        onChange(e);
-      }
-    };
+  if (onChange) {
+    onChange(e);
+  }
+};
 
     return (
       <div style={{ display: "inline-block", position: "relative" }}>

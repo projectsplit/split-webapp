@@ -145,9 +145,10 @@ const MemberPicker = ({
   };
 
 const changeAmount = (id: string, e: React.ChangeEvent<HTMLInputElement>): void => {
-  if (category.value !== "Amounts") {
+   if (category.value !== "Amounts") {
+    let value = e.target.value.replace(/,/g, '.'); // Replace comma with dot
     const updatedMembers = memberAmounts.map(m => 
-      m.id === id ? { ...m, screenQuantity: e.target.value, locked: true } : m
+      m.id === id ? { ...m, screenQuantity: value, locked: true } : m
     );
     setMemberAmounts(recalculateAmounts(updatedMembers, totalAmount, decimalDigits, category, selectedCurrency));
     return;
