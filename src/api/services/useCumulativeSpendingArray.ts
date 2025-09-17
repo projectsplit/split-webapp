@@ -15,7 +15,7 @@ export const useCumulativeSpendingArray = (
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     staleTime: 10000,
-    enabled: true,
+   enabled: !!currency
   });
 };
 
