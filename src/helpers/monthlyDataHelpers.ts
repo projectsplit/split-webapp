@@ -23,7 +23,7 @@ export const monthMap: { [key: string]: string } = {
   'Jun': 'June',
   'Jul': 'July',
   'Aug': 'August',
-  'Sept': 'September',
+  'Sep': 'September',
   'Oct': 'October',
   'Nov': 'November',
   'Dec': 'December'
