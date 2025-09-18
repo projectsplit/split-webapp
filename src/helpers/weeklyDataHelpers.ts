@@ -90,7 +90,7 @@ export function keepMonthAndNumberOfDay(dateArray: string[]): string[] {
   const formattedDates: string[] = [];
   dateArray.forEach((dateString) => {
     const date = new Date(dateString);
-    const month = date.toLocaleString("default", { month: "short" });
+    const month = date.toLocaleString("en-US", { month: "short" });
     const day = date.getDate();
     const formattedDate = `${month} ${day} `;
     formattedDates.push(formattedDate);
