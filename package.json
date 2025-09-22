@@ -1,7 +1,7 @@
 {
   "name": "split-webapp",
   "private": true,
-  "version": "0.0.172",
+  "version": "0.0.173",
   "tagVersionPrefix": "",
   "type": "module",
   "scripts": {
