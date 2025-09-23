@@ -7,6 +7,7 @@ import { copyToClipboard } from "../../../../helpers/copyToClipboars";
 import { useEffect, useState } from "react";
 import { IoIosWarning } from "react-icons/io";
 import ShimerPlaceholder from "../../ShimerPlaceholder/ShimerPlaceholder";
+import config from "../../../../config";
 
 export default function RevokeAccessItem({
   expires,
@@ -57,7 +58,7 @@ export default function RevokeAccessItem({
       {" "}
       <div
         className="codeAndCopy"
-        onClick={() => copyToClipboard(id, "https://abcsplit.uk/j/")}
+        onClick={() => copyToClipboard(id, `${config.clientUrl}/j/`)}
       >
         <div className="code"> {id} </div>
         <IoCopy />

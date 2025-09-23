@@ -10,6 +10,7 @@ import { copyToClipboard } from "../../../helpers/copyToClipboars";
 import { useQueryClient } from "@tanstack/react-query";
 import { IoIosWarning } from "react-icons/io";
 import ShimerPlaceholder from "../ShimerPlaceholder/ShimerPlaceholder";
+import config from "../../../config";
 
 export default function ShareGroup({
   groupName,
@@ -55,7 +56,7 @@ export default function ShareGroup({
       const qrCode = new QRCodeStyling({
         width: 250,
         height: 250,
-        data: `https://abcsplit.uk/j/${invitationCode}`,
+        data: `${config.clientUrl}/j/${invitationCode}`,
         dotsOptions: {
           color: "#000000",
           type: "rounded",
@@ -113,7 +114,7 @@ export default function ShareGroup({
               <div
                 className="copy"
                 onClick={() =>
-                  copyToClipboard(invitationCode, "https://abcsplit.uk/j/")
+                  copyToClipboard(invitationCode, `${config.clientUrl}/j/`)
                 }
               >
                 <IoCopy />
