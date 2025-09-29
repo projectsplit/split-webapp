@@ -103,6 +103,8 @@ const SearchUsersToInvite = ({
               placeholder="Search"
               backgroundcolor="#2d2d2d"
               onChange={(e) => setKeyword(e.target.value)}
+              value={keyword ||""}
+             
             />
           </div>
 
@@ -141,7 +143,8 @@ const SearchUsersToInvite = ({
               placeholder="guest's name"
               backgroundcolor="#2d2d2d"
               onChange={(e) => setGuestName(e.target.value)}
-              value={guestName}
+              value={guestName|| ""}
+               autoFocus={true}
             />
             <div className="createButton">
               <MyButton
