@@ -3,6 +3,7 @@ import CreateExpenseForm from "../../CreateExpenseForm/CreateExpenseForm";
 import { NewExpenseAnimationProps } from "../../../interfaces";
 import { ExpenseResponseItem } from "../../../types";
 import { useSignal } from "@preact/signals-react";
+import { useRef } from "react";
 
 export default function NewExpenseAnimation({
   group,
@@ -11,9 +12,9 @@ export default function NewExpenseAnimation({
   timeZoneCoordinates
 }: NewExpenseAnimationProps) {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
-  
+    const nodeRef = useRef(null);
   return (
-    <CSSTransition in={menu.value === "newExpense"} timeout={0} unmountOnExit>
+    <CSSTransition in={menu.value === "newExpense"} timeout={0} unmountOnExit nodeRef={nodeRef}>
       <CreateExpenseForm
         group={group}
         expense={null}

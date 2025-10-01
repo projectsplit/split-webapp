@@ -1,42 +1,83 @@
 import { Signal } from "@preact/signals-react";
 import { PickerMember } from "../../../../types";
+import { StyledText } from "./Text.styled";
 
 interface TextProps {
-    description: string;
-    selectedCount: number;
-    sortedMemberAmounts:  PickerMember[];
-    isEquallySplit: Signal<boolean>
-    category: Signal<string>
+  description: string;
+  selectedCount: number;
+  sortedMemberAmounts: PickerMember[];
+  isEquallySplit: Signal<boolean>;
+  category: Signal<string>;
 }
-const Text = ({description, selectedCount, sortedMemberAmounts, isEquallySplit}:TextProps) => {
+const Text = ({
+  description,
+  selectedCount,
+  sortedMemberAmounts,
+  isEquallySplit,
+}: TextProps) => {
   return (
-    <div className="text">
-      {description === "Participants"
-        ? selectedCount === 0
-          ? "Select participants"
-          : selectedCount === 1
-          ? `Billed to ${sortedMemberAmounts.find((m) => m.selected ===true)?.name}`
-          : selectedCount === 2 && isEquallySplit.value
-          ? `Split equally between ${selectedCount} `
-          : selectedCount === 2 && !isEquallySplit.value
-          ? `Split unequally between ${selectedCount} `
-          : selectedCount > 2 && isEquallySplit.value
-          ? `Split equally among ${selectedCount} `
-          : `Split unequally among ${selectedCount} `
-        : description === "Payers"
-        ? selectedCount === 0
-          ? "Select payers"
-          : selectedCount === 1
-          ? `Paid by ${sortedMemberAmounts.find((m) => m.selected ===true)?.name}`
-          : selectedCount === 2 && isEquallySplit.value
-          ? `Paid equally by ${selectedCount} `
-          : selectedCount === 2 && !isEquallySplit.value
-          ? `Paid unequally by ${selectedCount} `
-          : selectedCount > 2 && isEquallySplit.value
-          ? `Paid equally by ${selectedCount} `
-          : `Paid unequally by ${selectedCount} `
-        : null}
-    </div>
+    <StyledText>
+      {description === "Participants" ? (
+        selectedCount === 0 ? (
+          ""
+        ) : selectedCount === 1 ? (
+          <>
+            Billed to{" "}
+            <div className="button">
+              {sortedMemberAmounts.find((m) => m.selected === true)?.name}{" "}
+            </div>{" "}
+            and
+          </>
+        ) : selectedCount === 2 && isEquallySplit.value ? (
+          <>
+            Split <div className="button">equally </div>{" "}
+            between {selectedCount} and
+          </>
+        ) : selectedCount === 2 && !isEquallySplit.value ? (
+          <>
+            Split <div className="button">unequally </div>{" "}
+            between {selectedCount} and
+          </>
+        ) : selectedCount > 2 && isEquallySplit.value ? (
+          <>
+            Split <div className="button">equally </div>{" "} among {selectedCount}{" "}
+            and
+          </>
+        ) : (
+          <>
+            Split <div className="button">unequally </div>{" "} among {selectedCount}{" "}
+            and
+          </>
+        )
+      ) : description === "Payers" ? (
+        selectedCount === 0 ? (
+          ""
+        ) : selectedCount === 1 ? (
+          <>
+            paid by{" "}
+            <div className="button">
+              {sortedMemberAmounts.find((m) => m.selected === true)?.name}{" "}
+            </div>
+          </>
+        ) : selectedCount === 2 && isEquallySplit.value ? (
+          <>
+            paid <div className="button">equally </div>{" "} by {selectedCount}
+          </>
+        ) : selectedCount === 2 && !isEquallySplit.value ? (
+          <>
+            paid <div className="button">unequally </div>{" "} by {selectedCount}
+          </>
+        ) : selectedCount > 2 && isEquallySplit.value ? (
+          <>
+            paid <div className="button">equally </div>{" "} by {selectedCount}
+          </>
+        ) : (
+          <>
+            paid <div className="button">unequally </div>{" "} by {selectedCount}
+          </>
+        )
+      ) : null}
+    </StyledText>
   );
 };
 

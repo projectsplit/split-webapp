@@ -56,25 +56,23 @@ export function submitExpense({
 }) {
   setShowAmountError(true);
 
+  if (participantsCategory.value === "Shares") {
+    participants.map((p) => {
+      if (p.actualAmount === "0.00") {
+        p.selected = false;
+      }
+      return p;
+    });
+  }
 
-if (participantsCategory.value === 'Shares') {
-  participants.map(p => {
-    if ( p.actualAmount === '0.00') {
-      p.selected = false;
-    }
-    return p; 
-  });
-}
-
-if (payersCategory.value === 'Shares') {
-  payers.map(p => {
-    if ( p.actualAmount === '0.00') {
-      p.selected = false;
-    }
-    return p; 
-  });
-}
-
+  if (payersCategory.value === "Shares") {
+    payers.map((p) => {
+      if (p.actualAmount === "0.00") {
+        p.selected = false;
+      }
+      return p;
+    });
+  }
 
   if (
     participants.length ===
@@ -89,68 +87,66 @@ if (payersCategory.value === 'Shares') {
     return;
   }
 
-   if( participantsCategory.value === "Shares" || payersCategory.value === "Shares") {
-       const selectedParticipants = participants.filter((x) => x.selected);
-        const areParticipantsNumbersValid = selectedParticipants.every(
-          (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
-        );
-    
-        const isParticipantsSumInvalid =
-          selectedParticipants.length > 0 &&
-          (significantDigitsFromTicker(currencySymbol) >= 3
-            ? Number(
-                selectedParticipants
-                  .reduce((acc, payer) => acc + Number(payer.actualAmount), 0)
-                  .toFixed(significantDigitsFromTicker(currencySymbol))
-              ) !==
-              Number(
-                Number(amount).toFixed(significantDigitsFromTicker(currencySymbol))
-              )
-            : selectedParticipants.reduce(
-                (acc, payer) => currency(acc).add(payer.actualAmount).value,
-                0
-              ) !== currency(amount).value);
-    
-        const selectedPayers = payers.filter((x) => x.selected);
-        const arePayersNumbersValid = selectedPayers.every(
-          (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
-        );
-        const isPayersSumInvalid =
-          selectedPayers.length > 0 &&
-          (significantDigitsFromTicker(currencySymbol) >= 3
-            ? Number(
-                selectedPayers
-                  .reduce((acc, payer) => acc + Number(payer.actualAmount), 0)
-                  .toFixed(significantDigitsFromTicker(currencySymbol))
-              ) !==
-              Number(
-                Number(amount).toFixed(significantDigitsFromTicker(currencySymbol))
-              )
-            : selectedPayers.reduce(
-                (acc, payer) => currency(acc).add(payer.actualAmount).value,
-                0
-              ) !== currency(amount).value);
-    
-        // Validate amount when participants or payers are selected
-        if (selectedParticipants.length > 0 || selectedPayers.length > 0) {
-          setShowAmountError(true);
-        }
-          setParticipantsError(
-            !areParticipantsNumbersValid
-              ? "Amounts must be positive"
-              : isParticipantsSumInvalid
-              ? "Amounts must add up to total"
-              : ""
-          );
-          setPayersError(
-            !arePayersNumbersValid
-              ? "Amounts must be positive"
-              : isPayersSumInvalid
-              ? "Amounts must add up to total"
-              : ""
-          );
+  const selectedParticipants = participants.filter((x) => x.selected);
+  const areParticipantsNumbersValid = selectedParticipants.every(
+    (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
+  );
+
+  const isParticipantsSumInvalid =
+    selectedParticipants.length > 0 &&
+    (significantDigitsFromTicker(currencySymbol) >= 3
+      ? Number(
+          selectedParticipants
+            .reduce((acc, payer) => acc + Number(payer.actualAmount), 0)
+            .toFixed(significantDigitsFromTicker(currencySymbol))
+        ) !==
+        Number(
+          Number(amount).toFixed(significantDigitsFromTicker(currencySymbol))
+        )
+      : selectedParticipants.reduce(
+          (acc, payer) => currency(acc).add(payer.actualAmount).value,
+          0
+        ) !== currency(amount).value);
+
+  const selectedPayers = payers.filter((x) => x.selected);
+  const arePayersNumbersValid = selectedPayers.every(
+    (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
+  );
+  const isPayersSumInvalid =
+    selectedPayers.length > 0 &&
+    (significantDigitsFromTicker(currencySymbol) >= 3
+      ? Number(
+          selectedPayers
+            .reduce((acc, payer) => acc + Number(payer.actualAmount), 0)
+            .toFixed(significantDigitsFromTicker(currencySymbol))
+        ) !==
+        Number(
+          Number(amount).toFixed(significantDigitsFromTicker(currencySymbol))
+        )
+      : selectedPayers.reduce(
+          (acc, payer) => currency(acc).add(payer.actualAmount).value,
+          0
+        ) !== currency(amount).value);
+
+  // Validate amount when participants or payers are selected
+  if (selectedParticipants.length > 0 || selectedPayers.length > 0) {
+    setShowAmountError(true);
   }
-  
+  setParticipantsError(
+    !areParticipantsNumbersValid
+      ? "Amounts must be positive"
+      : isParticipantsSumInvalid
+      ? "Amounts must add up to total"
+      : ""
+  );
+  setPayersError(
+    !arePayersNumbersValid
+      ? "Amounts must be positive"
+      : isPayersSumInvalid
+      ? "Amounts must add up to total"
+      : ""
+  );
+
   if (!amountIsValid(amount, setAmountError)) return;
 
   if (!location.value && description.length == 0) {
@@ -193,7 +189,7 @@ export const createParticipantPickerArray = (
   group: Group,
   expense: FormExpense | null,
   type: string,
-  isCreateExpense:boolean
+  isCreateExpense: boolean
 ): PickerMember[] => {
   return [...group.guests, ...group.members].map((member) => {
     const participant = expense?.participants.find(
@@ -201,7 +197,7 @@ export const createParticipantPickerArray = (
     );
     const actualAmount = participant?.participationAmount ?? "";
     const isPercentageType = type === "Percentages";
-     const isSharesType = type === "Shares";
+    const isSharesType = type === "Shares";
     const expenseAmount = Number(expense?.amount);
     const participationAmount = Number(participant?.participationAmount);
 
@@ -212,7 +208,9 @@ export const createParticipantPickerArray = (
       !isNaN(expenseAmount) &&
       expenseAmount !== 0
         ? ((participationAmount / expenseAmount) * 100).toFixed(1)
-        : isSharesType && !isCreateExpense?'':actualAmount //'0'
+        : isSharesType && !isCreateExpense
+        ? ""
+        : actualAmount; //'0'
 
     return {
       id: member.id,
@@ -251,7 +249,9 @@ export const createPayerPickerArray = (
       !isNaN(expenseAmount) &&
       expenseAmount !== 0
         ? ((paymentAmount / expenseAmount) * 100).toFixed(1)
-        : isSharesType && !isCreateExpense?'':actualAmount //'0'
+        : isSharesType && !isCreateExpense
+        ? ""
+        : actualAmount; //'0'
 
     return {
       id: member.id,

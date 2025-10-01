@@ -34,7 +34,12 @@ import {
   BeautifulMentionsItemData,
   BeautifulMentionsMenuProps,
 } from "lexical-beautiful-mentions";
-import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult, UseMutateFunction } from "@tanstack/react-query";
+import {
+  FetchNextPageOptions,
+  InfiniteData,
+  InfiniteQueryObserverResult,
+  UseMutateFunction,
+} from "@tanstack/react-query";
 import { NavigateFunction } from "react-router-dom";
 
 export interface ExpenseProps {
@@ -146,6 +151,7 @@ export interface MemberPickerProps {
   selectedCurrency: string;
   category: Signal<string>;
   userMemberId: string | undefined;
+  setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface DayPickerProps {
@@ -310,6 +316,9 @@ export interface LocationPickerProps {
   timeZoneCoordinates: Coordinates;
 }
 
+export interface LocationDisplayProps {
+  location: Signal<GeoLocation | undefined>;
+}
 export interface PlacePickerProps {
   location: Signal<GeoLocation | undefined>;
   isMapOpen: Signal<boolean>;
@@ -679,7 +688,13 @@ export interface ConfirmLeaveGroupProps extends MenuProps {
   openGroupOptionsMenu: Signal<boolean>;
 }
 export interface RemoveGuestWarningProps extends MenuProps {}
+export interface ParticipantsPayersErrorMenuProps extends MenuProps {
+  error: string | undefined;
+}
 export interface RemoveGuestWarningAnimationProps extends MenuProps {}
+export interface ParticipantsPayersAnimationProps extends MenuProps {
+  error: string | undefined;
+}
 export interface RenameGroupMenuProps extends MenuProps {
   groupId: string | undefined;
   groupName: string | undefined;
@@ -964,8 +979,8 @@ export interface CumulativeSpendingProps {
   startDate: Signal<string>;
   endDate: Signal<string>;
   currency: string;
-  backendData:SpendingChartsResponse |undefined;
-  isSuccess:boolean
+  backendData: SpendingChartsResponse | undefined;
+  isSuccess: boolean;
 }
 
 export interface BarChartProps extends CumulativeSpendingProps {}
@@ -1064,12 +1079,19 @@ export interface ShareGroupProps {
   >;
   groupId: string;
   setInvitationCode: React.Dispatch<React.SetStateAction<string | null>>;
-  expires:string;
+  expires: string;
 }
 export interface RevokeAccessProps {
-  groupId:string;
+  groupId: string;
   hasNextPage: boolean;
-  fetchNextPage: (options?: FetchNextPageOptions) => Promise<InfiniteQueryObserverResult<InfiniteData<GetJoinCodesResponse, unknown>, Error>>;
+  fetchNextPage: (
+    options?: FetchNextPageOptions
+  ) => Promise<
+    InfiniteQueryObserverResult<
+      InfiniteData<GetJoinCodesResponse, unknown>,
+      Error
+    >
+  >;
   isFetching: boolean;
   isFetchingNextPage: boolean;
   data: InfiniteData<GetJoinCodesResponse, unknown> | undefined;
