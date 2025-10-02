@@ -330,7 +330,7 @@ export default function ExpenseForm({
       />
       <FormInput
         description="Description"
-        placeholder="e.g. Air tickets"
+        placeholder="Enter Description"
         value={description}
         error={descriptionError}
         onChange={handleDescriptionChange}

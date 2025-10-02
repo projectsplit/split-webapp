@@ -37,6 +37,7 @@ import MemberPicker2 from "../MemberPicker/MemberPicker2";
 import { MdLocationOn } from "react-icons/md";
 import { FaCalendar, FaLocationArrow } from "react-icons/fa";
 import { LocationDisplay } from "./LocationDisplay/LocationDisplay";
+import DateDisplay from "./DateDisplay/DateDisplay";
 
 export default function ExpenseForm2({
   group,
@@ -132,6 +133,7 @@ export default function ExpenseForm2({
   );
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
+  const isDateShowing = useSignal<boolean>(false)
   const participantsCategory = useSignal<string>("Amounts");
   const payersCategory = useSignal<string>("Amounts");
 
@@ -307,7 +309,7 @@ export default function ExpenseForm2({
           {showAmountError && amountError ? amountError : ""}
         </span>
       </div>
-      <div className="textStyleInfo">
+      {amountNumber?<div className="textStyleInfo">
         <MemberPicker2
           description={"Participants"}
           totalAmount={amountNumber}
@@ -333,23 +335,22 @@ export default function ExpenseForm2({
           userMemberId={userMemberId}
           setError={setPayersError}
         />
-      </div>
+      </div>:""}
       <FormInput
         description="Description"
-        placeholder="e.g. Air tickets"
+        placeholder="Description"
         value={description}
         error={descriptionError}
         onChange={handleDescriptionChange}
       />
       <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
-      <LocationDisplay  location={location}/>
-      <DateTime
+      <LocationDisplay location={location} isMapOpen={isMapOpen} />
+      {isDateShowing.value&&<DateDisplay
         selectedDateTime={expenseTime}
-        setSelectedDateTime={setExpenseTime}
         timeZoneId={timeZoneId}
-        isEdit={!isCreateExpense}
-        category={signal("Expense")}
-      />
+        setTime={setExpenseTime}
+        isDateShowing={isDateShowing}
+      />}
       <div className="spacer"></div>
       <div className="bottomButtons">
         {" "}
@@ -369,7 +370,14 @@ export default function ExpenseForm2({
           isMapOpen={isMapOpen}
           timeZoneCoordinates={timeZoneCoordinates}
         />
-        <FaCalendar className="calendarIcon" />
+        <DateTime
+          selectedDateTime={expenseTime}
+          setSelectedDateTime={setExpenseTime}
+          timeZoneId={timeZoneId}
+          isEdit={!isCreateExpense}
+          category={signal("Expense")}
+          isDateShowing={isDateShowing}
+        />
       </div>
 
       <MenuAnimationBackground menu={currencyMenu} />

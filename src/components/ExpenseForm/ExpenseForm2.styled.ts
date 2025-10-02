@@ -83,9 +83,11 @@ export const StyledExpenseForm2 = styled.div`
     .locationIcon {
       color: ${({ theme }) => theme.yellow};
       flex-shrink: 0;
-      font-size: 30px;
+      font-size: 25px;
       margin-left: 20px;
       margin-right: 20px;
+      display:flex;
+      align-self:center;
     }
     .calendarIcon {
       color: ${({ theme }) => theme.highlightColor};

@@ -130,6 +130,7 @@ export interface DateTimePickerProps {
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
   category: Signal<string>;
+  isDateShowing:Signal<boolean>
 }
 
 export interface DateTimeProps {
@@ -139,6 +140,14 @@ export interface DateTimeProps {
   isEdit: boolean;
   withLexicalContext?: boolean;
   category: Signal<string>;
+  isDateShowing:Signal<boolean>;
+}
+
+export interface DateDisplayProps {
+  timeZoneId: string;
+  selectedDateTime: string;
+  setTime: React.Dispatch<React.SetStateAction<string>>
+  isDateShowing:Signal<boolean>
 }
 
 export interface MemberPickerProps {
@@ -163,6 +172,7 @@ export interface DayPickerProps {
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
   category: Signal<string>;
+  isDateShowing:Signal<boolean>
 }
 
 export interface ScrollPickerProps {
@@ -318,6 +328,7 @@ export interface LocationPickerProps {
 
 export interface LocationDisplayProps {
   location: Signal<GeoLocation | undefined>;
+  isMapOpen: Signal<boolean>;
 }
 export interface PlacePickerProps {
   location: Signal<GeoLocation | undefined>;

@@ -18,7 +18,8 @@ const DateTimePicker = ({
   calendarIsOpen,
   showOptions,
   withLexicalContext
-  ,category
+  ,category,
+  isDateShowing
 }: DateTimePickerProps) => {
   const MINUTE_STEP = 1;
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
@@ -62,7 +63,9 @@ const DateTimePicker = ({
           );
           setRealtimeUpdate?.(false);
         },
+       
       }
+     
     : null;
 
   useEffect(() => {
@@ -96,8 +99,8 @@ const DateTimePicker = ({
   }, [selectedDateTime]);
 
   return (
-    <StyledDateTimePicker $isSearchCalendar={calendarIsOpen?.value}>
-      <div className="top-menu">
+    <StyledDateTimePicker $isSearchCalendar={calendarIsOpen?.value} >
+      <div className="top-menu" >
         <div className="month-year">
           <RxChevronLeft
             className="button"
@@ -150,9 +153,10 @@ const DateTimePicker = ({
         showOptions={showOptions}
         withLexicalContext={withLexicalContext}
         category={category}
+       isDateShowing={isDateShowing}
       />
       {showTimeControls && timePickerUtils && (
-        <div className="bottom-menu">
+        <div className="bottom-menu" onClick={()=>isDateShowing.value=true}>
           <div
             className={`button ${isNow(selectedDateTime) ? "active" : ""}`}
             onClick={timePickerUtils.onNowClick}
