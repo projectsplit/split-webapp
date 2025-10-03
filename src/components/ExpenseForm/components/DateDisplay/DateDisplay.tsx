@@ -1,6 +1,6 @@
 import { StyledDateDisplay } from "./DateDisplay.styled";
-import { DateDisplayProps } from "../../../interfaces";
-import { toLuxon } from "../../../utils";
+import { DateDisplayProps } from "../../../../interfaces";
+import { toLuxon } from "../../../../utils";
 import { FaCalendar } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 

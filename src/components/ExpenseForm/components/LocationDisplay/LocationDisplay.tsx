@@ -1,5 +1,5 @@
 import { IoClose } from "react-icons/io5";
-import { LocationDisplayProps } from "../../../interfaces";
+import { LocationDisplayProps } from "../../../../interfaces";
 import { StyledLocationDisplay } from "./LocationDisplay.styled";
 import { MdLocationOn } from "react-icons/md";
 

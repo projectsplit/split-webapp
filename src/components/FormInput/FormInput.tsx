@@ -1,9 +1,10 @@
 import { forwardRef, useRef } from "react";
 import { StyledFormInput, StyledInput } from "./FormInput.styled";
 import { FaTags } from "react-icons/fa";
+import { Signal } from "@preact/signals-react";
 
 const FormInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ description, error, ...props }, ref) => {
+  ({ description, labelMenuIsOpen, error, ...props }, ref) => {
     const inputRef = useRef<HTMLInputElement>();
 
     if (ref && typeof ref === "object" && ref.current) {
@@ -19,11 +20,14 @@ const FormInput = forwardRef<HTMLInputElement, InputProps>(
       }
     };
 
-return (
+    return (
       <StyledFormInput $hasError={!!error}>
         <div className="labelIconAndInputField">
           <div className="labelSelectorWrapper">
-            <div className="labelSelector" onClick={() => console.log("clicked")}>
+            <div
+              className="labelSelector"
+              onClick={() => (labelMenuIsOpen.value = true)}
+            >
               <FaTags className="tagIcon" />
             </div>
           </div>
@@ -51,4 +55,5 @@ export default FormInput;
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   description?: string;
   error?: string;
+  labelMenuIsOpen: Signal<boolean>;
 }

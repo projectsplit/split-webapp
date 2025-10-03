@@ -23,6 +23,7 @@ export const StyledInputMonetary = styled.div<StyledInputMonetary>`
     border-color: ${({ theme, $inputError }) =>
       $inputError ? theme.errorColor : theme.highlightColor};
   }
+  transition: border-color 0.15s;
   .currencySelectorWrapper {
     position: absolute;
 

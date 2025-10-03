@@ -36,8 +36,9 @@ import { StyledExpenseForm2 } from "./ExpenseForm2.styled";
 import MemberPicker2 from "../MemberPicker/MemberPicker2";
 import { MdLocationOn } from "react-icons/md";
 import { FaCalendar, FaLocationArrow } from "react-icons/fa";
-import { LocationDisplay } from "./LocationDisplay/LocationDisplay";
-import DateDisplay from "./DateDisplay/DateDisplay";
+import { LocationDisplay } from "./components/LocationDisplay/LocationDisplay";
+import DateDisplay from "./components/DateDisplay/DateDisplay";
+import { LabelMenu } from "./components/LabelMenu/LabelMenu";
 
 export default function ExpenseForm2({
   group,
@@ -118,6 +119,7 @@ export default function ExpenseForm2({
   const [labels, setLabels] = useState<Label[]>(
     isCreateExpense || !expense ? [] : expense.labels
   );
+
   const [expenseTime, setExpenseTime] = useState<string>(
     isCreateExpense || !expense
       ? new Date().toISOString()
@@ -133,7 +135,8 @@ export default function ExpenseForm2({
   );
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
-  const isDateShowing = useSignal<boolean>(false)
+  const isDateShowing = useSignal<boolean>(false);
+  const labelMenuIsOpen = useSignal<boolean>(false);
   const participantsCategory = useSignal<string>("Amounts");
   const payersCategory = useSignal<string>("Amounts");
 
@@ -309,48 +312,56 @@ export default function ExpenseForm2({
           {showAmountError && amountError ? amountError : ""}
         </span>
       </div>
-      {amountNumber?<div className="textStyleInfo">
-        <MemberPicker2
-          description={"Participants"}
-          totalAmount={amountNumber}
-          memberAmounts={adjustParticipants}
-          error={participantsError}
-          setMemberAmounts={setParticipants}
-          group={group}
-          selectedCurrency={currencySymbol}
-          category={participantsCategory}
-          userMemberId={userMemberId}
-          setError={setParticipantsError}
-        />
+      {amountNumber ? (
+        <div className="textStyleInfo">
+          <MemberPicker2
+            description={"Participants"}
+            totalAmount={amountNumber}
+            memberAmounts={adjustParticipants}
+            error={participantsError}
+            setMemberAmounts={setParticipants}
+            group={group}
+            selectedCurrency={currencySymbol}
+            category={participantsCategory}
+            userMemberId={userMemberId}
+            setError={setParticipantsError}
+          />
 
-        <MemberPicker2
-          description={"Payers"}
-          totalAmount={amountNumber}
-          memberAmounts={adjustPayers}
-          error={payersError}
-          setMemberAmounts={setPayers}
-          group={group}
-          selectedCurrency={currencySymbol}
-          category={payersCategory}
-          userMemberId={userMemberId}
-          setError={setPayersError}
-        />
-      </div>:""}
+          <MemberPicker2
+            description={"Payers"}
+            totalAmount={amountNumber}
+            memberAmounts={adjustPayers}
+            error={payersError}
+            setMemberAmounts={setPayers}
+            group={group}
+            selectedCurrency={currencySymbol}
+            category={payersCategory}
+            userMemberId={userMemberId}
+            setError={setPayersError}
+          />
+        </div>
+      ) : (
+        ""
+      )}
       <FormInput
         description="Description"
         placeholder="Description"
         value={description}
         error={descriptionError}
         onChange={handleDescriptionChange}
+        labelMenuIsOpen={labelMenuIsOpen}
       />
-      <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
+      {labelMenuIsOpen.value && <LabelMenu labelMenuIsOpen={labelMenuIsOpen} labels={labels} setLabels={setLabels} groupId={group.id}/>}
+    
       <LocationDisplay location={location} isMapOpen={isMapOpen} />
-      {isDateShowing.value&&<DateDisplay
-        selectedDateTime={expenseTime}
-        timeZoneId={timeZoneId}
-        setTime={setExpenseTime}
-        isDateShowing={isDateShowing}
-      />}
+      {isDateShowing.value && (
+        <DateDisplay
+          selectedDateTime={expenseTime}
+          timeZoneId={timeZoneId}
+          setTime={setExpenseTime}
+          isDateShowing={isDateShowing}
+        />
+      )}
       <div className="spacer"></div>
       <div className="bottomButtons">
         {" "}

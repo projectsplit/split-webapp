@@ -347,6 +347,15 @@ export interface LabelPickerProps {
   setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
   groupId: string;
 }
+
+export interface LabelMenuProps {
+  labelMenuIsOpen:Signal<boolean>
+    labels: Label[];
+  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
+  groupId: string;
+}
+
+
 export interface BottomMenuProps {
   children: any;
   height?: string;
@@ -1122,3 +1131,5 @@ export interface RevokeAccessItemProps {
   invitationCode: string | null;
   mostRecentCodeHasBeenRevoked: Signal<boolean>;
 }
+
+
