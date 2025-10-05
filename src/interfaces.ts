@@ -1132,4 +1132,7 @@ export interface RevokeAccessItemProps {
   mostRecentCodeHasBeenRevoked: Signal<boolean>;
 }
 
-
+export interface LabelsDisplayProps{
+  labels: Label[]
+  setLabels: React.Dispatch<React.SetStateAction<Label[]>>
+}

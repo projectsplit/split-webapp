@@ -39,6 +39,7 @@ import { FaCalendar, FaLocationArrow } from "react-icons/fa";
 import { LocationDisplay } from "./components/LocationDisplay/LocationDisplay";
 import DateDisplay from "./components/DateDisplay/DateDisplay";
 import { LabelMenu } from "./components/LabelMenu/LabelMenu";
+import LabelsDisplay from "./components/LabelsDisplay/LabelsDisplay";
 
 export default function ExpenseForm2({
   group,
@@ -362,6 +363,7 @@ export default function ExpenseForm2({
           isDateShowing={isDateShowing}
         />
       )}
+      {labels.length>0?<LabelsDisplay labels={labels} setLabels={setLabels} />:null}
       <div className="spacer"></div>
       <div className="bottomButtons">
         {" "}
