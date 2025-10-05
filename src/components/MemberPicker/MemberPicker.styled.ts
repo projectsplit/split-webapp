@@ -24,16 +24,6 @@ export const StyledMemberPicker = styled.div<{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: ${({ theme }) => theme.layer2};
-    border: 1px solid
-      ${({ theme, $hasError, $isOpen }) =>
-        $hasError
-          ? theme.errorColor
-          : $isOpen
-          ? theme.highlightColor
-          : theme.lineColor};
-    border-radius: 8px;
-    padding: 0.5em 1em;
     white-space: nowrap;
     cursor: pointer;
     text-overflow: clip;
@@ -63,30 +53,63 @@ export const StyledMemberPicker = styled.div<{
     }
   }
 
-  .dropdown {
-    background-color: ${({ theme }) => theme.backgroundcolor};
+  .menu {
+    position: fixed;
     color: ${({ theme }) => theme.textActiveColor};
-    border-color: ${({ theme }) => theme.lineColor};
+    background-color: ${({ theme }) => theme.backgroundcolor};
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    margin: 0;
+    z-index: 10;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    position: absolute;
-    z-index: 5;
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: 8px;
-    border-width: 1px;
-    border-style: solid;
-    max-height: 300px;
+    padding: 12px 16px;
+    gap: 20px;
+    bottom: 0;
     overflow-y: auto;
-    overflow-x: hidden; 
-    top: calc(100% - 12px);
-    /* @media (max-width: 768px) {
-      max-height: 200px;
-    } */
+    .header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+
+      .closeButtonContainer {
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      .backButton {
+        cursor: pointer;
+        display: block;
+        font-size: 1.875rem;
+      }
+
+      .closeButtonContainer:hover::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background-color: rgba(128, 128, 128, 0.3);
+        pointer-events: none;
+      }
+
+      .title {
+        font-weight: 600;
+      }
+      .gap {
+        margin-right: 0.9375rem;
+      }
+    }
     .categories {
       margin-top: 7px;
-      
     }
     .separator {
       margin-left: 10px;
@@ -205,6 +228,9 @@ export const StyledMemberPicker = styled.div<{
           color: ${({ theme }) => theme.lineColor};
         }
       }
+    }
+    .spacer {
+      flex-grow: 1; /* This pushes the button to the bottom */
     }
   }
 `;

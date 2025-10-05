@@ -34,7 +34,12 @@ import {
   BeautifulMentionsItemData,
   BeautifulMentionsMenuProps,
 } from "lexical-beautiful-mentions";
-import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult, UseMutateFunction } from "@tanstack/react-query";
+import {
+  FetchNextPageOptions,
+  InfiniteData,
+  InfiniteQueryObserverResult,
+  UseMutateFunction,
+} from "@tanstack/react-query";
 import { NavigateFunction } from "react-router-dom";
 
 export interface ExpenseProps {
@@ -125,6 +130,7 @@ export interface DateTimePickerProps {
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
   category: Signal<string>;
+  isDateShowing:Signal<boolean>
 }
 
 export interface DateTimeProps {
@@ -134,6 +140,14 @@ export interface DateTimeProps {
   isEdit: boolean;
   withLexicalContext?: boolean;
   category: Signal<string>;
+  isDateShowing:Signal<boolean>;
+}
+
+export interface DateDisplayProps {
+  timeZoneId: string;
+  selectedDateTime: string;
+  setTime: React.Dispatch<React.SetStateAction<string>>
+  isDateShowing:Signal<boolean>
 }
 
 export interface MemberPickerProps {
@@ -146,6 +160,7 @@ export interface MemberPickerProps {
   selectedCurrency: string;
   category: Signal<string>;
   userMemberId: string | undefined;
+  setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface DayPickerProps {
@@ -157,6 +172,7 @@ export interface DayPickerProps {
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
   category: Signal<string>;
+  isDateShowing:Signal<boolean>
 }
 
 export interface ScrollPickerProps {
@@ -310,6 +326,10 @@ export interface LocationPickerProps {
   timeZoneCoordinates: Coordinates;
 }
 
+export interface LocationDisplayProps {
+  location: Signal<GeoLocation | undefined>;
+  isMapOpen: Signal<boolean>;
+}
 export interface PlacePickerProps {
   location: Signal<GeoLocation | undefined>;
   isMapOpen: Signal<boolean>;
@@ -327,6 +347,15 @@ export interface LabelPickerProps {
   setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
   groupId: string;
 }
+
+export interface LabelMenuProps {
+  labelMenuIsOpen:Signal<boolean>
+    labels: Label[];
+  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
+  groupId: string;
+}
+
+
 export interface BottomMenuProps {
   children: any;
   height?: string;
@@ -679,7 +708,13 @@ export interface ConfirmLeaveGroupProps extends MenuProps {
   openGroupOptionsMenu: Signal<boolean>;
 }
 export interface RemoveGuestWarningProps extends MenuProps {}
+export interface ParticipantsPayersErrorMenuProps extends MenuProps {
+  error: string | undefined;
+}
 export interface RemoveGuestWarningAnimationProps extends MenuProps {}
+export interface ParticipantsPayersAnimationProps extends MenuProps {
+  error: string | undefined;
+}
 export interface RenameGroupMenuProps extends MenuProps {
   groupId: string | undefined;
   groupName: string | undefined;
@@ -964,8 +999,8 @@ export interface CumulativeSpendingProps {
   startDate: Signal<string>;
   endDate: Signal<string>;
   currency: string;
-  backendData:SpendingChartsResponse |undefined;
-  isSuccess:boolean
+  backendData: SpendingChartsResponse | undefined;
+  isSuccess: boolean;
 }
 
 export interface BarChartProps extends CumulativeSpendingProps {}
@@ -1064,12 +1099,19 @@ export interface ShareGroupProps {
   >;
   groupId: string;
   setInvitationCode: React.Dispatch<React.SetStateAction<string | null>>;
-  expires:string;
+  expires: string;
 }
 export interface RevokeAccessProps {
-  groupId:string;
+  groupId: string;
   hasNextPage: boolean;
-  fetchNextPage: (options?: FetchNextPageOptions) => Promise<InfiniteQueryObserverResult<InfiniteData<GetJoinCodesResponse, unknown>, Error>>;
+  fetchNextPage: (
+    options?: FetchNextPageOptions
+  ) => Promise<
+    InfiniteQueryObserverResult<
+      InfiniteData<GetJoinCodesResponse, unknown>,
+      Error
+    >
+  >;
   isFetching: boolean;
   isFetchingNextPage: boolean;
   data: InfiniteData<GetJoinCodesResponse, unknown> | undefined;
@@ -1088,4 +1130,9 @@ export interface RevokeAccessItemProps {
   groupId: string;
   invitationCode: string | null;
   mostRecentCodeHasBeenRevoked: Signal<boolean>;
+}
+
+export interface LabelsDisplayProps{
+  labels: Label[]
+  setLabels: React.Dispatch<React.SetStateAction<Label[]>>
 }

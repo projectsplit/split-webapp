@@ -6,12 +6,7 @@ import React, {
   useState,
 } from "react";
 import { StyledExpenseForm } from "./ExpenseForm.styled";
-import {
-  GeoLocation,
-  Label,
-  PickerMember,
-  UserInfo,
-} from "../../types";
+import { GeoLocation, Label, PickerMember, UserInfo } from "../../types";
 import MyButton from "../MyButton/MyButton";
 import { DateTime } from "../DateTime";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
@@ -37,8 +32,16 @@ import {
 import { useSetBySharesAmountsToZero } from "./hooks/useSetBySharesAmountsToZero";
 import { useExpenseValidation } from "./hooks/useExpenseValidation";
 import { useOutletContext } from "react-router-dom";
+import { StyledExpenseForm2 } from "./ExpenseForm2.styled";
+import MemberPicker2 from "../MemberPicker/MemberPicker2";
+import { MdLocationOn } from "react-icons/md";
+import { FaCalendar, FaLocationArrow } from "react-icons/fa";
+import { LocationDisplay } from "./components/LocationDisplay/LocationDisplay";
+import DateDisplay from "./components/DateDisplay/DateDisplay";
+import { LabelMenu } from "./components/LabelMenu/LabelMenu";
+import LabelsDisplay from "./components/LabelsDisplay/LabelsDisplay";
 
-export default function ExpenseForm({
+export default function ExpenseForm2({
   group,
   expense,
   timeZoneId,
@@ -117,6 +120,7 @@ export default function ExpenseForm({
   const [labels, setLabels] = useState<Label[]>(
     isCreateExpense || !expense ? [] : expense.labels
   );
+
   const [expenseTime, setExpenseTime] = useState<string>(
     isCreateExpense || !expense
       ? new Date().toISOString()
@@ -132,6 +136,8 @@ export default function ExpenseForm({
   );
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
+  const isDateShowing = useSignal<boolean>(false);
+  const labelMenuIsOpen = useSignal<boolean>(false);
   const participantsCategory = useSignal<string>("Amounts");
   const payersCategory = useSignal<string>("Amounts");
 
@@ -145,6 +151,7 @@ export default function ExpenseForm({
     participantsByCategory[
       participantsCategory.value as keyof typeof participantsByCategory
     ];
+
   const payers =
     payersByCategory[payersCategory.value as keyof typeof payersByCategory];
 
@@ -280,7 +287,7 @@ export default function ExpenseForm({
   );
 
   return (
-    <StyledExpenseForm>
+    <StyledExpenseForm2>
       <div className="header">
         <div className="gap"></div>
         <div className="title">{header}</div>
@@ -306,65 +313,93 @@ export default function ExpenseForm({
           {showAmountError && amountError ? amountError : ""}
         </span>
       </div>
-      <MemberPicker
-        description={"Participants"}
-        totalAmount={amountNumber}
-        memberAmounts={adjustParticipants}
-        error={participantsError}
-        setMemberAmounts={setParticipants}
-        group={group}
-        selectedCurrency={currencySymbol}
-        category={participantsCategory}
-        userMemberId={userMemberId}
-      />
-      <MemberPicker
-        description={"Payers"}
-        totalAmount={amountNumber}
-        memberAmounts={adjustPayers}
-        error={payersError}
-        setMemberAmounts={setPayers}
-        group={group}
-        selectedCurrency={currencySymbol}
-        category={payersCategory}
-        userMemberId={userMemberId}
-      />
+      {amountNumber ? (
+        <div className="textStyleInfo">
+          <MemberPicker2
+            description={"Participants"}
+            totalAmount={amountNumber}
+            memberAmounts={adjustParticipants}
+            error={participantsError}
+            setMemberAmounts={setParticipants}
+            group={group}
+            selectedCurrency={currencySymbol}
+            category={participantsCategory}
+            userMemberId={userMemberId}
+            setError={setParticipantsError}
+          />
+
+          <MemberPicker2
+            description={"Payers"}
+            totalAmount={amountNumber}
+            memberAmounts={adjustPayers}
+            error={payersError}
+            setMemberAmounts={setPayers}
+            group={group}
+            selectedCurrency={currencySymbol}
+            category={payersCategory}
+            userMemberId={userMemberId}
+            setError={setPayersError}
+          />
+        </div>
+      ) : (
+        ""
+      )}
       <FormInput
         description="Description"
-        placeholder="Enter Description"
+        placeholder="Description"
         value={description}
         error={descriptionError}
         onChange={handleDescriptionChange}
+        labelMenuIsOpen={labelMenuIsOpen}
       />
-      <LabelPicker labels={labels} setLabels={setLabels} groupId={group.id} />
-      <LocationPicker
-        location={location}
-        isMapOpen={isMapOpen}
-        timeZoneCoordinates={timeZoneCoordinates}
-      />
-      <DateTime
-        selectedDateTime={expenseTime}
-        setSelectedDateTime={setExpenseTime}
-        timeZoneId={timeZoneId}
-        isEdit={!isCreateExpense}
-        category={signal("Expense")}
-
-      />
+      {labelMenuIsOpen.value && <LabelMenu labelMenuIsOpen={labelMenuIsOpen} labels={labels} setLabels={setLabels} groupId={group.id}/>}
+    
+      <LocationDisplay location={location} isMapOpen={isMapOpen} />
+      {isDateShowing.value && (
+        <DateDisplay
+          selectedDateTime={expenseTime}
+          timeZoneId={timeZoneId}
+          setTime={setExpenseTime}
+          isDateShowing={isDateShowing}
+        />
+      )}
+      {labels.length>0?<LabelsDisplay labels={labels} setLabels={setLabels} />:null}
       <div className="spacer"></div>
-      <MyButton
-        fontSize="16"
-        onClick={onSubmit}
-        isLoading={
-          isCreateExpense ? isPendingCreateExpense : isPendingEditExpense
-        }
-      >
-        Submit
-      </MyButton>
+      <div className="bottomButtons">
+        {" "}
+        <div className="submitButton">
+          <MyButton
+            fontSize="16"
+            onClick={onSubmit}
+            isLoading={
+              isCreateExpense ? isPendingCreateExpense : isPendingEditExpense
+            }
+          >
+            Submit
+          </MyButton>
+        </div>
+        <LocationPicker
+          location={location}
+          isMapOpen={isMapOpen}
+          timeZoneCoordinates={timeZoneCoordinates}
+        />
+        <DateTime
+          selectedDateTime={expenseTime}
+          setSelectedDateTime={setExpenseTime}
+          timeZoneId={timeZoneId}
+          isEdit={!isCreateExpense}
+          category={signal("Expense")}
+          isDateShowing={isDateShowing}
+        />
+      </div>
+
       <MenuAnimationBackground menu={currencyMenu} />
+
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handleCurrencyOptionsClick}
         selectedCurrency={currencySymbol}
       />
-    </StyledExpenseForm>
+    </StyledExpenseForm2>
   );
 }

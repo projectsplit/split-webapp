@@ -14,7 +14,8 @@ const DayPicker = (props: DayPickerProps) => {
     calendarIsOpen,
     showOptions,
     withLexicalContext = false,
-    category
+    category,
+    isDateShowing
   } = props;
 
   const [editor] = withLexicalContext ? useLexicalComposerContext() : [null];
@@ -92,7 +93,7 @@ const DayPicker = (props: DayPickerProps) => {
         ))}
       </div>
 
-      <div className="month-grid">
+      <div className="month-grid" onClick={()=>isDateShowing.value=true}>
         {calendarGrid.map((week, i) => (
           <div key={i} className="week-row">
             {week.map((day, j) => {

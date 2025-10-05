@@ -10,30 +10,31 @@ const fadeIn = keyframes`
 
 export const StyledLabelPicker = styled.div<{
   $hasError?: boolean;
-  $isOpen?: boolean;
+  // $isOpen?: boolean;
 }>`
   color: ${({ theme }) => theme.secondaryTextColor};
   display: flex;
   flex-direction: column;
   position: relative;
+  cursor: text;
 
-  cursor: pointer;
   .main {
+    &:focus-within {
+      border-color: ${({ theme, $hasError }) =>
+        $hasError ? theme.errorColor : theme.highlightColor};
+    }
+      transition: border-color 0.15s;
     background-color: ${({ theme }) => theme.layer2};
     display: flex;
     gap: 4px;
     align-items: center;
     border: 1px solid
-      ${({ theme, $hasError, $isOpen }) =>
-        $hasError
-          ? theme.errorColor
-          : $isOpen
-          ? theme.highlightColor
-          : theme.lineColor};
+      ${({ theme, $hasError }) =>
+        $hasError ? theme.errorColor : theme.lineColor};
     border-radius: 8px;
     padding: 8px 16px;
     flex-wrap: wrap;
-    position: relative; /* Ensure relative positioning for child elements */
+    position: relative;
 
     .selected-label {
       color: #000000a2;
@@ -54,7 +55,6 @@ export const StyledLabelPicker = styled.div<{
     .icon {
       display: flex;
       font-size: 1.4rem;
-      color: ${({ $isOpen, theme }) => ($isOpen ? theme.textActiveColor : "")};
       margin-left: auto; /* Pushes the button to the right */
       cursor: pointer;
     }
@@ -78,22 +78,16 @@ export const StyledLabelPicker = styled.div<{
   }
 
   .dropdown {
-    background-color: ${({ theme }) => theme.backgroundcolor};
-    color: ${({ theme }) => theme.textActiveColor};
-    border-color: ${({ theme }) => theme.lineColor};
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: absolute;
+    /* position: absolute; */
     z-index: 3;
     width: 100%;
-    box-sizing: border-box;
-    border-radius: 8px;
-    border-width: 1px;
-    border-style: solid;
-    max-height: 300px;
+    /* box-sizing: border-box; */
+
     overflow-y: auto;
-    top: calc(100% - 12px);
+    top: calc(100% + 10px);
 
     @media (max-width: 768px) {
       max-height: 200px;

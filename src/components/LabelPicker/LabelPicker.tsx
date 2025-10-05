@@ -38,33 +38,33 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
     setText("");
   }
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
 
-  const clickOutsideListener = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node) &&
-      mainRef.current &&
-      !mainRef.current.contains(event.target as Node)
-    ) {
-      setIsMenuOpen(false);
-    }
-  };
+  // const clickOutsideListener = (event: MouseEvent) => {
+  //   if (
+  //     dropdownRef.current &&
+  //     !dropdownRef.current.contains(event.target as Node) &&
+  //     mainRef.current &&
+  //     !mainRef.current.contains(event.target as Node)
+  //   ) {
+  //     setIsMenuOpen(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", clickOutsideListener);
-    return () => {
-      document.removeEventListener("mousedown", clickOutsideListener);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", clickOutsideListener);
+  //   return () => {
+  //     document.removeEventListener("mousedown", clickOutsideListener);
+  //   };
+  // }, []);
 
   const handleFocus = () => {
-    setIsMenuOpen(true);
+    // setIsMenuOpen(true);
     inputRef.current?.focus();
   };
 
@@ -111,22 +111,22 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
 
   const isEmpty = labels?.length === 0 && text.length === 0;
 
-  const handleArrowMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  // const handleArrowMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
 
-    e.preventDefault();
-    e.stopPropagation();
+  //   e.preventDefault();
+  //   e.stopPropagation();
 
-    if (isMenuOpen) {
-      setIsMenuOpen(false);
-      inputRef.current?.blur();
-    } else {
-      setIsMenuOpen(true);
-      inputRef.current?.focus();
-    }
-  };
+  //   if (isMenuOpen) {
+  //     setIsMenuOpen(false);
+  //     inputRef.current?.blur();
+  //   } else {
+  //     setIsMenuOpen(true);
+  //     inputRef.current?.focus();
+  //   }
+  // };
 
   return (
-    <StyledLabelPicker $isOpen={isMenuOpen}>
+    <StyledLabelPicker >
       <div
         className="main"
         onFocus={() => handleFocus()}
@@ -162,13 +162,13 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
           isText={true}
         />
         {isEmpty && (
-          <div style={{ position: "absolute", flex: 1 }}>Select label</div>
+          <div style={{ position: "absolute", flex: 1 }}>Select or create label</div>
         )}
-        <div className="icon" onMouseDown={handleArrowMouseDown} ref={arrowRef}>
+        {/* <div className="icon" onMouseDown={handleArrowMouseDown} ref={arrowRef}>
           <FiChevronDown />
-        </div>
+        </div> */}
       </div>
-      {isMenuOpen && remainingSuggestedLabels.length > 0 && (
+      { 
         <div className="dropdown" ref={dropdownRef}>
           {remainingSuggestedLabels.map(x => (
             <div
@@ -192,8 +192,8 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
             </div>
           ))}
         </div>
-      )}
-      <div className="meta">{<span className="description">Labels</span>}</div>
+      }
+      {/* <div className="meta">{<span className="description">Labels</span>}</div> */}
     </StyledLabelPicker>
   );
 };

@@ -9,7 +9,9 @@ export const StyledInputMonetary = styled.div<StyledInputMonetary>`
   flex-direction: column;
   position: relative;
   justify-content: space-evenly;
-  border: 1px solid ${({ theme, $inputError }) => ($inputError ? theme.errorColor :  theme.lineColor)};
+  border: 1px solid
+    ${({ theme, $inputError }) =>
+      $inputError ? theme.errorColor : theme.lineColor};
   /* border-style: ${({ $inputError }) => ($inputError ? "solid" : "none")};
   border-width: ${({ $inputError }) => ($inputError ? "1px" : "0")};
   border-color: ${({ theme, $inputError }) =>
@@ -18,11 +20,13 @@ export const StyledInputMonetary = styled.div<StyledInputMonetary>`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
   &:focus-within {
-      border-color: ${({ theme, $inputError }) => ($inputError ? theme.errorColor : theme.highlightColor)};
-    }
+    border-color: ${({ theme, $inputError }) =>
+      $inputError ? theme.errorColor : theme.highlightColor};
+  }
+  transition: border-color 0.15s;
   .currencySelectorWrapper {
     position: absolute;
-    
+
     .currencySelector {
       display: flex;
       flex-direction: row;

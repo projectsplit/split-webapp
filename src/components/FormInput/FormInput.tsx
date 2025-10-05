@@ -1,8 +1,10 @@
 import { forwardRef, useRef } from "react";
-import { StyledInput } from "./FormInput.styled";
+import { StyledFormInput, StyledInput } from "./FormInput.styled";
+import { FaTags } from "react-icons/fa";
+import { Signal } from "@preact/signals-react";
 
 const FormInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ description, error, ...props }, ref) => {
+  ({ description, labelMenuIsOpen, error, ...props }, ref) => {
     const inputRef = useRef<HTMLInputElement>();
 
     if (ref && typeof ref === "object" && ref.current) {
@@ -17,22 +19,33 @@ const FormInput = forwardRef<HTMLInputElement, InputProps>(
         }, 0);
       }
     };
- 
+
     return (
-      <StyledInput $hasError={!!error}>
-        <div className="input-container">
-          <input
-            {...props}
-            ref={ref}
-            onFocus={handleFocus}
-            defaultValue={props.defaultValue}
-          />
+      <StyledFormInput $hasError={!!error}>
+        <div className="labelIconAndInputField">
+          <div className="labelSelectorWrapper">
+            <div
+              className="labelSelector"
+              onClick={() => (labelMenuIsOpen.value = true)}
+            >
+              <FaTags className="tagIcon" />
+            </div>
+          </div>
+          <StyledInput $hasError={!!error}>
+            <div className="input-container">
+              <input
+                {...props}
+                ref={ref}
+                onFocus={handleFocus}
+                defaultValue={props.defaultValue}
+              />
+            </div>
+          </StyledInput>
         </div>
         <div className="meta">
-          {description && <span className="description">{description}</span>}
           {error && <span className="error">{error}</span>}
         </div>
-      </StyledInput>
+      </StyledFormInput>
     );
   }
 );
@@ -42,4 +55,5 @@ export default FormInput;
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   description?: string;
   error?: string;
+  labelMenuIsOpen: Signal<boolean>;
 }

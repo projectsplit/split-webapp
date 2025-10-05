@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledExpenseForm = styled.div`
+export const StyledExpenseForm2 = styled.div`
   position: fixed;
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.backgroundcolor};
@@ -69,11 +69,42 @@ export const StyledExpenseForm = styled.div`
   .spacer {
     flex-grow: 1; /* This pushes the button to the bottom */
   }
+  .bottomButtons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
+    .submitButton {
+      flex-grow: 1;
+    }
+    .submitButton > * {
+      width: 100%; /* Ensure the button inside takes full container width */
+    }
+    .locationIcon {
+      color: ${({ theme }) => theme.yellow};
+      flex-shrink: 0;
+      font-size: 25px;
+      margin-left: 20px;
+      margin-right: 20px;
+      display:flex;
+      align-self:center;
+    }
+    .calendarIcon {
+      color: ${({ theme }) => theme.highlightColor};
+      flex-shrink: 0;
+      font-size: 30px;
+     
+      margin-right: 10px;
+    }
+  }
   .textStyleInfo {
     display: flex;
     flex-direction: row;
     gap: 5px;
-    justify-content:center;
+    justify-content: center;
+    @media (max-width: 380px) {
+      flex-direction: column;
+      align-items: center;
+    }
   }
 `;

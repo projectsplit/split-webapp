@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledExpenseForm = styled.div`
+export const StyledLabelMenu = styled.div`
   position: fixed;
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.backgroundcolor};
@@ -16,6 +16,10 @@ export const StyledExpenseForm = styled.div`
   gap: 20px;
   bottom: 0;
   overflow-y: auto;
+  .spacer {
+    flex-grow: 1; /* This pushes the button to the bottom */
+  }
+
   .header {
     display: flex;
     flex-direction: row;
@@ -29,7 +33,7 @@ export const StyledExpenseForm = styled.div`
       display: inline-block;
     }
 
-    .closeButton {
+    .backButton {
       cursor: pointer;
       display: block;
       font-size: 1.875rem;
@@ -54,26 +58,5 @@ export const StyledExpenseForm = styled.div`
     .gap {
       margin-right: 0.9375rem;
     }
-  }
-
-  .inputAndErrorsWrapper {
-    display: flex;
-    flex-direction: column;
-    .errorMsg {
-      font-size: 12px;
-      color: ${({ theme }) => theme.errorColor};
-      display: flex;
-      justify-content: end;
-    }
-  }
-  .spacer {
-    flex-grow: 1; /* This pushes the button to the bottom */
-  }
-
-  .textStyleInfo {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-    justify-content:center;
   }
 `;
