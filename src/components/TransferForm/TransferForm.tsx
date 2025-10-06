@@ -14,6 +14,7 @@ import { useOutletContext } from "react-router-dom";
 import { CreateTransferRequest, UserInfo } from "../../types";
 import { useTransfer } from "../../api/services/useTransfers";
 import FormInput from "../FormInput/FormInput";
+import DateDisplay from "../ExpenseForm/components/DateDisplay/DateDisplay";
 
 export default function TransferForm({
   group,
@@ -42,16 +43,20 @@ export default function TransferForm({
   );
   const [senderId, setSenderId] = useState<string>("");
   const [receiverId, setReceiverId] = useState<string>("");
-
+  const [showPicker, setShowPicker] = useState<boolean>(false);
+  const isDateShowing = useSignal<boolean>(false);
   const handleInputBlur = useCallback(() => {
     setShowAmountError(true);
     amountIsValid(amount, setAmountError);
-  },[amount, setShowAmountError, setAmountError]);
+  }, [amount, setShowAmountError, setAmountError]);
 
   const allMembers = [...group.guests, ...group.members];
   const members = group?.members;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
-  const { mutate: createTransferMutation, isPending } = useTransfer(menu, group.id);
+  const { mutate: createTransferMutation, isPending } = useTransfer(
+    menu,
+    group.id
+  );
 
   const handldeCurrencyOptionsClick = (curr: string) => {
     setCurrencySymbol(curr);
@@ -75,13 +80,28 @@ export default function TransferForm({
     };
 
     createTransferMutation(createTransferRequest);
-  },[setShowAmountError, setShowIdError, amount, idError.error, group.id, currencySymbol, receiverId, senderId,transferTime, description]);
+  }, [
+    setShowAmountError,
+    setShowIdError,
+    amount,
+    idError.error,
+    group.id,
+    currencySymbol,
+    receiverId,
+    senderId,
+    transferTime,
+    description,
+  ]);
 
-  const sortedMembers =useMemo(()=>[...allMembers].sort((a, b) => {
-    if (a.id === userMemberId) return -1;
-    if (b.id === userMemberId) return 1;
-    return 0;
-  }),[allMembers]) 
+  const sortedMembers = useMemo(
+    () =>
+      [...allMembers].sort((a, b) => {
+        if (a.id === userMemberId) return -1;
+        if (b.id === userMemberId) return 1;
+        return 0;
+      }),
+    [allMembers]
+  );
 
   useEffect(() => {
     if (senderId === receiverId && senderId !== "") {
@@ -209,23 +229,43 @@ export default function TransferForm({
         </span>
       </div>
       <FormInput
-        description="Description"
-        placeholder="e.g. Settle up"
+        description=""
+        placeholder="Description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <DateTime
-        selectedDateTime={transferTime}
-        setSelectedDateTime={setTransferTime}
-        timeZoneId={timeZoneId}
-        isEdit={false}
-        category={signal("Transfers")}
-       
-      />
+      {isDateShowing.value && (
+        <DateDisplay
+          selectedDateTime={transferTime}
+          timeZoneId={timeZoneId}
+          setTime={setTransferTime}
+          isDateShowing={isDateShowing}
+          setShowPicker={setShowPicker}
+        />
+      )}
       <div className="spacer"></div>
-      <MyButton fontSize="16" onClick={submitTransfer} isLoading={isPending}>
-        Submit
-      </MyButton>
+      <div className="bottomButtons">
+        <div className="submitButton">
+          <MyButton
+            fontSize="16"
+            onClick={submitTransfer}
+            isLoading={isPending}
+          >
+            Submit
+          </MyButton>
+        </div>
+
+        <DateTime
+          selectedDateTime={transferTime}
+          setSelectedDateTime={setTransferTime}
+          timeZoneId={timeZoneId}
+          isEdit={false}
+          category={signal("Transfers")}
+          isDateShowing={isDateShowing}
+          showPicker={showPicker}
+          setShowPicker={setShowPicker}
+        />
+      </div>
       <MenuAnimationBackground menu={currencyMenu} />
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}

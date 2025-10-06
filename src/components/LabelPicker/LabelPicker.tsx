@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import AutoWidthInput from "../AutoWidthInput";
 import { IoClose } from "react-icons/io5";
 import { StyledLabelPicker } from "./LabelPicker.styled";
 import { LabelPickerProps } from "../../interfaces";
-import { FiChevronDown } from "react-icons/fi";
 import { useGetGroupLabels } from "../../api/services/useGetGroupLabels";
 import { Label } from "../../types";
 import labelColors from "../../labelColors";
@@ -38,33 +37,11 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
     setText("");
   }
 
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const arrowRef = useRef<HTMLDivElement>(null);
-
-  // const clickOutsideListener = (event: MouseEvent) => {
-  //   if (
-  //     dropdownRef.current &&
-  //     !dropdownRef.current.contains(event.target as Node) &&
-  //     mainRef.current &&
-  //     !mainRef.current.contains(event.target as Node)
-  //   ) {
-  //     setIsMenuOpen(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", clickOutsideListener);
-  //   return () => {
-  //     document.removeEventListener("mousedown", clickOutsideListener);
-  //   };
-  // }, []);
 
   const handleFocus = () => {
-    // setIsMenuOpen(true);
     inputRef.current?.focus();
   };
 
@@ -111,20 +88,6 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
 
   const isEmpty = labels?.length === 0 && text.length === 0;
 
-  // const handleArrowMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-
-  //   e.preventDefault();
-  //   e.stopPropagation();
-
-  //   if (isMenuOpen) {
-  //     setIsMenuOpen(false);
-  //     inputRef.current?.blur();
-  //   } else {
-  //     setIsMenuOpen(true);
-  //     inputRef.current?.focus();
-  //   }
-  // };
-
   return (
     <StyledLabelPicker >
       <div
@@ -164,9 +127,6 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
         {isEmpty && (
           <div style={{ position: "absolute", flex: 1 }}>Select or create label</div>
         )}
-        {/* <div className="icon" onMouseDown={handleArrowMouseDown} ref={arrowRef}>
-          <FiChevronDown />
-        </div> */}
       </div>
       { 
         <div className="dropdown" ref={dropdownRef}>
@@ -193,7 +153,6 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
           ))}
         </div>
       }
-      {/* <div className="meta">{<span className="description">Labels</span>}</div> */}
     </StyledLabelPicker>
   );
 };

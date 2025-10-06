@@ -47,6 +47,7 @@ export const StyledFormInputWithTag = styled.div<{ $hasError?: boolean }>`
         align-items: center;
         justify-content: space-between;
         cursor: pointer;
+        font-size:29px;
       }
     }
   }

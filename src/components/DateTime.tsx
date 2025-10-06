@@ -13,9 +13,11 @@ export const DateTime = ({
   isEdit,
   withLexicalContext,
   category,
-  isDateShowing
+  isDateShowing,
+  showPicker,
+  setShowPicker
 }: DateTimeProps) => {
-  const [showPicker, setShowPicker] = useState<boolean>(false);
+
   const [realtimeUpdate, setRealtimeUpdate] = useState<boolean>(!isEdit);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -60,14 +62,9 @@ export const DateTime = ({
 
   return (
     <StyledDateTime ref={ref}>
-      <div className="main" onClick={(_) => setShowPicker(!showPicker)}>
-        {/* <HiClock className='icon' /> */}
+      <div className="main" onClick={(_) => {setShowPicker(!showPicker), isDateShowing.value=true}}>
         <FaCalendar className="calendarIcon" />
-        {/* <div className='text'>{toLuxon(selectedDateTime, timeZoneId).toFormat('ccc, dd MMM yyyy HH:mm')}</div> */}
       </div>
-      {/* <div className='meta'>
-        <span className='description'>Time {`(${timeZoneId})`}</span>
-      </div> */}
       {showPicker && (
         <DateTimePicker
           selectedDateTime={selectedDateTime}
@@ -87,18 +84,7 @@ export const DateTime = ({
 
 const StyledDateTime = styled.div`
   .main {
-    /* display: flex;
-    align-items: center;
-    border: 1px solid ${({ theme }) => theme.lineColor};
-    border-radius: 8px;
-    padding: 0.5em 1em;
-    gap: 10px;
-    white-space: nowrap;
-    text-overflow: clip;
-    overflow: hidden; */
     cursor: pointer;
-    /* background-color:  ${({ theme }) => theme.layer2}; */
-
     .text {
       color: ${({ theme }) => theme.textActiveColor};
       white-space: nowrap;
@@ -106,20 +92,4 @@ const StyledDateTime = styled.div`
       text-overflow: ellipsis;
     }
   }
-
-  /* .meta {
-    display: flex;
-    justify-content: space-between;
-    padding: 0px 4px;
-    font-size: 12px;
-
-    .description {
-      color: ${({ theme }) => theme.inactiveTabButtonTextColor};
-    }
-
-    .error {
-      color: ${({ theme }) => theme.errorColor};
-      font-weight: 400;
-    }
-  } */
 `;

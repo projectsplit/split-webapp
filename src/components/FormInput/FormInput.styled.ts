@@ -5,13 +5,14 @@ export const StyledInput = styled.div<{ $hasError?: boolean }>`
   flex-direction: column;
 
   .input-container {
+    padding:0.8rem;
     background-color: ${({ theme }) => theme.layer2};
     border-radius: 8px;
     border-radius: 8px;
     border: 1px solid
       ${({ theme, $hasError }) =>
         $hasError ? theme.errorColor : theme.lineColor};
-    padding: 0.5em 1em;
+  
     transition: border-color 0.15s;
 
     &:focus-within {

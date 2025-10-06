@@ -16,6 +16,12 @@ export const StyledLabelMenu = styled.div`
   gap: 20px;
   bottom: 0;
   overflow-y: auto;
+  .info {
+    display: flex;
+    justify-content: center;
+    font-size: 13px;
+    text-align: center;
+  }
   .spacer {
     flex-grow: 1; /* This pushes the button to the bottom */
   }
@@ -58,5 +64,9 @@ export const StyledLabelMenu = styled.div`
     .gap {
       margin-right: 0.9375rem;
     }
+  }
+  .label-picker-wrapper {
+    flex: 1;
+    overflow-y: auto;
   }
 `;

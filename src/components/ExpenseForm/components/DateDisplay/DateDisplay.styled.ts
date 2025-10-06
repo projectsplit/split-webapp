@@ -4,7 +4,7 @@ export const StyledDateDisplay = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-
+  cursor:pointer;
   .calendarIcon {
     color: ${({ theme }) => theme.highlightColor};
     margin-right: 10px;

@@ -130,7 +130,7 @@ export interface DateTimePickerProps {
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
   category: Signal<string>;
-  isDateShowing:Signal<boolean>
+  isDateShowing: Signal<boolean>;
 }
 
 export interface DateTimeProps {
@@ -140,14 +140,17 @@ export interface DateTimeProps {
   isEdit: boolean;
   withLexicalContext?: boolean;
   category: Signal<string>;
-  isDateShowing:Signal<boolean>;
+  isDateShowing: Signal<boolean>;
+  setShowPicker: React.Dispatch<React.SetStateAction<boolean>>;
+  showPicker: boolean;
 }
 
 export interface DateDisplayProps {
   timeZoneId: string;
   selectedDateTime: string;
-  setTime: React.Dispatch<React.SetStateAction<string>>
-  isDateShowing:Signal<boolean>
+  setTime: React.Dispatch<React.SetStateAction<string>>;
+  isDateShowing: Signal<boolean>;
+  setShowPicker: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface MemberPickerProps {
@@ -172,7 +175,7 @@ export interface DayPickerProps {
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
   category: Signal<string>;
-  isDateShowing:Signal<boolean>
+  isDateShowing: Signal<boolean>;
 }
 
 export interface ScrollPickerProps {
@@ -349,12 +352,11 @@ export interface LabelPickerProps {
 }
 
 export interface LabelMenuProps {
-  labelMenuIsOpen:Signal<boolean>
-    labels: Label[];
+  labelMenuIsOpen: Signal<boolean>;
+  labels: Label[];
   setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
   groupId: string;
 }
-
 
 export interface BottomMenuProps {
   children: any;
@@ -1132,7 +1134,8 @@ export interface RevokeAccessItemProps {
   mostRecentCodeHasBeenRevoked: Signal<boolean>;
 }
 
-export interface LabelsDisplayProps{
-  labels: Label[]
-  setLabels: React.Dispatch<React.SetStateAction<Label[]>>
+export interface LabelsDisplayProps {
+  labels: Label[];
+  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
+  labelMenuIsOpen:Signal<boolean>
 }

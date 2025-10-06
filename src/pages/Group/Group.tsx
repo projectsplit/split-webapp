@@ -37,7 +37,7 @@ type errorObject = {
   config: InternalAxiosRequestConfig<any> | undefined;
 };
 export default function Group() {
-  const menu = useSignal<string | null>('');//TODO CHANGE
+  const menu = useSignal<string | null>('newExpense'); //TODO newExpense
   const showBottomBar = useSignal<boolean>(false);
   const groupError = useSignal<errorObject>();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
