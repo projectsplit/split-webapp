@@ -9,7 +9,6 @@ import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
 import {
-  ExpenseFilter,
   ExpenseParsedFilters,
   ExpenseResponseItem,
   TransferParsedFilters,
