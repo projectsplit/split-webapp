@@ -4,6 +4,7 @@ export const StyledLabelsDisplay = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  cursor: pointer;
     .tagIcon {
     /* color: ${({ theme }) => theme.redish}; */
     margin-right: 10px;

@@ -8,10 +8,11 @@ export default function DateDisplay({
   selectedDateTime,
   timeZoneId,
   setTime,
-  isDateShowing
+  isDateShowing,
+  setShowPicker
 }: DateDisplayProps) {
   return (
-    <StyledDateDisplay>
+    <StyledDateDisplay onClick={()=>setShowPicker(true)}>
       {" "}
       <FaCalendar className="calendarIcon" />
       <div className="dateAndClose">

@@ -109,4 +109,23 @@ export const StyledTransferForm = styled.div<StyledTransferFormProps>`
   .spacer {
     flex-grow: 1;
   }
+  .bottomButtons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .submitButton {
+      flex-grow: 1;
+    }
+    .submitButton > * {
+      width: 100%; /* Ensure the button inside takes full container width */
+    }
+    .calendarIcon {
+      color: ${({ theme }) => theme.highlightColor};
+      flex-shrink: 0;
+      font-size: 30px;
+      margin-right: 10px;
+      margin-left: 10px;
+    }
+  }
 `;

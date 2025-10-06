@@ -1,6 +1,6 @@
 import { ExpenseFormProps } from "../../interfaces";
 import ExpenseForm from "../ExpenseForm/ExpenseForm";
-import ExpenseForm2 from "../ExpenseForm/ExpenseForm2";
+import ExpenseForm2 from "../ExpenseForm/ExpenseForm";
 
 
 const CreateExpenseForm: React.FC<ExpenseFormProps> = ({

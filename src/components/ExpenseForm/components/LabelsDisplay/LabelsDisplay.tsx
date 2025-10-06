@@ -8,6 +8,7 @@ import { FaTags } from "react-icons/fa";
 export default function LabelsDisplay({
   labels,
   setLabels,
+  labelMenuIsOpen
 }: LabelsDisplayProps) {
   const handleSelectedLabelClick = (labelText: string) => {
     setLabels(labels.filter((x) => x.text !== labelText));
@@ -16,7 +17,7 @@ export default function LabelsDisplay({
   return (
     <StyledLabelsDisplay>
       {" "}
-      <FaTags className="tagIcon" />
+      <FaTags className="tagIcon"  onClick={()=>labelMenuIsOpen.value=true}/>
       <div className="labels">
         {" "}
         {labels.map((x) => {

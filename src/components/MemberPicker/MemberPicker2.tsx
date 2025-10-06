@@ -19,6 +19,7 @@ import ParticipantsPayersAnimation from "../Menus/MenuAnimations/ParticipantsPay
 
 import { handleDoneClick } from "./helpers/handleDoneClick";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
+import Separator from "../Separator/Separator";
 
 const MemberPicker2 = ({
   memberAmounts,
@@ -346,6 +347,7 @@ const MemberPicker2 = ({
             </div>
             <div className="gap"></div>
           </div>
+       
           <div className="categories">
             <CategorySelector
               activeCat={"Amounts"}

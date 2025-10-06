@@ -1,7 +1,7 @@
 
 import { EditExpenseFormProps } from "../../interfaces";
 import ExpenseForm from "../ExpenseForm/ExpenseForm";
-import ExpenseForm2 from "../ExpenseForm/ExpenseForm2";
+import ExpenseForm2 from "../ExpenseForm/ExpenseForm";
 
 const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   group,

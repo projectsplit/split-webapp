@@ -20,13 +20,17 @@ export const LabelMenu = ({
             onClick={() => (labelMenuIsOpen.value = false)}
           />
         </div>
-
         <div className="title">Tag expense</div>
         <div className="gap"></div>
       </div>
+      <div className="info">
+        Type in the field to create a new label (press space to create) or
+        choose from existing labels.
+      </div>
+      <div className="label-picker-wrapper">
+        <LabelPicker labels={labels} setLabels={setLabels} groupId={groupId} />
+      </div>
 
-      <LabelPicker labels={labels} setLabels={setLabels} groupId={groupId} />
-       <div className="spacer"></div>
       <MyButton fontSize="16" onClick={() => (labelMenuIsOpen.value = false)}>
         Done
       </MyButton>
