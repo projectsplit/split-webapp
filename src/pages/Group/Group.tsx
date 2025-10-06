@@ -9,7 +9,6 @@ import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { Signal, useSignal } from "@preact/signals-react";
 import {
-  ExpenseFilter,
   ExpenseParsedFilters,
   ExpenseResponseItem,
   TransferParsedFilters,
@@ -37,7 +36,7 @@ type errorObject = {
   config: InternalAxiosRequestConfig<any> | undefined;
 };
 export default function Group() {
-  const menu = useSignal<string | null>('newExpense'); //TODO newExpense
+  const menu = useSignal<string | null>(null);
   const showBottomBar = useSignal<boolean>(false);
   const groupError = useSignal<errorObject>();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
