@@ -40,6 +40,7 @@ import { LocationDisplay } from "./components/LocationDisplay/LocationDisplay";
 import DateDisplay from "./components/DateDisplay/DateDisplay";
 import { LabelMenu } from "./components/LabelMenu/LabelMenu";
 import LabelsDisplay from "./components/LabelsDisplay/LabelsDisplay";
+import FormInputWithTag from "./components/FormInputWithTag/FormInputWithTag";
 
 export default function ExpenseForm2({
   group,
@@ -344,7 +345,7 @@ export default function ExpenseForm2({
       ) : (
         ""
       )}
-      <FormInput
+      <FormInputWithTag
         description="Description"
         placeholder="Description"
         value={description}
