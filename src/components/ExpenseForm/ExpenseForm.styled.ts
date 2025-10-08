@@ -100,11 +100,12 @@ export const StyledExpenseForm = styled.div`
   .textStyleInfo {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 5px;
     justify-content: center;
-    @media (max-width: 380px) {
+    /* @media (max-width: 400px) {
       flex-direction: column;
       align-items: center;
-    }
+    } */
   }
 `;

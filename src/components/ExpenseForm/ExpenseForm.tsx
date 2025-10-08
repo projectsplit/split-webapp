@@ -287,7 +287,6 @@ export default function ExpenseForm({
       <div className="header">
         <div className="gap"></div>
         <div className="title">{header}</div>
-
         <div
           className="closeButtonContainer"
           onClick={() => (menu.value = null)}
@@ -358,7 +357,7 @@ export default function ExpenseForm({
       )}
 
       <LocationDisplay location={location} isMapOpen={isMapOpen} />
-      {isDateShowing.value && (
+      {(isDateShowing.value||!isCreateExpense) && (
         <DateDisplay
           selectedDateTime={expenseTime}
           timeZoneId={timeZoneId}
