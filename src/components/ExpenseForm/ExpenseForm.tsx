@@ -44,6 +44,7 @@ export default function ExpenseForm({
   header,
   selectedExpense,
   isCreateExpense,
+  isPersonal
 }: ExpenseFormProps) {
   const isInitialRender = useRef<boolean>(true);
 
@@ -308,7 +309,7 @@ export default function ExpenseForm({
           {showAmountError && amountError ? amountError : ""}
         </span>
       </div>
-      {amountNumber ? (
+      {amountNumber &&!isPersonal? (
         <div className="textStyleInfo">
           <MemberPicker2
             description={"Participants"}

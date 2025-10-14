@@ -12,7 +12,7 @@ export const StyledDetailedTransfer = styled(StyledMiddleScreenMenu)<{
   scrollbar-width: thin;
   margin: 2px;
   box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`};
-  z-index:4;
+  z-index: 4;
   .total {
     display: flex;
     justify-content: center;
@@ -58,6 +58,7 @@ export const StyledDetailedTransfer = styled(StyledMiddleScreenMenu)<{
   .date {
     font-size: 15px;
     font-weight: 600;
+    text-align: center;
     display: flex;
     justify-content: center;
     color: ${({ theme }) => theme.layer6};
@@ -110,7 +111,7 @@ export const StyledDetailedTransfer = styled(StyledMiddleScreenMenu)<{
     .contentEditablePlaceholder {
       position: absolute;
       padding-left: 0.9rem;
-      margin-top:15px;
+      margin-top: 15px;
       color: ${({ theme }) => theme.grey};
       pointer-events: none;
     }
@@ -164,5 +165,4 @@ export const StyledDetailedTransfer = styled(StyledMiddleScreenMenu)<{
       }
     }
   }
-
 `;

@@ -9,7 +9,8 @@ export default function NewExpenseAnimation({
   group,
   timeZoneId,
   menu,
-  timeZoneCoordinates
+  timeZoneCoordinates,
+  isPersonal
 }: NewExpenseAnimationProps) {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
     const nodeRef = useRef(null);
@@ -24,6 +25,7 @@ export default function NewExpenseAnimation({
         header="Create New Expense"
         isCreateExpense={true}
         selectedExpense={selectedExpense}
+        isPersonal={isPersonal}
       />
     </CSSTransition>
   );

@@ -428,6 +428,7 @@ export interface NewExpenseAnimationProps {
   menu: Signal<string | null>;
   selectedExpense: Signal<ExpenseResponseItem | null>;
   timeZoneCoordinates: Coordinates;
+  isPersonal: boolean;
 }
 
 export interface NewTransferAnimationProps {
@@ -445,6 +446,7 @@ export interface ExpenseFormProps {
   header: string;
   selectedExpense: Signal<ExpenseResponseItem | null>;
   isCreateExpense: boolean;
+  isPersonal: boolean;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
@@ -458,11 +460,19 @@ export interface TransferFormProps {
 }
 
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
+export interface HomeQuickActionsAnimationProps extends MenuProps {
+  isPersonal: Signal<boolean>;
+}
+export interface NonGroupUsersAnimationProps extends MenuProps{};
+export interface NonGroupUsersProps extends MenuProps{};
 export interface LocationPickerAnimationProps extends MenuProps {
   location: GeoLocation | undefined;
   setLocation: React.Dispatch<React.SetStateAction<GeoLocation | undefined>>;
 }
 export interface GroupQuickActionsMenuprops extends MenuProps {}
+export interface HomeQuickActionsMenuprops extends MenuProps {
+  isPersonal: Signal<boolean>;
+}
 export interface DeleteExpenseAnimationProps extends MenuProps {
   description: string;
   selectedExpense: Signal<ExpenseResponseItem | null>;
@@ -1137,5 +1147,5 @@ export interface RevokeAccessItemProps {
 export interface LabelsDisplayProps {
   labels: Label[];
   setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
-  labelMenuIsOpen:Signal<boolean>
+  labelMenuIsOpen: Signal<boolean>;
 }

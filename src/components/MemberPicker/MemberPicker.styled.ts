@@ -112,9 +112,6 @@ export const StyledMemberPicker = styled.div<{
       margin-top: 7px;
     }
     .separator {
-      margin-left: 10px;
-      margin-right: 10px;
-      transform: translateZ(0);
       position: sticky;
       min-height: 1px;
     }
