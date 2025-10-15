@@ -2,11 +2,11 @@ import styled from "styled-components";
 
 export const StyledUserItem = styled.div`
   margin-top: 0.625rem;
-  margin-bottom: 0.625rem;
+  margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
-  padding: 0 0.875rem;
-
+  padding: 0 1rem;
+  
   .top-row {
     display: flex;
     align-items: center;

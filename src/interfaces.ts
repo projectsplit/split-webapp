@@ -471,7 +471,7 @@ export interface LocationPickerAnimationProps extends MenuProps {
 }
 export interface UserItemProps {
   username: string;
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 export interface GroupQuickActionsMenuprops extends MenuProps {}
 export interface HomeQuickActionsMenuprops extends MenuProps {

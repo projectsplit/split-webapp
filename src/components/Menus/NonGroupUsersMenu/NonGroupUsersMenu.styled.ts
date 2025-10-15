@@ -80,7 +80,7 @@ export const StyledNonGroupUsersMenu = styled.div<{
   .scrollable-content {
     overflow-y: auto;
     flex: 1;
-    padding-top: 1rem;
+
     padding-bottom: 180px;
     .members {
       display: flex;
@@ -99,14 +99,13 @@ export const StyledNonGroupUsersMenu = styled.div<{
     .input {
       display: flex;
       width: 100%;
-      padding: 12px;
+      padding-right: 12px;
+      padding-left: 12px;
       .search-input {
         width: 100%;
         flex: 1;
-        padding-top: 7px;
-        padding-bottom: 7px;
+
         font-size: 16px;
-        
       }
       /* .createButton{
       margin-left: 10px;
@@ -119,7 +118,7 @@ export const StyledNonGroupUsersMenu = styled.div<{
         display: flex;
         gap: 4px;
         align-items: center;
-       
+
         border-radius: 8px;
         padding: 8px 16px;
         flex-wrap: wrap;
@@ -147,13 +146,36 @@ export const StyledNonGroupUsersMenu = styled.div<{
           margin-left: auto; /* Pushes the button to the right */
           cursor: pointer;
         }
-        .search-annotation{
+        .search-annotation {
           position: absolute;
-          flex: 1; 
-          color:grey;
+          flex: 1;
+          color: grey;
           cursor: text;
         }
       }
+    }
+  }
+  .doneButton {
+    position: fixed;
+    bottom: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    cursor: pointer;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 5;
+    padding: 16px;
+    display: flex;
+    justify-content: stretch;
+    cursor: pointer;
+    & > * {
+      flex: 1;
     }
   }
 `;

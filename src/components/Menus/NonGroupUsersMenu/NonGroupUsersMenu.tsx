@@ -6,14 +6,12 @@ import { useSignal } from "@preact/signals-react";
 import { BiArrowBack } from "react-icons/bi";
 import MyButton from "../../MyButton/MyButton";
 import Sentinel from "../../Sentinel";
-import Input from "../../Input/Input";
 import { useRef, useState } from "react";
 import { useSearchUsersToInvite } from "../../../api/services/useSearchUsersToInvite";
 import useDebounce from "../../../hooks/useDebounce";
 import UserItem from "./UserItem/UserItem";
 import AutoWidthInput from "../../AutoWidthInput";
 import { SearchUserToInviteResponseItem } from "../../../types";
-import { text } from "stream/consumers";
 
 export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
   const category = useSignal<string>("Friends");
@@ -48,20 +46,22 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
   };
 
   const addUser = (username: string) => {
-    if (users.map(x => x.username).includes(username)) {
-      setKeyword("");
+    const trimmed = username.trim();
+    const existingUser = data?.pages
+      .flatMap((x) => x.users)
+      .find((x) => x.username === trimmed);
+
+    if (!existingUser) {
+      // User not found in fetched data, keep keyword as-is or show error
       return;
     }
 
-    const existingUser = data?.pages
-      .flatMap(x => x.users)
-      .find(x => x.username === username);
-
-    const newUser: SearchUserToInviteResponseItem = existingUser||{
-      userId: username,
-      username,
-      isGroupMember: false,
-      isAlreadyInvited: false,
+    const newUser: SearchUserToInviteResponseItem = {
+      //TODO will have to change to friend list rather than users to invite
+      userId: existingUser.userId,
+      username: existingUser.username,
+      isGroupMember: existingUser.isGroupMember,
+      isAlreadyInvited: existingUser.isAlreadyInvited,
     };
 
     if (!users.map((x) => x.username).includes(newUser.username)) {
@@ -77,19 +77,19 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newKeyword = e.target.value;
-    const trimmed = newKeyword.trim();
+    // const trimmed = newKeyword.trim();
 
-    if (trimmed.length === 0) {
-      setKeyword("");
-      return;
-    }
+    // if (trimmed.length === 0) {
+    //   setKeyword("");
+    //   return;
+    // }
 
     if (newKeyword.slice(-1) === " ") {
-      addUser(trimmed);
+      addUser(newKeyword);
       return;
     }
 
-    setKeyword(trimmed);
+    setKeyword(newKeyword);
   };
 
   const remainingSuggestedUsers =
@@ -99,96 +99,91 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
 
   const isEmpty = users?.length === 0 && keyword.length === 0;
 
-
-
   return (
     <StyledNonGroupUsersMenu>
-      <div className="menu">
-        <div className="fixedHeader">
-          <div className="header">
-            <div className="closeButtonContainer">
-              <BiArrowBack
-                className="backButton"
-                onClick={() => (menu.value = null)}
-              />
-            </div>
-            <div className="title">Shared with you and...</div>
-            <div className="gap"></div>
-          </div>
-          <div className="categories">
-            <CategorySelector
-              activeCat={"Amounts"}
-              categories={{
-                cat1: "Friends",
-                cat2: "Groups",
-              }}
-              navLinkUse={false}
-              activeCatAsState={category}
+      <div className="fixedHeader">
+        <div className="header">
+          <div className="closeButtonContainer">
+            <BiArrowBack
+              className="backButton"
+              onClick={() => (menu.value = null)}
             />
           </div>
+          <div className="title">Shared with you and...</div>
+          <div className="gap"></div>
         </div>
-
-        <div className="scrollable-content">
-          <div className="input">
-            <div
-              className="main"
-              onFocus={() => handleFocus()}
-              // onBlur={handleBlur}
-              ref={mainRef}
-              tabIndex={0}
-            >
-              {users.map((user) => (
-                <span
-                  key={user.userId}
-                  style={{
-                    backgroundColor: "white",
-                    color: "#000000c8",
-                  }}
-                  onClick={() => handleSelectedUserCick(user.userId)}
-                  className="selected-label"
-                >
-                  {user.username}
-                  <IoClose />
-                </span>
-              ))}
-              <AutoWidthInput
-                className="input"
-                inputMode="text"
-                autoComplete="off"
-                autoCorrect="off"
-                spellCheck={false}
-                value={keyword}
-                onChange={handleInputChange}
-                ref={inputRef}
-                isText={true}
-                autoFocus
-              />
-              {isEmpty && <div className="search-annotation">Search</div>}
-            </div>
-          </div>
-
-          {remainingSuggestedUsers.length > 0 && (
-            <div className="dropdown" ref={dropdownRef}>
-              {remainingSuggestedUsers.map((user) => (
-            
-                  <UserItem
-                    username={user.username}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSuggestedUserClick(user.username);
-                    }}
-                  />
-               
-              ))}
-            </div>
-          )}
-
-          <Sentinel
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
+        <div className="categories">
+          <CategorySelector
+            activeCat={"Amounts"}
+            categories={{
+              cat1: "Friends",
+              cat2: "Groups",
+            }}
+            navLinkUse={false}
+            activeCatAsState={category}
           />
         </div>
+      </div>
+
+      <div className="scrollable-content">
+        <div className="input">
+          <div
+            className="main"
+            onFocus={() => handleFocus()}
+            // onBlur={handleBlur}
+            ref={mainRef}
+            tabIndex={0}
+          >
+            {users.map((user) => (
+              <span
+                key={user.userId}
+                style={{
+                  backgroundColor: "white",
+                  color: "#000000c8",
+                }}
+                onClick={() => handleSelectedUserCick(user.userId)}
+                className="selected-label"
+              >
+                {user.username}
+                <IoClose />
+              </span>
+            ))}
+            <AutoWidthInput
+              className="input"
+              inputMode="text"
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+              value={keyword}
+              onChange={handleInputChange}
+              ref={inputRef}
+              isText={true}
+            />
+            {isEmpty && <div className="search-annotation">Search</div>}
+          </div>
+        </div>
+
+        {remainingSuggestedUsers.length > 0 && (
+          <div className="dropdown" ref={dropdownRef}>
+            {remainingSuggestedUsers.map((user) => (
+              <UserItem
+                username={user.username}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSuggestedUserClick(user.username);
+                }}
+              />
+            ))}
+          </div>
+        )}
+        <Sentinel
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+        />
+      </div>
+      <div className="doneButton">
+        <MyButton>Done</MyButton>
       </div>
     </StyledNonGroupUsersMenu>
   );
