@@ -13,5 +13,7 @@ ${({ $shouldStyleBorder }) =>
   height: 100%;
   display: flex;
   flex-direction: column;
-  
+> div[style*="position: fixed"] {
+    z-index: 4; /* Ensure fixed children (background) are above */
+  }
 `;

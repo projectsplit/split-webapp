@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
-export const StyledNonGroupUsersMenu = styled.div`
+export const StyledNonGroupUsersMenu = styled.div<{
+  $hasError?: boolean;
+  // $isOpen?: boolean;
+}>`
   position: fixed;
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.layer2};
@@ -12,55 +15,63 @@ export const StyledNonGroupUsersMenu = styled.div`
   z-index: 10;
   display: flex;
   flex-direction: column;
-  padding: 12px 16px;
+
   gap: 20px;
   bottom: 0;
   overflow-y: auto;
-  .header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
+  .fixedHeader {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background-color: ${({ theme }) => theme.layer2};
+    .header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      padding: 12px 16px;
+      .closeButtonContainer {
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+      }
 
-    .closeButtonContainer {
-      position: relative;
-      cursor: pointer;
-      display: inline-block;
-    }
+      .backButton {
+        cursor: pointer;
+        display: block;
+        font-size: 1.875rem;
+      }
 
-    .backButton {
-      cursor: pointer;
-      display: block;
-      font-size: 1.875rem;
-    }
+      .closeButtonContainer:hover::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background-color: rgba(128, 128, 128, 0.3);
+        pointer-events: none;
+      }
 
-    .closeButtonContainer:hover::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background-color: rgba(128, 128, 128, 0.3);
-      pointer-events: none;
+      .title {
+        font-weight: 600;
+      }
+      .gap {
+        margin-right: 0.9375rem;
+      }
     }
-
-    .title {
-      font-weight: 600;
-    }
-    .gap {
-      margin-right: 0.9375rem;
+    .categories {
+      margin-top: 7px;
     }
   }
-  .categories {
-    margin-top: 7px;
-  }
+
   .separator {
     position: sticky;
     min-height: 1px;
+    transform: translateZ(0);
   }
 
   .spacer {
@@ -88,17 +99,61 @@ export const StyledNonGroupUsersMenu = styled.div`
     .input {
       display: flex;
       width: 100%;
-
+      padding: 12px;
       .search-input {
         width: 100%;
         flex: 1;
         padding-top: 7px;
         padding-bottom: 7px;
         font-size: 16px;
+        
       }
       /* .createButton{
       margin-left: 10px;
     } */
+      .main {
+        width: 100%;
+
+        transition: border-color 0.15s;
+        background-color: ${({ theme }) => theme.inputGrey};
+        display: flex;
+        gap: 4px;
+        align-items: center;
+       
+        border-radius: 8px;
+        padding: 8px 16px;
+        flex-wrap: wrap;
+        position: relative;
+
+        .selected-label {
+          color: #000000a2;
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          border-radius: 2px;
+          padding: 2px 8px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 700;
+        }
+
+        .input {
+          flex: 1;
+        }
+
+        .icon {
+          display: flex;
+          font-size: 1.4rem;
+          margin-left: auto; /* Pushes the button to the right */
+          cursor: pointer;
+        }
+        .search-annotation{
+          position: absolute;
+          flex: 1; 
+          color:grey;
+          cursor: text;
+        }
+      }
     }
   }
 `;

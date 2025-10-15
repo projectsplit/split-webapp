@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { SearchUserToInviteResponse } from "../../types";
 
 export const useSearchUsersToInvite = (
   groupId: string,
@@ -68,14 +69,4 @@ const searchUsersToinvite = async (
   return response.data;
 };
 
-type SearchUserToInviteResponse = {
-  users: SearchUserToInviteResponseItem[];
-  next: string | null;
-};
 
-type SearchUserToInviteResponseItem = {
-  userId: string;
-  username: string;
-  isGroupMember: boolean;
-  isAlreadyInvited: boolean;
-};

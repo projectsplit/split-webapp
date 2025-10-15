@@ -682,3 +682,15 @@ export type SpendingChartsResponseItem = {
   from: Date;
   to: Date;
 };
+
+export type SearchUserToInviteResponse = {
+  users: SearchUserToInviteResponseItem[];
+  next: string | null;
+};
+
+export type SearchUserToInviteResponseItem = {
+  userId: string;
+  username: string;
+  isGroupMember: boolean;
+  isAlreadyInvited: boolean;
+};

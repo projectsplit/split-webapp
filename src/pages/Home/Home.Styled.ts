@@ -10,7 +10,7 @@ export const StyledHomepage = styled.div`
   overflow: hidden;
   position: relative;
 > div[style*="position: fixed"] {
-    z-index: 3; /* Ensure fixed children (background) are above */
+    z-index:1; /* Ensure fixed children (background) are above */
   }
   .fixedTop {
     padding: 14px;

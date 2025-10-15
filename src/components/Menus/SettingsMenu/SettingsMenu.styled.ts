@@ -9,7 +9,7 @@ export const StyledSettingsMenu = styled.div`
   overflow-y: auto;
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.layer2};
-  z-index: 3;
+  z-index: 4;
   display: flex;
   flex-direction: column;
 

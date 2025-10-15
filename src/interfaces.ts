@@ -463,11 +463,15 @@ export interface GroupQuickActionsAnimationProps extends MenuProps {}
 export interface HomeQuickActionsAnimationProps extends MenuProps {
   isPersonal: Signal<boolean>;
 }
-export interface NonGroupUsersAnimationProps extends MenuProps{};
-export interface NonGroupUsersProps extends MenuProps{};
+export interface NonGroupUsersAnimationProps extends MenuProps {}
+export interface NonGroupUsersProps extends MenuProps {}
 export interface LocationPickerAnimationProps extends MenuProps {
   location: GeoLocation | undefined;
   setLocation: React.Dispatch<React.SetStateAction<GeoLocation | undefined>>;
+}
+export interface UserItemProps {
+  username: string;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 export interface GroupQuickActionsMenuprops extends MenuProps {}
 export interface HomeQuickActionsMenuprops extends MenuProps {
