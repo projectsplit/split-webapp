@@ -2,21 +2,30 @@ import { StyledNonGroupUsersMenu } from "./NonGroupUsersMenu.styled";
 import { NonGroupUsersProps } from "../../../interfaces";
 import { CategorySelector } from "../../CategorySelector/CategorySelector";
 import { IoClose } from "react-icons/io5";
-import { useSignal } from "@preact/signals-react";
+import { Signal, useSignal } from "@preact/signals-react";
 import { BiArrowBack } from "react-icons/bi";
 import MyButton from "../../MyButton/MyButton";
 import Sentinel from "../../Sentinel";
 import { useRef, useState } from "react";
 import { useSearchUsersToInvite } from "../../../api/services/useSearchUsersToInvite";
 import useDebounce from "../../../hooks/useDebounce";
-import UserItem from "./UserItem/UserItem";
 import AutoWidthInput from "../../AutoWidthInput";
-import { SearchUserToInviteResponseItem } from "../../../types";
+import {
+  GetGroupsResponseItem,
+  SearchUserToInviteResponseItem,
+  UserInfo,
+} from "../../../types";
+import useGetGroups from "../../../api/services/useGetGroup";
+import { useOutletContext } from "react-router-dom";
+import Item from "./UserItem/Item";
+import { TiGroup } from "react-icons/ti";
+import { BsFillPersonFill } from "react-icons/bs";
 
 export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
   const category = useSignal<string>("Friends");
   const [keyword, setKeyword] = useState("");
   const [users, setUsers] = useState<SearchUserToInviteResponseItem[]>([]);
+  const [groups, setGroups] = useState<GetGroupsResponseItem[]>([]);
   const pageSize = 10;
   const [debouncedKeyword, _isDebouncing] = useDebounce<string>(
     keyword.length > 1 ? keyword : "",
@@ -25,6 +34,11 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const { userInfo } = useOutletContext<{
+    userInfo: UserInfo;
+  }>();
+
   const {
     data,
     fetchNextPage,
@@ -37,12 +51,22 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
     pageSize
   );
 
+  const {
+    data: userGroups,
+    fetchNextPage: fetchNextGroupsPage,
+    hasNextPage: hasNextGroupsPage,
+    isFetchingNextPage: isFetchingNextGroupsPage,
+  } = useGetGroups(userInfo.userId, pageSize);
+
   const handleFocus = () => {
     inputRef.current?.focus();
   };
 
   const handleSelectedUserCick = (userId: string) => {
     setUsers(users.filter((x) => x.userId !== userId));
+  };
+  const handleSelectedGroupCick = (groupId: string) => {
+    setGroups(groups.filter((x) => x.id !== groupId));
   };
 
   const addUser = (username: string) => {
@@ -70,12 +94,57 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
     setKeyword("");
   };
 
+  // const addGroup = (groupname: string) => {
+  //   const trimmed = groupname.trim();
+  //   const existingGroup = userGroups?.pages
+  //     .flatMap((x) => x.groups)
+  //     .find((x) => x.name === trimmed);
+
+  //   if (!existingGroup) {
+  //     // User not found in fetched data, keep keyword as-is or show error
+  //     return;
+  //   }
+
+  //   const newGroup: GetGroupsResponseItem = {
+  //     //TODO will have to change to group list with members
+  //     id: existingGroup.id,
+  //     name: existingGroup.name,
+  //   };
+
+  //   if (!groups.map((x) => x.name).includes(newGroup.name)) {
+  //     setGroups([...groups, newGroup]);
+  //   }
+  //   setKeyword("");
+  // };
+
   const handleSuggestedUserClick = (username: string) => {
     addUser(username);
-    inputRef.current?.focus();
+    // inputRef.current?.focus();
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleSuggestedGroupClick = (groupId: string) => {
+  const existingGroup = userGroups?.pages
+    .flatMap((x) => x.groups)
+    .find((x) => x.id === groupId);
+
+  if (!existingGroup) return;
+
+  setGroups([
+    {
+      id: existingGroup.id,
+      name: existingGroup.name,
+    },
+  ]);
+
+  // Refocus input
+  // inputRef.current?.focus();
+};
+
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+    // category: Signal<string>
+  ) => {
     const newKeyword = e.target.value;
     // const trimmed = newKeyword.trim();
 
@@ -84,10 +153,15 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
     //   return;
     // }
 
-    if (newKeyword.slice(-1) === " ") {
-      addUser(newKeyword);
-      return;
-    }
+    // if (newKeyword.slice(-1) === " " && category.value === "Friends") {
+    //   addUser(newKeyword);
+
+    //   return;
+    // } else if (newKeyword.slice(-1) === " " && category.value === "Groups") {
+    //   addGroup(newKeyword);
+
+    //   return;
+    // }
 
     setKeyword(newKeyword);
   };
@@ -97,7 +171,13 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
       .flatMap((x) => x.users)
       .filter((x) => !users.map((u) => u.userId).includes(x.userId)) ?? [];
 
-  const isEmpty = users?.length === 0 && keyword.length === 0;
+  const remainingSuggestedGroups =
+    userGroups?.pages
+      .flatMap((x) => x.groups)
+      .filter((x) => !groups.map((g) => g.id).includes(x.id)) ?? [];
+
+  const isEmpty =
+    users?.length === 0 && keyword.length === 0 && groups?.length === 0;
 
   return (
     <StyledNonGroupUsersMenu>
@@ -144,7 +224,30 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
                 onClick={() => handleSelectedUserCick(user.userId)}
                 className="selected-label"
               >
-                {user.username}
+                <div className="info">
+                  {" "}
+                  <BsFillPersonFill />
+                  {user.username}
+                </div>
+
+                <IoClose />
+              </span>
+            ))}
+            {groups.map((group) => (
+              <span
+                key={group.id}
+                style={{
+                  backgroundColor: "#696e80",
+                  color: "white",
+                }}
+                onClick={() => handleSelectedGroupCick(group.id)}
+                className="selected-label"
+              >
+                <div className="info">
+                  <TiGroup />
+                  All of : {group.name}
+                </div>
+
                 <IoClose />
               </span>
             ))}
@@ -155,7 +258,7 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
               autoCorrect="off"
               spellCheck={false}
               value={keyword}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e)}
               ref={inputRef}
               isText={true}
             />
@@ -163,23 +266,45 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
           </div>
         </div>
 
-        {remainingSuggestedUsers.length > 0 && (
-          <div className="dropdown" ref={dropdownRef}>
-            {remainingSuggestedUsers.map((user) => (
-              <UserItem
-                username={user.username}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSuggestedUserClick(user.username);
-                }}
-              />
-            ))}
-          </div>
-        )}
+        {category.value === "Friends"
+          ? remainingSuggestedUsers.length > 0 && (
+              <div className="dropdown" ref={dropdownRef}>
+                {remainingSuggestedUsers.map((user) => (
+                  <Item
+                    key={user.userId}
+                    name={user.username}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSuggestedUserClick(user.username);
+                    }}
+                  />
+                ))}
+              </div>
+            )
+          : remainingSuggestedGroups.length > 0 && (
+              <div className="dropdown" ref={dropdownRef}>
+                {remainingSuggestedGroups.map((group) => (
+                  <Item
+                    key={group.id}
+                    name={group.name}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSuggestedGroupClick(group.id);
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
         <Sentinel
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
+        />
+        <Sentinel
+          fetchNextPage={fetchNextGroupsPage}
+          hasNextPage={hasNextGroupsPage}
+          isFetchingNextPage={isFetchingNextGroupsPage}
         />
       </div>
       <div className="doneButton">

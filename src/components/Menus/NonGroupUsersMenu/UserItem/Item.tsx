@@ -1,16 +1,16 @@
-import { StyledUserItem } from "./UserItem.styled";
+import { StyledItem } from "./Item.styled";
 import { UserItemProps } from "../../../../interfaces";
 
-export default function UserItem({
-  username,
+export default function Item({
+  name,
   onClick,
 }: UserItemProps) {
   return (
-    <StyledUserItem>
+    <StyledItem>
       <div className="top-row">
         <div onClick={onClick}>
-          {username}</div>
+          {name}</div>
       </div>
-    </StyledUserItem>
+    </StyledItem>
   );
 }

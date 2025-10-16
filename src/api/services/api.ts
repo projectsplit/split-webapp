@@ -144,18 +144,7 @@ export const getGroupDebts = async (
   return response.data;
 };
 
-export const getGroups = async (
-  userId: string,
-  pageSize: number,
-  next?: string
-): Promise<GetGroupsResponse> => {
-  const params = { userId, pageSize, next };
-  const response = await apiClient.get<void, AxiosResponse<GetGroupsResponse>>(
-    "/groups",
-    { params }
-  );
-  return response.data;
-};
+
 
 export const getUserId = async () => {
   const response = await apiClient.get("/");

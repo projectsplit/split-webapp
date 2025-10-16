@@ -1,8 +1,8 @@
 import { CSSTransition } from "react-transition-group";
 import CreateExpenseForm from "../../CreateExpenseForm/CreateExpenseForm";
 import { NewExpenseAnimationProps } from "../../../interfaces";
-import { ExpenseResponseItem } from "../../../types";
-import { useSignal } from "@preact/signals-react";
+// import { ExpenseResponseItem } from "../../../types";
+// import { useSignal } from "@preact/signals-react";
 import { useRef } from "react";
 
 export default function NewExpenseAnimation({
@@ -10,9 +10,9 @@ export default function NewExpenseAnimation({
   timeZoneId,
   menu,
   timeZoneCoordinates,
-  isPersonal
+  isPersonal,
+  selectedExpense
 }: NewExpenseAnimationProps) {
-  const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
     const nodeRef = useRef(null);
   return (
     <CSSTransition in={menu.value === "newExpense"} timeout={0} unmountOnExit nodeRef={nodeRef}>

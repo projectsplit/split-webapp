@@ -129,11 +129,17 @@ export const StyledNonGroupUsersMenu = styled.div<{
           display: flex;
           gap: 8px;
           align-items: center;
-          border-radius: 2px;
+          border-radius: 5px;
           padding: 2px 8px;
           cursor: pointer;
           font-size: 14px;
           font-weight: 700;
+          .info{
+            display:flex;
+            flex-direction:row;
+            align-items:center;
+            gap:2px;
+          }
         }
 
         .input {

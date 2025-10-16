@@ -428,7 +428,7 @@ export interface NewExpenseAnimationProps {
   menu: Signal<string | null>;
   selectedExpense: Signal<ExpenseResponseItem | null>;
   timeZoneCoordinates: Coordinates;
-  isPersonal: boolean;
+  isPersonal?: boolean;
 }
 
 export interface NewTransferAnimationProps {
@@ -446,11 +446,12 @@ export interface ExpenseFormProps {
   header: string;
   selectedExpense: Signal<ExpenseResponseItem | null>;
   isCreateExpense: boolean;
-  isPersonal: boolean;
+  isPersonal?: boolean;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
   selectedExpense: Signal<ExpenseResponseItem | null>;
+
 }
 
 export interface TransferFormProps {
@@ -470,7 +471,7 @@ export interface LocationPickerAnimationProps extends MenuProps {
   setLocation: React.Dispatch<React.SetStateAction<GeoLocation | undefined>>;
 }
 export interface UserItemProps {
-  username: string;
+  name: string;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 export interface GroupQuickActionsMenuprops extends MenuProps {}

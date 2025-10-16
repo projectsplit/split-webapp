@@ -90,6 +90,7 @@ export default function Home() {
     error,
   } = useGroup("a865c378-8956-4cb7-903d-a669e26282de");
 
+
   return (
     <StyledHomepage>
       {isFetching || !userInfo?.username ? (

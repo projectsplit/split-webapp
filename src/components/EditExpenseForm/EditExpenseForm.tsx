@@ -1,7 +1,7 @@
 
 import { EditExpenseFormProps } from "../../interfaces";
 import ExpenseForm from "../ExpenseForm/ExpenseForm";
-import ExpenseForm2 from "../ExpenseForm/ExpenseForm";
+
 
 const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   group,
@@ -9,7 +9,8 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   timeZoneId,
   menu,
   selectedExpense,
-  timeZoneCoordinates
+  timeZoneCoordinates,
+  isPersonal
 }) => {
 
   if (!expense) {
@@ -17,7 +18,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   }
   
   return (
-    <ExpenseForm2
+    <ExpenseForm
       expense={expense}
       group={group}
       menu={menu}
@@ -26,6 +27,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
       header="Edit Expense"
       selectedExpense={selectedExpense}
       isCreateExpense={false}
+      isPersonal={isPersonal}
     />
   );
 };

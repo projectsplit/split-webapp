@@ -156,6 +156,18 @@ export type GetGroupsResponseItem = {
   name: string;
 };
 
+export type SearchUserToInviteResponse = {
+  users: SearchUserToInviteResponseItem[];
+  next: string | null;
+};
+
+export type SearchUserToInviteResponseItem = {
+  userId: string;
+  username: string;
+  isGroupMember: boolean;
+  isAlreadyInvited: boolean;
+};
+
 export type Group = {
   id: string;
   created: Date;
@@ -683,14 +695,3 @@ export type SpendingChartsResponseItem = {
   to: Date;
 };
 
-export type SearchUserToInviteResponse = {
-  users: SearchUserToInviteResponseItem[];
-  next: string | null;
-};
-
-export type SearchUserToInviteResponseItem = {
-  userId: string;
-  username: string;
-  isGroupMember: boolean;
-  isAlreadyInvited: boolean;
-};
