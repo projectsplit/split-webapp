@@ -5,10 +5,9 @@ import App from "./App";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./theme";
 import GlobalStyles from "./styles/global";
-import { useEffect, useState } from "react";
+import { StrictMode, useEffect, useState } from "react";
 import SplashScreen from "./pages/SplashScreen/SplashScreen";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,9 +45,9 @@ const RootComponent: React.FC = () => {
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
-  <QueryClientProvider client={queryClient}>
-    <GlobalStyles />
-    <RootComponent />
-  </QueryClientProvider>
-  // </StrictMode>,
+    <QueryClientProvider client={queryClient}>
+      <GlobalStyles />
+      <RootComponent />
+    </QueryClientProvider>
+  //</StrictMode> 
 );

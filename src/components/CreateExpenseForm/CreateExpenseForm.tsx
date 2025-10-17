@@ -1,6 +1,6 @@
 import { ExpenseFormProps } from "../../interfaces";
 import ExpenseForm from "../ExpenseForm/ExpenseForm";
-import ExpenseForm2 from "../ExpenseForm/ExpenseForm";
+
 
 
 const CreateExpenseForm: React.FC<ExpenseFormProps> = ({
@@ -10,11 +10,12 @@ const CreateExpenseForm: React.FC<ExpenseFormProps> = ({
   menu,
   timeZoneCoordinates,
   header,
-  selectedExpense
+  selectedExpense,
+  isPersonal
 }) => {
  
   return (
-    <ExpenseForm2
+    <ExpenseForm
       expense={expense}
       group={group}
       menu={menu}
@@ -23,6 +24,7 @@ const CreateExpenseForm: React.FC<ExpenseFormProps> = ({
       header={header}
       isCreateExpense={true}
       selectedExpense={selectedExpense}
+      isPersonal={isPersonal}
     />
   );
 };

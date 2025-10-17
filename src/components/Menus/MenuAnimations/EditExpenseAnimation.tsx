@@ -9,6 +9,7 @@ export default function EditExpenseAnimation({
   expense,
   selectedExpense,
   timeZoneCoordinates,
+  isPersonal
 }: NewExpenseAnimationProps) {
   return (
     <CSSTransition in={menu.value === "editExpense"} timeout={0} unmountOnExit>
@@ -21,6 +22,7 @@ export default function EditExpenseAnimation({
         timeZoneCoordinates={timeZoneCoordinates}
         header="Edit Expense"
         isCreateExpense={false}
+        isPersonal={isPersonal}
       />
     </CSSTransition>
   );

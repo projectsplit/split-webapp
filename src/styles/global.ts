@@ -138,6 +138,26 @@ input {
   transition: all 100ms ease-in-out;
 }
 
+
+.quick-actions-enter {
+  opacity: 0;
+}
+.quick-actions-enter-active .new {
+  animation-play-state: running;
+}
+.quick-actions-exit {
+  opacity: 1;
+}
+.quick-actions-exit-active .new {
+  animation: none;
+  transform: scale(1);
+  transition: transform 0.2s ease-out;
+}
+.quick-actions-exit-done {
+  transform: scale(0);
+  opacity: 0;
+}
+
 `;
 
 export default GlobalStyles;

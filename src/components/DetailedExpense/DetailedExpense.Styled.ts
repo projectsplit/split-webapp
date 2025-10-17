@@ -10,7 +10,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
   scrollbar-width: thin;
   margin: 2px;
   box-shadow: ${({ theme }) => `0 0 0 1px ${theme.lightBorder}`};
-  z-index:4;
+  z-index: 4;
   .dateAndLabels {
     display: flex;
     flex-direction: column;
@@ -36,7 +36,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    .expenseName{
+    .expenseName {
       font-size: 20px;
     }
     .descreption {
@@ -47,7 +47,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
       white-space: nowrap;
       font-size: 18px;
       font-weight: 400;
-      color: ${({theme})=>theme.whiteText};
+      color: ${({ theme }) => theme.whiteText};
       font-style: italic;
       min-height: 21px;
     }
@@ -75,7 +75,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     white-space: nowrap;
     font-size: 18px;
     font-weight: 400;
-    color: ${({theme})=>theme.whiteText};
+    color: ${({ theme }) => theme.whiteText};
 
     min-height: 21px;
     font-weight: bold;
@@ -92,11 +92,12 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
       }
     }
   }
-  .createdBy,.date {
+  .createdBy,
+  .date {
     display: flex;
     flex-direction: row;
     justify-content: center;
-
+    text-align: center;
     font-size: 15px;
     font-weight: 600;
     color: ${({ theme }) => theme.grey};

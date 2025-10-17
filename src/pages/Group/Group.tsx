@@ -143,7 +143,7 @@ export default function Group() {
               menu={menu}
               selectedExpense={selectedExpense}
               timeZoneCoordinates={timeZoneCoordinates}
-
+              isPersonal={false}
             />
           )}
           {group && (

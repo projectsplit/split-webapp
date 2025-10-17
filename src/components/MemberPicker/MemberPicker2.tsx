@@ -16,10 +16,9 @@ import { BiArrowBack } from "react-icons/bi";
 import MyButton from "../MyButton/MyButton";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import ParticipantsPayersAnimation from "../Menus/MenuAnimations/ParticipantsPayersAnimation";
-
 import { handleDoneClick } from "./helpers/handleDoneClick";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
-import Separator from "../Separator/Separator";
+
 
 const MemberPicker2 = ({
   memberAmounts,

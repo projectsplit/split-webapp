@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "styled-components";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import {
+  ExpenseResponseItem,
   GroupsAllBalancesResponse,
   MostRecentGroupDetailsResponse,
   UserInfo,
@@ -27,10 +28,16 @@ import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/Setting
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
 import Spinner from "../../components/Spinner/Spinner";
+import { AiFillThunderbolt } from "react-icons/ai";
+import HomeQuickActionsAnimation from "../../components/Menus/MenuAnimations/HomeQuickActionsAnimation";
+import useGroup from "../../api/services/useGroup";
+import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
+import NonGroupUsersAnimation from "../../components/Menus/MenuAnimations/NonGroupUsersAnimation";
 
 export default function Home() {
   const navigate = useNavigate();
-
+  const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
+  const isPersonal = useSignal<boolean>(false);
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
 
@@ -39,7 +46,10 @@ export default function Home() {
     topMenuTitle: Signal<string>;
   }>();
 
+  const timeZoneId = userInfo?.timeZone;
+  const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
   const menu = useSignal<string | null>(null);
+  const quickActionsMenu = useSignal<string | null>(null);
   const recentGroupId = userInfo?.recentGroupId;
 
   const {
@@ -71,6 +81,17 @@ export default function Home() {
   const isArchived = mostRecentGroupData?.isArchived;
   // isFetching:mostRecentGroupDataIsFetching, isLoading:mostRecentGroupDataIsLoading
   // const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
+
+  //TODO need to be able to get the personal group id. If expenses are to be submitted without the group then this can be discarded.
+
+  const {
+    data: group,
+    isFetching: groupIsFetching,
+    isError,
+    error,
+  } = useGroup("f7637b50-e77d-4609-9e38-eb0acc9c9c51");
+
+const isGlowing = quickActionsMenu.value === "quickActions";
 
   return (
     <StyledHomepage>
@@ -166,8 +187,37 @@ export default function Home() {
               </OptionButton>
             </div>
           </div>
+          <div
+            className={`actions ${isGlowing ? "glow" : ""}`}
+            onClick={() =>
+              (quickActionsMenu.value =
+                quickActionsMenu.value === "quickActions"
+                  ? null
+                  : "quickActions")
+            }
+          >
+            <AiFillThunderbolt className="thunder" />
+          </div>
         </>
       )}
+      <MenuAnimationBackground menu={quickActionsMenu} />
+      {group && (
+        <NewExpenseAnimation
+          expense={null}
+          group={group}
+          timeZoneId={timeZoneId}
+          menu={quickActionsMenu}
+          selectedExpense={selectedExpense}
+          timeZoneCoordinates={timeZoneCoordinates}
+          isPersonal={isPersonal.value}
+        />
+      )}
+
+      <HomeQuickActionsAnimation
+        menu={quickActionsMenu}
+        isPersonal={isPersonal}
+      />
+      <NonGroupUsersAnimation menu={quickActionsMenu} />
     </StyledHomepage>
   );
 }

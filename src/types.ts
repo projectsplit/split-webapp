@@ -153,7 +153,28 @@ export type GetGroupsResponse = {
 
 export type GetGroupsResponseItem = {
   id: string;
+  created: Date;
+  updated: Date;
+  ownerId: string;
   name: string;
+  currency: string;
+  members: Member[];
+  guests: Guest[];
+  labels: Label[];
+  isArchived: boolean;
+  
+};
+
+export type SearchUserToInviteResponse = {
+  users: SearchUserToInviteResponseItem[];
+  next: string | null;
+};
+
+export type SearchUserToInviteResponseItem = {
+  userId: string;
+  username: string;
+  isGroupMember: boolean;
+  isAlreadyInvited: boolean;
 };
 
 export type Group = {
@@ -682,3 +703,4 @@ export type SpendingChartsResponseItem = {
   from: Date;
   to: Date;
 };
+
