@@ -9,8 +9,8 @@ export const StyledHomepage = styled.div`
   width: 100%;
   overflow: hidden;
   position: relative;
-> div[style*="position: fixed"] {
-    z-index:1; /* Ensure fixed children (background) are above */
+  > div[style*="position: fixed"] {
+    z-index: 1; /* Ensure fixed children (background) are above */
   }
   .fixedTop {
     padding: 14px;
@@ -102,27 +102,10 @@ export const StyledHomepage = styled.div`
           font-size: 12px;
           margin-left: 5px;
         }
-        .groupName {
-        }
       }
     }
   }
-  @keyframes spin-animation {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  .spinner {
-    align-self: center;
-    animation: spin-animation 0.8s linear infinite;
-    font-size: 25px;
-    color: ${({ theme }) => theme.labelColor6};
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
+
   .actions {
     position: fixed;
     bottom: 40px;
@@ -136,12 +119,53 @@ export const StyledHomepage = styled.div`
     justify-content: center;
     z-index: 4;
     cursor: pointer;
-    /* box-shadow: rgba(61, 37, 59, 0.5) 0px 4px 4px; */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 0 10px ${({ theme }) => theme.pinkish};
+    will-change: box-shadow;
+    overflow: hidden; /* clips glow to circular boundary */
+    border-radius: 50%;
 
     .thunder {
-      position: static;
       font-size: 30px;
       color: white;
+    }
+
+    &.glow {
+      animation: glowRandom 2.5s infinite ease-in-out;
+      transform: scale(1.08);
+    }
+  }
+
+  @keyframes glowRandom {
+    0% {
+      box-shadow: 0 0 10px ${({ theme }) => theme.pinkish},
+        2px -2px 15px ${({ theme }) => theme.pinkish},
+        -3px 3px 20px ${({ theme }) => theme.pinkish};
+    }
+    20% {
+      box-shadow: -2px 1px 12px ${({ theme }) => theme.pinkish},
+        3px -3px 18px ${({ theme }) => theme.pinkish},
+        1px 2px 25px ${({ theme }) => theme.pinkish};
+    }
+    40% {
+      box-shadow: 3px 2px 10px ${({ theme }) => theme.pinkish},
+        -2px -3px 20px ${({ theme }) => theme.pinkish},
+        0 0 15px ${({ theme }) => theme.pinkish};
+    }
+    60% {
+      box-shadow: -3px -1px 12px ${({ theme }) => theme.pinkish},
+        2px 3px 18px ${({ theme }) => theme.pinkish},
+        0 0 20px ${({ theme }) => theme.pinkish};
+    }
+    80% {
+      box-shadow: 2px 3px 10px ${({ theme }) => theme.pinkish},
+        -1px -2px 18px ${({ theme }) => theme.pinkish},
+        1px 1px 25px ${({ theme }) => theme.pinkish};
+    }
+    100% {
+      box-shadow: 0 0 10px ${({ theme }) => theme.pinkish},
+        2px -2px 15px ${({ theme }) => theme.pinkish},
+        -3px 3px 20px ${({ theme }) => theme.pinkish};
     }
   }
 `;

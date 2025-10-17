@@ -44,7 +44,7 @@ export default function ExpenseForm({
   header,
   selectedExpense,
   isCreateExpense,
-  isPersonal
+  isPersonal,
 }: ExpenseFormProps) {
   const isInitialRender = useRef<boolean>(true);
 
@@ -52,7 +52,7 @@ export default function ExpenseForm({
     useExpense(menu, group.id);
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
-    useEditExpense(menu, selectedExpense, group.id);
+    useEditExpense(menu, group.id, selectedExpense);
 
   const [participantsByCategory, setParticipantsByCategory] = useState<{
     Amounts: PickerMember[];
@@ -309,7 +309,7 @@ export default function ExpenseForm({
           {showAmountError && amountError ? amountError : ""}
         </span>
       </div>
-      {amountNumber &&!isPersonal? (
+      {amountNumber && !isPersonal ? (
         <div className="textStyleInfo">
           <MemberPicker2
             description={"Participants"}
@@ -317,7 +317,7 @@ export default function ExpenseForm({
             memberAmounts={adjustParticipants}
             error={participantsError}
             setMemberAmounts={setParticipants}
-            group={group}
+            // group={group}
             selectedCurrency={currencySymbol}
             category={participantsCategory}
             userMemberId={userMemberId}
@@ -330,7 +330,7 @@ export default function ExpenseForm({
             memberAmounts={adjustPayers}
             error={payersError}
             setMemberAmounts={setPayers}
-            group={group}
+            // group={group}
             selectedCurrency={currencySymbol}
             category={payersCategory}
             userMemberId={userMemberId}
@@ -358,7 +358,7 @@ export default function ExpenseForm({
       )}
 
       <LocationDisplay location={location} isMapOpen={isMapOpen} />
-      {(isDateShowing.value||!isCreateExpense) && (
+      {(isDateShowing.value || !isCreateExpense) && (
         <DateDisplay
           selectedDateTime={expenseTime}
           timeZoneId={timeZoneId}
@@ -368,7 +368,11 @@ export default function ExpenseForm({
         />
       )}
       {labels.length > 0 ? (
-        <LabelsDisplay labels={labels} setLabels={setLabels} labelMenuIsOpen={labelMenuIsOpen}/>
+        <LabelsDisplay
+          labels={labels}
+          setLabels={setLabels}
+          labelMenuIsOpen={labelMenuIsOpen}
+        />
       ) : null}
       <div className="spacer"></div>
       <div className="bottomButtons">

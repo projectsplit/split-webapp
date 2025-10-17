@@ -37,7 +37,7 @@ import NonGroupUsersAnimation from "../../components/Menus/MenuAnimations/NonGro
 export default function Home() {
   const navigate = useNavigate();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
-  const isPersonal = useSignal<boolean>(false)
+  const isPersonal = useSignal<boolean>(false);
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
 
@@ -49,7 +49,7 @@ export default function Home() {
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
   const menu = useSignal<string | null>(null);
-  const quickActionsMenu = useSignal<string | null>(null); 
+  const quickActionsMenu = useSignal<string | null>(null);
   const recentGroupId = userInfo?.recentGroupId;
 
   const {
@@ -83,13 +83,15 @@ export default function Home() {
   // const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
 
   //TODO need to be able to get the personal group id. If expenses are to be submitted without the group then this can be discarded.
+
   const {
     data: group,
     isFetching: groupIsFetching,
     isError,
     error,
-  } = useGroup("a865c378-8956-4cb7-903d-a669e26282de");
+  } = useGroup("f7637b50-e77d-4609-9e38-eb0acc9c9c51");
 
+const isGlowing = quickActionsMenu.value === "quickActions";
 
   return (
     <StyledHomepage>
@@ -186,8 +188,13 @@ export default function Home() {
             </div>
           </div>
           <div
-            className="actions"
-            onClick={() => (quickActionsMenu.value = "quickActions")}
+            className={`actions ${isGlowing ? "glow" : ""}`}
+            onClick={() =>
+              (quickActionsMenu.value =
+                quickActionsMenu.value === "quickActions"
+                  ? null
+                  : "quickActions")
+            }
           >
             <AiFillThunderbolt className="thunder" />
           </div>
@@ -206,8 +213,11 @@ export default function Home() {
         />
       )}
 
-      <HomeQuickActionsAnimation menu={quickActionsMenu} isPersonal={isPersonal} />
-      <NonGroupUsersAnimation menu={quickActionsMenu}/>
+      <HomeQuickActionsAnimation
+        menu={quickActionsMenu}
+        isPersonal={isPersonal}
+      />
+      <NonGroupUsersAnimation menu={quickActionsMenu} />
     </StyledHomepage>
   );
 }

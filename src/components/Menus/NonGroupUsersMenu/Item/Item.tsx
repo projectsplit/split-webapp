@@ -1,7 +1,8 @@
 import { StyledItem } from "./Item.styled";
 import { UserItemProps } from "../../../../interfaces";
+import React from "react";
 
-export default function Item({
+export default React.memo(function Item({
   name,
   onClick,
 }: UserItemProps) {
@@ -13,4 +14,4 @@ export default function Item({
       </div>
     </StyledItem>
   );
-}
+})

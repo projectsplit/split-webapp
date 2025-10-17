@@ -1,12 +1,11 @@
 import { StyledNonGroupUsersMenu } from "./NonGroupUsersMenu.styled";
 import { NonGroupUsersProps } from "../../../interfaces";
 import { CategorySelector } from "../../CategorySelector/CategorySelector";
-import { IoClose } from "react-icons/io5";
 import { Signal, useSignal } from "@preact/signals-react";
 import { BiArrowBack } from "react-icons/bi";
 import MyButton from "../../MyButton/MyButton";
 import Sentinel from "../../Sentinel";
-import { useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useSearchUsersToInvite } from "../../../api/services/useSearchUsersToInvite";
 import useDebounce from "../../../hooks/useDebounce";
 import AutoWidthInput from "../../AutoWidthInput";
@@ -17,12 +16,15 @@ import {
 } from "../../../types";
 import useGetGroups from "../../../api/services/useGetGroup";
 import { useOutletContext } from "react-router-dom";
-import Item from "./UserItem/Item";
-import { TiGroup } from "react-icons/ti";
-import { BsFillPersonFill } from "react-icons/bs";
+import Item from "./Item/Item";
+import CreateExpenseForm from "../../CreateExpenseForm/CreateExpenseForm";
+import React from "react";
+import { SelectedGroups } from "./SelectionLists/SelectedGroups";
+import { SelectedUsers } from "./SelectionLists/SelectedUsers";
 
 export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
   const category = useSignal<string>("Friends");
+  const expenseMenu = useSignal<string | null>(null);
   const [keyword, setKeyword] = useState("");
   const [users, setUsers] = useState<SearchUserToInviteResponseItem[]>([]);
   const [groups, setGroups] = useState<GetGroupsResponseItem[]>([]);
@@ -46,7 +48,7 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
     isFetchingNextPage,
     updateUserInvitationStatus,
   } = useSearchUsersToInvite(
-    "a865c378-8956-4cb7-903d-a669e26282de",
+    "f7637b50-e77d-4609-9e38-eb0acc9c9c51",
     debouncedKeyword,
     pageSize
   );
@@ -94,90 +96,67 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
     setKeyword("");
   };
 
-  // const addGroup = (groupname: string) => {
-  //   const trimmed = groupname.trim();
-  //   const existingGroup = userGroups?.pages
-  //     .flatMap((x) => x.groups)
-  //     .find((x) => x.name === trimmed);
-
-  //   if (!existingGroup) {
-  //     // User not found in fetched data, keep keyword as-is or show error
-  //     return;
-  //   }
-
-  //   const newGroup: GetGroupsResponseItem = {
-  //     //TODO will have to change to group list with members
-  //     id: existingGroup.id,
-  //     name: existingGroup.name,
-  //   };
-
-  //   if (!groups.map((x) => x.name).includes(newGroup.name)) {
-  //     setGroups([...groups, newGroup]);
-  //   }
-  //   setKeyword("");
-  // };
-
-  const handleSuggestedUserClick = (username: string) => {
-    addUser(username);
-    // inputRef.current?.focus();
-  };
-
-const handleSuggestedGroupClick = (groupId: string) => {
-  const existingGroup = userGroups?.pages
-    .flatMap((x) => x.groups)
-    .find((x) => x.id === groupId);
-
-  if (!existingGroup) return;
-
-  setGroups([
-    {
-      id: existingGroup.id,
-      name: existingGroup.name,
+  const handleSuggestedUserClick = useCallback(
+    (username: string) => {
+      addUser(username);
     },
-  ]);
+    [addUser]
+  );
 
-  // Refocus input
-  // inputRef.current?.focus();
-};
+  const handleSuggestedGroupClick = useCallback(
+    (groupId: string) => {
+      const existingGroup = userGroups?.pages
+        .flatMap((x) => x.groups)
+        .find((x) => x.id === groupId);
 
+      if (!existingGroup) return;
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-    // category: Signal<string>
-  ) => {
-    const newKeyword = e.target.value;
-    // const trimmed = newKeyword.trim();
+      setGroups([
+        {
+          id: existingGroup.id,
+          name: existingGroup.name,
+          created: existingGroup.created,
+          updated: existingGroup.updated,
+          ownerId: existingGroup.ownerId,
+          members: existingGroup.members,
+          labels: existingGroup.labels,
+          isArchived: existingGroup.isArchived,
+          guests: existingGroup.guests,
+          currency: existingGroup.currency,
+        },
+      ]);
+    },
+    [userGroups]
+  );
+  console.log(groups);
 
-    // if (trimmed.length === 0) {
-    //   setKeyword("");
-    //   return;
-    // }
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setKeyword(e.target.value);
+    },
+    []
+  );
 
-    // if (newKeyword.slice(-1) === " " && category.value === "Friends") {
-    //   addUser(newKeyword);
+  const remainingSuggestedUsers = useMemo(() => {
+    return (
+      data?.pages
+        .flatMap((x) => x.users)
+        .filter((x) => !users.some((u) => u.userId === x.userId)) ?? []
+    );
+  }, [data, users]);
 
-    //   return;
-    // } else if (newKeyword.slice(-1) === " " && category.value === "Groups") {
-    //   addGroup(newKeyword);
+  const remainingSuggestedGroups = useMemo(() => {
+    return (
+      userGroups?.pages
+        .flatMap((x) => x.groups)
+        .filter((x) => !groups.some((g) => g.id === x.id)) ?? []
+    );
+  }, [userGroups, groups]);
 
-    //   return;
-    // }
-
-    setKeyword(newKeyword);
-  };
-
-  const remainingSuggestedUsers =
-    data?.pages
-      .flatMap((x) => x.users)
-      .filter((x) => !users.map((u) => u.userId).includes(x.userId)) ?? [];
-
-  const remainingSuggestedGroups =
-    userGroups?.pages
-      .flatMap((x) => x.groups)
-      .filter((x) => !groups.map((g) => g.id).includes(x.id)) ?? [];
-
-  const isEmpty =
-    users?.length === 0 && keyword.length === 0 && groups?.length === 0;
+  const isEmpty = useMemo(
+    () => users?.length === 0 && keyword.length === 0 && groups?.length === 0,
+    [users, groups, keyword]
+  );
 
   return (
     <StyledNonGroupUsersMenu>
@@ -204,7 +183,6 @@ const handleSuggestedGroupClick = (groupId: string) => {
           />
         </div>
       </div>
-
       <div className="scrollable-content">
         <div className="input">
           <div
@@ -214,43 +192,12 @@ const handleSuggestedGroupClick = (groupId: string) => {
             ref={mainRef}
             tabIndex={0}
           >
-            {users.map((user) => (
-              <span
-                key={user.userId}
-                style={{
-                  backgroundColor: "white",
-                  color: "#000000c8",
-                }}
-                onClick={() => handleSelectedUserCick(user.userId)}
-                className="selected-label"
-              >
-                <div className="info">
-                  {" "}
-                  <BsFillPersonFill />
-                  {user.username}
-                </div>
+            <SelectedUsers users={users} onRemove={handleSelectedUserCick} />
+            <SelectedGroups
+              groups={groups}
+              onRemove={handleSelectedGroupCick}
+            />
 
-                <IoClose />
-              </span>
-            ))}
-            {groups.map((group) => (
-              <span
-                key={group.id}
-                style={{
-                  backgroundColor: "#696e80",
-                  color: "white",
-                }}
-                onClick={() => handleSelectedGroupCick(group.id)}
-                className="selected-label"
-              >
-                <div className="info">
-                  <TiGroup />
-                  All of : {group.name}
-                </div>
-
-                <IoClose />
-              </span>
-            ))}
             <AutoWidthInput
               className="input"
               inputMode="text"
@@ -308,8 +255,23 @@ const handleSuggestedGroupClick = (groupId: string) => {
         />
       </div>
       <div className="doneButton">
-        <MyButton>Done</MyButton>
+        <MyButton onClick={() => (expenseMenu.value = "newExpense")}>
+          Done
+        </MyButton>
       </div>
+      {groups.length && expenseMenu.value === "newExpense" && (
+        <CreateExpenseForm
+          group={groups[0]}
+          expense={null}
+          timeZoneId={userInfo.timeZone}
+          menu={expenseMenu}
+          timeZoneCoordinates={userInfo.timeZoneCoordinates}
+          header="Create New Expense"
+          isCreateExpense={true}
+          // selectedExpense={selectedExpense}
+          isPersonal={false}
+        />
+      )}
     </StyledNonGroupUsersMenu>
   );
 };
