@@ -36,11 +36,11 @@ export const StyledHomeQuickActionsMenu = styled.div`
         flex-direction: row;
         position: relative;
 
-        .person {
-          padding: 0.5rem;
+        .symbol {
+          padding: 0.6rem;
           border-radius: 50%;
           display: flex;
-
+        
           cursor: pointer;
           color: rgb(81, 131, 238);
           background-color: white;
@@ -49,18 +49,7 @@ export const StyledHomeQuickActionsMenu = styled.div`
           position: relative;
         }
       }
-      .receipt {
-        font-size: 20px;
-        position: absolute;
-        color: rgb(81, 131, 238);
-        border-radius: 50%;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        bottom: -10px;
-        left: -12px;
-      }
       .descr {
         flex: 1 1 auto;
         margin-right: 8px;

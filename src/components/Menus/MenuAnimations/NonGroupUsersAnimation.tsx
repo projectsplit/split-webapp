@@ -4,7 +4,9 @@ import { useRef } from "react";
 import { NonGroupUsersMenu } from "../NonGroupUsersMenu/NonGroupUsersMenu";
 
 export default function NonGroupUsersAnimation({
-  menu
+  menu,
+  nonGroupUsers,
+  isPersonal
 }: NonGroupUsersAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -14,7 +16,7 @@ export default function NonGroupUsersAnimation({
       timeout={100}
       unmountOnExit
     >
-      <NonGroupUsersMenu menu={menu}/>
+      <NonGroupUsersMenu menu={menu} nonGroupUsers={nonGroupUsers} isPersonal={isPersonal}/>
     </CSSTransition>
   );
 }

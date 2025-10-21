@@ -5,7 +5,7 @@ import HomeQuickActionsMenu from "../HomeQuickActionsMenu/HomeQuickActionsMenu";
 
 export default function HomeQuickActionsAnimation({
   menu,
-  isPersonal
+  isNonGroupExpense
 }: HomeQuickActionsAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -16,7 +16,7 @@ export default function HomeQuickActionsAnimation({
       classNames="quick-actions"
       unmountOnExit
     >
-      <HomeQuickActionsMenu menu={menu} isPersonal={isPersonal}/>
+      <HomeQuickActionsMenu menu={menu} isNonGroupExpense={isNonGroupExpense}/>
     </CSSTransition>
   );
 }

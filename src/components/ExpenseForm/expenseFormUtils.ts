@@ -4,8 +4,11 @@ import {
   FormExpense,
   GeoLocation,
   Group,
+  Guest,
   Label,
+  Member,
   PickerMember,
+  User,
 } from "../../types";
 import { significantDigitsFromTicker } from "../../helpers/openExchangeRates";
 import currency from "currency.js";
@@ -22,7 +25,7 @@ export function submitExpense({
   description,
   setDescriptionError,
   isCreateExpense,
-  group,
+  groupId,
   expense,
   currencySymbol,
   expenseTime,
@@ -43,7 +46,7 @@ export function submitExpense({
   description: string;
   setDescriptionError: React.Dispatch<React.SetStateAction<string>>;
   isCreateExpense: boolean;
-  group: Group;
+  groupId?: string;
   expense: FormExpense | null;
   currencySymbol: string;
   expenseTime: string;
@@ -159,7 +162,7 @@ export function submitExpense({
 
   const expenseRequest: ExpenseRequest = {
     amount: Number(amount),
-    ...(isCreateExpense ? { groupId: group.id } : { expenseId: expense?.id }),
+    ...(isCreateExpense ? { groupId: groupId } : { expenseId: expense?.id }),
     currency: currencySymbol,
     payments: payers
       .filter((value) => value.selected)
@@ -185,84 +188,165 @@ export function submitExpense({
     editExpenseMutation(expenseRequest);
   }
 }
+
 export const createParticipantPickerArray = (
-  group: Group,
+  allGroupMembers: (Member | Guest)[],
+  allNonGroupUsers: Signal<User[]>,
   expense: FormExpense | null,
   type: string,
-  isCreateExpense: boolean
+  isCreateExpense: boolean,
+  isnonGroupExpense?: boolean
 ): PickerMember[] => {
-  return [...group.guests, ...group.members].map((member) => {
-    const participant = expense?.participants.find(
-      (p) => p.memberId === member.id
-    );
-    const actualAmount = participant?.participationAmount ?? "";
-    const isPercentageType = type === "Percentages";
-    const isSharesType = type === "Shares";
-    const expenseAmount = Number(expense?.amount);
-    const participationAmount = Number(participant?.participationAmount);
+  if (isnonGroupExpense && allNonGroupUsers.value.length > 0) {
+    return allNonGroupUsers.value.map((user) => {
+      const participant = expense?.participants.find(
+        (p) => p.memberId === user?.userId
+      );
+      const actualAmount = participant?.participationAmount ?? "";
+      const isPercentageType = type === "Percentages";
+      const isSharesType = type === "Shares";
+      const expenseAmount = Number(expense?.amount);
+      const participationAmount = Number(participant?.participationAmount);
 
-    const screenQuantity =
-      isPercentageType &&
-      expense?.amount &&
-      participant?.participationAmount &&
-      !isNaN(expenseAmount) &&
-      expenseAmount !== 0
-        ? ((participationAmount / expenseAmount) * 100).toFixed(1)
-        : isSharesType && !isCreateExpense
-        ? ""
-        : actualAmount; //'0'
+      const screenQuantity =
+        isPercentageType &&
+        expense?.amount &&
+        participant?.participationAmount &&
+        !isNaN(expenseAmount) &&
+        expenseAmount !== 0
+          ? ((participationAmount / expenseAmount) * 100).toFixed(1)
+          : isSharesType && !isCreateExpense
+          ? ""
+          : actualAmount; //'0'
 
-    return {
-      id: member.id,
-      actualAmount:
-        expense?.participants.find((p) => p.memberId === member.id)
-          ?.participationAmount ?? "",
-      screenQuantity,
-      locked:
-        expense?.participants.some((p) => p.memberId === member.id) ?? false,
-      name: member.name,
-      order: 0,
-      selected:
-        expense?.participants.some((p) => p.memberId === member.id) ?? false,
-    };
-  });
+      return {
+        id: user.userId,
+        actualAmount:
+          expense?.participants.find((p) => p.memberId === user.userId)
+            ?.participationAmount ?? "",
+        screenQuantity,
+        locked:
+          expense?.participants.some((p) => p.memberId === user.userId) ??
+          false,
+        name: user.username,
+        order: 0,
+        selected:
+          expense?.participants.some((p) => p.memberId === user.userId) ??
+          false,
+      };
+    });
+  } else {
+    return allGroupMembers.map((member) => {
+      const participant = expense?.participants.find(
+        (p) => p.memberId === member?.id
+      );
+      const actualAmount = participant?.participationAmount ?? "";
+      const isPercentageType = type === "Percentages";
+      const isSharesType = type === "Shares";
+      const expenseAmount = Number(expense?.amount);
+      const participationAmount = Number(participant?.participationAmount);
+
+      const screenQuantity =
+        isPercentageType &&
+        expense?.amount &&
+        participant?.participationAmount &&
+        !isNaN(expenseAmount) &&
+        expenseAmount !== 0
+          ? ((participationAmount / expenseAmount) * 100).toFixed(1)
+          : isSharesType && !isCreateExpense
+          ? ""
+          : actualAmount; //'0'
+
+      return {
+        id: member.id,
+        actualAmount:
+          expense?.participants.find((p) => p.memberId === member.id)
+            ?.participationAmount ?? "",
+        screenQuantity,
+        locked:
+          expense?.participants.some((p) => p.memberId === member.id) ?? false,
+        name: member.name,
+        order: 0,
+        selected:
+          expense?.participants.some((p) => p.memberId === member.id) ?? false,
+      };
+    });
+  }
 };
 
 export const createPayerPickerArray = (
-  group: Group,
+  allGroupMembers: (Member | Guest)[],
+  allNonGroupUsers: Signal<User[]>,
   expense: FormExpense | null,
   type: string,
-  isCreateExpense: boolean
+  isCreateExpense: boolean,
+  isnonGroupExpense?: boolean
 ): PickerMember[] => {
-  return [...group.guests, ...group.members].map((member) => {
-    const payer = expense?.payers.find((p) => p.memberId === member.id);
-    const actualAmount = payer?.paymentAmount ?? "";
-    const isPercentageType = type === "Percentages";
-    const isSharesType = type === "Shares";
-    const expenseAmount = Number(expense?.amount);
-    const paymentAmount = Number(payer?.paymentAmount);
+  if (isnonGroupExpense && allNonGroupUsers.value.length > 0) {
+    return allNonGroupUsers.value.map((user) => {
+      const payer = expense?.payers.find((p) => p.memberId === user?.userId);
+      const actualAmount = payer?.paymentAmount ?? "";
+      const isPercentageType = type === "Percentages";
+      const isSharesType = type === "Shares";
+      const expenseAmount = Number(expense?.amount);
+      const paymentAmount = Number(payer?.paymentAmount);
 
-    const screenQuantity =
-      isPercentageType &&
-      expense?.amount &&
-      payer?.paymentAmount &&
-      !isNaN(expenseAmount) &&
-      expenseAmount !== 0
-        ? ((paymentAmount / expenseAmount) * 100).toFixed(1)
-        : isSharesType && !isCreateExpense
-        ? ""
-        : actualAmount; //'0'
+      const screenQuantity =
+        isPercentageType &&
+        expense?.amount &&
+        payer?.paymentAmount &&
+        !isNaN(expenseAmount) &&
+        expenseAmount !== 0
+          ? ((paymentAmount / expenseAmount) * 100).toFixed(1)
+          : isSharesType && !isCreateExpense
+          ? ""
+          : actualAmount; //'0'
 
-    return {
-      id: member.id,
-      actualAmount:
-        expense?.payers.find((p) => p.memberId === member.id)?.paymentAmount ??
-        "",
-      screenQuantity,
-      locked: expense?.payers.some((p) => p.memberId === member.id) ?? false,
-      name: member.name,
-      order: 0,
-      selected: expense?.payers.some((p) => p.memberId === member.id) ?? false,
-    };
-  });
+      return {
+        id: user.userId,
+        actualAmount:
+          expense?.payers.find((p) => p.memberId === user.userId)
+            ?.paymentAmount ?? "",
+        screenQuantity,
+        locked: expense?.payers.some((p) => p.memberId === user.userId) ?? false,
+        name: user.username,
+        order: 0,
+        selected:
+          expense?.payers.some((p) => p.memberId === user.userId) ?? false,
+      };
+    });
+  } else {
+    return allGroupMembers.map((member) => {
+      const payer = expense?.payers.find((p) => p.memberId === member?.id);
+      const actualAmount = payer?.paymentAmount ?? "";
+      const isPercentageType = type === "Percentages";
+      const isSharesType = type === "Shares";
+      const expenseAmount = Number(expense?.amount);
+      const paymentAmount = Number(payer?.paymentAmount);
+
+      const screenQuantity =
+        isPercentageType &&
+        expense?.amount &&
+        payer?.paymentAmount &&
+        !isNaN(expenseAmount) &&
+        expenseAmount !== 0
+          ? ((paymentAmount / expenseAmount) * 100).toFixed(1)
+          : isSharesType && !isCreateExpense
+          ? ""
+          : actualAmount; //'0'
+
+      return {
+        id: member.id,
+        actualAmount:
+          expense?.payers.find((p) => p.memberId === member.id)
+            ?.paymentAmount ?? "",
+        screenQuantity,
+        locked: expense?.payers.some((p) => p.memberId === member.id) ?? false,
+        name: member.name,
+        order: 0,
+        selected:
+          expense?.payers.some((p) => p.memberId === member.id) ?? false,
+      };
+    });
+  }
 };

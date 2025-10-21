@@ -10,7 +10,7 @@ import { Signal } from "@preact/signals-react";
 
 export const useEditExpense = (
   menu: Signal<string | null>,
-  groupId: string,
+  groupId: string|undefined,
   selectedExpense?: Signal<ExpenseResponseItem | null>
 ) => {
   const queryClient = useQueryClient();

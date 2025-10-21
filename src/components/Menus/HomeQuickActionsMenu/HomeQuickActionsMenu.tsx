@@ -1,40 +1,37 @@
 import { StyledHomeQuickActionsMenu } from "./HomeQuickActionsMenu.styled";
 import { HomeQuickActionsMenuprops } from "../../../interfaces";
-import { HiOutlineUser, HiOutlineUserGroup } from "react-icons/hi";
 import { FaReceipt } from "react-icons/fa";
+import { BiTransfer } from "react-icons/bi";
 
 export default function HomeQuickActionsMenu({
   menu,
-  isPersonal,
+  isNonGroupExpense
 }: HomeQuickActionsMenuprops) {
   return (
     <StyledHomeQuickActionsMenu>
       <div className="buttons">
         <div
           className="new"
-          onClick={() => {
-            isPersonal.value = false;
-            menu.value = "nongroupusers";
-          }}
+          // onClick={() => {
+          //   isPersonal.value = true;
+          //   menu.value = "newExpense";
+          // }}
         >
-          <div className="descr">Shared expense</div>
+          <div className="descr">Transfer</div>
           <div className="wrapper">
-            <HiOutlineUserGroup className="person" />
-            <FaReceipt className="receipt" />
+            <BiTransfer className="symbol" />
           </div>
         </div>
-
         <div
           className="new"
           onClick={() => {
-            isPersonal.value = true;
             menu.value = "newExpense";
+            isNonGroupExpense.value=true;
           }}
         >
-          <div className="descr">Personal expense</div>
+          <div className="descr">Expense</div>
           <div className="wrapper">
-            <HiOutlineUser className="person" />
-            <FaReceipt className="receipt" />
+            <FaReceipt className="symbol" />
           </div>
         </div>
       </div>

@@ -5,7 +5,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { GeoLocation, Label, PickerMember, UserInfo } from "../../types";
+import {
+  GeoLocation,
+  Label,
+  Member,
+  PickerMember,
+  UserInfo,
+} from "../../types";
 import MyButton from "../MyButton/MyButton";
 import { DateTime } from "../DateTime";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
@@ -36,7 +42,9 @@ import LabelsDisplay from "./components/LabelsDisplay/LabelsDisplay";
 import FormInputWithTag from "./components/FormInputWithTag/FormInputWithTag";
 
 export default function ExpenseForm({
-  group,
+  allGroupMembers,
+  allNonGroupUsers,
+  groupId,
   expense,
   timeZoneId,
   menu,
@@ -45,14 +53,17 @@ export default function ExpenseForm({
   selectedExpense,
   isCreateExpense,
   isPersonal,
+  isnonGroupExpense,
+  currency,
+  nonGroupMenu,
 }: ExpenseFormProps) {
   const isInitialRender = useRef<boolean>(true);
 
   const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
-    useExpense(menu, group.id);
+    useExpense(menu, groupId);
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
-    useEditExpense(menu, group.id, selectedExpense);
+    useEditExpense(menu, groupId, selectedExpense);
 
   const [participantsByCategory, setParticipantsByCategory] = useState<{
     Amounts: PickerMember[];
@@ -60,24 +71,86 @@ export default function ExpenseForm({
     Percentages: PickerMember[];
   }>({
     Amounts: createParticipantPickerArray(
-      group,
+      allGroupMembers,
+      allNonGroupUsers,
       expense,
       "Amounts",
-      isCreateExpense
+      isCreateExpense,
+      isnonGroupExpense
     ),
     Shares: createParticipantPickerArray(
-      group,
+      allGroupMembers,
+      allNonGroupUsers,
       expense,
       "Shares",
-      isCreateExpense
+      isCreateExpense,
+      isnonGroupExpense
     ),
     Percentages: createParticipantPickerArray(
-      group,
+      allGroupMembers,
+      allNonGroupUsers,
       expense,
       "Percentages",
-      isCreateExpense
+      isCreateExpense,
+      isnonGroupExpense
     ),
   });
+
+  useEffect(() => {
+    if (!isnonGroupExpense) return;
+
+    setParticipantsByCategory({
+      Amounts: createParticipantPickerArray(
+        allGroupMembers,
+        allNonGroupUsers,
+        expense,
+        "Amounts",
+        isCreateExpense,
+        true
+      ),
+      Shares: createParticipantPickerArray(
+        allGroupMembers,
+        allNonGroupUsers,
+        expense,
+        "Shares",
+        isCreateExpense,
+        true
+      ),
+      Percentages: createParticipantPickerArray(
+        allGroupMembers,
+        allNonGroupUsers,
+        expense,
+        "Percentages",
+        isCreateExpense,
+        true
+      ),
+    });
+    setPayersByCategory({
+      Amounts: createPayerPickerArray(
+        allGroupMembers,
+        allNonGroupUsers,
+        expense,
+        "Amounts",
+        isCreateExpense,
+        isnonGroupExpense
+      ),
+      Shares: createPayerPickerArray(
+        allGroupMembers,
+        allNonGroupUsers,
+        expense,
+        "Shares",
+        isCreateExpense,
+        isnonGroupExpense
+      ),
+      Percentages: createPayerPickerArray(
+        allGroupMembers,
+        allNonGroupUsers,
+        expense,
+        "Percentages",
+        isCreateExpense
+      ),
+    });
+  }, [allNonGroupUsers.value, isnonGroupExpense, isCreateExpense]);
 
   const [participantsError, setParticipantsError] = useState<string>("");
 
@@ -86,10 +159,25 @@ export default function ExpenseForm({
     Shares: PickerMember[];
     Percentages: PickerMember[];
   }>({
-    Amounts: createPayerPickerArray(group, expense, "Amounts", isCreateExpense),
-    Shares: createPayerPickerArray(group, expense, "Shares", isCreateExpense),
+    Amounts: createPayerPickerArray(
+      allGroupMembers,
+      allNonGroupUsers,
+      expense,
+      "Amounts",
+      isCreateExpense,
+      isnonGroupExpense
+    ),
+    Shares: createPayerPickerArray(
+      allGroupMembers,
+      allNonGroupUsers,
+      expense,
+      "Shares",
+      isCreateExpense,
+      isnonGroupExpense
+    ),
     Percentages: createPayerPickerArray(
-      group,
+      allGroupMembers,
+      allNonGroupUsers,
       expense,
       "Percentages",
       isCreateExpense
@@ -100,7 +188,7 @@ export default function ExpenseForm({
   const [descriptionError, setDescriptionError] = useState<string>("");
 
   const [currencySymbol, setCurrencySymbol] = useState<string>(
-    isCreateExpense || !expense ? group.currency : expense.currency
+    isCreateExpense || !expense ? currency : expense.currency
   );
   const [amount, setAmount] = useState<string>(
     isCreateExpense || !expense ? "" : expense.amount
@@ -141,8 +229,13 @@ export default function ExpenseForm({
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
-  const members = group?.members;
+  // const members = group?.members;
+  const members = allGroupMembers.filter(
+    (item): item is Member => "userId" in item
+  );
+
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
+
 
   const participants =
     participantsByCategory[
@@ -153,16 +246,28 @@ export default function ExpenseForm({
     payersByCategory[payersCategory.value as keyof typeof payersByCategory];
 
   const adjustParticipants = useMemo(() => {
-    return participants.map((m) =>
-      m.id === userMemberId ? { ...m, name: "you" } : m
-    );
-  }, [participants, userMemberId]);
+    if (isnonGroupExpense) {
+      return participants.map((m) =>
+        m.id === userInfo?.userId ? { ...m, name: "you" } : m
+      );
+    } else {
+      return participants.map((m) =>
+        m.id === userMemberId ? { ...m, name: "you" } : m
+      );
+    }
+  }, [participants, userMemberId, allNonGroupUsers.value, allGroupMembers]);
 
   const adjustPayers = useMemo(() => {
-    return payers.map((m) =>
-      m.id === userMemberId ? { ...m, name: "you" } : m
-    );
-  }, [payers, userMemberId]);
+    if (isnonGroupExpense) {
+      return payers.map((m) =>
+        m.id === userInfo?.userId ? { ...m, name: "you" } : m
+      );
+    } else {
+      return payers.map((m) =>
+        m.id === userMemberId ? { ...m, name: "you" } : m
+      );
+    }
+  }, [payers, userMemberId, allNonGroupUsers.value, allGroupMembers]);
 
   const setParticipants = (newParticipants: PickerMember[]) => {
     setParticipantsByCategory((prev) => ({
@@ -190,7 +295,7 @@ export default function ExpenseForm({
       description,
       setDescriptionError,
       isCreateExpense,
-      group,
+      groupId,
       expense,
       currencySymbol,
       expenseTime,
@@ -282,6 +387,15 @@ export default function ExpenseForm({
     },
     []
   );
+  const showShareExpenseButton =
+    isnonGroupExpense &&
+    !isPersonal &&
+    amountNumber &&
+    allNonGroupUsers.value.length === 0;
+  const showDetailedSharedExpenseText =
+    (allNonGroupUsers?.value.length > 0 || allGroupMembers?.length > 0) &&
+    amountNumber &&
+    !isPersonal;
 
   return (
     <StyledExpenseForm>
@@ -309,7 +423,7 @@ export default function ExpenseForm({
           {showAmountError && amountError ? amountError : ""}
         </span>
       </div>
-      {amountNumber && !isPersonal ? (
+      {showDetailedSharedExpenseText ? (
         <div className="textStyleInfo">
           <MemberPicker2
             description={"Participants"}
@@ -322,6 +436,8 @@ export default function ExpenseForm({
             category={participantsCategory}
             userMemberId={userMemberId}
             setError={setParticipantsError}
+            isnonGroupExpense={isnonGroupExpense}
+            userId={userInfo.userId}
           />
 
           <MemberPicker2
@@ -335,6 +451,8 @@ export default function ExpenseForm({
             category={payersCategory}
             userMemberId={userMemberId}
             setError={setPayersError}
+            isnonGroupExpense={isnonGroupExpense}
+            userId={userInfo.userId}
           />
         </div>
       ) : (
@@ -348,12 +466,22 @@ export default function ExpenseForm({
         onChange={handleDescriptionChange}
         labelMenuIsOpen={labelMenuIsOpen}
       />
+      {showShareExpenseButton && nonGroupMenu ? (
+        <div className="shareExpenseOption">
+          <div
+            className="button"
+            onClick={() => (nonGroupMenu.value = "nongroupusers")}
+          >
+            Share Expense{" "}
+          </div>
+        </div>
+      ) : null}
       {labelMenuIsOpen.value && (
         <LabelMenu
           labelMenuIsOpen={labelMenuIsOpen}
           labels={labels}
           setLabels={setLabels}
-          groupId={group.id}
+          groupId={groupId}
         />
       )}
 

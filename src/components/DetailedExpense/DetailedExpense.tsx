@@ -213,11 +213,13 @@ export default function DetailedExpense({
       />
       <EditExpenseAnimation
         expense={expenseToEdit || null}
-        group={group}
+        groupId={group.id}
         timeZoneId={timeZoneId}
         menu={menu}
         selectedExpense={selectedExpense}
         timeZoneCoordinates={timeZoneCoordinates}
+        currency={group.currency}
+        allGroupMembers={[...group.members,...group.guests]}
       />
     </StyledDetailedExpense>
   );

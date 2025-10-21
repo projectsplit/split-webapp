@@ -103,7 +103,7 @@ export default function Group() {
     }
   }, [isError, groupError.value, navigate]);
 
-  
+
   return (
     <StyledGroup>
       {isFetching ? (
@@ -138,12 +138,14 @@ export default function Group() {
           {group && (
             <NewExpenseAnimation
               expense={null}
-              group={group}
+              groupId={group.id}
               timeZoneId={timeZoneId}
               menu={menu}
               selectedExpense={selectedExpense}
               timeZoneCoordinates={timeZoneCoordinates}
               isPersonal={false}
+              currency={group.currency}
+              allGroupMembers={[...group.members,...group.guests]}
             />
           )}
           {group && (

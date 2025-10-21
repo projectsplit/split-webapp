@@ -3,18 +3,22 @@ import { NewExpenseAnimationProps } from "../../../interfaces";
 import EditExpenseForm from "../../EditExpenseForm/EditExpenseForm";
 
 export default function EditExpenseAnimation({
-  group,
+  groupId,
   timeZoneId,
   menu,
   expense,
   selectedExpense,
   timeZoneCoordinates,
-  isPersonal
+  isPersonal,
+  allGroupMembers,
+  currency,
+  isnonGroupExpense,
+  allNonGroupUsers
 }: NewExpenseAnimationProps) {
   return (
     <CSSTransition in={menu.value === "editExpense"} timeout={0} unmountOnExit>
       <EditExpenseForm
-        group={group}
+        groupId={groupId}
         expense={expense}
         timeZoneId={timeZoneId}
         menu={menu}
@@ -23,6 +27,11 @@ export default function EditExpenseAnimation({
         header="Edit Expense"
         isCreateExpense={false}
         isPersonal={isPersonal}
+        allGroupMembers={allGroupMembers}
+        currency={currency}
+        isnonGroupExpense={isnonGroupExpense}
+        allNonGroupUsers={allNonGroupUsers}
+      
       />
     </CSSTransition>
   );

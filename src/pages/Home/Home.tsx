@@ -13,6 +13,7 @@ import {
   ExpenseResponseItem,
   GroupsAllBalancesResponse,
   MostRecentGroupDetailsResponse,
+  User,
   UserInfo,
 } from "../../types";
 import {
@@ -33,14 +34,16 @@ import HomeQuickActionsAnimation from "../../components/Menus/MenuAnimations/Hom
 import useGroup from "../../api/services/useGroup";
 import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
 import NonGroupUsersAnimation from "../../components/Menus/MenuAnimations/NonGroupUsersAnimation";
+import CreateExpenseForm from "../../components/CreateExpenseForm/CreateExpenseForm";
 
 export default function Home() {
   const navigate = useNavigate();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const isPersonal = useSignal<boolean>(false);
+  const isNonGroupExpense = useSignal<boolean>(false);
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
-
+  const nonGroupUsers = useSignal<User[]>([]);
   const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
@@ -49,6 +52,7 @@ export default function Home() {
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
   const menu = useSignal<string | null>(null);
+  const nonGroupMenu = useSignal<string | null>(null);
   const quickActionsMenu = useSignal<string | null>(null);
   const recentGroupId = userInfo?.recentGroupId;
 
@@ -84,15 +88,14 @@ export default function Home() {
 
   //TODO need to be able to get the personal group id. If expenses are to be submitted without the group then this can be discarded.
 
-  const {
-    data: group,
-    isFetching: groupIsFetching,
-    isError,
-    error,
-  } = useGroup("f7637b50-e77d-4609-9e38-eb0acc9c9c51");
+  // const {
+  //   data: group,
+  //   isFetching: groupIsFetching,
+  //   isError,
+  //   error,
+  // } = useGroup("f7637b50-e77d-4609-9e38-eb0acc9c9c51");
 
-const isGlowing = quickActionsMenu.value === "quickActions";
-
+  const isGlowing = quickActionsMenu.value === "quickActions";
   return (
     <StyledHomepage>
       {isFetching || !userInfo?.username ? (
@@ -201,23 +204,29 @@ const isGlowing = quickActionsMenu.value === "quickActions";
         </>
       )}
       <MenuAnimationBackground menu={quickActionsMenu} />
-      {group && (
-        <NewExpenseAnimation
+
+      {quickActionsMenu.value === "newExpense" && (
+        <CreateExpenseForm
           expense={null}
-          group={group}
-          timeZoneId={timeZoneId}
+          timeZoneId={userInfo.timeZone}
           menu={quickActionsMenu}
-          selectedExpense={selectedExpense}
-          timeZoneCoordinates={timeZoneCoordinates}
-          isPersonal={isPersonal.value}
+          timeZoneCoordinates={userInfo.timeZoneCoordinates}
+          header="Create New Expense"
+          isCreateExpense={true}
+          isPersonal={false}
+          isnonGroupExpense={isNonGroupExpense.value}
+          allGroupMembers={[]}
+          currency={userInfo.currency}
+          allNonGroupUsers={nonGroupUsers}
+          nonGroupMenu={nonGroupMenu}
         />
       )}
 
       <HomeQuickActionsAnimation
         menu={quickActionsMenu}
-        isPersonal={isPersonal}
+        isNonGroupExpense={isNonGroupExpense}
       />
-      <NonGroupUsersAnimation menu={quickActionsMenu} />
+      <NonGroupUsersAnimation menu={nonGroupMenu} nonGroupUsers={nonGroupUsers} isPersonal={isPersonal}/>
     </StyledHomepage>
   );
 }

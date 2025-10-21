@@ -86,18 +86,19 @@ export const StyledExpenseForm = styled.div`
       font-size: 25px;
       margin-left: 20px;
       margin-right: 20px;
-      display:flex;
-      align-self:center;
+      display: flex;
+      align-self: center;
     }
     .calendarIcon {
       color: ${({ theme }) => theme.highlightColor};
       flex-shrink: 0;
       font-size: 30px;
-     
+
       margin-right: 10px;
     }
   }
   .textStyleInfo {
+    text-align: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -107,5 +108,21 @@ export const StyledExpenseForm = styled.div`
       flex-direction: column;
       align-items: center;
     } */
+  }
+  .shareExpenseOption {
+     text-align: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    .button {
+      font-weight: bold;
+      display: inline-block;
+      border: 1px solid #646cff;
+      border-radius: 5px;
+      padding: 4px 6px;
+      cursor: pointer;
+    }
   }
 `;

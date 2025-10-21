@@ -30,6 +30,8 @@ const MemberPicker2 = ({
   userMemberId,
   selectedCurrency,
   setError,
+  isnonGroupExpense,
+  userId,
 }: MemberPickerProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -74,7 +76,9 @@ const MemberPicker2 = ({
     description,
     renderCounter,
     category,
-    selectedCurrency
+    selectedCurrency,
+    userId,
+    isnonGroupExpense
   );
 
   useEffect(() => {
@@ -84,6 +88,7 @@ const MemberPicker2 = ({
       decimalDigits
     );
   }, [memberAmounts]);
+
 
   const selectMember = (selectedId: string): void => {
     const newFormMembers = memberAmounts.map((m) => {
@@ -263,7 +268,9 @@ const MemberPicker2 = ({
     );
   };
 
+  
   const selectedCount = memberAmounts.filter((m) => m.selected).length;
+
 
   const handleMainClick = () => {
     setMemberAmounts(

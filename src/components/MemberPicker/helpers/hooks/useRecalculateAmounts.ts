@@ -12,73 +12,69 @@ export const useRecalculateAmounts = (
   description: string,
   renderCounter: React.MutableRefObject<number>,
   category: Signal<string>,
-  ticker:string
+  ticker: string,
+  userId: string,
+  isnonGroupExpense: boolean | undefined
 ) => {
   useEffect(() => {
-
-setMemberAmounts(
-  recalculateAmounts(
-    memberAmounts,
-    totalAmount,
-    decimalDigits,
-    category,
-    ticker
-  )
-);
-
-if (totalAmount > 0) {
-  if (
-    description === "Participants" &&
-    !memberAmounts.some((m) => m.selected)
-  ) {
-    const newFormMembers = memberAmounts.map((m) => ({
-      ...m,
-      selected: true,
-      order: renderCounter.current,
-    }));
     setMemberAmounts(
       recalculateAmounts(
-        newFormMembers,
+        memberAmounts,
         totalAmount,
         decimalDigits,
         category,
         ticker
       )
     );
-  }
-  if (
-    description === "Payers" &&
-    !memberAmounts.some((m) => m.selected)
-  ) {
-    const newFormMembers = memberAmounts.map((m) => ({
-      ...m,
-      selected: m.id === userMemberId,
-      order: renderCounter.current,
-    }));
-    setMemberAmounts(
-      recalculateAmounts(
-        newFormMembers,
-        totalAmount,
-        decimalDigits,
-        category,
-        ticker
-      )
-    );
-  }
-}
 
-if (totalAmount === 0) {
-  const newFormMembers = memberAmounts.map((m) => ({
-    ...m,
-    selected: false,
-    actualAmount: "",
-    screenQuantity: "",
-    locked: false,
-  }));
-  setMemberAmounts(newFormMembers);
-}
-return () => {};
+    if (totalAmount > 0) {
+      if (
+        description === "Participants" &&
+        !memberAmounts.some((m) => m.selected)
+      ) {
+        const newFormMembers = memberAmounts.map((m) => ({
+          ...m,
+          selected: true,
+          order: renderCounter.current,
+        }));
+        setMemberAmounts(
+          recalculateAmounts(
+            newFormMembers,
+            totalAmount,
+            decimalDigits,
+            category,
+            ticker
+          )
+        );
+      }
+      if (description === "Payers" && !memberAmounts.some((m) => m.selected)) {
+        const newFormMembers = memberAmounts.map((m) => ({
+          ...m,
+          selected: isnonGroupExpense ? m.id === userId : m.id === userMemberId,
+          order: renderCounter.current,
+        }));
+        setMemberAmounts(
+          recalculateAmounts(
+            newFormMembers,
+            totalAmount,
+            decimalDigits,
+            category,
+            ticker
+          )
+        );
+      }
+    }
 
-  }, [totalAmount,category.value]);
+    if (totalAmount === 0) {
+      const newFormMembers = memberAmounts.map((m) => ({
+        ...m,
+        selected: false,
+        actualAmount: "",
+        screenQuantity: "",
+        locked: false,
+      }));
+      setMemberAmounts(newFormMembers);
+    }
+    return () => {};
+  }, [totalAmount, category.value, memberAmounts.length]);
 };
-

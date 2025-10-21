@@ -6,7 +6,7 @@ import { GetLabelsResponse } from "./useGetGroupLabels";
 export const useRemoveLabel = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, Error, { groupId: string; labelId: string }>({
+  return useMutation<any, Error, { groupId: string|undefined; labelId: string }>({
     mutationFn: ({ groupId, labelId }) => removeLabel(groupId, labelId),
     onSuccess: (_, { groupId, labelId }) => {
       queryClient.setQueryData(["groupLabels", groupId], (oldData: GetLabelsResponse | undefined) => {
@@ -20,6 +20,9 @@ export const useRemoveLabel = () => {
   });
 };
 
-const removeLabel = async (groupId: string, labelId: string): Promise<void> => {
+const removeLabel = async (groupId: string|undefined, labelId: string): Promise<void> => {
+  if (!groupId) {
+    throw new Error("groupId is undefined");
+  }
   await apiClient.post<void, AxiosResponse<void>>(`/groups/${groupId}/remove-label`, { labelId });
 };

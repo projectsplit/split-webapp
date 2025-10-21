@@ -4,7 +4,7 @@ import { apiClient } from "../apiClients";
 import { ExpenseRequest } from "../../types";
 import { Signal } from "@preact/signals-react";
 
-export const useExpense = (menu: Signal<string | null>, groupId:string) => {
+export const useExpense = (menu: Signal<string | null>, groupId:string|undefined) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, ExpenseRequest>({

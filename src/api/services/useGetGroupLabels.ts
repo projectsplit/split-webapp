@@ -2,7 +2,7 @@ import { AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetGroupLabels = (groupId: string) => {
+export const useGetGroupLabels = (groupId: string|undefined) => {
 
   return useQuery({
     queryKey: ["groupLabels", groupId],
@@ -12,8 +12,11 @@ export const useGetGroupLabels = (groupId: string) => {
   });
 };
 
-const getLabels = async (groupId: string) => {
+const getLabels = async (groupId: string | undefined) => {
   const params = { groupId };
+if (!groupId) {
+    return { labels: [] };
+  }
   const response = await apiClient.get<void, AxiosResponse<GetLabelsResponse>>(
     "/expenses/labels",
     { params }

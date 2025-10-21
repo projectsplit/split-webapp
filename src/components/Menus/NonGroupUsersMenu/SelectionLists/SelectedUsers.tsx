@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchUserToInviteResponseItem } from "../../../../types";
+import {  User } from "../../../../types";
 import { BsFillPersonFill } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
 
@@ -8,7 +8,7 @@ export const SelectedUsers = React.memo(
     users,
     onRemove,
   }: {
-    users: SearchUserToInviteResponseItem[];
+    users: User[];
     onRemove: (id: string) => void;
   }) => {
     return users.map((user) => (

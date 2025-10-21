@@ -22,11 +22,14 @@ import React from "react";
 import { SelectedGroups } from "./SelectionLists/SelectedGroups";
 import { SelectedUsers } from "./SelectionLists/SelectedUsers";
 
-export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
+export const NonGroupUsersMenu = ({
+  menu,
+  nonGroupUsers,
+  isPersonal,
+}: NonGroupUsersProps) => {
   const category = useSignal<string>("Friends");
-  const expenseMenu = useSignal<string | null>(null);
   const [keyword, setKeyword] = useState("");
-  const [users, setUsers] = useState<SearchUserToInviteResponseItem[]>([]);
+  // const [users, setUsers] = useState<SearchUserToInviteResponseItem[]>([]);
   const [groups, setGroups] = useState<GetGroupsResponseItem[]>([]);
   const pageSize = 10;
   const [debouncedKeyword, _isDebouncing] = useDebounce<string>(
@@ -65,7 +68,9 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
   };
 
   const handleSelectedUserCick = (userId: string) => {
-    setUsers(users.filter((x) => x.userId !== userId));
+    nonGroupUsers.value = nonGroupUsers.value.filter(
+      (x) => x.userId !== userId
+    );
   };
   const handleSelectedGroupCick = (groupId: string) => {
     setGroups(groups.filter((x) => x.id !== groupId));
@@ -90,8 +95,10 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
       isAlreadyInvited: existingUser.isAlreadyInvited,
     };
 
-    if (!users.map((x) => x.username).includes(newUser.username)) {
-      setUsers([...users, newUser]);
+    if (
+      !nonGroupUsers.value.map((x) => x.username).includes(newUser.username)
+    ) {
+      nonGroupUsers.value = [...nonGroupUsers.value, newUser];
     }
     setKeyword("");
   };
@@ -128,7 +135,6 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
     },
     [userGroups]
   );
-  console.log(groups);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,9 +147,11 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
     return (
       data?.pages
         .flatMap((x) => x.users)
-        .filter((x) => !users.some((u) => u.userId === x.userId)) ?? []
+        .filter(
+          (x) => !nonGroupUsers.value.some((u) => u.userId === x.userId)
+        ) ?? []
     );
-  }, [data, users]);
+  }, [data, nonGroupUsers.value]);
 
   const remainingSuggestedGroups = useMemo(() => {
     return (
@@ -154,8 +162,11 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
   }, [userGroups, groups]);
 
   const isEmpty = useMemo(
-    () => users?.length === 0 && keyword.length === 0 && groups?.length === 0,
-    [users, groups, keyword]
+    () =>
+      nonGroupUsers.value?.length === 0 &&
+      keyword.length === 0 &&
+      groups?.length === 0,
+    [nonGroupUsers.value, groups, keyword]
   );
 
   return (
@@ -168,7 +179,7 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
               onClick={() => (menu.value = null)}
             />
           </div>
-          <div className="title">Shared with you and...</div>
+          <div className="title">Shared expense with</div>
           <div className="gap"></div>
         </div>
         <div className="categories">
@@ -192,7 +203,10 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
             ref={mainRef}
             tabIndex={0}
           >
-            <SelectedUsers users={users} onRemove={handleSelectedUserCick} />
+            <SelectedUsers
+              users={nonGroupUsers.value}
+              onRemove={handleSelectedUserCick}
+            />
             <SelectedGroups
               groups={groups}
               onRemove={handleSelectedGroupCick}
@@ -255,11 +269,20 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
         />
       </div>
       <div className="doneButton">
-        <MyButton onClick={() => (expenseMenu.value = "newExpense")}>
+        <MyButton
+          onClick={() => {
+            menu.value = null;
+            if (nonGroupUsers.value.length > 0) {
+              isPersonal.value = false;
+            } else {
+              isPersonal.value = true;
+            }
+          }}
+        >
           Done
         </MyButton>
       </div>
-      {groups.length && expenseMenu.value === "newExpense" && (
+      {/* {groups.length>0 && expenseMenu.value === "newExpense" && (
         <CreateExpenseForm
           group={groups[0]}
           expense={null}
@@ -271,7 +294,7 @@ export const NonGroupUsersMenu = ({ menu }: NonGroupUsersProps) => {
           // selectedExpense={selectedExpense}
           isPersonal={false}
         />
-      )}
+      )} */}
     </StyledNonGroupUsersMenu>
   );
 };

@@ -26,6 +26,9 @@ import {
   BudgetInfoResponse,
   GetJoinCodesResponse,
   SpendingChartsResponse,
+  Member,
+  Guest,
+  User,
 } from "./types";
 import { Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
@@ -164,6 +167,8 @@ export interface MemberPickerProps {
   category: Signal<string>;
   userMemberId: string | undefined;
   setError: React.Dispatch<React.SetStateAction<string>>;
+  isnonGroupExpense: boolean|undefined;
+  userId: string;
 }
 
 export interface DayPickerProps {
@@ -348,14 +353,14 @@ export interface TimeZoneOptionsAnimationProps {
 export interface LabelPickerProps {
   labels: Label[];
   setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
-  groupId: string;
+  groupId?: string;
 }
 
 export interface LabelMenuProps {
   labelMenuIsOpen: Signal<boolean>;
   labels: Label[];
   setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
-  groupId: string;
+  groupId?: string;
 }
 
 export interface BottomMenuProps {
@@ -422,13 +427,17 @@ export interface ToggleSwitchProps {
 }
 
 export interface NewExpenseAnimationProps {
-  group: Group;
+  groupId?: string;
   expense: FormExpense | null;
   timeZoneId: string;
   menu: Signal<string | null>;
   selectedExpense?: Signal<ExpenseResponseItem | null>;
   timeZoneCoordinates: Coordinates;
   isPersonal?: boolean;
+  allGroupMembers: (Member | Guest)[];
+  currency: string;
+  isnonGroupExpense?: boolean;
+  allNonGroupUsers: User[];
 }
 
 export interface NewTransferAnimationProps {
@@ -438,7 +447,9 @@ export interface NewTransferAnimationProps {
 }
 
 export interface ExpenseFormProps {
-  group: Group;
+  allGroupMembers: (Member | Guest)[];
+  allNonGroupUsers: Signal<User[]>;
+  groupId?: string;
   expense: FormExpense | null;
   timeZoneId: string;
   menu: Signal<string | null>;
@@ -447,11 +458,13 @@ export interface ExpenseFormProps {
   selectedExpense?: Signal<ExpenseResponseItem | null>;
   isCreateExpense: boolean;
   isPersonal?: boolean;
+  isnonGroupExpense?: boolean;
+  currency: string;
+  nonGroupMenu?: Signal<string | null>;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
   selectedExpense?: Signal<ExpenseResponseItem | null>;
-
 }
 
 export interface TransferFormProps {
@@ -462,10 +475,16 @@ export interface TransferFormProps {
 
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
 export interface HomeQuickActionsAnimationProps extends MenuProps {
+  isNonGroupExpense: Signal<boolean>;
+}
+export interface NonGroupUsersAnimationProps extends MenuProps {
+  nonGroupUsers: Signal<User[]>;
   isPersonal: Signal<boolean>;
 }
-export interface NonGroupUsersAnimationProps extends MenuProps {}
-export interface NonGroupUsersProps extends MenuProps {}
+export interface NonGroupUsersProps extends MenuProps {
+  nonGroupUsers: Signal<User[]>;
+  isPersonal: Signal<boolean>;
+}
 export interface LocationPickerAnimationProps extends MenuProps {
   location: GeoLocation | undefined;
   setLocation: React.Dispatch<React.SetStateAction<GeoLocation | undefined>>;
@@ -476,7 +495,7 @@ export interface UserItemProps {
 }
 export interface GroupQuickActionsMenuprops extends MenuProps {}
 export interface HomeQuickActionsMenuprops extends MenuProps {
-  isPersonal: Signal<boolean>;
+  isNonGroupExpense: Signal<boolean>;
 }
 export interface DeleteExpenseAnimationProps extends MenuProps {
   description: string;
