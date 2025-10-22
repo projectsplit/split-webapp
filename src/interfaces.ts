@@ -167,8 +167,10 @@ export interface MemberPickerProps {
   category: Signal<string>;
   userMemberId: string | undefined;
   setError: React.Dispatch<React.SetStateAction<string>>;
-  isnonGroupExpense: boolean|undefined;
+  isnonGroupExpense: boolean | undefined;
   userId: string;
+   groupMembers: Signal<(Member | Guest)[]>;
+  nonGroupUsers: Signal<User[]>;
 }
 
 export interface DayPickerProps {
@@ -433,11 +435,11 @@ export interface NewExpenseAnimationProps {
   menu: Signal<string | null>;
   selectedExpense?: Signal<ExpenseResponseItem | null>;
   timeZoneCoordinates: Coordinates;
-  isPersonal?: boolean;
-  allGroupMembers: (Member | Guest)[];
+  isPersonal: Signal<boolean>;
+  groupMembers: Signal<(Member | Guest)[]>;
   currency: string;
   isnonGroupExpense?: boolean;
-  allNonGroupUsers: User[];
+  nonGroupUsers: Signal<User[]>;
 }
 
 export interface NewTransferAnimationProps {
@@ -447,8 +449,8 @@ export interface NewTransferAnimationProps {
 }
 
 export interface ExpenseFormProps {
-  allGroupMembers: (Member | Guest)[];
-  allNonGroupUsers: Signal<User[]>;
+  groupMembers: Signal<(Member | Guest)[]>;
+  nonGroupUsers: Signal<User[]>;
   groupId?: string;
   expense: FormExpense | null;
   timeZoneId: string;
@@ -457,7 +459,7 @@ export interface ExpenseFormProps {
   header: string;
   selectedExpense?: Signal<ExpenseResponseItem | null>;
   isCreateExpense: boolean;
-  isPersonal?: boolean;
+  isPersonal: Signal<boolean>;
   isnonGroupExpense?: boolean;
   currency: string;
   nonGroupMenu?: Signal<string | null>;
@@ -480,10 +482,12 @@ export interface HomeQuickActionsAnimationProps extends MenuProps {
 export interface NonGroupUsersAnimationProps extends MenuProps {
   nonGroupUsers: Signal<User[]>;
   isPersonal: Signal<boolean>;
+  groupMembers: Signal<(Guest | Member)[]>;
 }
 export interface NonGroupUsersProps extends MenuProps {
   nonGroupUsers: Signal<User[]>;
   isPersonal: Signal<boolean>;
+  groupMembers: Signal<(Guest | Member)[]>;
 }
 export interface LocationPickerAnimationProps extends MenuProps {
   location: GeoLocation | undefined;

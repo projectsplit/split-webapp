@@ -3,7 +3,6 @@ import {
   ExpenseRequest,
   FormExpense,
   GeoLocation,
-  Group,
   Guest,
   Label,
   Member,
@@ -157,9 +156,6 @@ export function submitExpense({
     return;
   }
 
-  //Add a setError only for when Shares state is active so if all shares accross all payers and participants are 0 then show error
-  //console.log(payers, participants, amount);
-
   const expenseRequest: ExpenseRequest = {
     amount: Number(amount),
     ...(isCreateExpense ? { groupId: groupId } : { expenseId: expense?.id }),
@@ -190,15 +186,15 @@ export function submitExpense({
 }
 
 export const createParticipantPickerArray = (
-  allGroupMembers: (Member | Guest)[],
-  allNonGroupUsers: Signal<User[]>,
+  groupMembers: Signal<(Member | Guest)[]>,
+  nonGroupUsers: Signal<User[]>,
   expense: FormExpense | null,
   type: string,
   isCreateExpense: boolean,
   isnonGroupExpense?: boolean
 ): PickerMember[] => {
-  if (isnonGroupExpense && allNonGroupUsers.value.length > 0) {
-    return allNonGroupUsers.value.map((user) => {
+  if (isnonGroupExpense && nonGroupUsers.value.length > 0) {
+    return nonGroupUsers.value.map((user) => {
       const participant = expense?.participants.find(
         (p) => p.memberId === user?.userId
       );
@@ -236,7 +232,7 @@ export const createParticipantPickerArray = (
       };
     });
   } else {
-    return allGroupMembers.map((member) => {
+    return groupMembers?.value.map((member) => {
       const participant = expense?.participants.find(
         (p) => p.memberId === member?.id
       );
@@ -275,15 +271,15 @@ export const createParticipantPickerArray = (
 };
 
 export const createPayerPickerArray = (
-  allGroupMembers: (Member | Guest)[],
-  allNonGroupUsers: Signal<User[]>,
+  groupMembers: Signal<(Member | Guest)[]>,
+  nonGroupUsers: Signal<User[]>,
   expense: FormExpense | null,
   type: string,
   isCreateExpense: boolean,
   isnonGroupExpense?: boolean
 ): PickerMember[] => {
-  if (isnonGroupExpense && allNonGroupUsers.value.length > 0) {
-    return allNonGroupUsers.value.map((user) => {
+  if (isnonGroupExpense && nonGroupUsers.value.length > 0) {
+    return nonGroupUsers.value.map((user) => {
       const payer = expense?.payers.find((p) => p.memberId === user?.userId);
       const actualAmount = payer?.paymentAmount ?? "";
       const isPercentageType = type === "Percentages";
@@ -316,7 +312,7 @@ export const createPayerPickerArray = (
       };
     });
   } else {
-    return allGroupMembers.map((member) => {
+    return groupMembers?.value.map((member) => {
       const payer = expense?.payers.find((p) => p.memberId === member?.id);
       const actualAmount = payer?.paymentAmount ?? "";
       const isPercentageType = type === "Percentages";

@@ -36,13 +36,13 @@ export function useExpenseValidation({
       payersCategory.value !== "Shares"
     ) {
     
-      const selectedParticipants = participants.filter((x) => x.selected);
-      const areParticipantsNumbersValid = selectedParticipants.every(
+      const selectedParticipants = participants?.filter((x) => x.selected);
+      const areParticipantsNumbersValid = selectedParticipants?.every(
         (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
       );
 
       const isParticipantsSumInvalid =
-        selectedParticipants.length > 0 &&
+        selectedParticipants?.length > 0 &&
         (significantDigitsFromTicker(currencySymbol) >= 3
           ? Number(
               selectedParticipants
@@ -59,12 +59,12 @@ export function useExpenseValidation({
               0
             ) !== currency(amount).value);
 
-      const selectedPayers = payers.filter((x) => x.selected);
-      const arePayersNumbersValid = selectedPayers.every(
+      const selectedPayers = payers?.filter((x) => x.selected);
+      const arePayersNumbersValid = selectedPayers?.every(
         (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
       );
       const isPayersSumInvalid =
-        selectedPayers.length > 0 &&
+        selectedPayers?.length > 0 &&
         (significantDigitsFromTicker(currencySymbol) >= 3
           ? Number(
               selectedPayers
@@ -82,7 +82,7 @@ export function useExpenseValidation({
             ) !== currency(amount).value);
 
       // Validate amount when participants or payers are selected
-      if (selectedParticipants.length > 0 || selectedPayers.length > 0) {
+      if (selectedParticipants?.length > 0 || selectedPayers?.length > 0) {
         setShowAmountError(true);
       }
 

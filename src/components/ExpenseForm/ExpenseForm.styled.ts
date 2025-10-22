@@ -97,20 +97,32 @@ export const StyledExpenseForm = styled.div`
       margin-right: 10px;
     }
   }
-  .textStyleInfo {
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 5px;
-    justify-content: center;
-    /* @media (max-width: 400px) {
+
+ 
+    .textStyleInfo {
+      text-align: center;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: center;
+      /* @media (max-width: 400px) {
       flex-direction: column;
       align-items: center;
     } */
-  }
+      .editButton{
+        display:flex;
+        align-self:center;
+        font-size:25px;
+        margin-left:20px;
+        cursor:pointer;
+
+      }
+    }
+
+
   .shareExpenseOption {
-     text-align: center;
+    text-align: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;

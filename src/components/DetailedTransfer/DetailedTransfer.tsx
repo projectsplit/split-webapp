@@ -6,9 +6,6 @@ import { AiFillDelete } from "react-icons/ai";
 import { useSignal } from "@preact/signals-react";
 import { DateOnly, TimeOnly, YearOnly } from "../../helpers/timeHelpers";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { EditorContent } from "../DetailedExpense/EditorContent/EditorContent";
-
 import { HeadingNode } from "@lexical/rich-text";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import DeleteTransferAnimation from "../Menus/MenuAnimations/DeleteTransferAnimation";

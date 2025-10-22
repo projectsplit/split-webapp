@@ -15,6 +15,7 @@ const Text = ({
   sortedMemberAmounts,
   isEquallySplit,
 }: TextProps) => {
+ 
   return (
     <StyledText>
       {description === "Participants" ? (

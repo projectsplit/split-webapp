@@ -17,15 +17,16 @@ import {
 import useGetGroups from "../../../api/services/useGetGroup";
 import { useOutletContext } from "react-router-dom";
 import Item from "./Item/Item";
-import CreateExpenseForm from "../../CreateExpenseForm/CreateExpenseForm";
 import React from "react";
 import { SelectedGroups } from "./SelectionLists/SelectedGroups";
 import { SelectedUsers } from "./SelectionLists/SelectedUsers";
+import { mergeMembersAndGuests } from "../../../helpers/mergeMembersAndGuests";
 
 export const NonGroupUsersMenu = ({
   menu,
   nonGroupUsers,
   isPersonal,
+  groupMembers
 }: NonGroupUsersProps) => {
   const category = useSignal<string>("Friends");
   const [keyword, setKeyword] = useState("");
@@ -74,6 +75,8 @@ export const NonGroupUsersMenu = ({
   };
   const handleSelectedGroupCick = (groupId: string) => {
     setGroups(groups.filter((x) => x.id !== groupId));
+    groupMembers.value=[]
+
   };
 
   const addUser = (username: string) => {
@@ -105,6 +108,9 @@ export const NonGroupUsersMenu = ({
 
   const handleSuggestedUserClick = useCallback(
     (username: string) => {
+      if( groups.length>0){
+        setGroups([])
+      }
       addUser(username);
     },
     [addUser]
@@ -112,12 +118,14 @@ export const NonGroupUsersMenu = ({
 
   const handleSuggestedGroupClick = useCallback(
     (groupId: string) => {
+      if(nonGroupUsers.value.length>0){
+        nonGroupUsers.value=[]//TODO need to only allow current user in
+      }
       const existingGroup = userGroups?.pages
         .flatMap((x) => x.groups)
         .find((x) => x.id === groupId);
 
       if (!existingGroup) return;
-
       setGroups([
         {
           id: existingGroup.id,
@@ -132,6 +140,7 @@ export const NonGroupUsersMenu = ({
           currency: existingGroup.currency,
         },
       ]);
+       groupMembers.value=[...existingGroup.members,...existingGroup.guests]
     },
     [userGroups]
   );
@@ -179,7 +188,7 @@ export const NonGroupUsersMenu = ({
               onClick={() => (menu.value = null)}
             />
           </div>
-          <div className="title">Shared expense with</div>
+          <div className="title">Share expense with</div>
           <div className="gap"></div>
         </div>
         <div className="categories">
@@ -272,7 +281,7 @@ export const NonGroupUsersMenu = ({
         <MyButton
           onClick={() => {
             menu.value = null;
-            if (nonGroupUsers.value.length > 0) {
+            if (nonGroupUsers.value.length > 0 || groupMembers.value.length > 0) {
               isPersonal.value = false;
             } else {
               isPersonal.value = true;
@@ -282,19 +291,6 @@ export const NonGroupUsersMenu = ({
           Done
         </MyButton>
       </div>
-      {/* {groups.length>0 && expenseMenu.value === "newExpense" && (
-        <CreateExpenseForm
-          group={groups[0]}
-          expense={null}
-          timeZoneId={userInfo.timeZone}
-          menu={expenseMenu}
-          timeZoneCoordinates={userInfo.timeZoneCoordinates}
-          header="Create New Expense"
-          isCreateExpense={true}
-          // selectedExpense={selectedExpense}
-          isPersonal={false}
-        />
-      )} */}
     </StyledNonGroupUsersMenu>
   );
 };

@@ -19,7 +19,6 @@ import ParticipantsPayersAnimation from "../Menus/MenuAnimations/ParticipantsPay
 import { handleDoneClick } from "./helpers/handleDoneClick";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
-
 const MemberPicker2 = ({
   memberAmounts,
   setMemberAmounts,
@@ -32,6 +31,8 @@ const MemberPicker2 = ({
   setError,
   isnonGroupExpense,
   userId,
+  groupMembers,
+  nonGroupUsers,
 }: MemberPickerProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -78,7 +79,9 @@ const MemberPicker2 = ({
     category,
     selectedCurrency,
     userId,
-    isnonGroupExpense
+    isnonGroupExpense,
+    groupMembers,
+    nonGroupUsers
   );
 
   useEffect(() => {
@@ -88,7 +91,6 @@ const MemberPicker2 = ({
       decimalDigits
     );
   }, [memberAmounts]);
-
 
   const selectMember = (selectedId: string): void => {
     const newFormMembers = memberAmounts.map((m) => {
@@ -268,9 +270,7 @@ const MemberPicker2 = ({
     );
   };
 
-  
   const selectedCount = memberAmounts.filter((m) => m.selected).length;
-
 
   const handleMainClick = () => {
     setMemberAmounts(
@@ -348,12 +348,18 @@ const MemberPicker2 = ({
 
             <div className="title">
               {description === "Participants"
-                ? `Split ${displayCurrencyAndAmount(totalAmount.toString(),selectedCurrency)} by`
-                : `${displayCurrencyAndAmount(totalAmount.toString(),selectedCurrency)} paid by`}
+                ? `Split ${displayCurrencyAndAmount(
+                    totalAmount.toString(),
+                    selectedCurrency
+                  )} by`
+                : `${displayCurrencyAndAmount(
+                    totalAmount.toString(),
+                    selectedCurrency
+                  )} paid by`}
             </div>
             <div className="gap"></div>
           </div>
-       
+
           <div className="categories">
             <CategorySelector
               activeCat={"Amounts"}

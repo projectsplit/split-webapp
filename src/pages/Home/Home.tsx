@@ -12,6 +12,8 @@ import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAd
 import {
   ExpenseResponseItem,
   GroupsAllBalancesResponse,
+  Guest,
+  Member,
   MostRecentGroupDetailsResponse,
   User,
   UserInfo,
@@ -39,11 +41,12 @@ import CreateExpenseForm from "../../components/CreateExpenseForm/CreateExpenseF
 export default function Home() {
   const navigate = useNavigate();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
-  const isPersonal = useSignal<boolean>(false);
+  const isPersonal = useSignal<boolean>(true);
   const isNonGroupExpense = useSignal<boolean>(false);
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
   const nonGroupUsers = useSignal<User[]>([]);
+  const groupMembers = useSignal<(Guest | Member)[]>([]);
   const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
@@ -96,6 +99,7 @@ export default function Home() {
   // } = useGroup("f7637b50-e77d-4609-9e38-eb0acc9c9c51");
 
   const isGlowing = quickActionsMenu.value === "quickActions";
+  console.log(groupMembers.value)
   return (
     <StyledHomepage>
       {isFetching || !userInfo?.username ? (
@@ -213,11 +217,11 @@ export default function Home() {
           timeZoneCoordinates={userInfo.timeZoneCoordinates}
           header="Create New Expense"
           isCreateExpense={true}
-          isPersonal={false}
+          isPersonal={isPersonal}
           isnonGroupExpense={isNonGroupExpense.value}
-          allGroupMembers={[]}
+          groupMembers={groupMembers}
           currency={userInfo.currency}
-          allNonGroupUsers={nonGroupUsers}
+          nonGroupUsers={nonGroupUsers}
           nonGroupMenu={nonGroupMenu}
         />
       )}
@@ -226,7 +230,12 @@ export default function Home() {
         menu={quickActionsMenu}
         isNonGroupExpense={isNonGroupExpense}
       />
-      <NonGroupUsersAnimation menu={nonGroupMenu} nonGroupUsers={nonGroupUsers} isPersonal={isPersonal}/>
+      <NonGroupUsersAnimation
+        menu={nonGroupMenu}
+        nonGroupUsers={nonGroupUsers}
+        isPersonal={isPersonal}
+        groupMembers={groupMembers}
+      />
     </StyledHomepage>
   );
 }

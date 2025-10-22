@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import { Signal, useSignal } from "@preact/signals-react";
+import { signal, Signal, useSignal } from "@preact/signals-react";
 import {
   ExpenseParsedFilters,
   ExpenseResponseItem,
@@ -143,9 +143,11 @@ export default function Group() {
               menu={menu}
               selectedExpense={selectedExpense}
               timeZoneCoordinates={timeZoneCoordinates}
-              isPersonal={false}
+              isPersonal={signal(false)}
               currency={group.currency}
-              allGroupMembers={[...group.members,...group.guests]}
+              groupMembers={signal([...group.members,...group.guests])}
+              isnonGroupExpense={false}
+              nonGroupUsers={signal([])}
             />
           )}
           {group && (

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { recalculateAmounts } from "../recalculateAmounts";
-import { PickerMember } from "../../../../types";
+import { Guest, Member, PickerMember, User } from "../../../../types";
 import { Signal } from "@preact/signals-react";
 
 export const useRecalculateAmounts = (
@@ -14,7 +14,9 @@ export const useRecalculateAmounts = (
   category: Signal<string>,
   ticker: string,
   userId: string,
-  isnonGroupExpense: boolean | undefined
+  isnonGroupExpense: boolean | undefined,
+  groupMembers: Signal<(Member | Guest)[]>,
+  nonGroupUsers: Signal<User[]>
 ) => {
   useEffect(() => {
     setMemberAmounts(
@@ -50,7 +52,12 @@ export const useRecalculateAmounts = (
       if (description === "Payers" && !memberAmounts.some((m) => m.selected)) {
         const newFormMembers = memberAmounts.map((m) => ({
           ...m,
-          selected: isnonGroupExpense ? m.id === userId : m.id === userMemberId,
+          selected:
+            isnonGroupExpense && nonGroupUsers.value.length > 0
+              ? m.id === userId
+              : isnonGroupExpense && groupMembers.value.length > 0
+              ? m.id === userMemberId
+              : m.id === userMemberId,
           order: renderCounter.current,
         }));
         setMemberAmounts(

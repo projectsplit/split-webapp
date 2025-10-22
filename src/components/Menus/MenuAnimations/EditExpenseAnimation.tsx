@@ -10,10 +10,10 @@ export default function EditExpenseAnimation({
   selectedExpense,
   timeZoneCoordinates,
   isPersonal,
-  allGroupMembers,
+  groupMembers,
   currency,
   isnonGroupExpense,
-  allNonGroupUsers
+  nonGroupUsers
 }: NewExpenseAnimationProps) {
   return (
     <CSSTransition in={menu.value === "editExpense"} timeout={0} unmountOnExit>
@@ -27,10 +27,10 @@ export default function EditExpenseAnimation({
         header="Edit Expense"
         isCreateExpense={false}
         isPersonal={isPersonal}
-        allGroupMembers={allGroupMembers}
+        groupMembers={groupMembers}
         currency={currency}
         isnonGroupExpense={isnonGroupExpense}
-        allNonGroupUsers={allNonGroupUsers}
+        nonGroupUsers={nonGroupUsers}
       
       />
     </CSSTransition>

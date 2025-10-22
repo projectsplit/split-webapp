@@ -12,9 +12,9 @@ export default function NewExpenseAnimation({
   timeZoneCoordinates,
   isPersonal,
   selectedExpense,
-  allGroupMembers,
+  groupMembers,
   currency,
-  allNonGroupUsers,
+  nonGroupUsers,
   isnonGroupExpense
 }: NewExpenseAnimationProps) {
   const nodeRef = useRef(null);
@@ -35,9 +35,9 @@ export default function NewExpenseAnimation({
         isCreateExpense={true}
         selectedExpense={selectedExpense}
         isPersonal={isPersonal}
-        allGroupMembers={allGroupMembers}
+        groupMembers={groupMembers}
         currency={currency}
-        allNonGroupUsers={allNonGroupUsers}
+        nonGroupUsers={nonGroupUsers}
         isnonGroupExpense={isnonGroupExpense}
       />
     </CSSTransition>
