@@ -26,7 +26,7 @@ export default function HomeQuickActionsMenu({
           className="new"
           onClick={() => {
             menu.value = "newExpense";
-            isNonGroupExpense.value=true;
+             isNonGroupExpense.value=true;
           }}
         >
           <div className="descr">Expense</div>

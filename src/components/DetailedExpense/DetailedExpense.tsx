@@ -9,7 +9,7 @@ import Pill from "../Pill/Pill";
 import { DateOnly, TimeOnly, YearOnly } from "../../helpers/timeHelpers";
 import MapsInfoBox from "./MapsInfoBox/MapsInfoBox";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
-import { useSignal } from "@preact/signals-react";
+import { signal, useSignal } from "@preact/signals-react";
 import DeleteExpenseAnimation from "../Menus/MenuAnimations/DeleteExpenseAnimation";
 import { FormExpense, GeoLocation } from "../../types";
 import EditExpenseAnimation from "../Menus/MenuAnimations/EditExpenseAnimation";
@@ -219,7 +219,9 @@ export default function DetailedExpense({
         selectedExpense={selectedExpense}
         timeZoneCoordinates={timeZoneCoordinates}
         currency={group.currency}
-        allGroupMembers={[...group.members,...group.guests]}
+        groupMembers={signal([...group.members,...group.guests])}
+        
+
       />
     </StyledDetailedExpense>
   );

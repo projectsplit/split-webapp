@@ -41,7 +41,7 @@ const MemberPicker2 = ({
   const isEquallySplit = useSignal<boolean>(true);
   const inputRefs = useRef<Map<string, HTMLInputElement>>(new Map());
   const errorMenu = useSignal<string>("");
-
+  const [selectedCount, setSelectedCount] = useState<number>(memberAmounts.filter((m) => m.selected).length)
   const [decimalDigits, setDecimalDigits] = useState<number>(2);
 
   renderCounter.current++;
@@ -79,10 +79,16 @@ const MemberPicker2 = ({
     category,
     selectedCurrency,
     userId,
-    isnonGroupExpense,
     groupMembers,
-    nonGroupUsers
+    nonGroupUsers,
+    isnonGroupExpense,
   );
+
+
+useEffect(() => {
+  setSelectedCount(memberAmounts.filter((m) => m.selected).length);
+
+}, [isnonGroupExpense?.value, memberAmounts]);
 
   useEffect(() => {
     isEquallySplit.value = isEquallySplitFn(
@@ -270,7 +276,7 @@ const MemberPicker2 = ({
     );
   };
 
-  const selectedCount = memberAmounts.filter((m) => m.selected).length;
+
 
   const handleMainClick = () => {
     setMemberAmounts(

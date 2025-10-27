@@ -57,8 +57,19 @@ export default function ExpenseForm({
   isnonGroupExpense,
   currency,
   nonGroupMenu,
+  nonGroupGroups,
 }: ExpenseFormProps) {
   const isInitialRender = useRef<boolean>(true);
+
+  const { userInfo } = useOutletContext<{
+    userInfo: UserInfo;
+  }>();
+
+  const members = groupMembers?.value.filter(
+    (item): item is Member => "userId" in item
+  );
+
+  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
   const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
     useExpense(menu, groupId);
@@ -77,7 +88,7 @@ export default function ExpenseForm({
       expense,
       "Amounts",
       isCreateExpense,
-      isnonGroupExpense
+      isnonGroupExpense?.value
     ),
     Shares: createParticipantPickerArray(
       groupMembers,
@@ -85,7 +96,8 @@ export default function ExpenseForm({
       expense,
       "Shares",
       isCreateExpense,
-      isnonGroupExpense
+
+      isnonGroupExpense?.value
     ),
     Percentages: createParticipantPickerArray(
       groupMembers,
@@ -93,71 +105,10 @@ export default function ExpenseForm({
       expense,
       "Percentages",
       isCreateExpense,
-      isnonGroupExpense
+
+      isnonGroupExpense?.value
     ),
   });
-
-  useEffect(() => {
-    setParticipantsByCategory({
-      Amounts: createParticipantPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Amounts",
-        isCreateExpense,
-        isnonGroupExpense
-      ),
-      Shares: createParticipantPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Shares",
-        isCreateExpense,
-        isnonGroupExpense
-      ),
-      Percentages: createParticipantPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Percentages",
-        isCreateExpense,
-        isnonGroupExpense
-      ),
-    });
-    setPayersByCategory({
-      Amounts: createPayerPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Amounts",
-        isCreateExpense,
-        isnonGroupExpense
-      ),
-      Shares: createPayerPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Shares",
-        isCreateExpense,
-        isnonGroupExpense
-      ),
-      Percentages: createPayerPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Percentages",
-        isCreateExpense,
-        isnonGroupExpense
-      ),
-    });
-  }, [
-    nonGroupUsers?.value,
-    isnonGroupExpense,
-    isCreateExpense,
-    groupMembers?.value,
-  ]);
-
-  const [participantsError, setParticipantsError] = useState<string>("");
 
   const [payersByCategory, setPayersByCategory] = useState<{
     Amounts: PickerMember[];
@@ -170,7 +121,9 @@ export default function ExpenseForm({
       expense,
       "Amounts",
       isCreateExpense,
-      isnonGroupExpense
+      userInfo.userId,
+      userMemberId,
+      isnonGroupExpense?.value
     ),
     Shares: createPayerPickerArray(
       groupMembers,
@@ -178,16 +131,87 @@ export default function ExpenseForm({
       expense,
       "Shares",
       isCreateExpense,
-      isnonGroupExpense
+      userInfo.userId,
+      userMemberId,
+      isnonGroupExpense?.value
     ),
     Percentages: createPayerPickerArray(
       groupMembers,
       nonGroupUsers,
       expense,
       "Percentages",
-      isCreateExpense
+      isCreateExpense,
+      userInfo.userId,
+      userMemberId,
+      isnonGroupExpense?.value
     ),
   });
+
+  useEffect(() => {
+    setParticipantsByCategory({
+      Amounts: createParticipantPickerArray(
+        groupMembers,
+        nonGroupUsers,
+        expense,
+        "Amounts",
+        isCreateExpense,
+
+        isnonGroupExpense?.value
+      ),
+      Shares: createParticipantPickerArray(
+        groupMembers,
+        nonGroupUsers,
+        expense,
+        "Shares",
+        isCreateExpense,
+
+        isnonGroupExpense?.value
+      ),
+      Percentages: createParticipantPickerArray(
+        groupMembers,
+        nonGroupUsers,
+        expense,
+        "Percentages",
+        isCreateExpense,
+
+        isnonGroupExpense?.value
+      ),
+    });
+    setPayersByCategory({
+      Amounts: createPayerPickerArray(
+        groupMembers,
+        nonGroupUsers,
+        expense,
+        "Amounts",
+        isCreateExpense,
+        userInfo.userId,
+        userMemberId,
+        isnonGroupExpense?.value
+      ),
+      Shares: createPayerPickerArray(
+        groupMembers,
+        nonGroupUsers,
+        expense,
+        "Shares",
+        isCreateExpense,
+        userInfo.userId,
+        userMemberId,
+        isnonGroupExpense?.value
+      ),
+      Percentages: createPayerPickerArray(
+        groupMembers,
+        nonGroupUsers,
+        expense,
+        "Percentages",
+        isCreateExpense,
+        userInfo.userId,
+        userMemberId,
+        isnonGroupExpense?.value
+      ),
+    });
+  }, [nonGroupUsers.value, isCreateExpense, groupMembers.value]);
+
+  const [participantsError, setParticipantsError] = useState<string>("");
 
   const [payersError, setPayersError] = useState<string>("");
   const [descriptionError, setDescriptionError] = useState<string>("");
@@ -231,15 +255,7 @@ export default function ExpenseForm({
   const participantsCategory = useSignal<string>("Amounts");
   const payersCategory = useSignal<string>("Amounts");
 
-  const { userInfo } = useOutletContext<{
-    userInfo: UserInfo;
-  }>();
   // const members = group?.members;
-  const members = groupMembers?.value.filter(
-    (item): item is Member => "userId" in item
-  );
-
-  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
   const participants =
     participantsByCategory[
@@ -250,7 +266,7 @@ export default function ExpenseForm({
     payersByCategory[payersCategory.value as keyof typeof payersByCategory];
 
   const adjustParticipants = useMemo(() => {
-    if (isnonGroupExpense) {
+    if (isnonGroupExpense?.value) {
       return participants?.map((m) =>
         m.id === userInfo?.userId ? { ...m, name: "you" } : m
       );
@@ -259,10 +275,10 @@ export default function ExpenseForm({
         m.id === userMemberId ? { ...m, name: "you" } : m
       );
     }
-  }, [participants, userMemberId, nonGroupUsers?.value, groupMembers]);
+  }, [participants, userMemberId, nonGroupUsers.value, groupMembers.value]);
 
   const adjustPayers = useMemo(() => {
-    if (isnonGroupExpense) {
+    if (isnonGroupExpense?.value) {
       return payers?.map((m) =>
         m.id === userInfo?.userId ? { ...m, name: "you" } : m
       );
@@ -271,7 +287,7 @@ export default function ExpenseForm({
         m.id === userMemberId ? { ...m, name: "you" } : m
       );
     }
-  }, [payers, userMemberId, nonGroupUsers?.value, groupMembers]);
+  }, [payers, userMemberId, nonGroupUsers.value, groupMembers.value]);
 
   const setParticipants = (newParticipants: PickerMember[]) => {
     setParticipantsByCategory((prev) => ({
@@ -319,7 +335,6 @@ export default function ExpenseForm({
     setParticipantsError,
     setPayersError,
     setShowAmountError,
-    setAmountError,
     participantsCategory,
     payersCategory,
   });
@@ -361,8 +376,8 @@ export default function ExpenseForm({
 
   const handleInputBlur = useCallback(() => {
     if (
-      participants.some((p) => p.selected) ||
-      payers.some((p) => p.selected)
+      (participants.some((p) => p.selected) ||
+      payers.some((p) => p.selected))
     ) {
       setShowAmountError(true);
       amountIsValid(amount, setAmountError);
@@ -394,9 +409,11 @@ export default function ExpenseForm({
 
   const showShareExpenseButton =
     isnonGroupExpense &&
+    isnonGroupExpense.value &&
     isPersonal.value &&
     amountNumber &&
     nonGroupUsers.value.length === 0;
+
   const showDetailedSharedExpenseText =
     (nonGroupUsers?.value.length > 0 || groupMembers?.value.length > 0) &&
     amountNumber &&
@@ -410,10 +427,13 @@ export default function ExpenseForm({
         <div
           className="closeButtonContainer"
           onClick={() => {
-            if (isnonGroupExpense) {
+            if (isnonGroupExpense?.value) {
               nonGroupUsers.value = [];
-              groupMembers.value=[]
-              isPersonal.value =true
+              groupMembers.value = [];
+              isPersonal.value = true;
+              if (nonGroupGroups) {
+                nonGroupGroups.value = [];
+              }
             }
             menu.value = null;
           }}

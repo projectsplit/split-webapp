@@ -14,9 +14,9 @@ export const useRecalculateAmounts = (
   category: Signal<string>,
   ticker: string,
   userId: string,
-  isnonGroupExpense: boolean | undefined,
   groupMembers: Signal<(Member | Guest)[]>,
-  nonGroupUsers: Signal<User[]>
+  nonGroupUsers: Signal<User[]>,
+   isnonGroupExpense?: Signal<boolean>
 ) => {
   useEffect(() => {
     setMemberAmounts(
@@ -53,9 +53,9 @@ export const useRecalculateAmounts = (
         const newFormMembers = memberAmounts.map((m) => ({
           ...m,
           selected:
-            isnonGroupExpense && nonGroupUsers.value.length > 0
+           isnonGroupExpense&& isnonGroupExpense.value && nonGroupUsers.value.length > 0
               ? m.id === userId
-              : isnonGroupExpense && groupMembers.value.length > 0
+              : isnonGroupExpense&& isnonGroupExpense.value && groupMembers.value.length > 0
               ? m.id === userMemberId
               : m.id === userMemberId,
           order: renderCounter.current,
@@ -83,5 +83,11 @@ export const useRecalculateAmounts = (
       setMemberAmounts(newFormMembers);
     }
     return () => {};
-  }, [totalAmount, category.value, memberAmounts.length]);
+  }, [
+    totalAmount,
+    category.value,
+    memberAmounts.length,
+    groupMembers.value,
+    nonGroupUsers.value,
+  ]);
 };

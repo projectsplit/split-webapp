@@ -147,22 +147,11 @@ export type Payment = {
 };
 
 export type GetGroupsResponse = {
-  groups: GetGroupsResponseItem[];
+  groups: Group[];
   next: string | null;
 };
 
-export type GetGroupsResponseItem = {
-  id: string;
-  created: Date;
-  updated: Date;
-  ownerId: string;
-  name: string;
-  currency: string;
-  members: Member[];
-  guests: Guest[];
-  labels: Label[];
-  isArchived: boolean;
-};
+export type GetGroupsResponseItem = Group;
 
 export type SearchUserToInviteResponse = {
   users: SearchUserToInviteResponseItem[];

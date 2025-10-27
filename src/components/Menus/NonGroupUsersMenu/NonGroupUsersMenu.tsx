@@ -1,7 +1,7 @@
 import { StyledNonGroupUsersMenu } from "./NonGroupUsersMenu.styled";
 import { NonGroupUsersProps } from "../../../interfaces";
 import { CategorySelector } from "../../CategorySelector/CategorySelector";
-import { Signal, useSignal } from "@preact/signals-react";
+import { useSignal } from "@preact/signals-react";
 import { BiArrowBack } from "react-icons/bi";
 import MyButton from "../../MyButton/MyButton";
 import Sentinel from "../../Sentinel";
@@ -9,29 +9,23 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useSearchUsersToInvite } from "../../../api/services/useSearchUsersToInvite";
 import useDebounce from "../../../hooks/useDebounce";
 import AutoWidthInput from "../../AutoWidthInput";
-import {
-  GetGroupsResponseItem,
-  SearchUserToInviteResponseItem,
-  UserInfo,
-} from "../../../types";
-import useGetGroups from "../../../api/services/useGetGroup";
-import { useOutletContext } from "react-router-dom";
+import { SearchUserToInviteResponseItem } from "../../../types";
 import Item from "./Item/Item";
 import React from "react";
 import { SelectedGroups } from "./SelectionLists/SelectedGroups";
 import { SelectedUsers } from "./SelectionLists/SelectedUsers";
-import { mergeMembersAndGuests } from "../../../helpers/mergeMembersAndGuests";
+import { useSearchGroupsByName } from "../../../api/services/useSearchGroupsByName";
 
 export const NonGroupUsersMenu = ({
   menu,
   nonGroupUsers,
   isPersonal,
-  groupMembers
+  groupMembers,
+  nonGroupGroups,
+  isNonGroupExpense,
 }: NonGroupUsersProps) => {
   const category = useSignal<string>("Friends");
   const [keyword, setKeyword] = useState("");
-  // const [users, setUsers] = useState<SearchUserToInviteResponseItem[]>([]);
-  const [groups, setGroups] = useState<GetGroupsResponseItem[]>([]);
   const pageSize = 10;
   const [debouncedKeyword, _isDebouncing] = useDebounce<string>(
     keyword.length > 1 ? keyword : "",
@@ -41,9 +35,9 @@ export const NonGroupUsersMenu = ({
   const mainRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { userInfo } = useOutletContext<{
-    userInfo: UserInfo;
-  }>();
+  // const { userInfo } = useOutletContext<{
+  //   userInfo: UserInfo;
+  // }>();
 
   const {
     data,
@@ -62,7 +56,7 @@ export const NonGroupUsersMenu = ({
     fetchNextPage: fetchNextGroupsPage,
     hasNextPage: hasNextGroupsPage,
     isFetchingNextPage: isFetchingNextGroupsPage,
-  } = useGetGroups(userInfo.userId, pageSize);
+  } = useSearchGroupsByName(debouncedKeyword, pageSize);
 
   const handleFocus = () => {
     inputRef.current?.focus();
@@ -74,9 +68,8 @@ export const NonGroupUsersMenu = ({
     );
   };
   const handleSelectedGroupCick = (groupId: string) => {
-    setGroups(groups.filter((x) => x.id !== groupId));
-    groupMembers.value=[]
-
+    nonGroupGroups.value = nonGroupGroups.value.filter((x) => x.id !== groupId);
+    groupMembers.value = [];
   };
 
   const addUser = (username: string) => {
@@ -108,9 +101,10 @@ export const NonGroupUsersMenu = ({
 
   const handleSuggestedUserClick = useCallback(
     (username: string) => {
-      if( groups.length>0){
-        setGroups([])
-      }
+      nonGroupGroups.value = [];
+      groupMembers.value = [];
+      isNonGroupExpense.value = true;
+
       addUser(username);
     },
     [addUser]
@@ -118,15 +112,15 @@ export const NonGroupUsersMenu = ({
 
   const handleSuggestedGroupClick = useCallback(
     (groupId: string) => {
-      if(nonGroupUsers.value.length>0){
-        nonGroupUsers.value=[]//TODO need to only allow current user in
-      }
+      nonGroupUsers.value = []; //TODO need to only allow current user in
+      isNonGroupExpense.value = false;
+
       const existingGroup = userGroups?.pages
         .flatMap((x) => x.groups)
         .find((x) => x.id === groupId);
 
       if (!existingGroup) return;
-      setGroups([
+      nonGroupGroups.value = [
         {
           id: existingGroup.id,
           name: existingGroup.name,
@@ -139,8 +133,8 @@ export const NonGroupUsersMenu = ({
           guests: existingGroup.guests,
           currency: existingGroup.currency,
         },
-      ]);
-       groupMembers.value=[...existingGroup.members,...existingGroup.guests]
+      ];
+      groupMembers.value = [...existingGroup.members, ...existingGroup.guests];
     },
     [userGroups]
   );
@@ -166,16 +160,16 @@ export const NonGroupUsersMenu = ({
     return (
       userGroups?.pages
         .flatMap((x) => x.groups)
-        .filter((x) => !groups.some((g) => g.id === x.id)) ?? []
+        .filter((x) => !nonGroupGroups.value.some((g) => g.id === x.id)) ?? []
     );
-  }, [userGroups, groups]);
+  }, [userGroups, nonGroupGroups.value]);
 
   const isEmpty = useMemo(
     () =>
       nonGroupUsers.value?.length === 0 &&
       keyword.length === 0 &&
-      groups?.length === 0,
-    [nonGroupUsers.value, groups, keyword]
+      nonGroupGroups.value?.length === 0,
+    [nonGroupUsers.value, nonGroupGroups.value, keyword]
   );
 
   return (
@@ -217,7 +211,7 @@ export const NonGroupUsersMenu = ({
               onRemove={handleSelectedUserCick}
             />
             <SelectedGroups
-              groups={groups}
+              groups={nonGroupGroups.value}
               onRemove={handleSelectedGroupCick}
             />
 
@@ -280,12 +274,15 @@ export const NonGroupUsersMenu = ({
       <div className="doneButton">
         <MyButton
           onClick={() => {
-            menu.value = null;
-            if (nonGroupUsers.value.length > 0 || groupMembers.value.length > 0) {
+            if (
+              nonGroupUsers.value.length > 0 ||
+              groupMembers.value.length > 0
+            ) {
               isPersonal.value = false;
             } else {
               isPersonal.value = true;
             }
+             menu.value = null;
           }}
         >
           Done

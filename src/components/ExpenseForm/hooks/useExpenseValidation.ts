@@ -14,9 +14,9 @@ export function useExpenseValidation({
   setParticipantsError,
   setPayersError,
   setShowAmountError,
-  setAmountError,
   participantsCategory,
   payersCategory,
+
 }: {
   amount: string;
   participants: PickerMember[];
@@ -25,17 +25,16 @@ export function useExpenseValidation({
   setParticipantsError: React.Dispatch<React.SetStateAction<string>>;
   setPayersError: React.Dispatch<React.SetStateAction<string>>;
   setShowAmountError: React.Dispatch<React.SetStateAction<boolean>>;
-  setAmountError: React.Dispatch<React.SetStateAction<string>>;
   participantsCategory: Signal<string>;
   payersCategory: Signal<string>;
+
 }) {
   useEffect(() => {
-    amountIsValid(amount, setAmountError);
+
     if (
       participantsCategory.value !== "Shares" &&
       payersCategory.value !== "Shares"
     ) {
-    
       const selectedParticipants = participants?.filter((x) => x.selected);
       const areParticipantsNumbersValid = selectedParticipants?.every(
         (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0

@@ -9,10 +9,10 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   selectedExpense,
   timeZoneCoordinates,
   isPersonal,
-  allGroupMembers,
+  groupMembers,
   currency,
   isnonGroupExpense,
-  allNonGroupUsers,
+  nonGroupUsers,
   
 }) => {
   if (!expense) {
@@ -31,9 +31,9 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
       isCreateExpense={false}
       isPersonal={isPersonal}
       currency={currency}
-      allGroupMembers={allGroupMembers}
+      groupMembers={groupMembers}
       isnonGroupExpense={isnonGroupExpense}
-      allNonGroupUsers={allNonGroupUsers}
+      nonGroupUsers={nonGroupUsers}
     />
   );
 };

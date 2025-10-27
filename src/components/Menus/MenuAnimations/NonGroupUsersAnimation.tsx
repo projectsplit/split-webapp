@@ -7,7 +7,9 @@ export default function NonGroupUsersAnimation({
   menu,
   nonGroupUsers,
   isPersonal,
-  groupMembers
+  groupMembers,
+  nonGroupGroups,
+  isNonGroupExpense
 }: NonGroupUsersAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -17,7 +19,7 @@ export default function NonGroupUsersAnimation({
       timeout={100}
       unmountOnExit
     >
-      <NonGroupUsersMenu menu={menu} nonGroupUsers={nonGroupUsers} isPersonal={isPersonal} groupMembers={groupMembers}/>
+      <NonGroupUsersMenu menu={menu} nonGroupUsers={nonGroupUsers} isPersonal={isPersonal} groupMembers={groupMembers} nonGroupGroups={nonGroupGroups} isNonGroupExpense={isNonGroupExpense} />
     </CSSTransition>
   );
 }

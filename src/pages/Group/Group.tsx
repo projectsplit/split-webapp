@@ -146,7 +146,7 @@ export default function Group() {
               isPersonal={signal(false)}
               currency={group.currency}
               groupMembers={signal([...group.members,...group.guests])}
-              isnonGroupExpense={false}
+              isnonGroupExpense={signal(false)}
               nonGroupUsers={signal([])}
             />
           )}

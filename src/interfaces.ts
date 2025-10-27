@@ -167,7 +167,7 @@ export interface MemberPickerProps {
   category: Signal<string>;
   userMemberId: string | undefined;
   setError: React.Dispatch<React.SetStateAction<string>>;
-  isnonGroupExpense: boolean | undefined;
+  isnonGroupExpense?: Signal<boolean>;
   userId: string;
    groupMembers: Signal<(Member | Guest)[]>;
   nonGroupUsers: Signal<User[]>;
@@ -438,7 +438,7 @@ export interface NewExpenseAnimationProps {
   isPersonal: Signal<boolean>;
   groupMembers: Signal<(Member | Guest)[]>;
   currency: string;
-  isnonGroupExpense?: boolean;
+  isnonGroupExpense?: Signal<boolean>;
   nonGroupUsers: Signal<User[]>;
 }
 
@@ -460,13 +460,15 @@ export interface ExpenseFormProps {
   selectedExpense?: Signal<ExpenseResponseItem | null>;
   isCreateExpense: boolean;
   isPersonal: Signal<boolean>;
-  isnonGroupExpense?: boolean;
+  isnonGroupExpense?:Signal<boolean>;
   currency: string;
   nonGroupMenu?: Signal<string | null>;
+  nonGroupGroups?:Signal<Group[]>
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
   selectedExpense?: Signal<ExpenseResponseItem | null>;
+
 }
 
 export interface TransferFormProps {
@@ -483,11 +485,16 @@ export interface NonGroupUsersAnimationProps extends MenuProps {
   nonGroupUsers: Signal<User[]>;
   isPersonal: Signal<boolean>;
   groupMembers: Signal<(Guest | Member)[]>;
+  nonGroupGroups:Signal<Group[]>
+  isNonGroupExpense:Signal<boolean>
 }
+
 export interface NonGroupUsersProps extends MenuProps {
   nonGroupUsers: Signal<User[]>;
   isPersonal: Signal<boolean>;
   groupMembers: Signal<(Guest | Member)[]>;
+  nonGroupGroups:Signal<Group[]>
+  isNonGroupExpense:Signal<boolean>
 }
 export interface LocationPickerAnimationProps extends MenuProps {
   location: GeoLocation | undefined;

@@ -1,6 +1,7 @@
 import { amountIsValid } from "../../helpers/amountIsValid";
 import {
   ExpenseRequest,
+  ExpenseResponseItem,
   FormExpense,
   GeoLocation,
   Guest,
@@ -77,25 +78,25 @@ export function submitExpense({
   }
 
   if (
-    participants.length ===
-    participants.filter((p) => p.selected === false).length
+    participants?.length ===
+    participants?.filter((p) => p.selected === false).length
   ) {
     setParticipantsError("Select at least one participant");
     return;
   }
 
-  if (payers.length === payers.filter((p) => p.selected === false).length) {
+  if (payers?.length === payers?.filter((p) => p.selected === false).length) {
     setPayersError("Select at least one payer");
     return;
   }
 
-  const selectedParticipants = participants.filter((x) => x.selected);
+  const selectedParticipants = participants?.filter((x) => x.selected);
   const areParticipantsNumbersValid = selectedParticipants.every(
     (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
   );
 
   const isParticipantsSumInvalid =
-    selectedParticipants.length > 0 &&
+    selectedParticipants?.length > 0 &&
     (significantDigitsFromTicker(currencySymbol) >= 3
       ? Number(
           selectedParticipants
@@ -110,28 +111,28 @@ export function submitExpense({
           0
         ) !== currency(amount).value);
 
-  const selectedPayers = payers.filter((x) => x.selected);
-  const arePayersNumbersValid = selectedPayers.every(
+  const selectedPayers = payers?.filter((x) => x.selected);
+  const arePayersNumbersValid = selectedPayers?.every(
     (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
   );
   const isPayersSumInvalid =
-    selectedPayers.length > 0 &&
+    selectedPayers?.length > 0 &&
     (significantDigitsFromTicker(currencySymbol) >= 3
       ? Number(
           selectedPayers
-            .reduce((acc, payer) => acc + Number(payer.actualAmount), 0)
+            ?.reduce((acc, payer) => acc + Number(payer.actualAmount), 0)
             .toFixed(significantDigitsFromTicker(currencySymbol))
         ) !==
         Number(
           Number(amount).toFixed(significantDigitsFromTicker(currencySymbol))
         )
-      : selectedPayers.reduce(
+      : selectedPayers?.reduce(
           (acc, payer) => currency(acc).add(payer.actualAmount).value,
           0
         ) !== currency(amount).value);
 
   // Validate amount when participants or payers are selected
-  if (selectedParticipants.length > 0 || selectedPayers.length > 0) {
+  if (selectedParticipants?.length > 0 || selectedPayers?.length > 0) {
     setShowAmountError(true);
   }
   setParticipantsError(
@@ -193,8 +194,10 @@ export const createParticipantPickerArray = (
   isCreateExpense: boolean,
   isnonGroupExpense?: boolean
 ): PickerMember[] => {
+  let array: PickerMember[] = [];
+
   if (isnonGroupExpense && nonGroupUsers.value.length > 0) {
-    return nonGroupUsers.value.map((user) => {
+    array = nonGroupUsers.value.map((user) => {
       const participant = expense?.participants.find(
         (p) => p.memberId === user?.userId
       );
@@ -213,13 +216,11 @@ export const createParticipantPickerArray = (
           ? ((participationAmount / expenseAmount) * 100).toFixed(1)
           : isSharesType && !isCreateExpense
           ? ""
-          : actualAmount; //'0'
+          : actualAmount;
 
       return {
         id: user.userId,
-        actualAmount:
-          expense?.participants.find((p) => p.memberId === user.userId)
-            ?.participationAmount ?? "",
+        actualAmount,
         screenQuantity,
         locked:
           expense?.participants.some((p) => p.memberId === user.userId) ??
@@ -232,7 +233,7 @@ export const createParticipantPickerArray = (
       };
     });
   } else {
-    return groupMembers?.value.map((member) => {
+    array = groupMembers.value.map((member) => {
       const participant = expense?.participants.find(
         (p) => p.memberId === member?.id
       );
@@ -251,13 +252,11 @@ export const createParticipantPickerArray = (
           ? ((participationAmount / expenseAmount) * 100).toFixed(1)
           : isSharesType && !isCreateExpense
           ? ""
-          : actualAmount; //'0'
+          : actualAmount;
 
       return {
         id: member.id,
-        actualAmount:
-          expense?.participants.find((p) => p.memberId === member.id)
-            ?.participationAmount ?? "",
+        actualAmount,
         screenQuantity,
         locked:
           expense?.participants.some((p) => p.memberId === member.id) ?? false,
@@ -268,6 +267,13 @@ export const createParticipantPickerArray = (
       };
     });
   }
+
+  // Auto-select all participants for new expense
+  if (isCreateExpense) {
+    array = array.map((m) => ({ ...m, selected: true, order: 0 }));
+  }
+
+  return array;
 };
 
 export const createPayerPickerArray = (
@@ -276,10 +282,14 @@ export const createPayerPickerArray = (
   expense: FormExpense | null,
   type: string,
   isCreateExpense: boolean,
+  userId: string,
+  userMemberId: string | undefined,
   isnonGroupExpense?: boolean
 ): PickerMember[] => {
+  let array: PickerMember[] = [];
+
   if (isnonGroupExpense && nonGroupUsers.value.length > 0) {
-    return nonGroupUsers.value.map((user) => {
+    array = nonGroupUsers.value.map((user) => {
       const payer = expense?.payers.find((p) => p.memberId === user?.userId);
       const actualAmount = payer?.paymentAmount ?? "";
       const isPercentageType = type === "Percentages";
@@ -296,15 +306,14 @@ export const createPayerPickerArray = (
           ? ((paymentAmount / expenseAmount) * 100).toFixed(1)
           : isSharesType && !isCreateExpense
           ? ""
-          : actualAmount; //'0'
+          : actualAmount;
 
       return {
         id: user.userId,
-        actualAmount:
-          expense?.payers.find((p) => p.memberId === user.userId)
-            ?.paymentAmount ?? "",
+        actualAmount,
         screenQuantity,
-        locked: expense?.payers.some((p) => p.memberId === user.userId) ?? false,
+        locked:
+          expense?.payers.some((p) => p.memberId === user.userId) ?? false,
         name: user.username,
         order: 0,
         selected:
@@ -312,7 +321,7 @@ export const createPayerPickerArray = (
       };
     });
   } else {
-    return groupMembers?.value.map((member) => {
+    array = groupMembers.value.map((member) => {
       const payer = expense?.payers.find((p) => p.memberId === member?.id);
       const actualAmount = payer?.paymentAmount ?? "";
       const isPercentageType = type === "Percentages";
@@ -329,13 +338,11 @@ export const createPayerPickerArray = (
           ? ((paymentAmount / expenseAmount) * 100).toFixed(1)
           : isSharesType && !isCreateExpense
           ? ""
-          : actualAmount; //'0'
+          : actualAmount;
 
       return {
         id: member.id,
-        actualAmount:
-          expense?.payers.find((p) => p.memberId === member.id)
-            ?.paymentAmount ?? "",
+        actualAmount,
         screenQuantity,
         locked: expense?.payers.some((p) => p.memberId === member.id) ?? false,
         name: member.name,
@@ -345,4 +352,19 @@ export const createPayerPickerArray = (
       };
     });
   }
+
+  // Auto-select the current user as payer for new expense
+  if (isCreateExpense) {
+    const selectedId =
+      isnonGroupExpense && nonGroupUsers.value.length > 0
+        ? userId
+        : userMemberId;
+    array = array.map((m) => ({
+      ...m,
+      selected: m.id === selectedId,
+      order: 0,
+    }));
+  }
+
+  return array;
 };

@@ -11,6 +11,7 @@ import { useTheme } from "styled-components";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import {
   ExpenseResponseItem,
+  Group,
   GroupsAllBalancesResponse,
   Guest,
   Member,
@@ -46,6 +47,8 @@ export default function Home() {
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
   const nonGroupUsers = useSignal<User[]>([]);
+  const nonGroupGroups = useSignal<Group[]>([])
+
   const groupMembers = useSignal<(Guest | Member)[]>([]);
   const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
@@ -85,21 +88,8 @@ export default function Home() {
     topMenuTitle.value = "";
   }, []);
 
-  const isArchived = mostRecentGroupData?.isArchived;
-  // isFetching:mostRecentGroupDataIsFetching, isLoading:mostRecentGroupDataIsLoading
-  // const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
-
-  //TODO need to be able to get the personal group id. If expenses are to be submitted without the group then this can be discarded.
-
-  // const {
-  //   data: group,
-  //   isFetching: groupIsFetching,
-  //   isError,
-  //   error,
-  // } = useGroup("f7637b50-e77d-4609-9e38-eb0acc9c9c51");
-
   const isGlowing = quickActionsMenu.value === "quickActions";
-  console.log(groupMembers.value)
+
   return (
     <StyledHomepage>
       {isFetching || !userInfo?.username ? (
@@ -218,11 +208,12 @@ export default function Home() {
           header="Create New Expense"
           isCreateExpense={true}
           isPersonal={isPersonal}
-          isnonGroupExpense={isNonGroupExpense.value}
+          isnonGroupExpense={isNonGroupExpense}
           groupMembers={groupMembers}
           currency={userInfo.currency}
           nonGroupUsers={nonGroupUsers}
           nonGroupMenu={nonGroupMenu}
+          nonGroupGroups={nonGroupGroups}
         />
       )}
 
@@ -235,6 +226,8 @@ export default function Home() {
         nonGroupUsers={nonGroupUsers}
         isPersonal={isPersonal}
         groupMembers={groupMembers}
+        nonGroupGroups={nonGroupGroups}
+        isNonGroupExpense={isNonGroupExpense}
       />
     </StyledHomepage>
   );
