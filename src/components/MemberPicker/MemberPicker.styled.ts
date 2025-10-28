@@ -120,13 +120,20 @@ export const StyledMemberPicker = styled.div<{
       overflow: auto;
       .textAndCheck {
         display: flex;
-        flex-direction: row;
+        justify-content: start;
         gap: 10px;
         align-items: center;
+
         .nameAndAmount {
           display: flex;
           flex-direction: column;
+          .name {
+            display: flex;
+           justify-content: start;
+          }
           .amount {
+            display: flex;
+            justify-content: start;
             font-size: 12px;
           }
         }
@@ -151,10 +158,9 @@ export const StyledMemberPicker = styled.div<{
       border-radius: 3px;
       cursor: pointer;
       .checkmark {
-        position: absolute;
         font-size: 25px;
         bottom: 0px;
-        color: ${({ theme }) => theme.highlightColor};
+        color: white;
       }
     }
 

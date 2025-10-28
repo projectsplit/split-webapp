@@ -266,7 +266,7 @@ export default function ExpenseForm({
     payersByCategory[payersCategory.value as keyof typeof payersByCategory];
 
   const adjustParticipants = useMemo(() => {
-    if (isnonGroupExpense?.value) {
+    if (nonGroupUsers.value.length>0) {
       return participants?.map((m) =>
         m.id === userInfo?.userId ? { ...m, name: "you" } : m
       );
@@ -278,7 +278,7 @@ export default function ExpenseForm({
   }, [participants, userMemberId, nonGroupUsers.value, groupMembers.value]);
 
   const adjustPayers = useMemo(() => {
-    if (isnonGroupExpense?.value) {
+    if (nonGroupUsers.value.length>0) {
       return payers?.map((m) =>
         m.id === userInfo?.userId ? { ...m, name: "you" } : m
       );
@@ -376,8 +376,8 @@ export default function ExpenseForm({
 
   const handleInputBlur = useCallback(() => {
     if (
-      (participants.some((p) => p.selected) ||
-      payers.some((p) => p.selected))
+      participants.some((p) => p.selected) ||
+      payers.some((p) => p.selected)
     ) {
       setShowAmountError(true);
       amountIsValid(amount, setAmountError);
@@ -427,10 +427,11 @@ export default function ExpenseForm({
         <div
           className="closeButtonContainer"
           onClick={() => {
-            if (isnonGroupExpense?.value) {
+            if (isnonGroupExpense && isnonGroupExpense?.value) {
               nonGroupUsers.value = [];
               groupMembers.value = [];
               isPersonal.value = true;
+              isnonGroupExpense.value = false;
               if (nonGroupGroups) {
                 nonGroupGroups.value = [];
               }

@@ -9,12 +9,13 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useSearchUsersToInvite } from "../../../api/services/useSearchUsersToInvite";
 import useDebounce from "../../../hooks/useDebounce";
 import AutoWidthInput from "../../AutoWidthInput";
-import { SearchUserToInviteResponseItem } from "../../../types";
+import { SearchUserToInviteResponseItem, User, UserInfo } from "../../../types";
 import Item from "./Item/Item";
 import React from "react";
 import { SelectedGroups } from "./SelectionLists/SelectedGroups";
 import { SelectedUsers } from "./SelectionLists/SelectedUsers";
 import { useSearchGroupsByName } from "../../../api/services/useSearchGroupsByName";
+import { useOutletContext } from "react-router-dom";
 
 export const NonGroupUsersMenu = ({
   menu,
@@ -22,7 +23,6 @@ export const NonGroupUsersMenu = ({
   isPersonal,
   groupMembers,
   nonGroupGroups,
-  isNonGroupExpense,
 }: NonGroupUsersProps) => {
   const category = useSignal<string>("Friends");
   const [keyword, setKeyword] = useState("");
@@ -35,9 +35,9 @@ export const NonGroupUsersMenu = ({
   const mainRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // const { userInfo } = useOutletContext<{
-  //   userInfo: UserInfo;
-  // }>();
+  const { userInfo } = useOutletContext<{
+    userInfo: UserInfo;
+  }>();
 
   const {
     data,
@@ -83,6 +83,17 @@ export const NonGroupUsersMenu = ({
       return;
     }
 
+    const currentUser: User = {
+      userId: userInfo.userId,
+      username: userInfo.username,
+    };
+
+    if (
+      !nonGroupUsers.value.map((x) => x.userId).includes(currentUser.userId)
+    ) {
+      nonGroupUsers.value = [...nonGroupUsers.value, currentUser];
+    }
+
     const newUser: SearchUserToInviteResponseItem = {
       //TODO will have to change to friend list rather than users to invite
       userId: existingUser.userId,
@@ -103,7 +114,6 @@ export const NonGroupUsersMenu = ({
     (username: string) => {
       nonGroupGroups.value = [];
       groupMembers.value = [];
-      isNonGroupExpense.value = true;
 
       addUser(username);
     },
@@ -113,8 +123,6 @@ export const NonGroupUsersMenu = ({
   const handleSuggestedGroupClick = useCallback(
     (groupId: string) => {
       nonGroupUsers.value = []; //TODO need to only allow current user in
-      isNonGroupExpense.value = false;
-
       const existingGroup = userGroups?.pages
         .flatMap((x) => x.groups)
         .find((x) => x.id === groupId);
@@ -172,6 +180,14 @@ export const NonGroupUsersMenu = ({
     [nonGroupUsers.value, nonGroupGroups.value, keyword]
   );
 
+  const isPersonalFn = () => {
+    if (nonGroupUsers.value.length > 0 || groupMembers.value.length > 0) {
+      isPersonal.value = false;
+    } else {
+      isPersonal.value = true;
+    }
+  };
+
   return (
     <StyledNonGroupUsersMenu>
       <div className="fixedHeader">
@@ -179,7 +195,10 @@ export const NonGroupUsersMenu = ({
           <div className="closeButtonContainer">
             <BiArrowBack
               className="backButton"
-              onClick={() => (menu.value = null)}
+              onClick={() => {
+                isPersonalFn();
+                menu.value = null;
+              }}
             />
           </div>
           <div className="title">Share expense with</div>
@@ -209,6 +228,7 @@ export const NonGroupUsersMenu = ({
             <SelectedUsers
               users={nonGroupUsers.value}
               onRemove={handleSelectedUserCick}
+              currentUserId={userInfo.userId}
             />
             <SelectedGroups
               groups={nonGroupGroups.value}
@@ -233,16 +253,18 @@ export const NonGroupUsersMenu = ({
         {category.value === "Friends"
           ? remainingSuggestedUsers.length > 0 && (
               <div className="dropdown" ref={dropdownRef}>
-                {remainingSuggestedUsers.map((user) => (
-                  <Item
-                    key={user.userId}
-                    name={user.username}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSuggestedUserClick(user.username);
-                    }}
-                  />
-                ))}
+                {remainingSuggestedUsers.map((user) =>
+                  user.userId !== userInfo.userId ? (
+                    <Item
+                      key={user.userId}
+                      name={user.username}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSuggestedUserClick(user.username);
+                      }}
+                    />
+                  ) : null
+                )}
               </div>
             )
           : remainingSuggestedGroups.length > 0 && (
@@ -274,15 +296,8 @@ export const NonGroupUsersMenu = ({
       <div className="doneButton">
         <MyButton
           onClick={() => {
-            if (
-              nonGroupUsers.value.length > 0 ||
-              groupMembers.value.length > 0
-            ) {
-              isPersonal.value = false;
-            } else {
-              isPersonal.value = true;
-            }
-             menu.value = null;
+            isPersonalFn();
+            menu.value = null;
           }}
         >
           Done

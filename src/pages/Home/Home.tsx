@@ -227,7 +227,6 @@ export default function Home() {
         isPersonal={isPersonal}
         groupMembers={groupMembers}
         nonGroupGroups={nonGroupGroups}
-        isNonGroupExpense={isNonGroupExpense}
       />
     </StyledHomepage>
   );

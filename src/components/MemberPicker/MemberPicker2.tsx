@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MemberPickerProps } from "../../interfaces";
 import { useSignal } from "@preact/signals-react";
 import { StyledMemberPicker } from "./MemberPicker.styled";
@@ -41,7 +41,6 @@ const MemberPicker2 = ({
   const isEquallySplit = useSignal<boolean>(true);
   const inputRefs = useRef<Map<string, HTMLInputElement>>(new Map());
   const errorMenu = useSignal<string>("");
-  const [selectedCount, setSelectedCount] = useState<number>(memberAmounts.filter((m) => m.selected).length)
   const [decimalDigits, setDecimalDigits] = useState<number>(2);
 
   renderCounter.current++;
@@ -81,14 +80,8 @@ const MemberPicker2 = ({
     userId,
     groupMembers,
     nonGroupUsers,
-    isnonGroupExpense,
+    isnonGroupExpense
   );
-
-
-useEffect(() => {
-  setSelectedCount(memberAmounts.filter((m) => m.selected).length);
-
-}, [isnonGroupExpense?.value, memberAmounts]);
 
   useEffect(() => {
     isEquallySplit.value = isEquallySplitFn(
@@ -119,6 +112,13 @@ useEffect(() => {
 
   const deselectMember = (id: string): void => {
     const newFormMembers = memberAmounts.map((m) => {
+      if (
+        isnonGroupExpense?.value &&
+        m.id === userId &&
+        description === "Participants"
+      )
+        return m;
+
       if (m.id === id) {
         return {
           ...m,
@@ -276,8 +276,6 @@ useEffect(() => {
     );
   };
 
-
-
   const handleMainClick = () => {
     setMemberAmounts(
       recalculateAmounts(
@@ -317,6 +315,11 @@ useEffect(() => {
     totalAmount,
     setIsMenuOpen,
   ]);
+
+  const selectedCount = useMemo(
+    () => memberAmounts.filter((m) => m.selected).length,
+    [isnonGroupExpense?.value, memberAmounts]
+  );
 
   return (
     <StyledMemberPicker

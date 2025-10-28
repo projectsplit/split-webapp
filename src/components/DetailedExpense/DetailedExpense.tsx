@@ -220,7 +220,8 @@ export default function DetailedExpense({
         timeZoneCoordinates={timeZoneCoordinates}
         currency={group.currency}
         groupMembers={signal([...group.members,...group.guests])}
-        
+        nonGroupUsers={signal([])}//these are group expenses. Will have to differentiate between group x non group x personal (all that refer to user)
+        isPersonal={signal(false)}
 
       />
     </StyledDetailedExpense>
