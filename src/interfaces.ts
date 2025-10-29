@@ -828,6 +828,9 @@ export interface NameAndAmountsProps {
   m: PickerMember;
   onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
   currency: string;
+  isnonGroupExpense:Signal<boolean> | undefined
+  userId:string
+  description:string;
 }
 
 export interface CurrentSearchFieldProps {

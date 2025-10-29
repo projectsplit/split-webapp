@@ -1,32 +1,59 @@
 import { FaCheck } from "react-icons/fa";
 import { NameAndAmountsProps } from "../../../../interfaces";
 import { displayCurrencyAndAmount } from "../../../../helpers/displayCurrencyAndAmount";
+import { HiLockClosed } from "react-icons/hi";
 
 export const NameAndAmounts = ({
   category,
   m,
   onClick,
-  currency
+  currency,
+  isnonGroupExpense,
+  userId,
+  description,
 }: NameAndAmountsProps) => {
+  
+  const criteriaForLockedUser =
+    isnonGroupExpense &&
+    isnonGroupExpense.value &&
+    m.id === userId &&
+    description === "Participants";
 
   return (
     <>
-      {category.value === "Shares"||category.value==='Percentages' ? (
+      {category.value === "Shares" || category.value === "Percentages" ? (
         <div className="textAndCheck">
-          
           <div className="tick-cube" onClick={onClick}>
-            <FaCheck className="checkmark" />
+            {criteriaForLockedUser ? (
+              <div className="checkmarkAndLock">
+                <FaCheck className="checkmark" style={{ color: "#9e9e9e" }} />
+                <HiLockClosed className="locked-icon" />
+              </div>
+            ) : (
+              <FaCheck className="checkmark" />
+            )}
           </div>
           <div className="nameAndAmount">
             <div className="name"> {m.name}</div>
-            <div className="amount">{
-            displayCurrencyAndAmount(m.actualAmount === '' ? '0' : m.actualAmount,currency)}</div>
+            <div className="amount">
+              {displayCurrencyAndAmount(
+                m.actualAmount === "" ? "0" : m.actualAmount,
+                currency
+              )}
+            </div>
           </div>
         </div>
       ) : (
         <div className="textAndCheck">
           <div className="tick-cube" onClick={onClick}>
-            <FaCheck className="checkmark" />
+            {criteriaForLockedUser ? (
+              <div className="checkmarkAndLock">
+                <FaCheck className="checkmark" style={{ color: "#9e9e9e" }} />
+                <HiLockClosed className="locked-icon" />
+              </div>
+            ) : (
+              <FaCheck className="checkmark" />
+            )}
           </div>
           {m.name}
         </div>

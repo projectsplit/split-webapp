@@ -129,7 +129,7 @@ export const StyledMemberPicker = styled.div<{
           flex-direction: column;
           .name {
             display: flex;
-           justify-content: start;
+            justify-content: start;
           }
           .amount {
             display: flex;
@@ -139,7 +139,18 @@ export const StyledMemberPicker = styled.div<{
         }
       }
     }
-
+    .checkmarkAndLock {
+      position: relative;
+      display: inline-block;
+      .locked-icon {
+        position: absolute;
+        font-size: 18px;
+        color: #ffb700ff;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
     .selected {
       background-color: ${({ theme }) => theme.backgroundcolor};
       color: ${({ theme }) => theme.textActiveColor};
@@ -159,7 +170,6 @@ export const StyledMemberPicker = styled.div<{
       cursor: pointer;
       .checkmark {
         font-size: 25px;
-        bottom: 0px;
         color: white;
       }
     }

@@ -387,6 +387,9 @@ const MemberPicker2 = ({
               .map((m) => (
                 <div key={m.id} className="selected option">
                   <NameAndAmounts
+                  description={description}
+                    isnonGroupExpense={isnonGroupExpense}
+                    userId = {userId}
                     category={category}
                     m={m}
                     onClick={() => deselectMember(m.id)}
