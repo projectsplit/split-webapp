@@ -83,134 +83,88 @@ export default function ExpenseForm({
     isCreateExpense || !expense ? "" : expense.amount
   );
 
-  const [participantsByCategory, setParticipantsByCategory] = useState<{
-    Amounts: PickerMember[];
-    Shares: PickerMember[];
-    Percentages: PickerMember[];
-  }>({
-    Amounts: createParticipantPickerArray(
-      groupMembers,
-      nonGroupUsers,
-      expense,
-      "Amounts",
-      isCreateExpense,
-      isnonGroupExpense?.value
-    ),
-    Shares: createParticipantPickerArray(
-      groupMembers,
-      nonGroupUsers,
-      expense,
-      "Shares",
-      isCreateExpense,
-      isnonGroupExpense?.value
-    ),
-    Percentages: createParticipantPickerArray(
-      groupMembers,
-      nonGroupUsers,
-      expense,
-      "Percentages",
-      isCreateExpense,
-      isnonGroupExpense?.value
-    ),
-  });
+const initialParticipantsByCategory = useMemo(() => ({
+  Amounts: createParticipantPickerArray(
+    groupMembers,
+    nonGroupUsers,
+    expense,
+    "Amounts",
+    isCreateExpense,
+    isnonGroupExpense?.value
+  ),
+  Shares: createParticipantPickerArray(
+    groupMembers,
+    nonGroupUsers,
+    expense,
+    "Shares",
+    isCreateExpense,
+    isnonGroupExpense?.value
+  ),
+  Percentages: createParticipantPickerArray(
+    groupMembers,
+    nonGroupUsers,
+    expense,
+    "Percentages",
+    isCreateExpense,
+    isnonGroupExpense?.value
+  ),
+}), [
+  groupMembers?.value,
+  nonGroupUsers?.value,
+  expense,
+  isCreateExpense,
+  isnonGroupExpense?.value,
+]);
 
-  const [payersByCategory, setPayersByCategory] = useState<{
-    Amounts: PickerMember[];
-    Shares: PickerMember[];
-    Percentages: PickerMember[];
-  }>({
-    Amounts: createPayerPickerArray(
-      groupMembers,
-      nonGroupUsers,
-      expense,
-      "Amounts",
-      isCreateExpense,
-      userInfo.userId,
-      userMemberId,
-      isnonGroupExpense?.value
-    ),
-    Shares: createPayerPickerArray(
-      groupMembers,
-      nonGroupUsers,
-      expense,
-      "Shares",
-      isCreateExpense,
-      userInfo.userId,
-      userMemberId,
-      isnonGroupExpense?.value
-    ),
-    Percentages: createPayerPickerArray(
-      groupMembers,
-      nonGroupUsers,
-      expense,
-      "Percentages",
-      isCreateExpense,
-      userInfo.userId,
-      userMemberId,
-      isnonGroupExpense?.value
-    ),
-  });
+const initialPayersByCategory = useMemo(() => ({
+  Amounts: createPayerPickerArray(
+    groupMembers,
+    nonGroupUsers,
+    expense,
+    "Amounts",
+    isCreateExpense,
+    userInfo.userId,
+    userMemberId,
+    isnonGroupExpense?.value
+  ),
+  Shares: createPayerPickerArray(
+    groupMembers,
+    nonGroupUsers,
+    expense,
+    "Shares",
+    isCreateExpense,
+    userInfo.userId,
+    userMemberId,
+    isnonGroupExpense?.value
+  ),
+  Percentages: createPayerPickerArray(
+    groupMembers,
+    nonGroupUsers,
+    expense,
+    "Percentages",
+    isCreateExpense,
+    userInfo.userId,
+    userMemberId,
+    isnonGroupExpense?.value
+  ),
+}), [
+  groupMembers?.value,
+  nonGroupUsers?.value,
+  expense,
+  isCreateExpense,
+  userInfo.userId,
+  userMemberId,
+  isnonGroupExpense?.value,
+]);
 
-  useEffect(() => {
-    setParticipantsByCategory({
-      Amounts: createParticipantPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Amounts",
-        isCreateExpense,
-        isnonGroupExpense?.value
-      ),
-      Shares: createParticipantPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Shares",
-        isCreateExpense,
-        isnonGroupExpense?.value
-      ),
-      Percentages: createParticipantPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Percentages",
-        isCreateExpense,
-        isnonGroupExpense?.value
-      ),
-    });
-    setPayersByCategory({
-      Amounts: createPayerPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Amounts",
-        isCreateExpense,
-        userInfo.userId,
-        userMemberId,
-        isnonGroupExpense?.value
-      ),
-      Shares: createPayerPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Shares",
-        isCreateExpense,
-        userInfo.userId,
-        userMemberId,
-        isnonGroupExpense?.value
-      ),
-      Percentages: createPayerPickerArray(
-        groupMembers,
-        nonGroupUsers,
-        expense,
-        "Percentages",
-        isCreateExpense,
-        userInfo.userId,
-        userMemberId,
-        isnonGroupExpense?.value
-      ),
-    });
-  }, [nonGroupUsers.value, isCreateExpense, groupMembers.value, amount]);
+const [participantsByCategory, setParticipantsByCategory] = useState(initialParticipantsByCategory);
+const [payersByCategory, setPayersByCategory] = useState(initialPayersByCategory);
+
+// Optional reset when dependencies change
+useEffect(() => {
+  setParticipantsByCategory(initialParticipantsByCategory);
+  setPayersByCategory(initialPayersByCategory);
+}, [initialParticipantsByCategory, initialPayersByCategory]);
 
   const [participantsError, setParticipantsError] = useState<string>("");
 

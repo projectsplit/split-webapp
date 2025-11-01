@@ -16,7 +16,6 @@ export function useExpenseValidation({
   setShowAmountError,
   participantsCategory,
   payersCategory,
-
 }: {
   amount: string;
   participants: PickerMember[];
@@ -27,10 +26,8 @@ export function useExpenseValidation({
   setShowAmountError: React.Dispatch<React.SetStateAction<boolean>>;
   participantsCategory: Signal<string>;
   payersCategory: Signal<string>;
-
 }) {
   useEffect(() => {
-
     if (
       participantsCategory.value !== "Shares" &&
       payersCategory.value !== "Shares"
@@ -85,24 +82,28 @@ export function useExpenseValidation({
         setShowAmountError(true);
       }
 
-      const errorsWithTimeOut = setTimeout(() => {
-        setParticipantsError(
-          !areParticipantsNumbersValid
-            ? "Amounts must be positive"
-            : isParticipantsSumInvalid
-            ? "Amounts must add up to total"
-            : ""
-        );
-        setPayersError(
-          !arePayersNumbersValid
-            ? "Amounts must be positive"
-            : isPayersSumInvalid
-            ? "Amounts must add up to total"
-            : ""
-        );
-      }, 200);
-
-      return () => clearTimeout(errorsWithTimeOut);
+      setParticipantsError((prev) => {
+        if (!amount || amount.trim() === "") {
+          return prev === "" ? prev : "";
+        }
+        const newError = !areParticipantsNumbersValid
+          ? "Amounts must be positive"
+          : isParticipantsSumInvalid
+          ? "Amounts must add up to total"
+          : "";
+        return prev === newError ? prev : newError;
+      });
+      setPayersError((prev) => {
+         if (!amount || amount.trim() === "") {
+          return prev === "" ? prev : "";
+        }
+        const newError = !arePayersNumbersValid
+          ? "Amounts must be positive"
+          : isPayersSumInvalid
+          ? "Amounts must add up to total"
+          : "";
+        return prev === newError ? prev : newError;
+      });
     }
   }, [amount, participants, payers]);
 }
