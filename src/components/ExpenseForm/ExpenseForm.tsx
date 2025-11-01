@@ -83,32 +83,17 @@ export default function ExpenseForm({
     isCreateExpense || !expense ? "" : expense.amount
   );
 
-const initialParticipantsByCategory = useMemo(() => ({
-  Amounts: createParticipantPickerArray(
-    groupMembers,
-    nonGroupUsers,
-    expense,
-    "Amounts",
-    isCreateExpense,
-    isnonGroupExpense?.value
-  ),
-  Shares: createParticipantPickerArray(
-    groupMembers,
-    nonGroupUsers,
-    expense,
-    "Shares",
-    isCreateExpense,
-    isnonGroupExpense?.value
-  ),
-  Percentages: createParticipantPickerArray(
-    groupMembers,
-    nonGroupUsers,
-    expense,
-    "Percentages",
-    isCreateExpense,
-    isnonGroupExpense?.value
-  ),
-}), [
+const initialParticipantsByCategory = useMemo(() => {
+  const groupArr = groupMembers?.value ?? [];
+  const nonGroupArr = nonGroupUsers?.value ?? [];
+  const isNonGroup = isnonGroupExpense?.value ?? false;
+
+  return {
+    Amounts: createParticipantPickerArray(groupArr, nonGroupArr, expense, "Amounts", isCreateExpense, isNonGroup),
+    Shares: createParticipantPickerArray(groupArr, nonGroupArr, expense, "Shares", isCreateExpense, isNonGroup),
+    Percentages: createParticipantPickerArray(groupArr, nonGroupArr, expense, "Percentages", isCreateExpense, isNonGroup),
+  };
+}, [
   groupMembers?.value,
   nonGroupUsers?.value,
   expense,
@@ -116,44 +101,48 @@ const initialParticipantsByCategory = useMemo(() => ({
   isnonGroupExpense?.value,
 ]);
 
-const initialPayersByCategory = useMemo(() => ({
-  Amounts: createPayerPickerArray(
-    groupMembers,
-    nonGroupUsers,
-    expense,
-    "Amounts",
-    isCreateExpense,
-    userInfo.userId,
-    userMemberId,
-    isnonGroupExpense?.value
-  ),
-  Shares: createPayerPickerArray(
-    groupMembers,
-    nonGroupUsers,
-    expense,
-    "Shares",
-    isCreateExpense,
-    userInfo.userId,
-    userMemberId,
-    isnonGroupExpense?.value
-  ),
-  Percentages: createPayerPickerArray(
-    groupMembers,
-    nonGroupUsers,
-    expense,
-    "Percentages",
-    isCreateExpense,
-    userInfo.userId,
-    userMemberId,
-    isnonGroupExpense?.value
-  ),
-}), [
+const initialPayersByCategory = useMemo(() => {
+  const groupArr = groupMembers?.value ?? [];
+  const nonGroupArr = nonGroupUsers?.value ?? [];
+  const isNonGroup = isnonGroupExpense?.value ?? false;
+
+  return {
+    Amounts: createPayerPickerArray(
+      groupArr,
+      nonGroupArr,
+      expense,
+      "Amounts",
+      isCreateExpense,
+      userInfo.userId,
+      userMemberId,
+      isNonGroup
+    ),
+    Shares: createPayerPickerArray(
+      groupArr,
+      nonGroupArr,
+      expense,
+      "Shares",
+      isCreateExpense,
+      userInfo.userId,
+      userMemberId,
+      isNonGroup
+    ),
+    Percentages: createPayerPickerArray(
+      groupArr,
+      nonGroupArr,
+      expense,
+      "Percentages",
+      isCreateExpense,
+      userInfo.userId,
+      userMemberId,
+      isNonGroup
+    ),
+  };
+}, [
   groupMembers?.value,
   nonGroupUsers?.value,
   expense,
   isCreateExpense,
-  userInfo.userId,
-  userMemberId,
   isnonGroupExpense?.value,
 ]);
 
@@ -219,29 +208,22 @@ useEffect(() => {
   const payers =
     payersByCategory[payersCategory.value as keyof typeof payersByCategory];
 
-  const adjustParticipants = useMemo(() => {
-    if (nonGroupUsers.value.length > 0) {
-      return participants?.map((m) =>
-        m.id === userInfo?.userId ? { ...m, name: "you" } : m
-      );
-    } else {
-      return participants?.map((m) =>
-        m.id === userMemberId ? { ...m, name: "you" } : m
-      );
-    }
-  }, [participants, userMemberId, nonGroupUsers.value, groupMembers.value]);
+const adjustParticipants = useMemo(() => {
+  if (!participants) return [];
+  const userIdToCheck = nonGroupUsers.value.length > 0 ? userInfo?.userId : userMemberId;
+  return participants.map(m =>
+    m.id === userIdToCheck ? { ...m, name: "you" } : m
+  );
+}, [participants, userInfo?.userId, userMemberId, nonGroupUsers.value.length]);
 
-  const adjustPayers = useMemo(() => {
-    if (nonGroupUsers.value.length > 0) {
-      return payers?.map((m) =>
-        m.id === userInfo?.userId ? { ...m, name: "you" } : m
-      );
-    } else {
-      return payers?.map((m) =>
-        m.id === userMemberId ? { ...m, name: "you" } : m
-      );
-    }
-  }, [payers, userMemberId, nonGroupUsers.value, groupMembers.value]);
+
+  const adjustPayers =  useMemo(() => {
+  if (!payers) return [];
+  const userIdToCheck = nonGroupUsers.value.length > 0 ? userInfo?.userId : userMemberId;
+  return payers.map(m =>
+    m.id === userIdToCheck ? { ...m, name: "you" } : m
+  );
+}, [payers, userInfo?.userId, userMemberId, nonGroupUsers.value.length]);
 
   const setParticipants = (newParticipants: PickerMember[]) => {
     setParticipantsByCategory((prev) => ({

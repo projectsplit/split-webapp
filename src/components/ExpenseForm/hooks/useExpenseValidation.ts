@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 
 import currency from "currency.js";
 import { PickerMember } from "../../../types";
@@ -27,7 +27,7 @@ export function useExpenseValidation({
   participantsCategory: Signal<string>;
   payersCategory: Signal<string>;
 }) {
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (
       participantsCategory.value !== "Shares" &&
       payersCategory.value !== "Shares"
@@ -83,7 +83,7 @@ export function useExpenseValidation({
       }
 
       setParticipantsError((prev) => {
-        if (!amount || amount.trim() === "") {
+        if (!amount || amount.trim() === ""||amount==='0'||amount=='0.') {
           return prev === "" ? prev : "";
         }
         const newError = !areParticipantsNumbersValid
@@ -94,7 +94,7 @@ export function useExpenseValidation({
         return prev === newError ? prev : newError;
       });
       setPayersError((prev) => {
-         if (!amount || amount.trim() === "") {
+         if (!amount || amount.trim() === ""||amount==='0'||amount=='0.') {
           return prev === "" ? prev : "";
         }
         const newError = !arePayersNumbersValid

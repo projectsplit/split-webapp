@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { recalculateAmounts } from "../recalculateAmounts";
 import { Guest, Member, PickerMember, User } from "../../../../types";
 import { Signal } from "@preact/signals-react";
@@ -19,7 +19,7 @@ export const useRecalculateAmounts = (
   isCreateExpense:boolean,
    isnonGroupExpense?: Signal<boolean>
 ) => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     setMemberAmounts(
       recalculateAmounts(
         memberAmounts,

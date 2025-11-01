@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { MemberPickerProps } from "../../interfaces";
 import { useSignal } from "@preact/signals-react";
 import { StyledMemberPicker } from "./MemberPicker.styled";
@@ -20,7 +20,7 @@ import { handleDoneClick } from "./helpers/handleDoneClick";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 import { errorSettingFn } from "./helpers/errorSettingFn";
 
-const MemberPicker2 = ({
+const MemberPickerPreMemo2 = ({
   memberAmounts,
   setMemberAmounts,
   totalAmount,
@@ -98,7 +98,7 @@ const MemberPicker2 = ({
     isnonGroupExpense
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isLoading) return;
     isEquallySplit.value = isEquallySplitFn(
       memberAmounts,
@@ -311,12 +311,6 @@ const MemberPicker2 = ({
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const sortedMemberAmounts = useMemo(() => {
-    return [...memberAmounts].sort(
-      (a, b) => Number(b.selected) - Number(a.selected)
-    );
-  }, [memberAmounts]);
-
   const memoizedHandleDoneClick = useCallback(() => {
     handleDoneClick(
       description,
@@ -338,10 +332,25 @@ const MemberPicker2 = ({
     setIsMenuOpen,
   ]);
 
+  const sortedMemberAmounts = useMemo(() => {
+    return [...memberAmounts].sort(
+      (a, b) => Number(b.selected) - Number(a.selected)
+    );
+  }, [memberAmounts]); 
+
   const selectedCount = useMemo(
     () => memberAmounts.filter((m) => m.selected).length,
-    [isnonGroupExpense?.value, memberAmounts]
+    [memberAmounts] 
   );
+
+  const selectedMembersForText = useMemo(() => {
+  return memberAmounts
+    .filter(m => m.selected)
+    .sort((a, b) => (b.order ?? 0) - (a.order ?? 0)) // stable order
+    .map(m => ({ id: m.id, name: m.name }));
+}, [memberAmounts]);
+
+  const isEquallySplitValue = isEquallySplit.value; 
 
   return (
     <StyledMemberPicker
@@ -360,10 +369,9 @@ const MemberPicker2 = ({
       <div className="main" onClick={handleMainClick} ref={mainRef}>
         <Text
           description={description}
-          isEquallySplit={isEquallySplit}
+          isEquallySplit={isEquallySplitValue}
           selectedCount={selectedCount}
-          sortedMemberAmounts={sortedMemberAmounts}
-          category={category}
+          selectedMembers={selectedMembersForText}
           error={error}
         />
       </div>
@@ -463,5 +471,21 @@ const MemberPicker2 = ({
     </StyledMemberPicker>
   );
 };
+
+export const MemberPicker2 = memo(MemberPickerPreMemo2, (prev, next) => {
+  return (
+    prev.description === next.description &&
+    prev.totalAmount === next.totalAmount &&
+    prev.memberAmounts === next.memberAmounts &&
+    prev.error === next.error &&
+    prev.selectedCurrency === next.selectedCurrency &&
+    prev.category.value === next.category.value &&
+    prev.isLoading === next.isLoading &&
+    prev.userMemberId === next.userMemberId &&
+    prev.isnonGroupExpense?.value === next.isnonGroupExpense?.value &&
+    prev.userId === next.userId &&
+    prev.isCreateExpense === next.isCreateExpense
+  );
+});
 
 export default MemberPicker2;

@@ -185,8 +185,8 @@ export function submitExpense({
 }
 
 export const createParticipantPickerArray = (
-  groupMembers: Signal<(Member | Guest)[]>,
-  nonGroupUsers: Signal<User[]>,
+  groupMembers: (Member | Guest)[],
+  nonGroupUsers: User[],
   expense: FormExpense | null,
   type: string,
   isCreateExpense: boolean,
@@ -194,8 +194,8 @@ export const createParticipantPickerArray = (
 ): PickerMember[] => {
   let array: PickerMember[] = [];
 
-  if (isnonGroupExpense && nonGroupUsers.value.length > 0) {
-    array = nonGroupUsers.value.map((user) => {
+  if (isnonGroupExpense && nonGroupUsers.length > 0) {
+    array = nonGroupUsers.map((user) => {
       const participant = expense?.participants.find(
         (p) => p.memberId === user?.userId
       );
@@ -230,7 +230,7 @@ export const createParticipantPickerArray = (
       };
     });
   } else { 
-    array = groupMembers.value.map((member) => {
+    array = groupMembers.map((member) => {
       const participant = expense?.participants.find(
         (p) => p.memberId === member?.id
       );    
@@ -274,8 +274,8 @@ export const createParticipantPickerArray = (
 };
 
 export const createPayerPickerArray = (
-  groupMembers: Signal<(Member | Guest)[]>,
-  nonGroupUsers: Signal<User[]>,
+  groupMembers: (Member | Guest)[],
+  nonGroupUsers: User[],
   expense: FormExpense | null,
   type: string,
   isCreateExpense: boolean,
@@ -285,8 +285,8 @@ export const createPayerPickerArray = (
 ): PickerMember[] => {
   let array: PickerMember[] = [];
 
-  if (isnonGroupExpense && nonGroupUsers.value.length > 0) {
-    array = nonGroupUsers.value.map((user) => {
+  if (isnonGroupExpense && nonGroupUsers.length > 0) {
+    array = nonGroupUsers.map((user) => {
       const payer = expense?.payers.find((p) => p.memberId === user?.userId);
       const actualAmount = payer?.paymentAmount ?? "";
       const isPercentageType = type === "Percentages";
@@ -318,7 +318,7 @@ export const createPayerPickerArray = (
       };
     });
   } else {
-    array = groupMembers.value.map((member) => {
+    array = groupMembers.map((member) => {
       const payer = expense?.payers.find((p) => p.memberId === member?.id);
       const actualAmount = payer?.paymentAmount ?? "";
       const isPercentageType = type === "Percentages";
@@ -353,7 +353,7 @@ export const createPayerPickerArray = (
   // Auto-select the current user as payer for new expense
   if (isCreateExpense) {
     const selectedId =
-      isnonGroupExpense && nonGroupUsers.value.length > 0
+      isnonGroupExpense && nonGroupUsers.length > 0
         ? userId
         : userMemberId;
     array = array.map((m) => ({
