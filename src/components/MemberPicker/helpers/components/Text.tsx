@@ -18,7 +18,7 @@ const Text = memo(
   }: TextProps) {
     const firstSelectedName = selectedMembers[0]?.name;
     return (
-      <StyledText error={error}>
+      <StyledText $error={error}>
         {description === "Participants" ? (
           selectedCount === 0 ? (
             ""

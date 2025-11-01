@@ -193,7 +193,7 @@ useEffect(() => {
 
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
-  const isDateShowing = useSignal<boolean>(false);
+  const isDateShowing = useSignal<boolean>(!isCreateExpense);
   const labelMenuIsOpen = useSignal<boolean>(false);
   const participantsCategory = useSignal<string>("Amounts");
   const payersCategory = useSignal<string>("Amounts");
@@ -496,7 +496,7 @@ const adjustParticipants = useMemo(() => {
       )}
 
       <LocationDisplay location={location} isMapOpen={isMapOpen} />
-      {(isDateShowing.value || !isCreateExpense) && (
+      {(isDateShowing.value) && (
         <DateDisplay
           selectedDateTime={expenseTime}
           timeZoneId={timeZoneId}

@@ -1,8 +1,6 @@
-import { useEffect, useLayoutEffect } from "react";
-
+import { useLayoutEffect } from "react";
 import currency from "currency.js";
 import { PickerMember } from "../../../types";
-import { amountIsValid } from "../../../helpers/amountIsValid";
 import { significantDigitsFromTicker } from "../../../helpers/openExchangeRates";
 import { Signal } from "@preact/signals-react";
 
