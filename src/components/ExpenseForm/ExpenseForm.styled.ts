@@ -118,6 +118,29 @@ export const StyledExpenseForm = styled.div`
         cursor:pointer;
 
       }
+      .definition{
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+        gap:5px;
+        .labelStyle{
+          background-color: #696e80;
+          color: white;
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          border-radius: 5px;
+          padding: 2px 8px;
+          font-size: 14px;
+          font-weight: 700;
+          .info{
+            display:flex;
+            flex-direction:row;
+            align-items:center;
+            gap:5px;
+          }
+        }
+      }
     }
 
 

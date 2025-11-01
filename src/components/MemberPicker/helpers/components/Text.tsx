@@ -8,15 +8,19 @@ interface TextProps {
   sortedMemberAmounts: PickerMember[];
   isEquallySplit: Signal<boolean>;
   category: Signal<string>;
+  error: string | undefined
 }
 const Text = ({
   description,
   selectedCount,
   sortedMemberAmounts,
   isEquallySplit,
+  error
 }: TextProps) => {
+
   return (
-    <StyledText>
+
+    <StyledText error={error}>
       {description === "Participants" ? (
         selectedCount === 0 ? (
           ""

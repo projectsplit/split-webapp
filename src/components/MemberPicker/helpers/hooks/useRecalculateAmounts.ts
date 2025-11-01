@@ -16,6 +16,7 @@ export const useRecalculateAmounts = (
   userId: string,
   groupMembers: Signal<(Member | Guest)[]>,
   nonGroupUsers: Signal<User[]>,
+  isCreateExpense:boolean,
    isnonGroupExpense?: Signal<boolean>
 ) => {
   useEffect(() => {
@@ -25,7 +26,8 @@ export const useRecalculateAmounts = (
         totalAmount,
         decimalDigits,
         category,
-        ticker
+        ticker,
+        isCreateExpense
       )
     );
 
@@ -45,7 +47,8 @@ export const useRecalculateAmounts = (
             totalAmount,
             decimalDigits,
             category,
-            ticker
+            ticker,
+            isCreateExpense
           )
         );
       }
@@ -66,7 +69,8 @@ export const useRecalculateAmounts = (
             totalAmount,
             decimalDigits,
             category,
-            ticker
+            ticker,
+            isCreateExpense
           )
         );
       }

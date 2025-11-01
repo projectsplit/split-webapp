@@ -13,7 +13,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   currency,
   isnonGroupExpense,
   nonGroupUsers,
-  
+  isCreateExpense
 }) => {
   if (!expense) {
     return <div>Error: Expense not found.</div>;
@@ -28,7 +28,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
       timeZoneId={timeZoneId}
       header="Edit Expense"
       selectedExpense={selectedExpense}
-      isCreateExpense={false}
+      isCreateExpense={isCreateExpense}
       isPersonal={isPersonal}
       currency={currency}
       groupMembers={groupMembers}

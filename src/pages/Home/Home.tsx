@@ -27,7 +27,7 @@ import useBudgetInfo from "../../api/services/useBudgetInfo";
 
 import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
 import { useOutletContext } from "react-router-dom";
-import { Signal, useSignal } from "@preact/signals-react";
+import { signal, Signal, useSignal } from "@preact/signals-react";
 import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
@@ -46,9 +46,9 @@ export default function Home() {
   const isNonGroupExpense = useSignal<boolean>(false);
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
-  const nonGroupUsers = useSignal<User[]>([]);
-  const nonGroupGroups = useSignal<Group[]>([])
 
+  const nonGroupUsers = useSignal<User[]>([]);
+  const nonGroupGroups = useSignal<Group[]>([]);
   const groupMembers = useSignal<(Guest | Member)[]>([]);
   const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
@@ -87,6 +87,27 @@ export default function Home() {
   useEffect(() => {
     topMenuTitle.value = "";
   }, []);
+
+  useEffect(() => {
+    if (isNonGroupExpense.value) {
+      const saved = localStorage.getItem("nonGroupExpenseData");
+      if (saved) {
+        const {
+          nonGroupUsers: u,
+          nonGroupGroups: g,
+          groupMembers: m,
+        } = JSON.parse(saved);
+        nonGroupUsers.value = u ?? [];
+        nonGroupGroups.value = g ?? [];
+        groupMembers.value = m ?? [];
+        isPersonal.value = false;
+      }
+    } else {
+      nonGroupUsers.value = [];
+      nonGroupGroups.value = [];
+      groupMembers.value = [];
+    }
+  }, [isNonGroupExpense.value]);
 
   const isGlowing = quickActionsMenu.value === "quickActions";
 
@@ -201,6 +222,7 @@ export default function Home() {
 
       {quickActionsMenu.value === "newExpense" && (
         <CreateExpenseForm
+          groupId={nonGroupGroups?.value[0]?.id}
           expense={null}
           timeZoneId={userInfo.timeZone}
           menu={quickActionsMenu}

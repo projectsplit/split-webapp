@@ -1,7 +1,6 @@
 import { amountIsValid } from "../../helpers/amountIsValid";
 import {
   ExpenseRequest,
-  ExpenseResponseItem,
   FormExpense,
   GeoLocation,
   Guest,
@@ -58,7 +57,6 @@ export function submitExpense({
   payersCategory: Signal<string>;
 }) {
   setShowAmountError(true);
-
   if (participantsCategory.value === "Shares") {
     participants.map((p) => {
       if (p.actualAmount === "0.00") {
@@ -222,9 +220,8 @@ export const createParticipantPickerArray = (
         id: user.userId,
         actualAmount,
         screenQuantity,
-        locked:
-          expense?.participants.some((p) => p.memberId === user.userId) ??
-          false,
+        locked: expense?.participants.some((p) => p.memberId === user.userId) ??
+            false,
         name: user.username,
         order: 0,
         selected:
@@ -232,11 +229,11 @@ export const createParticipantPickerArray = (
           false,
       };
     });
-  } else {
+  } else { 
     array = groupMembers.value.map((member) => {
       const participant = expense?.participants.find(
         (p) => p.memberId === member?.id
-      );
+      );    
       const actualAmount = participant?.participationAmount ?? "";
       const isPercentageType = type === "Percentages";
       const isSharesType = type === "Shares";
@@ -258,7 +255,7 @@ export const createParticipantPickerArray = (
         id: member.id,
         actualAmount,
         screenQuantity,
-        locked:
+        locked: 
           expense?.participants.some((p) => p.memberId === member.id) ?? false,
         name: member.name,
         order: 0,

@@ -18,6 +18,7 @@ import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackgr
 import ParticipantsPayersAnimation from "../Menus/MenuAnimations/ParticipantsPayersAnimation";
 import { handleDoneClick } from "./helpers/handleDoneClick";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
+import { errorSettingFn } from "./helpers/errorSettingFn";
 
 const MemberPicker2 = ({
   memberAmounts,
@@ -33,6 +34,8 @@ const MemberPicker2 = ({
   userId,
   groupMembers,
   nonGroupUsers,
+  isLoading,
+  isCreateExpense,
 }: MemberPickerProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -44,7 +47,6 @@ const MemberPicker2 = ({
   const [decimalDigits, setDecimalDigits] = useState<number>(2);
 
   renderCounter.current++;
-
   const clickOutsideListener = (event: MouseEvent) => {
     if (
       dropdownRef.current &&
@@ -67,6 +69,18 @@ const MemberPicker2 = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (isCreateExpense) return;
+    errorSettingFn(
+      description,
+      memberAmounts,
+      setError,
+      errorMenu,
+      selectedCurrency,
+      totalAmount
+    );
+  }, [totalAmount]);
+
   useRecalculateAmounts(
     memberAmounts,
     setMemberAmounts,
@@ -80,16 +94,18 @@ const MemberPicker2 = ({
     userId,
     groupMembers,
     nonGroupUsers,
+    isCreateExpense,
     isnonGroupExpense
   );
 
   useEffect(() => {
+    if (isLoading) return;
     isEquallySplit.value = isEquallySplitFn(
       memberAmounts,
       totalAmount,
       decimalDigits
     );
-  }, [memberAmounts]);
+  }, [memberAmounts, totalAmount]);
 
   const selectMember = (selectedId: string): void => {
     const newFormMembers = memberAmounts.map((m) => {
@@ -105,7 +121,8 @@ const MemberPicker2 = ({
         totalAmount,
         decimalDigits,
         category,
-        selectedCurrency
+        selectedCurrency,
+        isCreateExpense
       )
     );
   };
@@ -137,7 +154,8 @@ const MemberPicker2 = ({
         totalAmount,
         decimalDigits,
         category,
-        selectedCurrency
+        selectedCurrency,
+        isCreateExpense
       )
     );
   };
@@ -147,7 +165,6 @@ const MemberPicker2 = ({
     id: string
   ): void => {
     e.stopPropagation();
-
     const newFormMembers = memberAmounts.map((m) => {
       if (m.id === id) {
         return { ...m, locked: !m.locked };
@@ -160,7 +177,8 @@ const MemberPicker2 = ({
         totalAmount,
         decimalDigits,
         category,
-        selectedCurrency
+        selectedCurrency,
+        isCreateExpense
       )
     );
   };
@@ -180,7 +198,8 @@ const MemberPicker2 = ({
           totalAmount,
           decimalDigits,
           category,
-          selectedCurrency
+          selectedCurrency,
+          isCreateExpense
         )
       );
       return;
@@ -228,7 +247,8 @@ const MemberPicker2 = ({
         totalAmount,
         decimalDigits,
         category,
-        selectedCurrency
+        selectedCurrency,
+        isCreateExpense
       )
     );
   };
@@ -271,7 +291,8 @@ const MemberPicker2 = ({
         totalAmount,
         decimalDigits,
         category,
-        selectedCurrency
+        selectedCurrency,
+        isCreateExpense
       )
     );
   };
@@ -283,17 +304,18 @@ const MemberPicker2 = ({
         totalAmount,
         decimalDigits,
         category,
-        selectedCurrency
+        selectedCurrency,
+        isCreateExpense
       )
     );
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const sortedMemberAmounts = [...memberAmounts].sort((a, b) => {
-    if (a.id === userMemberId) return -1;
-    if (b.id === userMemberId) return 1;
-    return 0;
-  });
+  const sortedMemberAmounts = useMemo(() => {
+    return [...memberAmounts].sort(
+      (a, b) => Number(b.selected) - Number(a.selected)
+    );
+  }, [memberAmounts]);
 
   const memoizedHandleDoneClick = useCallback(() => {
     handleDoneClick(
@@ -342,6 +364,7 @@ const MemberPicker2 = ({
           selectedCount={selectedCount}
           sortedMemberAmounts={sortedMemberAmounts}
           category={category}
+          error={error}
         />
       </div>
       {isMenuOpen && (
@@ -387,9 +410,9 @@ const MemberPicker2 = ({
               .map((m) => (
                 <div key={m.id} className="selected option">
                   <NameAndAmounts
-                  description={description}
+                    description={description}
                     isnonGroupExpense={isnonGroupExpense}
-                    userId = {userId}
+                    userId={userId}
                     category={category}
                     m={m}
                     onClick={() => deselectMember(m.id)}

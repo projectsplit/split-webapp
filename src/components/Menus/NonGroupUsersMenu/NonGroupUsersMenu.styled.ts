@@ -123,7 +123,6 @@ export const StyledNonGroupUsersMenu = styled.div<{
         padding: 8px 16px;
         flex-wrap: wrap;
         position: relative;
-
         .selected-label {
           color: #000000a2;
           display: flex;
@@ -138,7 +137,7 @@ export const StyledNonGroupUsersMenu = styled.div<{
             display:flex;
             flex-direction:row;
             align-items:center;
-            gap:2px;
+            gap:5px;
           }
         }
 

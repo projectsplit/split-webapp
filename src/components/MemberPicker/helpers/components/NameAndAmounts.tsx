@@ -18,7 +18,6 @@ export const NameAndAmounts = ({
     isnonGroupExpense.value &&
     m.id === userId &&
     description === "Participants";
-
   return (
     <>
       {category.value === "Shares" || category.value === "Percentages" ? (

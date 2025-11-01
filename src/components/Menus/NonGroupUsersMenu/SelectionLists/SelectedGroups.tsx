@@ -23,7 +23,7 @@ export const SelectedGroups = React.memo(
       >
         <div className="info">
           <TiGroup />
-          All of : {group.name}
+          {group.name}
         </div>
 
         <IoClose />

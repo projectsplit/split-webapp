@@ -171,6 +171,8 @@ export interface MemberPickerProps {
   userId: string;
    groupMembers: Signal<(Member | Guest)[]>;
   nonGroupUsers: Signal<User[]>;
+  isLoading:boolean,
+  isCreateExpense:boolean
 }
 
 export interface DayPickerProps {
@@ -452,7 +454,7 @@ export interface ExpenseFormProps {
   groupMembers: Signal<(Member | Guest)[]>;
   nonGroupUsers: Signal<User[]>;
   groupId?: string;
-  expense: FormExpense | null;
+  expense: FormExpense | null;//make this signal, and then make null when toggling a lock so it does not use prev expense any more
   timeZoneId: string;
   menu: Signal<string | null>;
   timeZoneCoordinates: Coordinates;

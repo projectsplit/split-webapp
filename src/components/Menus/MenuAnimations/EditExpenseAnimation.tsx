@@ -2,6 +2,7 @@ import { CSSTransition } from "react-transition-group";
 import { NewExpenseAnimationProps } from "../../../interfaces";
 import EditExpenseForm from "../../EditExpenseForm/EditExpenseForm";
 
+
 export default function EditExpenseAnimation({
   groupId,
   timeZoneId,

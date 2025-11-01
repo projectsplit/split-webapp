@@ -6,27 +6,28 @@ import { distributeRemainderCentsForShares } from "./distributeRemainderCentsFor
 import { significantDigitsFromTicker } from "../../../helpers/openExchangeRates";
 import { removeCommas } from "../../../helpers/removeCommas";
 
-
 export const recalculateAmounts = (
   formMembers: PickerMember[],
   totalAmount: number,
   decimalDigits: number,
   category: Signal<string>,
-  ticker: string
+  ticker: string,
+  isCreateExpense: boolean
 ): PickerMember[] => {
-
   const getCleanActual = (sq: string) => {
     const clean = removeCommas(sq);
-    if (clean === '' || clean === '.') {
-      return '0';
-    } else if (clean.startsWith('.')) {
-      return '0' + clean;
+    if (clean === "" || clean === ".") {
+      return "0";
+    } else if (clean.startsWith(".")) {
+      return "0" + clean;
     }
     return clean;
   };
 
   const synchronizedFormMembers = formMembers.map((m) =>
-    m.locked && m.selected ? { ...m, actualAmount: getCleanActual(m.screenQuantity) } : m
+    m.locked && m.selected
+      ? { ...m, actualAmount: getCleanActual(m.screenQuantity) }
+      : m
   );
 
   const lockedSelectedMembers = synchronizedFormMembers.filter(
@@ -50,6 +51,7 @@ export const recalculateAmounts = (
         unlockedSelectedMembers.length,
         decimalDigits
       );
+  
       actualAmountsArray = [...screenArray];
       return synchronizedFormMembers.map((m) => {
         if (m.selected && !m.locked) {
@@ -58,8 +60,8 @@ export const recalculateAmounts = (
             ...m,
             screenQuantity: formatCurrency(screenValue, ticker),
             //screenQuantity:screenValue,
-            actualAmount:
-              actualAmountsArray.shift()?.toFixed(decimalDigits) || "",
+            actualAmount:screenValue
+              // actualAmountsArray.shift()?.toFixed(decimalDigits) || "",
           };
         }
         return m;
@@ -116,9 +118,15 @@ export const recalculateAmounts = (
     case "Shares":
       const totalShares = synchronizedFormMembers.reduce(
         (sum, member) =>
-          sum + (member.screenQuantity && member.selected ? Number(member.screenQuantity) : 0),
+          sum +
+          (member.screenQuantity && member.selected
+            ? Number(member.screenQuantity)
+            : 0),
         0
       );
+      if (totalShares === 0 && !isCreateExpense) {
+        return synchronizedFormMembers.map((m) => ({ ...m, actualAmount: "" }));
+      }
       if (totalShares === 0) {
         return synchronizedFormMembers;
       }
@@ -130,7 +138,9 @@ export const recalculateAmounts = (
 
       return synchronizedFormMembers.map((m) => {
         if (m.selected) {
-          const adjustedMember = adjustedToOriginalAmount.find((a) => a.id === m.id);
+          const adjustedMember = adjustedToOriginalAmount.find(
+            (a) => a.id === m.id
+          );
           return {
             ...m,
             actualAmount: adjustedMember ? adjustedMember.amount : "",
@@ -150,9 +160,9 @@ export const recalculateAmounts = (
 };
 
 function formatCurrency(value: string, ticker: string): string {
-  let sign = '';
-  if (value.startsWith('-')) {
-    sign = '-';
+  let sign = "";
+  if (value.startsWith("-")) {
+    sign = "-";
     value = value.slice(1);
   }
 
@@ -164,7 +174,10 @@ function formatCurrency(value: string, ticker: string): string {
     if (decimalPoints === 0) {
       formattedValue = formattedValue.slice(0, decimalIndex);
     } else {
-      formattedValue = formattedValue.slice(0, decimalIndex + decimalPoints + 1);
+      formattedValue = formattedValue.slice(
+        0,
+        decimalIndex + decimalPoints + 1
+      );
     }
   }
 
@@ -176,10 +189,10 @@ function formatCurrency(value: string, ticker: string): string {
     formattedValue = formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  if (formattedValue.startsWith('0.') && formattedValue.length > 2) {
+  if (formattedValue.startsWith("0.") && formattedValue.length > 2) {
     formattedValue = formattedValue.slice(1);
-  } else if (formattedValue === '0.') {
-    formattedValue = '.';
+  } else if (formattedValue === "0.") {
+    formattedValue = ".";
   }
 
   return sign + formattedValue;
