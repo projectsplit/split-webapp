@@ -49,6 +49,5 @@ export const useEditExpense = (
 };
 
 const editExpense = async (req: ExpenseRequest): Promise<void> => {
-    console.log(req)
   await apiClient.post<void, AxiosResponse<void>>("/expenses/edit", req);
 };

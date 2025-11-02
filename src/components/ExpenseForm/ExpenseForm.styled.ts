@@ -98,7 +98,10 @@ export const StyledExpenseForm = styled.div`
     }
   }
 
- 
+  .errorsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     .textStyleInfo {
       text-align: center;
       display: flex;
@@ -110,20 +113,19 @@ export const StyledExpenseForm = styled.div`
       flex-direction: column;
       align-items: center;
     } */
-      .editButton{
-        display:flex;
-        align-self:center;
-        font-size:25px;
-        margin-left:20px;
-        cursor:pointer;
-
+      .editButton {
+        display: flex;
+        align-self: center;
+        font-size: 25px;
+        margin-left: 20px;
+        cursor: pointer;
       }
-      .definition{
-        display:flex;
-        flex-direction:row;
-        align-items:center;
-        gap:5px;
-        .labelStyle{
+      .definition {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
+        .labelStyle {
           background-color: #696e80;
           color: white;
           display: flex;
@@ -133,16 +135,26 @@ export const StyledExpenseForm = styled.div`
           padding: 2px 8px;
           font-size: 14px;
           font-weight: 700;
-          .info{
-            display:flex;
-            flex-direction:row;
-            align-items:center;
-            gap:5px;
+          .info {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 5px;
           }
         }
       }
     }
-
+    .errors {
+      .errorMsg {
+        display: flex;
+        justify-content: center;
+        word-wrap: break-word;
+        font-size: 12px;
+        color: ${({ theme }) => theme.errorColor};
+        font-weight: 400;
+      }
+    }
+  }
 
   .shareExpenseOption {
     text-align: center;

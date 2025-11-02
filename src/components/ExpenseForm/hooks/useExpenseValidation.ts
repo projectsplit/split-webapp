@@ -85,9 +85,9 @@ export function useExpenseValidation({
           return prev === "" ? prev : "";
         }
         const newError = !areParticipantsNumbersValid
-          ? "Amounts must be positive"
+          ? "Participation amounts must be positive"
           : isParticipantsSumInvalid
-          ? "Amounts must add up to total"
+          ? "Participation amounts must add up to total"
           : "";
         return prev === newError ? prev : newError;
       });
@@ -96,9 +96,9 @@ export function useExpenseValidation({
           return prev === "" ? prev : "";
         }
         const newError = !arePayersNumbersValid
-          ? "Amounts must be positive"
+          ? "Payment amounts must be positive"
           : isPayersSumInvalid
-          ? "Amounts must add up to total"
+          ?"Payment amounts must add up to total"
           : "";
         return prev === newError ? prev : newError;
       });
