@@ -198,8 +198,6 @@ useEffect(() => {
   const participantsCategory = useSignal<string>("Amounts");
   const payersCategory = useSignal<string>("Amounts");
 
-  // const members = group?.members;
-
   const participants =
     participantsByCategory[
       participantsCategory.value as keyof typeof participantsByCategory
