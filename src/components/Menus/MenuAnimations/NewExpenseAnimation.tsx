@@ -6,18 +6,27 @@ import { NewExpenseAnimationProps } from "../../../interfaces";
 import { useRef } from "react";
 
 export default function NewExpenseAnimation({
-  group,
+  groupId,
   timeZoneId,
   menu,
   timeZoneCoordinates,
   isPersonal,
-  selectedExpense
+  selectedExpense,
+  groupMembers,
+  currency,
+  nonGroupUsers,
+  isnonGroupExpense
 }: NewExpenseAnimationProps) {
-    const nodeRef = useRef(null);
+  const nodeRef = useRef(null);
   return (
-    <CSSTransition in={menu.value === "newExpense"} timeout={0} unmountOnExit nodeRef={nodeRef}>
+    <CSSTransition
+      in={menu.value === "newExpense"}
+      timeout={0}
+      unmountOnExit
+      nodeRef={nodeRef}
+    >
       <CreateExpenseForm
-        group={group}
+        groupId={groupId}
         expense={null}
         timeZoneId={timeZoneId}
         menu={menu}
@@ -26,6 +35,10 @@ export default function NewExpenseAnimation({
         isCreateExpense={true}
         selectedExpense={selectedExpense}
         isPersonal={isPersonal}
+        groupMembers={groupMembers}
+        currency={currency}
+        nonGroupUsers={nonGroupUsers}
+        isnonGroupExpense={isnonGroupExpense}
       />
     </CSSTransition>
   );

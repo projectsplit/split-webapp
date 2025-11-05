@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import { Signal, useSignal } from "@preact/signals-react";
+import { signal, Signal, useSignal } from "@preact/signals-react";
 import {
   ExpenseParsedFilters,
   ExpenseResponseItem,
@@ -103,7 +103,7 @@ export default function Group() {
     }
   }, [isError, groupError.value, navigate]);
 
-  
+
   return (
     <StyledGroup>
       {isFetching ? (
@@ -138,12 +138,16 @@ export default function Group() {
           {group && (
             <NewExpenseAnimation
               expense={null}
-              group={group}
+              groupId={group.id}
               timeZoneId={timeZoneId}
               menu={menu}
               selectedExpense={selectedExpense}
               timeZoneCoordinates={timeZoneCoordinates}
-              isPersonal={false}
+              isPersonal={signal(false)}
+              currency={group.currency}
+              groupMembers={signal([...group.members,...group.guests])}
+              isnonGroupExpense={signal(false)}
+              nonGroupUsers={signal([])}
             />
           )}
           {group && (

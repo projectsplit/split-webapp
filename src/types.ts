@@ -24,7 +24,6 @@ export type PasswordSignUpResponse = {
   accessToken: string;
 };
 
-
 export type SendGoogleCodeRequest = {
   code: string;
 };
@@ -42,6 +41,7 @@ export type UserInfo = {
   hasNewerNotifications: boolean;
   currency: string;
 };
+
 
 export type ExpenseItem = {
   id: string;
@@ -147,23 +147,11 @@ export type Payment = {
 };
 
 export type GetGroupsResponse = {
-  groups: GetGroupsResponseItem[];
+  groups: Group[];
   next: string | null;
 };
 
-export type GetGroupsResponseItem = {
-  id: string;
-  created: Date;
-  updated: Date;
-  ownerId: string;
-  name: string;
-  currency: string;
-  members: Member[];
-  guests: Guest[];
-  labels: Label[];
-  isArchived: boolean;
-  
-};
+export type GetGroupsResponseItem = Group;
 
 export type SearchUserToInviteResponse = {
   users: SearchUserToInviteResponseItem[];
@@ -195,6 +183,11 @@ export type Member = {
   name: string;
   userId: string;
   joined: Date;
+};
+
+export type User = {
+  userId: string;
+  username: string;
 };
 
 export type TruncatedMember = {
@@ -445,7 +438,7 @@ export type GetUserInvitationsResponseItem = {
   groupId: string;
   groupName: string;
   guestId: string | null;
-  guestName:string| null
+  guestName: string | null;
 };
 
 export type DeleteExpenseRequest = {
@@ -540,7 +533,8 @@ export type GroupedItem = {
   [key: string]: FilteredResultItem[]; // Groups items under keys by `prop`
 };
 
-export type CreateExpenseFilterRequest = {//Do not change
+export type CreateExpenseFilterRequest = {
+  //Do not change
   groupId: string;
   participantsIds: string[];
   payersIds: string[];
@@ -562,7 +556,8 @@ export type ExpenseFilter = {
   labels: string[];
 };
 
-export type CreateTransferFilterRequest = { //Do not change
+export type CreateTransferFilterRequest = {
+  //Do not change
   groupId: string;
   receiversIds: string[];
   sendersIds: string[];
@@ -633,29 +628,27 @@ export type TransferFilterResponse = {
   freeText: string;
 };
 
-export type ExpenseParsedFilters= {
+export type ExpenseParsedFilters = {
   participantsIds?: string[];
   payersIds?: string[];
   freeText?: string;
   before?: string | null;
   after?: string | null;
   labels?: string[];
-}
+};
 
-export type TransferParsedFilters= {
+export type TransferParsedFilters = {
   sendersIds?: string[];
   receiversIds?: string[];
   freeText?: string;
   before?: string | null;
   after?: string | null;
-
-}
+};
 
 export type DateConstraint = {
   trigger: "before:" | "after:" | "during:";
-  value: string; 
+  value: string;
 };
-
 
 export type GetTotalLentTotalBorrowedResponse = {
   totalBorrowed: number[];
@@ -703,4 +696,3 @@ export type SpendingChartsResponseItem = {
   from: Date;
   to: Date;
 };
-

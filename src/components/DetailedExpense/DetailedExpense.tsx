@@ -9,7 +9,7 @@ import Pill from "../Pill/Pill";
 import { DateOnly, TimeOnly, YearOnly } from "../../helpers/timeHelpers";
 import MapsInfoBox from "./MapsInfoBox/MapsInfoBox";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
-import { useSignal } from "@preact/signals-react";
+import { signal, useSignal } from "@preact/signals-react";
 import DeleteExpenseAnimation from "../Menus/MenuAnimations/DeleteExpenseAnimation";
 import { FormExpense, GeoLocation } from "../../types";
 import EditExpenseAnimation from "../Menus/MenuAnimations/EditExpenseAnimation";
@@ -213,11 +213,16 @@ export default function DetailedExpense({
       />
       <EditExpenseAnimation
         expense={expenseToEdit || null}
-        group={group}
+        groupId={group.id}
         timeZoneId={timeZoneId}
         menu={menu}
         selectedExpense={selectedExpense}
         timeZoneCoordinates={timeZoneCoordinates}
+        currency={group.currency}
+        groupMembers={signal([...group.members,...group.guests])}
+        nonGroupUsers={signal([])}//these are group expenses. Will have to differentiate between group x non group x personal (all that refer to user)
+        isPersonal={signal(false)}
+
       />
     </StyledDetailedExpense>
   );

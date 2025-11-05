@@ -11,8 +11,12 @@ import { useTheme } from "styled-components";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import {
   ExpenseResponseItem,
+  Group,
   GroupsAllBalancesResponse,
+  Guest,
+  Member,
   MostRecentGroupDetailsResponse,
+  User,
   UserInfo,
 } from "../../types";
 import {
@@ -23,7 +27,7 @@ import useBudgetInfo from "../../api/services/useBudgetInfo";
 
 import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
 import { useOutletContext } from "react-router-dom";
-import { Signal, useSignal } from "@preact/signals-react";
+import { signal, Signal, useSignal } from "@preact/signals-react";
 import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
@@ -33,14 +37,19 @@ import HomeQuickActionsAnimation from "../../components/Menus/MenuAnimations/Hom
 import useGroup from "../../api/services/useGroup";
 import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
 import NonGroupUsersAnimation from "../../components/Menus/MenuAnimations/NonGroupUsersAnimation";
+import CreateExpenseForm from "../../components/CreateExpenseForm/CreateExpenseForm";
 
 export default function Home() {
   const navigate = useNavigate();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
-  const isPersonal = useSignal<boolean>(false);
+  const isPersonal = useSignal<boolean>(true);
+  const isNonGroupExpense = useSignal<boolean>(false);
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
 
+  const nonGroupUsers = useSignal<User[]>([]);
+  const nonGroupGroups = useSignal<Group[]>([]);
+  const groupMembers = useSignal<(Guest | Member)[]>([]);
   const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
@@ -49,6 +58,7 @@ export default function Home() {
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
   const menu = useSignal<string | null>(null);
+  const nonGroupMenu = useSignal<string | null>(null);
   const quickActionsMenu = useSignal<string | null>(null);
   const recentGroupId = userInfo?.recentGroupId;
 
@@ -78,20 +88,28 @@ export default function Home() {
     topMenuTitle.value = "";
   }, []);
 
-  const isArchived = mostRecentGroupData?.isArchived;
-  // isFetching:mostRecentGroupDataIsFetching, isLoading:mostRecentGroupDataIsLoading
-  // const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
+  useEffect(() => {
+    if (isNonGroupExpense.value) {
+      const saved = localStorage.getItem("nonGroupExpenseData");
+      if (saved) {
+        const {
+          nonGroupUsers: u,
+          nonGroupGroups: g,
+          groupMembers: m,
+        } = JSON.parse(saved);
+        nonGroupUsers.value = u ?? [];
+        nonGroupGroups.value = g ?? [];
+        groupMembers.value = m ?? [];
+        isPersonal.value = true;
+      }
+    } else {
+      nonGroupUsers.value = [];
+      nonGroupGroups.value = [];
+      groupMembers.value = [];
+    }
+  }, [isNonGroupExpense.value]);
 
-  //TODO need to be able to get the personal group id. If expenses are to be submitted without the group then this can be discarded.
-
-  const {
-    data: group,
-    isFetching: groupIsFetching,
-    isError,
-    error,
-  } = useGroup("f7637b50-e77d-4609-9e38-eb0acc9c9c51");
-
-const isGlowing = quickActionsMenu.value === "quickActions";
+  const isGlowing = quickActionsMenu.value === "quickActions";
 
   return (
     <StyledHomepage>
@@ -201,23 +219,37 @@ const isGlowing = quickActionsMenu.value === "quickActions";
         </>
       )}
       <MenuAnimationBackground menu={quickActionsMenu} />
-      {group && (
-        <NewExpenseAnimation
+
+      {quickActionsMenu.value === "newExpense" && (
+        <CreateExpenseForm
+          groupId={nonGroupGroups?.value[0]?.id}
           expense={null}
-          group={group}
-          timeZoneId={timeZoneId}
+          timeZoneId={userInfo.timeZone}
           menu={quickActionsMenu}
-          selectedExpense={selectedExpense}
-          timeZoneCoordinates={timeZoneCoordinates}
-          isPersonal={isPersonal.value}
+          timeZoneCoordinates={userInfo.timeZoneCoordinates}
+          header="Create New Expense"
+          isCreateExpense={true}
+          isPersonal={isPersonal}
+          isnonGroupExpense={isNonGroupExpense}
+          groupMembers={groupMembers}
+          currency={userInfo.currency}
+          nonGroupUsers={nonGroupUsers}
+          nonGroupMenu={nonGroupMenu}
+          nonGroupGroups={nonGroupGroups}
         />
       )}
 
       <HomeQuickActionsAnimation
         menu={quickActionsMenu}
-        isPersonal={isPersonal}
+        isNonGroupExpense={isNonGroupExpense}
       />
-      <NonGroupUsersAnimation menu={quickActionsMenu} />
+      <NonGroupUsersAnimation
+        menu={nonGroupMenu}
+        nonGroupUsers={nonGroupUsers}
+        isPersonal={isPersonal}
+        groupMembers={groupMembers}
+        nonGroupGroups={nonGroupGroups}
+      />
     </StyledHomepage>
   );
 }

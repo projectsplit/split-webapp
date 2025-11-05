@@ -1,33 +1,39 @@
-
 import { EditExpenseFormProps } from "../../interfaces";
 import ExpenseForm from "../ExpenseForm/ExpenseForm";
 
-
 const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
-  group,
+  groupId,
   expense,
   timeZoneId,
   menu,
   selectedExpense,
   timeZoneCoordinates,
-  isPersonal
+  isPersonal,
+  groupMembers,
+  currency,
+  isnonGroupExpense,
+  nonGroupUsers,
+  isCreateExpense
 }) => {
-
   if (!expense) {
     return <div>Error: Expense not found.</div>;
   }
-  
+
   return (
     <ExpenseForm
       expense={expense}
-      group={group}
+      groupId={groupId}
       menu={menu}
       timeZoneCoordinates={timeZoneCoordinates}
       timeZoneId={timeZoneId}
       header="Edit Expense"
       selectedExpense={selectedExpense}
-      isCreateExpense={false}
+      isCreateExpense={isCreateExpense}
       isPersonal={isPersonal}
+      currency={currency}
+      groupMembers={groupMembers}
+      isnonGroupExpense={isnonGroupExpense}
+      nonGroupUsers={nonGroupUsers}
     />
   );
 };

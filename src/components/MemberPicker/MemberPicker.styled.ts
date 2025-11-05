@@ -120,19 +120,37 @@ export const StyledMemberPicker = styled.div<{
       overflow: auto;
       .textAndCheck {
         display: flex;
-        flex-direction: row;
+        justify-content: start;
         gap: 10px;
         align-items: center;
+
         .nameAndAmount {
           display: flex;
           flex-direction: column;
+          .name {
+            display: flex;
+            justify-content: start;
+          }
           .amount {
+            display: flex;
+            justify-content: start;
             font-size: 12px;
           }
         }
       }
     }
-
+    .checkmarkAndLock {
+      position: relative;
+      display: inline-block;
+      .locked-icon {
+        position: absolute;
+        font-size: 18px;
+        color: #ffb700ff;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
     .selected {
       background-color: ${({ theme }) => theme.backgroundcolor};
       color: ${({ theme }) => theme.textActiveColor};
@@ -151,10 +169,8 @@ export const StyledMemberPicker = styled.div<{
       border-radius: 3px;
       cursor: pointer;
       .checkmark {
-        position: absolute;
         font-size: 25px;
-        bottom: 0px;
-        color: ${({ theme }) => theme.highlightColor};
+        color: white;
       }
     }
 
@@ -228,6 +244,35 @@ export const StyledMemberPicker = styled.div<{
     }
     .spacer {
       flex-grow: 1; /* This pushes the button to the bottom */
+    }
+    .text {
+      color: ${({ theme }) => theme.textInactiveColor};
+    }
+    .remainders {
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      
+      .checkmark {
+        font-size: 25px;
+        bottom: 0px;
+        color: ${({ theme }) => theme.green};
+      }
+      .firstRow {
+        display:flex;
+        flex-direction:row;
+        justify-content:center;
+        align-items:center;
+        gap:5px;
+      }
+      .secondRow {
+        .redText {
+          color: ${({ theme }) => theme.redish};
+        }
+        .greenText {
+          color: ${({ theme }) => theme.green};
+        }
+      }
     }
   }
 `;

@@ -26,6 +26,9 @@ import {
   BudgetInfoResponse,
   GetJoinCodesResponse,
   SpendingChartsResponse,
+  Member,
+  Guest,
+  User,
 } from "./types";
 import { Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
@@ -164,6 +167,12 @@ export interface MemberPickerProps {
   category: Signal<string>;
   userMemberId: string | undefined;
   setError: React.Dispatch<React.SetStateAction<string>>;
+  isnonGroupExpense?: Signal<boolean>;
+  userId: string;
+   groupMembers: Signal<(Member | Guest)[]>;
+  nonGroupUsers: Signal<User[]>;
+  isLoading:boolean,
+  isCreateExpense:boolean
 }
 
 export interface DayPickerProps {
@@ -348,14 +357,14 @@ export interface TimeZoneOptionsAnimationProps {
 export interface LabelPickerProps {
   labels: Label[];
   setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
-  groupId: string;
+  groupId?: string;
 }
 
 export interface LabelMenuProps {
   labelMenuIsOpen: Signal<boolean>;
   labels: Label[];
   setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
-  groupId: string;
+  groupId?: string;
 }
 
 export interface BottomMenuProps {
@@ -422,13 +431,17 @@ export interface ToggleSwitchProps {
 }
 
 export interface NewExpenseAnimationProps {
-  group: Group;
+  groupId?: string;
   expense: FormExpense | null;
   timeZoneId: string;
   menu: Signal<string | null>;
   selectedExpense?: Signal<ExpenseResponseItem | null>;
   timeZoneCoordinates: Coordinates;
-  isPersonal?: boolean;
+  isPersonal: Signal<boolean>;
+  groupMembers: Signal<(Member | Guest)[]>;
+  currency: string;
+  isnonGroupExpense?: Signal<boolean>;
+  nonGroupUsers: Signal<User[]>;
 }
 
 export interface NewTransferAnimationProps {
@@ -438,15 +451,21 @@ export interface NewTransferAnimationProps {
 }
 
 export interface ExpenseFormProps {
-  group: Group;
-  expense: FormExpense | null;
+  groupMembers: Signal<(Member | Guest)[]>;
+  nonGroupUsers: Signal<User[]>;
+  groupId?: string;
+  expense: FormExpense | null;//make this signal, and then make null when toggling a lock so it does not use prev expense any more
   timeZoneId: string;
   menu: Signal<string | null>;
   timeZoneCoordinates: Coordinates;
   header: string;
   selectedExpense?: Signal<ExpenseResponseItem | null>;
   isCreateExpense: boolean;
-  isPersonal?: boolean;
+  isPersonal: Signal<boolean>;
+  isnonGroupExpense?:Signal<boolean>;
+  currency: string;
+  nonGroupMenu?: Signal<string | null>;
+  nonGroupGroups?:Signal<Group[]>
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
@@ -462,10 +481,21 @@ export interface TransferFormProps {
 
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
 export interface HomeQuickActionsAnimationProps extends MenuProps {
-  isPersonal: Signal<boolean>;
+  isNonGroupExpense: Signal<boolean>;
 }
-export interface NonGroupUsersAnimationProps extends MenuProps {}
-export interface NonGroupUsersProps extends MenuProps {}
+export interface NonGroupUsersAnimationProps extends MenuProps {
+  nonGroupUsers: Signal<User[]>;
+  isPersonal: Signal<boolean>;
+  groupMembers: Signal<(Guest | Member)[]>;
+  nonGroupGroups:Signal<Group[]>
+}
+
+export interface NonGroupUsersProps extends MenuProps {
+  nonGroupUsers: Signal<User[]>;
+  isPersonal: Signal<boolean>;
+  groupMembers: Signal<(Guest | Member)[]>;
+  nonGroupGroups:Signal<Group[]>
+}
 export interface LocationPickerAnimationProps extends MenuProps {
   location: GeoLocation | undefined;
   setLocation: React.Dispatch<React.SetStateAction<GeoLocation | undefined>>;
@@ -476,7 +506,7 @@ export interface UserItemProps {
 }
 export interface GroupQuickActionsMenuprops extends MenuProps {}
 export interface HomeQuickActionsMenuprops extends MenuProps {
-  isPersonal: Signal<boolean>;
+  isNonGroupExpense: Signal<boolean>;
 }
 export interface DeleteExpenseAnimationProps extends MenuProps {
   description: string;
@@ -800,6 +830,9 @@ export interface NameAndAmountsProps {
   m: PickerMember;
   onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
   currency: string;
+  isnonGroupExpense:Signal<boolean> | undefined
+  userId:string
+  description:string;
 }
 
 export interface CurrentSearchFieldProps {
