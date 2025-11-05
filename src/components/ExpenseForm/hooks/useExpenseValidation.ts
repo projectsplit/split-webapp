@@ -14,6 +14,7 @@ export function useExpenseValidation({
   setShowAmountError,
   participantsCategory,
   payersCategory,
+  isSubmitting
 }: {
   amount: string;
   participants: PickerMember[];
@@ -24,8 +25,10 @@ export function useExpenseValidation({
   setShowAmountError: React.Dispatch<React.SetStateAction<boolean>>;
   participantsCategory: Signal<string>;
   payersCategory: Signal<string>;
+  isSubmitting: Signal<boolean>
 }) {
   useLayoutEffect(() => {
+    if (isSubmitting.value) return;
     if (
       participantsCategory.value !== "Shares" &&
       payersCategory.value !== "Shares"

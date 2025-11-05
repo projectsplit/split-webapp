@@ -11,7 +11,8 @@ import { Signal } from "@preact/signals-react";
 export const useEditExpense = (
   menu: Signal<string | null>,
   groupId: string|undefined,
-  selectedExpense?: Signal<ExpenseResponseItem | null>
+  isSubmitting: Signal<boolean>,
+  selectedExpense?: Signal<ExpenseResponseItem | null>,
 ) => {
   const queryClient = useQueryClient();
 
@@ -42,7 +43,7 @@ export const useEditExpense = (
       if (selectedExpense) {
         selectedExpense.value = null;
       }
-
+      isSubmitting.value=false;
       menu.value = null;
     },
   });
