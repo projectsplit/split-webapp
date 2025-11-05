@@ -30,7 +30,7 @@ const searchGroupsByName = async (
   const response = await apiClient.get<
     void,
     AxiosResponse<GetGroupsResponse>
-  >("/groups/search-groups", { params });
+  >("/groups/search", { params });
   return response.data;
 };
 
