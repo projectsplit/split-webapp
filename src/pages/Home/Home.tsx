@@ -100,7 +100,7 @@ export default function Home() {
         nonGroupUsers.value = u ?? [];
         nonGroupGroups.value = g ?? [];
         groupMembers.value = m ?? [];
-        isPersonal.value = true;
+        isPersonal.value = false;
       }
     } else {
       nonGroupUsers.value = [];

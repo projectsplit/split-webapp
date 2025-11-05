@@ -13,6 +13,7 @@ export const useExpense = (
   menu: Signal<string | null>,
   groupId: string | undefined,
   navigate: NavigateFunction,
+  isSubmitting:Signal<boolean>,
   isNonGroupExpense?: Signal<boolean>
 ) => {
   const queryClient = useQueryClient();
@@ -41,6 +42,7 @@ export const useExpense = (
         queryKey: [groupId],
         exact: false,
       });
+      isSubmitting.value=false
       menu.value = null;
       if (isNonGroupExpense && isNonGroupExpense.value) {
         navigate(`/groups/${groupId}/expenses`);

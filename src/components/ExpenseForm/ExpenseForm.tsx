@@ -43,7 +43,6 @@ import FormInputWithTag from "./components/FormInputWithTag/FormInputWithTag";
 import { FaRegEdit } from "react-icons/fa";
 import { TiGroup } from "react-icons/ti";
 
-
 export default function ExpenseForm({
   groupMembers,
   nonGroupUsers,
@@ -72,12 +71,13 @@ export default function ExpenseForm({
   );
 
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
+  const isSubmitting = useSignal<boolean>(false);
 
   const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
-    useExpense(menu, groupId, navigate, isnonGroupExpense);
+    useExpense(menu, groupId, navigate,isSubmitting, isnonGroupExpense,);
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
-    useEditExpense(menu, groupId, selectedExpense);
+    useEditExpense(menu, groupId,isSubmitting, selectedExpense);
 
   const [amount, setAmount] = useState<string>(
     isCreateExpense || !expense ? "" : expense.amount
@@ -269,6 +269,7 @@ export default function ExpenseForm({
   };
 
   const onSubmit = () => {
+    isSubmitting.value = true;
     submitExpense({
       participants,
       setParticipantsError,
@@ -311,6 +312,7 @@ export default function ExpenseForm({
     setShowAmountError,
     participantsCategory,
     payersCategory,
+    isSubmitting,
   });
 
   const prevParticipantsByCategory = useRef(participantsByCategory);
@@ -387,7 +389,6 @@ export default function ExpenseForm({
     isPersonal.value &&
     amountNumber &&
     nonGroupUsers.value.length === 0;
-
 
   const showDetailedSharedExpenseText =
     (nonGroupUsers?.value.length > 0 || groupMembers?.value.length > 0) &&
@@ -551,7 +552,7 @@ export default function ExpenseForm({
           labelMenuIsOpen={labelMenuIsOpen}
         />
       ) : null}
-      <div className="spacer"/>
+      <div className="spacer" />
       <div className="bottomButtons">
         {" "}
         <div className="submitButton">
