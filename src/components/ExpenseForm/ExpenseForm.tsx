@@ -43,6 +43,7 @@ import FormInputWithTag from "./components/FormInputWithTag/FormInputWithTag";
 import { FaRegEdit } from "react-icons/fa";
 import { TiGroup } from "react-icons/ti";
 
+
 export default function ExpenseForm({
   groupMembers,
   nonGroupUsers,
@@ -387,6 +388,7 @@ export default function ExpenseForm({
     amountNumber &&
     nonGroupUsers.value.length === 0;
 
+
   const showDetailedSharedExpenseText =
     (nonGroupUsers?.value.length > 0 || groupMembers?.value.length > 0) &&
     amountNumber &&
@@ -549,7 +551,7 @@ export default function ExpenseForm({
           labelMenuIsOpen={labelMenuIsOpen}
         />
       ) : null}
-      <div className="spacer"></div>
+      <div className="spacer"/>
       <div className="bottomButtons">
         {" "}
         <div className="submitButton">

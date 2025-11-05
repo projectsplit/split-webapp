@@ -1,4 +1,12 @@
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { MemberPickerProps } from "../../interfaces";
 import { useSignal } from "@preact/signals-react";
 import { StyledMemberPicker } from "./MemberPicker.styled";
@@ -19,6 +27,9 @@ import ParticipantsPayersAnimation from "../Menus/MenuAnimations/ParticipantsPay
 import { handleDoneClick } from "./helpers/handleDoneClick";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 import { errorSettingFn } from "./helpers/errorSettingFn";
+import IonIcon from "@reacticons/ionicons";
+import { useTotalSelectedAmount } from "./helpers/hooks/useTotalSelectedAmount";
+import { BuildRemainingAmountText } from "./helpers/components/BuildRemainingAmountText";
 
 const MemberPickerPreMemo2 = ({
   memberAmounts,
@@ -336,21 +347,22 @@ const MemberPickerPreMemo2 = ({
     return [...memberAmounts].sort(
       (a, b) => Number(b.selected) - Number(a.selected)
     );
-  }, [memberAmounts]); 
+  }, [memberAmounts]);
 
   const selectedCount = useMemo(
     () => memberAmounts.filter((m) => m.selected).length,
-    [memberAmounts] 
+    [memberAmounts]
   );
 
   const selectedMembersForText = useMemo(() => {
-  return memberAmounts
-    .filter(m => m.selected)
-    .sort((a, b) => (b.order ?? 0) - (a.order ?? 0)) // stable order
-    .map(m => ({ id: m.id, name: m.name }));
-}, [memberAmounts]);
+    return memberAmounts
+      .filter((m) => m.selected)
+      .sort((a, b) => (b.order ?? 0) - (a.order ?? 0)) // stable order
+      .map((m) => ({ id: m.id, name: m.name }));
+  }, [memberAmounts]);
 
-  const isEquallySplitValue = isEquallySplit.value; 
+  const isEquallySplitValue = isEquallySplit.value;
+  const totalSelectedAmount = useTotalSelectedAmount(memberAmounts,selectedCurrency)
 
   return (
     <StyledMemberPicker
@@ -461,6 +473,30 @@ const MemberPickerPreMemo2 = ({
               ))}
           </div>
           <div className="spacer"></div>
+          <div className="remainders">
+            <div className="firstRow">
+              {" "}
+              <div className="amounts">
+                {displayCurrencyAndAmount(
+                  totalSelectedAmount.toString(),
+                  selectedCurrency
+                )}{" "}
+                <span className="text">out of</span>{" "}
+                {displayCurrencyAndAmount(
+                  totalAmount.toString(),
+                  selectedCurrency
+                )}
+              </div>
+              {totalSelectedAmount === totalAmount ? (
+                <IonIcon name="checkmark-sharp" className="checkmark" />
+              ) : null}
+            </div>
+            {BuildRemainingAmountText(
+              totalSelectedAmount,
+              selectedCurrency,
+              totalAmount
+            )}
+          </div>
           <MyButton fontSize="16" onClick={memoizedHandleDoneClick}>
             Done
           </MyButton>

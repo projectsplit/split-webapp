@@ -245,5 +245,34 @@ export const StyledMemberPicker = styled.div<{
     .spacer {
       flex-grow: 1; /* This pushes the button to the bottom */
     }
+    .text {
+      color: ${({ theme }) => theme.textInactiveColor};
+    }
+    .remainders {
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      
+      .checkmark {
+        font-size: 25px;
+        bottom: 0px;
+        color: ${({ theme }) => theme.green};
+      }
+      .firstRow {
+        display:flex;
+        flex-direction:row;
+        justify-content:center;
+        align-items:center;
+        gap:5px;
+      }
+      .secondRow {
+        .redText {
+          color: ${({ theme }) => theme.redish};
+        }
+        .greenText {
+          color: ${({ theme }) => theme.green};
+        }
+      }
+    }
   }
 `;
