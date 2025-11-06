@@ -27,10 +27,12 @@ const searchGroupsByName = async (
   next?: string
 ): Promise<GetGroupsResponse> => {
   const params = { pageSize, next, keyword };
+
   const response = await apiClient.get<
     void,
     AxiosResponse<GetGroupsResponse>
   >("/groups/search", { params });
+ 
   return response.data;
 };
 
