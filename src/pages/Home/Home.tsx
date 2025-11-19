@@ -38,7 +38,7 @@ import useGroup from "../../api/services/useGroup";
 import CreateExpenseForm from "../../components/CreateExpenseForm/CreateExpenseForm";
 import TransferForm from "../../components/TransferForm/TransferForm";
 import NonGroupExpenseUsersAnimation from "../../components/Menus/MenuAnimations/NonGroupExpenseUsersAnimation";
-import NonGroupTransferUsersAnimation from "../../components/Menus/MenuAnimations/NonGroupTransferUsersAnimation";
+import NonGroupTransferAnimation from "../../components/Menus/MenuAnimations/NonGroupTransferAnimation";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ export default function Home() {
   const theme = useTheme();
 
   const nonGroupUsers = useSignal<User[]>([]);
-  const nonGroupGroups = useSignal<Group[]>([]);
+  const nonGroupGroup = useSignal<Group | null>(null);
   const groupMembers = useSignal<(Guest | Member)[]>([]);
   const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
@@ -71,12 +71,11 @@ export default function Home() {
   }>({
     attribute: "",
     menu: null,
-    senderId: '',
+    senderId: "",
     senderName: "",
     receiverId: "",
     receiverName: "",
   });
-
 
   const quickActionsMenu = useSignal<string | null>(null);
   const recentGroupId = userInfo?.recentGroupId;
@@ -113,17 +112,17 @@ export default function Home() {
       if (saved) {
         const {
           nonGroupUsers: u,
-          nonGroupGroups: g,
+          nonGroupGroup: g,
           groupMembers: m,
         } = JSON.parse(saved);
         nonGroupUsers.value = u ?? [];
-        nonGroupGroups.value = g ?? [];
+        nonGroupGroup.value = g ?? null;
         groupMembers.value = m ?? [];
         isPersonal.value = false;
       }
     } else {
       nonGroupUsers.value = [];
-      nonGroupGroups.value = [];
+      nonGroupGroup.value = null;
       groupMembers.value = [];
     }
   }, [isNonGroupExpense.value]);
@@ -241,7 +240,7 @@ export default function Home() {
 
       {quickActionsMenu.value === "newExpense" && (
         <CreateExpenseForm
-          groupId={nonGroupGroups?.value[0]?.id}
+          groupId={nonGroupGroup.value?.id}
           expense={null}
           timeZoneId={userInfo.timeZone}
           menu={quickActionsMenu}
@@ -254,19 +253,19 @@ export default function Home() {
           currency={userInfo.currency}
           nonGroupUsers={nonGroupUsers}
           nonGroupMenu={nonGroupExpenseMenu}
-          nonGroupGroups={nonGroupGroups}
+          nonGroupGroup={nonGroupGroup}
         />
       )}
       {quickActionsMenu.value === "newTransfer" && (
         <TransferForm
-          groupId={nonGroupGroups?.value[0]?.id}
+          groupId={nonGroupGroup.value?.id}
           timeZoneId={userInfo.timeZone}
           menu={quickActionsMenu}
           isnonGroupTransfer={isNonGroupTransfer}
           groupMembers={groupMembers}
           currency={userInfo.currency}
           nonGroupUsers={nonGroupUsers}
-          nonGroupGroups={nonGroupGroups}
+          nonGroupGroup={nonGroupGroup}
           nonGroupMenu={nonGroupTransferMenu}
         />
       )}
@@ -282,11 +281,14 @@ export default function Home() {
         nonGroupUsers={nonGroupUsers}
         isPersonal={isPersonal}
         groupMembers={groupMembers}
-        nonGroupGroups={nonGroupGroups}
+        nonGroupGroup={nonGroupGroup}
         isNonGroupExpense={isNonGroupExpense}
       />
-      <NonGroupTransferUsersAnimation
+      <NonGroupTransferAnimation
         nonGroupTransferMenu={nonGroupTransferMenu}
+        nonGroupGroup={nonGroupGroup}
+        groupMembers={groupMembers}
+       isNonGroupTransfer ={isNonGroupTransfer}
       />
     </StyledHomepage>
   );

@@ -1,20 +1,26 @@
-import { StyledNonGroupTransferUsersMenu } from "./NonGroupTransferUsersMenu.styled";
-import { NonGroupTransferUsersMenuProps } from "../../../../interfaces";
+import { StyledNonGroupTransferUsersMenu } from "./NonGroupTransferMenu.styled";
+import { NonGroupTransferMenuProps } from "../../../../interfaces";
 import { BiArrowBack } from "react-icons/bi";
 import MyButton from "../../../MyButton/MyButton";
 import AutoWidthInput from "../../../AutoWidthInput";
 import Sentinel from "../../../Sentinel";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import useDebounce from "../../../../hooks/useDebounce";
 import { useSearchFriendsToInvite } from "../../../../api/services/useSearchFriendsToInvite";
 import { useOutletContext } from "react-router-dom";
 import { UserInfo } from "../../../../types";
 import User from "../User/User";
 import ShimmerUserRow from "../../../ShimmersUserRow/ShimmerUserRow";
+import { useSearchGroupsByName } from "../../../../api/services/useSearchGroupsByName";
+import Item from "../Item/Item";
+import { SelectedGroup } from "../SelectionLists/SelectedGroup";
 
-export default function NonGroupTransferUsersMenu({
+export default function NonGroupTransferMenu({
   nonGroupTransferMenu,
-}: NonGroupTransferUsersMenuProps) {
+  nonGroupGroup,
+  groupMembers,
+  isNonGroupTransfer,
+}: NonGroupTransferMenuProps) {
   const pageSize = 10;
   const [keyword, setKeyword] = useState<string>("");
   // const [selectedUser, setSelectedUser] = useState<string>('')
@@ -65,7 +71,56 @@ export default function NonGroupTransferUsersMenu({
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     result;
   const users = data?.pages.flatMap((x) => x.users) ?? [];
-  const isEmpty = keyword.length === 0;
+
+  const { data: userGroups, isFetching: groupsAreFetching } =
+    useSearchGroupsByName(debouncedKeyword, pageSize);
+
+  const remainingSuggestedGroups = useMemo(() => {
+    return (
+      userGroups?.pages
+        .flatMap((x) => x.groups)
+        .filter((x) => nonGroupGroup.value?.id !== x.id) ?? []
+    );
+  }, [userGroups, nonGroupGroup.value]);
+
+  const isEmpty = useMemo(
+    () => keyword.length === 0 && !nonGroupGroup.value,
+    [nonGroupGroup.value, keyword]
+  );
+
+  const handleSuggestedGroupClick = useCallback(
+    (groupId: string) => {
+      const existingGroup = userGroups?.pages
+        .flatMap((x) => x.groups)
+        .find((x) => x.id === groupId);
+
+      if (!existingGroup) return;
+      isNonGroupTransfer.value = false;
+      (nonGroupGroup.value = {
+        id: existingGroup.id,
+        name: existingGroup.name,
+        created: existingGroup.created,
+        updated: existingGroup.updated,
+        ownerId: existingGroup.ownerId,
+        members: existingGroup.members,
+        labels: existingGroup.labels,
+        isArchived: existingGroup.isArchived,
+        guests: existingGroup.guests,
+        currency: existingGroup.currency,
+      }),
+        (groupMembers.value = [
+          ...existingGroup.members,
+          ...existingGroup.guests,
+        ]);
+    },
+    [userGroups]
+  );
+
+  const handleSelectedGroupCick = () => {
+    nonGroupGroup.value = null;
+    groupMembers.value = [];
+    isNonGroupTransfer.value = true;
+  };
 
   return (
     <StyledNonGroupTransferUsersMenu>
@@ -85,7 +140,9 @@ export default function NonGroupTransferUsersMenu({
           <div className="title">
             {nonGroupTransferMenu.value.attribute === "sender"
               ? "Select sender"
-              : "Select receiver"}
+              : nonGroupTransferMenu.value.attribute === "receiver"
+              ? "Select receiver"
+              : "Select Group"}
           </div>
           <div className="gap"></div>
         </div>
@@ -99,6 +156,10 @@ export default function NonGroupTransferUsersMenu({
             ref={mainRef}
             tabIndex={0}
           >
+            <SelectedGroup
+              group={nonGroupGroup.value}
+              onRemove={handleSelectedGroupCick}
+            />
             <AutoWidthInput
               className="input"
               inputMode="text"
@@ -114,7 +175,7 @@ export default function NonGroupTransferUsersMenu({
           </div>
         </div>
         <div className="dropdown" ref={dropdownRef}>
-          {isFetching ? (
+          {isFetching || groupsAreFetching ? (
             <>
               {Array(6)
                 .fill(null)
@@ -122,7 +183,9 @@ export default function NonGroupTransferUsersMenu({
                   <ShimmerUserRow key={i} />
                 ))}
             </>
-          ) : users.length > 0 ? (
+          ) : users.length > 0 &&
+            (nonGroupTransferMenu.value.attribute === "sender" ||
+              nonGroupTransferMenu.value.attribute === "receiver") ? (
             users.map((user) => (
               <User
                 key={user.userId}
@@ -136,7 +199,22 @@ export default function NonGroupTransferUsersMenu({
                 }}
               />
             ))
-          ) : null}
+          ) : (
+            remainingSuggestedGroups.length > 0 && (
+              <div className="dropdown" ref={dropdownRef}>
+                {remainingSuggestedGroups.map((group) => (
+                  <Item
+                    key={group.id}
+                    name={group.name}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSuggestedGroupClick(group.id);
+                    }}
+                  />
+                ))}
+              </div>
+            )
+          )}
         </div>
         <Sentinel
           fetchNextPage={fetchNextPage}

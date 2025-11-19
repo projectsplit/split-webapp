@@ -109,7 +109,6 @@ export const StyledNonGroupExpenseUsersMenu = styled.div`
     } */
       .main {
         width: 100%;
-
         transition: border-color 0.15s;
         background-color: ${({ theme }) => theme.inputGrey};
         display: flex;

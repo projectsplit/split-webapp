@@ -8,7 +8,7 @@ export default function NonGroupExpenseUsersAnimation({
   nonGroupUsers,
   isPersonal,
   groupMembers,
-  nonGroupGroups,
+  nonGroupGroup,
   isNonGroupExpense
 }: NonGroupExpenseUsersAnimationProps) {
   const nodeRef = useRef(null);
@@ -24,7 +24,7 @@ export default function NonGroupExpenseUsersAnimation({
         nonGroupUsers={nonGroupUsers}
         isPersonal={isPersonal}
         groupMembers={groupMembers}
-        nonGroupGroups={nonGroupGroups}
+        nonGroupGroup={nonGroupGroup}
         isNonGroupExpense={isNonGroupExpense}
       />
     </CSSTransition>

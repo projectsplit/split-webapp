@@ -58,7 +58,7 @@ export default function ExpenseForm({
   isnonGroupExpense,
   currency,
   nonGroupMenu,
-  nonGroupGroups,
+  nonGroupGroup,
 }: ExpenseFormProps) {
   const isInitialRender = useRef<boolean>(true);
   const navigate = useNavigate();
@@ -295,7 +295,7 @@ export default function ExpenseForm({
     if (isnonGroupExpense && isnonGroupExpense.value) {
       const data = {
         nonGroupUsers: nonGroupUsers.value,
-        nonGroupGroups: nonGroupGroups?.value,
+        nonGroupGroup: nonGroupGroup?.value,
         groupMembers: groupMembers.value,
       };
       localStorage.setItem("nonGroupExpenseData", JSON.stringify(data));
@@ -408,8 +408,8 @@ export default function ExpenseForm({
               groupMembers.value = [];
               isPersonal.value = true;
               isnonGroupExpense.value = false;
-              if (nonGroupGroups) {
-                nonGroupGroups.value = [];
+              if (nonGroupGroup) {
+                nonGroupGroup.value = null;
               }
             }
             menu.value = null;
@@ -435,14 +435,14 @@ export default function ExpenseForm({
       {showDetailedSharedExpenseText ? (
         <div className="errorsWrapper">
           <div className="textStyleInfo">
-            {nonGroupGroups && nonGroupGroups?.value.length > 0 ? (
+            {nonGroupGroup && nonGroupGroup.value ? (
               <div className="definition">
                 
                 <span className="labelStyle">
                   <div className="info">
                     {" "}
                     <TiGroup />
-                    {nonGroupGroups?.value[0].name}
+                    {nonGroupGroup.value.name}
                   </div>
                 </span>
                 :

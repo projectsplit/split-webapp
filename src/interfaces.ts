@@ -469,7 +469,7 @@ export interface ExpenseFormProps {
   isnonGroupExpense?: Signal<boolean>;
   currency: string;
   nonGroupMenu?: Signal<string | null>;
-  nonGroupGroups?: Signal<Group[]>;
+  nonGroupGroup?: Signal<Group | null>;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
@@ -483,7 +483,7 @@ export interface TransferFormProps {
   currency: string;
   timeZoneId: string;
   menu: Signal<string | null>;
-  nonGroupGroups?: Signal<Group[]>;
+  nonGroupGroup?: Signal<Group | null>;
   groupId?: string;
   isnonGroupTransfer?: Signal<boolean>;
   nonGroupMenu?: Signal<{
@@ -497,28 +497,28 @@ export interface TransferFormProps {
 }
 
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
-export interface HomeQuickActionsAnimationProps  {
-  quickActionsMenu:Signal<string | null>;
+export interface HomeQuickActionsAnimationProps {
+  quickActionsMenu: Signal<string | null>;
   isNonGroupExpense: Signal<boolean>;
-   nonGroupTransferMenu: Signal<{
+  nonGroupTransferMenu: Signal<{
     attribute: string;
     menu: string | null;
     senderId: string;
     senderName: string;
     receiverId: string;
     receiverName: string;
-}>
-userInfo:UserInfo
+  }>;
+  userInfo: UserInfo;
 }
 export interface NonGroupExpenseUsersAnimationProps extends MenuProps {
   nonGroupUsers: Signal<User[]>;
   isPersonal: Signal<boolean>;
   groupMembers: Signal<(Guest | Member)[]>;
-  nonGroupGroups: Signal<Group[]>;
+  nonGroupGroup: Signal<Group | null>;
   isNonGroupExpense: Signal<boolean>;
 }
 
-export interface NonGroupTransferUsersAnimationProps {
+export interface NonGroupTransferAnimationProps {
   nonGroupTransferMenu: Signal<{
     attribute: string;
     menu: string | null;
@@ -527,9 +527,12 @@ export interface NonGroupTransferUsersAnimationProps {
     receiverId: string;
     receiverName: string;
   }>;
+  nonGroupGroup: Signal<Group | null>;
+  groupMembers: Signal<(Guest | Member)[]>;
+  isNonGroupTransfer : Signal<boolean>;
 }
 
-export interface NonGroupTransferUsersMenuProps {
+export interface NonGroupTransferMenuProps {
   nonGroupTransferMenu: Signal<{
     attribute: string;
     menu: string | null;
@@ -538,13 +541,16 @@ export interface NonGroupTransferUsersMenuProps {
     receiverId: string;
     receiverName: string;
   }>;
+  nonGroupGroup: Signal<Group | null>;
+  groupMembers: Signal<(Guest | Member)[]>;
+  isNonGroupTransfer : Signal<boolean>;
 }
 
 export interface NonGroupUsersProps extends MenuProps {
   nonGroupUsers: Signal<User[]>;
   isPersonal: Signal<boolean>;
   groupMembers: Signal<(Guest | Member)[]>;
-  nonGroupGroups: Signal<Group[]>;
+  nonGroupGroup: Signal<Group | null>;
   isNonGroupExpense: Signal<boolean>;
 }
 export interface LocationPickerAnimationProps extends MenuProps {
@@ -559,7 +565,7 @@ export interface UserItemProps {
 export interface UserProps {
   name: string;
   userId: string;
-  nonGroupTransferMenu:  Signal<{
+  nonGroupTransferMenu: Signal<{
     attribute: string;
     menu: string | null;
     senderId: string;
@@ -573,7 +579,7 @@ export interface UserProps {
 
 export interface GroupQuickActionsMenuprops extends MenuProps {}
 export interface HomeQuickActionsMenuprops {
-  quickActionsMenu:Signal<string | null>;
+  quickActionsMenu: Signal<string | null>;
   isNonGroupExpense: Signal<boolean>;
   nonGroupTransferMenu: Signal<{
     attribute: string;
@@ -582,8 +588,8 @@ export interface HomeQuickActionsMenuprops {
     senderName: string;
     receiverId: string;
     receiverName: string;
-}>
-userInfo:UserInfo
+  }>;
+  userInfo: UserInfo;
 }
 export interface DeleteExpenseAnimationProps extends MenuProps {
   description: string;

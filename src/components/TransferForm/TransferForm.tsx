@@ -17,6 +17,7 @@ import FormInput from "../FormInput/FormInput";
 import DateDisplay from "../ExpenseForm/components/DateDisplay/DateDisplay";
 import SendMenuWrapper from "./SendMenuWrapper/SendMenuWrapper";
 import { TiGroup } from "react-icons/ti";
+import { SelectedGroup } from "../Menus/NonGroupUsersMenus/SelectionLists/SelectedGroup";
 
 export default function TransferForm({
   groupMembers,
@@ -24,7 +25,7 @@ export default function TransferForm({
   currency,
   timeZoneId,
   menu,
-  nonGroupGroups,
+  nonGroupGroup,
   groupId,
   isnonGroupTransfer,
   nonGroupMenu,
@@ -69,7 +70,7 @@ export default function TransferForm({
   )?.id;
 
   const noReceiverSelected = nonGroupMenu?.value.receiverName === "";
-  
+
   const { mutate: createTransferMutation, isPending } = useTransfer(
     menu,
     groupId,
@@ -86,12 +87,11 @@ export default function TransferForm({
   const submitTransfer = useCallback(() => {
     setShowAmountError(true);
     setShowIdError(true);
-     if (noReceiverSelected) {
+    if (noReceiverSelected) {
       setRecipientError("Select a recipient");
     }
     if (!amountIsValid(amount, setAmountError)) return;
     if (!!idError.error) return;
-   
 
     const createTransferRequest: CreateTransferRequest = {
       amount: Number(amount),
@@ -177,7 +177,7 @@ export default function TransferForm({
           onChange={(e) => {
             handleInputChange(e, currencySymbol, displayedAmount, setAmount);
             setShowAmountError(false);
-            setRecipientError('')
+            setRecipientError("");
           }}
           onBlur={handleInputBlur}
           currency={currencySymbol}
@@ -199,7 +199,7 @@ export default function TransferForm({
                   (nonGroupMenu.value = {
                     ...nonGroupMenu.value,
                     attribute: "sender",
-                    menu: "nonGroupTransferUsers",
+                    menu: "nonGroupTransfer",
                   })
                 }
               >
@@ -214,7 +214,7 @@ export default function TransferForm({
                   (nonGroupMenu.value = {
                     ...nonGroupMenu.value,
                     attribute: "receiver",
-                    menu: "nonGroupTransferUsers",
+                    menu: "nonGroupTransfer",
                   })
                 }
               >
@@ -225,10 +225,21 @@ export default function TransferForm({
             </div>
           </div>
           <span className="errorMsg">
-            {showAmountError && recipientError &&noReceiverSelected? recipientError : ""}
+            {showAmountError && recipientError && noReceiverSelected
+              ? recipientError
+              : ""}
           </span>
           <div className="buttonWrapper">
-            <div className="groupButton">
+            <div
+              className="groupButton"
+              onClick={() =>
+                (nonGroupMenu.value = {
+                  ...nonGroupMenu.value,
+                  attribute: "groups",
+                  menu: "nonGroupTransfer",
+                })
+              }
+            >
               <TiGroup className="groupIcon" />
               <span className="descr">Groups</span>
             </div>
@@ -236,7 +247,17 @@ export default function TransferForm({
         </div>
       ) : (
         <div className="groupMenu">
-          {" "}
+          {nonGroupGroup && isnonGroupTransfer && (
+            <div className="nonGroupGroupPill">
+              <SelectedGroup
+                group={nonGroupGroup.value}
+                onRemove={() => {
+                  nonGroupGroup.value = null;
+                  isnonGroupTransfer.value = true;
+                }}
+              />
+            </div>
+          )}{" "}
           <SendMenuWrapper
             title="Sender"
             idError={idError}
