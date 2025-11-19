@@ -51,6 +51,7 @@ export function TotalLentBorrowed({
   startDate,
   backendData,
   isSuccess,
+  timeZone
 }: TotalLentBorrowedProps) {
   const fractalFactor = 4;
 
@@ -80,7 +81,8 @@ export function TotalLentBorrowed({
     selectedYear,
     allWeeksPerYear,
     startDate,
-    endDate
+    endDate,
+    timeZone
   );
 
   const totalLent =

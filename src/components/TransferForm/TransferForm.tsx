@@ -3,26 +3,35 @@ import { TransferFormProps } from "../../interfaces";
 import { StyledTransferForm } from "./TransferForm.styled";
 import InputMonetary from "../InputMonetary/InputMonetary";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { signal, useSignal } from "@preact/signals-react";
+import { signal, useComputed, useSignal } from "@preact/signals-react";
 import { handleInputChange } from "../../helpers/handleInputChange";
 import { amountIsValid } from "../../helpers/amountIsValid";
 import { DateTime } from "../DateTime";
 import MyButton from "../MyButton/MyButton";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import CurrencyOptionsAnimation from "../Menus/MenuAnimations/CurrencyOptionsAnimation";
-import { useOutletContext } from "react-router-dom";
-import { CreateTransferRequest, UserInfo } from "../../types";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { CreateTransferRequest, Member, UserInfo } from "../../types";
 import { useTransfer } from "../../api/services/useTransfers";
 import FormInput from "../FormInput/FormInput";
 import DateDisplay from "../ExpenseForm/components/DateDisplay/DateDisplay";
+import SendMenuWrapper from "./SendMenuWrapper/SendMenuWrapper";
+import { TiGroup } from "react-icons/ti";
 
 export default function TransferForm({
-  group,
+  groupMembers,
+  nonGroupUsers,
+  currency,
   timeZoneId,
   menu,
+  nonGroupGroups,
+  groupId,
+  isnonGroupTransfer,
+  nonGroupMenu,
 }: TransferFormProps) {
-  const [currencySymbol, setCurrencySymbol] = useState<string>(group.currency);
-
+  const [currencySymbol, setCurrencySymbol] = useState<string>(currency);
+  const isSubmitting = useSignal<boolean>(false);
+  const navigate = useNavigate();
   const displayedAmount = useSignal<string>("");
   const [amount, setAmount] = useState<string>("");
   const currencyMenu = useSignal<string | null>(null);
@@ -34,6 +43,7 @@ export default function TransferForm({
     error: string;
   }>({ isSenderError: false, isReceiverError: false, error: "" });
   const [amountError, setAmountError] = useState<string>("");
+  const [recipientError, setRecipientError] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
@@ -50,12 +60,22 @@ export default function TransferForm({
     amountIsValid(amount, setAmountError);
   }, [amount, setShowAmountError, setAmountError]);
 
-  const allMembers = [...group.guests, ...group.members];
-  const members = group?.members;
-  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
+  const userMembers = groupMembers?.value.filter(
+    (item): item is Member => "userId" in item
+  );
+
+  const userMemberId = userMembers?.find(
+    (m) => m.userId === userInfo?.userId
+  )?.id;
+
+  const noReceiverSelected = nonGroupMenu?.value.receiverName === "";
+  
   const { mutate: createTransferMutation, isPending } = useTransfer(
     menu,
-    group.id
+    groupId,
+    navigate,
+    isSubmitting,
+    isnonGroupTransfer
   );
 
   const handldeCurrencyOptionsClick = (curr: string) => {
@@ -66,12 +86,16 @@ export default function TransferForm({
   const submitTransfer = useCallback(() => {
     setShowAmountError(true);
     setShowIdError(true);
+     if (noReceiverSelected) {
+      setRecipientError("Select a recipient");
+    }
     if (!amountIsValid(amount, setAmountError)) return;
     if (!!idError.error) return;
+   
 
     const createTransferRequest: CreateTransferRequest = {
       amount: Number(amount),
-      groupId: group.id,
+      groupId: groupId,
       currency: currencySymbol,
       receiverId: receiverId,
       senderId: senderId,
@@ -85,7 +109,7 @@ export default function TransferForm({
     setShowIdError,
     amount,
     idError.error,
-    group.id,
+    groupId,
     currencySymbol,
     receiverId,
     senderId,
@@ -93,15 +117,11 @@ export default function TransferForm({
     description,
   ]);
 
-  const sortedMembers = useMemo(
-    () =>
-      [...allMembers].sort((a, b) => {
-        if (a.id === userMemberId) return -1;
-        if (b.id === userMemberId) return 1;
-        return 0;
-      }),
-    [allMembers]
-  );
+  const sortedMembers = useComputed(() => {
+    return [...groupMembers.value].sort((a, b) =>
+      a.id === userMemberId ? -1 : b.id === userMemberId ? 1 : 0
+    );
+  });
 
   useEffect(() => {
     if (senderId === receiverId && senderId !== "") {
@@ -134,7 +154,10 @@ export default function TransferForm({
   }, [senderId, receiverId]);
 
   return (
-    <StyledTransferForm inputError={showIdError}>
+    <StyledTransferForm
+      $inputError={showIdError}
+      $noReceiverSelected={noReceiverSelected}
+    >
       {" "}
       <div className="header">
         <div className="gap"></div>
@@ -154,6 +177,7 @@ export default function TransferForm({
           onChange={(e) => {
             handleInputChange(e, currencySymbol, displayedAmount, setAmount);
             setShowAmountError(false);
+            setRecipientError('')
           }}
           onBlur={handleInputBlur}
           currency={currencySymbol}
@@ -164,70 +188,77 @@ export default function TransferForm({
           {showAmountError && amountError ? amountError : ""}
         </span>
       </div>
-      <div className="sendMenuWrapper">
-        <div
-          className="sendMenu"
-          style={{
-            borderColor:
-              idError.isSenderError && showIdError ? "#ba5d5d" : "#000000",
-          }}
-        >
-          <div className="title">Sent from</div>
-          <div className="options">
-            {sortedMembers.map((m, i) => (
+      {isnonGroupTransfer && isnonGroupTransfer.value && nonGroupMenu ? (
+        <div className="options">
+          <div className="nonGroupMenu">
+            <div className="textAndButton">
+              <div className="text"> Sent from </div>
               <div
-                key={i}
-                className="name"
-                style={{
-                  backgroundColor: senderId === m.id ? "white" : "",
-                  color: senderId === m.id ? "#26272B" : "",
-                }}
-                onClick={() => {
-                  setSenderId((prev) => (prev === m.id ? "" : m.id));
-                  setShowIdError(false);
-                }}
+                className="button senderButton"
+                onClick={() =>
+                  (nonGroupMenu.value = {
+                    ...nonGroupMenu.value,
+                    attribute: "sender",
+                    menu: "nonGroupTransferUsers",
+                  })
+                }
               >
-                {m.id === userMemberId ? "You" : m.name}
+                {nonGroupMenu.value.senderName}
+              </div>{" "}
+            </div>
+            <div className="textAndButton">
+              <div className="text"> and received by </div>
+              <div
+                className="button receiverButton"
+                onClick={() =>
+                  (nonGroupMenu.value = {
+                    ...nonGroupMenu.value,
+                    attribute: "receiver",
+                    menu: "nonGroupTransferUsers",
+                  })
+                }
+              >
+                {nonGroupMenu.value.receiverName === ""
+                  ? "select user"
+                  : nonGroupMenu.value.receiverName}
               </div>
-            ))}
+            </div>
+          </div>
+          <span className="errorMsg">
+            {showAmountError && recipientError &&noReceiverSelected? recipientError : ""}
+          </span>
+          <div className="buttonWrapper">
+            <div className="groupButton">
+              <TiGroup className="groupIcon" />
+              <span className="descr">Groups</span>
+            </div>
           </div>
         </div>
-        <span className="errorMsg">
-          {idError.isSenderError && showIdError ? idError.error : ""}
-        </span>
-      </div>
-      <div className="sendMenuWrapper">
-        <div
-          className="sendMenu"
-          style={{
-            borderColor:
-              idError.isReceiverError && showIdError ? "#ba5d5d" : "#000000",
-          }}
-        >
-          <div className="title">Sent to</div>
-          <div className="options">
-            {sortedMembers.map((m, i) => (
-              <div
-                key={i}
-                className="name"
-                style={{
-                  backgroundColor: receiverId === m.id ? "white" : "",
-                  color: receiverId === m.id ? "#26272B" : "",
-                }}
-                onClick={() => {
-                  setReceiverId((prev) => (prev === m.id ? "" : m.id));
-                  setShowIdError(false);
-                }}
-              >
-                {m.id === userMemberId ? "You" : m.name}
-              </div>
-            ))}
-          </div>
+      ) : (
+        <div className="groupMenu">
+          {" "}
+          <SendMenuWrapper
+            title="Sender"
+            idError={idError}
+            id={senderId}
+            setId={setSenderId}
+            setShowIdError={setShowIdError}
+            userMemberId={userMemberId}
+            showIdError={showIdError}
+            sortedMembers={sortedMembers}
+          />
+          <SendMenuWrapper
+            title="Receiver"
+            idError={idError}
+            id={receiverId}
+            setId={setReceiverId}
+            setShowIdError={setShowIdError}
+            userMemberId={userMemberId}
+            showIdError={showIdError}
+            sortedMembers={sortedMembers}
+          />
         </div>
-        <span className="errorMsg">
-          {idError.isReceiverError && showIdError ? idError.error : ""}
-        </span>
-      </div>
+      )}
       <FormInput
         description=""
         placeholder="Description"

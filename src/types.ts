@@ -400,7 +400,7 @@ export type CreateTransfersRequest = {
 };
 
 export type CreateTransferRequest = {
-  groupId: string;
+  groupId: string|undefined;
   description: string;
   amount: number;
   currency: string;

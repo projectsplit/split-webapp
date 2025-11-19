@@ -16,7 +16,7 @@ import { StyledBarChart } from "./BarChart.styled";
 import Carousel from "../../Carousel/Carousel";
 import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
 
-import {  getAllDaysInMonth } from "../../../../helpers/monthlyDataHelpers";
+import { getAllDaysInMonth } from "../../../../helpers/monthlyDataHelpers";
 import { createGroupedLabels } from "../../helpers/createGroupedLabels";
 import { getChartOptions } from "./options/getChartOptions";
 import { groupExpensesPerWeek } from "../../helpers/groupExpensesPerWeek";
@@ -52,11 +52,10 @@ export function BarChart({
   endDate,
   currency,
   backendData,
-   isSuccess
+  isSuccess,
+  timeZone,
 }: BarChartProps) {
-
-
- const cumulArrayData = getCumulativeShares(backendData);
+  const cumulArrayData = getCumulativeShares(backendData);
 
   const expenseDataPoints = deCumulArray(cumulArrayData); //getRandomNumbers(31, -500, 1000); // This is supposed to be the total amount spent per calendar day
 
@@ -74,7 +73,7 @@ export function BarChart({
       case Frequency.Weekly:
         return shortWeekdays;
       case Frequency.Annually:
-        return months.map(m=>m.slice(0,3))
+        return months.map((m) => m.slice(0, 3));
       default:
         return [];
     }
@@ -90,7 +89,8 @@ export function BarChart({
     selectedYear,
     allWeeksPerYear,
     startDate,
-    endDate
+    endDate,
+    timeZone
   );
 
   const options = getChartOptions(
@@ -103,8 +103,10 @@ export function BarChart({
     currency
   );
 
-
-  const expenseDataGrouping = (cycle: Frequency,expenseDataPoints: number[]) => {
+  const expenseDataGrouping = (
+    cycle: Frequency,
+    expenseDataPoints: number[]
+  ) => {
     switch (cycle) {
       case Frequency.Monthly:
         return groupExpensesPerWeek(expenseDataPoints);
@@ -117,8 +119,11 @@ export function BarChart({
     }
   };
 
-  const expenseData = expenseDataGrouping(selectedCycle.value,expenseDataPoints);
-  
+  const expenseData = expenseDataGrouping(
+    selectedCycle.value,
+    expenseDataPoints
+  );
+
   const data = {
     labels: labels,
     datasets: [
@@ -126,15 +131,18 @@ export function BarChart({
         label: "cumulative spending",
         data: expenseData,
         backgroundColor: "rgba(153, 30, 251, 0.5)",
-        borderWidth: 2
+        borderWidth: 2,
       },
     ],
   } as any;
 
-
   return (
     <StyledBarChart>
-      <Bar options={options} data={data} plugins={[noData, ChartDataLabels,horizontalLine]} />
+      <Bar
+        options={options}
+        data={data}
+        plugins={[noData, ChartDataLabels, horizontalLine]}
+      />
       <div className="periodOptions">
         <Carousel
           carouselItems={getCarouselItemsBasedOnCycle(

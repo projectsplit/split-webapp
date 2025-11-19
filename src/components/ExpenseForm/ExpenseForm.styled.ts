@@ -166,7 +166,7 @@ export const StyledExpenseForm = styled.div`
     .button {
       font-weight: bold;
       display: inline-block;
-      border: 1px solid #646cff;
+      border: 1px solid ${({ theme }) => theme.highlightColor};
       border-radius: 5px;
       padding: 4px 6px;
       cursor: pointer;

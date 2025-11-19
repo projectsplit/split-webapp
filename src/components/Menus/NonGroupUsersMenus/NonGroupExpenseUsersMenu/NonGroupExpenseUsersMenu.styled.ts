@@ -1,9 +1,6 @@
 import styled from "styled-components";
 
-export const StyledNonGroupUsersMenu = styled.div<{
-  $hasError?: boolean;
-  // $isOpen?: boolean;
-}>`
+export const StyledNonGroupExpenseUsersMenu = styled.div`
   position: fixed;
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.layer2};

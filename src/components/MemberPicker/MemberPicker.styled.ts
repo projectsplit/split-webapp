@@ -29,12 +29,6 @@ export const StyledMemberPicker = styled.div<{
     text-overflow: clip;
     overflow: hidden;
     position: relative;
-    .icon {
-      font-size: 1.4rem;
-      &:hover {
-        color: ${({ theme }) => theme.whiteText};
-      }
-    }
   }
 
   .meta {

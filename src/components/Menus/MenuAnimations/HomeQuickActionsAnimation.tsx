@@ -4,19 +4,26 @@ import { useRef } from "react";
 import HomeQuickActionsMenu from "../HomeQuickActionsMenu/HomeQuickActionsMenu";
 
 export default function HomeQuickActionsAnimation({
-  menu,
-  isNonGroupExpense
+  quickActionsMenu,
+  isNonGroupExpense,
+  nonGroupTransferMenu,
+  userInfo,
 }: HomeQuickActionsAnimationProps) {
   const nodeRef = useRef(null);
   return (
     <CSSTransition
       nodeRef={nodeRef}
-      in={menu.value === "quickActions"}
+      in={quickActionsMenu.value === "quickActions"}
       timeout={100}
       classNames="quick-actions"
       unmountOnExit
     >
-      <HomeQuickActionsMenu menu={menu} isNonGroupExpense={isNonGroupExpense}/>
+      <HomeQuickActionsMenu
+        quickActionsMenu={quickActionsMenu}
+        isNonGroupExpense={isNonGroupExpense}
+        nonGroupTransferMenu={nonGroupTransferMenu}
+        userInfo={userInfo}
+      />
     </CSSTransition>
   );
 }

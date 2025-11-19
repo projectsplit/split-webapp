@@ -2,7 +2,6 @@ import { useState } from "react";
 import { StyledSearchUsersToInvite } from "./SearchUsersToInvite.styled";
 import { useSearchUsersToInvite } from "../../api/services/useSearchUsersToInvite";
 import Input from "../../components/Input/Input";
-import useDebounce from "../../hooks/useDebounce";
 import MyButton from "../../components/MyButton/MyButton";
 import { useParams } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
@@ -17,6 +16,7 @@ import RemoveGuestWarningAnimation from "../../components/Menus/MenuAnimations/R
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import Sentinel from "../../components/Sentinel";
 import { SearchResultItem } from "./SearchResultItem/SearchResultItem";
+import useDebounce from "../../hooks/useDebounce";
 
 const SearchUsersToInvite = ({
   menu,
@@ -33,10 +33,7 @@ const SearchUsersToInvite = ({
   const userInvitationSent = useSignal<boolean>(false);
   const noGroupError = useSignal<string>("");
   const noMemberError = useSignal<string>("");
-  const [debouncedKeyword, _isDebouncing] = useDebounce<string>(
-    keyword.length > 1 ? keyword : "",
-    500
-  );
+  const [debouncedKeyword,] = useDebounce(keyword.length > 1 ? keyword : "",300);
 
   const {
     data,

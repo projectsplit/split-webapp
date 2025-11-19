@@ -3,12 +3,17 @@ import { apiClient } from "../apiClients";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { SearchUserToInviteResponse } from "../../types";
 
-export const useSearchUsersToInvite = (
+//This needs to be replaced with the actual queery that will be doing this
+//this is just a copy of useSearchUsersToInvite
+export const useSearchFriendsToInvite = (
   groupId: string,
   keyword: string,
   pageSize: number,
+  isNonGroup?: boolean,
   guestId?: string
 ) => {
+
+  if (!isNonGroup) return undefined;
   const queryKey = ["searchUsersToInvite", groupId, keyword, pageSize];
   const queryClient = useQueryClient();
 
@@ -18,11 +23,11 @@ export const useSearchUsersToInvite = (
       searchUsersToinvite(groupId, keyword, pageSize, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: "",
-    // enabled:!!keyword && keyword.length > 1
+    // enabled: !!keyword && keyword.length > 1
   });
 
   const updateUserInvitationStatus = (userId: string, isInvited: boolean) => {
-    // Update cache for all query keys. 
+    // Update cache for all query keys.
     const queryKeys = queryClient
       .getQueryCache()
       .getAll()
@@ -52,7 +57,6 @@ export const useSearchUsersToInvite = (
       });
     });
   };
-
   return { ...query, updateUserInvitationStatus };
 };
 
@@ -69,5 +73,3 @@ const searchUsersToinvite = async (
   >("/invitations/search-users", { params });
   return response.data;
 };
-
-

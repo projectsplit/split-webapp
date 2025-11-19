@@ -54,6 +54,7 @@ export function CumulativeSpending({
   currency,
   backendData,
   isSuccess,
+  timeZone
 }: CumulativeSpendingProps) {
   const fractalFactor = 1;
 
@@ -65,7 +66,8 @@ export function CumulativeSpending({
     selectedYear,
     allWeeksPerYear,
     startDate,
-    endDate
+    endDate,
+    timeZone
   );
 
   const allDaysInMonth = getAllDaysInMonth(

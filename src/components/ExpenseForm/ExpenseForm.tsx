@@ -66,15 +66,15 @@ export default function ExpenseForm({
     userInfo: UserInfo;
   }>();
 
-  const members = groupMembers?.value.filter(
+  const userMembers = groupMembers?.value.filter(
     (item): item is Member => "userId" in item
   );
 
-  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
+  const userMemberId = userMembers?.find((m) => m.userId === userInfo?.userId)?.id;
   const isSubmitting = useSignal<boolean>(false);
 
   const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
-    useExpense(menu, groupId, navigate,isSubmitting, isnonGroupExpense,);
+    useExpense(menu, groupId, navigate,isSubmitting, isnonGroupExpense);
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
     useEditExpense(menu, groupId,isSubmitting, selectedExpense);
@@ -437,7 +437,7 @@ export default function ExpenseForm({
           <div className="textStyleInfo">
             {nonGroupGroups && nonGroupGroups?.value.length > 0 ? (
               <div className="definition">
-                With{" "}
+                
                 <span className="labelStyle">
                   <div className="info">
                     {" "}
@@ -491,7 +491,7 @@ export default function ExpenseForm({
             {isCreateExpense && nonGroupMenu ? (
               <div
                 className="editButton"
-                onClick={() => (nonGroupMenu.value = "nongroupusers")}
+                onClick={() => (nonGroupMenu.value = "nonGroupExpenseUsers")}
               >
                 <FaRegEdit />
               </div>
@@ -520,7 +520,7 @@ export default function ExpenseForm({
         <div className="shareExpenseOption">
           <div
             className="button"
-            onClick={() => (nonGroupMenu.value = "nongroupusers")}
+            onClick={() => (nonGroupMenu.value = "nonGroupExpenseUsers")}
           >
             Share Expense{" "}
           </div>

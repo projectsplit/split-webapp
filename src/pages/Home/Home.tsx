@@ -35,15 +35,17 @@ import Spinner from "../../components/Spinner/Spinner";
 import { AiFillThunderbolt } from "react-icons/ai";
 import HomeQuickActionsAnimation from "../../components/Menus/MenuAnimations/HomeQuickActionsAnimation";
 import useGroup from "../../api/services/useGroup";
-import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
-import NonGroupUsersAnimation from "../../components/Menus/MenuAnimations/NonGroupUsersAnimation";
 import CreateExpenseForm from "../../components/CreateExpenseForm/CreateExpenseForm";
+import TransferForm from "../../components/TransferForm/TransferForm";
+import NonGroupExpenseUsersAnimation from "../../components/Menus/MenuAnimations/NonGroupExpenseUsersAnimation";
+import NonGroupTransferUsersAnimation from "../../components/Menus/MenuAnimations/NonGroupTransferUsersAnimation";
 
 export default function Home() {
   const navigate = useNavigate();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const isPersonal = useSignal<boolean>(true);
   const isNonGroupExpense = useSignal<boolean>(false);
+  const isNonGroupTransfer = useSignal<boolean>(true);
   const [showAdvice, setShowAdvice] = useState(true);
   const theme = useTheme();
 
@@ -58,7 +60,24 @@ export default function Home() {
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
   const menu = useSignal<string | null>(null);
-  const nonGroupMenu = useSignal<string | null>(null);
+  const nonGroupExpenseMenu = useSignal<string | null>(null);
+  const nonGroupTransferMenu = useSignal<{
+    attribute: string;
+    menu: string | null;
+    senderId: string;
+    senderName: string;
+    receiverId: string;
+    receiverName: string;
+  }>({
+    attribute: "",
+    menu: null,
+    senderId: '',
+    senderName: "",
+    receiverId: "",
+    receiverName: "",
+  });
+
+
   const quickActionsMenu = useSignal<string | null>(null);
   const recentGroupId = userInfo?.recentGroupId;
 
@@ -234,21 +253,40 @@ export default function Home() {
           groupMembers={groupMembers}
           currency={userInfo.currency}
           nonGroupUsers={nonGroupUsers}
-          nonGroupMenu={nonGroupMenu}
+          nonGroupMenu={nonGroupExpenseMenu}
           nonGroupGroups={nonGroupGroups}
+        />
+      )}
+      {quickActionsMenu.value === "newTransfer" && (
+        <TransferForm
+          groupId={nonGroupGroups?.value[0]?.id}
+          timeZoneId={userInfo.timeZone}
+          menu={quickActionsMenu}
+          isnonGroupTransfer={isNonGroupTransfer}
+          groupMembers={groupMembers}
+          currency={userInfo.currency}
+          nonGroupUsers={nonGroupUsers}
+          nonGroupGroups={nonGroupGroups}
+          nonGroupMenu={nonGroupTransferMenu}
         />
       )}
 
       <HomeQuickActionsAnimation
-        menu={quickActionsMenu}
+        quickActionsMenu={quickActionsMenu}
         isNonGroupExpense={isNonGroupExpense}
+        nonGroupTransferMenu={nonGroupTransferMenu}
+        userInfo={userInfo}
       />
-      <NonGroupUsersAnimation
-        menu={nonGroupMenu}
+      <NonGroupExpenseUsersAnimation
+        menu={nonGroupExpenseMenu}
         nonGroupUsers={nonGroupUsers}
         isPersonal={isPersonal}
         groupMembers={groupMembers}
         nonGroupGroups={nonGroupGroups}
+        isNonGroupExpense={isNonGroupExpense}
+      />
+      <NonGroupTransferUsersAnimation
+        nonGroupTransferMenu={nonGroupTransferMenu}
       />
     </StyledHomepage>
   );
