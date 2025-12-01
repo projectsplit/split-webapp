@@ -70,14 +70,16 @@ export default function ExpenseForm({
     (item): item is Member => "userId" in item
   );
 
-  const userMemberId = userMembers?.find((m) => m.userId === userInfo?.userId)?.id;
+  const userMemberId = userMembers?.find(
+    (m) => m.userId === userInfo?.userId
+  )?.id;
   const isSubmitting = useSignal<boolean>(false);
 
   const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
-    useExpense(menu, groupId, navigate,isSubmitting, isnonGroupExpense);
+    useExpense(menu, groupId, navigate, isSubmitting, isnonGroupExpense);
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
-    useEditExpense(menu, groupId,isSubmitting, selectedExpense);
+    useEditExpense(menu, groupId, isSubmitting, selectedExpense);
 
   const [amount, setAmount] = useState<string>(
     isCreateExpense || !expense ? "" : expense.amount
@@ -298,6 +300,7 @@ export default function ExpenseForm({
         nonGroupGroup: nonGroupGroup?.value,
         groupMembers: groupMembers.value,
       };
+      if(groupMembers.value.length>0||nonGroupUsers.value.length>0||nonGroupGroup?.value)
       localStorage.setItem("nonGroupExpenseData", JSON.stringify(data));
     }
   };
@@ -395,6 +398,14 @@ export default function ExpenseForm({
     amountNumber &&
     !isPersonal.value;
 
+  const showMakePersonal =
+    isPersonal.value===false &&
+    amountNumber 
+    &&
+    !((adjustParticipants.filter((m) => m.selected).length === 1&&adjustParticipants[0].name==='you') &&
+    (adjustPayers.filter((m) => m.selected).length === 1&&adjustPayers[0].name==='you'));
+
+    console.log(showShareExpenseButton)
   return (
     <StyledExpenseForm>
       <div className="header">
@@ -437,7 +448,6 @@ export default function ExpenseForm({
           <div className="textStyleInfo">
             {nonGroupGroup && nonGroupGroup.value ? (
               <div className="definition">
-                
                 <span className="labelStyle">
                   <div className="info">
                     {" "}
@@ -523,6 +533,21 @@ export default function ExpenseForm({
             onClick={() => (nonGroupMenu.value = "nonGroupExpenseUsers")}
           >
             Share Expense{" "}
+          </div>
+        </div>
+      ) : null}
+      {showMakePersonal && nonGroupMenu ? (
+        <div className="shareExpenseOption">
+          <div
+            className="button"
+            onClick={() => {
+               localStorage.removeItem("nonGroupExpenseData");
+              isPersonal.value = true;
+              nonGroupUsers.value = [];
+             
+            }}
+          >
+            Make Personal{" "}
           </div>
         </div>
       ) : null}

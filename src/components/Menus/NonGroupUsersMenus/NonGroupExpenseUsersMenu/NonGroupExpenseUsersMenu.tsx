@@ -176,13 +176,11 @@ export const NonGroupExpenseUsersMenu = ({
     );
   }, [userGroups, nonGroupGroup.value]);
 
-  const isEmpty = useMemo(
-    () =>
-      nonGroupUsers.value?.length === 0 &&
+  const isEmpty = useMemo(() => {
+   return (nonGroupUsers.value?.length === 0||nonGroupUsers.value?.length === 1) &&
       keyword.length === 0 &&
-      !nonGroupGroup.value,
-    [nonGroupUsers.value, nonGroupGroup.value, keyword]
-  );
+      !nonGroupGroup.value;
+  }, [nonGroupUsers.value, nonGroupGroup.value, keyword]);
 
   const isPersonalFn = () => {
     if (nonGroupUsers.value.length > 0 || groupMembers.value.length > 0) {
@@ -205,7 +203,7 @@ export const NonGroupExpenseUsersMenu = ({
               }}
             />
           </div>
-          <div className="title">Share expense with</div>
+          <div className="title">Share expense with you and...</div>
           <div className="gap"></div>
         </div>
         <div className="categories">

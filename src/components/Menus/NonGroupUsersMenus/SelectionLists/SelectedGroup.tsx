@@ -36,7 +36,7 @@ const StyledSelectedGroup = styled.span`
   cursor: pointer;
   font-size: 14px;
   font-weight: 700;
-  margin-bottom:5px;
+  margin-bottom: 5px;
   .info {
     display: flex;
     flex-direction: row;

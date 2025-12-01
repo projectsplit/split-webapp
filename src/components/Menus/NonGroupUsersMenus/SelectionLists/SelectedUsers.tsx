@@ -2,6 +2,7 @@ import React from "react";
 import { User } from "../../../../types";
 import { BsFillPersonFill } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
+import { styled } from "styled-components";
 
 export const SelectedUsers = React.memo(
   ({
@@ -15,7 +16,7 @@ export const SelectedUsers = React.memo(
   }) => {
     return users.map((user) =>
       user.userId !== currentUserId ? (
-        <span
+        <StyledSelectedUser
           key={user.userId}
           style={{
             backgroundColor: "white",
@@ -31,8 +32,27 @@ export const SelectedUsers = React.memo(
           </div>
 
           <IoClose />
-        </span>
+        </StyledSelectedUser>
       ) : null
     );
   }
 );
+
+const StyledSelectedUser = styled.span`
+  color: #000000a2;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border-radius: 5px;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom:5px;
+  .info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+  }
+`;
