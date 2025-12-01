@@ -1,9 +1,6 @@
 import styled from "styled-components";
 
-export const StyledNonGroupUsersMenu = styled.div<{
-  $hasError?: boolean;
-  // $isOpen?: boolean;
-}>`
+export const StyledNonGroupTransferUsersMenu = styled.div`
   position: fixed;
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.layer2};
@@ -15,15 +12,16 @@ export const StyledNonGroupUsersMenu = styled.div<{
   z-index: 10;
   display: flex;
   flex-direction: column;
-
   gap: 20px;
   bottom: 0;
   overflow-y: auto;
+
   .fixedHeader {
     position: sticky;
     top: 0;
     z-index: 5;
     background-color: ${({ theme }) => theme.layer2};
+
     .header {
       display: flex;
       flex-direction: row;
@@ -31,6 +29,7 @@ export const StyledNonGroupUsersMenu = styled.div<{
       justify-content: space-between;
       flex-shrink: 0;
       padding: 12px 16px;
+
       .closeButtonContainer {
         position: relative;
         cursor: pointer;
@@ -63,25 +62,13 @@ export const StyledNonGroupUsersMenu = styled.div<{
         margin-right: 0.9375rem;
       }
     }
-    .categories {
-      margin-top: 7px;
-    }
   }
 
-  .separator {
-    position: sticky;
-    min-height: 1px;
-    transform: translateZ(0);
-  }
-
-  .spacer {
-    flex-grow: 1; /* This pushes the button to the bottom */
-  }
   .scrollable-content {
     overflow-y: auto;
     flex: 1;
-
     padding-bottom: 180px;
+
     .members {
       display: flex;
       flex-direction: column;
@@ -104,25 +91,25 @@ export const StyledNonGroupUsersMenu = styled.div<{
       .search-input {
         width: 100%;
         flex: 1;
-
         font-size: 16px;
       }
-      /* .createButton{
-      margin-left: 10px;
-    } */
       .main {
         width: 100%;
-
         transition: border-color 0.15s;
         background-color: ${({ theme }) => theme.inputGrey};
         display: flex;
         gap: 4px;
-        align-items: center;
-
         border-radius: 8px;
         padding: 8px 16px;
         flex-wrap: wrap;
         position: relative;
+
+        .search-annotation {
+          position: absolute;
+          flex: 1;
+          color: grey;
+          cursor: text;
+        }
         .selected-label {
           color: #000000a2;
           display: flex;
@@ -133,33 +120,24 @@ export const StyledNonGroupUsersMenu = styled.div<{
           cursor: pointer;
           font-size: 14px;
           font-weight: 700;
-          .info{
-            display:flex;
-            flex-direction:row;
-            align-items:center;
-            gap:5px;
+          .info {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 5px;
           }
-        }
-
-        .input {
-          flex: 1;
-        }
-
-        .icon {
-          display: flex;
-          font-size: 1.4rem;
-          margin-left: auto; /* Pushes the button to the right */
-          cursor: pointer;
-        }
-        .search-annotation {
-          position: absolute;
-          flex: 1;
-          color: grey;
-          cursor: text;
         }
       }
     }
+    .dropdown {
+      margin-top: 20px;
+      .spinner {
+        display: flex;
+        justify-content: center;
+      }
+    }
   }
+
   .doneButton {
     position: fixed;
     bottom: 40px;

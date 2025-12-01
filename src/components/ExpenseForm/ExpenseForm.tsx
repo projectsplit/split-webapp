@@ -58,7 +58,7 @@ export default function ExpenseForm({
   isnonGroupExpense,
   currency,
   nonGroupMenu,
-  nonGroupGroups,
+  nonGroupGroup,
 }: ExpenseFormProps) {
   const isInitialRender = useRef<boolean>(true);
   const navigate = useNavigate();
@@ -66,15 +66,15 @@ export default function ExpenseForm({
     userInfo: UserInfo;
   }>();
 
-  const members = groupMembers?.value.filter(
+  const userMembers = groupMembers?.value.filter(
     (item): item is Member => "userId" in item
   );
 
-  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
+  const userMemberId = userMembers?.find((m) => m.userId === userInfo?.userId)?.id;
   const isSubmitting = useSignal<boolean>(false);
 
   const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
-    useExpense(menu, groupId, navigate,isSubmitting, isnonGroupExpense,);
+    useExpense(menu, groupId, navigate,isSubmitting, isnonGroupExpense);
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
     useEditExpense(menu, groupId,isSubmitting, selectedExpense);
@@ -295,7 +295,7 @@ export default function ExpenseForm({
     if (isnonGroupExpense && isnonGroupExpense.value) {
       const data = {
         nonGroupUsers: nonGroupUsers.value,
-        nonGroupGroups: nonGroupGroups?.value,
+        nonGroupGroup: nonGroupGroup?.value,
         groupMembers: groupMembers.value,
       };
       localStorage.setItem("nonGroupExpenseData", JSON.stringify(data));
@@ -408,8 +408,8 @@ export default function ExpenseForm({
               groupMembers.value = [];
               isPersonal.value = true;
               isnonGroupExpense.value = false;
-              if (nonGroupGroups) {
-                nonGroupGroups.value = [];
+              if (nonGroupGroup) {
+                nonGroupGroup.value = null;
               }
             }
             menu.value = null;
@@ -435,14 +435,14 @@ export default function ExpenseForm({
       {showDetailedSharedExpenseText ? (
         <div className="errorsWrapper">
           <div className="textStyleInfo">
-            {nonGroupGroups && nonGroupGroups?.value.length > 0 ? (
+            {nonGroupGroup && nonGroupGroup.value ? (
               <div className="definition">
-                With{" "}
+                
                 <span className="labelStyle">
                   <div className="info">
                     {" "}
                     <TiGroup />
-                    {nonGroupGroups?.value[0].name}
+                    {nonGroupGroup.value.name}
                   </div>
                 </span>
                 :
@@ -491,7 +491,7 @@ export default function ExpenseForm({
             {isCreateExpense && nonGroupMenu ? (
               <div
                 className="editButton"
-                onClick={() => (nonGroupMenu.value = "nongroupusers")}
+                onClick={() => (nonGroupMenu.value = "nonGroupExpenseUsers")}
               >
                 <FaRegEdit />
               </div>
@@ -520,7 +520,7 @@ export default function ExpenseForm({
         <div className="shareExpenseOption">
           <div
             className="button"
-            onClick={() => (nonGroupMenu.value = "nongroupusers")}
+            onClick={() => (nonGroupMenu.value = "nonGroupExpenseUsers")}
           >
             Share Expense{" "}
           </div>

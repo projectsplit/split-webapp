@@ -4,18 +4,28 @@ import { FaReceipt } from "react-icons/fa";
 import { BiTransfer } from "react-icons/bi";
 
 export default function HomeQuickActionsMenu({
-  menu,
-  isNonGroupExpense
+  quickActionsMenu,
+  isNonGroupExpense,
+  nonGroupTransferMenu,
+  userInfo
 }: HomeQuickActionsMenuprops) {
+
   return (
     <StyledHomeQuickActionsMenu>
       <div className="buttons">
         <div
           className="new"
-          // onClick={() => {
-          //   isPersonal.value = true;
-          //   menu.value = "newExpense";
-          // }}
+          onClick={() => {
+            quickActionsMenu.value = "newTransfer";
+            nonGroupTransferMenu.value = {
+              attribute: "", 
+              menu: null, 
+              senderId: userInfo.userId, 
+              senderName: "You",
+              receiverId: "",
+              receiverName: "",
+            };
+          }}
         >
           <div className="descr">Transfer</div>
           <div className="wrapper">
@@ -25,8 +35,8 @@ export default function HomeQuickActionsMenu({
         <div
           className="new"
           onClick={() => {
-            menu.value = "newExpense";
-             isNonGroupExpense.value=true;
+            quickActionsMenu.value = "newExpense";
+            isNonGroupExpense.value = true;
           }}
         >
           <div className="descr">Expense</div>

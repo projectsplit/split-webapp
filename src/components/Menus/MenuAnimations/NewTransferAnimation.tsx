@@ -4,9 +4,13 @@ import TransferForm from "../../TransferForm/TransferForm";
 import { useRef } from "react";
 
 export default function NewTransferAnimation({
-  group,
   timeZoneId,
   menu,
+  groupMembers,
+  nonGroupUsers,
+  currency,
+  isnonGroupTransfer,
+  groupId,
 }: NewTransferAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -16,7 +20,15 @@ export default function NewTransferAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <TransferForm group={group} timeZoneId={timeZoneId} menu={menu} />
+      <TransferForm
+        groupId={groupId}
+        timeZoneId={timeZoneId}
+        menu={menu}
+        groupMembers={groupMembers}
+        nonGroupUsers={nonGroupUsers}
+        currency={currency}
+        isnonGroupTransfer={isnonGroupTransfer}
+      />
     </CSSTransition>
   );
 }

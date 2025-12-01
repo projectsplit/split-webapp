@@ -25,6 +25,7 @@ import { CategoryButton } from "../../components/CategoryButton/CategoryButton";
 import TopBarWithBackButton from "../../components/TopBarWithBackButton/TopBarWithBackButton";
 import Spinner from "../../components/Spinner/Spinner";
 import { useCumulativeSpendingArray } from "../../api/services/useCumulativeSpendingArray";
+import { timeZones } from "../../helpers/timeZones";
 
 export default function Analytics() {
   const [selectedChart, setSelectedChart] =
@@ -112,7 +113,7 @@ export default function Analytics() {
   const { data, isSuccess, isFetching } = useCumulativeSpendingArray(
     startDate.value,
     endDate.value,
-    currency ,
+    currency,
     selectedCycle.value
   );
 
@@ -188,6 +189,7 @@ export default function Analytics() {
                   currency={currency}
                   backendData={data}
                   isSuccess={isSuccess}
+                  timeZone={userInfo.timeZone}
                 />
               )}
               {selectedChart === "barChart" && (
@@ -205,6 +207,7 @@ export default function Analytics() {
                   currency={currency}
                   backendData={data}
                   isSuccess={isSuccess}
+                  timeZone={userInfo.timeZone}
                 />
               )}
               {selectedChart === "totalLentBorrowed" && (
@@ -222,6 +225,7 @@ export default function Analytics() {
                   currency={currency}
                   backendData={data}
                   isSuccess={isSuccess}
+                  timeZone={userInfo.timeZone}
                 />
               )}
             </div>

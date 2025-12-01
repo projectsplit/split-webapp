@@ -30,7 +30,7 @@ import {
   Guest,
   User,
 } from "./types";
-import { Signal } from "@preact/signals-react";
+import { ReadonlySignal, Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
 import {
   BeautifulMentionsItem,
@@ -169,10 +169,10 @@ export interface MemberPickerProps {
   setError: React.Dispatch<React.SetStateAction<string>>;
   isnonGroupExpense?: Signal<boolean>;
   userId: string;
-   groupMembers: Signal<(Member | Guest)[]>;
+  groupMembers: Signal<(Member | Guest)[]>;
   nonGroupUsers: Signal<User[]>;
-  isLoading:boolean,
-  isCreateExpense:boolean
+  isLoading: boolean;
+  isCreateExpense: boolean;
 }
 
 export interface DayPickerProps {
@@ -445,16 +445,20 @@ export interface NewExpenseAnimationProps {
 }
 
 export interface NewTransferAnimationProps {
-  group: Group;
   timeZoneId: string;
   menu: Signal<string | null>;
+  groupMembers: Signal<(Member | Guest)[]>;
+  nonGroupUsers: Signal<User[]>;
+  currency: string;
+  groupId?: string;
+  isnonGroupTransfer?: Signal<boolean>;
 }
 
 export interface ExpenseFormProps {
   groupMembers: Signal<(Member | Guest)[]>;
   nonGroupUsers: Signal<User[]>;
   groupId?: string;
-  expense: FormExpense | null;//make this signal, and then make null when toggling a lock so it does not use prev expense any more
+  expense: FormExpense | null; //make this signal, and then make null when toggling a lock so it does not use prev expense any more
   timeZoneId: string;
   menu: Signal<string | null>;
   timeZoneCoordinates: Coordinates;
@@ -462,39 +466,92 @@ export interface ExpenseFormProps {
   selectedExpense?: Signal<ExpenseResponseItem | null>;
   isCreateExpense: boolean;
   isPersonal: Signal<boolean>;
-  isnonGroupExpense?:Signal<boolean>;
+  isnonGroupExpense?: Signal<boolean>;
   currency: string;
   nonGroupMenu?: Signal<string | null>;
-  nonGroupGroups?:Signal<Group[]>
+  nonGroupGroup?: Signal<Group | null>;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
   selectedExpense?: Signal<ExpenseResponseItem | null>;
-
 }
 
 export interface TransferFormProps {
-  group: Group;
+  // group: Group;
+  groupMembers: Signal<(Member | Guest)[]>;
+  nonGroupUsers: Signal<User[]>;
+  currency: string;
   timeZoneId: string;
   menu: Signal<string | null>;
+  nonGroupGroup?: Signal<Group | null>;
+  groupId?: string;
+  isnonGroupTransfer?: Signal<boolean>;
+  nonGroupMenu?: Signal<{
+    attribute: string;
+    menu: string | null;
+    senderId: string;
+    senderName: string;
+    receiverId: string;
+    receiverName: string;
+  }>;
 }
 
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
-export interface HomeQuickActionsAnimationProps extends MenuProps {
+export interface HomeQuickActionsAnimationProps {
+  quickActionsMenu: Signal<string | null>;
   isNonGroupExpense: Signal<boolean>;
+  nonGroupTransferMenu: Signal<{
+    attribute: string;
+    menu: string | null;
+    senderId: string;
+    senderName: string;
+    receiverId: string;
+    receiverName: string;
+  }>;
+  userInfo: UserInfo;
 }
-export interface NonGroupUsersAnimationProps extends MenuProps {
+export interface NonGroupExpenseUsersAnimationProps extends MenuProps {
   nonGroupUsers: Signal<User[]>;
   isPersonal: Signal<boolean>;
   groupMembers: Signal<(Guest | Member)[]>;
-  nonGroupGroups:Signal<Group[]>
+  nonGroupGroup: Signal<Group | null>;
+  isNonGroupExpense: Signal<boolean>;
+}
+
+export interface NonGroupTransferAnimationProps {
+  nonGroupTransferMenu: Signal<{
+    attribute: string;
+    menu: string | null;
+    senderId: string;
+    senderName: string;
+    receiverId: string;
+    receiverName: string;
+  }>;
+  nonGroupGroup: Signal<Group | null>;
+  groupMembers: Signal<(Guest | Member)[]>;
+  isNonGroupTransfer : Signal<boolean>;
+}
+
+export interface NonGroupTransferMenuProps {
+  nonGroupTransferMenu: Signal<{
+    attribute: string;
+    menu: string | null;
+    senderId: string;
+    senderName: string;
+    receiverId: string;
+    receiverName: string;
+  }>;
+  nonGroupGroup: Signal<Group | null>;
+  groupMembers: Signal<(Guest | Member)[]>;
+  isNonGroupTransfer : Signal<boolean>;
 }
 
 export interface NonGroupUsersProps extends MenuProps {
   nonGroupUsers: Signal<User[]>;
   isPersonal: Signal<boolean>;
   groupMembers: Signal<(Guest | Member)[]>;
-  nonGroupGroups:Signal<Group[]>
+  nonGroupGroup: Signal<Group | null>;
+  isNonGroupExpense: Signal<boolean>;
 }
 export interface LocationPickerAnimationProps extends MenuProps {
   location: GeoLocation | undefined;
@@ -504,9 +561,35 @@ export interface UserItemProps {
   name: string;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
+
+export interface UserProps {
+  name: string;
+  userId: string;
+  nonGroupTransferMenu: Signal<{
+    attribute: string;
+    menu: string | null;
+    senderId: string;
+    senderName: string;
+    receiverId: string;
+    receiverName: string;
+  }>;
+  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+  currentUserId: string;
+}
+
 export interface GroupQuickActionsMenuprops extends MenuProps {}
-export interface HomeQuickActionsMenuprops extends MenuProps {
+export interface HomeQuickActionsMenuprops {
+  quickActionsMenu: Signal<string | null>;
   isNonGroupExpense: Signal<boolean>;
+  nonGroupTransferMenu: Signal<{
+    attribute: string;
+    menu: string | null;
+    senderId: string;
+    senderName: string;
+    receiverId: string;
+    receiverName: string;
+  }>;
+  userInfo: UserInfo;
 }
 export interface DeleteExpenseAnimationProps extends MenuProps {
   description: string;
@@ -830,9 +913,9 @@ export interface NameAndAmountsProps {
   m: PickerMember;
   onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
   currency: string;
-  isnonGroupExpense:Signal<boolean> | undefined
-  userId:string
-  description:string;
+  isnonGroupExpense: Signal<boolean> | undefined;
+  userId: string;
+  description: string;
 }
 
 export interface CurrentSearchFieldProps {
@@ -1051,6 +1134,7 @@ export interface CumulativeSpendingProps {
   currency: string;
   backendData: SpendingChartsResponse | undefined;
   isSuccess: boolean;
+  timeZone: string;
 }
 
 export interface BarChartProps extends CumulativeSpendingProps {}
@@ -1186,4 +1270,19 @@ export interface LabelsDisplayProps {
   labels: Label[];
   setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
   labelMenuIsOpen: Signal<boolean>;
+}
+
+export interface SendMenuWrapperInterface {
+  title: string;
+  idError: {
+    isSenderError: boolean;
+    isReceiverError: boolean;
+    error: string;
+  };
+  showIdError: boolean;
+  sortedMembers: ReadonlySignal<(Member | Guest)[]>;
+  id: string;
+  userMemberId: string | undefined;
+  setId: (value: React.SetStateAction<string>) => void;
+  setShowIdError: (value: React.SetStateAction<boolean>) => void;
 }

@@ -1,35 +1,40 @@
-import { StyledNonGroupUsersMenu } from "./NonGroupUsersMenu.styled";
-import { NonGroupUsersProps } from "../../../interfaces";
-import { CategorySelector } from "../../CategorySelector/CategorySelector";
+import { StyledNonGroupExpenseUsersMenu } from "./NonGroupExpenseUsersMenu.styled";
+import { NonGroupUsersProps } from "../../../../interfaces";
+import { CategorySelector } from "../../../CategorySelector/CategorySelector";
 import { useSignal } from "@preact/signals-react";
 import { BiArrowBack } from "react-icons/bi";
-import MyButton from "../../MyButton/MyButton";
-import Sentinel from "../../Sentinel";
+import MyButton from "../../../MyButton/MyButton";
+import Sentinel from "../../../Sentinel";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { useSearchUsersToInvite } from "../../../api/services/useSearchUsersToInvite";
-import useDebounce from "../../../hooks/useDebounce";
-import AutoWidthInput from "../../AutoWidthInput";
-import { SearchUserToInviteResponseItem, User, UserInfo } from "../../../types";
-import Item from "./Item/Item";
+import AutoWidthInput from "../../../AutoWidthInput";
+import {
+  SearchUserToInviteResponseItem,
+  User,
+  UserInfo,
+} from "../../../../types";
+import Item from "../Item/Item";
 import React from "react";
-import { SelectedGroups } from "./SelectionLists/SelectedGroups";
-import { SelectedUsers } from "./SelectionLists/SelectedUsers";
-import { useSearchGroupsByName } from "../../../api/services/useSearchGroupsByName";
+import { SelectedUsers } from "../SelectionLists/SelectedUsers";
+import { useSearchGroupsByName } from "../../../../api/services/useSearchGroupsByName";
 import { useOutletContext } from "react-router-dom";
+import { useSearchFriendsToInvite } from "../../../../api/services/useSearchFriendsToInvite";
+import useDebounce from "../../../../hooks/useDebounce";
+import { SelectedGroup } from "../SelectionLists/SelectedGroup";
 
-export const NonGroupUsersMenu = ({
+export const NonGroupExpenseUsersMenu = ({
   menu,
   nonGroupUsers,
   isPersonal,
   groupMembers,
-  nonGroupGroups,
+  nonGroupGroup,
+  isNonGroupExpense,
 }: NonGroupUsersProps) => {
   const category = useSignal<string>("Friends");
   const [keyword, setKeyword] = useState("");
   const pageSize = 10;
-  const [debouncedKeyword, _isDebouncing] = useDebounce<string>(
+  const [debouncedKeyword] = useDebounce(
     keyword.length > 1 ? keyword : "",
-    500
+    300
   );
   const inputRef = useRef<HTMLInputElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
@@ -39,17 +44,15 @@ export const NonGroupUsersMenu = ({
     userInfo: UserInfo;
   }>();
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    updateUserInvitationStatus,
-  } = useSearchUsersToInvite(
+  const result = useSearchFriendsToInvite(
     "f7637b50-e77d-4609-9e38-eb0acc9c9c51",
     debouncedKeyword,
-    pageSize
+    pageSize,
+    isNonGroupExpense.value
   );
+
+  if (!result) return null;
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = result;
 
   const {
     data: userGroups,
@@ -67,8 +70,9 @@ export const NonGroupUsersMenu = ({
       (x) => x.userId !== userId
     );
   };
-  const handleSelectedGroupCick = (groupId: string) => {
-    nonGroupGroups.value = nonGroupGroups.value.filter((x) => x.id !== groupId);
+
+  const handleSelectedGroupCick = () => {
+    nonGroupGroup.value = null;
     groupMembers.value = [];
   };
 
@@ -112,9 +116,8 @@ export const NonGroupUsersMenu = ({
 
   const handleSuggestedUserClick = useCallback(
     (username: string) => {
-      nonGroupGroups.value = [];
+      nonGroupGroup.value = null;
       groupMembers.value = [];
-
       addUser(username);
     },
     [addUser]
@@ -128,21 +131,22 @@ export const NonGroupUsersMenu = ({
         .find((x) => x.id === groupId);
 
       if (!existingGroup) return;
-      nonGroupGroups.value = [
-        {
-          id: existingGroup.id,
-          name: existingGroup.name,
-          created: existingGroup.created,
-          updated: existingGroup.updated,
-          ownerId: existingGroup.ownerId,
-          members: existingGroup.members,
-          labels: existingGroup.labels,
-          isArchived: existingGroup.isArchived,
-          guests: existingGroup.guests,
-          currency: existingGroup.currency,
-        },
-      ];
-      groupMembers.value = [...existingGroup.members, ...existingGroup.guests];
+      (nonGroupGroup.value = {
+        id: existingGroup.id,
+        name: existingGroup.name,
+        created: existingGroup.created,
+        updated: existingGroup.updated,
+        ownerId: existingGroup.ownerId,
+        members: existingGroup.members,
+        labels: existingGroup.labels,
+        isArchived: existingGroup.isArchived,
+        guests: existingGroup.guests,
+        currency: existingGroup.currency,
+      }),
+        (groupMembers.value = [
+          ...existingGroup.members,
+          ...existingGroup.guests,
+        ]);
     },
     [userGroups]
   );
@@ -168,16 +172,16 @@ export const NonGroupUsersMenu = ({
     return (
       userGroups?.pages
         .flatMap((x) => x.groups)
-        .filter((x) => !nonGroupGroups.value.some((g) => g.id === x.id)) ?? []
+        .filter((x) => nonGroupGroup.value?.id !== x.id) ?? []
     );
-  }, [userGroups, nonGroupGroups.value]);
+  }, [userGroups, nonGroupGroup.value]);
 
   const isEmpty = useMemo(
     () =>
       nonGroupUsers.value?.length === 0 &&
       keyword.length === 0 &&
-      nonGroupGroups.value?.length === 0,
-    [nonGroupUsers.value, nonGroupGroups.value, keyword]
+      !nonGroupGroup.value,
+    [nonGroupUsers.value, nonGroupGroup.value, keyword]
   );
 
   const isPersonalFn = () => {
@@ -189,7 +193,7 @@ export const NonGroupUsersMenu = ({
   };
 
   return (
-    <StyledNonGroupUsersMenu>
+    <StyledNonGroupExpenseUsersMenu>
       <div className="fixedHeader">
         <div className="header">
           <div className="closeButtonContainer">
@@ -230,8 +234,8 @@ export const NonGroupUsersMenu = ({
               onRemove={handleSelectedUserCick}
               currentUserId={userInfo.userId}
             />
-            <SelectedGroups
-              groups={nonGroupGroups.value}
+            <SelectedGroup
+              group={nonGroupGroup.value}
               onRemove={handleSelectedGroupCick}
             />
 
@@ -281,7 +285,6 @@ export const NonGroupUsersMenu = ({
                 ))}
               </div>
             )}
-
         <Sentinel
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
@@ -303,6 +306,6 @@ export const NonGroupUsersMenu = ({
           Done
         </MyButton>
       </div>
-    </StyledNonGroupUsersMenu>
+    </StyledNonGroupExpenseUsersMenu>
   );
 };

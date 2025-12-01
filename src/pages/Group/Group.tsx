@@ -40,8 +40,8 @@ export default function Group() {
   const showBottomBar = useSignal<boolean>(false);
   const groupError = useSignal<errorObject>();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
-  const expenseParsedFilters = useSignal<ExpenseParsedFilters>({})
-  const transferParsedFilters = useSignal<TransferParsedFilters>({})
+  const expenseParsedFilters = useSignal<ExpenseParsedFilters>({});
+  const transferParsedFilters = useSignal<TransferParsedFilters>({});
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
@@ -103,7 +103,6 @@ export default function Group() {
     }
   }, [isError, groupError.value, navigate]);
 
-
   return (
     <StyledGroup>
       {isFetching ? (
@@ -130,7 +129,15 @@ export default function Group() {
             }}
             navLinkUse={true}
           />
-          <Outlet context={{ userInfo, group, showBottomBar,expenseParsedFilters,transferParsedFilters }} />
+          <Outlet
+            context={{
+              userInfo,
+              group,
+              showBottomBar,
+              expenseParsedFilters,
+              transferParsedFilters,
+            }}
+          />
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}
 
           <MenuAnimationBackground menu={menu} />
@@ -145,16 +152,20 @@ export default function Group() {
               timeZoneCoordinates={timeZoneCoordinates}
               isPersonal={signal(false)}
               currency={group.currency}
-              groupMembers={signal([...group.members,...group.guests])}
+              groupMembers={signal([...group.members, ...group.guests])}
               isnonGroupExpense={signal(false)}
               nonGroupUsers={signal([])}
             />
           )}
           {group && (
             <NewTransferAnimation
-              group={group}
+              groupId={group.id}
               timeZoneId={timeZoneId}
               menu={menu}
+              currency={group.currency}
+              groupMembers={signal([...group.members, ...group.guests])}
+              isnonGroupTransfer={signal(false)}
+              nonGroupUsers={signal([])}
             />
           )}
           {group && <AddNewUserAnimation menu={menu} groupName={groupName} />}
@@ -167,7 +178,16 @@ export default function Group() {
             />
           )}
           <GroupQuickActionsAnimation menu={menu} />
-          {group && <SearchTransactionsAnimation menu={menu} group={group} userInfo={userInfo} timeZoneId={timeZoneId} expenseParsedFilters={expenseParsedFilters} transferParsedFilters={transferParsedFilters}/>}
+          {group && (
+            <SearchTransactionsAnimation
+              menu={menu}
+              group={group}
+              userInfo={userInfo}
+              timeZoneId={timeZoneId}
+              expenseParsedFilters={expenseParsedFilters}
+              transferParsedFilters={transferParsedFilters}
+            />
+          )}
           <div className="bottomMenu">
             {" "}
             <BottomMainMenu

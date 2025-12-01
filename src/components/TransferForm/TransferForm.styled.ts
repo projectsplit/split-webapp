@@ -1,6 +1,8 @@
 import styled from "styled-components";
 interface StyledTransferFormProps {
-  inputError?: boolean;
+  $inputError?: boolean;
+  $noReceiverSelected?: boolean;
+   $isSamePersonError:boolean;
 }
 
 export const StyledTransferForm = styled.div<StyledTransferFormProps>`
@@ -17,35 +19,74 @@ export const StyledTransferForm = styled.div<StyledTransferFormProps>`
   z-index: 10;
   bottom: 0;
   overflow-y: auto;
-  .sendMenuWrapper {
-    .sendMenu {
-      padding: 10px;
-      border: 1px solid
-        ${({ theme, inputError }) =>
-          inputError ? theme.errorColor : theme.backgroundcolor};
-      border-radius: 8px;
 
-      .title {
-        font-weight: 600;
-      }
-      .options {
+  .options {
+    .nonGroupMenu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+
+      .textAndButton {
         display: flex;
-        flex-direction: row;
-        gap: 5px;
-        flex-wrap: wrap;
-        margin-top: 10px;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        flex-shrink: 0;
 
-        .name {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
+        .button {
+          font-weight: bold;
+          border: 1px solid ;
+          border-radius: 5px;
+          padding: 4px 8px;
           cursor: pointer;
-          background-color: ${({ theme }) => theme.layer2};
-          border-width: 1px;
-          border-radius: 8px;
-          padding: 5px 12px;
-          gap: 3px;
-          font-size: 14px;
+          flex-shrink: 0;
+          &.receiverButton {
+            border-color: ${(props) =>
+              (props.$noReceiverSelected||props.$isSamePersonError)
+                ? props.theme.redish
+                : props.theme.highlightColor};
+          }
+
+          /* Sender button never red from this condition */
+          &.senderButton {
+            border-color: ${({ theme,$isSamePersonError }) => $isSamePersonError?theme.redish:theme.highlightColor};
+          }
+        }
+
+        @media (max-width: 275px) {
+          flex-direction: column;
+          gap: 4px;
+          white-space: normal;
+
+          .text {
+            text-align: center;
+          }
+        }
+      }
+    }
+    .buttonWrapper {
+      display: flex;
+      justify-content: center;
+      .groupButton {
+        margin-top: 20px;
+        width: 60px;
+        background-color: ${({ theme }) => theme.layer2};
+        cursor: pointer;
+        border-radius: 10px;
+        padding: 0.5rem;
+        .groupIcon {
+          display: flex;
+          justify-self: center;
+          color: ${({ theme }) => theme.deepPurple};
+          font-size: 30px;
+        }
+        .descr {
+          display: flex;
+          justify-self: center;
+          font-size: 10px;
+          margin-top: 3px;
         }
       }
     }
@@ -53,8 +94,9 @@ export const StyledTransferForm = styled.div<StyledTransferFormProps>`
       font-size: 12px;
       color: ${({ theme }) => theme.errorColor};
       display: flex;
-      justify-content: end;
+      justify-content: center;
     }
+ 
   }
 
   .header {
@@ -124,8 +166,16 @@ export const StyledTransferForm = styled.div<StyledTransferFormProps>`
       color: ${({ theme }) => theme.highlightColor};
       flex-shrink: 0;
       font-size: 30px;
-      margin-right: 10px;
+      
       margin-left: 10px;
     }
   }
+     .groupMenu {
+      .nonGroupGroupPill {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+
 `;

@@ -9,7 +9,8 @@ export const useStartAndEndDatesEffect = (
   selectedYear: Signal<number>,
   allWeeksPerYear: Date[][],
   startDate: Signal<string>,
-  endDate: Signal<string>
+  endDate: Signal<string>,
+  timeZone:string
 ) => {
 
   useEffect(() => {
@@ -17,7 +18,8 @@ export const useStartAndEndDatesEffect = (
       selectedCycle.value,
       selectedTimeCycleIndex.value,
       selectedYear.value,
-      allWeeksPerYear
+      allWeeksPerYear,
+      timeZone
     );
     startDate.value = startAndEndDates[0];
     endDate.value = startAndEndDates[1];
