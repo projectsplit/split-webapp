@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
-import { CreateTransferRequest } from "../../types";
+import { CreateTransferRequest, Group } from "../../types";
 import { Signal } from "@preact/signals-react";
 import { NavigateFunction } from "react-router-dom";
 
@@ -10,7 +10,7 @@ export const useTransfer = (
   groupId: string | undefined,
   navigate: NavigateFunction,
   isSubmitting: Signal<boolean>,
-  isNonGroupTransfer?: Signal<boolean>
+  nonGroupGroup?: Signal<Group | null>
 ) => {
   const queryClient = useQueryClient();
 
@@ -38,9 +38,9 @@ export const useTransfer = (
         queryKey: [groupId],
         exact: false,
       });
-      isSubmitting.value=false
+      isSubmitting.value = false;
       menu.value = null;
-      if (isNonGroupTransfer && isNonGroupTransfer.value) {
+      if (nonGroupGroup?.value) {
         navigate(`/groups/${groupId}/transfers`);
       }
     },

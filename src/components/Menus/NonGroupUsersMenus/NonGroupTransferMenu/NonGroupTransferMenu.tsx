@@ -10,10 +10,10 @@ import { useSearchFriendsToInvite } from "../../../../api/services/useSearchFrie
 import { useOutletContext } from "react-router-dom";
 import { UserInfo } from "../../../../types";
 import User from "../User/User";
-import ShimmerUserRow from "../../../ShimmersUserRow/ShimmerUserRow";
 import { useSearchGroupsByName } from "../../../../api/services/useSearchGroupsByName";
 import Item from "../Item/Item";
 import { SelectedGroup } from "../SelectionLists/SelectedGroup";
+import Spinner from "../../../Spinner/Spinner";
 
 export default function NonGroupTransferMenu({
   nonGroupTransferMenu,
@@ -46,13 +46,51 @@ export default function NonGroupTransferMenu({
 
   const handleSuggestedUserClick = (userId: string, username: string) => {
     const displayName = username === userInfo.username ? "You" : username;
+    const isSelf = userId === userInfo.userId;
 
-    nonGroupTransferMenu.value = {
-      ...nonGroupTransferMenu.value,
-      ...(nonGroupTransferMenu.value.attribute === "sender"
-        ? { senderId: userId, senderName: displayName }
-        : { receiverId: userId, receiverName: displayName }),
-    };
+    const menu = nonGroupTransferMenu.value;
+    const isSenderMode = menu.attribute === "sender";
+
+    if (isSelf) {
+      if (isSenderMode) {
+        nonGroupTransferMenu.value = {
+          ...menu,
+          receiverId: userInfo.userId,
+          receiverName: "You",
+
+          senderId: menu.receiverId || menu.senderId,
+          senderName: menu.receiverId ? menu.receiverName : menu.senderName,
+        };
+      } else {
+        nonGroupTransferMenu.value = {
+          ...menu,
+          senderId: userInfo.userId,
+          senderName: "You",
+
+          receiverId: menu.senderId || menu.receiverId,
+          receiverName: menu.senderId ? menu.senderName : menu.receiverName,
+        };
+      }
+      return;
+    }
+
+    if (isSenderMode) {
+      nonGroupTransferMenu.value = {
+        ...menu,
+        senderId: userId,
+        senderName: displayName,
+        receiverId: userInfo.userId,
+        receiverName: "You",
+      };
+    } else {
+      nonGroupTransferMenu.value = {
+        ...menu,
+        receiverId: userId,
+        receiverName: displayName,
+        senderId: userInfo.userId,
+        senderName: "You",
+      };
+    }
   };
 
   const handleFocus = () => {
@@ -176,13 +214,9 @@ export default function NonGroupTransferMenu({
         </div>
         <div className="dropdown" ref={dropdownRef}>
           {isFetching || groupsAreFetching ? (
-            <>
-              {Array(6)
-                .fill(null)
-                .map((_, i) => (
-                  <ShimmerUserRow key={i} />
-                ))}
-            </>
+            <div className="spinner">
+              <Spinner />
+            </div>
           ) : users.length > 0 &&
             (nonGroupTransferMenu.value.attribute === "sender" ||
               nonGroupTransferMenu.value.attribute === "receiver") ? (

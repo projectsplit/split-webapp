@@ -44,7 +44,10 @@ export default function TransferForm({
     error: string;
   }>({ isSenderError: false, isReceiverError: false, error: "" });
   const [amountError, setAmountError] = useState<string>("");
-  const [recipientError, setRecipientError] = useState<string>("");
+  const [userSelectionError, setUserSelectionError] = useState<{
+    recipientError: string;
+    isSameUserError: string;
+  }>({ recipientError: "", isSameUserError: "" });
   const [description, setDescription] = useState<string>("");
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
@@ -55,6 +58,8 @@ export default function TransferForm({
   const [senderId, setSenderId] = useState<string>("");
   const [receiverId, setReceiverId] = useState<string>("");
   const [showPicker, setShowPicker] = useState<boolean>(false);
+  const [showSamePersonError, setShowSamePersonError] =
+    useState<boolean>(false);
   const isDateShowing = useSignal<boolean>(false);
   const handleInputBlur = useCallback(() => {
     setShowAmountError(true);
@@ -69,14 +74,20 @@ export default function TransferForm({
     (m) => m.userId === userInfo?.userId
   )?.id;
 
-  const noReceiverSelected = nonGroupMenu?.value.receiverName === "";
+  const { noReceiverSelected, isSamePerson } = useMemo(() => {
+    return {
+      noReceiverSelected: nonGroupMenu?.value.receiverName === "",
+      isSamePerson:
+        nonGroupMenu?.value.senderId === nonGroupMenu?.value.receiverId,
+    };
+  }, [nonGroupMenu?.value.senderId, nonGroupMenu?.value.receiverId]);
 
   const { mutate: createTransferMutation, isPending } = useTransfer(
     menu,
     groupId,
     navigate,
     isSubmitting,
-    isnonGroupTransfer
+    nonGroupGroup
   );
 
   const handldeCurrencyOptionsClick = (curr: string) => {
@@ -88,7 +99,17 @@ export default function TransferForm({
     setShowAmountError(true);
     setShowIdError(true);
     if (noReceiverSelected) {
-      setRecipientError("Select a recipient");
+      setUserSelectionError({
+        ...userSelectionError,
+        recipientError: "Select a recipient",
+      });
+    }
+    if (isSamePerson) {
+      setUserSelectionError({
+        ...userSelectionError,
+        isSameUserError: "Sender and receiver cannot be the same person",
+      });
+      setShowSamePersonError(true);
     }
     if (!amountIsValid(amount, setAmountError)) return;
     if (!!idError.error) return;
@@ -157,12 +178,12 @@ export default function TransferForm({
     <StyledTransferForm
       $inputError={showIdError}
       $noReceiverSelected={noReceiverSelected}
+      $isSamePersonError={showSamePersonError}
     >
       {" "}
       <div className="header">
         <div className="gap"></div>
         <div className="title">New Transfer</div>
-
         <div
           className="closeButtonContainer"
           onClick={() => (menu.value = null)}
@@ -177,7 +198,8 @@ export default function TransferForm({
           onChange={(e) => {
             handleInputChange(e, currencySymbol, displayedAmount, setAmount);
             setShowAmountError(false);
-            setRecipientError("");
+            setShowSamePersonError(false);
+            setUserSelectionError({ isSameUserError: "", recipientError: "" });
           }}
           onBlur={handleInputBlur}
           currency={currencySymbol}
@@ -188,20 +210,28 @@ export default function TransferForm({
           {showAmountError && amountError ? amountError : ""}
         </span>
       </div>
-      {isnonGroupTransfer && isnonGroupTransfer.value && nonGroupMenu ? (
+      {isnonGroupTransfer &&
+      isnonGroupTransfer.value &&
+      nonGroupMenu &&
+      nonGroupGroup?.value === null ? (
         <div className="options">
           <div className="nonGroupMenu">
             <div className="textAndButton">
               <div className="text"> Sent from </div>
               <div
                 className="button senderButton"
-                onClick={() =>
-                  (nonGroupMenu.value = {
+                onClick={() => {
+                  nonGroupMenu.value = {
                     ...nonGroupMenu.value,
                     attribute: "sender",
                     menu: "nonGroupTransfer",
-                  })
-                }
+                  };
+                  setShowSamePersonError(false);
+                  setUserSelectionError({
+                    ...userSelectionError,
+                    isSameUserError: "",
+                  });
+                }}
               >
                 {nonGroupMenu.value.senderName}
               </div>{" "}
@@ -210,13 +240,18 @@ export default function TransferForm({
               <div className="text"> and received by </div>
               <div
                 className="button receiverButton"
-                onClick={() =>
-                  (nonGroupMenu.value = {
+                onClick={() => {
+                  nonGroupMenu.value = {
                     ...nonGroupMenu.value,
                     attribute: "receiver",
                     menu: "nonGroupTransfer",
-                  })
-                }
+                  };
+                  setShowSamePersonError(false);
+                  setUserSelectionError({
+                    ...userSelectionError,
+                    isSameUserError: "",
+                  });
+                }}
               >
                 {nonGroupMenu.value.receiverName === ""
                   ? "select user"
@@ -225,8 +260,13 @@ export default function TransferForm({
             </div>
           </div>
           <span className="errorMsg">
-            {showAmountError && recipientError && noReceiverSelected
-              ? recipientError
+            {showAmountError &&
+            userSelectionError.recipientError &&
+            noReceiverSelected
+              ? userSelectionError.recipientError
+              : ""}
+            {showAmountError && userSelectionError.isSameUserError
+              ? userSelectionError.isSameUserError
               : ""}
           </span>
           <div className="buttonWrapper">
@@ -256,8 +296,9 @@ export default function TransferForm({
                   isnonGroupTransfer.value = true;
                 }}
               />
+              <div />
             </div>
-          )}{" "}
+          )}
           <SendMenuWrapper
             title="Sender"
             idError={idError}

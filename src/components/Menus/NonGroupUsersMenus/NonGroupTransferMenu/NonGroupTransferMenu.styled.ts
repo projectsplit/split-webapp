@@ -63,7 +63,7 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
       }
     }
   }
-  
+
   .scrollable-content {
     overflow-y: auto;
     flex: 1;
@@ -110,7 +110,7 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
           color: grey;
           cursor: text;
         }
-         .selected-label {
+        .selected-label {
           color: #000000a2;
           display: flex;
           gap: 8px;
@@ -120,18 +120,21 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
           cursor: pointer;
           font-size: 14px;
           font-weight: 700;
-          .info{
-            display:flex;
-            flex-direction:row;
-            align-items:center;
-            gap:5px;
+          .info {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 5px;
           }
         }
-        
       }
     }
-    .dropdown{
-      margin-top:20px;
+    .dropdown {
+      margin-top: 20px;
+      .spinner {
+        display: flex;
+        justify-content: center;
+      }
     }
   }
 

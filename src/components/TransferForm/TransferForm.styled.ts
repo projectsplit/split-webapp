@@ -2,6 +2,7 @@ import styled from "styled-components";
 interface StyledTransferFormProps {
   $inputError?: boolean;
   $noReceiverSelected?: boolean;
+   $isSamePersonError:boolean;
 }
 
 export const StyledTransferForm = styled.div<StyledTransferFormProps>`
@@ -36,21 +37,21 @@ export const StyledTransferForm = styled.div<StyledTransferFormProps>`
 
         .button {
           font-weight: bold;
-          border: 1px solid ${({ theme }) => theme.highlightColor};
+          border: 1px solid ;
           border-radius: 5px;
           padding: 4px 8px;
           cursor: pointer;
           flex-shrink: 0;
           &.receiverButton {
             border-color: ${(props) =>
-              props.$noReceiverSelected
+              (props.$noReceiverSelected||props.$isSamePersonError)
                 ? props.theme.redish
                 : props.theme.highlightColor};
           }
 
           /* Sender button never red from this condition */
           &.senderButton {
-            border-color: ${({ theme }) => theme.highlightColor};
+            border-color: ${({ theme,$isSamePersonError }) => $isSamePersonError?theme.redish:theme.highlightColor};
           }
         }
 
@@ -89,12 +90,13 @@ export const StyledTransferForm = styled.div<StyledTransferFormProps>`
         }
       }
     }
-    .errorMsg{
-       font-size: 12px;
+    .errorMsg {
+      font-size: 12px;
       color: ${({ theme }) => theme.errorColor};
       display: flex;
       justify-content: center;
     }
+ 
   }
 
   .header {
@@ -164,8 +166,16 @@ export const StyledTransferForm = styled.div<StyledTransferFormProps>`
       color: ${({ theme }) => theme.highlightColor};
       flex-shrink: 0;
       font-size: 30px;
-      margin-right: 10px;
+      
       margin-left: 10px;
     }
   }
+     .groupMenu {
+      .nonGroupGroupPill {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+
 `;
