@@ -195,6 +195,7 @@ export default function ExpenseForm({
   const [amountError, setAmountError] = useState<string>("");
 
   const [showAmountError, setShowAmountError] = useState<boolean>(false);
+  const [makePersonalClicked, setMakePersonalClicked] = useState<boolean>(false)
 
   const [description, setDescription] = useState<string>(
     isCreateExpense || !expense ? "" : expense.description
@@ -303,6 +304,9 @@ export default function ExpenseForm({
       if(groupMembers.value.length>0||nonGroupUsers.value.length>0||nonGroupGroup?.value)
       localStorage.setItem("nonGroupExpenseData", JSON.stringify(data));
     }
+    if(makePersonalClicked){
+      localStorage.removeItem("nonGroupExpenseData");
+    }
   };
 
   useExpenseValidation({
@@ -405,7 +409,6 @@ export default function ExpenseForm({
     !((adjustParticipants.filter((m) => m.selected).length === 1&&adjustParticipants[0].name==='you') &&
     (adjustPayers.filter((m) => m.selected).length === 1&&adjustPayers[0].name==='you'));
 
-    console.log(showShareExpenseButton)
   return (
     <StyledExpenseForm>
       <div className="header">
@@ -541,7 +544,7 @@ export default function ExpenseForm({
           <div
             className="button"
             onClick={() => {
-               localStorage.removeItem("nonGroupExpenseData");
+              setMakePersonalClicked(true)
               isPersonal.value = true;
               nonGroupUsers.value = [];
              

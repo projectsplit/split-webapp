@@ -272,13 +272,15 @@ export default function TransferForm({
           <div className="buttonWrapper">
             <div
               className="groupButton"
-              onClick={() =>
-                (nonGroupMenu.value = {
+              onClick={() => {
+                setShowAmountError(false);
+                setShowIdError(false);
+                nonGroupMenu.value = {
                   ...nonGroupMenu.value,
                   attribute: "groups",
                   menu: "nonGroupTransfer",
-                })
-              }
+                };
+              }}
             >
               <TiGroup className="groupIcon" />
               <span className="descr">Groups</span>
