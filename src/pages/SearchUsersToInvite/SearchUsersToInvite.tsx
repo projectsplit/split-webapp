@@ -12,7 +12,7 @@ import { useCreateGuest } from "../../api/services/useCreateGuest";
 import { useQueryClient } from "@tanstack/react-query";
 import useGroup from "../../api/services/useGroup";
 import MemberItem from "../../components/Menus/RemoveUserFromGroupMenu/MemberItem/MemberItem";
-import RemoveGuestWarningAnimation from "../../components/Menus/MenuAnimations/RemoveGuestWarningAnimation";
+import RemoveGuestWarningAnimation from "../../components/Menus/MenuAnimations/RemoveWarningAnimation";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import Sentinel from "../../components/Sentinel";
 import { SearchResultItem } from "./SearchResultItem/SearchResultItem";
@@ -33,7 +33,10 @@ const SearchUsersToInvite = ({
   const userInvitationSent = useSignal<boolean>(false);
   const noGroupError = useSignal<string>("");
   const noMemberError = useSignal<string>("");
-  const [debouncedKeyword,] = useDebounce(keyword.length > 1 ? keyword : "",300);
+  const [debouncedKeyword] = useDebounce(
+    keyword.length > 1 ? keyword : "",
+    300
+  );
 
   const {
     data,
@@ -41,7 +44,12 @@ const SearchUsersToInvite = ({
     hasNextPage,
     isFetchingNextPage,
     updateUserInvitationStatus,
-  } = useSearchUsersToInvite(groupId, debouncedKeyword, pageSize, guestToBeReplaced?.guestId);
+  } = useSearchUsersToInvite(
+    groupId,
+    debouncedKeyword,
+    pageSize,
+    guestToBeReplaced?.guestId
+  );
 
   const {
     mutate: createGuestExpenseMutation,
@@ -76,16 +84,16 @@ const SearchUsersToInvite = ({
           )}
           <div
             className="closeButtonContainer"
-            onClick={async () => {
-              try {
-                await queryClient.invalidateQueries({
+            onClick={() => {
+              menu.value = null;
+              queryClient
+                .invalidateQueries({
                   queryKey: [groupId],
                   exact: false,
+                })
+                .catch((error) => {
+                  console.error("Failed to invalidate queries:", error);
                 });
-                menu.value = null;
-              } catch (error) {
-                console.error("Failed to invalidate queries:", error);
-              }
             }}
           >
             <IoClose className="closeButton" />
@@ -100,8 +108,7 @@ const SearchUsersToInvite = ({
               placeholder="Search"
               backgroundcolor="#2d2d2d"
               onChange={(e) => setKeyword(e.target.value)}
-              value={keyword ||""}
-             
+              value={keyword || ""}
             />
           </div>
 
@@ -140,8 +147,8 @@ const SearchUsersToInvite = ({
               placeholder="guest's name"
               backgroundcolor="#2d2d2d"
               onChange={(e) => setGuestName(e.target.value)}
-              value={guestName|| ""}
-               autoFocus={true}
+              value={guestName || ""}
+              autoFocus={true}
             />
             <div className="createButton">
               <MyButton

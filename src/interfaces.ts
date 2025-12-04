@@ -44,6 +44,7 @@ import {
   UseMutateFunction,
 } from "@tanstack/react-query";
 import { NavigateFunction } from "react-router-dom";
+import { AxiosError } from "axios";
 
 export interface ExpenseProps {
   timeZoneId: string;
@@ -529,7 +530,7 @@ export interface NonGroupTransferAnimationProps {
   }>;
   nonGroupGroup: Signal<Group | null>;
   groupMembers: Signal<(Guest | Member)[]>;
-  isNonGroupTransfer : Signal<boolean>;
+  isNonGroupTransfer: Signal<boolean>;
 }
 
 export interface NonGroupTransferMenuProps {
@@ -543,7 +544,7 @@ export interface NonGroupTransferMenuProps {
   }>;
   nonGroupGroup: Signal<Group | null>;
   groupMembers: Signal<(Guest | Member)[]>;
-  isNonGroupTransfer : Signal<boolean>;
+  isNonGroupTransfer: Signal<boolean>;
 }
 
 export interface NonGroupUsersProps extends MenuProps {
@@ -578,18 +579,10 @@ export interface UserProps {
 }
 
 export interface GroupQuickActionsMenuprops extends MenuProps {}
-export interface HomeQuickActionsMenuprops {
-  quickActionsMenu: Signal<string | null>;
-  isNonGroupExpense: Signal<boolean>;
-  nonGroupTransferMenu: Signal<{
-    attribute: string;
-    menu: string | null;
-    senderId: string;
-    senderName: string;
-    receiverId: string;
-    receiverName: string;
-  }>;
-  userInfo: UserInfo;
+export interface ActionsMenuprops {
+  onClickTransfer: React.MouseEventHandler<HTMLDivElement> | undefined;
+  onClickExpense: React.MouseEventHandler<HTMLDivElement> | undefined;
+  bottom?: string | number;
 }
 export interface DeleteExpenseAnimationProps extends MenuProps {
   description: string;
@@ -837,11 +830,22 @@ export interface ConfirmLeaveGroupProps extends MenuProps {
   memberId: string | undefined;
   openGroupOptionsMenu: Signal<boolean>;
 }
-export interface RemoveGuestWarningProps extends MenuProps {}
+export interface RemoveWarningProps extends MenuProps {
+  message: string;
+  header: string;
+  onConfirm?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  isLoading?: boolean;
+}
 export interface ParticipantsPayersErrorMenuProps extends MenuProps {
   error: string | undefined;
 }
-export interface RemoveGuestWarningAnimationProps extends MenuProps {}
+export interface RemoveWarningAnimationProps extends MenuProps {
+  header: string;
+  message: string;
+  menuValue: string;
+  onConfirm?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  isLoading?: boolean;
+}
 export interface ParticipantsPayersAnimationProps extends MenuProps {
   error: string | undefined;
 }

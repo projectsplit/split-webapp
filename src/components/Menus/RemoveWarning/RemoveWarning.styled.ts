@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { StyledMiddleScreenMenu } from "../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
 
-export const StyledRemoveGuestWarning = styled(StyledMiddleScreenMenu)`
+export const StyledRemoveWarning = styled(StyledMiddleScreenMenu)`
   .headerSeparator {
     position: sticky;
     top: 0;
@@ -45,5 +45,11 @@ export const StyledRemoveGuestWarning = styled(StyledMiddleScreenMenu)`
     justify-content: center;
     align-items: center;
     gap: 5px;
+  }
+    .buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap:10px;
   }
 `;
