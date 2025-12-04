@@ -13,8 +13,8 @@ export default function MemberItem({
   onCannotRemoveClick,
 }: MemberItemProps) {
 
-  const { mutate: removeUser, isPending: isPendingMember } =
-    useRemoveMemberFromGroup(groupId, noGroupError, noMemberError);
+ 
+
   const { mutate: removeGuest, isPending: isPendingGuest } =
     useRemoveGuestFromGroup(groupId, noGroupError, noMemberError);
 
@@ -23,7 +23,7 @@ export default function MemberItem({
       onCannotRemoveClick();
       return;
     }
-    isGuest ? removeGuest(member.id) : removeUser(member.id);
+    isGuest ? removeGuest(member.id) : null;
   };
 
   return (
@@ -39,7 +39,7 @@ export default function MemberItem({
 
       <MyButton
         variant="secondary"
-        isLoading={isPendingMember || isPendingGuest}
+        isLoading={isPendingGuest}
         onClick={handleClick}
       >
         Remove

@@ -1,4 +1,4 @@
-import { IoClose, IoExit, IoPersonRemove, IoQrCode } from "react-icons/io5";
+import { IoClose, IoExit, IoPersonAdd, IoPersonRemove, IoQrCode } from "react-icons/io5";
 import { StyledGroupOptions } from "./GroupOptions.styled";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
@@ -17,9 +17,10 @@ import { useChangeGroupCurrency } from "../../../api/services/useChangeGroupCurr
 import { useQueryClient } from "@tanstack/react-query";
 import RemoveUserFromGroupMenu from "../../../components/Menus/RemoveUserFromGroupMenu/RemoveUserFromGroupMenu";
 import { useEffect } from "react";
+import AddNewUserAnimation from "../../../components/Menus/MenuAnimations/AddNewUserAnimation";
 
 export default function GroupOptions({ group }: GroupOptionsProps) {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const { userInfo, openGroupOptionsMenu } = useOutletContext<{
     openGroupOptionsMenu: Signal<boolean>;
     userInfo: UserInfo;
@@ -31,6 +32,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
   const currencyMenu = useSignal<string | null>(null);
   const archiveGroupMenu = useSignal<string | null>(null);
   const leaveGroupMenu = useSignal<string | null>(null);
+  const newUserMenu = useSignal<string | null>(null);
   const renameMenu = useSignal<string | null>(null);
   const noGroupFoundError = useSignal<string>("");
   const allCurrencies = useSignal<Currency[]>(currencyData);
@@ -127,6 +129,14 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
 
         <div
           className="option"
+          onClick={() => (newUserMenu.value = "newUser")}
+        >
+          <IoPersonAdd className="icon" />
+          <div className="description">New User </div>
+        </div>
+
+        <div
+          className="option"
           onClick={() => (openRemoveUserMenu.value = true)}
         >
           <IoPersonRemove className="icon" />
@@ -137,10 +147,13 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
           className="option"
           onClick={() => {
             const searchParams = new URLSearchParams(location.search);
-            searchParams.set("in", 'true');
-           navigate(`/groups/generatecode/${group?.id}?${searchParams.toString()}`, {
-              replace: true,
-            });
+            searchParams.set("in", "true");
+            navigate(
+              `/groups/generatecode/${group?.id}?${searchParams.toString()}`,
+              {
+                replace: true,
+              }
+            );
           }}
         >
           <IoQrCode className="icon" />
@@ -159,6 +172,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
       <MenuAnimationBackground menu={archiveGroupMenu} />
       <MenuAnimationBackground menu={leaveGroupMenu} />
       <MenuAnimationBackground menu={renameMenu} />
+      <MenuAnimationBackground menu={newUserMenu} />
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
@@ -188,6 +202,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
           userInfo={userInfo}
         />
       )}
+      {group && <AddNewUserAnimation menu={newUserMenu} groupName={groupName} />}
     </StyledGroupOptions>
   );
 }

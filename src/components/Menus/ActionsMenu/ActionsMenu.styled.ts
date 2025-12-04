@@ -1,9 +1,13 @@
 import styled from "styled-components";
 
-export const StyledHomeQuickActionsMenu = styled.div`
+interface StyledActionsMenuProps {
+  $bottom?: string | number
+}
+
+export const StyledActionsMenu = styled.div<StyledActionsMenuProps>`
   z-index: 4;
   position: fixed;
-  bottom: 100px;
+  bottom: ${({ $bottom }) => (typeof $bottom === 'number' ? `${$bottom}px` : $bottom)};
   right: 30px;
   .buttons {
     display: flex;

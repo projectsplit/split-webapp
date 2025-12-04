@@ -7,7 +7,8 @@ import { Group } from "../../types";
 export const useRemoveMemberFromGroup = (
   groupId: string | undefined,
   noGroupError:Signal<string>,
-  noMemberError:Signal<string>
+  noMemberError:Signal<string>,
+  menu:Signal<string|null>
 ) => {
   const queryClient = useQueryClient();
 
@@ -44,6 +45,7 @@ export const useRemoveMemberFromGroup = (
         queryKey: ["mostRecentGroup"],
         exact: false,
       });
+      menu.value=null
     },
   });
 

@@ -1,7 +1,7 @@
 import { CSSTransition } from "react-transition-group";
 import { HomeQuickActionsAnimationProps } from "../../../interfaces";
 import { useRef } from "react";
-import HomeQuickActionsMenu from "../HomeQuickActionsMenu/HomeQuickActionsMenu";
+import ActionsMenu from "../ActionsMenu/ActionsMenu";
 
 export default function HomeQuickActionsAnimation({
   quickActionsMenu,
@@ -10,6 +10,7 @@ export default function HomeQuickActionsAnimation({
   userInfo,
 }: HomeQuickActionsAnimationProps) {
   const nodeRef = useRef(null);
+
   return (
     <CSSTransition
       nodeRef={nodeRef}
@@ -18,11 +19,23 @@ export default function HomeQuickActionsAnimation({
       classNames="quick-actions"
       unmountOnExit
     >
-      <HomeQuickActionsMenu
-        quickActionsMenu={quickActionsMenu}
-        isNonGroupExpense={isNonGroupExpense}
-        nonGroupTransferMenu={nonGroupTransferMenu}
-        userInfo={userInfo}
+      <ActionsMenu
+        onClickExpense={() => {
+          quickActionsMenu.value = "newExpense";
+          isNonGroupExpense.value = true;
+        }}
+        onClickTransfer={() => {
+          quickActionsMenu.value = "newTransfer";
+          nonGroupTransferMenu.value = {
+            attribute: "",
+            menu: null,
+            senderId: userInfo.userId,
+            senderName: "You",
+            receiverId: "",
+            receiverName: "",
+          };
+        }}
+        bottom={100}
       />
     </CSSTransition>
   );

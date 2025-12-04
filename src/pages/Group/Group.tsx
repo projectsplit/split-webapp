@@ -168,7 +168,7 @@ export default function Group() {
               nonGroupUsers={signal([])}
             />
           )}
-          {group && <AddNewUserAnimation menu={menu} groupName={groupName} />}
+          
           {group && (
             <ConfirmUnArchiveGroupAnimation
               groupId={group.id}
@@ -195,7 +195,7 @@ export default function Group() {
               menu={menu}
               onClick={() => {
                 if (group && !group.isArchived) {
-                  menu.value = "menuWithOptions";
+                  menu.value = "quickActions";
                 } else {
                 }
               }}
