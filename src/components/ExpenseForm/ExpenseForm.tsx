@@ -177,10 +177,15 @@ export default function ExpenseForm({
   );
 
   // Optional reset when dependencies change
-  useEffect(() => {
+ useEffect(() => {
+    if (isSubmitting.value) return;
     setParticipantsByCategory(initialParticipantsByCategory);
     setPayersByCategory(initialPayersByCategory);
-  }, [initialParticipantsByCategory, initialPayersByCategory]);
+  }, [
+    initialParticipantsByCategory,
+    initialPayersByCategory,
+    isSubmitting.value,
+  ]);
 
   const [participantsError, setParticipantsError] = useState<string>("");
 
