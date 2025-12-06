@@ -365,7 +365,7 @@ export default function ExpenseForm({
     setPayersError("");
   }, [participantsByCategory["Shares"], payersByCategory["Shares"]]);
 
-  const amountNumber = !amountError ? Number(amount) : Number.NaN;
+  const amountNumber = !amountError ? Number(amount) : 0;
 
   const handleInputBlur = useCallback(() => {
     if (
@@ -389,6 +389,9 @@ export default function ExpenseForm({
     (e: React.ChangeEvent<HTMLInputElement>) => {
       handleInputChange(e, currencySymbol, displayedAmount, setAmount);
       setShowAmountError(false);
+      setAmountError('')
+      setParticipantsError('')
+      setPayersError('')
     },
     [currencySymbol, displayedAmount, setAmount]
   );
@@ -409,8 +412,14 @@ export default function ExpenseForm({
 
   const showDetailedSharedExpenseText =
     (nonGroupUsers?.value.length > 0 || groupMembers?.value.length > 0) &&
-    amountNumber &&
+    !!amountNumber &&
     !isPersonal.value;
+
+  console.log(
+    nonGroupUsers?.value.length > 0 || groupMembers?.value.length > 0,
+    amountNumber,
+    !isPersonal.value
+  );
 
   const showMakePersonal =
     isPersonal.value === false &&
