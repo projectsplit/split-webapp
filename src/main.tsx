@@ -45,9 +45,9 @@ const RootComponent: React.FC = () => {
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <GlobalStyles />
-      <RootComponent />
-    </QueryClientProvider>
-  //  </StrictMode>  
+  <QueryClientProvider client={queryClient}>
+    <GlobalStyles />
+    <RootComponent />
+  </QueryClientProvider>
+  //  </StrictMode>
 );
