@@ -415,12 +415,6 @@ export default function ExpenseForm({
     !!amountNumber &&
     !isPersonal.value;
 
-  console.log(
-    nonGroupUsers?.value.length > 0 || groupMembers?.value.length > 0,
-    amountNumber,
-    !isPersonal.value
-  );
-
   const showMakePersonal =
     isPersonal.value === false &&
     amountNumber &&
