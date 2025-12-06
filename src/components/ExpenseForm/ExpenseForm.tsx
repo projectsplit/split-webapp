@@ -177,7 +177,7 @@ export default function ExpenseForm({
   );
 
   // Optional reset when dependencies change
- useEffect(() => {
+  useEffect(() => {
     if (isSubmitting.value) return;
     setParticipantsByCategory(initialParticipantsByCategory);
     setPayersByCategory(initialPayersByCategory);
@@ -200,7 +200,8 @@ export default function ExpenseForm({
   const [amountError, setAmountError] = useState<string>("");
 
   const [showAmountError, setShowAmountError] = useState<boolean>(false);
-  const [makePersonalClicked, setMakePersonalClicked] = useState<boolean>(false)
+  const [makePersonalClicked, setMakePersonalClicked] =
+    useState<boolean>(false);
 
   const [description, setDescription] = useState<string>(
     isCreateExpense || !expense ? "" : expense.description
@@ -306,10 +307,14 @@ export default function ExpenseForm({
         nonGroupGroup: nonGroupGroup?.value,
         groupMembers: groupMembers.value,
       };
-      if(groupMembers.value.length>0||nonGroupUsers.value.length>0||nonGroupGroup?.value)
-      localStorage.setItem("nonGroupExpenseData", JSON.stringify(data));
+      if (
+        groupMembers.value.length > 0 ||
+        nonGroupUsers.value.length > 0 ||
+        nonGroupGroup?.value
+      )
+        localStorage.setItem("nonGroupExpenseData", JSON.stringify(data));
     }
-    if(makePersonalClicked){
+    if (makePersonalClicked) {
       localStorage.removeItem("nonGroupExpenseData");
     }
   };
@@ -408,11 +413,14 @@ export default function ExpenseForm({
     !isPersonal.value;
 
   const showMakePersonal =
-    isPersonal.value===false &&
-    amountNumber 
-    &&
-    !((adjustParticipants.filter((m) => m.selected).length === 1&&adjustParticipants[0].name==='you') &&
-    (adjustPayers.filter((m) => m.selected).length === 1&&adjustPayers[0].name==='you'));
+    isPersonal.value === false &&
+    amountNumber &&
+    !(
+      adjustParticipants.filter((m) => m.selected).length === 1 &&
+      adjustParticipants[0].name === "you" &&
+      adjustPayers.filter((m) => m.selected).length === 1 &&
+      adjustPayers[0].name === "you"
+    );
 
   return (
     <StyledExpenseForm>
@@ -549,10 +557,9 @@ export default function ExpenseForm({
           <div
             className="button"
             onClick={() => {
-              setMakePersonalClicked(true)
+              setMakePersonalClicked(true);
               isPersonal.value = true;
               nonGroupUsers.value = [];
-             
             }}
           >
             Make Personal{" "}

@@ -90,10 +90,15 @@ export default function TransferForm({
     nonGroupGroup
   );
 
-  const handldeCurrencyOptionsClick = (curr: string) => {
-    setCurrencySymbol(curr);
-    currencyMenu.value = null;
-  };
+  const handldeCurrencyOptionsClick = useCallback(
+    (curr: string) => {
+      setCurrencySymbol(curr);
+      currencyMenu.value = null;
+      setAmount("");
+      displayedAmount.value = "";
+    },
+    [currencyMenu]
+  );
 
   const submitTransfer = useCallback(() => {
     setShowAmountError(true);

@@ -201,6 +201,16 @@ export type Guest = {
   name: string;
   joined: Date;
 };
+export type Invitation= {
+    id: string;
+    created: string;
+    senderId: string;
+    receiverId: string;
+    groupId: string;
+    groupName: string;
+    guestId: string | null;
+    guestName: string | null;
+  };
 export type GroupMember = Member | Guest;
 
 export type PickerMember = {

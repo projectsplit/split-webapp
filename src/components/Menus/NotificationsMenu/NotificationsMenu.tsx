@@ -72,6 +72,7 @@ export default function NotificationsMenu({
                     guestName:x.guestName
 
                   }}
+                  menu={menu}
                   timeZoneId={timeZoneId}
                 />
               </div>
