@@ -7,7 +7,6 @@ export const StyledGroup = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
-
   .spinner {
     display: flex;
     flex-direction: column;
