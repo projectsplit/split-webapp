@@ -278,7 +278,6 @@ export default function ExpenseForm({
   };
 
   const onSubmit = () => {
-    isSubmitting.value = true;
     submitExpense({
       participants,
       payers,
@@ -298,6 +297,7 @@ export default function ExpenseForm({
       setShowAmountError,
       participantsCategory,
       payersCategory,
+      isSubmitting
     });
     if (isnonGroupExpense && isnonGroupExpense.value) {
       const data = {

@@ -9,8 +9,6 @@ import {
   PickerMember,
   User,
 } from "../../types";
-import { significantDigitsFromTicker } from "../../helpers/openExchangeRates";
-import currency from "currency.js";
 import { Signal } from "@preact/signals-react";
 
 export function submitExpense({
@@ -32,6 +30,7 @@ export function submitExpense({
   setShowAmountError,
   participantsCategory,
   payersCategory,
+  isSubmitting
 }: {
   participants: PickerMember[];
   payers: PickerMember[];
@@ -51,6 +50,7 @@ export function submitExpense({
   setShowAmountError: React.Dispatch<React.SetStateAction<boolean>>;
   participantsCategory: Signal<string>;
   payersCategory: Signal<string>;
+  isSubmitting:Signal<boolean>
 }) {
   setShowAmountError(true);
   if (participantsCategory.value === "Shares") {
@@ -102,8 +102,10 @@ export function submitExpense({
 
   if (isCreateExpense) {
     createExpenseMutation(expenseRequest);
+    isSubmitting.value = true;
   } else {
     editExpenseMutation(expenseRequest);
+    isSubmitting.value = true;
   }
 }
 
