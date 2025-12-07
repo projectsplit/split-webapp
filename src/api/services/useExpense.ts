@@ -42,12 +42,14 @@ export const useExpense = (
         queryKey: [groupId],
         exact: false,
       });
-      isSubmitting.value=false
       menu.value = null;
       if (isNonGroupExpense && isNonGroupExpense.value) {
         navigate(`/groups/${groupId}/expenses`);
       }
     },
+    onSettled: () => {
+    isSubmitting.value = false;
+  }
   });
 };
 
