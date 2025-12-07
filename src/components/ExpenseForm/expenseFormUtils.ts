@@ -88,6 +88,8 @@ export function submitExpense({
     return;
   }
 
+  if (!amountIsValid(amount, setAmountError)) return;
+
   const selectedParticipants = participants?.filter((x) => x.selected);
   const areParticipantsNumbersValid = selectedParticipants.every(
     (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
@@ -148,7 +150,7 @@ export function submitExpense({
       : ""
   );
 
-  if (!amountIsValid(amount, setAmountError)) return;
+
 
   if (!location.value && description.length == 0) {
     setDescriptionError("Select a description or a location");
