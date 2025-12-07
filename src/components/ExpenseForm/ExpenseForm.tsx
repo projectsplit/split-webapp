@@ -281,9 +281,7 @@ export default function ExpenseForm({
     isSubmitting.value = true;
     submitExpense({
       participants,
-      setParticipantsError,
       payers,
-      setPayersError,
       amount,
       setAmountError,
       location,

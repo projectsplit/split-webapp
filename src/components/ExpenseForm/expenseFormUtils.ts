@@ -15,9 +15,7 @@ import { Signal } from "@preact/signals-react";
 
 export function submitExpense({
   participants,
-  setParticipantsError,
   payers,
-  setPayersError,
   amount,
   setAmountError,
   location,
@@ -36,9 +34,7 @@ export function submitExpense({
   payersCategory,
 }: {
   participants: PickerMember[];
-  setParticipantsError: React.Dispatch<React.SetStateAction<string>>;
   payers: PickerMember[];
-  setPayersError: React.Dispatch<React.SetStateAction<string>>;
   amount: string;
   setAmountError: React.Dispatch<React.SetStateAction<string>>;
   location: { value: GeoLocation | undefined };
@@ -75,82 +71,7 @@ export function submitExpense({
     });
   }
 
-  if (
-    participants?.length ===
-    participants?.filter((p) => p.selected === false).length
-  ) {
-    setParticipantsError("Select at least one participant");
-    return;
-  }
-
-  if (payers?.length === payers?.filter((p) => p.selected === false).length) {
-    setPayersError("Select at least one payer");
-    return;
-  }
-
   if (!amountIsValid(amount, setAmountError)) return;
-
-  const selectedParticipants = participants?.filter((x) => x.selected);
-  const areParticipantsNumbersValid = selectedParticipants.every(
-    (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
-  );
-
-  const isParticipantsSumInvalid =
-    selectedParticipants?.length > 0 &&
-    (significantDigitsFromTicker(currencySymbol) >= 3
-      ? Number(
-          selectedParticipants
-            .reduce((acc, payer) => acc + Number(payer.actualAmount), 0)
-            .toFixed(significantDigitsFromTicker(currencySymbol))
-        ) !==
-        Number(
-          Number(amount).toFixed(significantDigitsFromTicker(currencySymbol))
-        )
-      : selectedParticipants.reduce(
-          (acc, payer) => currency(acc).add(payer.actualAmount).value,
-          0
-        ) !== currency(amount).value);
-
-  const selectedPayers = payers?.filter((x) => x.selected);
-  const arePayersNumbersValid = selectedPayers?.every(
-    (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
-  );
-  const isPayersSumInvalid =
-    selectedPayers?.length > 0 &&
-    (significantDigitsFromTicker(currencySymbol) >= 3
-      ? Number(
-          selectedPayers
-            ?.reduce((acc, payer) => acc + Number(payer.actualAmount), 0)
-            .toFixed(significantDigitsFromTicker(currencySymbol))
-        ) !==
-        Number(
-          Number(amount).toFixed(significantDigitsFromTicker(currencySymbol))
-        )
-      : selectedPayers?.reduce(
-          (acc, payer) => currency(acc).add(payer.actualAmount).value,
-          0
-        ) !== currency(amount).value);
-
-  // Validate amount when participants or payers are selected
-  if (selectedParticipants?.length > 0 || selectedPayers?.length > 0) {
-    setShowAmountError(true);
-  }
-  setParticipantsError(
-    !areParticipantsNumbersValid
-      ? "Participation amounts must be positive"
-      : isParticipantsSumInvalid
-      ? "Participation amounts must add up to total"
-      : ""
-  );
-  setPayersError(
-    !arePayersNumbersValid
-      ? "Payment amounts must be positive"
-      : isPayersSumInvalid
-      ? "Payment amounts must add up to total"
-      : ""
-  );
-
-
 
   if (!location.value && description.length == 0) {
     setDescriptionError("Select a description or a location");
