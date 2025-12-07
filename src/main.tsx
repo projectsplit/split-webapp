@@ -48,7 +48,6 @@ createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <GlobalStyles />
     <RootComponent />
-    
   </QueryClientProvider>
   //  </StrictMode>
 );
