@@ -8,6 +8,8 @@ export const ScrollableContainer = styled.div<{ $contentEditableHeight: number}>
   position: fixed;
   scrollbar-width: thin;
   width: 100%;
+  left: 0;
+
   .items {
     display: flex;
     flex-direction: column;
@@ -16,4 +18,19 @@ export const ScrollableContainer = styled.div<{ $contentEditableHeight: number}>
     padding: 3rem 1rem;
     margin-left: 14px;
   }
+
+  @media (min-width: 769px) {
+    max-width: 768px;
+    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+
+    .items {
+      margin-left: 0;
+      padding: 3rem 1rem;
+    }
+  }
 `;
+
