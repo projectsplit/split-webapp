@@ -23,6 +23,7 @@ import Budget from "./pages/Budget/Budget";
 import RedirectToBudget from "./routes/RedirectToBudget";
 import CreateAccount from "./pages/CreateAccount/CreateAccount";
 import GenerateInvitationCode from "./pages/GenerateInvitationCode/GenerateInvitationCode";
+import Groups2 from "./pages/Groups/Groups2";
 
 const App = () => {
   return (
@@ -34,7 +35,7 @@ const App = () => {
         <Route element={<Protected />}>
           <Route path={routes.ROOT} element={<Home />} />
           <Route path={routes.JOIN} element={<Home />} />
-          <Route path="/groups" element={<Groups />} />
+          <Route path="/groups" element={<Groups2 />} />
           <Route path="/groups/generatecode/:groupid" element={<GenerateInvitationCode/>}/>
           <Route path="/groups/:groupid" element={<Group />}>
             <Route index element={<RedirectToExpenses />} />
