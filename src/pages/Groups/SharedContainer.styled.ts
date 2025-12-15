@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledGroups2Container = styled.div<{ groupState: string }>`
+export const StyledSharedContainer = styled.div<{ $groupState: string }>`
   overflow: auto;
   box-sizing: border-box;
   width: 100%;
@@ -33,57 +33,62 @@ export const StyledGroups2Container = styled.div<{ groupState: string }>`
           width: 120%;
           background-color: ${({ theme }) => theme.layer2};
           cursor: pointer;
-          border-radius: 10px;
-          padding: 0.3rem;
+          border-radius: 12px;
+          padding: 0.5rem 0.2rem;
+          transition: all 0.2s ease-in-out;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          &:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+          }
+
+          .groupIcon.active,
+          .groupIcon.non,
+          .groupIcon.archived {
+            font-size: 28px;
+            margin-bottom: 4px;
+          }
 
           .groupIcon.active {
-            display: flex;
-            justify-self: center;
-            color: ${({ theme, groupState }) =>
-              groupState === "Active"
+            color: ${({ theme, $groupState }) =>
+              $groupState === "Active"
                 ? theme.activeActive
                 : theme.activeInactive};
-            font-size: 30px;
           }
           .groupIcon.non {
-            display: flex;
-            justify-self: center;
-            color: ${({ theme, groupState }) =>
-              groupState === "NonGroups" ? theme.nonActive : theme.nonInactive};
-            font-size: 30px;
+            color: ${({ theme, $groupState }) =>
+              $groupState === "NonGroup" ? theme.nonActive : theme.nonInactive};
           }
           .groupIcon.archived {
-            display: flex;
-            justify-self: center;
-            color: ${({ theme, groupState }) =>
-              groupState === "Archived"
+            color: ${({ theme, $groupState }) =>
+              $groupState === "Archived"
                 ? theme.archivedActive
                 : theme.archivedInactive};
-            font-size: 30px;
           }
+
           &:has(.groupIcon.active) .descr {
-            color: ${({ theme, groupState }) =>
-              groupState === "Active" ? "inherit" : theme.layer6};
+            color: ${({ theme, $groupState }) =>
+              $groupState === "Active" ? "inherit" : theme.layer6};
           }
 
           /* NonGroups button text */
           &:has(.groupIcon.non) .descr {
-            color: ${({ theme, groupState }) =>
-              groupState === "NonGroups"
-                ? "inherit"
-                : theme.layer6};
+            color: ${({ theme, $groupState }) =>
+              $groupState === "NonGroup" ? "inherit" : theme.layer6};
           }
 
           /* Archived button text */
           &:has(.groupIcon.archived) .descr {
-            color: ${({ theme, groupState }) =>
-              groupState === "Archived" ? "inherit" : theme.layer6};
+            color: ${({ theme, $groupState }) =>
+              $groupState === "Archived" ? "inherit" : theme.layer6};
           }
           .descr {
-            display: flex;
-            justify-self: center;
-            font-size: 10px;
-            margin-top: 3px;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.2;
           }
         }
       }

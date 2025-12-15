@@ -17,13 +17,13 @@ import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu
 import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import Spinner from "../../components/Spinner/Spinner";
-import { StyledGroups2Container } from "./Groups2Container.styled";
+import { StyledSharedContainer } from "./SharedContainer.styled";
 import Separator from "../../components/Separator/Separator";
 import VerticalSeparator from "../../components/VerticalSeparator/VerticalSeparator";
 import { TiGroup } from "react-icons/ti";
 import { IoIosArchive } from "react-icons/io";
 
-export default function Groups() {
+export default function Shared() {
   const queryClient = useQueryClient();
   const menu = useSignal<string | null>(null);
   const currencyMenu = useSignal<string | null>(null);
@@ -89,21 +89,21 @@ export default function Groups() {
   };
 
   return (
-    <StyledGroups2Container groupState={activeGroupCatAsState.value}>
+    <StyledSharedContainer $groupState={activeGroupCatAsState.value}>
       <Separator />
       <div className="optionButtonsAndGroups">
         <div className="optionButtons">
           <div className="buttonWrapper">
-            {activeGroupCatAsState.value === "NonGroups" && (
+            {activeGroupCatAsState.value === "NonGroup" && (
               <div className="activeBar" />
             )}
             <div
               className="button"
-              onClick={() => (activeGroupCatAsState.value = "NonGroups")}
+              onClick={() => (activeGroupCatAsState.value = "NonGroup")}
             >
               <MdGroupOff className="groupIcon non" />
-              <span className="descr">Non </span>
-              <span className="descr">Groups</span>
+              <span className="descr">Non</span>
+              <span className="descr">Group</span>
             </div>
           </div>
           <div className="buttonWrapper">
@@ -190,9 +190,9 @@ export default function Groups() {
                   </TreeAdjustedContainer>
                 </div>
               ))}
-              {activeGroupCatAsState.value === "NonGroups" && (
+              {activeGroupCatAsState.value === "NonGroup" && (
                 <TreeAdjustedContainer
-                  onClick={() => navigate(`/shared/nongroup`)}
+                  onClick={() => navigate(`/shared/nongroup/expenses`)}
                   hasOption={true}
                   items={[
                     <div className="groupsInfo" key="settled">
@@ -228,7 +228,7 @@ export default function Groups() {
         openGroupOptionsMenu={openGroupOptionsMenu}
         navigateToGroups={true}
       />
-    </StyledGroups2Container>
+    </StyledSharedContainer>
   );
 }
 
