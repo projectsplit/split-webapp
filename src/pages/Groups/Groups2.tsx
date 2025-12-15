@@ -89,25 +89,50 @@ export default function Groups() {
   };
 
   return (
-    <StyledGroups2Container>
+    <StyledGroups2Container  groupState={activeGroupCatAsState.value}>
       <Separator />
-
       <div className="optionButtonsAndGroups">
         <div className="optionButtons">
-          <div className="button">
-            <MdGroupOff className="groupIcon" />
-            <span className="descr">Non </span>
-            <span className="descr">Groups</span>
+          <div className="buttonWrapper">
+            {activeGroupCatAsState.value === "NonGroups" && (
+              <div className="activeBar" />
+            )}
+            <div
+              className="button"
+              onClick={() => (activeGroupCatAsState.value = "NonGroups")}
+            >
+              <MdGroupOff className="groupIcon non" />
+              <span className="descr">Non </span>
+              <span className="descr">Groups</span>
+            </div>
           </div>
-          <div className="button">
-            <TiGroup className="groupIcon" />
-            <span className="descr">Active </span>
-            <span className="descr">Groups</span>
+          <div className="buttonWrapper">
+            {activeGroupCatAsState.value === "Active" && (
+              <div className="activeBar" />
+            )}
+            <div
+              className="button"
+              onClick={() => (activeGroupCatAsState.value = "Active")}
+            >
+              <TiGroup className="groupIcon active" />
+              <span className="descr">Active</span>
+              <span className="descr">Groups</span>
+            </div>
           </div>
-          <div className="button">
-            <IoIosArchive  className="groupIcon" />
-            <span className="descr">Archived </span>
-            <span className="descr">Groups</span>
+
+          <div className="buttonWrapper">
+            {activeGroupCatAsState.value === "Archived" && (
+              <div className="activeBar" />
+            )}
+
+            <div
+              className="button"
+              onClick={() => (activeGroupCatAsState.value = "Archived")}
+            >
+              <IoIosArchive className="groupIcon archived" />
+              <span className="descr">Archived </span>
+              <span className="descr">Groups</span>
+            </div>
           </div>
         </div>
         <VerticalSeparator />
@@ -187,3 +212,5 @@ export default function Groups() {
     </StyledGroups2Container>
   );
 }
+
+

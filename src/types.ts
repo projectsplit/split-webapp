@@ -42,7 +42,6 @@ export type UserInfo = {
   currency: string;
 };
 
-
 export type ExpenseItem = {
   id: string;
   date: string;
@@ -201,16 +200,16 @@ export type Guest = {
   name: string;
   joined: Date;
 };
-export type Invitation= {
-    id: string;
-    created: string;
-    senderId: string;
-    receiverId: string;
-    groupId: string;
-    groupName: string;
-    guestId: string | null;
-    guestName: string | null;
-  };
+export type Invitation = {
+  id: string;
+  created: string;
+  senderId: string;
+  receiverId: string;
+  groupId: string;
+  groupName: string;
+  guestId: string | null;
+  guestName: string | null;
+};
 export type GroupMember = Member | Guest;
 
 export type PickerMember = {
@@ -410,7 +409,7 @@ export type CreateTransfersRequest = {
 };
 
 export type CreateTransferRequest = {
-  groupId: string|undefined;
+  groupId: string | undefined;
   description: string;
   amount: number;
   currency: string;
@@ -706,3 +705,6 @@ export type SpendingChartsResponseItem = {
   from: Date;
   to: Date;
 };
+
+
+export type Variant = "non" | "active" | "archived";

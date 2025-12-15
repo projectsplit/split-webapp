@@ -18,13 +18,16 @@ export const CategorySelector = ({
     const currentValue = navLinkUse
       ? activeCat.charAt(0).toUpperCase() + activeCat.slice(1)
       : activeCatAsState
-      ? activeCatAsState.value.charAt(0).toUpperCase() + activeCatAsState.value.slice(1)
+      ? activeCatAsState.value.charAt(0).toUpperCase() +
+        activeCatAsState.value.slice(1)
       : activeCat.charAt(0).toUpperCase() + activeCat.slice(1);
     const initialIndex = Object.values(categories).indexOf(currentValue);
     return initialIndex !== -1 ? categoryKeys[initialIndex] : categoryKeys[0];
   };
 
-  const [activeCategory, setActiveCategory] = useState(getInitialActiveCategory);
+  const [activeCategory, setActiveCategory] = useState(
+    getInitialActiveCategory
+  );
 
   useEffect(() => {
     const updatedCategory = getInitialActiveCategory();
@@ -67,7 +70,7 @@ export const CategorySelector = ({
 
     const updateIndicator = () => {
       const activeButton = categoryRefs[activeCategory]?.current;
-   
+
       if (activeButton) {
         const { offsetLeft, clientWidth } = activeButton;
         const reducedWidth = clientWidth * 0.5;
@@ -83,11 +86,10 @@ export const CategorySelector = ({
     updateIndicator();
     window.addEventListener("resize", updateIndicator);
     return () => window.removeEventListener("resize", updateIndicator);
-  }, [activeCategory,activeCatAsState?.value, activeCat]); 
-
+  }, [activeCategory, activeCatAsState?.value, activeCat]);
 
   const isSmallScreen = window.matchMedia("(max-width: 400px)").matches;
-   const getCategoryLabel = (label: string) => {
+  const getCategoryLabel = (label: string) => {
     if (label === "Percentages" && isSmallScreen) {
       return "%ages";
     }
@@ -101,16 +103,23 @@ export const CategorySelector = ({
           <CategoryButton
             key={key}
             ref={categoryRefs[key]}
-            to={ navLinkUse? categories[key as keyof typeof categories]?.toLocaleLowerCase() : undefined }
+            to={
+              navLinkUse
+                ? categories[
+                    key as keyof typeof categories
+                  ]?.toLocaleLowerCase()
+                : undefined
+            }
             onClick={() => {
               setActiveCategory(key);
               if (!navLinkUse && activeCatAsState) {
-                activeCatAsState.value = categories[key as keyof typeof categories]!;
+                activeCatAsState.value =
+                  categories[key as keyof typeof categories]!;
               }
             }}
             selected={activeCategory === key}
           >
-              {getCategoryLabel(label)}
+            {getCategoryLabel(label)}
           </CategoryButton>
         ))}
         <div
