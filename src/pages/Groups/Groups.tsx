@@ -41,7 +41,7 @@ export default function Groups() {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
-      queryKey: ["groups", activeGroupCatAsState.value.toLowerCase()],
+      queryKey: ["shared", activeGroupCatAsState.value.toLowerCase()],
       queryFn: ({ pageParam: next }) =>
         getGroupsTotalAmounts(
           pageSize,
@@ -59,9 +59,9 @@ export default function Groups() {
   );
 
   useEffect(() => {
-    topMenuTitle.value = "Groups";
+    topMenuTitle.value = "Shared";
     queryClient.invalidateQueries({
-      queryKey: ["groups", activeGroupCatAsState.value.toLowerCase()],
+      queryKey: ["shared", activeGroupCatAsState.value.toLowerCase()],
       exact: true,
     });
   }, [activeGroupCatAsState.value]);
@@ -70,7 +70,7 @@ export default function Groups() {
   const updateMostRecentGroupId = useMostRecentGroup();
 
   const onGroupClickHandler = (id: string, groupName: string) => {
-    navigate(`/groups/${id}/expenses`, { state: { groupName } });
+    navigate(`/shared/${id}/expenses`, { state: { groupName } });
     updateMostRecentGroupId.mutate(id);
   };
 
@@ -81,7 +81,7 @@ export default function Groups() {
   ) => {
     if (!isGroupArchived) {
       e.stopPropagation();
-      navigate(`/groups/generatecode/${groupId}`);
+      navigate(`/shared/generatecode/${groupId}`);
     } else {
       e.stopPropagation();
       groupIdClicked.value = groupId;

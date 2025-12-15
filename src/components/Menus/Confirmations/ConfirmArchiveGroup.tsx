@@ -31,7 +31,7 @@ export default function ConfirmArchiveGroup({
       openGroupOptionsMenu.value = false;
       activeGroupCatAsState.value = "Archived";
  
-      navigate("/groups");
+      navigate("/shared");
     }
   };
 

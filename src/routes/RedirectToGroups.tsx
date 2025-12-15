@@ -5,7 +5,7 @@ export default function RedirectToGroups() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/groups", { replace: true });
+    navigate("/shared", { replace: true });
   }, []);
 
   return null;

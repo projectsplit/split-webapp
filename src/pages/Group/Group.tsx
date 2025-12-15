@@ -99,7 +99,7 @@ export default function Group() {
       typeof groupError.value.status === "number" &&
       groupError.value.status === 404
     ) {
-      navigate("/groups");
+      navigate("/shared");
     }
   }, [isError, groupError.value, navigate]);
 

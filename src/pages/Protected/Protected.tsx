@@ -31,7 +31,7 @@ const Protected: React.FC = () => {
   const excludeTopMenu = shouldExcludeTopMenu([
     "/analytics",
     "/budget",
-    "/groups/generatecode",
+    "/shared/generatecode",
   ]);
 
   return isUserAuthenticated() ? (

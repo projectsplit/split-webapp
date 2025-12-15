@@ -34,7 +34,7 @@ export const useRemoveGuestFromGroup = (
       
       await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
       await queryClient.invalidateQueries({ queryKey: ["debts", groupId], exact: false });
-      await queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
       await queryClient.invalidateQueries({
         queryKey: ["mostRecentGroup"],
         exact: false,

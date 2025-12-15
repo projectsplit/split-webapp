@@ -29,7 +29,7 @@ const getGroup = async (
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 400) {
-      navigate("/groups");
+      navigate("/shared");
     }
     throw error;
   }

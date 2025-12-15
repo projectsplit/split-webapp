@@ -22,7 +22,7 @@ export const useUpdateGroupName = (
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
       await queryClient.invalidateQueries({ queryKey: [groupId], exact: false });
-      await queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
       await queryClient.invalidateQueries({
         queryKey: ["mostRecentGroup"],
         exact: false,

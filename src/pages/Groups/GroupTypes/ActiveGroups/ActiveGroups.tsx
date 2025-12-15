@@ -15,7 +15,7 @@ export default function ActiveGroups() {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
-      queryKey: ["groups", "active"],
+      queryKey: ["shared", "active"],
       queryFn: ({ pageParam: next }) => getGroupsTotalAmounts(pageSize, next, false),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,
       initialPageParam: "",
@@ -25,7 +25,7 @@ export default function ActiveGroups() {
   const updateMostRecentGroupId = useMostRecentGroup();
 
   const onGroupClickHandler = (id: string, groupName: string) => {
-    navigate(`/groups/active/${id}/expenses`, { state: { groupName } });
+    navigate(`/shared/active/${id}/expenses`, { state: { groupName } });
     updateMostRecentGroupId.mutate(id);
   };
 

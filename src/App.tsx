@@ -35,9 +35,9 @@ const App = () => {
         <Route element={<Protected />}>
           <Route path={routes.ROOT} element={<Home />} />
           <Route path={routes.JOIN} element={<Home />} />
-          <Route path="/groups" element={<Groups2 />} />
-          <Route path="/groups/generatecode/:groupid" element={<GenerateInvitationCode/>}/>
-          <Route path="/groups/:groupid" element={<Group />}>
+          <Route path="/shared" element={<Groups2 />} />
+          <Route path="/shared/generatecode/:groupid" element={<GenerateInvitationCode/>}/>
+          <Route path="/shared/:groupid" element={<Group />}>
             <Route index element={<RedirectToExpenses />} />
             <Route path="expenses" element={<Expenses />} />
             <Route path="transfers" element={<Transfers />} />

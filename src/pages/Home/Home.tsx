@@ -158,7 +158,7 @@ export default function Home() {
                   <div className="mostRecentMsg">Most recent</div>
                   <TreeAdjustedContainer
                     onClick={() => {
-                      navigate(`/groups/${mostRecentGroupData.id}`);
+                      navigate(`/shared/${mostRecentGroupData.id}`);
                     }}
                     hasOption={true}
                     optionname="chevron-forward-outline"
@@ -175,7 +175,7 @@ export default function Home() {
               !isFetching &&
               data?.groupCount === 0 ? (
                 <OptionButton
-                  onClick={() => navigate("/groups")}
+                  onClick={() => navigate("/shared")}
                   name="Groups"
                   description="Keep track of your shared finances"
                   hasArrow={false}
@@ -186,7 +186,7 @@ export default function Home() {
                 <TreeAdjustedContainer
                   hasOption={false}
                   optionname="chevron-forward-outline"
-                  onClick={() => navigate("/groups")}
+                  onClick={() => navigate("/shared")}
                   items={TreeItemBuilderForHomeAndGroups(data?.balances)}
                 >
                   <div className="groups">
@@ -194,7 +194,7 @@ export default function Home() {
                       <TiGroup className="groupIcon" />
                       <span className="groupCount">{data?.groupCount}</span>
                     </div>
-                    <div className="groupName">Groups</div>
+                    <div className="groupName">Shared</div>
                   </div>
                 </TreeAdjustedContainer>
               )}

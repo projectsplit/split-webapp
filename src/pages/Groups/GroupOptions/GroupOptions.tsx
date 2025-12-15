@@ -63,7 +63,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
           exact: false,
         });
         await queryClient.invalidateQueries({
-          queryKey: ["groups"],
+          queryKey: ["shared"],
           exact: false,
         });
         await queryClient.invalidateQueries({
@@ -149,7 +149,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
             const searchParams = new URLSearchParams(location.search);
             searchParams.set("in", "true");
             navigate(
-              `/groups/generatecode/${group?.id}?${searchParams.toString()}`,
+                `/shared/generatecode/${group?.id}?${searchParams.toString()}`,
               {
                 replace: true,
               }

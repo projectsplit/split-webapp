@@ -21,8 +21,8 @@ export const useArchiveGroup = (
     },
     onSuccess: async () => {
       //await queryClient.invalidateQueries({ queryKey:["groups"], exact:false});
-      await queryClient.invalidateQueries({ queryKey: ["groups", "active"], exact: true });
-      await queryClient.invalidateQueries({ queryKey: ["groups", "archived"], exact: true });
+      await queryClient.invalidateQueries({ queryKey: ["shared", "active"], exact: true });
+      await queryClient.invalidateQueries({ queryKey: ["shared", "archived"], exact: true });
       await queryClient.invalidateQueries({ queryKey: ["mostRecentGroup"], exact: false });
       await queryClient.invalidateQueries({ queryKey: [groupId], exact: false });
       menu.value = null;

@@ -6,7 +6,7 @@ export default function RedirectToExpenses() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate(`/groups/${groupid}/expenses`);
+    navigate(`/shared/${groupid}/expenses`);
   }, [groupid]);
 
   return null;

@@ -63,7 +63,7 @@ export const StyledGroups2Container = styled.div<{ groupState: string }>`
           }
           &:has(.groupIcon.active) .descr {
             color: ${({ theme, groupState }) =>
-              groupState === "Active" ? "inherit" : theme.secondaryTextColor};
+              groupState === "Active" ? "inherit" : theme.layer6};
           }
 
           /* NonGroups button text */
@@ -71,13 +71,13 @@ export const StyledGroups2Container = styled.div<{ groupState: string }>`
             color: ${({ theme, groupState }) =>
               groupState === "NonGroups"
                 ? "inherit"
-                : theme.secondaryTextColor};
+                : theme.layer6};
           }
 
           /* Archived button text */
           &:has(.groupIcon.archived) .descr {
             color: ${({ theme, groupState }) =>
-              groupState === "Archived" ? "inherit" : theme.secondaryTextColor};
+              groupState === "Archived" ? "inherit" : theme.layer6};
           }
           .descr {
             display: flex;

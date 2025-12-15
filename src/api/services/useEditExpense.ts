@@ -29,7 +29,7 @@ export const useEditExpense = (
       });
       await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["groups"],
+        queryKey: ["shared"],
         exact: false,
       });
       await queryClient.invalidateQueries({
