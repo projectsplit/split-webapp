@@ -12,9 +12,9 @@ export default function ConfirmUnArchiveGroup({
 }: ConfirmArchiveGroupProps) {
   const noGroupFoundError = useSignal<string>("");
   const navigate = useNavigate();
-  const { activeGroupCatAsState,groupIsArchived } = useOutletContext<{
+  const { activeGroupCatAsState, groupIsArchived } = useOutletContext<{
     activeGroupCatAsState: Signal<string>;
-    groupIsArchived:Signal<boolean>
+    groupIsArchived: Signal<boolean>
   }>();
 
   const { mutate: archiveGroup, isPending } = useArchiveGroup(
@@ -27,8 +27,10 @@ export default function ConfirmUnArchiveGroup({
     archiveGroup(false);
     openGroupOptionsMenu.value = false;
     activeGroupCatAsState.value = "Active";
-    if(navigateToGroups) {navigate("/groups")};
-    groupIsArchived.value=false
+    if (navigateToGroups) {
+      navigate("/shared");
+    }
+    groupIsArchived.value = false;
   };
 
   return (
