@@ -27,7 +27,7 @@ export const useTransfer = (
       });
       await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["groups"],
+        queryKey: ["shared"],
         exact: false,
       });
       await queryClient.invalidateQueries({
@@ -41,7 +41,7 @@ export const useTransfer = (
       isSubmitting.value = false;
       menu.value = null;
       if (nonGroupGroup?.value) {
-        navigate(`/groups/${groupId}/transfers`);
+        navigate(`/shared/${groupId}/transfers`);
       }
     },
   });

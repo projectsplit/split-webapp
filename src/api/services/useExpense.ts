@@ -31,7 +31,7 @@ export const useExpense = (
       });
       await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["groups"],
+        queryKey: ["shared"],
         exact: false,
       });
       await queryClient.invalidateQueries({
@@ -44,7 +44,7 @@ export const useExpense = (
       });
       menu.value = null;
       if (isNonGroupExpense && isNonGroupExpense.value) {
-        navigate(`/groups/${groupId}/expenses`);
+        navigate(`/shared/${groupId}/expenses`);
       }
     },
     onSettled: () => {

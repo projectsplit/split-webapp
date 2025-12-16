@@ -57,7 +57,7 @@ export const StyledTopMenu = styled.div<{ title: string }>`
     flex-direction: row;
 
     .title {
-      font-size: ${({ title }) => (title === "Groups" ? 24 : 18)}px;
+      font-size: ${({ title }) => (title === "Shared" ? 24 : 18)}px;
       font-weight: 600;
     }
   }

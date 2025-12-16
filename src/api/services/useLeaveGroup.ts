@@ -24,7 +24,7 @@ export const useLeaveGroup = (
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["groups"],
+        queryKey: ["shared"],
         exact: false,
       });
       await queryClient.invalidateQueries({
@@ -33,7 +33,7 @@ export const useLeaveGroup = (
       });
       menu.value = null;
       openGroupOptionsMenu.value=false
-      navigate("/groups");
+      navigate("/shared");
     },
     onError: (error: AxiosError) => {
       // console.log("Error response data:", error.response?.data);

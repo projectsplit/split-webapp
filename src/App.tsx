@@ -23,26 +23,37 @@ import Budget from "./pages/Budget/Budget";
 import RedirectToBudget from "./routes/RedirectToBudget";
 import CreateAccount from "./pages/CreateAccount/CreateAccount";
 import GenerateInvitationCode from "./pages/GenerateInvitationCode/GenerateInvitationCode";
-import Groups2 from "./pages/Groups/Groups2";
+import Shared from "./pages/Groups/Shared";
+import RedirectToNonGroupExpenses from "./routes/RedirectToNonGroupExpenses";
+
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path={routes.AUTH} element={<Auth />} />
-        <Route path = {routes.CREATE} element={<CreateAccount/>}/>
+        <Route path={routes.CREATE} element={<CreateAccount />} />
         <Route path={routes.GOOGLE_REDIRECT} element={<GoogleCallback />} />
         <Route element={<Protected />}>
           <Route path={routes.ROOT} element={<Home />} />
           <Route path={routes.JOIN} element={<Home />} />
-          <Route path="/groups" element={<Groups2 />} />
-          <Route path="/groups/generatecode/:groupid" element={<GenerateInvitationCode/>}/>
-          <Route path="/groups/:groupid" element={<Group />}>
+          <Route path="/shared" element={<Shared />} />
+          <Route path="/shared/generatecode/:groupid" element={<GenerateInvitationCode />} />
+
+          <Route path="/shared/:groupid" element={<Group />}>
             <Route index element={<RedirectToExpenses />} />
             <Route path="expenses" element={<Expenses />} />
             <Route path="transfers" element={<Transfers />} />
             <Route path="debts" element={<Members />} />
             <Route path="*" element={<RedirectToExpenses />} />
+          </Route>
+
+          <Route path="/shared/nongroup" element={<Group />}>
+            <Route index element={<RedirectToNonGroupExpenses />} />
+            <Route path="expenses" element={<div style={{overflowY: "auto", height: "100%"}}> </div>} />
+            <Route path="transfers" element={<div style={{overflowY: "auto", height: "100%"}}></div>} />
+            <Route path="debts" element={<div style={{overflowY: "auto", height: "100%"}}></div>} />
+            <Route path="*" element={<RedirectToNonGroupExpenses />} />
           </Route>
 
           <Route path="/analytics/*" element={<RedirectToAnalytics />} />

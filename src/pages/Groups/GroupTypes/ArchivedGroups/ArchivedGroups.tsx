@@ -16,7 +16,7 @@ export default function ArchivedGroups() {
   const openGroupOptionsMenu = useSignal<boolean>(true)
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
-      queryKey: ["groups", "archived"],
+      queryKey: ["shared", "archived"],
       queryFn: ({ pageParam: next }) =>
         getGroupsTotalAmounts(pageSize, next, true),
       getNextPageParam: (lastPage) => lastPage?.next || undefined,

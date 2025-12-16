@@ -14,7 +14,7 @@ export const useMultipleTransfers = (menu: Signal<string | null>,) => {
       await queryClient.invalidateQueries({ queryKey: ["debts"], exact: false });
       await queryClient.invalidateQueries({ queryKey: ["groupTransfers"], exact: false });
       await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      await queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
       menu.value = null;
     }
   });

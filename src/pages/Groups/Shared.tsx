@@ -17,13 +17,13 @@ import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu
 import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import Spinner from "../../components/Spinner/Spinner";
-import { StyledGroups2Container } from "./Groups2Container.styled";
+import { StyledSharedContainer } from "./SharedContainer.styled";
 import Separator from "../../components/Separator/Separator";
 import VerticalSeparator from "../../components/VerticalSeparator/VerticalSeparator";
 import { TiGroup } from "react-icons/ti";
 import { IoIosArchive } from "react-icons/io";
 
-export default function Groups() {
+export default function Shared() {
   const queryClient = useQueryClient();
   const menu = useSignal<string | null>(null);
   const currencyMenu = useSignal<string | null>(null);
@@ -41,7 +41,7 @@ export default function Groups() {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
-      queryKey: ["groups", activeGroupCatAsState.value.toLowerCase()],
+      queryKey: ["shared", activeGroupCatAsState.value.toLowerCase()],
       queryFn: ({ pageParam: next }) =>
         getGroupsTotalAmounts(
           pageSize,
@@ -59,9 +59,9 @@ export default function Groups() {
   );
 
   useEffect(() => {
-    topMenuTitle.value = "Groups";
+    topMenuTitle.value = "Shared";
     queryClient.invalidateQueries({
-      queryKey: ["groups", activeGroupCatAsState.value.toLowerCase()],
+      queryKey: ["shared", activeGroupCatAsState.value.toLowerCase()],
       exact: true,
     });
   }, [activeGroupCatAsState.value]);
@@ -69,7 +69,7 @@ export default function Groups() {
   const updateMostRecentGroupId = useMostRecentGroup();
 
   const onGroupClickHandler = (id: string, groupName: string) => {
-    navigate(`/groups/${id}/expenses`, { state: { groupName } });
+    navigate(`/shared/${id}/expenses`, { state: { groupName } });
     updateMostRecentGroupId.mutate(id);
   };
 
@@ -80,7 +80,7 @@ export default function Groups() {
   ) => {
     if (!isGroupArchived) {
       e.stopPropagation();
-      navigate(`/groups/generatecode/${groupId}`);
+      navigate(`/shared/generatecode/${groupId}`);
     } else {
       e.stopPropagation();
       groupIdClicked.value = groupId;
@@ -89,21 +89,21 @@ export default function Groups() {
   };
 
   return (
-    <StyledGroups2Container  groupState={activeGroupCatAsState.value}>
+    <StyledSharedContainer $groupState={activeGroupCatAsState.value}>
       <Separator />
       <div className="optionButtonsAndGroups">
         <div className="optionButtons">
           <div className="buttonWrapper">
-            {activeGroupCatAsState.value === "NonGroups" && (
+            {activeGroupCatAsState.value === "NonGroup" && (
               <div className="activeBar" />
             )}
             <div
               className="button"
-              onClick={() => (activeGroupCatAsState.value = "NonGroups")}
+              onClick={() => (activeGroupCatAsState.value = "NonGroup")}
             >
               <MdGroupOff className="groupIcon non" />
-              <span className="descr">Non </span>
-              <span className="descr">Groups</span>
+              <span className="descr">Non</span>
+              <span className="descr">Group</span>
             </div>
           </div>
           <div className="buttonWrapper">
@@ -190,6 +190,25 @@ export default function Groups() {
                   </TreeAdjustedContainer>
                 </div>
               ))}
+              {activeGroupCatAsState.value === "NonGroup" && (
+                <TreeAdjustedContainer
+                  onClick={() => navigate(`/shared/nongroup/expenses`)}
+                  hasOption={true}
+                  items={[
+                    <div className="groupsInfo" key="settled">
+                      <div className="settled">
+                        <div>You are settled </div>
+                        {/* <IonIcon name="checkmark-sharp" className="checkmark" /> */}
+                      </div>
+                    </div>,
+                  ]}
+                  optionname={'chevron-forward-outline'}
+                >
+
+                  <div className="groupName">Non Group transactions</div>
+
+                </TreeAdjustedContainer>
+              )}
 
               <Sentinel
                 fetchNextPage={fetchNextPage}
@@ -209,7 +228,7 @@ export default function Groups() {
         openGroupOptionsMenu={openGroupOptionsMenu}
         navigateToGroups={true}
       />
-    </StyledGroups2Container>
+    </StyledSharedContainer>
   );
 }
 

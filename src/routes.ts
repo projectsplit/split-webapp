@@ -6,7 +6,7 @@ const routes = {
   GOOGLE_REDIRECT: "/google/redirect",
   USER_INVITATIONS: "/invitations",
   JOIN: "/j/:code",
-  GROUP: "/groups/:groupid"
+  GROUP: "/shared/:groupid"
 };
 
 export default routes;

@@ -90,9 +90,9 @@ export default function GenerateInvitationCode() {
             className="closeButtonContainer"
             onClick={() => {
               if (landedFromGroup === "true") {
-                navigate(`/groups/${params.groupid}`, { replace: true });
+                navigate(`/shared/${params.groupid}`, { replace: true });
               } else {
-                navigate("/groups", { replace: true });
+                navigate("/shared", { replace: true });
               }
             }}
           >

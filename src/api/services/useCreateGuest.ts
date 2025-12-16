@@ -48,7 +48,7 @@ export const useCreateGuest = (
         queryKey: ["debts", groupId],
         exact: false,
       });
-      queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
       queryClient.invalidateQueries({
         queryKey: ["mostRecentGroup"],
         exact: false,

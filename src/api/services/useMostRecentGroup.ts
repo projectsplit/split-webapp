@@ -18,7 +18,7 @@ export const useMostRecentGroup = () => {
         exact: false,
       });
       await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      await queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
     },
     onError: (error) => {
       console.log(error);

@@ -21,11 +21,11 @@ export default function TopMenu({
     useState<boolean>(true);
 
   const handleNavigate = (title: string) => {
-    if (title !== "" && title !== "Groups") {
-      navigate("/groups");
+    if (title !== "" && title !== "Shared") {
+      navigate("/shared");
     }
   };
-  const isInGroup = title !== "" && title !== "Groups";
+  const isInShared = title !== "" && title !== "Shared";
 
   return (
     <StyledTopMenu title={title}>
@@ -37,12 +37,12 @@ export default function TopMenu({
           />
         ) : null}
 
-        {isInGroup ? (
+        {isInShared ? (
           <div className="titleStripe">
             <div
               className="title"
               onClick={() => handleNavigate(title)}
-              style={{ cursor: title !== "Groups" ? "pointer" : "" }}
+              style={{ cursor: title !== "Shared" ? "pointer" : "" }}
             >
               {title}
             </div>
@@ -50,12 +50,12 @@ export default function TopMenu({
         ) : null}
       </div>
 
-      {!isInGroup ? (
+      {!isInShared ? (
         <div className="titleStripe">
           <div
             className="title"
             onClick={() => handleNavigate(title)}
-            style={{ cursor: title !== "Groups" ? "pointer" : "" }}
+            style={{ cursor: title !== "Shared" ? "pointer" : "" }}
           >
             {title}
           </div>
@@ -64,7 +64,7 @@ export default function TopMenu({
 
       <div className="bellAndCog">
         {" "}
-        {isInGroup ? (
+        {isInShared ? (
           groupIsArchived ? (
             <div
               className="cogContainer"

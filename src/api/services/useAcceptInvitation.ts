@@ -65,8 +65,8 @@ export const useAcceptInvitation = (
         exact: false,
       });
       queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
-      navigate(`/groups/${invitation.groupId}/expenses`);
+      queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
+      navigate(`/shared/${invitation.groupId}/expenses`);
       menu.value=null
     },
     onError: (error, invitationId, context) => {

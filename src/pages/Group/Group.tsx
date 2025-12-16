@@ -65,8 +65,6 @@ export default function Group() {
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
   const { data: group, isFetching, isError, error } = useGroup(groupid);
 
-  const groupName = group?.name;
-
   useEffect(() => {
     groupIsArchived.value = group?.isArchived || false;
     return () => {
@@ -99,7 +97,7 @@ export default function Group() {
       typeof groupError.value.status === "number" &&
       groupError.value.status === 404
     ) {
-      navigate("/groups");
+      navigate("/shared");
     }
   }, [isError, groupError.value, navigate]);
 
@@ -168,7 +166,7 @@ export default function Group() {
               nonGroupUsers={signal([])}
             />
           )}
-          
+
           {group && (
             <ConfirmUnArchiveGroupAnimation
               groupId={group.id}

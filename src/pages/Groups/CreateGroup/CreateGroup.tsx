@@ -37,7 +37,7 @@ export default function CreateGroup({
   const {mutate:createGroup, isPending} = useMutation<any, any, GroupRequest>({
     mutationFn: (groupData) => createGroupFn(groupData),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["groups", "active"] });
+      await queryClient.invalidateQueries({ queryKey: ["shared", "active"] });
       await queryClient.invalidateQueries({ queryKey: ["home"] });
       menu.value = null;
     },
