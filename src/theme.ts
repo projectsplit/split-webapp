@@ -43,7 +43,7 @@ export const theme = {
   orange: "#DFA769",
 
   nonInactive: "#2c3445",
-  nonActive: "#4b6cff",
+  nonActive: "#0866ff",
 
   /* Active Groups (purple) */
   activeInactive: "#3b2f4a",

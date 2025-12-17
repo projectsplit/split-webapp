@@ -77,6 +77,11 @@ export default function ShareGroup({
       });
       qrRef.current.innerHTML = "";
       qrCode.append(qrRef.current);
+      return () => {
+        if (qrRef.current) {
+          qrRef.current.innerHTML = "";
+        }
+      };
     }
   }, [invitationCode, isPending]);
 
@@ -121,7 +126,7 @@ export default function ShareGroup({
               </div>
             </div>
             <div className="expires">
-              {!timeLeft.length || timeLeft === "NaN"  ? (
+              {!timeLeft.length || timeLeft === "NaN" ? (
                 <ShimerPlaceholder />
               ) : timeLeft && timeLeft === "Expired" ? (
                 <span className="text">
