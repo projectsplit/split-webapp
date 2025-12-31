@@ -443,6 +443,7 @@ export interface NewExpenseAnimationProps {
   currency: string;
   isnonGroupExpense?: Signal<boolean>;
   nonGroupUsers: Signal<User[]>;
+  nonGroupMenu?: Signal<string | null>;
 }
 
 export interface NewTransferAnimationProps {
@@ -471,6 +472,7 @@ export interface ExpenseFormProps {
   currency: string;
   nonGroupMenu?: Signal<string | null>;
   nonGroupGroup?: Signal<Group | null>;
+  fromHome?: boolean;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {

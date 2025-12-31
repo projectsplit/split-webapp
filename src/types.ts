@@ -105,12 +105,26 @@ export type ExpenseResponseItem = {
   id: string;
   created: string;
   updated: string;
-  groupId: string;
+  occurred: string;
   creatorId: string;
   amount: number;
-  occurred: string;
   description: string;
   currency: string;
+  location: GeoLocation | undefined;
+};
+
+export type GroupExpenseResponseItem =ExpenseResponseItem& {
+  groupId: string;
+  payments: GroupPayment[];
+  shares: GroupShare[];
+  labels: {
+    id: string;
+    text: string;
+    color: string;
+  }[];
+};
+
+export type NonGroupExpenseResponseItem =ExpenseResponseItem & {
   payments: Payment[];
   shares: Share[];
   labels: {
@@ -118,7 +132,14 @@ export type ExpenseResponseItem = {
     text: string;
     color: string;
   }[];
-  location: GeoLocation | undefined;
+};
+
+export type PersonalExpenseResponseItem =ExpenseResponseItem & {
+  labels: {
+    id: string;
+    text: string;
+    color: string;
+  }[];
 };
 
 export type TransferResponseItem = {
@@ -135,13 +156,22 @@ export type TransferResponseItem = {
   receiverId: string;
 };
 
-export type Share = {
+export type GroupShare = {
   memberId: string;
   amount: number;
 };
 
-export type Payment = {
+export type GroupPayment = {
   memberId: string;
+  amount: number;
+};
+export type Share = {
+  userId: string;
+  amount: number;
+};
+
+export type Payment = {
+  userId: string;
   amount: number;
 };
 
@@ -705,6 +735,5 @@ export type SpendingChartsResponseItem = {
   from: Date;
   to: Date;
 };
-
 
 export type Variant = "non" | "active" | "archived";

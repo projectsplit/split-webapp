@@ -10,7 +10,7 @@ import { CategorySelector } from "../../components/CategorySelector/CategorySele
 import { signal, Signal, useSignal } from "@preact/signals-react";
 import {
   ExpenseParsedFilters,
-  ExpenseResponseItem,
+  GroupExpenseResponseItem,
   TransferParsedFilters,
   UserInfo,
 } from "../../types";
@@ -18,9 +18,8 @@ import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
 import GroupQuickActionsAnimation from "../../components/Menus/MenuAnimations/MenuWithOptionsToAddAnimation";
-import AddNewUserAnimation from "../../components/Menus/MenuAnimations/AddNewUserAnimation";
 import useGroup from "../../api/services/useGroup";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTransferAnimation";
 import GroupOptions from "../Groups/GroupOptions/GroupOptions";
 import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
@@ -39,7 +38,7 @@ export default function Group() {
   const menu = useSignal<string | null>(null);
   const showBottomBar = useSignal<boolean>(false);
   const groupError = useSignal<errorObject>();
-  const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
+  const selectedExpense = useSignal<GroupExpenseResponseItem | null>(null);
   const expenseParsedFilters = useSignal<ExpenseParsedFilters>({});
   const transferParsedFilters = useSignal<TransferParsedFilters>({});
   const location = useLocation();
@@ -194,8 +193,7 @@ export default function Group() {
               onClick={() => {
                 if (group && !group.isArchived) {
                   menu.value = "quickActions";
-                } else {
-                }
+                } 
               }}
             />
           </div>

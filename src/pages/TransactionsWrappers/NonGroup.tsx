@@ -1,0 +1,130 @@
+import { signal, Signal, useSignal } from '@preact/signals-react';
+import React, { useEffect } from 'react'
+import { Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
+import { ExpenseParsedFilters, ExpenseResponseItem, NonGroupExpenseResponseItem, TransferParsedFilters, User, UserInfo } from '../../types';
+import { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import Spinner from '../../components/Spinner/Spinner';
+import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
+import MenuAnimationBackground from '../../components/Menus/MenuAnimations/MenuAnimationBackground';
+import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';
+import SearchTransactionsAnimation from '../../components/Menus/MenuAnimations/SearchTransactionsAnimation';
+import GroupQuickActionsAnimation from '../../components/Menus/MenuAnimations/MenuWithOptionsToAddAnimation';
+import NewExpenseAnimation from '../../components/Menus/MenuAnimations/NewExpenseAnimation';
+import NewTransferAnimation from '../../components/Menus/MenuAnimations/NewTransferAnimation';
+import { StyledGroup } from './Group.styled';
+import NonGroupExpenseUsersAnimation from '../../components/Menus/MenuAnimations/NonGroupExpenseUsersAnimation';
+
+
+
+export default function NonGroup() {
+  const menu = useSignal<string | null>(null);
+  const showBottomBar = useSignal<boolean>(false);
+  const selectedExpense = useSignal<NonGroupExpenseResponseItem | null>(null);
+  const nonGroupMenu = useSignal<string | null>("nonGroupExpenseUsers");
+  const expenseParsedFilters = useSignal<ExpenseParsedFilters>({});
+  const transferParsedFilters = useSignal<TransferParsedFilters>({});
+  const location = useLocation();
+  const path = location.pathname.split("/").pop() || "";
+  const nonGroupUsers = useSignal<User[]>([]);
+  const navigate = useNavigate();
+
+  const {
+    userInfo,
+    topMenuTitle,
+  } = useOutletContext<{
+    userInfo: UserInfo;
+    topMenuTitle: Signal<string>;
+  }>();
+
+  const timeZoneId = userInfo?.timeZone;
+  const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
+
+
+  useEffect(() => {
+    topMenuTitle.value = 'Non Group Transactions';
+  }, [showBottomBar.value]);
+
+  useEffect(() => {
+
+    const saved = localStorage.getItem("nonGroupExpenseData");
+    if (saved) {
+      const {
+        nonGroupUsers: u,
+      } = JSON.parse(saved);
+      nonGroupUsers.value = u ?? [];
+
+    }
+  }, []);
+
+  return (
+    <StyledGroup>
+      <div className="group">
+        <CategorySelector
+          activeCat={path}
+          categories={{
+            cat1: "Expenses",
+            cat2: "Transfers",
+            cat3: "Debts",
+          }}
+          navLinkUse={true}
+        />
+        <Outlet
+          context={{
+            userInfo,
+            showBottomBar,
+            expenseParsedFilters,
+            transferParsedFilters,
+          }}
+        />
+
+        <MenuAnimationBackground menu={menu} />
+
+        <NewExpenseAnimation
+          expense={null}
+          timeZoneId={timeZoneId}
+          menu={menu}
+          selectedExpense={selectedExpense}
+          timeZoneCoordinates={timeZoneCoordinates}
+          isPersonal={signal(false)}
+          currency={userInfo?.currency}
+          groupMembers={signal([])}
+          isnonGroupExpense={signal(true)}
+          nonGroupUsers={nonGroupUsers}
+          nonGroupMenu={nonGroupMenu}
+        />
+
+
+        <NewTransferAnimation
+          timeZoneId={timeZoneId}
+          menu={menu}
+          currency={userInfo?.currency}
+          groupMembers={signal([])}
+          isnonGroupTransfer={signal(true)}
+          nonGroupUsers={nonGroupUsers}
+        />
+
+        <GroupQuickActionsAnimation menu={menu} />
+
+        {/* <SearchTransactionsAnimation
+              menu={menu}
+              group={null}
+              userInfo={userInfo}
+              timeZoneId={timeZoneId}
+              expenseParsedFilters={expenseParsedFilters}
+              transferParsedFilters={transferParsedFilters}
+            /> */}
+
+        <div className="bottomMenu">
+          {" "}
+          <BottomMainMenu
+            menu={menu}
+            onClick={() => {
+              menu.value = "quickActions";
+            }}
+          />
+        </div>
+      </div>
+
+    </StyledGroup>
+  );
+}

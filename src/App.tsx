@@ -10,7 +10,7 @@ import GoogleCallback from "./pages/GoogleCallback";
 import Home from "./pages/Home/Home";
 import Groups from "./pages/Groups/Groups";
 import RedirectToExpenses from "./routes/RedirectToExpenses";
-import Group from "./pages/Group/Group";
+import Group from "./pages/TransactionsWrappers/Group";
 import Expenses from "./pages/Expenses/Expenses";
 import Transfers from "./pages/Transfers/Transfers";
 import Members from "./pages/Members/Members";
@@ -25,6 +25,7 @@ import CreateAccount from "./pages/CreateAccount/CreateAccount";
 import GenerateInvitationCode from "./pages/GenerateInvitationCode/GenerateInvitationCode";
 import Shared from "./pages/Groups/Shared";
 import RedirectToNonGroupExpenses from "./routes/RedirectToNonGroupExpenses";
+import NonGroup from "./pages/TransactionsWrappers/NonGroup";
 
 
 const App = () => {
@@ -48,11 +49,11 @@ const App = () => {
             <Route path="*" element={<RedirectToExpenses />} />
           </Route>
 
-          <Route path="/shared/nongroup" element={<Group />}>
+          <Route path="/shared/nongroup" element={<NonGroup />}>
             <Route index element={<RedirectToNonGroupExpenses />} />
-            <Route path="expenses" element={<div style={{overflowY: "auto", height: "100%"}}> </div>} />
-            <Route path="transfers" element={<div style={{overflowY: "auto", height: "100%"}}></div>} />
-            <Route path="debts" element={<div style={{overflowY: "auto", height: "100%"}}></div>} />
+            <Route path="expenses" element={<div style={{ overflowY: "auto", height: "100%" }}> </div>} />
+            <Route path="transfers" element={<div style={{ overflowY: "auto", height: "100%" }}></div>} />
+            <Route path="debts" element={<div style={{ overflowY: "auto", height: "100%" }}></div>} />
             <Route path="*" element={<RedirectToNonGroupExpenses />} />
           </Route>
 

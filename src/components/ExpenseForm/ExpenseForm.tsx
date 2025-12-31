@@ -59,6 +59,7 @@ export default function ExpenseForm({
   currency,
   nonGroupMenu,
   nonGroupGroup,
+  fromHome
 }: ExpenseFormProps) {
   const isInitialRender = useRef<boolean>(true);
   const navigate = useNavigate();
@@ -234,7 +235,7 @@ export default function ExpenseForm({
 
   const participants =
     participantsByCategory[
-      participantsCategory.value as keyof typeof participantsByCategory
+    participantsCategory.value as keyof typeof participantsByCategory
     ];
 
   const payers =
@@ -243,7 +244,9 @@ export default function ExpenseForm({
   const adjustParticipants = useMemo(() => {
     if (!participants) return [];
     const userIdToCheck =
-      nonGroupUsers.value.length > 0 ? userInfo?.userId : userMemberId;
+      nonGroupUsers.value.length > 0 || isnonGroupExpense?.value
+        ? userInfo?.userId
+        : userMemberId;
     return participants.map((m) =>
       m.id === userIdToCheck ? { ...m, name: "you" } : m
     );
@@ -252,16 +255,25 @@ export default function ExpenseForm({
     userInfo?.userId,
     userMemberId,
     nonGroupUsers.value.length,
+    isnonGroupExpense?.value,
   ]);
 
   const adjustPayers = useMemo(() => {
     if (!payers) return [];
     const userIdToCheck =
-      nonGroupUsers.value.length > 0 ? userInfo?.userId : userMemberId;
+      nonGroupUsers.value.length > 0 || isnonGroupExpense?.value
+        ? userInfo?.userId
+        : userMemberId;
     return payers.map((m) =>
       m.id === userIdToCheck ? { ...m, name: "you" } : m
     );
-  }, [payers, userInfo?.userId, userMemberId, nonGroupUsers.value.length]);
+  }, [
+    payers,
+    userInfo?.userId,
+    userMemberId,
+    nonGroupUsers.value.length,
+    isnonGroupExpense?.value,
+  ]);
 
   const setParticipants = (newParticipants: PickerMember[]) => {
     setParticipantsByCategory((prev) => ({
@@ -543,7 +555,7 @@ export default function ExpenseForm({
         onChange={handleDescriptionChange}
         labelMenuIsOpen={labelMenuIsOpen}
       />
-      {showShareExpenseButton && nonGroupMenu ? (
+      {showShareExpenseButton && fromHome && nonGroupMenu ? (
         <div className="shareExpenseOption">
           <div
             className="button"
@@ -553,7 +565,7 @@ export default function ExpenseForm({
           </div>
         </div>
       ) : null}
-      {showMakePersonal && nonGroupMenu ? (
+      {showMakePersonal && fromHome && nonGroupMenu ? (
         <div className="shareExpenseOption">
           <div
             className="button"
@@ -564,6 +576,16 @@ export default function ExpenseForm({
             }}
           >
             Make Personal{" "}
+          </div>
+        </div>
+      ) : null}
+      {isnonGroupExpense?.value && amountNumber && nonGroupMenu && !fromHome ? (
+        <div className="shareExpenseOption">
+          <div
+            className="button"
+            onClick={() => (nonGroupMenu.value = "nonGroupExpenseUsers")}
+          >
+            Shared with you and...{" "}
           </div>
         </div>
       ) : null}
