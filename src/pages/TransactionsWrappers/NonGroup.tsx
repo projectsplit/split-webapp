@@ -20,7 +20,7 @@ export default function NonGroup() {
   const menu = useSignal<string | null>(null);
   const showBottomBar = useSignal<boolean>(false);
   const selectedExpense = useSignal<NonGroupExpenseResponseItem | null>(null);
-  const nonGroupMenu = useSignal<string | null>("nonGroupExpenseUsers");
+  const nonGroupMenu = useSignal<string | null>(null);
   const expenseParsedFilters = useSignal<ExpenseParsedFilters>({});
   const transferParsedFilters = useSignal<TransferParsedFilters>({});
   const location = useLocation();
@@ -124,7 +124,16 @@ export default function NonGroup() {
           />
         </div>
       </div>
+      <NonGroupExpenseUsersAnimation
+        menu={nonGroupMenu}
+        nonGroupUsers={nonGroupUsers}
+        isPersonal={signal(false)}
+        groupMembers={signal([])}
+        nonGroupGroup={signal(null)}
+        isNonGroupExpense={signal(true)}
+        fromNonGroup={true}
 
+      />
     </StyledGroup>
   );
 }

@@ -1,7 +1,7 @@
 import { CSSTransition } from "react-transition-group";
 import { NonGroupExpenseUsersAnimationProps } from "../../../interfaces";
 import { useRef } from "react";
-import {  NonGroupExpenseUsersMenu } from "../NonGroupUsersMenus/NonGroupExpenseUsersMenu/NonGroupExpenseUsersMenu";
+import { NonGroupExpenseUsersMenu } from "../NonGroupUsersMenus/NonGroupExpenseUsersMenu/NonGroupExpenseUsersMenu";
 
 export default function NonGroupExpenseUsersAnimation({
   menu,
@@ -9,7 +9,8 @@ export default function NonGroupExpenseUsersAnimation({
   isPersonal,
   groupMembers,
   nonGroupGroup,
-  isNonGroupExpense
+  isNonGroupExpense,
+  fromNonGroup
 }: NonGroupExpenseUsersAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -26,6 +27,7 @@ export default function NonGroupExpenseUsersAnimation({
         groupMembers={groupMembers}
         nonGroupGroup={nonGroupGroup}
         isNonGroupExpense={isNonGroupExpense}
+        fromNonGroup={fromNonGroup}
       />
     </CSSTransition>
   );

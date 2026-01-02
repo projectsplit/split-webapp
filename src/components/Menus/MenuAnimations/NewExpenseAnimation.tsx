@@ -16,7 +16,7 @@ export default function NewExpenseAnimation({
   currency,
   nonGroupUsers,
   isnonGroupExpense,
-   nonGroupMenu
+  nonGroupMenu
 }: NewExpenseAnimationProps) {
   const nodeRef = useRef(null);
   return (

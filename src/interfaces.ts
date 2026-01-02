@@ -519,6 +519,7 @@ export interface NonGroupExpenseUsersAnimationProps extends MenuProps {
   groupMembers: Signal<(Guest | Member)[]>;
   nonGroupGroup: Signal<Group | null>;
   isNonGroupExpense: Signal<boolean>;
+  fromNonGroup: boolean;
 }
 
 export interface NonGroupTransferAnimationProps {
@@ -555,6 +556,7 @@ export interface NonGroupUsersProps extends MenuProps {
   groupMembers: Signal<(Guest | Member)[]>;
   nonGroupGroup: Signal<Group | null>;
   isNonGroupExpense: Signal<boolean>;
+  fromNonGroup: boolean;
 }
 export interface LocationPickerAnimationProps extends MenuProps {
   location: GeoLocation | undefined;

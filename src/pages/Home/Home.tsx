@@ -284,6 +284,7 @@ export default function Home() {
         groupMembers={groupMembers}
         nonGroupGroup={nonGroupGroup}
         isNonGroupExpense={isNonGroupExpense}
+        fromNonGroup={false}
       />
       <NonGroupTransferAnimation
         nonGroupTransferMenu={nonGroupTransferMenu}

@@ -173,6 +173,7 @@ export default function ExpenseForm({
   const [participantsByCategory, setParticipantsByCategory] = useState(
     initialParticipantsByCategory
   );
+
   const [payersByCategory, setPayersByCategory] = useState(
     initialPayersByCategory
   );
@@ -444,12 +445,14 @@ export default function ExpenseForm({
           className="closeButtonContainer"
           onClick={() => {
             if (isnonGroupExpense && isnonGroupExpense?.value) {
-              nonGroupUsers.value = [];
-              groupMembers.value = [];
-              isPersonal.value = true;
-              isnonGroupExpense.value = false;
-              if (nonGroupGroup) {
-                nonGroupGroup.value = null;
+              if (fromHome) {
+                nonGroupUsers.value = [];
+                groupMembers.value = [];
+                isPersonal.value = true;
+                isnonGroupExpense.value = false;
+                if (nonGroupGroup) {
+                  nonGroupGroup.value = null;
+                }
               }
             }
             menu.value = null;
@@ -579,7 +582,7 @@ export default function ExpenseForm({
           </div>
         </div>
       ) : null}
-      {isnonGroupExpense?.value && amountNumber && nonGroupMenu && !fromHome ? (
+      {amountNumber && nonGroupMenu && !fromHome && adjustPayers.length === 0 && adjustParticipants.length === 0 ? (
         <div className="shareExpenseOption">
           <div
             className="button"
