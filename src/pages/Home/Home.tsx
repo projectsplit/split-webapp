@@ -107,7 +107,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (isNonGroupExpense.value) {
       const saved = localStorage.getItem("nonGroupExpenseData");
       if (saved) {
         const {
@@ -119,13 +118,11 @@ export default function Home() {
         nonGroupGroup.value = g ?? null;
         groupMembers.value = m ?? [];
         isPersonal.value = false;
+        if(nonGroupGroup.value !== null){
+          isNonGroupExpense.value = false;
+        }
       }
-    } else {
-      nonGroupUsers.value = [];
-      nonGroupGroup.value = null;
-      groupMembers.value = [];
-    }
-  }, [isNonGroupExpense.value]);
+  },[]);
 
   const isGlowing = quickActionsMenu.value === "quickActions";
 

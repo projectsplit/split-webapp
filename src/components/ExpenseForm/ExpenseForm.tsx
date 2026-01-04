@@ -183,11 +183,7 @@ export default function ExpenseForm({
     if (isSubmitting.value) return;
     setParticipantsByCategory(initialParticipantsByCategory);
     setPayersByCategory(initialPayersByCategory);
-  }, [
-    initialParticipantsByCategory,
-    initialPayersByCategory,
-    isSubmitting.value,
-  ]);
+  }, [initialParticipantsByCategory, initialPayersByCategory]);
 
   const [participantsError, setParticipantsError] = useState<string>("");
 
@@ -310,7 +306,8 @@ export default function ExpenseForm({
       setShowAmountError,
       participantsCategory,
       payersCategory,
-      isSubmitting
+      isSubmitting,
+      isnonGroupExpense
     });
     if (isnonGroupExpense && isnonGroupExpense.value) {
       const data = {
@@ -415,8 +412,6 @@ export default function ExpenseForm({
   );
 
   const showShareExpenseButton =
-    isnonGroupExpense &&
-    isnonGroupExpense.value &&
     isPersonal.value &&
     amountNumber &&
     nonGroupUsers.value.length === 0;

@@ -49,8 +49,7 @@ export const NonGroupExpenseUsersMenu = ({
   const result = useSearchFriendsToInvite(
     "f7637b50-e77d-4609-9e38-eb0acc9c9c51",
     debouncedKeyword,
-    pageSize,
-    isNonGroupExpense.value
+    pageSize
   );
 
   if (!result) return null;
@@ -282,6 +281,7 @@ export const NonGroupExpenseUsersMenu = ({
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSuggestedGroupClick(group.id);
+                    isNonGroupExpense.value = false
                   }}
                 />
               ))}

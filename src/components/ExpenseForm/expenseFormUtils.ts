@@ -30,7 +30,8 @@ export function submitExpense({
   setShowAmountError,
   participantsCategory,
   payersCategory,
-  isSubmitting
+  isSubmitting,
+  isnonGroupExpense,
 }: {
   participants: PickerMember[];
   payers: PickerMember[];
@@ -50,8 +51,10 @@ export function submitExpense({
   setShowAmountError: React.Dispatch<React.SetStateAction<boolean>>;
   participantsCategory: Signal<string>;
   payersCategory: Signal<string>;
-  isSubmitting:Signal<boolean>
+  isSubmitting: Signal<boolean>;
+  isnonGroupExpense: Signal<boolean> | undefined;
 }) {
+
   setShowAmountError(true);
   if (participantsCategory.value === "Shares") {
     participants.map((p) => {
@@ -78,27 +81,52 @@ export function submitExpense({
     return;
   }
 
-  const expenseRequest: ExpenseRequest = {
-    amount: Number(amount),
-    ...(isCreateExpense ? { groupId: groupId } : { expenseId: expense?.id }),
-    currency: currencySymbol,
-    payments: payers
-      .filter((value) => value.selected)
-      .map((value) => ({
-        memberId: value.id,
-        amount: Number(value.actualAmount),
-      })),
-    shares: participants
-      .filter((value) => value.selected)
-      .map((value) => ({
-        memberId: value.id,
-        amount: Number(value.actualAmount),
-      })),
-    description: description,
-    location: location.value ?? null,
-    occurred: expenseTime,
-    labels: labels.map((x) => ({ text: x.text, color: x.color })),
-  };
+   let expenseRequest: ExpenseRequest;
+  if (isnonGroupExpense?.value) {
+     expenseRequest = {
+      amount: Number(amount),
+      ...(isCreateExpense ? {  } : { expenseId: expense?.id }),
+      currency: currencySymbol,
+      payments: payers
+        .filter((value) => value.selected)
+        .map((value) => ({
+          userId: value.id,
+          amount: Number(value.actualAmount),
+        })),
+      shares: participants
+        .filter((value) => value.selected)
+        .map((value) => ({
+          userId: value.id,
+          amount: Number(value.actualAmount),
+        })),
+      description: description,
+      location: location.value ?? null,
+      occurred: expenseTime,
+      labels: labels.map((x) => ({ text: x.text, color: x.color })),
+    };
+  } else {
+     expenseRequest = {
+      amount: Number(amount),
+      ...(isCreateExpense ? { groupId: groupId } : { expenseId: expense?.id }),
+      currency: currencySymbol,
+      payments: payers
+        .filter((value) => value.selected)
+        .map((value) => ({
+          memberId: value.id,
+          amount: Number(value.actualAmount),
+        })),
+      shares: participants
+        .filter((value) => value.selected)
+        .map((value) => ({
+          memberId: value.id,
+          amount: Number(value.actualAmount),
+        })),
+      description: description,
+      location: location.value ?? null,
+      occurred: expenseTime,
+      labels: labels.map((x) => ({ text: x.text, color: x.color })),
+    };
+  }
 
   if (isCreateExpense) {
     createExpenseMutation(expenseRequest);
@@ -145,8 +173,9 @@ export const createParticipantPickerArray = (
         id: user.userId,
         actualAmount,
         screenQuantity,
-        locked: expense?.participants.some((p) => p.memberId === user.userId) ??
-            false,
+        locked:
+          expense?.participants.some((p) => p.memberId === user.userId) ??
+          false,
         name: user.username,
         order: 0,
         selected:
@@ -154,11 +183,11 @@ export const createParticipantPickerArray = (
           false,
       };
     });
-  } else { 
+  } else {
     array = groupMembers.map((member) => {
       const participant = expense?.participants.find(
         (p) => p.memberId === member?.id
-      );    
+      );
       const actualAmount = participant?.participationAmount ?? "";
       const isPercentageType = type === "Percentages";
       const isSharesType = type === "Shares";
@@ -180,7 +209,7 @@ export const createParticipantPickerArray = (
         id: member.id,
         actualAmount,
         screenQuantity,
-        locked: 
+        locked:
           expense?.participants.some((p) => p.memberId === member.id) ?? false,
         name: member.name,
         order: 0,
@@ -278,9 +307,7 @@ export const createPayerPickerArray = (
   // Auto-select the current user as payer for new expense
   if (isCreateExpense) {
     const selectedId =
-      isnonGroupExpense && nonGroupUsers.length > 0
-        ? userId
-        : userMemberId;
+      isnonGroupExpense && nonGroupUsers.length > 0 ? userId : userMemberId;
     array = array.map((m) => ({
       ...m,
       selected: m.id === selectedId,

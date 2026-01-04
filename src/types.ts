@@ -113,7 +113,7 @@ export type ExpenseResponseItem = {
   location: GeoLocation | undefined;
 };
 
-export type GroupExpenseResponseItem =ExpenseResponseItem& {
+export type GroupExpenseResponseItem = ExpenseResponseItem & {
   groupId: string;
   payments: GroupPayment[];
   shares: GroupShare[];
@@ -124,7 +124,7 @@ export type GroupExpenseResponseItem =ExpenseResponseItem& {
   }[];
 };
 
-export type NonGroupExpenseResponseItem =ExpenseResponseItem & {
+export type NonGroupExpenseResponseItem = ExpenseResponseItem & {
   payments: Payment[];
   shares: Share[];
   labels: {
@@ -134,7 +134,7 @@ export type NonGroupExpenseResponseItem =ExpenseResponseItem & {
   }[];
 };
 
-export type PersonalExpenseResponseItem =ExpenseResponseItem & {
+export type PersonalExpenseResponseItem = ExpenseResponseItem & {
   labels: {
     id: string;
     text: string;
@@ -258,37 +258,53 @@ export type Label = {
   color: string;
 };
 
-export type CreateExpenseRequest = {
-  amount: number;
-  groupId: string;
-  currency: string;
-  payments: {
-    memberId: string;
-    amount: number;
-  }[];
-  shares: {
-    memberId: string;
-    amount: number;
-  }[];
-  description: string;
-  location: GeoLocation | null;
-  occurred: string;
-  labels: {
-    text: string;
-    color: string;
-  }[];
-};
+// export type CreateExpenseRequest = {
+//   amount: number;
+//   currency: string;
+//   description: string;
+//   location: GeoLocation | null;
+//   occurred: string;
+//   labels: {
+//     text: string;
+//     color: string;
+//   }[];
+// };
+
+// export type CreateGroupExpenseRequest = CreateExpenseRequest & {
+//   groupId: string;
+//   payments: {
+//     memberId: string;
+//     amount: number;
+//   }[];
+//   shares: {
+//     memberId: string;
+//     amount: number;
+//   }[];
+// };
+
+// export type CreateNonGroupExpenseRequest = CreateExpenseRequest & {
+//   payments: {
+//     userId: string;
+//     amount: number;
+//   }[];
+//   shares: {
+//     userId: string;
+//     amount: number;
+//   }[];
+// };
 
 export type CreateEditExpenseRequest = {
   expenseId: string;
   amount: number;
   currency: string;
   payments: {
-    memberId: string;
+    userId?: string;
+    memberId?: string;
     amount: number;
   }[];
   shares: {
-    memberId: string;
+    userId?: string;
+    memberId?: string;
     amount: number;
   }[];
   description: string;
@@ -306,11 +322,13 @@ export type ExpenseRequest = {
   amount: number;
   currency: string;
   payments: {
-    memberId: string;
+    userId?: string;
+    memberId?: string;
     amount: number;
   }[];
   shares: {
-    memberId: string;
+    userId?: string;
+    memberId?: string;
     amount: number;
   }[];
   description: string;

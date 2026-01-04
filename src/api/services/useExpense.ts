@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useQueryClient,
-  UseMutationResult,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
 import { ExpenseRequest } from "../../types";
@@ -13,46 +9,63 @@ export const useExpense = (
   menu: Signal<string | null>,
   groupId: string | undefined,
   navigate: NavigateFunction,
-  isSubmitting:Signal<boolean>,
+  isSubmitting: Signal<boolean>,
   isNonGroupExpense?: Signal<boolean>
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, ExpenseRequest>({
-    mutationFn: (expense) => createExpense(expense),
+    mutationFn: (expense) =>
+      isNonGroupExpense?.value
+        ? createNonGroupExpense(expense)
+        : createGroupExpense(expense),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["debts"],
         exact: false,
       });
-      await queryClient.invalidateQueries({
-        queryKey: ["groupExpenses"],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      await queryClient.invalidateQueries({
-        queryKey: ["shared"],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: [groupId],
-        exact: false,
-      });
-      menu.value = null;
-      if (isNonGroupExpense && isNonGroupExpense.value) {
+
+      if (isNonGroupExpense?.value) {
+        menu.value = null;
+        navigate(`/shared/nongroup/expenses`);
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: ["groupExpenses"],
+          exact: false,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: ["home"],
+          exact: false,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: ["shared"],
+          exact: false,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: ["mostRecentGroup"],
+          exact: false,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [groupId],
+          exact: false,
+        });
+        menu.value = null;
         navigate(`/shared/${groupId}/expenses`);
       }
     },
     onSettled: () => {
-    isSubmitting.value = false;
-  }
+      isSubmitting.value = false;
+    },
   });
 };
 
-const createExpense = async (req: ExpenseRequest): Promise<void> => {
+const createGroupExpense = async (req: ExpenseRequest): Promise<void> => {
   await apiClient.post<void, AxiosResponse<void>>("/expenses/create", req);
+};
+
+const createNonGroupExpense = async (req: ExpenseRequest): Promise<void> => {
+  await apiClient.post<void, AxiosResponse<void>>(
+    "/expenses/create-non-group",
+    req
+  );
 };
