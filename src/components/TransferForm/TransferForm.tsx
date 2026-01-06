@@ -29,6 +29,7 @@ export default function TransferForm({
   groupId,
   isnonGroupTransfer,
   nonGroupMenu,
+  fromHome,
 }: TransferFormProps) {
   const [currencySymbol, setCurrencySymbol] = useState<string>(currency);
   const isSubmitting = useSignal<boolean>(false);
@@ -179,6 +180,7 @@ export default function TransferForm({
     }
   }, [senderId, receiverId]);
 
+
   return (
     <StyledTransferForm
       $inputError={showIdError}
@@ -216,9 +218,9 @@ export default function TransferForm({
         </span>
       </div>
       {isnonGroupTransfer &&
-      isnonGroupTransfer.value &&
-      nonGroupMenu &&
-      nonGroupGroup?.value === null ? (
+        isnonGroupTransfer.value &&
+        nonGroupMenu &&
+        nonGroupGroup?.value === null ? (
         <div className="options">
           <div className="nonGroupMenu">
             <div className="textAndButton">
@@ -266,15 +268,15 @@ export default function TransferForm({
           </div>
           <span className="errorMsg">
             {showAmountError &&
-            userSelectionError.recipientError &&
-            noReceiverSelected
+              userSelectionError.recipientError &&
+              noReceiverSelected
               ? userSelectionError.recipientError
               : ""}
             {showAmountError && userSelectionError.isSameUserError
               ? userSelectionError.isSameUserError
               : ""}
           </span>
-          <div className="buttonWrapper">
+          {fromHome && <div className="buttonWrapper">
             <div
               className="groupButton"
               onClick={() => {
@@ -290,7 +292,7 @@ export default function TransferForm({
               <TiGroup className="groupIcon" />
               <span className="descr">Groups</span>
             </div>
-          </div>
+          </div>}
         </div>
       ) : (
         <div className="groupMenu">

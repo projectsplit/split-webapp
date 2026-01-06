@@ -454,6 +454,16 @@ export interface NewTransferAnimationProps {
   currency: string;
   groupId?: string;
   isnonGroupTransfer?: Signal<boolean>;
+  nonGroupMenu?: Signal<{
+    attribute: string;
+    menu: string | null;
+    senderId: string;
+    senderName: string;
+    receiverId: string;
+    receiverName: string;
+  }>;
+  nonGroupGroup?: Signal<Group | null>;
+  fromHome?: boolean;
 }
 
 export interface ExpenseFormProps {
@@ -497,6 +507,7 @@ export interface TransferFormProps {
     receiverId: string;
     receiverName: string;
   }>;
+  fromHome?: boolean;
 }
 
 export interface GroupQuickActionsAnimationProps extends MenuProps {}

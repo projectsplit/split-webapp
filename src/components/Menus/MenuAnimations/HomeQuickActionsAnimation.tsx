@@ -22,7 +22,7 @@ export default function HomeQuickActionsAnimation({
       <ActionsMenu
         onClickExpense={() => {
           quickActionsMenu.value = "newExpense";
-          // isNonGroupExpense.value = true;
+          isNonGroupExpense.value = true;
         }}
         onClickTransfer={() => {
           quickActionsMenu.value = "newTransfer";

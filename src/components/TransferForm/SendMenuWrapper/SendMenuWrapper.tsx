@@ -18,7 +18,7 @@ const SendMenuWrapper = ({
       : idError.isReceiverError && showIdError;
 
   return (
-    <StyledSendMenu inputError={showIdError}>
+    <StyledSendMenu $inputError={showIdError}>
       <div
         className="sendMenu"
         style={{

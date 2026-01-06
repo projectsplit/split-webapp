@@ -120,6 +120,7 @@ export const NonGroupExpenseUsersMenu = ({
       nonGroupGroup.value = null;
       groupMembers.value = [];
       addUser(username);
+      isNonGroupExpense.value = true;
     },
     [addUser]
   );

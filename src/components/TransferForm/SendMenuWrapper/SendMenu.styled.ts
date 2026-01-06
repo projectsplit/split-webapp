@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
 interface StyledTransferFormProps {
-  inputError?: boolean;
+  $inputError?: boolean;
 }
 
 export const StyledSendMenu = styled.div<StyledTransferFormProps>`
   .sendMenu {
     padding: 10px;
     border: 1px solid
-      ${({ theme, inputError }) =>
-        inputError ? theme.errorColor : theme.backgroundcolor};
+      ${({ theme, $inputError }) =>
+        $inputError ? theme.errorColor : theme.backgroundcolor};
     border-radius: 8px;
 
     .title {

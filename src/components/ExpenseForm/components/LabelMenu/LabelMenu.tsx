@@ -24,8 +24,7 @@ export const LabelMenu = ({
         <div className="gap"></div>
       </div>
       <div className="info">
-        Type in the field to create a new label (press space to create) or
-        choose from existing labels.
+       Type to add a new label (press space to confirm) or pick an existing one.
       </div>
       <div className="label-picker-wrapper">
         <LabelPicker labels={labels} setLabels={setLabels} groupId={groupId} />

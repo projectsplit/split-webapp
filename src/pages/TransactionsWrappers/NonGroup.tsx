@@ -13,6 +13,7 @@ import NewExpenseAnimation from '../../components/Menus/MenuAnimations/NewExpens
 import NewTransferAnimation from '../../components/Menus/MenuAnimations/NewTransferAnimation';
 import { StyledGroup } from './Group.styled';
 import NonGroupExpenseUsersAnimation from '../../components/Menus/MenuAnimations/NonGroupExpenseUsersAnimation';
+import NonGroupTransferAnimation from '../../components/Menus/MenuAnimations/NonGroupTransferAnimation';
 
 
 
@@ -21,6 +22,21 @@ export default function NonGroup() {
   const showBottomBar = useSignal<boolean>(false);
   const selectedExpense = useSignal<NonGroupExpenseResponseItem | null>(null);
   const nonGroupMenu = useSignal<string | null>(null);
+  const nonGroupTransferMenu = useSignal<{
+    attribute: string;
+    menu: string | null;
+    senderId: string;
+    senderName: string;
+    receiverId: string;
+    receiverName: string;
+  }>({
+    attribute: "",
+    menu: null,
+    senderId: "",
+    senderName: "",
+    receiverId: "",
+    receiverName: "",
+  });
   const expenseParsedFilters = useSignal<ExpenseParsedFilters>({});
   const transferParsedFilters = useSignal<TransferParsedFilters>({});
   const location = useLocation();
@@ -54,6 +70,14 @@ export default function NonGroup() {
       nonGroupUsers.value = u ?? [];
 
     }
+    nonGroupTransferMenu.value = {
+      attribute: "",
+      menu: null,
+      senderId: userInfo.userId,
+      senderName: "You",
+      receiverId: "",
+      receiverName: "",
+    };
   }, []);
 
   return (
@@ -101,6 +125,9 @@ export default function NonGroup() {
           groupMembers={signal([])}
           isnonGroupTransfer={signal(true)}
           nonGroupUsers={nonGroupUsers}
+          nonGroupMenu={nonGroupTransferMenu}
+          nonGroupGroup={signal(null)}
+          fromHome={false}
         />
 
         <GroupQuickActionsAnimation menu={menu} />
@@ -133,6 +160,12 @@ export default function NonGroup() {
         isNonGroupExpense={signal(true)}
         fromNonGroup={true}
 
+      />
+      <NonGroupTransferAnimation
+        nonGroupTransferMenu={nonGroupTransferMenu}
+        nonGroupGroup={signal(null)}
+        groupMembers={signal([])}
+        isNonGroupTransfer={signal(true)}
       />
     </StyledGroup>
   );
