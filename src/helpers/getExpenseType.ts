@@ -39,6 +39,6 @@ export const getExpenseType = (
   if (isNonGroupExpense(expense)) {
     return "NonGroup";
   }
-
+  
   return "Personal";
 };

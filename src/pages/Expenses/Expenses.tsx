@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Expense from "../../components/Expense/Expense";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -70,7 +70,7 @@ const Expenses = () => {
 
   const expenses = data?.pages.flatMap((p) => p.expenses);
   const expenseType = getExpenseType(getFirst(expenses));
-
+  
   useEffect(() => {
     const expenseFilters = localStorage.getItem("expenseFilter");
     if (expenseFilters) {
@@ -240,7 +240,7 @@ const Expenses = () => {
           errorMessage={errorMessage}
           userMemberId={userMemberId || ""}
           group={group}
-          
+
         />
       )}
 
