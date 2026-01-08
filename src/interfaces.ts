@@ -29,11 +29,15 @@ import {
   Member,
   Guest,
   User,
+  GroupPayment,
+  GroupShare,
+  ExpenseType,
+  GroupTransaction,
+  NonGroupTransaction,
 } from "./types";
 import { ReadonlySignal, Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
 import {
-  BeautifulMentionsItem,
   BeautifulMentionsItemData,
   BeautifulMentionsMenuProps,
 } from "lexical-beautiful-mentions";
@@ -43,8 +47,7 @@ import {
   InfiniteQueryObserverResult,
   UseMutateFunction,
 } from "@tanstack/react-query";
-import { NavigateFunction } from "react-router-dom";
-import { AxiosError } from "axios";
+
 
 export interface ExpenseProps {
   timeZoneId: string;
@@ -65,11 +68,10 @@ export interface MapsInfoBoxProps {
 export interface LabelProps {
   backgroundColor: string;
 }
+
+
 export interface MembersInfoBoxProps {
-  transactions: {
-    memberId: string;
-    amount: number;
-  }[];
+  transactions: GroupTransaction[] | NonGroupTransaction[]|undefined;
   areShares: boolean;
   currency: string;
   members: TruncatedMember[];
@@ -77,11 +79,12 @@ export interface MembersInfoBoxProps {
 }
 
 export interface DetailedExpenseProps {
+  expenseType: ExpenseType;
   timeZoneId: string;
   timeZoneCoordinates: Coordinates;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  payments: Payment[];
-  shares: Share[];
+  payments?: GroupPayment[] | Payment[];
+  shares?: GroupShare[]   | Share[];
   amount: number;
   currency: string;
   occurred: string;
@@ -98,7 +101,7 @@ export interface DetailedExpenseProps {
   members: TruncatedMember[];
   errorMessage: Signal<string>;
   userMemberId: string;
-  group: Group;
+  group?: Group;
 }
 
 export interface DetailedTransferProps {

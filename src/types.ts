@@ -84,12 +84,12 @@ export type GroupedTransaction = {
 
 export type FormExpense = {
   id: string;
-  groupId: string;
+  groupId?: string;
   amount: string;
   currency: string;
   description: string;
-  payers: Payer[];
-  participants: Participant[];
+  payers?: Payer[] | NonGroupPayer[];
+  participants?: Participant[] | NonGroupParticipant[];
   expenseTime: Date;
   labels: {
     id: string;
@@ -101,6 +101,32 @@ export type FormExpense = {
   location: GeoLocation | undefined;
 };
 
+export type FormGroupExpense = FormExpense & {
+  groupId: string;
+  payers: Payer[];
+  participants: Participant[];
+};
+
+export type FormNonGroupExpense = FormExpense & {
+  payers: NonGroupPayer[];
+  participants: NonGroupParticipant[];
+};
+
+export type ExpenseType =
+  | "Group"
+  | "NonGroup"
+  | "Personal"
+  | "undefined expense";
+
+  export type GroupTransaction = {
+  memberId: string;
+  amount: number;
+};
+export type NonGroupTransaction = {
+  userId: string;
+  amount: number;
+};
+
 export type ExpenseResponseItem = {
   id: string;
   created: string;
@@ -110,36 +136,26 @@ export type ExpenseResponseItem = {
   amount: number;
   description: string;
   currency: string;
-  location: GeoLocation | undefined;
+  location?: GeoLocation;
+  groupId?: string;
+  payments?: GroupPayment[] | Payment[];
+  shares?: GroupShare[] | Share[];
+  labels: {
+    id: string;
+    text: string;
+    color: string;
+  }[];
 };
 
 export type GroupExpenseResponseItem = ExpenseResponseItem & {
   groupId: string;
   payments: GroupPayment[];
   shares: GroupShare[];
-  labels: {
-    id: string;
-    text: string;
-    color: string;
-  }[];
 };
 
 export type NonGroupExpenseResponseItem = ExpenseResponseItem & {
   payments: Payment[];
   shares: Share[];
-  labels: {
-    id: string;
-    text: string;
-    color: string;
-  }[];
-};
-
-export type PersonalExpenseResponseItem = ExpenseResponseItem & {
-  labels: {
-    id: string;
-    text: string;
-    color: string;
-  }[];
 };
 
 export type TransferResponseItem = {
@@ -440,6 +456,14 @@ export type Participant = {
 export type Payer = {
   memberId: string;
   paymentAmount: string;
+};
+export type NonGroupPayer = {
+  userId: string;
+  paymentAmount: string;
+};
+export type NonGroupParticipant = {
+  userId: string;
+  participationAmount: string;
 };
 
 export type Transfer = {

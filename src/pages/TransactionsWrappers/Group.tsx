@@ -10,7 +10,7 @@ import { CategorySelector } from "../../components/CategorySelector/CategorySele
 import { signal, Signal, useSignal } from "@preact/signals-react";
 import {
   ExpenseParsedFilters,
-  GroupExpenseResponseItem,
+  ExpenseResponseItem,
   TransferParsedFilters,
   UserInfo,
 } from "../../types";
@@ -38,7 +38,7 @@ export default function Group() {
   const menu = useSignal<string | null>(null);
   const showBottomBar = useSignal<boolean>(false);
   const groupError = useSignal<errorObject>();
-  const selectedExpense = useSignal<GroupExpenseResponseItem | null>(null);
+  const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const expenseParsedFilters = useSignal<ExpenseParsedFilters>({});
   const transferParsedFilters = useSignal<TransferParsedFilters>({});
   const location = useLocation();

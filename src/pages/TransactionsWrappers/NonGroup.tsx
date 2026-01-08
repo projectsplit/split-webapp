@@ -1,7 +1,7 @@
 import { signal, Signal, useSignal } from '@preact/signals-react';
 import React, { useEffect } from 'react'
 import { Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
-import { ExpenseParsedFilters, ExpenseResponseItem, NonGroupExpenseResponseItem, TransferParsedFilters, User, UserInfo } from '../../types';
+import { ExpenseParsedFilters, ExpenseResponseItem, TransferParsedFilters, User, UserInfo } from '../../types';
 import { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import Spinner from '../../components/Spinner/Spinner';
 import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
@@ -20,7 +20,7 @@ import NonGroupTransferAnimation from '../../components/Menus/MenuAnimations/Non
 export default function NonGroup() {
   const menu = useSignal<string | null>(null);
   const showBottomBar = useSignal<boolean>(false);
-  const selectedExpense = useSignal<NonGroupExpenseResponseItem | null>(null);
+  const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const nonGroupMenu = useSignal<string | null>(null);
   const nonGroupTransferMenu = useSignal<{
     attribute: string;
