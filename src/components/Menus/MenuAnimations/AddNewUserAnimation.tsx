@@ -10,8 +10,8 @@ export default function AddNewUserAnimation({
 }: AddNewUserAnimationProps) {
   const nodeRef = useRef(null);
   return (
-    <CSSTransition in={menu.value === "newUser"} timeout={0} unmountOnExit  ref={nodeRef}>
-      <SearchUsersToInvite menu={menu} groupName={groupName} guestToBeReplaced={guestToBeReplaced}/>
+    <CSSTransition in={menu.value === "newUser"} timeout={0} unmountOnExit nodeRef={nodeRef}>
+      <SearchUsersToInvite menu={menu} groupName={groupName} guestToBeReplaced={guestToBeReplaced} />
     </CSSTransition>
   );
 }

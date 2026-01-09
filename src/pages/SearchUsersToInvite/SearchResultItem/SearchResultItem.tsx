@@ -12,7 +12,7 @@ export const SearchResultItem: React.FC<{
   onInviteSuccess: () => void;
   guestId?: string;
   userInvitationSent: Signal<boolean>
-  guestName?:string
+  guestName?: string
 }> = ({
   userId,
   username,
@@ -25,9 +25,13 @@ export const SearchResultItem: React.FC<{
   guestName
 }) => {
 
-    const { mutate, isPending, isError } = isAlreadyInvited
-      ? useRevokeInvitation(userInvitationSent)
-      : useSendInvitation(userInvitationSent);
+    const { mutate: revoke, isPending: isRevoking, isError: isRevokeError } =
+      useRevokeInvitation(userInvitationSent);
+    const { mutate: send, isPending: isSending, isError: isSendError } =
+      useSendInvitation(userInvitationSent);
+
+    const isPending = isAlreadyInvited ? isRevoking : isSending;
+    const isError = isAlreadyInvited ? isRevokeError : isSendError;
 
     if (isGroupMember) {
       return (
@@ -40,14 +44,23 @@ export const SearchResultItem: React.FC<{
       );
     }
 
-    const onClick = () =>
-      mutate({
-        groupId,
-        guestId: (guestId && guestId != "" )? guestId : null,
-        receiverId: userId,
-        onSuccess: onInviteSuccess,
-        guestName:(guestName && guestName != "" )? guestName:null
-      });
+    const onClick = () => {
+      if (isAlreadyInvited) {
+        revoke({
+          groupId,
+          receiverId: userId,
+          onSuccess: onInviteSuccess,
+        });
+      } else {
+        send({
+          groupId,
+          guestId: guestId && guestId != "" ? guestId : null,
+          receiverId: userId,
+          onSuccess: onInviteSuccess,
+          guestName: guestName && guestName != "" ? guestName : null,
+        });
+      }
+    };
 
     return (
       <div className="search-result">

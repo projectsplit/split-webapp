@@ -179,7 +179,14 @@ const SearchUsersToInvite = ({
         </div>
       )}
       <MenuAnimationBackground menu={cannotBeRemovedClickedWarning} />
-      <RemoveGuestWarningAnimation menu={cannotBeRemovedClickedWarning} />
+      <RemoveGuestWarningAnimation
+        menu={cannotBeRemovedClickedWarning}
+        message={
+          "This guest cannot be removed because they are involved in expenses or transfers. Removing them will disrupt the group's financial history."
+        }
+        menuValue="cannotRemoveGuest"
+        header="Info"
+      />
     </StyledSearchUsersToInvite>
   );
 };
