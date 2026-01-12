@@ -73,7 +73,7 @@ export default function NonGroup() {
     nonGroupTransferMenu.value = {
       attribute: "",
       menu: null,
-      senderId: userInfo.userId,
+      senderId: userInfo?.userId,
       senderName: "You",
       receiverId: "",
       receiverName: "",
