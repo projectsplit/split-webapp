@@ -2,6 +2,8 @@ import { amountIsValid } from "../../helpers/amountIsValid";
 import {
   ExpenseRequest,
   FormExpense,
+  FormGroupExpense,
+  FormNonGroupExpense,
   GeoLocation,
   Guest,
   Label,
@@ -54,7 +56,6 @@ export function submitExpense({
   isSubmitting: Signal<boolean>;
   isnonGroupExpense: Signal<boolean> | undefined;
 }) {
-
   setShowAmountError(true);
   if (participantsCategory.value === "Shares") {
     participants.map((p) => {
@@ -81,11 +82,11 @@ export function submitExpense({
     return;
   }
 
-   let expenseRequest: ExpenseRequest;
+  let expenseRequest: ExpenseRequest;
   if (isnonGroupExpense?.value) {
-     expenseRequest = {
+    expenseRequest = {
       amount: Number(amount),
-      ...(isCreateExpense ? {  } : { expenseId: expense?.id }),
+      ...(isCreateExpense ? {} : { expenseId: expense?.id }),
       currency: currencySymbol,
       payments: payers
         .filter((value) => value.selected)
@@ -105,7 +106,7 @@ export function submitExpense({
       labels: labels.map((x) => ({ text: x.text, color: x.color })),
     };
   } else {
-     expenseRequest = {
+    expenseRequest = {
       amount: Number(amount),
       ...(isCreateExpense ? { groupId: groupId } : { expenseId: expense?.id }),
       currency: currencySymbol,
@@ -137,6 +138,18 @@ export function submitExpense({
   }
 }
 
+function isNonGroupExpense(
+  expense: FormExpense | null
+): expense is FormNonGroupExpense {
+  return !!expense && expense.groupId === undefined;
+}
+
+function isGroupExpense(
+  expense: FormExpense | null
+): expense is FormGroupExpense {
+  return !!expense && expense.groupId !== undefined;
+}
+
 export const createParticipantPickerArray = (
   groupMembers: (Member | Guest)[],
   nonGroupUsers: User[],
@@ -149,9 +162,9 @@ export const createParticipantPickerArray = (
 
   if (isnonGroupExpense && nonGroupUsers.length > 0) {
     array = nonGroupUsers.map((user) => {
-      const participant = expense?.participants.find(
-        (p) => p.memberId === user?.userId
-      );
+      const participant = isNonGroupExpense(expense)
+        ? expense.participants.find((p) => p.userId === user.userId)
+        : undefined;
       const actualAmount = participant?.participationAmount ?? "";
       const isPercentageType = type === "Percentages";
       const isSharesType = type === "Shares";
@@ -174,20 +187,23 @@ export const createParticipantPickerArray = (
         actualAmount,
         screenQuantity,
         locked:
-          expense?.participants.some((p) => p.memberId === user.userId) ??
+          (isNonGroupExpense(expense) &&
+            expense.participants.some((p) => p.userId === user.userId)) ??
           false,
         name: user.username,
         order: 0,
         selected:
-          expense?.participants.some((p) => p.memberId === user.userId) ??
+          (isNonGroupExpense(expense) &&
+            expense.participants.some((p) => p.userId === user.userId)) ??
           false,
       };
     });
   } else {
     array = groupMembers.map((member) => {
-      const participant = expense?.participants.find(
-        (p) => p.memberId === member?.id
-      );
+      const participant =
+        expense && isGroupExpense(expense)
+          ? expense.participants.find((p) => p.memberId === member.id)
+          : undefined;
       const actualAmount = participant?.participationAmount ?? "";
       const isPercentageType = type === "Percentages";
       const isSharesType = type === "Shares";
@@ -209,12 +225,14 @@ export const createParticipantPickerArray = (
         id: member.id,
         actualAmount,
         screenQuantity,
-        locked:
-          expense?.participants.some((p) => p.memberId === member.id) ?? false,
+        locked: isGroupExpense(expense)
+          ? expense?.participants.some((p) => p.memberId === member.id) ?? false
+          : false,
         name: member.name,
         order: 0,
-        selected:
-          expense?.participants.some((p) => p.memberId === member.id) ?? false,
+        selected: isGroupExpense(expense)
+          ? expense?.participants.some((p) => p.memberId === member.id) ?? false
+          : false,
       };
     });
   }
@@ -241,7 +259,9 @@ export const createPayerPickerArray = (
 
   if (isnonGroupExpense && nonGroupUsers.length > 0) {
     array = nonGroupUsers.map((user) => {
-      const payer = expense?.payers.find((p) => p.memberId === user?.userId);
+      const payer = isNonGroupExpense(expense)
+        ? expense.payers.find((p) => p.userId === user.userId)
+        : undefined;
       const actualAmount = payer?.paymentAmount ?? "";
       const isPercentageType = type === "Percentages";
       const isSharesType = type === "Shares";
@@ -264,16 +284,23 @@ export const createPayerPickerArray = (
         actualAmount,
         screenQuantity,
         locked:
-          expense?.payers.some((p) => p.memberId === user.userId) ?? false,
+          (isNonGroupExpense(expense) &&
+            expense.payers.some((p) => p.userId === user.userId)) ??
+          false,
         name: user.username,
         order: 0,
         selected:
-          expense?.payers.some((p) => p.memberId === user.userId) ?? false,
+          (isNonGroupExpense(expense) &&
+            expense.payers.some((p) => p.userId === user.userId)) ??
+          false,
       };
     });
   } else {
     array = groupMembers.map((member) => {
-      const payer = expense?.payers.find((p) => p.memberId === member?.id);
+      const payer =
+        expense && isGroupExpense(expense)
+          ? expense.payers.find((p) => p.memberId === member.id)
+          : undefined;
       const actualAmount = payer?.paymentAmount ?? "";
       const isPercentageType = type === "Percentages";
       const isSharesType = type === "Shares";
@@ -295,11 +322,14 @@ export const createPayerPickerArray = (
         id: member.id,
         actualAmount,
         screenQuantity,
-        locked: expense?.payers.some((p) => p.memberId === member.id) ?? false,
+        locked: isGroupExpense(expense)
+          ? expense?.payers.some((p) => p.memberId === member.id) ?? false
+          : false,
         name: member.name,
         order: 0,
-        selected:
-          expense?.payers.some((p) => p.memberId === member.id) ?? false,
+        selected: isGroupExpense(expense)
+          ? expense?.payers.some((p) => p.memberId === member.id) ?? false
+          : false,
       };
     });
   }
