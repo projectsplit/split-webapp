@@ -20,15 +20,15 @@ export function useExpenseValidation({
   participants: PickerMember[];
   payers: PickerMember[];
   currencySymbol: string;
-  setParticipantsError: React.Dispatch<React.SetStateAction<string>>;
-  setPayersError: React.Dispatch<React.SetStateAction<string>>;
-  setShowAmountError: React.Dispatch<React.SetStateAction<boolean>>;
+  setParticipantsError: (msgOrUpdater: string | ((prev: string) => string)) => void;
+  setPayersError: (msgOrUpdater: string | ((prev: string) => string)) => void;
+  setShowAmountError: (show: boolean) => void;
   participantsCategory: Signal<string>;
   payersCategory: Signal<string>;
-  isSubmitting: Signal<boolean>
+  isSubmitting: boolean
 }) {
   useLayoutEffect(() => {
-    if (isSubmitting.value) return;
+    if (isSubmitting) return;
     if (
       participantsCategory.value !== "Shares" &&
       payersCategory.value !== "Shares"

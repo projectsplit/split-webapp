@@ -112,13 +112,19 @@ export type FormNonGroupExpense = FormExpense & {
   participants: NonGroupParticipant[];
 };
 
+export type FormPersonalExpense = FormExpense & {
+  groupId?: never;
+  payments?: never;
+  shares?: never;
+};
+
 export type ExpenseType =
   | "Group"
   | "NonGroup"
   | "Personal"
   | "undefined expense";
 
-  export type GroupTransaction = {
+export type GroupTransaction = {
   memberId: string;
   amount: number;
 };
@@ -156,6 +162,12 @@ export type GroupExpenseResponseItem = ExpenseResponseItem & {
 export type NonGroupExpenseResponseItem = ExpenseResponseItem & {
   payments: Payment[];
   shares: Share[];
+};
+
+export type PersonalExpenseResponseItem = ExpenseResponseItem & {
+  groupId?: never;
+  payments?: never;
+  shares?: never;
 };
 
 export type TransferResponseItem = {

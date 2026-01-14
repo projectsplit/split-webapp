@@ -42,6 +42,8 @@ import LabelsDisplay from "./components/LabelsDisplay/LabelsDisplay";
 import FormInputWithTag from "./components/FormInputWithTag/FormInputWithTag";
 import { FaRegEdit } from "react-icons/fa";
 import { TiGroup } from "react-icons/ti";
+import { useExpenseStore } from "./formStore/formStore";
+import { useShallow } from 'zustand/react/shallow'
 
 export default function ExpenseForm({
   groupMembers,
@@ -67,6 +69,79 @@ export default function ExpenseForm({
     userInfo: UserInfo;
   }>();
 
+  const {
+  amount,
+  description,
+  currencySymbol,
+  expenseTime,
+  labels,
+  location,
+  amountError,
+  showAmountError,
+  participantsError,
+  payersError,
+  descriptionError,
+  isSubmitting,
+
+  // Actions you'll use soon
+  setAmount,
+  setDescription,
+  setCurrencySymbol,
+  setExpenseTime,
+  setLabels,
+  setLocation,
+  setAmountError,
+  setShowAmountError,
+  setParticipantsError,
+  setPayersError,
+  setDescriptionError,
+  setIsSubmitting,
+  initialize,
+} = useExpenseStore(
+  useShallow((state) => ({
+    amount: state.amount,
+    description: state.description,
+    currencySymbol: state.currencySymbol,
+    expenseTime: state.expenseTime,
+    labels: state.labels,
+    location: state.location,
+    amountError: state.amountError,
+    showAmountError: state.showAmountError,
+    participantsError: state.participantsError,
+    payersError: state.payersError,
+    descriptionError: state.descriptionError,
+    isSubmitting: state.isSubmitting,
+
+    setAmount: state.setAmount,
+    setDescription: state.setDescription,
+    setCurrencySymbol: state.setCurrencySymbol,
+    setExpenseTime: state.setExpenseTime,
+    setLabels: state.setLabels,
+    setLocation: state.setLocation,
+    setAmountError: state.setAmountError,
+    setShowAmountError: state.setShowAmountError,
+    setParticipantsError: state.setParticipantsError,
+    setPayersError: state.setPayersError,
+    setDescriptionError: state.setDescriptionError,
+    setIsSubmitting: state.setIsSubmitting,
+    initialize: state.initialize,
+  }))
+);
+
+useEffect(() => {
+  initialize({
+    isCreateExpense,
+    expense,
+    currency,
+    groupMembers,
+    nonGroupUsers,
+    userInfo,
+    userMemberId,
+    isnonGroupExpense,
+    // We'll add more config params later (groupMembers, etc.)
+  });
+}, [initialize, isCreateExpense, expense?.id, currency]);
+
   const userMembers = groupMembers?.value.filter(
     (item): item is Member => "userId" in item
   );
@@ -74,17 +149,14 @@ export default function ExpenseForm({
   const userMemberId = userMembers?.find(
     (m) => m.userId === userInfo?.userId
   )?.id;
-  const isSubmitting = useSignal<boolean>(false);
+
 
   const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
-    useExpense(menu, groupId, navigate, isSubmitting, isnonGroupExpense);
+    useExpense(menu, groupId, navigate, setIsSubmitting, isnonGroupExpense);
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
-    useEditExpense(menu, groupId, isSubmitting, selectedExpense);
+    useEditExpense(menu, groupId, setIsSubmitting, selectedExpense);
 
-  const [amount, setAmount] = useState<string>(
-    isCreateExpense || !expense ? "" : expense.amount
-  );
 
   const initialParticipantsByCategory = useMemo(() => {
     const groupArr = groupMembers?.value ?? [];
@@ -180,43 +252,14 @@ export default function ExpenseForm({
 
   // Optional reset when dependencies change
   useEffect(() => {
-    if (isSubmitting.value) return;
+    if (isSubmitting) return;
     setParticipantsByCategory(initialParticipantsByCategory);
     setPayersByCategory(initialPayersByCategory);
   }, [initialParticipantsByCategory, initialPayersByCategory]);
 
-  const [participantsError, setParticipantsError] = useState<string>("");
 
-  const [payersError, setPayersError] = useState<string>("");
-
-  const [descriptionError, setDescriptionError] = useState<string>("");
-
-  const [currencySymbol, setCurrencySymbol] = useState<string>(
-    isCreateExpense || !expense ? currency : expense.currency
-  );
-
-  const [amountError, setAmountError] = useState<string>("");
-
-  const [showAmountError, setShowAmountError] = useState<boolean>(false);
   const [makePersonalClicked, setMakePersonalClicked] =
     useState<boolean>(false);
-
-  const [description, setDescription] = useState<string>(
-    isCreateExpense || !expense ? "" : expense.description
-  );
-  const [labels, setLabels] = useState<Label[]>(
-    isCreateExpense || !expense ? [] : expense.labels
-  );
-
-  const [expenseTime, setExpenseTime] = useState<string>(
-    isCreateExpense || !expense
-      ? new Date().toISOString()
-      : expense.expenseTime.toISOString()
-  );
-
-  const location = useSignal<GeoLocation | undefined>(
-    expense?.location ?? undefined
-  );
 
   const displayedAmount = useSignal<string>(
     isCreateExpense || !expense ? "" : expense.amount
@@ -306,7 +349,7 @@ export default function ExpenseForm({
       setShowAmountError,
       participantsCategory,
       payersCategory,
-      isSubmitting,
+      setIsSubmitting,
       isnonGroupExpense
     });
     if (isnonGroupExpense && isnonGroupExpense.value) {
@@ -366,7 +409,7 @@ export default function ExpenseForm({
   useEffect(() => {
     if (!isCreateExpense) return;
     setDescriptionError("");
-  }, [location.value, description]);
+  }, [location, description]);
 
   useEffect(() => {
     setParticipantsError("");
@@ -596,7 +639,7 @@ export default function ExpenseForm({
         />
       )}
 
-      <LocationDisplay location={location} isMapOpen={isMapOpen} />
+      <LocationDisplay location={location} isMapOpen={isMapOpen} setLocation={setLocation} />
       {isDateShowing.value && (
         <DateDisplay
           selectedDateTime={expenseTime}
@@ -631,6 +674,7 @@ export default function ExpenseForm({
           location={location}
           isMapOpen={isMapOpen}
           timeZoneCoordinates={timeZoneCoordinates}
+          setLocation={setLocation}
         />
         <DateTime
           selectedDateTime={expenseTime}

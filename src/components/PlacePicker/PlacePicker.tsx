@@ -10,7 +10,7 @@ import { StyledPlacePicker } from "./PlacePicker.styled";
 import { PlacePickerProps } from "../../interfaces";
 import MyButton from "../MyButton/MyButton";
 
-const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultCoordinates }) => {
+const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultCoordinates,setLocation }) => {
   const mapId = `${config.googleMapId}`;
   const defaultZoom = 14;
   const googleMapsBaseUrl = "https://www.google.com/maps/search/?api=1";
@@ -19,7 +19,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
   const localStorageUserLocation = localStorage.getItem("last_geo_location");
   const lastUserGeoLocation: GeoLocation = localStorageUserLocation ? JSON.parse(localStorageUserLocation) : undefined;
 
-  const initialLocation: GeoLocation = location.value ?? lastUserGeoLocation ?? {
+  const initialLocation: GeoLocation = location ?? lastUserGeoLocation ?? {
     coordinates: defaultCoordinates,
     google: {
       id: null,
@@ -29,11 +29,11 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
     },
   };
 
-  const [selectedLocation, setSelectedLocation] = useState<GeoLocation>(location.value ?? initialLocation);
+  const [selectedLocation, setSelectedLocation] = useState<GeoLocation>(location ?? initialLocation);
 
   const userLocation = useGeolocation();
   const map = useMap();
-  const shouldPanToUserLocation = useRef(!location.value);
+  const shouldPanToUserLocation = useRef(!location);
   const autocompleteInputRef = useRef<HTMLInputElement>(null);
 
   const placesLib = useMapsLibrary("places");
@@ -191,7 +191,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
   );
 
   const submitLocation = () => {
-    location.value = (selectedLocation);
+    setLocation(selectedLocation);
     isMapOpen.value = false
   };
 

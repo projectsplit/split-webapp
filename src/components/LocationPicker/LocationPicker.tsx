@@ -9,17 +9,19 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
   location,
   isMapOpen,
   timeZoneCoordinates,
+  setLocation,
 }) => {
 
 
   return (
     <APIProvider apiKey={config.googleMapsApiKey}>
-      <StyledLocationPicker location={location.value}>
+      <StyledLocationPicker location={location}>
         {isMapOpen.value && (
           <PlacePicker
             location={location}
             isMapOpen={isMapOpen}
             defaultCoordinates={timeZoneCoordinates}
+            setLocation={setLocation}
           />
         )}
         <div className="main">

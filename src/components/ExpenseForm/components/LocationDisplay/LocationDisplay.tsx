@@ -6,12 +6,13 @@ import { MdLocationOn } from "react-icons/md";
 export const LocationDisplay = ({
   location,
   isMapOpen,
+  setLocation,
 }: LocationDisplayProps) => {
-  const locationName = location.value?.google?.name;
-  const locationCoordinates = location.value?.coordinates;
+  const locationName = location?.google?.name;
+  const locationCoordinates = location?.coordinates;
 
   const clearLocation = () => {
-    location.value = undefined;
+    setLocation(undefined);
   };
 
   if (locationName) {
@@ -24,7 +25,7 @@ export const LocationDisplay = ({
         >
           {locationName}
           <div className="closeButtonWrapper">
-            {location.value !== undefined ? (
+            {location !== undefined ? (
               <IoClose
                 className="closeButton"
                 onClick={(e) => {
@@ -51,7 +52,7 @@ export const LocationDisplay = ({
           <div className="coord">{latitude}</div>
           <div className="coord">{longitude}</div>
           <div className="closeButtonWrapper">
-            {location.value !== undefined ? (
+            {location !== undefined ? (
               <IoClose
                 className="closeButton"
                 onClick={(e) => {

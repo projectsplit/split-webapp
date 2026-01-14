@@ -12,10 +12,10 @@ export default function DateDisplay({
   setShowPicker
 }: DateDisplayProps) {
   return (
-    <StyledDateDisplay onClick={()=>setShowPicker(true)}>
+    <StyledDateDisplay >
       {" "}
       <FaCalendar className="calendarIcon" />
-      <div className="dateAndClose">
+      <div className="dateAndClose" onClick={()=>setShowPicker(true)}>
         {toLuxon(selectedDateTime, timeZoneId).toFormat(
           "ccc, dd MMM yyyy HH:mm"
         )}

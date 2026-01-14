@@ -1,7 +1,6 @@
 import {
   useMutation,
   useQueryClient,
-  UseMutationResult,
 } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
@@ -11,7 +10,7 @@ import { Signal } from "@preact/signals-react";
 export const useEditExpense = (
   menu: Signal<string | null>,
   groupId: string | undefined,
-  isSubmitting: Signal<boolean>,
+  setIsSubmitting: (value: boolean) => void,
   selectedExpense?: Signal<ExpenseResponseItem | null>
 ) => {
   const queryClient = useQueryClient();
@@ -46,7 +45,7 @@ export const useEditExpense = (
       menu.value = null;
     },
     onSettled: () => {
-      isSubmitting.value = false;
+      setIsSubmitting(false);
     },
   });
 };

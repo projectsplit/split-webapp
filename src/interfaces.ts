@@ -142,7 +142,7 @@ export interface DateTimePickerProps {
 
 export interface DateTimeProps {
   selectedDateTime: string;
-  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedDateTime: (value: string | ((prev: string) => string)) => void;
   timeZoneId: string;
   isEdit: boolean;
   withLexicalContext?: boolean;
@@ -155,7 +155,7 @@ export interface DateTimeProps {
 export interface DateDisplayProps {
   timeZoneId: string;
   selectedDateTime: string;
-  setTime: React.Dispatch<React.SetStateAction<string>>;
+  setTime: (time: string) => void;
   isDateShowing: Signal<boolean>;
   setShowPicker: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -338,18 +338,21 @@ export interface CurrencyOptionsAnimationProps {
 
 export interface LocationPickerProps {
   isMapOpen: Signal<boolean>;
-  location: Signal<GeoLocation | undefined>;
+  location: GeoLocation | undefined;
   timeZoneCoordinates: Coordinates;
+  setLocation: (location: GeoLocation | undefined) => void
 }
 
 export interface LocationDisplayProps {
-  location: Signal<GeoLocation | undefined>;
+  location:GeoLocation | undefined;
   isMapOpen: Signal<boolean>;
+  setLocation: (location: GeoLocation | undefined) => void
 }
 export interface PlacePickerProps {
-  location: Signal<GeoLocation | undefined>;
+  location: GeoLocation | undefined;
   isMapOpen: Signal<boolean>;
   defaultCoordinates: Coordinates;
+  setLocation: (location: GeoLocation | undefined) => void
 }
 
 export interface PlacePickerAnimationProps extends PlacePickerProps {}
@@ -360,14 +363,14 @@ export interface TimeZoneOptionsAnimationProps {
 }
 export interface LabelPickerProps {
   labels: Label[];
-  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
+  setLabels: (labels: Label[]) => void;
   groupId?: string;
 }
 
 export interface LabelMenuProps {
   labelMenuIsOpen: Signal<boolean>;
   labels: Label[];
-  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
+  setLabels: (labels: Label[]) => void
   groupId?: string;
 }
 
@@ -1290,7 +1293,7 @@ export interface RevokeAccessItemProps {
 
 export interface LabelsDisplayProps {
   labels: Label[];
-  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
+  setLabels: (labels: Label[]) => void;
   labelMenuIsOpen: Signal<boolean>;
 }
 

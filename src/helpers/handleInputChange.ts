@@ -6,7 +6,7 @@ export const handleInputChange = (
   e: React.ChangeEvent<HTMLInputElement>,
   currencySymbol: string,
   displayedAmount: Signal<string>,
-  setAmount: (value: React.SetStateAction<string>) => void
+  setAmount: (value: string) => void
 ) => {
   const oldDisplayedLength = displayedAmount.value.length;
   const rawLength = e.target.value.length;

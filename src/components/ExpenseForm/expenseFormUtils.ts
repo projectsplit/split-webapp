@@ -32,16 +32,16 @@ export function submitExpense({
   setShowAmountError,
   participantsCategory,
   payersCategory,
-  isSubmitting,
+  setIsSubmitting,
   isnonGroupExpense,
 }: {
   participants: PickerMember[];
   payers: PickerMember[];
   amount: string;
-  setAmountError: React.Dispatch<React.SetStateAction<string>>;
-  location: { value: GeoLocation | undefined };
+  setAmountError: (msg: string) => void;
+  location: GeoLocation | undefined;
   description: string;
-  setDescriptionError: React.Dispatch<React.SetStateAction<string>>;
+  setDescriptionError: (msg: string) => void;
   isCreateExpense: boolean;
   groupId?: string;
   expense: FormExpense | null;
@@ -50,10 +50,10 @@ export function submitExpense({
   labels: Label[];
   createExpenseMutation: (expense: ExpenseRequest) => void;
   editExpenseMutation: (expense: ExpenseRequest) => void;
-  setShowAmountError: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowAmountError: (show: boolean) => void;
   participantsCategory: Signal<string>;
   payersCategory: Signal<string>;
-  isSubmitting: Signal<boolean>;
+  setIsSubmitting: (value: boolean) => void;
   isnonGroupExpense: Signal<boolean> | undefined;
 }) {
   setShowAmountError(true);
@@ -77,7 +77,7 @@ export function submitExpense({
 
   if (!amountIsValid(amount, setAmountError)) return;
 
-  if (!location.value && description.length == 0) {
+  if (!location && description.length == 0) {
     setDescriptionError("Select a description or a location");
     return;
   }
@@ -101,7 +101,7 @@ export function submitExpense({
           amount: Number(value.actualAmount),
         })),
       description: description,
-      location: location.value ?? null,
+      location: location ?? null,
       occurred: expenseTime,
       labels: labels.map((x) => ({ text: x.text, color: x.color })),
     };
@@ -123,7 +123,7 @@ export function submitExpense({
           amount: Number(value.actualAmount),
         })),
       description: description,
-      location: location.value ?? null,
+      location: location ?? null,
       occurred: expenseTime,
       labels: labels.map((x) => ({ text: x.text, color: x.color })),
     };
@@ -131,10 +131,10 @@ export function submitExpense({
 
   if (isCreateExpense) {
     createExpenseMutation(expenseRequest);
-    isSubmitting.value = true;
+   setIsSubmitting(true);
   } else {
     editExpenseMutation(expenseRequest);
-    isSubmitting.value = true;
+    setIsSubmitting(true);
   }
 }
 

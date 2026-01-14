@@ -9,7 +9,7 @@ export const useExpense = (
   menu: Signal<string | null>,
   groupId: string | undefined,
   navigate: NavigateFunction,
-  isSubmitting: Signal<boolean>,
+  setIsSubmitting: (value: boolean) => void,
   isNonGroupExpense?: Signal<boolean>
 ) => {
   const queryClient = useQueryClient();
@@ -54,7 +54,7 @@ export const useExpense = (
       }
     },
     onSettled: () => {
-      isSubmitting.value = false;
+     setIsSubmitting(false);
     },
   });
 };
