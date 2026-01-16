@@ -171,7 +171,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       isCreateExpense,
       userInfo,
       userMemberId,
-      isNonGroup
+      isNonGroup,
+      initialAmount
     );
 
     set({
@@ -204,12 +205,31 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       userMemberId,
     } = config;
 
+    const userMembers = groupMembers?.value.filter(
+      (item): item is Member => "userId" in item
+    );
+
+    // If we have a userMemberId passed in config, use it (though likely undefined/stale if coming from effect)
+    // Otherwise, try to find it in the new groupMembers list
+    let derivedUserMemberId = userMemberId;
+    if (!derivedUserMemberId && userMembers) {
+      derivedUserMemberId = userMembers.find(
+        (m) => m.userId === userInfo?.userId
+      )?.id;
+    }
+    // Also re-check against current group members if we have an ID but it might be from a diff group?
+    // Actually, simply re-deriving it unconditionally from the current groupMembers is safer when switching groups.
+    derivedUserMemberId = userMembers?.find(
+      (m) => m.userId === userInfo?.userId
+    )?.id;
+
     // Recalculate participants/payers based on NEW member lists,
     // but keep existing amount/description/etc. in the store.
     const groupArr = groupMembers?.value ?? [];
     const nonGroupArr = nonGroupUsers?.value ?? [];
     const isNonGroup = isnonGroupExpense?.value ?? false;
 
+    const currentAmount = get().amount;
     // NOTE: This re-creates the arrays. If we want to preserve *selected* states
     // logic would need to be more complex (merging). For now, we assume
     // adding/removing members resets the *picker* state to default for those members.
@@ -219,13 +239,15 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       expense,
       isCreateExpense,
       userInfo,
-      userMemberId,
-      isNonGroup
+      derivedUserMemberId,
+      isNonGroup,
+      currentAmount
     );
 
     set({
       participantsByCategory,
       payersByCategory,
+      userMemberId: derivedUserMemberId, // Update store with the correct ID
     });
   },
   resetForm: () => {

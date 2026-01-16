@@ -254,7 +254,8 @@ export const createPayerPickerArray = (
   isCreateExpense: boolean,
   userId: string,
   userMemberId: string | undefined,
-  isnonGroupExpense?: boolean
+  isnonGroupExpense?: boolean,
+  currentAmount?: string
 ): PickerMember[] => {
   let array: PickerMember[] = [];
 
@@ -339,11 +340,16 @@ export const createPayerPickerArray = (
   if (isCreateExpense) {
     const selectedId =
       isnonGroupExpense && nonGroupUsers.length > 0 ? userId : userMemberId;
-    array = array.map((m) => ({
-      ...m,
-      selected: m.id === selectedId,
-      order: 0,
-    }));
+    array = array.map((m) => {
+      const isSelected = m.id === selectedId;
+      return {
+        ...m,
+        selected: isSelected,
+        order: 0,
+        actualAmount:
+          isSelected && currentAmount ? currentAmount : m.actualAmount,
+      };
+    });
   }
 
   return array;
@@ -356,7 +362,8 @@ export const generatePickerArrays = (
   isCreateExpense: boolean,
   userInfo: UserInfo,
   userMemberId: string | undefined,
-  isnonGroupExpense?: boolean
+  isnonGroupExpense?: boolean,
+  currentAmount?: string
 ) => {
   const participantsByCategory = {
     Amounts: createParticipantPickerArray(
@@ -394,7 +401,8 @@ export const generatePickerArrays = (
       isCreateExpense,
       userInfo.userId,
       userMemberId,
-      isnonGroupExpense
+      isnonGroupExpense,
+      currentAmount
     ),
     Shares: createPayerPickerArray(
       groupMembers,
@@ -404,7 +412,8 @@ export const generatePickerArrays = (
       isCreateExpense,
       userInfo.userId,
       userMemberId,
-      isnonGroupExpense
+      isnonGroupExpense,
+      currentAmount
     ),
     Percentages: createPayerPickerArray(
       groupMembers,
@@ -414,7 +423,8 @@ export const generatePickerArrays = (
       isCreateExpense,
       userInfo.userId,
       userMemberId,
-      isnonGroupExpense
+      isnonGroupExpense,
+      currentAmount
     ),
   };
 

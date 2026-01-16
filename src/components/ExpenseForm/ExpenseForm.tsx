@@ -6,9 +6,6 @@ import React, {
   useState,
 } from "react";
 import {
-  GeoLocation,
-  Label,
-  Member,
   PickerMember,
   UserInfo,
 } from "../../types";
@@ -26,8 +23,6 @@ import { ExpenseFormProps } from "../../interfaces";
 import { useExpense } from "../../api/services/useExpense";
 import { useEditExpense } from "../../api/services/useEditExpense";
 import {
-  createParticipantPickerArray,
-  createPayerPickerArray,
   submitExpense,
 } from "./expenseFormUtils";
 import { useSetBySharesAmountsToZero } from "./hooks/useSetBySharesAmountsToZero";
