@@ -1,13 +1,15 @@
 import { create } from "zustand";
-import { ExpenseState } from "./formStoreTypes";
+import { CategoryMap, ExpenseState } from "./formStoreTypes";
 import {
-    FormExpense,
+  FormExpense,
   Guest,
   Member,
+  PickerMember,
   User,
   UserInfo,
 } from "../../../types";
 import { Signal } from "@preact/signals-react";
+import { generatePickerArrays } from "../expenseFormUtils";
 
 export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   // Default / initial values
@@ -17,6 +19,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   expenseTime: new Date().toISOString(),
   labels: [],
   location: undefined,
+  userMemberId: "",
 
   amountError: "",
   showAmountError: false,
@@ -38,9 +41,6 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     Percentages: [],
   } as const,
 
-  participantsCategory: "Amounts",
-  payersCategory: "Amounts",
-
   // ── Simple setters ──────────────────────────────────────────────
   setAmount: (value) => set({ amount: value }),
   setDescription: (value) => set({ description: value }),
@@ -55,10 +55,6 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   setLocation: (location) => set({ location }),
 
   setIsSubmitting: (value) => set({ isSubmitting: value }),
-
-  setParticipantsCategory: (category) =>
-    set({ participantsCategory: category }),
-  setPayersCategory: (category) => set({ payersCategory: category }),
 
   setAmountError: (msg: string) => set({ amountError: msg }),
   setShowAmountError: (show: boolean) => set({ showAmountError: show }),
@@ -79,14 +75,28 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   setDescriptionError: (msg: string) => set({ descriptionError: msg }),
 
   // ── Safe complex updates ────────────────────────────────────────
-  setParticipantsByCategory: (updater) =>
+  setParticipantsByCategory: (
+    updater:
+      | CategoryMap<PickerMember[]>
+      | ((prev: CategoryMap<PickerMember[]>) => CategoryMap<PickerMember[]>)
+  ) =>
     set((state) => ({
-      participantsByCategory: updater(state.participantsByCategory),
+      participantsByCategory:
+        typeof updater === "function"
+          ? updater(state.participantsByCategory)
+          : updater,
     })),
 
-  setPayersByCategory: (updater) =>
+  setPayersByCategory: (
+    updater:
+      | CategoryMap<PickerMember[]>
+      | ((prev: CategoryMap<PickerMember[]>) => CategoryMap<PickerMember[]>)
+  ) =>
     set((state) => ({
-      payersByCategory: updater(state.payersByCategory),
+      payersByCategory:
+        typeof updater === "function"
+          ? updater(state.payersByCategory)
+          : updater,
     })),
 
   // Granular update (recommended for performance)
@@ -108,7 +118,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
 
   initialize: (config: {
     isCreateExpense: boolean;
-    expense?:FormExpense | null;
+    expense: FormExpense | null;
     currency: string;
     groupMembers: Signal<(Member | Guest)[]>;
     nonGroupUsers: Signal<User[]>;
@@ -116,7 +126,22 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     userMemberId?: string;
     isnonGroupExpense?: Signal<boolean>;
   }) => {
-    const { isCreateExpense, expense, currency } = config;
+    const {
+      isCreateExpense,
+      expense,
+      currency,
+      groupMembers,
+      nonGroupUsers,
+      isnonGroupExpense,
+      userInfo,
+    } = config;
+    const userMembers = groupMembers?.value.filter(
+      (item): item is Member => "userId" in item
+    );
+
+    const userMemberId = userMembers?.find(
+      (m) => m.userId === userInfo?.userId
+    )?.id;
 
     const initialCurrency =
       isCreateExpense || !expense ? currency : expense.currency;
@@ -135,6 +160,20 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
 
     const initialLocation = expense?.location ?? undefined;
 
+    const groupArr = groupMembers?.value ?? [];
+    const nonGroupArr = nonGroupUsers?.value ?? [];
+    const isNonGroup = isnonGroupExpense?.value ?? false;
+
+    const { participantsByCategory, payersByCategory } = generatePickerArrays(
+      groupArr,
+      nonGroupArr,
+      expense,
+      isCreateExpense,
+      userInfo,
+      userMemberId,
+      isNonGroup
+    );
+
     set({
       amount: initialAmount,
       description: initialDescription,
@@ -142,6 +181,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       expenseTime: initialExpenseTime,
       labels: initialLabels,
       location: initialLocation,
+      participantsByCategory,
+      payersByCategory,
 
       amountError: "",
       showAmountError: false,
@@ -149,6 +190,42 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       payersError: "",
       descriptionError: "",
       isSubmitting: false,
+      userMemberId: userMemberId,
+    });
+  },
+  updateMembers: (config) => {
+    const {
+      groupMembers,
+      nonGroupUsers,
+      expense,
+      isCreateExpense,
+      isnonGroupExpense,
+      userInfo,
+      userMemberId,
+    } = config;
+
+    // Recalculate participants/payers based on NEW member lists,
+    // but keep existing amount/description/etc. in the store.
+    const groupArr = groupMembers?.value ?? [];
+    const nonGroupArr = nonGroupUsers?.value ?? [];
+    const isNonGroup = isnonGroupExpense?.value ?? false;
+
+    // NOTE: This re-creates the arrays. If we want to preserve *selected* states
+    // logic would need to be more complex (merging). For now, we assume
+    // adding/removing members resets the *picker* state to default for those members.
+    const { participantsByCategory, payersByCategory } = generatePickerArrays(
+      groupArr,
+      nonGroupArr,
+      expense,
+      isCreateExpense,
+      userInfo,
+      userMemberId,
+      isNonGroup
+    );
+
+    set({
+      participantsByCategory,
+      payersByCategory,
     });
   },
   resetForm: () => {

@@ -10,6 +10,7 @@ import {
   Member,
   PickerMember,
   User,
+  UserInfo,
 } from "../../types";
 import { Signal } from "@preact/signals-react";
 
@@ -131,7 +132,7 @@ export function submitExpense({
 
   if (isCreateExpense) {
     createExpenseMutation(expenseRequest);
-   setIsSubmitting(true);
+    setIsSubmitting(true);
   } else {
     editExpenseMutation(expenseRequest);
     setIsSubmitting(true);
@@ -346,4 +347,76 @@ export const createPayerPickerArray = (
   }
 
   return array;
+};
+
+export const generatePickerArrays = (
+  groupMembers: (Member | Guest)[],
+  nonGroupUsers: User[],
+  expense: FormExpense | null,
+  isCreateExpense: boolean,
+  userInfo: UserInfo,
+  userMemberId: string | undefined,
+  isnonGroupExpense?: boolean
+) => {
+  const participantsByCategory = {
+    Amounts: createParticipantPickerArray(
+      groupMembers,
+      nonGroupUsers,
+      expense,
+      "Amounts",
+      isCreateExpense,
+      isnonGroupExpense
+    ),
+    Shares: createParticipantPickerArray(
+      groupMembers,
+      nonGroupUsers,
+      expense,
+      "Shares",
+      isCreateExpense,
+      isnonGroupExpense
+    ),
+    Percentages: createParticipantPickerArray(
+      groupMembers,
+      nonGroupUsers,
+      expense,
+      "Percentages",
+      isCreateExpense,
+      isnonGroupExpense
+    ),
+  };
+
+  const payersByCategory = {
+    Amounts: createPayerPickerArray(
+      groupMembers,
+      nonGroupUsers,
+      expense,
+      "Amounts",
+      isCreateExpense,
+      userInfo.userId,
+      userMemberId,
+      isnonGroupExpense
+    ),
+    Shares: createPayerPickerArray(
+      groupMembers,
+      nonGroupUsers,
+      expense,
+      "Shares",
+      isCreateExpense,
+      userInfo.userId,
+      userMemberId,
+      isnonGroupExpense
+    ),
+    Percentages: createPayerPickerArray(
+      groupMembers,
+      nonGroupUsers,
+      expense,
+      "Percentages",
+      isCreateExpense,
+      userInfo.userId,
+      userMemberId,
+      isnonGroupExpense
+    ),
+  };
+
+  return { participantsByCategory, payersByCategory };
 };

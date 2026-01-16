@@ -1,6 +1,7 @@
 import { Signal } from "@preact/signals-react";
 import { useEffect } from "react";
 import { PickerMember } from "../../../types";
+import { CategoryMap } from "../formStore/formStoreTypes";
 
 export const useSetBySharesAmountsToZero = (
   payersCategory: Signal<string>,
@@ -25,20 +26,8 @@ export const useSetBySharesAmountsToZero = (
     "Shares": PickerMember[];
     "Percentages": PickerMember[];
   },
-  setParticipantsByCategory: (
-    value: React.SetStateAction<{
-      "Amounts": PickerMember[];
-      "Shares": PickerMember[];
-      "Percentages": PickerMember[];
-    }>
-  ) => void,
-  setPayersByCategory: (
-    value: React.SetStateAction<{
-      "Amounts": PickerMember[];
-      "Shares": PickerMember[];
-      "Percentages": PickerMember[];
-    }>
-  ) => void,
+  setParticipantsByCategory:(updater: (prev: CategoryMap<PickerMember[]>) => CategoryMap<PickerMember[]>) => void,
+  setPayersByCategory: (updater: (prev: CategoryMap<PickerMember[]>) => CategoryMap<PickerMember[]>) => void
 ) => {
   useEffect(() => {
     // Handle "Shares" for payers

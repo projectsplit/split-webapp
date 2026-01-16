@@ -10,9 +10,9 @@ import {
   UserInfo,
 } from "../../../types";
 
-type CategoryKey = "Amounts" | "Shares" | "Percentages";
+export type CategoryKey = "Amounts" | "Shares" | "Percentages";
 
-type CategoryMap<T> = {
+export type CategoryMap<T> = {
   readonly Amounts: T;
   readonly Shares: T;
   readonly Percentages: T;
@@ -23,7 +23,7 @@ export interface ExpenseState {
   description: string;
   currencySymbol: string;
   expenseTime: string;
-
+  userMemberId: string;
   labels: Label[];
   location: GeoLocation | undefined;
 
@@ -38,8 +38,6 @@ export interface ExpenseState {
   participantsByCategory: CategoryMap<PickerMember[]>;
   payersByCategory: CategoryMap<PickerMember[]>;
 
-  participantsCategory: CategoryKey;
-  payersCategory: CategoryKey;
 
   // ── Actions
 
@@ -60,15 +58,16 @@ export interface ExpenseState {
 
   setIsSubmitting: (value: boolean) => void;
 
-  setParticipantsCategory: (category: CategoryKey) => void;
-  setPayersCategory: (category: CategoryKey) => void;
-
   setParticipantsByCategory: (
-    updater: (prev: CategoryMap<PickerMember[]>) => CategoryMap<PickerMember[]>
+    updater:
+      | CategoryMap<PickerMember[]>
+      | ((prev: CategoryMap<PickerMember[]>) => CategoryMap<PickerMember[]>)
   ) => void;
 
   setPayersByCategory: (
-    updater: (prev: CategoryMap<PickerMember[]>) => CategoryMap<PickerMember[]>
+    updater:
+      | CategoryMap<PickerMember[]>
+      | ((prev: CategoryMap<PickerMember[]>) => CategoryMap<PickerMember[]>)
   ) => void;
 
   updateParticipantsInCategory: (
@@ -83,13 +82,23 @@ export interface ExpenseState {
 
   initialize: (config: {
     isCreateExpense: boolean;
-    expense?: FormExpense | null;
+    expense: FormExpense | null;
     currency: string;
     groupMembers: Signal<(Member | Guest)[]>;
     nonGroupUsers: Signal<User[]>;
     userInfo: UserInfo;
     userMemberId?: string;
     isnonGroupExpense?: Signal<boolean>;
+  }) => void;
+
+  updateMembers: (config: {
+    groupMembers: Signal<(Member | Guest)[]>;
+    nonGroupUsers: Signal<User[]>;
+    expense: FormExpense | null;
+    isCreateExpense: boolean;
+    isnonGroupExpense?: Signal<boolean>;
+    userInfo: UserInfo;
+    userMemberId?: string;
   }) => void;
 
   resetForm: () => void;

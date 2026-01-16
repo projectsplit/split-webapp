@@ -47,6 +47,7 @@ import {
   InfiniteQueryObserverResult,
   UseMutateFunction,
 } from "@tanstack/react-query";
+import { CategoryKey } from "./components/ExpenseForm/formStore/formStoreTypes";
 
 
 export interface ExpenseProps {
@@ -934,7 +935,7 @@ export interface GroupErrorProps {
 }
 
 export interface NameAndAmountsProps {
-  category: Signal<String>;
+  category: Signal<string>;
   m: PickerMember;
   onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
   currency: string;

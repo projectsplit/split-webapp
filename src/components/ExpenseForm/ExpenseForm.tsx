@@ -70,193 +70,121 @@ export default function ExpenseForm({
   }>();
 
   const {
-  amount,
-  description,
-  currencySymbol,
-  expenseTime,
-  labels,
-  location,
-  amountError,
-  showAmountError,
-  participantsError,
-  payersError,
-  descriptionError,
-  isSubmitting,
-
-  // Actions you'll use soon
-  setAmount,
-  setDescription,
-  setCurrencySymbol,
-  setExpenseTime,
-  setLabels,
-  setLocation,
-  setAmountError,
-  setShowAmountError,
-  setParticipantsError,
-  setPayersError,
-  setDescriptionError,
-  setIsSubmitting,
-  initialize,
-} = useExpenseStore(
-  useShallow((state) => ({
-    amount: state.amount,
-    description: state.description,
-    currencySymbol: state.currencySymbol,
-    expenseTime: state.expenseTime,
-    labels: state.labels,
-    location: state.location,
-    amountError: state.amountError,
-    showAmountError: state.showAmountError,
-    participantsError: state.participantsError,
-    payersError: state.payersError,
-    descriptionError: state.descriptionError,
-    isSubmitting: state.isSubmitting,
-
-    setAmount: state.setAmount,
-    setDescription: state.setDescription,
-    setCurrencySymbol: state.setCurrencySymbol,
-    setExpenseTime: state.setExpenseTime,
-    setLabels: state.setLabels,
-    setLocation: state.setLocation,
-    setAmountError: state.setAmountError,
-    setShowAmountError: state.setShowAmountError,
-    setParticipantsError: state.setParticipantsError,
-    setPayersError: state.setPayersError,
-    setDescriptionError: state.setDescriptionError,
-    setIsSubmitting: state.setIsSubmitting,
-    initialize: state.initialize,
-  }))
-);
-
-useEffect(() => {
-  initialize({
-    isCreateExpense,
-    expense,
-    currency,
-    groupMembers,
-    nonGroupUsers,
-    userInfo,
+    amount,
+    description,
+    currencySymbol,
+    expenseTime,
+    labels,
+    location,
+    amountError,
+    showAmountError,
+    participantsError,
+    payersError,
+    descriptionError,
+    isSubmitting,
+    participantsByCategory,
+    payersByCategory,
     userMemberId,
-    isnonGroupExpense,
-    // We'll add more config params later (groupMembers, etc.)
-  });
-}, [initialize, isCreateExpense, expense?.id, currency]);
+    updateParticipantsInCategory,
+    updatePayersInCategory,
+    // Actions you'll use soon
+    setAmount,
+    setDescription,
+    setCurrencySymbol,
+    setExpenseTime,
+    setLabels,
+    setLocation,
+    setAmountError,
+    setShowAmountError,
+    setParticipantsError,
+    setPayersError,
+    setDescriptionError,
+    setIsSubmitting,
+    setParticipantsByCategory,
+    setPayersByCategory,
+    initialize,
+    updateMembers,
+  } = useExpenseStore(
+    useShallow((state) => ({
+      amount: state.amount,
+      description: state.description,
+      currencySymbol: state.currencySymbol,
+      expenseTime: state.expenseTime,
+      labels: state.labels,
+      location: state.location,
+      amountError: state.amountError,
+      showAmountError: state.showAmountError,
+      participantsError: state.participantsError,
+      payersError: state.payersError,
+      descriptionError: state.descriptionError,
+      isSubmitting: state.isSubmitting,
+      participantsByCategory: state.participantsByCategory,
+      payersByCategory: state.payersByCategory,
+      userMemberId: state.userMemberId,
+      updateParticipantsInCategory: state.updateParticipantsInCategory,
+      updatePayersInCategory: state.updatePayersInCategory,
+      setParticipantsByCategory: state.setParticipantsByCategory,
+      setPayersByCategory: state.setPayersByCategory,
 
-  const userMembers = groupMembers?.value.filter(
-    (item): item is Member => "userId" in item
+      setAmount: state.setAmount,
+      setDescription: state.setDescription,
+      setCurrencySymbol: state.setCurrencySymbol,
+      setExpenseTime: state.setExpenseTime,
+      setLabels: state.setLabels,
+      setLocation: state.setLocation,
+      setAmountError: state.setAmountError,
+      setShowAmountError: state.setShowAmountError,
+      setParticipantsError: state.setParticipantsError,
+      setPayersError: state.setPayersError,
+      setDescriptionError: state.setDescriptionError,
+      setIsSubmitting: state.setIsSubmitting,
+      initialize: state.initialize,
+      updateMembers: state.updateMembers,
+    }))
   );
 
-  const userMemberId = userMembers?.find(
-    (m) => m.userId === userInfo?.userId
-  )?.id;
+  useEffect(() => {
+    initialize({
+      isCreateExpense,
+      expense,
+      currency,
+      groupMembers,
+      nonGroupUsers,
+      userInfo,
+      userMemberId,
+      isnonGroupExpense,
+      // We'll add more config params later (groupMembers, etc.)
+    });
+  }, [initialize, isCreateExpense, expense?.id, currency, userInfo]);
 
+  useEffect(() => {
+    // This effect handles updates to the member lists (participants/payers)
+    // without resetting the rest of the form (amount, description, etc.)
+    updateMembers({
+      groupMembers,
+      nonGroupUsers,
+      expense,
+      isCreateExpense,
+      isnonGroupExpense,
+      userInfo,
+      userMemberId,
+    });
+  }, [
+    updateMembers,
+    groupMembers?.value,
+    nonGroupUsers?.value,
+    isnonGroupExpense?.value,
+    expense,
+    isCreateExpense,
+    userInfo,
+    userMemberId,
+  ]);
 
   const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
     useExpense(menu, groupId, navigate, setIsSubmitting, isnonGroupExpense);
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
     useEditExpense(menu, groupId, setIsSubmitting, selectedExpense);
-
-
-  const initialParticipantsByCategory = useMemo(() => {
-    const groupArr = groupMembers?.value ?? [];
-    const nonGroupArr = nonGroupUsers?.value ?? [];
-    const isNonGroup = isnonGroupExpense?.value ?? false;
-
-    return {
-      Amounts: createParticipantPickerArray(
-        groupArr,
-        nonGroupArr,
-        expense,
-        "Amounts",
-        isCreateExpense,
-        isNonGroup
-      ),
-      Shares: createParticipantPickerArray(
-        groupArr,
-        nonGroupArr,
-        expense,
-        "Shares",
-        isCreateExpense,
-        isNonGroup
-      ),
-      Percentages: createParticipantPickerArray(
-        groupArr,
-        nonGroupArr,
-        expense,
-        "Percentages",
-        isCreateExpense,
-        isNonGroup
-      ),
-    };
-  }, [
-    groupMembers?.value,
-    nonGroupUsers?.value,
-    expense,
-    isCreateExpense,
-    isnonGroupExpense?.value,
-  ]);
-
-  const initialPayersByCategory = useMemo(() => {
-    const groupArr = groupMembers?.value ?? [];
-    const nonGroupArr = nonGroupUsers?.value ?? [];
-    const isNonGroup = isnonGroupExpense?.value ?? false;
-
-    return {
-      Amounts: createPayerPickerArray(
-        groupArr,
-        nonGroupArr,
-        expense,
-        "Amounts",
-        isCreateExpense,
-        userInfo.userId,
-        userMemberId,
-        isNonGroup
-      ),
-      Shares: createPayerPickerArray(
-        groupArr,
-        nonGroupArr,
-        expense,
-        "Shares",
-        isCreateExpense,
-        userInfo.userId,
-        userMemberId,
-        isNonGroup
-      ),
-      Percentages: createPayerPickerArray(
-        groupArr,
-        nonGroupArr,
-        expense,
-        "Percentages",
-        isCreateExpense,
-        userInfo.userId,
-        userMemberId,
-        isNonGroup
-      ),
-    };
-  }, [
-    groupMembers?.value,
-    nonGroupUsers?.value,
-    expense,
-    isCreateExpense,
-    isnonGroupExpense?.value,
-  ]);
-
-  const [participantsByCategory, setParticipantsByCategory] = useState(
-    initialParticipantsByCategory
-  );
-
-  const [payersByCategory, setPayersByCategory] = useState(
-    initialPayersByCategory
-  );
-
-  // Optional reset when dependencies change
-  useEffect(() => {
-    if (isSubmitting) return;
-    setParticipantsByCategory(initialParticipantsByCategory);
-    setPayersByCategory(initialPayersByCategory);
-  }, [initialParticipantsByCategory, initialPayersByCategory]);
-
 
   const [makePersonalClicked, setMakePersonalClicked] =
     useState<boolean>(false);
@@ -687,9 +615,7 @@ useEffect(() => {
           setShowPicker={setShowPicker}
         />
       </div>
-
       <MenuAnimationBackground menu={currencyMenu} />
-
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handleCurrencyOptionsClick}
