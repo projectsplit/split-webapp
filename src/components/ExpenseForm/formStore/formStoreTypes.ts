@@ -41,6 +41,8 @@ export interface ExpenseState {
 
   participantsCategory: Signal<CategoryKey>;
   payersCategory: Signal<CategoryKey>;
+  makePersonalClicked: boolean;
+  showPicker: boolean;
   // ── Actions
 
   setAmount: (value: string) => void;
@@ -59,6 +61,8 @@ export interface ExpenseState {
   setDescriptionError: (msg: string) => void;
 
   setIsSubmitting: (value: boolean) => void;
+  setMakePersonalClicked: (value: boolean) => void;
+  setShowPicker: (value: boolean) => void;
 
   setParticipantsByCategory: (
     updater:

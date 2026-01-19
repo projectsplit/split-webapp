@@ -149,7 +149,7 @@ export interface DateTimeProps {
   withLexicalContext?: boolean;
   category: Signal<string>;
   isDateShowing: Signal<boolean>;
-  setShowPicker: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowPicker: (value: boolean) => void;
   showPicker: boolean;
 }
 
@@ -158,7 +158,7 @@ export interface DateDisplayProps {
   selectedDateTime: string;
   setTime: (time: string) => void;
   isDateShowing: Signal<boolean>;
-  setShowPicker: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowPicker: (value: boolean) => void;
 }
 
 export interface MemberPickerProps {

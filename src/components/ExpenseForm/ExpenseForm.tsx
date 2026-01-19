@@ -79,10 +79,14 @@ export default function ExpenseForm({
     userMemberId,
     participantsCategory,
     payersCategory,
+    makePersonalClicked,
+    showPicker,
     validateForm,
     submitExpense,
     updateParticipantsInCategory,
     updatePayersInCategory,
+    setMakePersonalClicked,
+    setShowPicker,
     // Actions you'll use soon
     setAmount,
     setDescription,
@@ -123,7 +127,10 @@ export default function ExpenseForm({
       updatePayersInCategory: state.updatePayersInCategory,
       setParticipantsByCategory: state.setParticipantsByCategory,
       setPayersByCategory: state.setPayersByCategory,
-
+      makePersonalClicked: state.makePersonalClicked,
+      showPicker: state.showPicker,
+      setMakePersonalClicked: state.setMakePersonalClicked,
+      setShowPicker: state.setShowPicker,
       setAmount: state.setAmount,
       setDescription: state.setDescription,
       setCurrencySymbol: state.setCurrencySymbol,
@@ -179,19 +186,13 @@ export default function ExpenseForm({
     userMemberId,
   ]);
 
-
-  const [makePersonalClicked, setMakePersonalClicked] =
-    useState<boolean>(false);
-
-  const displayedAmount = useSignal<string>(
-    isCreateExpense || !expense ? "" : expense.amount
-  );
-  const [showPicker, setShowPicker] = useState<boolean>(false);
-
   const currencyMenu = useSignal<string | null>(null);
   const isMapOpen = useSignal<boolean>(false);
   const isDateShowing = useSignal<boolean>(!isCreateExpense);
   const labelMenuIsOpen = useSignal<boolean>(false);
+  const displayedAmount = useSignal<string>(
+    isCreateExpense || !expense ? "" : expense.amount
+  );
 
   const participants =
     participantsByCategory[

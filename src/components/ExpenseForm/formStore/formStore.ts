@@ -45,6 +45,9 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     Percentages: [],
   } as const,
 
+  makePersonalClicked:false,
+  showPicker:false,
+
   participantsCategory: signal<CategoryKey>("Amounts"),
   payersCategory: signal<CategoryKey>("Amounts"),
 
@@ -63,6 +66,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
         typeof value === "function" ? value(state.expenseTime) : value,
     })),
 
+  setMakePersonalClicked: (value) => set({ makePersonalClicked: value }),
+  setShowPicker: (value) => set({ showPicker: value }),
   setLabels: (labels) => set({ labels }),
   setLocation: (location) => set({ location }),
 
