@@ -22,9 +22,6 @@ import { signal, useSignal } from "@preact/signals-react";
 import { ExpenseFormProps } from "../../interfaces";
 import { useExpense } from "../../api/services/useExpense";
 import { useEditExpense } from "../../api/services/useEditExpense";
-import {
-  submitExpense,
-} from "./expenseFormUtils";
 import { useSetBySharesAmountsToZero } from "./hooks/useSetBySharesAmountsToZero";
 import { useExpenseValidation } from "./hooks/useExpenseValidation";
 import { useNavigate, useOutletContext } from "react-router-dom";
@@ -80,6 +77,10 @@ export default function ExpenseForm({
     participantsByCategory,
     payersByCategory,
     userMemberId,
+    participantsCategory,
+    payersCategory,
+    validateForm,
+    submitExpense,
     updateParticipantsInCategory,
     updatePayersInCategory,
     // Actions you'll use soon
@@ -116,6 +117,8 @@ export default function ExpenseForm({
       participantsByCategory: state.participantsByCategory,
       payersByCategory: state.payersByCategory,
       userMemberId: state.userMemberId,
+      participantsCategory: state.participantsCategory,
+      payersCategory: state.payersCategory,
       updateParticipantsInCategory: state.updateParticipantsInCategory,
       updatePayersInCategory: state.updatePayersInCategory,
       setParticipantsByCategory: state.setParticipantsByCategory,
@@ -135,9 +138,11 @@ export default function ExpenseForm({
       setIsSubmitting: state.setIsSubmitting,
       initialize: state.initialize,
       updateMembers: state.updateMembers,
+      validateForm: state.validateForm,
+      submitExpense: state.submitExpense,
     }))
   );
-
+  
   useEffect(() => {
     initialize({
       isCreateExpense,
@@ -148,7 +153,6 @@ export default function ExpenseForm({
       userInfo,
       userMemberId,
       isnonGroupExpense,
-      // We'll add more config params later (groupMembers, etc.)
     });
   }, [initialize, isCreateExpense, expense?.id, currency, userInfo]);
 
@@ -175,11 +179,6 @@ export default function ExpenseForm({
     userMemberId,
   ]);
 
-  const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
-    useExpense(menu, groupId, navigate, setIsSubmitting, isnonGroupExpense);
-
-  const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
-    useEditExpense(menu, groupId, setIsSubmitting, selectedExpense);
 
   const [makePersonalClicked, setMakePersonalClicked] =
     useState<boolean>(false);
@@ -193,8 +192,6 @@ export default function ExpenseForm({
   const isMapOpen = useSignal<boolean>(false);
   const isDateShowing = useSignal<boolean>(!isCreateExpense);
   const labelMenuIsOpen = useSignal<boolean>(false);
-  const participantsCategory = useSignal<string>("Amounts");
-  const payersCategory = useSignal<string>("Amounts");
 
   const participants =
     participantsByCategory[
@@ -243,6 +240,7 @@ export default function ExpenseForm({
       ...prev,
       [participantsCategory.value]: newParticipants,
     }));
+    validateForm({ showErrors: true })
   };
 
   const setPayers = (newPayers: PickerMember[]) => {
@@ -250,94 +248,36 @@ export default function ExpenseForm({
       ...prev,
       [payersCategory.value]: newPayers,
     }));
+    validateForm({ showErrors: true })
   };
+
+  const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
+    useExpense(menu, groupId, navigate, setIsSubmitting, nonGroupUsers,
+      nonGroupGroup,
+      groupMembers,
+      makePersonalClicked,
+      isnonGroupExpense);
+
+  const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
+    useEditExpense(menu, groupId, setIsSubmitting, nonGroupUsers,
+      nonGroupGroup,
+      groupMembers,
+      makePersonalClicked,
+      isnonGroupExpense,
+      selectedExpense);
+
 
   const onSubmit = () => {
     submitExpense({
-      participants,
-      payers,
-      amount,
-      setAmountError,
-      location,
-      description,
-      setDescriptionError,
-      isCreateExpense,
       groupId,
-      expense,
-      currencySymbol,
-      expenseTime,
-      labels,
       createExpenseMutation,
       editExpenseMutation,
-      setShowAmountError,
-      participantsCategory,
-      payersCategory,
-      setIsSubmitting,
-      isnonGroupExpense
+      isnonGroupExpense,
+      isCreateExpense,
+      expense,
     });
-    if (isnonGroupExpense && isnonGroupExpense.value) {
-      const data = {
-        nonGroupUsers: nonGroupUsers.value,
-        nonGroupGroup: nonGroupGroup?.value,
-        groupMembers: groupMembers.value,
-      };
-      if (
-        groupMembers.value.length > 0 ||
-        nonGroupUsers.value.length > 0 ||
-        nonGroupGroup?.value
-      )
-        localStorage.setItem("nonGroupExpenseData", JSON.stringify(data));
-    }
-    if (makePersonalClicked) {
-      localStorage.removeItem("nonGroupExpenseData");
-    }
-  };
+  }
 
-  useExpenseValidation({
-    amount,
-    participants,
-    payers,
-    currencySymbol,
-    setParticipantsError,
-    setPayersError,
-    setShowAmountError,
-    participantsCategory,
-    payersCategory,
-    isSubmitting,
-  });
-
-  const prevParticipantsByCategory = useRef(participantsByCategory);
-  const prevPayersByCategory = useRef(payersByCategory);
-
-  useSetBySharesAmountsToZero(
-    payersCategory,
-    prevPayersByCategory,
-    payersByCategory,
-    participantsCategory,
-    prevParticipantsByCategory,
-    participantsByCategory,
-    setParticipantsByCategory,
-    setPayersByCategory
-  );
-
-  useEffect(() => {
-    if (isInitialRender.current && !isCreateExpense) {
-      isInitialRender.current = false; // Mark initial render as done
-      return;
-    }
-    setAmount("");
-    displayedAmount.value = "";
-  }, [currencySymbol]);
-
-  useEffect(() => {
-    if (!isCreateExpense) return;
-    setDescriptionError("");
-  }, [location, description]);
-
-  useEffect(() => {
-    setParticipantsError("");
-    setPayersError("");
-  }, [participantsByCategory["Shares"], payersByCategory["Shares"]]);
 
   const amountNumber = !amountError ? Number(amount) : 0;
 
@@ -355,6 +295,7 @@ export default function ExpenseForm({
     (curr: string) => {
       setCurrencySymbol(curr);
       currencyMenu.value = null;
+      displayedAmount.value = ""
     },
     [currencyMenu]
   );
@@ -366,6 +307,7 @@ export default function ExpenseForm({
       setAmountError('')
       setParticipantsError('')
       setPayersError('')
+      if (!isInitialRender.current) validateForm({ showErrors: true })
     },
     [currencySymbol, displayedAmount, setAmount]
   );
@@ -373,6 +315,8 @@ export default function ExpenseForm({
   const handleDescriptionChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setDescription(e.target.value);
+      if (!isCreateExpense) return;
+      setDescriptionError("");
     },
     []
   );
@@ -598,6 +542,8 @@ export default function ExpenseForm({
           isMapOpen={isMapOpen}
           timeZoneCoordinates={timeZoneCoordinates}
           setLocation={setLocation}
+          isCreateExpense={isCreateExpense}
+          setDescriptionError={setDescriptionError}
         />
         <DateTime
           selectedDateTime={expenseTime}

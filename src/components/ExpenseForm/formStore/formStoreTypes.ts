@@ -1,5 +1,6 @@
 import { Signal } from "@preact/signals-react";
 import {
+    ExpenseRequest,
   FormExpense,
   GeoLocation,
   Guest,
@@ -38,7 +39,8 @@ export interface ExpenseState {
   participantsByCategory: CategoryMap<PickerMember[]>;
   payersByCategory: CategoryMap<PickerMember[]>;
 
-
+  participantsCategory: Signal<CategoryKey>;
+  payersCategory: Signal<CategoryKey>;
   // ── Actions
 
   setAmount: (value: string) => void;
@@ -101,5 +103,20 @@ export interface ExpenseState {
     userMemberId?: string;
   }) => void;
 
+  validateForm: (options?: { showErrors: boolean } | undefined) => {
+    isValid: boolean;
+    errors:
+      | { amount: string; participants: string; payers: string }
+      | { amount?: undefined; participants?: undefined; payers?: undefined };
+  };
+
   resetForm: () => void;
+  submitExpense: (inputs: {
+    groupId?: string;
+    createExpenseMutation: (req: ExpenseRequest) => void;
+    editExpenseMutation: (req: ExpenseRequest) => void;
+    isCreateExpense: boolean;
+    expense: FormExpense | null;
+    isnonGroupExpense?: Signal<boolean>;
+  }) => void;
 }

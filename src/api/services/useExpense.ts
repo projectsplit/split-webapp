@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
-import { ExpenseRequest } from "../../types";
+import { ExpenseRequest, Group, Guest, Member, User } from "../../types";
 import { Signal } from "@preact/signals-react";
 import { NavigateFunction } from "react-router-dom";
 
@@ -10,7 +10,11 @@ export const useExpense = (
   groupId: string | undefined,
   navigate: NavigateFunction,
   setIsSubmitting: (value: boolean) => void,
-  isNonGroupExpense?: Signal<boolean>
+  nonGroupUsers: Signal<User[]>,
+  nonGroupGroup:Signal<Group | null> | undefined,
+  groupMembers: Signal<(Member | Guest)[]>,
+  makePersonalClicked:boolean,
+  isNonGroupExpense: Signal<boolean> | undefined
 ) => {
   const queryClient = useQueryClient();
 
@@ -49,12 +53,29 @@ export const useExpense = (
           queryKey: [groupId],
           exact: false,
         });
+
+        if (isNonGroupExpense && isNonGroupExpense.value) {
+          const data = {
+            nonGroupUsers: nonGroupUsers.value,
+            nonGroupGroup: nonGroupGroup?.value,
+            groupMembers: groupMembers.value,
+          };
+          if (
+            groupMembers.value.length > 0 ||
+            nonGroupUsers.value.length > 0 ||
+            nonGroupGroup?.value
+          )
+            localStorage.setItem("nonGroupExpenseData", JSON.stringify(data));
+        }
+        if (makePersonalClicked) {
+          localStorage.removeItem("nonGroupExpenseData");
+        }
         menu.value = null;
         navigate(`/shared/${groupId}/expenses`);
       }
     },
     onSettled: () => {
-     setIsSubmitting(false);
+      setIsSubmitting(false);
     },
   });
 };

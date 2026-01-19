@@ -10,6 +10,8 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
   isMapOpen,
   timeZoneCoordinates,
   setLocation,
+  isCreateExpense,
+  setDescriptionError,
 }) => {
 
 
@@ -22,6 +24,8 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
             isMapOpen={isMapOpen}
             defaultCoordinates={timeZoneCoordinates}
             setLocation={setLocation}
+            isCreateExpense={isCreateExpense}
+            setDescriptionError={setDescriptionError}
           />
         )}
         <div className="main">

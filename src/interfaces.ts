@@ -342,6 +342,8 @@ export interface LocationPickerProps {
   location: GeoLocation | undefined;
   timeZoneCoordinates: Coordinates;
   setLocation: (location: GeoLocation | undefined) => void
+  isCreateExpense: boolean;
+  setDescriptionError: (error: string) => void;
 }
 
 export interface LocationDisplayProps {
@@ -354,6 +356,8 @@ export interface PlacePickerProps {
   isMapOpen: Signal<boolean>;
   defaultCoordinates: Coordinates;
   setLocation: (location: GeoLocation | undefined) => void
+  isCreateExpense: boolean;
+  setDescriptionError: (error: string) => void;
 }
 
 export interface PlacePickerAnimationProps extends PlacePickerProps {}

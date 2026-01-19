@@ -10,7 +10,7 @@ import { StyledPlacePicker } from "./PlacePicker.styled";
 import { PlacePickerProps } from "../../interfaces";
 import MyButton from "../MyButton/MyButton";
 
-const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultCoordinates,setLocation }) => {
+const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultCoordinates, setLocation, isCreateExpense, setDescriptionError }) => {
   const mapId = `${config.googleMapId}`;
   const defaultZoom = 14;
   const googleMapsBaseUrl = "https://www.google.com/maps/search/?api=1";
@@ -186,7 +186,10 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
 
       const placeLocation = await fetchPlaceLocation(e.detail.placeId);
       setSelectedLocation(placeLocation);
+      if (!isCreateExpense) return;
+      setDescriptionError("");
     },
+
     [placesService, geocoder]
   );
 
