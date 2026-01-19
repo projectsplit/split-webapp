@@ -1,10 +1,9 @@
 import { create } from "zustand";
-import { CategoryMap, ExpenseState, CategoryKey } from "./formStoreTypes";
+import { ExpenseState, CategoryKey } from "./formStoreTypes";
 import {
   FormExpense,
   Guest,
   Member,
-  PickerMember,
   User,
   UserInfo,
 } from "../../../types";

@@ -68,4 +68,4 @@ export const LocationDisplay = ({
   }
 };
 
-export default name;
+export default LocationDisplay;

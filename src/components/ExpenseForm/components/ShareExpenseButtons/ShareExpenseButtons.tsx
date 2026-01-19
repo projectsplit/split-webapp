@@ -1,6 +1,6 @@
 import { Signal } from "@preact/signals-react";
 import { StyledShareExpenseButtons } from "./ShareExpenseButtons.styled";
-import { PickerMember, User } from "../../../../types";
+import { PickerMember, User } from "@/types";
 
 export const ShareExpenseButtons = ({ isPersonal, amountNumber, nonGroupUsers, adjustParticipants, adjustPayers, fromHome, nonGroupMenu, setMakePersonalClicked }: ShareExpenseButtonsProps) => {
   const showShareExpenseButton =

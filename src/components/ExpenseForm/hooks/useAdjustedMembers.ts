@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 import { Signal } from "@preact/signals-react";
-import { PickerMember, User } from "../../../types";
-import { CategoryKey, CategoryMap } from "../formStore/formStoreTypes";
+import { PickerMember, User } from "@/types";
+import {
+  CategoryKey,
+  CategoryMap,
+} from "@/components/ExpenseForm/formStore/formStoreTypes";
 
 interface UseAdjustedMembersParams {
   participantsByCategory: CategoryMap<PickerMember[]>;

@@ -1,10 +1,10 @@
 import { StyledDetailedSharedExpenseText } from './DetailedSharedExpenseText.styled'
-import MemberPicker2 from '../../../MemberPicker/MemberPicker2'
+import MemberPicker2 from '@/components/MemberPicker/MemberPicker2'
 import { TiGroup } from 'react-icons/ti'
 import { FaRegEdit } from 'react-icons/fa'
 import { Signal } from '@preact/signals-react'
-import { Group, Guest, Member, PickerMember, User, UserInfo } from '../../../../types'
-import { CategoryKey } from '../../formStore/formStoreTypes'
+import { Group, Guest, Member, PickerMember, User, UserInfo } from '@/types'
+import { CategoryKey } from '@/components/ExpenseForm/formStore/formStoreTypes'
 
 export default function DetailedSharedExpenseText({
   nonGroupGroup,

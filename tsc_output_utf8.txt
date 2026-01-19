@@ -1,0 +1,1554 @@
+﻿error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/App.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/App.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/apiClients.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/apiClients.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/auth/api.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/auth/api.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/api.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/api.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useAcceptInvitation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useAcceptInvitation.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useArchiveGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useArchiveGroup.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useBudgetInfo.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useBudgetInfo.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useChangeGroupCurrency.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useChangeGroupCurrency.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useCreateBudget.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useCreateBudget.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useCreateGuest.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useCreateGuest.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useCumulativeSpendingArray.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useCumulativeSpendingArray.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useDebts.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useDebts.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useDeclineInvitation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useDeclineInvitation.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useDeleteExpense.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useDeleteExpense.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useDeleteTransfer.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useDeleteTransfer.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useEditExpense.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useEditExpense.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useEditUsername.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useEditUsername.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useExpense.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useExpense.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGenerateInvitationCode.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGenerateInvitationCode.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetGroup.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetGroupExpenses.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetGroupExpenses.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetGroupJoinCodes.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetGroupJoinCodes.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetGroupLabels.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetGroupLabels.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetJoinCode.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetJoinCode.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetUserInvitations.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetUserInvitations.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetUsernameStatus.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGetUsernameStatus.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useGroup.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useJoinWithCode.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useJoinWithCode.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useLastViewedNotification.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useLastViewedNotification.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useLeaveGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useLeaveGroup.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useMostRecentGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useMostRecentGroup.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useMultipleTransfers.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useMultipleTransfers.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useRemoveGuestFromGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useRemoveGuestFromGroup.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useRemoveLabel.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useRemoveLabel.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useRemoveMemberFromGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useRemoveMemberFromGroup.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useRevokeInvitation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useRevokeInvitation.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useRevokeInvitationCode.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useRevokeInvitationCode.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSearchFriendsToInvite.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSearchFriendsToInvite.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSearchGroupsByName.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSearchGroupsByName.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSearchUsersToInvite.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSearchUsersToInvite.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSelectedCurrency.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSelectedCurrency.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSendInvitation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSendInvitation.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSpengindInfo.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useSpengindInfo.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useTimeZone.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useTimeZone.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useTotalLentBorrowedArrays.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useTotalLentBorrowedArrays.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useTransfers.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useTransfers.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useUpdateGroupName.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/api/services/useUpdateGroupName.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/AutoWidthInput.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/AutoWidthInput.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BarsWithLegends/BarsAndAmounts/BarsAndAmounts.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BarsWithLegends/BarsAndAmounts/BarsAndAmounts.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BarsWithLegends/BarsAndAmounts/BarsAndAmounts.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BarsWithLegends/BarsAndAmounts/BarsAndAmounts.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BarsWithLegends/BarsWithLegends.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BarsWithLegends/BarsWithLegends.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BarsWithLegends/BarsWithLegends.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BarsWithLegends/BarsWithLegends.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/BudgetInfoMessage.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/BudgetInfoMessage.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/OnTrackMessage/OnTrackMessage.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/OnTrackMessage/OnTrackMessage.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/OnTrackMessage/OnTrackMessage.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/OnTrackMessage/OnTrackMessage.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/OverspentMessage/OverspentMessage.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/OverspentMessage/OverspentMessage.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/OverspentMessage/OverspentMessage.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/OverspentMessage/OverspentMessage.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/Recommendation/Recommendation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/Recommendation/Recommendation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/Recommendation/Recommendation.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/Recommendation/Recommendation.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/SimpleOnTrackMessage/SimpleOnTrackMessage.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/SimpleOnTrackMessage/SimpleOnTrackMessage.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/SimpleOnTrackMessage/SimpleOnTrackMessage.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/BudgetMessages/SimpleOnTrackMessage/SimpleOnTrackMessage.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Button.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Button.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/CategoryButton/CategoryButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/CategoryButton/CategoryButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/CategoryButton/CategoryButton.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/CategoryButton/CategoryButton.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/CategorySelector/CategorySelector.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/CategorySelector/CategorySelector.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/CategorySelector/CategorySelector.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/CategorySelector/CategorySelector.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/CreateExpenseForm/CreateExpenseForm.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/CreateExpenseForm/CreateExpenseForm.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DateTime.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DateTime.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DateTimePicker/DateTimePicker.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DateTimePicker/DateTimePicker.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DateTimePicker/DateTimePicker.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DateTimePicker/DateTimePicker.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DateTimePicker/DayPicker/DayPicker.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DateTimePicker/DayPicker/DayPicker.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/Comment/Comment.Styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/Comment/Comment.Styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/Comment/Comment.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/Comment/Comment.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/DetailedExpense.Styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/DetailedExpense.Styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/DetailedExpense.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/DetailedExpense.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/EditorContent/EditorContent.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/EditorContent/EditorContent.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/InfoBox/InfoBox.Styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/InfoBox/InfoBox.Styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/InfoBox/InfoBox.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/InfoBox/InfoBox.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/MapsInfoBox/MapsInfoBox.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/MapsInfoBox/MapsInfoBox.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/MapsInfoBox/MapsInfoBox.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/MapsInfoBox/MapsInfoBox.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/MembersInfoBox/MembersInfoBox.Styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/MembersInfoBox/MembersInfoBox.Styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/MembersInfoBox/MembersInfoBox.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/MembersInfoBox/MembersInfoBox.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/utils.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedExpense/utils.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedTransfer/DetailedTransfer.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedTransfer/DetailedTransfer.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedTransfer/DetailedTransfer.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/DetailedTransfer/DetailedTransfer.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/EditExpenseForm/EditExpenseForm.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/EditExpenseForm/EditExpenseForm.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Expense/Expense.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Expense/Expense.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Expense/Expense.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Expense/Expense.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/ExpenseForm.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/ExpenseForm.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/ExpenseForm.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/ExpenseForm.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/DateDisplay/DateDisplay.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/DateDisplay/DateDisplay.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/DateDisplay/DateDisplay.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/DateDisplay/DateDisplay.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/DetailedSharedExpenseText/DetailedSharedExpenseText.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/DetailedSharedExpenseText/DetailedSharedExpenseText.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/DetailedSharedExpenseText/DetailedSharedExpenseText.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/DetailedSharedExpenseText/DetailedSharedExpenseText.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ExpenseFormFooter/ExpenseFormFooter.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ExpenseFormFooter/ExpenseFormFooter.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ExpenseFormFooter/ExpenseFormFooter.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ExpenseFormFooter/ExpenseFormFooter.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ExpenseFormHeader/ExpenseFormHeader.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ExpenseFormHeader/ExpenseFormHeader.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ExpenseFormHeader/ExpenseFormHeader.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ExpenseFormHeader/ExpenseFormHeader.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/FormInputWithTag/FormInputWithTag.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/FormInputWithTag/FormInputWithTag.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/FormInputWithTag/FormInputWithTag.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/FormInputWithTag/FormInputWithTag.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LabelMenu/LabelMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LabelMenu/LabelMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LabelMenu/LabelMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LabelMenu/LabelMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LabelsDisplay/LabelsDisplay.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LabelsDisplay/LabelsDisplay.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LabelsDisplay/LabelsDisplay.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LabelsDisplay/LabelsDisplay.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LocationDisplay/LocationDisplay.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LocationDisplay/LocationDisplay.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LocationDisplay/LocationDisplay.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/LocationDisplay/LocationDisplay.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ShareExpenseButtons/ShareExpenseButtons.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ShareExpenseButtons/ShareExpenseButtons.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ShareExpenseButtons/ShareExpenseButtons.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/components/ShareExpenseButtons/ShareExpenseButtons.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/createParticipantPickerArray.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/createParticipantPickerArray.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/createPayerPickerArray.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/createPayerPickerArray.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/generatePickerArrays.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/generatePickerArrays.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/index.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/index.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/isGroupExpense.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/isGroupExpense.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/isNonGroupExpense.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/isNonGroupExpense.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/submitExpenseFromState.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/submitExpenseFromState.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/validateExpenseState.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/expenseFormUtils/validateExpenseState.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/formStore/formStore.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/formStore/formStore.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/formStore/formStoreTypes.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/formStore/formStoreTypes.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/hooks/useAdjustedMembers.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/hooks/useAdjustedMembers.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/hooks/useExpenseFormStore.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/hooks/useExpenseFormStore.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/hooks/useHandlers.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ExpenseForm/hooks/useHandlers.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/FormInput/FormInput.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/FormInput/FormInput.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/FormInput/FormInput.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/FormInput/FormInput.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/GoogleButton/GoogleButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/GoogleButton/GoogleButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/GoogleButton/GoogleButton.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/GoogleButton/GoogleButton.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/GoogleButton/index.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/GoogleButton/index.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Input/Input.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Input/Input.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Input/Input.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Input/Input.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/InputMonetary/InputMonetary.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/InputMonetary/InputMonetary.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/InputMonetary/InputMonetary.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/InputMonetary/InputMonetary.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Invitation/Invitation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Invitation/Invitation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Invitation/Invitation.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Invitation/Invitation.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Invitation/index.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Invitation/index.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/LabelPicker/LabelPicker.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/LabelPicker/LabelPicker.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/LabelPicker/LabelPicker.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/LabelPicker/LabelPicker.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/LocationPicker/LocationPicker.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/LocationPicker/LocationPicker.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/LocationPicker/LocationPicker.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/LocationPicker/LocationPicker.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/MemberPicker.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/MemberPicker.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/MemberPicker2.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/MemberPicker2.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/components/BuildRemainingAmountText.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/components/BuildRemainingAmountText.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/components/NameAndAmounts.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/components/NameAndAmounts.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/components/Right.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/components/Right.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/components/Text.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/components/Text.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/components/Text.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/components/Text.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/distributeRemainderCents.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/distributeRemainderCents.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/distributeRemainderCentsForShares.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/distributeRemainderCentsForShares.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/errorSettingFn.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/errorSettingFn.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/handleDoneClick.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/handleDoneClick.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/hooks/useRecalculateAmounts.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/hooks/useRecalculateAmounts.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/hooks/useTotalSelectedAmount.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/hooks/useTotalSelectedAmount.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/isEquallySplitFn.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/isEquallySplitFn.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/recalculateAmounts.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/recalculateAmounts.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/split.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MemberPicker/helpers/split.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ActionsMenu/ActionsMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ActionsMenu/ActionsMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ActionsMenu/ActionsMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ActionsMenu/ActionsMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/BottomMainMenu/BottomMainMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/BottomMainMenu/BottomMainMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/BottomMainMenu/BottomMainMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/BottomMainMenu/BottomMainMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/ConfirmArchiveGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/ConfirmArchiveGroup.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/ConfirmLeaveGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/ConfirmLeaveGroup.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/ConfirmUnArchiveGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/ConfirmUnArchiveGroup.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/Confirmation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/Confirmation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/Confirmation.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/Confirmation.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/DeleteExpenseConfirmation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/DeleteExpenseConfirmation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/DeleteTransferConfirmation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Confirmations/DeleteTransferConfirmation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/CurrencyOptions/CurrencyOptions.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/CurrencyOptions/CurrencyOptions.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/CurrencyOptions/CurrencyOptions.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/CurrencyOptions/CurrencyOptions.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/EditUsername/EditUsername.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/EditUsername/EditUsername.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/EditUsername/EditUsername.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/EditUsername/EditUsername.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ErrorMenu/ErrorMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ErrorMenu/ErrorMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ErrorMenu/ErrorMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ErrorMenu/ErrorMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/GroupQuickActionsMenu/GroupQuickActionsMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/GroupQuickActionsMenu/GroupQuickActionsMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/GroupQuickActionsMenu/GroupQuickActionsMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/GroupQuickActionsMenu/GroupQuickActionsMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Layouts/BottomMenu/BottomMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Layouts/BottomMenu/BottomMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Layouts/BottomMenu/BottomMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Layouts/BottomMenu/BottomMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AddNewUserAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AddNewUserAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsCycleSelectionAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsCycleSelectionAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsTimePeriodSelectionAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsTimePeriodSelectionAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsYearSelectionAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsYearSelectionAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AnalyticsMenuAnimations/components/Selection/Selection.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AnalyticsMenuAnimations/components/Selection/Selection.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AnalyticsMenuAnimations/components/Selection/Selection.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/AnalyticsMenuAnimations/components/Selection/Selection.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/BudgetAnimations/CreateBudgetConfirmationAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/BudgetAnimations/CreateBudgetConfirmationAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/BudgetAnimations/DeleteBudgetConfirmationAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/BudgetAnimations/DeleteBudgetConfirmationAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/BudgetAnimations/ManageBudgetAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/BudgetAnimations/ManageBudgetAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/ConfirmArchiveGroupAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/ConfirmArchiveGroupAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/ConfirmLeaveGroupAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/ConfirmLeaveGroupAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/CreateGroupAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/CreateGroupAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/CurrencyOptionsAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/CurrencyOptionsAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/DeleteExpenseAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/DeleteExpenseAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/DeleteTransferAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/DeleteTransferAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/EditExpenseAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/EditExpenseAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/EditUsernameAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/EditUsernameAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/ErrorMenuAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/ErrorMenuAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/GroupTotalsByCurrencyAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/GroupTotalsByCurrencyAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/HomeQuickActionsAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/HomeQuickActionsAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/InfoBoxAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/InfoBoxAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/MenuAnimationBackground.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/MenuAnimationBackground.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/MenuWithOptionsToAddAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/MenuWithOptionsToAddAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/NewExpenseAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/NewExpenseAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/NewTransferAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/NewTransferAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/NonGroupExpenseUsersAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/NonGroupExpenseUsersAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/NonGroupTransferAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/NonGroupTransferAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/NotificationsMenuAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/NotificationsMenuAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/ParticipantsPayersAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/ParticipantsPayersAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/RemoveWarningAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/RemoveWarningAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/RenameGroupAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/RenameGroupAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/SearchTransactionsAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/SearchTransactionsAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/SettingsMenuAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/SettingsMenuAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/SettleUpAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/SettleUpAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/TimeZoneOptionsAnimation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/MenuAnimations/TimeZoneOptionsAnimation.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/Item/Item.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/Item/Item.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/Item/Item.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/Item/Item.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/NonGroupExpenseUsersMenu/NonGroupExpenseUsersMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/NonGroupExpenseUsersMenu/NonGroupExpenseUsersMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/NonGroupExpenseUsersMenu/NonGroupExpenseUsersMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/NonGroupExpenseUsersMenu/NonGroupExpenseUsersMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/NonGroupTransferMenu/NonGroupTransferMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/NonGroupTransferMenu/NonGroupTransferMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/NonGroupTransferMenu/NonGroupTransferMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/NonGroupTransferMenu/NonGroupTransferMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/SelectionLists/SelectedGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/SelectionLists/SelectedGroup.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/SelectionLists/SelectedUsers.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/SelectionLists/SelectedUsers.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/User/User.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/User/User.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/User/User.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NonGroupUsersMenus/User/User.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NotificationsMenu/NotificationsMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NotificationsMenu/NotificationsMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NotificationsMenu/NotificationsMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/NotificationsMenu/NotificationsMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ParticipantsPayersErrorMenu/ParticipantsPayersErrorMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ParticipantsPayersErrorMenu/ParticipantsPayersErrorMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ParticipantsPayersErrorMenu/ParticipantsPayersErrorMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/ParticipantsPayersErrorMenu/ParticipantsPayersErrorMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RemoveUserFromGroupMenu/MemberItem/MemberItem.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RemoveUserFromGroupMenu/MemberItem/MemberItem.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RemoveUserFromGroupMenu/RemoveUserFromGroup.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RemoveUserFromGroupMenu/RemoveUserFromGroup.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RemoveUserFromGroupMenu/RemoveUserFromGroupMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RemoveUserFromGroupMenu/RemoveUserFromGroupMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RemoveWarning/RemoveWarning.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RemoveWarning/RemoveWarning.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RemoveWarning/RemoveWarning.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RemoveWarning/RemoveWarning.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RenameGroupMenu/RenameGroupMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RenameGroupMenu/RenameGroupMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RenameGroupMenu/RenameGroupMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/RenameGroupMenu/RenameGroupMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/SettingsMenu/SettingsMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/SettingsMenu/SettingsMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/SettingsMenu/SettingsMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/SettingsMenu/SettingsMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/TimeZoneOptions/TimeZoneOptions.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/TimeZoneOptions/TimeZoneOptions.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/TimeZoneOptions/TimeZoneOptions.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/TimeZoneOptions/TimeZoneOptions.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/TopMenu/TopMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/TopMenu/TopMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/TopMenu/TopMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Menus/TopMenu/TopMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MyButton/MyButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MyButton/MyButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/MyButton/StyledMyButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/MyButton/StyledMyButton.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/NotificationsBell/NotificationsBell.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/NotificationsBell/NotificationsBell.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/NotificationsBell/NotificationsBell.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/NotificationsBell/NotificationsBell.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/OptionsButton/OptionsButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/OptionsButton/OptionsButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/OptionsButton/OptionsButton.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/OptionsButton/OptionsButton.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/OptionsContainer/OptionsContainer.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/OptionsContainer/OptionsContainer.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/OptionsContainer/OptionsContainer.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/OptionsContainer/OptionsContainer.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Pill/Pill.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Pill/Pill.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Pill/Pill.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Pill/Pill.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/PlacePicker/PlacePicker.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/PlacePicker/PlacePicker.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/PlacePicker/PlacePicker.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/PlacePicker/PlacePicker.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ScrollPicker/ScrollPicker.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ScrollPicker/ScrollPicker.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ScrollPicker/ScrollPicker.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ScrollPicker/ScrollPicker.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/CurrentSearchField/CurrentSearchField.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/CurrentSearchField/CurrentSearchField.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/CurrentSearchField/StyledCurrentSearchField.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/CurrentSearchField/StyledCurrentSearchField.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/EditorContent/EditorContent.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/EditorContent/EditorContent.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/FilterCalendar/FilterCalendar.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/FilterCalendar/FilterCalendar.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/FilterCalendar/FilterCalendar.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/FilterCalendar/FilterCalendar.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Menu/Menu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Menu/Menu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Menu/Menu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Menu/Menu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Menu/ScrollableContainer.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Menu/ScrollableContainer.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/MenuItem/MenuItem.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/MenuItem/MenuItem.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/MenuItem/MenuItem.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/MenuItem/MenuItem.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchCategoryButton.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchCategoryButton.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchDateButton/SearchDateButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchDateButton/SearchDateButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchLabelButton/LabelsPillsDisplay/LabelsPillsDisplay.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchLabelButton/LabelsPillsDisplay/LabelsPillsDisplay.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchLabelButton/LabelsPillsDisplay/LabelsPillsDisplay.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchLabelButton/LabelsPillsDisplay/LabelsPillsDisplay.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchLabelButton/SearchLabelButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchLabelButton/SearchLabelButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchMemberButton/MembersPillsDisplay/MembersPillsDisplay.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchMemberButton/MembersPillsDisplay/MembersPillsDisplay.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchMemberButton/MembersPillsDisplay/MembersPillsDisplay.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchMemberButton/MembersPillsDisplay/MembersPillsDisplay.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchMemberButton/SearchMemberButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchCategoryButtons/SearchMemberButton/SearchMemberButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchTransactions.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchTransactions.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchTransactions.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/SearchTransactions.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Toolbars/MentionsToolbar.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Toolbars/MentionsToolbar.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Toolbars/OptionsToolbar/OptionsToolBar.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Toolbars/OptionsToolbar/OptionsToolBar.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Toolbars/OptionsToolbar/OptionsToolbar.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/Toolbars/OptionsToolbar/OptionsToolbar.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/addExistingTriggerElement.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/addExistingTriggerElement.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/deduplicateFromEndofArr.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/deduplicateFromEndofArr.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/finalProcessConstraints.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/finalProcessConstraints.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/findLastTextNode.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/findLastTextNode.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/generateMonthDaysArray.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/generateMonthDaysArray.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/getDateIntersection.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/getDateIntersection.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/handleCancelClick.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/handleCancelClick.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/handleInputChange.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/handleInputChange.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/handleSubmitButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/handleSubmitButton.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/initializeFilterState.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/initializeFilterState.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/insertDateMention.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/insertDateMention.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/isElementNode.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/isElementNode.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/localStorageStringParser.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/localStorageStringParser.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/onChangeEditorContent.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/onChangeEditorContent.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/parseDate.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/parseDate.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/reformatDate.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/reformatDate.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/removeWordFromEditor.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/removeWordFromEditor.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/updateFiltersMentions.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/updateFiltersMentions.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/updateMembersMentions.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/helpers/updateMembersMentions.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/hooks/useMembers.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/hooks/useMembers.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/hooks/useWeeklyDatesMemo.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/hooks/useWeeklyDatesMemo.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/utils/lexicalThemeConfiguration.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SearchTransactions/utils/lexicalThemeConfiguration.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Sentinel/Sentinel.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Sentinel/Sentinel.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Sentinel/index.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Sentinel/index.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Separator/Separator.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Separator/Separator.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Separator/Separator.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Separator/Separator.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ShimmersUserRow/ShimmerUserRow.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ShimmersUserRow/ShimmerUserRow.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ShimmersUserRow/ShimmerUserRow.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ShimmersUserRow/ShimmerUserRow.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Spinner/Spinner.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Spinner/Spinner.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SubmitButton/SubmitButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SubmitButton/SubmitButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/SubmitButton/SubmitButton.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/SubmitButton/SubmitButton.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ToggleSwitch/ToggleSwitch.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ToggleSwitch/ToggleSwitch.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/ToggleSwitch/ToggleSwitch.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/ToggleSwitch/ToggleSwitch.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/TopBarWithBackButton/TopBarWithBackButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/TopBarWithBackButton/TopBarWithBackButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/TopBarWithBackButton/TopBarWithBackButton.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/TopBarWithBackButton/TopBarWithBackButton.styled.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Transfer/Transfer.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Transfer/Transfer.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Transfer/Transfer.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Transfer/Transfer.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/TransferForm/SendMenuWrapper/SendMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/TransferForm/SendMenuWrapper/SendMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/TransferForm/SendMenuWrapper/SendMenuWrapper.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/TransferForm/SendMenuWrapper/SendMenuWrapper.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/TransferForm/TransferForm.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/TransferForm/TransferForm.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/TransferForm/TransferForm.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/TransferForm/TransferForm.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Tree/Tree.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Tree/Tree.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/Tree/Tree.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/Tree/Tree.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/TreeAdjustedContainer/TreeAdjustedContainer.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/TreeAdjustedContainer/TreeAdjustedContainer.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/TreeAdjustedContainer/TreeAdjustedContainer.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/TreeAdjustedContainer/TreeAdjustedContainer.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/TreeItemBuilder.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/TreeItemBuilder.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/TreeItemBuilderForHomeAndGroups.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/TreeItemBuilderForHomeAndGroups.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/UserOptionsButton/UserOptionsButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/UserOptionsButton/UserOptionsButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/UserOptionsButton/UserOptionsButton.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/UserOptionsButton/UserOptionsButton.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/VerticalSeparator/VerticalSeparator.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/VerticalSeparator/VerticalSeparator.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/components/VerticalSeparator/VerticalSeparator.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/components/VerticalSeparator/VerticalSeparator.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/config.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/config.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/constants.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/constants.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/amountIsValid.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/amountIsValid.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/copyToClipboars.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/copyToClipboars.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/currency-symbol-map.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/currency-symbol-map.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/currencyMask.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/currencyMask.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/displayCurrencyAndAmount.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/displayCurrencyAndAmount.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/enhanceNumberArray.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/enhanceNumberArray.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/generateYearsArray.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/generateYearsArray.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getExpenseType.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getExpenseType.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getFirst.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getFirst.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getGroupTotalByCurrency.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getGroupTotalByCurrency.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getInitials.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getInitials.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getIsoDateInfo.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getIsoDateInfo.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getLocaleFromCurrency.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getLocaleFromCurrency.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getOrdinalSuffix.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getOrdinalSuffix.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getWeekDay.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/getWeekDay.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/groupTransactions.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/groupTransactions.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/handleInputChange.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/handleInputChange.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/initialiseSelectedTimeCycle.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/initialiseSelectedTimeCycle.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/joinAmounts.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/joinAmounts.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/mergeMembersAndGuests.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/mergeMembersAndGuests.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/monthlyDataHelpers.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/monthlyDataHelpers.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/openExchangeRates.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/openExchangeRates.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/removeCommas.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/removeCommas.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/renderExpenseFilterPills.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/renderExpenseFilterPills.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/renderTransferFilterPills.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/renderTransferFilterPills.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/roundThousandsAndMils.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/roundThousandsAndMils.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/timeHelpers.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/timeHelpers.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/timeZones.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/timeZones.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/helpers/weeklyDataHelpers.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/helpers/weeklyDataHelpers.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/hooks/useDebounce.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/hooks/useDebounce.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/hooks/useGeoLocation.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/hooks/useGeoLocation.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/hooks/useRedirectToBudget.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/hooks/useRedirectToBudget.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/hooks/useSentinel.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/hooks/useSentinel.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/interfaces.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/interfaces.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/labelColors.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/labelColors.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/lexicalPlugins/LexicalClearEditorPlugin.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/lexicalPlugins/LexicalClearEditorPlugin.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/lexicalPlugins/OnChangePlugin.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/lexicalPlugins/OnChangePlugin.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/lexicalPlugins/PreventEnterCommandPlugin.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/lexicalPlugins/PreventEnterCommandPlugin.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/main.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/main.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/About.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/About.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Analytics.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Analytics.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Analytics.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Analytics.styled.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Carousel/Carousel.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Carousel/Carousel.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Carousel/Carousel.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Carousel/Carousel.styled.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/BarChart/BarChart.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/BarChart/BarChart.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/BarChart/BarChart.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/BarChart/BarChart.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/BarChart/options/getChartOptions.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/BarChart/options/getChartOptions.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/CumulativeSpending/CumulativeSpending.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/CumulativeSpending/CumulativeSpending.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/CumulativeSpending/CumulativeSpending.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/CumulativeSpending/CumulativeSpending.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/CumulativeSpending/data/getData.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/CumulativeSpending/data/getData.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/CumulativeSpending/options/getChartOptions.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/CumulativeSpending/options/getChartOptions.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/PeriodOption/PeriodOption.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/PeriodOption/PeriodOption.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/PeriodOption/StyledPeriodOption.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/PeriodOption/StyledPeriodOption.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/TotalLentBorrowed/TotalLentBorrowe.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/TotalLentBorrowed/TotalLentBorrowe.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/TotalLentBorrowed/TotalLentBorrowed.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/TotalLentBorrowed/TotalLentBorrowed.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/TotalLentBorrowed/data/getData.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/TotalLentBorrowed/data/getData.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/TotalLentBorrowed/options/getChartOptions.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/TotalLentBorrowed/options/getChartOptions.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/plugins/backGroundColor.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/plugins/backGroundColor.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/plugins/horizontalLine.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/plugins/horizontalLine.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/plugins/noData.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/Charts/plugins/noData.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/CycleOption/CycleOption.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/CycleOption/CycleOption.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/CycleOption/CycleOption.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/CycleOption/CycleOption.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/YearOption/YearOption.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/YearOption/YearOption.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/YearOption/YearOption.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/YearOption/YearOption.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/buildLabels.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/buildLabels.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/buildStartAndEndDates.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/buildStartAndEndDates.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/createGroupedLabels.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/createGroupedLabels.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/deCumulArray.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/deCumulArray.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/enhanceStringArray.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/enhanceStringArray.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/formatDateIntoYMD.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/formatDateIntoYMD.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/generateYearsArray.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/generateYearsArray.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/getCarouselItemsBasedOnCycle.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/getCarouselItemsBasedOnCycle.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/getCumulativeArray.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/getCumulativeArray.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/getTotalLentBorrowed.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/getTotalLentBorrowed.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/groupExpensesPerWeek.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/groupExpensesPerWeek.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/isCurrentPeriod.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/isCurrentPeriod.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/swapMonthDayToDayMonth.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/swapMonthDayToDayMonth.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/weeklyDataHelpers.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/helpers/weeklyDataHelpers.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/hooks/useCycleIndexEffect.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/hooks/useCycleIndexEffect.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/hooks/useStartEndDatesEffect.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Analytics/hooks/useStartEndDatesEffect.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Auth/Auth.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Auth/Auth.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Auth/AuthPage.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Auth/AuthPage.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Auth/WelcomeHeader/WelcomeHeader.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Auth/WelcomeHeader/WelcomeHeader.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Auth/WelcomeHeader/WelcomeHeader.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Auth/WelcomeHeader/WelcomeHeader.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Auth/index.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Auth/index.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/Budget.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/Budget.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/Calendar/Calendar.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/Calendar/Calendar.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/Calendar/Calendar.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/Calendar/Calendar.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CalendarOptionButton/CalendarOptionsButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CalendarOptionButton/CalendarOptionsButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CalendarOptionButton/CalendarOptionsButton.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CalendarOptionButton/CalendarOptionsButton.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ConfirmationForBudgetDeletion/ConfirmationForBudgetDeletion.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ConfirmationForBudgetDeletion/ConfirmationForBudgetDeletion.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ConfirmationForBudgetDeletion/ConfirmationForBudgetDeletion.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ConfirmationForBudgetDeletion/ConfirmationForBudgetDeletion.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ConfirmationForBudgetSubmission/ConfirmationForBudgetSubmission.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ConfirmationForBudgetSubmission/ConfirmationForBudgetSubmission.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ConfirmationForBudgetSubmission/ConfirmationForBudgetSubmission.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ConfirmationForBudgetSubmission/ConfirmationForBudgetSubmission.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/CreateBudget.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/CreateBudget.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/CreateBudget.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/CreateBudget.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/SetUpSpendingGoal/SetUpSpendingGoal.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/SetUpSpendingGoal/SetUpSpendingGoal.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/SetUpSpendingGoal/SetUpSpendingGoal.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/SetUpSpendingGoal/SetUpSpendingGoal.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/SpendingCycle/SpendingCycle.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/SpendingCycle/SpendingCycle.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/SpendingCycle/SpendingCycle.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CreateBudget/SpendingCycle/SpendingCycle.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CurrentBudget/CurrentBudget.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CurrentBudget/CurrentBudget.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CurrentBudget/CurrentBudget.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/CurrentBudget/CurrentBudget.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ManageBudgetMenu/ManageBudgetMenu.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ManageBudgetMenu/ManageBudgetMenu.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ManageBudgetMenu/ManageBudgetMenu.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ManageBudgetMenu/ManageBudgetMenu.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ProgressBar/ProgressBar.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ProgressBar/ProgressBar.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ProgressBar/ProgressBar.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/ProgressBar/ProgressBar.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/SpendingCycleInfo/SpendingCycleInfo.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/SpendingCycleInfo/SpendingCycleInfo.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/SpendingCycleInfo/SpendingCycleInfo.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/SpendingCycleInfo/SpendingCycleInfo.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/SpendingCycleSelector/SpendingCycleSelector.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/SpendingCycleSelector/SpendingCycleSelector.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/SpendingCycleSelector/SpendingCycleSelector.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Budget/SpendingCycleSelector/SpendingCycleSelector.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/CreateAccount/CreateAccount.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/CreateAccount/CreateAccount.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/CreateAccount/CreateAccount.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/CreateAccount/CreateAccount.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Expenses/Expenses.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Expenses/Expenses.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Expenses/Expenses.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Expenses/Expenses.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/GenerateInvitationCode.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/GenerateInvitationCode.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/GenerateInvitationCode.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/GenerateInvitationCode.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/RevokeAccess/RevokeAcces.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/RevokeAccess/RevokeAcces.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/RevokeAccess/RevokeAccess.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/RevokeAccess/RevokeAccess.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/RevokeAccess/RevokeAccessItem/RevokeAccessItem.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/RevokeAccess/RevokeAccessItem/RevokeAccessItem.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/RevokeAccess/RevokeAccessItem/RevokeAccessItem.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/RevokeAccess/RevokeAccessItem/RevokeAccessItem.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/ShareGroup/ShareGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/ShareGroup/ShareGroup.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/ShareGroup/ShareGroup.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/ShareGroup/ShareGroup.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/ShimerPlaceholder/ShimerPlaceholder.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/ShimerPlaceholder/ShimerPlaceholder.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/ShimerPlaceholder/ShimerPlaceholder.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/GenerateInvitationCode/ShimerPlaceholder/ShimerPlaceholder.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/GoogleCallback.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/GoogleCallback.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/CreateGroup/CreateGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/CreateGroup/CreateGroup.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/CreateGroup/CreateGroup.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/CreateGroup/CreateGroup.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupOptions/GroupOptions.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupOptions/GroupOptions.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupOptions/GroupOptions.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupOptions/GroupOptions.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupTypes/ActiveGroups/ActiveGroups.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupTypes/ActiveGroups/ActiveGroups.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupTypes/ArchivedGroups/ArchivedGroups.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupTypes/ArchivedGroups/ArchivedGroups.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupTypes/Groups.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupTypes/Groups.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/Groups.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/Groups.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupsContainer.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/GroupsContainer.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/NewButton/NewButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/NewButton/NewButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/NewButton/NewButton.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/NewButton/NewButton.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/Shared.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/Shared.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/SharedContainer.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Groups/SharedContainer.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Home/Home.Styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Home/Home.Styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Home/Home.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Home/Home.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Home/SelectionButton/SelectionButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Home/SelectionButton/SelectionButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Home/SelectionButton/SelectionButton.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Home/SelectionButton/SelectionButton.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Join/Join.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Join/Join.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Join/Join.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Join/Join.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Join/JoinOverslay.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Join/JoinOverslay.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Join/index.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Join/index.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/DescriptionAndTree/DescriptionAndTree.Styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/DescriptionAndTree/DescriptionAndTree.Styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/DescriptionAndTree/DescriptionAndTree.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/DescriptionAndTree/DescriptionAndTree.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/MemberDetailedDescription/MemberDetailedDescription.Styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/MemberDetailedDescription/MemberDetailedDescription.Styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/MemberDetailedDescription/MemberDetailedDescription.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/MemberDetailedDescription/MemberDetailedDescription.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/MemberFC.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/MemberFC.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/MemberFC.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/MemberFC.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/RenderScenarios/RenderScenarios.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/RenderScenarios/RenderScenarios.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/SettleUpButton/SettleUpButton.Styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/SettleUpButton/SettleUpButton.Styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/SettleUpButton/SettleUpButton.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Member/SettleUpButton/SettleUpButton.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Members.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Members.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Members.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/Members.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/SettleUpOptions/SettleUpOptions.Styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/SettleUpOptions/SettleUpOptions.Styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/SettleUpOptions/SettleUpOptions.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Members/SettleUpOptions/SettleUpOptions.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Protected/Protected.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Protected/Protected.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Protected/Protected.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Protected/Protected.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/SearchUsersToInvite/SearchResultItem/SearchResultItem.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/SearchUsersToInvite/SearchResultItem/SearchResultItem.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/SearchUsersToInvite/SearchUsersToInvite.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/SearchUsersToInvite/SearchUsersToInvite.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/SearchUsersToInvite/SearchUsersToInvite.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/SearchUsersToInvite/SearchUsersToInvite.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/SearchUsersToInvite/index.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/SearchUsersToInvite/index.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/SplashScreen/SplashScreen.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/SplashScreen/SplashScreen.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/SplashScreen/SplashScreen.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/SplashScreen/SplashScreen.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/Group.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/Group.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/Group.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/Group.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/GroupError.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/GroupError.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/GroupTotalsByCurrency/GroupTotalsByCurrency.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/GroupTotalsByCurrency/GroupTotalsByCurrency.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/GroupTotalsByCurrency/GroupTotalsByCurrency.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/GroupTotalsByCurrency/GroupTotalsByCurrency.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/NonGroup.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/TransactionsWrappers/NonGroup.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Transfers/Transfers.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Transfers/Transfers.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/pages/Transfers/Transfers.styled.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/pages/Transfers/Transfers.styled.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/routes.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/routes.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/routes/RedirectToAnalytics.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/routes/RedirectToAnalytics.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/routes/RedirectToBudget.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/routes/RedirectToBudget.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/routes/RedirectToExpenses.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/routes/RedirectToExpenses.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/routes/RedirectToGroups.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/routes/RedirectToGroups.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/routes/RedirectToNonGroupExpenses.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/routes/RedirectToNonGroupExpenses.tsx'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/styles/global.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/styles/global.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/styles/loadingSpinner.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/styles/loadingSpinner.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/theme.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/theme.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/types.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/types.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/src/utils.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/src/utils.ts'.
+  The file is in the program because:
+    Matched by include pattern 'src' in 'tsconfig.json'
+error TS6305: Output file 'C:/Users/chris/Desktop/split-webapp/vite.config.d.ts' has not been built from source file 'C:/Users/chris/Desktop/split-webapp/vite.config.ts'.
+  The file is in the program because:
+    Matched by include pattern 'vite.config.ts' in 'tsconfig.json'
