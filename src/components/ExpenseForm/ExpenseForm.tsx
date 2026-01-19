@@ -1,9 +1,7 @@
 import React, {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
-  useState,
 } from "react";
 import {
   PickerMember,
@@ -22,20 +20,18 @@ import { signal, useSignal } from "@preact/signals-react";
 import { ExpenseFormProps } from "../../interfaces";
 import { useExpense } from "../../api/services/useExpense";
 import { useEditExpense } from "../../api/services/useEditExpense";
-import { useSetBySharesAmountsToZero } from "./hooks/useSetBySharesAmountsToZero";
-import { useExpenseValidation } from "./hooks/useExpenseValidation";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { StyledExpenseForm } from "./ExpenseForm.styled";
-import MemberPicker2 from "../MemberPicker/MemberPicker2";
 import { LocationDisplay } from "./components/LocationDisplay/LocationDisplay";
 import DateDisplay from "./components/DateDisplay/DateDisplay";
 import { LabelMenu } from "./components/LabelMenu/LabelMenu";
 import LabelsDisplay from "./components/LabelsDisplay/LabelsDisplay";
 import FormInputWithTag from "./components/FormInputWithTag/FormInputWithTag";
-import { FaRegEdit } from "react-icons/fa";
-import { TiGroup } from "react-icons/ti";
 import { useExpenseStore } from "./formStore/formStore";
 import { useShallow } from 'zustand/react/shallow'
+import DetailedSharedExpenseText from "./components/DetailedSharedExpenseText/DetailedSharedExpenseText";
+import { ShareExpenseButtons } from "./components/ShareExpenseButtons/ShareExpenseButtons";
+import { useAdjustedMembers } from "./hooks/useAdjustedMembers";
 
 export default function ExpenseForm({
   groupMembers,
@@ -55,6 +51,7 @@ export default function ExpenseForm({
   nonGroupGroup,
   fromHome
 }: ExpenseFormProps) {
+  
   const isInitialRender = useRef<boolean>(true);
   const navigate = useNavigate();
   const { userInfo } = useOutletContext<{
@@ -73,7 +70,6 @@ export default function ExpenseForm({
     participantsError,
     payersError,
     descriptionError,
-    isSubmitting,
     participantsByCategory,
     payersByCategory,
     userMemberId,
@@ -83,11 +79,8 @@ export default function ExpenseForm({
     showPicker,
     validateForm,
     submitExpense,
-    updateParticipantsInCategory,
-    updatePayersInCategory,
     setMakePersonalClicked,
     setShowPicker,
-    // Actions you'll use soon
     setAmount,
     setDescription,
     setCurrencySymbol,
@@ -149,7 +142,7 @@ export default function ExpenseForm({
       submitExpense: state.submitExpense,
     }))
   );
-  
+
   useEffect(() => {
     initialize({
       isCreateExpense,
@@ -194,47 +187,16 @@ export default function ExpenseForm({
     isCreateExpense || !expense ? "" : expense.amount
   );
 
-  const participants =
-    participantsByCategory[
-    participantsCategory.value as keyof typeof participantsByCategory
-    ];
-
-  const payers =
-    payersByCategory[payersCategory.value as keyof typeof payersByCategory];
-
-  const adjustParticipants = useMemo(() => {
-    if (!participants) return [];
-    const userIdToCheck =
-      nonGroupUsers.value.length > 0 || isnonGroupExpense?.value
-        ? userInfo?.userId
-        : userMemberId;
-    return participants.map((m) =>
-      m.id === userIdToCheck ? { ...m, name: "you" } : m
-    );
-  }, [
-    participants,
-    userInfo?.userId,
+  const { participants, payers, adjustParticipants, adjustPayers } = useAdjustedMembers({
+    participantsByCategory,
+    payersByCategory,
+    participantsCategory,
+    payersCategory,
+    nonGroupUsers,
+    isnonGroupExpense,
+    userInfo,
     userMemberId,
-    nonGroupUsers.value.length,
-    isnonGroupExpense?.value,
-  ]);
-
-  const adjustPayers = useMemo(() => {
-    if (!payers) return [];
-    const userIdToCheck =
-      nonGroupUsers.value.length > 0 || isnonGroupExpense?.value
-        ? userInfo?.userId
-        : userMemberId;
-    return payers.map((m) =>
-      m.id === userIdToCheck ? { ...m, name: "you" } : m
-    );
-  }, [
-    payers,
-    userInfo?.userId,
-    userMemberId,
-    nonGroupUsers.value.length,
-    isnonGroupExpense?.value,
-  ]);
+  });
 
   const setParticipants = (newParticipants: PickerMember[]) => {
     setParticipantsByCategory((prev) => ({
@@ -322,26 +284,6 @@ export default function ExpenseForm({
     []
   );
 
-  const showShareExpenseButton =
-    isPersonal.value &&
-    amountNumber &&
-    nonGroupUsers.value.length === 0;
-
-  const showDetailedSharedExpenseText =
-    (nonGroupUsers?.value.length > 0 || groupMembers?.value.length > 0) &&
-    !!amountNumber &&
-    !isPersonal.value;
-
-  const showMakePersonal =
-    isPersonal.value === false &&
-    amountNumber &&
-    !(
-      adjustParticipants.filter((m) => m.selected).length === 1 &&
-      adjustParticipants[0].name === "you" &&
-      adjustPayers.filter((m) => m.selected).length === 1 &&
-      adjustPayers[0].name === "you"
-    );
-
   return (
     <StyledExpenseForm>
       <div className="header">
@@ -381,81 +323,31 @@ export default function ExpenseForm({
           {showAmountError && amountError ? amountError : ""}
         </span>
       </div>
-      {showDetailedSharedExpenseText ? (
-        <div className="errorsWrapper">
-          <div className="textStyleInfo">
-            {nonGroupGroup && nonGroupGroup.value ? (
-              <div className="definition">
-                <span className="labelStyle">
-                  <div className="info">
-                    {" "}
-                    <TiGroup />
-                    {nonGroupGroup.value.name}
-                  </div>
-                </span>
-                :
-              </div>
-            ) : null}
-            <MemberPicker2
-              isLoading={
-                isCreateExpense ? isPendingCreateExpense : isPendingEditExpense
-              }
-              description={"Participants"}
-              totalAmount={amountNumber}
-              memberAmounts={adjustParticipants}
-              error={participantsError}
-              setMemberAmounts={setParticipants}
-              // group={group}
-              selectedCurrency={currencySymbol}
-              category={participantsCategory}
-              userMemberId={userMemberId}
-              setError={setParticipantsError}
-              isnonGroupExpense={isnonGroupExpense}
-              userId={userInfo.userId}
-              groupMembers={groupMembers}
-              nonGroupUsers={nonGroupUsers}
-              isCreateExpense={isCreateExpense}
-            />
-            <MemberPicker2
-              isLoading={
-                isCreateExpense ? isPendingCreateExpense : isPendingEditExpense
-              }
-              description={"Payers"}
-              totalAmount={amountNumber}
-              memberAmounts={adjustPayers}
-              error={payersError}
-              setMemberAmounts={setPayers}
-              // group={group}
-              selectedCurrency={currencySymbol}
-              category={payersCategory}
-              userMemberId={userMemberId}
-              setError={setPayersError}
-              isnonGroupExpense={isnonGroupExpense}
-              userId={userInfo.userId}
-              groupMembers={groupMembers}
-              nonGroupUsers={nonGroupUsers}
-              isCreateExpense={isCreateExpense}
-            />
-            {isCreateExpense && nonGroupMenu ? (
-              <div
-                className="editButton"
-                onClick={() => (nonGroupMenu.value = "nonGroupExpenseUsers")}
-              >
-                <FaRegEdit />
-              </div>
-            ) : null}
-          </div>
-          <div className="errors">
-            {" "}
-            {participantsError && (
-              <div className="errorMsg">{participantsError}</div>
-            )}
-            {payersError && <div className="errorMsg">{payersError}</div>}
-          </div>
-        </div>
-      ) : (
-        ""
-      )}
+      <DetailedSharedExpenseText
+        nonGroupGroup={nonGroupGroup}
+        isCreateExpense={isCreateExpense}
+        isPendingCreateExpense={isPendingCreateExpense}
+        isPendingEditExpense={isPendingEditExpense}
+        amountNumber={amountNumber}
+        adjustParticipants={adjustParticipants}
+        setParticipants={setParticipants}
+        participantsError={participantsError}
+        currencySymbol={currencySymbol}
+        participantsCategory={participantsCategory}
+        userMemberId={userMemberId}
+        setParticipantsError={setParticipantsError}
+        isnonGroupExpense={isnonGroupExpense}
+        userInfo={userInfo}
+        groupMembers={groupMembers}
+        nonGroupUsers={nonGroupUsers}
+        nonGroupMenu={nonGroupMenu}
+        adjustPayers={adjustPayers}
+        setPayers={setPayers}
+        payersError={payersError}
+        setPayersError={setPayersError}
+        payersCategory={payersCategory}
+        isPersonal={isPersonal}
+      />
       <FormInputWithTag
         description="Description"
         placeholder="Description"
@@ -464,40 +356,16 @@ export default function ExpenseForm({
         onChange={handleDescriptionChange}
         labelMenuIsOpen={labelMenuIsOpen}
       />
-      {showShareExpenseButton && fromHome && nonGroupMenu ? (
-        <div className="shareExpenseOption">
-          <div
-            className="button"
-            onClick={() => (nonGroupMenu.value = "nonGroupExpenseUsers")}
-          >
-            Share Expense{" "}
-          </div>
-        </div>
-      ) : null}
-      {showMakePersonal && fromHome && nonGroupMenu ? (
-        <div className="shareExpenseOption">
-          <div
-            className="button"
-            onClick={() => {
-              setMakePersonalClicked(true);
-              isPersonal.value = true;
-              nonGroupUsers.value = [];
-            }}
-          >
-            Make Personal{" "}
-          </div>
-        </div>
-      ) : null}
-      {amountNumber && nonGroupMenu && !fromHome && adjustPayers.length === 0 && adjustParticipants.length === 0 ? (
-        <div className="shareExpenseOption">
-          <div
-            className="button"
-            onClick={() => (nonGroupMenu.value = "nonGroupExpenseUsers")}
-          >
-            Shared with you and...{" "}
-          </div>
-        </div>
-      ) : null}
+      <ShareExpenseButtons
+        isPersonal={isPersonal}
+        amountNumber={amountNumber}
+        nonGroupUsers={nonGroupUsers}
+        adjustParticipants={adjustParticipants}
+        adjustPayers={adjustPayers}
+        fromHome={fromHome}
+        nonGroupMenu={nonGroupMenu}
+        setMakePersonalClicked={setMakePersonalClicked}
+      />
       {labelMenuIsOpen.value && (
         <LabelMenu
           labelMenuIsOpen={labelMenuIsOpen}

@@ -45,8 +45,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     Percentages: [],
   } as const,
 
-  makePersonalClicked:false,
-  showPicker:false,
+  makePersonalClicked: false,
+  showPicker: false,
 
   participantsCategory: signal<CategoryKey>("Amounts"),
   payersCategory: signal<CategoryKey>("Amounts"),
@@ -92,90 +92,96 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   setDescriptionError: (msg: string) => set({ descriptionError: msg }),
 
   // ── Safe complex updates ────────────────────────────────────────
-setParticipantsByCategory: (updater) =>
-  set((state) => {
-    const prevByCategory = state.participantsByCategory;
-    const newByCategory =
-      typeof updater === "function" ? updater(prevByCategory) : updater;
+  setParticipantsByCategory: (updater) =>
+    set((state) => {
+      const prevByCategory = state.participantsByCategory;
+      const newByCategory =
+        typeof updater === "function" ? updater(prevByCategory) : updater;
 
-    // === PART 1: Detect if Shares changed ===
-    const prevShares = prevByCategory["Shares"] ?? [];
-    const newShares = newByCategory["Shares"] ?? [];
-    const sharesChanged = newShares !== prevShares;
+      // === PART 1: Detect if Shares changed ===
+      const prevShares = prevByCategory["Shares"] ?? [];
+      const newShares = newByCategory["Shares"] ?? [];
+      const sharesChanged = newShares !== prevShares;
 
-    let finalByCategory = newByCategory;
+      let finalByCategory = newByCategory;
 
-    // === PART 2: If Shares changed, apply reset to newly selected members ===
-    if (sharesChanged) {
-      const prevSelectedIds = new Set(prevShares.filter(m => m.selected).map(m => m.id));
+      // === PART 2: If Shares changed, apply reset to newly selected members ===
+      if (sharesChanged) {
+        const prevSelectedIds = new Set(
+          prevShares.filter((m) => m.selected).map((m) => m.id)
+        );
 
-      const resetShares = newShares.map(member => {
-        const wasJustSelected = member.selected && !prevSelectedIds.has(member.id);
+        const resetShares = newShares.map((member) => {
+          const wasJustSelected =
+            member.selected && !prevSelectedIds.has(member.id);
 
-        if (wasJustSelected) {
-          return {
-            ...member,
-            actualAmount: "",
-            screenQuantity: "",
-            locked: false,
-          };
-        }
-        return member;
-      });
+          if (wasJustSelected) {
+            return {
+              ...member,
+              actualAmount: "",
+              screenQuantity: "",
+              locked: false,
+            };
+          }
+          return member;
+        });
 
-      finalByCategory = {
-        ...newByCategory,
-        Shares: resetShares,
+        finalByCategory = {
+          ...newByCategory,
+          Shares: resetShares,
+        };
+      }
+
+      // === PART 3: Clear error if Shares changed ===
+      return {
+        participantsByCategory: finalByCategory,
+        ...(sharesChanged ? { participantsError: "" } : {}),
       };
-    }
+    }),
 
-    // === PART 3: Clear error if Shares changed ===
-    return {
-      participantsByCategory: finalByCategory,
-      ...(sharesChanged ? { participantsError: "" } : {}),
-    };
-  }),
+  setPayersByCategory: (updater) =>
+    set((state) => {
+      const prevByCategory = state.payersByCategory;
+      const newByCategory =
+        typeof updater === "function" ? updater(prevByCategory) : updater;
 
-setPayersByCategory: (updater) =>
-  set((state) => {
-    const prevByCategory = state.payersByCategory;
-    const newByCategory =
-      typeof updater === "function" ? updater(prevByCategory) : updater;
+      const prevShares = prevByCategory["Shares"] ?? [];
+      const newShares = newByCategory["Shares"] ?? [];
+      const sharesChanged = newShares !== prevShares;
 
-    const prevShares = prevByCategory["Shares"] ?? [];
-    const newShares = newByCategory["Shares"] ?? [];
-    const sharesChanged = newShares !== prevShares;
+      let finalByCategory = newByCategory;
 
-    let finalByCategory = newByCategory;
+      if (sharesChanged) {
+        const prevSelectedIds = new Set(
+          prevShares.filter((m) => m.selected).map((m) => m.id)
+        );
 
-    if (sharesChanged) {
-      const prevSelectedIds = new Set(prevShares.filter(m => m.selected).map(m => m.id));
+        const resetShares = newShares.map((member) => {
+          const wasJustSelected =
+            member.selected && !prevSelectedIds.has(member.id);
 
-      const resetShares = newShares.map(member => {
-        const wasJustSelected = member.selected && !prevSelectedIds.has(member.id);
+          if (wasJustSelected) {
+            return {
+              ...member,
+              actualAmount: "",
+              screenQuantity: "",
+              locked: false,
+            };
+          }
+          return member;
+        });
 
-        if (wasJustSelected) {
-          return {
-            ...member,
-            actualAmount: "",
-            screenQuantity: "",
-            locked: false,
-          };
-        }
-        return member;
-      });
+        finalByCategory = {
+          ...newByCategory,
+          Shares: resetShares,
+        };
+      }
 
-      finalByCategory = {
-        ...newByCategory,
-        Shares: resetShares,
+      return {
+        payersByCategory: finalByCategory,
+        ...(sharesChanged ? { payersError: "" } : {}),
       };
-    }
-
-    return {
-      payersByCategory: finalByCategory,
-      ...(sharesChanged ? { payersError: "" } : {}),
-    };
-  }),
+    }),
 
   // Granular update (recommended for performance)
   updateParticipantsInCategory: (category, updater) =>
