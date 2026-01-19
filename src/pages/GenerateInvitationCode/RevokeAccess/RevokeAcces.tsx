@@ -18,9 +18,6 @@ export default function RevokeAccess({
   invitationCode,
   mostRecentCodeHasBeenRevoked,
 }: RevokeAccessProps) {
-  const { userInfo } = useOutletContext<{
-    userInfo: UserInfo;
-  }>();
 
   if (isFetching && !isFetchingNextPage) {
     return (

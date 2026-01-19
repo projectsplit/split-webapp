@@ -11,6 +11,9 @@ export default function NewTransferAnimation({
   currency,
   isnonGroupTransfer,
   groupId,
+  nonGroupMenu,
+  nonGroupGroup,
+  fromHome,
 }: NewTransferAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -28,6 +31,9 @@ export default function NewTransferAnimation({
         nonGroupUsers={nonGroupUsers}
         currency={currency}
         isnonGroupTransfer={isnonGroupTransfer}
+        nonGroupMenu={nonGroupMenu}
+        nonGroupGroup={nonGroupGroup}
+        fromHome={fromHome}
       />
     </CSSTransition>
   );

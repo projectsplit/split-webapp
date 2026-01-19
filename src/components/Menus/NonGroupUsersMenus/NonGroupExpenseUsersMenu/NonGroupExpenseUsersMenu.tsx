@@ -28,7 +28,9 @@ export const NonGroupExpenseUsersMenu = ({
   groupMembers,
   nonGroupGroup,
   isNonGroupExpense,
+  fromNonGroup
 }: NonGroupUsersProps) => {
+
   const category = useSignal<string>("Friends");
   const [keyword, setKeyword] = useState("");
   const pageSize = 10;
@@ -47,8 +49,7 @@ export const NonGroupExpenseUsersMenu = ({
   const result = useSearchFriendsToInvite(
     "f7637b50-e77d-4609-9e38-eb0acc9c9c51",
     debouncedKeyword,
-    pageSize,
-    isNonGroupExpense.value
+    pageSize
   );
 
   if (!result) return null;
@@ -119,6 +120,7 @@ export const NonGroupExpenseUsersMenu = ({
       nonGroupGroup.value = null;
       groupMembers.value = [];
       addUser(username);
+      isNonGroupExpense.value = true;
     },
     [addUser]
   );
@@ -177,7 +179,7 @@ export const NonGroupExpenseUsersMenu = ({
   }, [userGroups, nonGroupGroup.value]);
 
   const isEmpty = useMemo(() => {
-   return (nonGroupUsers.value?.length === 0||nonGroupUsers.value?.length === 1) &&
+    return (nonGroupUsers.value?.length === 0 || nonGroupUsers.value?.length === 1) &&
       keyword.length === 0 &&
       !nonGroupGroup.value;
   }, [nonGroupUsers.value, nonGroupGroup.value, keyword]);
@@ -198,7 +200,9 @@ export const NonGroupExpenseUsersMenu = ({
             <BiArrowBack
               className="backButton"
               onClick={() => {
-                isPersonalFn();
+                if (!fromNonGroup) {
+                  isPersonalFn();
+                }
                 menu.value = null;
               }}
             />
@@ -206,7 +210,7 @@ export const NonGroupExpenseUsersMenu = ({
           <div className="title">Share expense with you and...</div>
           <div className="gap"></div>
         </div>
-        <div className="categories">
+        {!fromNonGroup && <div className="categories">
           <CategorySelector
             activeCat={"Amounts"}
             categories={{
@@ -216,7 +220,7 @@ export const NonGroupExpenseUsersMenu = ({
             navLinkUse={false}
             activeCatAsState={category}
           />
-        </div>
+        </div>}
       </div>
       <div className="scrollable-content">
         <div className="input">
@@ -232,10 +236,10 @@ export const NonGroupExpenseUsersMenu = ({
               onRemove={handleSelectedUserCick}
               currentUserId={userInfo.userId}
             />
-            <SelectedGroup
+            {!fromNonGroup && <SelectedGroup
               group={nonGroupGroup.value}
               onRemove={handleSelectedGroupCick}
-            />
+            />}
 
             <AutoWidthInput
               className="input"
@@ -254,50 +258,54 @@ export const NonGroupExpenseUsersMenu = ({
 
         {category.value === "Friends"
           ? remainingSuggestedUsers.length > 0 && (
-              <div className="dropdown" ref={dropdownRef}>
-                {remainingSuggestedUsers.map((user) =>
-                  user.userId !== userInfo.userId ? (
-                    <Item
-                      key={user.userId}
-                      name={user.username}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleSuggestedUserClick(user.username);
-                      }}
-                    />
-                  ) : null
-                )}
-              </div>
-            )
-          : remainingSuggestedGroups.length > 0 && (
-              <div className="dropdown" ref={dropdownRef}>
-                {remainingSuggestedGroups.map((group) => (
+            <div className="dropdown" ref={dropdownRef}>
+              {remainingSuggestedUsers.map((user) =>
+                user.userId !== userInfo.userId ? (
                   <Item
-                    key={group.id}
-                    name={group.name}
+                    key={user.userId}
+                    name={user.username}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleSuggestedGroupClick(group.id);
+                      handleSuggestedUserClick(user.username);
                     }}
                   />
-                ))}
-              </div>
-            )}
+                ) : null
+              )}
+            </div>
+          )
+          : !fromNonGroup && remainingSuggestedGroups.length > 0 && (
+            <div className="dropdown" ref={dropdownRef}>
+              {remainingSuggestedGroups.map((group) => (
+                <Item
+                  key={group.id}
+                  name={group.name}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSuggestedGroupClick(group.id);
+                    isNonGroupExpense.value = false
+                  }}
+                />
+              ))}
+            </div>
+          )}
         <Sentinel
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
         />
-        <Sentinel
+        {!fromNonGroup && <Sentinel
           fetchNextPage={fetchNextGroupsPage}
           hasNextPage={hasNextGroupsPage}
           isFetchingNextPage={isFetchingNextGroupsPage}
-        />
+        />}
       </div>
       <div className="doneButton">
         <MyButton
           onClick={() => {
-            isPersonalFn();
+            if (!fromNonGroup) {
+              isPersonalFn();
+            }
+
             menu.value = null;
           }}
         >

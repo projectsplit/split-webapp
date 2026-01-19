@@ -107,7 +107,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (isNonGroupExpense.value) {
       const saved = localStorage.getItem("nonGroupExpenseData");
       if (saved) {
         const {
@@ -119,13 +118,11 @@ export default function Home() {
         nonGroupGroup.value = g ?? null;
         groupMembers.value = m ?? [];
         isPersonal.value = false;
+        if(nonGroupGroup.value !== null){
+          isNonGroupExpense.value = false;
+        }
       }
-    } else {
-      nonGroupUsers.value = [];
-      nonGroupGroup.value = null;
-      groupMembers.value = [];
-    }
-  }, [isNonGroupExpense.value]);
+  },[]);
 
   const isGlowing = quickActionsMenu.value === "quickActions";
 
@@ -172,8 +169,8 @@ export default function Home() {
               ) : null}
 
               {!isLoadingAllBalancesResponse &&
-              !isFetching &&
-              data?.groupCount === 0 ? (
+                !isFetching &&
+                data?.groupCount === 0 ? (
                 <OptionButton
                   onClick={() => navigate("/shared")}
                   name="Groups"
@@ -226,10 +223,10 @@ export default function Home() {
           <div
             className={`actions ${isGlowing ? "glow" : ""}`}
             onClick={() =>
-              (quickActionsMenu.value =
-                quickActionsMenu.value === "quickActions"
-                  ? null
-                  : "quickActions")
+            (quickActionsMenu.value =
+              quickActionsMenu.value === "quickActions"
+                ? null
+                : "quickActions")
             }
           >
             <AiFillThunderbolt className="thunder" />
@@ -254,6 +251,7 @@ export default function Home() {
           nonGroupUsers={nonGroupUsers}
           nonGroupMenu={nonGroupExpenseMenu}
           nonGroupGroup={nonGroupGroup}
+          fromHome={true}
         />
       )}
       {quickActionsMenu.value === "newTransfer" && (
@@ -283,12 +281,13 @@ export default function Home() {
         groupMembers={groupMembers}
         nonGroupGroup={nonGroupGroup}
         isNonGroupExpense={isNonGroupExpense}
+        fromNonGroup={false}
       />
       <NonGroupTransferAnimation
         nonGroupTransferMenu={nonGroupTransferMenu}
         nonGroupGroup={nonGroupGroup}
         groupMembers={groupMembers}
-       isNonGroupTransfer ={isNonGroupTransfer}
+        isNonGroupTransfer={isNonGroupTransfer}
       />
     </StyledHomepage>
   );

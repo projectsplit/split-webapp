@@ -10,7 +10,7 @@ export default function RemoveWarning({
   message,
   onConfirm,
   isLoading,
-}: RemoveWarningProps) {
+  }: RemoveWarningProps) {
   return (
     <StyledRemoveWarning>
       <div className="headerSeparator">

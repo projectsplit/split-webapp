@@ -82,7 +82,7 @@ const Text = memo(
       prevProps.description === nextProps.description &&
       prevProps.selectedCount === nextProps.selectedCount &&
       prevProps.isEquallySplit === nextProps.isEquallySplit &&
-      prevProps.error === nextProps.error&&
+      prevProps.error === nextProps.error &&
       prevProps.selectedMembers[0]?.name === nextProps.selectedMembers[0]?.name
     );
   }

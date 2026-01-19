@@ -29,11 +29,15 @@ import {
   Member,
   Guest,
   User,
+  GroupPayment,
+  GroupShare,
+  ExpenseType,
+  GroupTransaction,
+  NonGroupTransaction,
 } from "./types";
 import { ReadonlySignal, Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
 import {
-  BeautifulMentionsItem,
   BeautifulMentionsItemData,
   BeautifulMentionsMenuProps,
 } from "lexical-beautiful-mentions";
@@ -43,8 +47,8 @@ import {
   InfiniteQueryObserverResult,
   UseMutateFunction,
 } from "@tanstack/react-query";
-import { NavigateFunction } from "react-router-dom";
-import { AxiosError } from "axios";
+import { CategoryKey } from "./components/ExpenseForm/formStore/formStoreTypes";
+
 
 export interface ExpenseProps {
   timeZoneId: string;
@@ -65,11 +69,10 @@ export interface MapsInfoBoxProps {
 export interface LabelProps {
   backgroundColor: string;
 }
+
+
 export interface MembersInfoBoxProps {
-  transactions: {
-    memberId: string;
-    amount: number;
-  }[];
+  transactions: GroupTransaction[] | NonGroupTransaction[]|undefined;
   areShares: boolean;
   currency: string;
   members: TruncatedMember[];
@@ -77,11 +80,12 @@ export interface MembersInfoBoxProps {
 }
 
 export interface DetailedExpenseProps {
+  expenseType: ExpenseType;
   timeZoneId: string;
   timeZoneCoordinates: Coordinates;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  payments: Payment[];
-  shares: Share[];
+  payments?: GroupPayment[] | Payment[];
+  shares?: GroupShare[]   | Share[];
   amount: number;
   currency: string;
   occurred: string;
@@ -98,7 +102,7 @@ export interface DetailedExpenseProps {
   members: TruncatedMember[];
   errorMessage: Signal<string>;
   userMemberId: string;
-  group: Group;
+  group?: Group;
 }
 
 export interface DetailedTransferProps {
@@ -139,22 +143,22 @@ export interface DateTimePickerProps {
 
 export interface DateTimeProps {
   selectedDateTime: string;
-  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedDateTime: (value: string | ((prev: string) => string)) => void;
   timeZoneId: string;
   isEdit: boolean;
   withLexicalContext?: boolean;
   category: Signal<string>;
   isDateShowing: Signal<boolean>;
-  setShowPicker: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowPicker: (value: boolean) => void;
   showPicker: boolean;
 }
 
 export interface DateDisplayProps {
   timeZoneId: string;
   selectedDateTime: string;
-  setTime: React.Dispatch<React.SetStateAction<string>>;
+  setTime: (time: string) => void;
   isDateShowing: Signal<boolean>;
-  setShowPicker: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowPicker: (value: boolean) => void;
 }
 
 export interface MemberPickerProps {
@@ -335,18 +339,25 @@ export interface CurrencyOptionsAnimationProps {
 
 export interface LocationPickerProps {
   isMapOpen: Signal<boolean>;
-  location: Signal<GeoLocation | undefined>;
+  location: GeoLocation | undefined;
   timeZoneCoordinates: Coordinates;
+  setLocation: (location: GeoLocation | undefined) => void
+  isCreateExpense: boolean;
+  setDescriptionError: (error: string) => void;
 }
 
 export interface LocationDisplayProps {
-  location: Signal<GeoLocation | undefined>;
+  location:GeoLocation | undefined;
   isMapOpen: Signal<boolean>;
+  setLocation: (location: GeoLocation | undefined) => void
 }
 export interface PlacePickerProps {
-  location: Signal<GeoLocation | undefined>;
+  location: GeoLocation | undefined;
   isMapOpen: Signal<boolean>;
   defaultCoordinates: Coordinates;
+  setLocation: (location: GeoLocation | undefined) => void
+  isCreateExpense: boolean;
+  setDescriptionError: (error: string) => void;
 }
 
 export interface PlacePickerAnimationProps extends PlacePickerProps {}
@@ -357,14 +368,14 @@ export interface TimeZoneOptionsAnimationProps {
 }
 export interface LabelPickerProps {
   labels: Label[];
-  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
+  setLabels: (labels: Label[]) => void;
   groupId?: string;
 }
 
 export interface LabelMenuProps {
   labelMenuIsOpen: Signal<boolean>;
   labels: Label[];
-  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
+  setLabels: (labels: Label[]) => void
   groupId?: string;
 }
 
@@ -443,6 +454,7 @@ export interface NewExpenseAnimationProps {
   currency: string;
   isnonGroupExpense?: Signal<boolean>;
   nonGroupUsers: Signal<User[]>;
+  nonGroupMenu?: Signal<string | null>;
 }
 
 export interface NewTransferAnimationProps {
@@ -453,6 +465,16 @@ export interface NewTransferAnimationProps {
   currency: string;
   groupId?: string;
   isnonGroupTransfer?: Signal<boolean>;
+  nonGroupMenu?: Signal<{
+    attribute: string;
+    menu: string | null;
+    senderId: string;
+    senderName: string;
+    receiverId: string;
+    receiverName: string;
+  }>;
+  nonGroupGroup?: Signal<Group | null>;
+  fromHome?: boolean;
 }
 
 export interface ExpenseFormProps {
@@ -471,6 +493,7 @@ export interface ExpenseFormProps {
   currency: string;
   nonGroupMenu?: Signal<string | null>;
   nonGroupGroup?: Signal<Group | null>;
+  fromHome?: boolean;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
@@ -495,6 +518,7 @@ export interface TransferFormProps {
     receiverId: string;
     receiverName: string;
   }>;
+  fromHome?: boolean;
 }
 
 export interface GroupQuickActionsAnimationProps extends MenuProps {}
@@ -517,6 +541,7 @@ export interface NonGroupExpenseUsersAnimationProps extends MenuProps {
   groupMembers: Signal<(Guest | Member)[]>;
   nonGroupGroup: Signal<Group | null>;
   isNonGroupExpense: Signal<boolean>;
+  fromNonGroup: boolean;
 }
 
 export interface NonGroupTransferAnimationProps {
@@ -553,6 +578,7 @@ export interface NonGroupUsersProps extends MenuProps {
   groupMembers: Signal<(Guest | Member)[]>;
   nonGroupGroup: Signal<Group | null>;
   isNonGroupExpense: Signal<boolean>;
+  fromNonGroup: boolean;
 }
 export interface LocationPickerAnimationProps extends MenuProps {
   location: GeoLocation | undefined;
@@ -913,7 +939,7 @@ export interface GroupErrorProps {
 }
 
 export interface NameAndAmountsProps {
-  category: Signal<String>;
+  category: Signal<string>;
   m: PickerMember;
   onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
   currency: string;
@@ -1272,7 +1298,7 @@ export interface RevokeAccessItemProps {
 
 export interface LabelsDisplayProps {
   labels: Label[];
-  setLabels: React.Dispatch<React.SetStateAction<Label[]>>;
+  setLabels: (labels: Label[]) => void;
   labelMenuIsOpen: Signal<boolean>;
 }
 

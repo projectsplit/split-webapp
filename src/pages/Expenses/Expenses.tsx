@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Expense from "../../components/Expense/Expense";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ExpenseParsedFilters,
   ExpenseResponseItem,
   Group,
   UserInfo,
 } from "../../types";
-import { getGroupExpenses } from "../../api/services/api";
+
 import { useOutletContext } from "react-router-dom";
 import { StyledExpenses } from "./Expenses.styled";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
@@ -29,6 +29,9 @@ import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimation
 import Spinner from "../../components/Spinner/Spinner";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { renderExpenseFilterPills } from "../../helpers/renderExpenseFilterPills";
+import useGetGroupExpenses from "../../api/services/useGetGroupExpenses";
+import { getExpenseType, isGroupExpense, isNonGroupExpense } from "../../helpers/getExpenseType";
+import { getFirst } from "../../helpers/getFirst";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -63,27 +66,11 @@ const Expenses = () => {
     Object.keys(groupTotalsByCurrency).length > 1;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useInfiniteQuery({
-      queryKey: [
-        "groupExpenses",
-        group?.id,
-        pageSize,
-        expenseParsedFilters.value,
-        timeZoneId,
-      ],
-      queryFn: ({ pageParam: next }) =>
-        getGroupExpenses(
-          group?.id!,
-          pageSize,
-          expenseParsedFilters.value,
-          next
-        ),
-      getNextPageParam: (lastPage) => lastPage?.next || undefined,
-      initialPageParam: "",
-    });
+    useGetGroupExpenses(group, expenseParsedFilters, pageSize, timeZoneId)
 
   const expenses = data?.pages.flatMap((p) => p.expenses);
-
+  const expenseType = getExpenseType(getFirst(expenses));
+  
   useEffect(() => {
     const expenseFilters = localStorage.getItem("expenseFilter");
     if (expenseFilters) {
@@ -138,27 +125,30 @@ const Expenses = () => {
     (expenseParsedFilters.value.payersIds !== undefined &&
       expenseParsedFilters.value.payersIds.length > 0);
 
+  const getUserAmount = (e: ExpenseResponseItem) => {
+    if (isGroupExpense(e)) {
+      return e.shares.find((x) => x.memberId === userMemberId)?.amount ?? 0;
+    }
+    if (isNonGroupExpense(e)) {
+      return e.shares.find((x) => x.userId === userInfo.userId)?.amount ?? 0;
+    }
+    return e.amount;
+  };
+
   return (
     <StyledExpenses>
       {!expenses || expenses.length === 0 ? (
         hasAnySearchParams ? (
           <div className="noFilteredData">
             <div className="pills">
-              {" "}
-              {renderExpenseFilterPills(
-                expenseParsedFilters,
-                group,
-                queryClient
-              )}
+              {renderExpenseFilterPills(expenseParsedFilters, group, queryClient)}
             </div>
             <div className="textAndIcon">
-              <span className="text">
-                No expenses found. Have a go and refine your search!{" "}
-              </span>
+              <span className="text">No expenses found. Have a go and refine your search!</span>
               <span className="emoji">🧐</span>
               <FaMagnifyingGlass className="icon" />
             </div>
-            <div/>
+            <div />
           </div>
         ) : (
           <div className="noData">
@@ -175,16 +165,11 @@ const Expenses = () => {
           ) : (
             <div className="filtersAndBars">
               <div className="pills">
-                {" "}
-                {renderExpenseFilterPills(
-                  expenseParsedFilters,
-                  group,
-                  queryClient
-                )}
+                {renderExpenseFilterPills(expenseParsedFilters, group, queryClient)}
               </div>
 
               <BarsWithLegends
-                bar1Legend="Group Total"
+                bar1Legend={expenseType === "Group" ? "Group Total" :expenseType === "NonGroup" ? "Total" : ""}
                 bar2Legend="Your Share"
                 bar1Total={totalExpense || 0}
                 bar2Total={userExpense || 0}
@@ -199,42 +184,45 @@ const Expenses = () => {
               />
             </div>
           )}
-          {Object.entries(
-            groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))
-          ).map(([date, expenses]) => (
-            <div key={date} className="same-date-container">
-              <div className="date-only">{date}</div>
-              <div className="expenses">
-                {expenses.map((e) => (
-                  <div className="expense" key={e.id}>
-                    <Expense
-                      amount={e.amount}
-                      currency={e.currency}
-                      occurred={e.occurred}
-                      description={e.description}
-                      location={e.location}
-                      timeZoneId={timeZoneId}
-                      onClick={() => (selectedExpense.value = e)}
-                      userAmount={
-                        e.shares.find((x) => x.memberId === userMemberId)
-                          ?.amount ?? 0
-                      }
-                      labels={e.labels}
-                    />
+
+          {Object.entries(groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))).map(
+            ([date, expenses]) => {
+              return (
+                <div key={date} className="same-date-container">
+                  <div className="date-only">{date}</div>
+                  <div className="expenses">
+                    {expenses.map((e) => (
+                      <div className="expense" key={e.id}>
+                        <Expense
+                          amount={e.amount}
+                          currency={e.currency}
+                          occurred={e.occurred}
+                          description={e.description}
+                          location={e.location}
+                          timeZoneId={timeZoneId}
+                          onClick={() => (selectedExpense.value = e)}
+                          userAmount={getUserAmount(e)}
+                          labels={e.labels}
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-          ))}
+                </div>
+              );
+            }
+          )}
         </>
       )}
+
       <Sentinel
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
       />
+
       {selectedExpense.value && (
         <DetailedExpense
+          expenseType={expenseType}
           selectedExpense={selectedExpense}
           amount={selectedExpense.value.amount}
           currency={selectedExpense.value.currency}
@@ -252,14 +240,12 @@ const Expenses = () => {
           errorMessage={errorMessage}
           userMemberId={userMemberId || ""}
           group={group}
+
         />
       )}
+
       <MenuAnimationBackground menu={menu} />
-      <ErrorMenuAnimation
-        menu={menu}
-        message={errorMessage.value}
-        type="expense"
-      />
+      <ErrorMenuAnimation menu={menu} message={errorMessage.value} type="expense" />
       <GroupTotalsByCurrencyAnimation
         menu={menu}
         bar1Legend="Group Total"

@@ -11,9 +11,10 @@ import MapsInfoBox from "./MapsInfoBox/MapsInfoBox";
 import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
 import { signal, useSignal } from "@preact/signals-react";
 import DeleteExpenseAnimation from "../Menus/MenuAnimations/DeleteExpenseAnimation";
-import { FormExpense, GeoLocation } from "../../types";
+import { FormExpense, GeoLocation, User } from "../../types";
 import EditExpenseAnimation from "../Menus/MenuAnimations/EditExpenseAnimation";
 import labelColors from "../../labelColors";
+import { buildFormExpense, getNonGroupUsers } from "./utils";
 
 export default function DetailedExpense({
   selectedExpense,
@@ -33,6 +34,7 @@ export default function DetailedExpense({
   errorMessage,
   userMemberId,
   group,
+  expenseType,
 }: DetailedExpenseProps) {
   const googleUrl = "https://www.google.com/maps/search/?api=1&query=";
   // const theme = {
@@ -63,28 +65,8 @@ export default function DetailedExpense({
   };
   const googleMapsUrl = googleMapsUrlBuilder(location);
 
-  const expenseToEdit: FormExpense | undefined = selectedExpense.value
-    ? {
-      id: selectedExpense.value.id,
-      amount: selectedExpense.value.amount.toString(),
-      description: selectedExpense.value.description,
-      currency: selectedExpense.value.currency,
-      groupId: group.id,
-      labels: selectedExpense.value.labels,
-      participants: selectedExpense.value.shares.map((share) => ({
-        memberId: share.memberId,
-        participationAmount: share.amount.toString(),
-      })),
-      payers: selectedExpense.value.payments.map((payment) => ({
-        memberId: payment.memberId,
-        paymentAmount: payment.amount.toString(),
-      })),
-      location: selectedExpense.value.location,
-      expenseTime: new Date(selectedExpense.value.occurred),
-      creationTime: new Date(selectedExpense.value.created),
-      lastUpdateTime: new Date(selectedExpense.value.updated),
-    }
-    : undefined;
+  const expenseToEdit = buildFormExpense(selectedExpense, expenseType, group);
+
 
   return (
     <StyledDetailedExpense>
@@ -141,7 +123,7 @@ export default function DetailedExpense({
       <div className="editDeleteButtons">
         <div className="dummyDiv" />
 
-        {!group.isArchived ? (
+        {group && !group.isArchived ? (
           <div className="buttons">
             <div className="editButton">
               <MyButton onClick={() => (menu.value = "editExpense")}>
@@ -213,15 +195,15 @@ export default function DetailedExpense({
       />
       <EditExpenseAnimation
         expense={expenseToEdit || null}
-        groupId={group.id}
+        groupId={group?.id}
         timeZoneId={timeZoneId}
         menu={menu}
         selectedExpense={selectedExpense}
         timeZoneCoordinates={timeZoneCoordinates}
-        currency={group.currency}
-        groupMembers={signal([...group.members,...group.guests])}
-        nonGroupUsers={signal([])}//these are group expenses. Will have to differentiate between group x non group x personal (all that refer to user)
-        isPersonal={signal(false)}
+        currency={currency}
+        groupMembers={group ? signal([...group.members, ...group.guests]) : signal([])}
+        nonGroupUsers={signal(getNonGroupUsers(expenseType, shares, payments, members))}
+        isPersonal={expenseType === "Personal" ? signal(true) : signal(false)}
 
       />
     </StyledDetailedExpense>

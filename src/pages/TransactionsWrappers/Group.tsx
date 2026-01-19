@@ -18,9 +18,8 @@ import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
 import GroupQuickActionsAnimation from "../../components/Menus/MenuAnimations/MenuWithOptionsToAddAnimation";
-import AddNewUserAnimation from "../../components/Menus/MenuAnimations/AddNewUserAnimation";
 import useGroup from "../../api/services/useGroup";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTransferAnimation";
 import GroupOptions from "../Groups/GroupOptions/GroupOptions";
 import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
@@ -194,8 +193,7 @@ export default function Group() {
               onClick={() => {
                 if (group && !group.isArchived) {
                   menu.value = "quickActions";
-                } else {
-                }
+                } 
               }}
             />
           </div>

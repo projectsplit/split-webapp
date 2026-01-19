@@ -1,6 +1,7 @@
 import { CSSTransition } from "react-transition-group";
 import { NewExpenseAnimationProps } from "../../../interfaces";
 import EditExpenseForm from "../../EditExpenseForm/EditExpenseForm";
+import { useRef } from "react";
 
 
 export default function EditExpenseAnimation({
@@ -16,8 +17,9 @@ export default function EditExpenseAnimation({
   isnonGroupExpense,
   nonGroupUsers
 }: NewExpenseAnimationProps) {
+  const nodeRef = useRef(null);
   return (
-    <CSSTransition in={menu.value === "editExpense"} timeout={0} unmountOnExit>
+    <CSSTransition in={menu.value === "editExpense"} timeout={0} unmountOnExit nodeRef={nodeRef}>
       <EditExpenseForm
         groupId={groupId}
         expense={expense}
@@ -32,7 +34,7 @@ export default function EditExpenseAnimation({
         currency={currency}
         isnonGroupExpense={isnonGroupExpense}
         nonGroupUsers={nonGroupUsers}
-      
+
       />
     </CSSTransition>
   );

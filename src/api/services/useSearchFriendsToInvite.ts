@@ -9,11 +9,9 @@ export const useSearchFriendsToInvite = (
   groupId: string,
   keyword: string,
   pageSize: number,
-  isNonGroup?: boolean,
   guestId?: string
 ) => {
 
-  if (!isNonGroup) return undefined;
   const queryKey = ["searchUsersToInvite", groupId, keyword, pageSize];
   const queryClient = useQueryClient();
 

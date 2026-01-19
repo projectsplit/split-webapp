@@ -84,12 +84,12 @@ export type GroupedTransaction = {
 
 export type FormExpense = {
   id: string;
-  groupId: string;
+  groupId?: string;
   amount: string;
   currency: string;
   description: string;
-  payers: Payer[];
-  participants: Participant[];
+  payers?: Payer[] | NonGroupPayer[];
+  participants?: Participant[] | NonGroupParticipant[];
   expenseTime: Date;
   labels: {
     id: string;
@@ -101,24 +101,73 @@ export type FormExpense = {
   location: GeoLocation | undefined;
 };
 
+export type FormGroupExpense = FormExpense & {
+  groupId: string;
+  payers: Payer[];
+  participants: Participant[];
+};
+
+export type FormNonGroupExpense = FormExpense & {
+  payers: NonGroupPayer[];
+  participants: NonGroupParticipant[];
+};
+
+export type FormPersonalExpense = FormExpense & {
+  groupId?: never;
+  payments?: never;
+  shares?: never;
+};
+
+export type ExpenseType =
+  | "Group"
+  | "NonGroup"
+  | "Personal"
+  | "undefined expense";
+
+export type GroupTransaction = {
+  memberId: string;
+  amount: number;
+};
+export type NonGroupTransaction = {
+  userId: string;
+  amount: number;
+};
+
 export type ExpenseResponseItem = {
   id: string;
   created: string;
   updated: string;
-  groupId: string;
+  occurred: string;
   creatorId: string;
   amount: number;
-  occurred: string;
   description: string;
   currency: string;
-  payments: Payment[];
-  shares: Share[];
+  location?: GeoLocation;
+  groupId?: string;
+  payments?: GroupPayment[] | Payment[];
+  shares?: GroupShare[] | Share[];
   labels: {
     id: string;
     text: string;
     color: string;
   }[];
-  location: GeoLocation | undefined;
+};
+
+export type GroupExpenseResponseItem = ExpenseResponseItem & {
+  groupId: string;
+  payments: GroupPayment[];
+  shares: GroupShare[];
+};
+
+export type NonGroupExpenseResponseItem = ExpenseResponseItem & {
+  payments: Payment[];
+  shares: Share[];
+};
+
+export type PersonalExpenseResponseItem = ExpenseResponseItem & {
+  groupId?: never;
+  payments?: never;
+  shares?: never;
 };
 
 export type TransferResponseItem = {
@@ -135,13 +184,22 @@ export type TransferResponseItem = {
   receiverId: string;
 };
 
-export type Share = {
+export type GroupShare = {
   memberId: string;
   amount: number;
 };
 
-export type Payment = {
+export type GroupPayment = {
   memberId: string;
+  amount: number;
+};
+export type Share = {
+  userId: string;
+  amount: number;
+};
+
+export type Payment = {
+  userId: string;
   amount: number;
 };
 
@@ -228,37 +286,53 @@ export type Label = {
   color: string;
 };
 
-export type CreateExpenseRequest = {
-  amount: number;
-  groupId: string;
-  currency: string;
-  payments: {
-    memberId: string;
-    amount: number;
-  }[];
-  shares: {
-    memberId: string;
-    amount: number;
-  }[];
-  description: string;
-  location: GeoLocation | null;
-  occurred: string;
-  labels: {
-    text: string;
-    color: string;
-  }[];
-};
+// export type CreateExpenseRequest = {
+//   amount: number;
+//   currency: string;
+//   description: string;
+//   location: GeoLocation | null;
+//   occurred: string;
+//   labels: {
+//     text: string;
+//     color: string;
+//   }[];
+// };
+
+// export type CreateGroupExpenseRequest = CreateExpenseRequest & {
+//   groupId: string;
+//   payments: {
+//     memberId: string;
+//     amount: number;
+//   }[];
+//   shares: {
+//     memberId: string;
+//     amount: number;
+//   }[];
+// };
+
+// export type CreateNonGroupExpenseRequest = CreateExpenseRequest & {
+//   payments: {
+//     userId: string;
+//     amount: number;
+//   }[];
+//   shares: {
+//     userId: string;
+//     amount: number;
+//   }[];
+// };
 
 export type CreateEditExpenseRequest = {
   expenseId: string;
   amount: number;
   currency: string;
   payments: {
-    memberId: string;
+    userId?: string;
+    memberId?: string;
     amount: number;
   }[];
   shares: {
-    memberId: string;
+    userId?: string;
+    memberId?: string;
     amount: number;
   }[];
   description: string;
@@ -276,11 +350,13 @@ export type ExpenseRequest = {
   amount: number;
   currency: string;
   payments: {
-    memberId: string;
+    userId?: string;
+    memberId?: string;
     amount: number;
   }[];
   shares: {
-    memberId: string;
+    userId?: string;
+    memberId?: string;
     amount: number;
   }[];
   description: string;
@@ -392,6 +468,14 @@ export type Participant = {
 export type Payer = {
   memberId: string;
   paymentAmount: string;
+};
+export type NonGroupPayer = {
+  userId: string;
+  paymentAmount: string;
+};
+export type NonGroupParticipant = {
+  userId: string;
+  participationAmount: string;
 };
 
 export type Transfer = {
@@ -705,6 +789,5 @@ export type SpendingChartsResponseItem = {
   from: Date;
   to: Date;
 };
-
 
 export type Variant = "non" | "active" | "archived";
