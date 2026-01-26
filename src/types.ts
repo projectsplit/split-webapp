@@ -157,17 +157,20 @@ export type GroupExpenseResponseItem = ExpenseResponseItem & {
   groupId: string;
   payments: GroupPayment[];
   shares: GroupShare[];
+  next: string | null
 };
 
 export type NonGroupExpenseResponseItem = ExpenseResponseItem & {
   payments: Payment[];
   shares: Share[];
+  next: string | null
 };
 
 export type PersonalExpenseResponseItem = ExpenseResponseItem & {
   groupId?: never;
   payments?: never;
   shares?: never;
+  next: string | null
 };
 
 export type TransferResponseItem = {
@@ -791,3 +794,5 @@ export type SpendingChartsResponseItem = {
 };
 
 export type Variant = "non" | "active" | "archived";
+
+export type TransactionType = "Group" | "NonGroup" | "Personal" 

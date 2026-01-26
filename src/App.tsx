@@ -51,7 +51,7 @@ const App = () => {
 
           <Route path="/shared/nongroup" element={<NonGroup />}>
             <Route index element={<RedirectToNonGroupExpenses />} />
-            <Route path="expenses" element={<div style={{ overflowY: "auto", height: "100%" }}> </div>} />
+            <Route path="expenses" element={<Expenses />} />
             <Route path="transfers" element={<div style={{ overflowY: "auto", height: "100%" }}></div>} />
             <Route path="debts" element={<div style={{ overflowY: "auto", height: "100%" }}></div>} />
             <Route path="*" element={<RedirectToNonGroupExpenses />} />

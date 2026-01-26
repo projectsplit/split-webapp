@@ -11,6 +11,7 @@ import { signal, Signal, useSignal } from "@preact/signals-react";
 import {
   ExpenseParsedFilters,
   ExpenseResponseItem,
+  TransactionType,
   TransferParsedFilters,
   UserInfo,
 } from "../../types";
@@ -45,6 +46,7 @@ export default function Group() {
   const path = location.pathname.split("/").pop() || "";
   const { groupid } = useParams();
   const navigate = useNavigate();
+  const transactionType: TransactionType = 'Group' as const
 
   const {
     userInfo,
@@ -133,6 +135,7 @@ export default function Group() {
               showBottomBar,
               expenseParsedFilters,
               transferParsedFilters,
+              transactionType
             }}
           />
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}
@@ -193,7 +196,7 @@ export default function Group() {
               onClick={() => {
                 if (group && !group.isArchived) {
                   menu.value = "quickActions";
-                } 
+                }
               }}
             />
           </div>

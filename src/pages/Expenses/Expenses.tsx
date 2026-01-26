@@ -5,6 +5,7 @@ import {
   ExpenseParsedFilters,
   ExpenseResponseItem,
   Group,
+  TransactionType,
   UserInfo,
 } from "../../types";
 
@@ -38,12 +39,13 @@ const Expenses = () => {
   const errorMessage = useSignal<string>("");
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
   const queryClient = useQueryClient();
-  const { userInfo, group, showBottomBar, expenseParsedFilters } =
+  const { userInfo, group, showBottomBar, expenseParsedFilters, transactionType } =
     useOutletContext<{
       userInfo: UserInfo;
       group: Group;
       showBottomBar: Signal<boolean>;
       expenseParsedFilters: Signal<ExpenseParsedFilters>;
+      transactionType: TransactionType
     }>();
 
   const timeZoneId = userInfo?.timeZone;
@@ -70,7 +72,7 @@ const Expenses = () => {
 
   const expenses = data?.pages.flatMap((p) => p.expenses);
   const expenseType = getExpenseType(getFirst(expenses));
-  
+
   useEffect(() => {
     const expenseFilters = localStorage.getItem("expenseFilter");
     if (expenseFilters) {
@@ -169,7 +171,7 @@ const Expenses = () => {
               </div>
 
               <BarsWithLegends
-                bar1Legend={expenseType === "Group" ? "Group Total" :expenseType === "NonGroup" ? "Total" : ""}
+                bar1Legend={expenseType === "Group" ? "Group Total" : expenseType === "NonGroup" ? "Total" : ""}
                 bar2Legend="Your Share"
                 bar1Total={totalExpense || 0}
                 bar2Total={userExpense || 0}

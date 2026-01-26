@@ -1,7 +1,7 @@
 import { signal, Signal, useSignal } from '@preact/signals-react';
 import React, { useEffect } from 'react'
 import { Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
-import { ExpenseParsedFilters, ExpenseResponseItem, TransferParsedFilters, User, UserInfo } from '../../types';
+import { ExpenseParsedFilters, ExpenseResponseItem, TransactionType, TransferParsedFilters, User, UserInfo } from '../../types';
 import { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import Spinner from '../../components/Spinner/Spinner';
 import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
@@ -54,7 +54,7 @@ export default function NonGroup() {
 
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
-
+  const transactionType: TransactionType = 'NonGroup' as const
 
   useEffect(() => {
     topMenuTitle.value = 'Non Group Transactions';
@@ -98,6 +98,8 @@ export default function NonGroup() {
             showBottomBar,
             expenseParsedFilters,
             transferParsedFilters,
+            transactionType
+
           }}
         />
 
