@@ -11,7 +11,7 @@ export default function MembersInfoBox({
   transactions,
   areShares,
   currency,
-  members,
+  participants,
   userMemberId,
 }: MembersInfoBoxProps) {
   const [hide, setHide] = React.useState<boolean>(false);
@@ -75,7 +75,7 @@ export default function MembersInfoBox({
                     {id === userMemberId ? (
                       <span className="you">You</span>
                     ) : (
-                      members.find((x) => x.id === id)?.name
+                      participants.find((x) => x.id === id)?.name
                     )}
                   </span>
 

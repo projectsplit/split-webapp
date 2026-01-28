@@ -75,7 +75,7 @@ export interface MembersInfoBoxProps {
   transactions: GroupTransaction[] | NonGroupTransaction[]|undefined;
   areShares: boolean;
   currency: string;
-  members: TruncatedMember[];
+  participants: TruncatedMember[];
   userMemberId: string;
 }
 
@@ -99,7 +99,7 @@ export interface DetailedExpenseProps {
   location: GeoLocation | undefined;
   selectedExpense: Signal<ExpenseResponseItem | null>;
   creator: string;
-  members: TruncatedMember[];
+  participants: TruncatedMember[];
   errorMessage: Signal<string>;
   userMemberId: string;
   group?: Group;

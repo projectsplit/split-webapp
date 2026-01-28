@@ -72,7 +72,6 @@ export const getNonGroupUsers = (
 ): User[] => {
   if (expenseType !== "NonGroup") return [];
   const uniqueUserIds = new Set<string>();
-
   // Helper to safely add IDs
   const addIds = (
     transactions:
@@ -91,7 +90,7 @@ export const getNonGroupUsers = (
 
   addIds(shares);
   addIds(payments);
-
+  console.log(uniqueUserIds, members)
   const users: User[] = [];
   uniqueUserIds.forEach((id) => {
     const member = members.find((m) => m.id === id);
@@ -99,5 +98,6 @@ export const getNonGroupUsers = (
       users.push({ userId: id, username: member.name });
     }
   });
+
   return users;
 };

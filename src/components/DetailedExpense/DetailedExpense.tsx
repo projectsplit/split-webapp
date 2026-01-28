@@ -30,7 +30,7 @@ export default function DetailedExpense({
   timeZoneCoordinates,
   creator,
   created,
-  members,
+  participants,
   errorMessage,
   userMemberId,
   group,
@@ -66,7 +66,6 @@ export default function DetailedExpense({
   const googleMapsUrl = googleMapsUrlBuilder(location);
 
   const expenseToEdit = buildFormExpense(selectedExpense, expenseType, group);
-
 
   return (
     <StyledDetailedExpense>
@@ -108,14 +107,14 @@ export default function DetailedExpense({
         transactions={shares}
         areShares={true}
         currency={currency}
-        members={members}
+        participants={participants}
         userMemberId={userMemberId}
       />
       <MembersInfoBox
         transactions={payments}
         areShares={false}
         currency={currency}
-        members={members}
+        participants={participants}
         userMemberId={userMemberId}
       />
       <MapsInfoBox location={location} googleMapsUrl={googleMapsUrl} />
@@ -150,7 +149,7 @@ export default function DetailedExpense({
         <div className="dummyDiv" />
       </div>
       <div className="createdBy">
-        Created by {members.find((x) => x.id === creator)?.name}{" "}
+        Created by {participants.find((x) => x.id === creator)?.name}{" "}
         {DateOnly(occurred, timeZoneId) === "Today" ||
           DateOnly(occurred, timeZoneId) === "Yesterday"
           ? DateOnly(created, timeZoneId)
@@ -202,7 +201,7 @@ export default function DetailedExpense({
         timeZoneCoordinates={timeZoneCoordinates}
         currency={currency}
         groupMembers={group ? signal([...group.members, ...group.guests]) : signal([])}
-        nonGroupUsers={signal(getNonGroupUsers(expenseType, shares, payments, members))}
+        nonGroupUsers={signal(getNonGroupUsers(expenseType, shares, payments, participants))}
         isPersonal={expenseType === "Personal" ? signal(true) : signal(false)}
 
       />

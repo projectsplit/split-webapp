@@ -63,15 +63,7 @@ export type TransferItem = {
   receiverName: string;
 };
 
-export type GetGroupExpensesResponse = {
-  expenses: ExpenseResponseItem[];
-  next: string | null;
-};
 
-export type GetGroupTransfersResponse = {
-  transfers: TransferResponseItem[];
-  next: string | null;
-};
 
 export type GroupedTransaction = {
   totalAmount: currency;
@@ -153,6 +145,16 @@ export type ExpenseResponseItem = {
   }[];
 };
 
+export type GetExpensesResponse = {
+  expenses: ExpenseResponseItem[];
+  next: string | null;
+};
+
+export type GetGroupTransfersResponse = {
+  transfers: TransferResponseItem[];
+  next: string | null;
+};
+
 export type GroupExpenseResponseItem = ExpenseResponseItem & {
   groupId: string;
   payments: GroupPayment[];
@@ -196,13 +198,16 @@ export type GroupPayment = {
   memberId: string;
   amount: number;
 };
+
 export type Share = {
   userId: string;
+  userName: string;
   amount: number;
 };
 
 export type Payment = {
   userId: string;
+  userName: string;
   amount: number;
 };
 

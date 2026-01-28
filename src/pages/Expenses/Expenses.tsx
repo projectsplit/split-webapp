@@ -16,7 +16,6 @@ import { CiReceipt } from "react-icons/ci";
 import { Signal, useSignal } from "@preact/signals-react";
 import DetailedExpense from "../../components/DetailedExpense/DetailedExpense";
 import { DateOnly } from "../../helpers/timeHelpers";
-import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
@@ -30,48 +29,63 @@ import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimation
 import Spinner from "../../components/Spinner/Spinner";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { renderExpenseFilterPills } from "../../helpers/renderExpenseFilterPills";
-import useGetGroupExpenses from "../../api/services/useGetGroupExpenses";
-import { getExpenseType, isGroupExpense, isNonGroupExpense } from "../../helpers/getExpenseType";
-import { getFirst } from "../../helpers/getFirst";
+import {
+  isGroupExpense,
+  isNonGroupExpense,
+} from "../../helpers/getExpenseType";
+import useGetExpenses from "@/api/services/useGetExpenses";
+import getAllParticipants from "@/helpers/getAllParticipants";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const errorMessage = useSignal<string>("");
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
   const queryClient = useQueryClient();
-  const { userInfo, group, showBottomBar, expenseParsedFilters, transactionType } =
-    useOutletContext<{
-      userInfo: UserInfo;
-      group: Group;
-      showBottomBar: Signal<boolean>;
-      expenseParsedFilters: Signal<ExpenseParsedFilters>;
-      transactionType: TransactionType
-    }>();
+  const {
+    userInfo,
+    group,
+    showBottomBar,
+    expenseParsedFilters,
+    transactionType,
+  } = useOutletContext<{
+    userInfo: UserInfo;
+    group: Group;
+    showBottomBar: Signal<boolean>;
+    expenseParsedFilters: Signal<ExpenseParsedFilters>;
+    transactionType: TransactionType;
+  }>();
 
   const timeZoneId = userInfo?.timeZone;
   const pageSize = 10;
-  const members = group?.members;
-  const guests = group?.guests;
-  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
-  const allParticipants = mergeMembersAndGuests(members || [], guests || []);
+  const members = group?.members;//group specific
+  const guests = group?.guests;//group specific
+  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;//group specific
 
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(group.id);
+  const params =
+    transactionType === "Group"
+      ? { transactionType: "Group" as const, group }
+      : { transactionType: transactionType };
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
+    useGetExpenses(expenseParsedFilters, pageSize, timeZoneId, params);
+
+  const expenses = data?.pages.flatMap((p) => p.expenses);
+
+  const allParticipants = getAllParticipants(expenses, transactionType, members || [], guests || []);
+
+  const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id);
   const totalSpent: Record<
     string,
     Record<string, number>
-  > = debts?.totalSpent ?? {};
+  > = debts?.totalSpent ?? {};//group specific
 
-  const groupTotalsByCurrency = getAllCurrencyTotals(totalSpent);
+  const groupTotalsByCurrency = getAllCurrencyTotals(totalSpent);//group specific
   const userTotalsByCurrency = getCurrencyValues(totalSpent, userMemberId);
   const shouldOpenMultiCurrencyTable =
     Object.keys(groupTotalsByCurrency).length > 1;
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useGetGroupExpenses(group, expenseParsedFilters, pageSize, timeZoneId)
 
-  const expenses = data?.pages.flatMap((p) => p.expenses);
-  const expenseType = getExpenseType(getFirst(expenses));
 
   useEffect(() => {
     const expenseFilters = localStorage.getItem("expenseFilter");
@@ -107,11 +121,17 @@ const Expenses = () => {
     );
   }
 
-  const totalExpense = getGroupTotalByCurrency(totalSpent, group.currency);
+  const totalExpense = getGroupTotalByCurrency(
+    totalSpent,
+    group?.currency
+  );//group specific
+
   const userExpense =
-    userMemberId && group.currency
-      ? totalSpent[userMemberId]?.[group.currency] ?? 0
-      : 0;
+    transactionType === "Group"
+      ? userMemberId && group?.currency
+        ? totalSpent[userMemberId]?.[group?.currency] ?? 0
+        : 0
+      : totalSpent[userInfo?.userId]?.[userInfo?.currency] ?? 0;
 
   const hasAnySearchParams =
     (expenseParsedFilters.value.before !== null &&
@@ -143,10 +163,16 @@ const Expenses = () => {
         hasAnySearchParams ? (
           <div className="noFilteredData">
             <div className="pills">
-              {renderExpenseFilterPills(expenseParsedFilters, group, queryClient)}
+              {renderExpenseFilterPills(
+                expenseParsedFilters,
+                group,
+                queryClient
+              )}
             </div>
             <div className="textAndIcon">
-              <span className="text">No expenses found. Have a go and refine your search!</span>
+              <span className="text">
+                No expenses found. Have a go and refine your search!
+              </span>
               <span className="emoji">🧐</span>
               <FaMagnifyingGlass className="icon" />
             </div>
@@ -167,15 +193,29 @@ const Expenses = () => {
           ) : (
             <div className="filtersAndBars">
               <div className="pills">
-                {renderExpenseFilterPills(expenseParsedFilters, group, queryClient)}
+                {renderExpenseFilterPills(
+                  expenseParsedFilters,
+                  group,
+                  queryClient
+                )}
               </div>
 
               <BarsWithLegends
-                bar1Legend={expenseType === "Group" ? "Group Total" : expenseType === "NonGroup" ? "Total" : ""}
+                bar1Legend={
+                  transactionType === "Group"
+                    ? "Group Total"
+                    : transactionType === "NonGroup"
+                      ? "Total"
+                      : ""
+                }
                 bar2Legend="Your Share"
                 bar1Total={totalExpense || 0}
                 bar2Total={userExpense || 0}
-                currency={group.currency}
+                currency={
+                  transactionType === "Group"
+                    ? group?.currency
+                    : userInfo?.currency
+                }
                 bar2Color="#e151ee"
                 bar1Color="#5183ee"
                 onClick={() => {
@@ -187,32 +227,32 @@ const Expenses = () => {
             </div>
           )}
 
-          {Object.entries(groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))).map(
-            ([date, expenses]) => {
-              return (
-                <div key={date} className="same-date-container">
-                  <div className="date-only">{date}</div>
-                  <div className="expenses">
-                    {expenses.map((e) => (
-                      <div className="expense" key={e.id}>
-                        <Expense
-                          amount={e.amount}
-                          currency={e.currency}
-                          occurred={e.occurred}
-                          description={e.description}
-                          location={e.location}
-                          timeZoneId={timeZoneId}
-                          onClick={() => (selectedExpense.value = e)}
-                          userAmount={getUserAmount(e)}
-                          labels={e.labels}
-                        />
-                      </div>
-                    ))}
-                  </div>
+          {Object.entries(
+            groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))
+          ).map(([date, expenses]) => {
+            return (
+              <div key={date} className="same-date-container">
+                <div className="date-only">{date}</div>
+                <div className="expenses">
+                  {expenses.map((e) => (
+                    <div className="expense" key={e.id}>
+                      <Expense
+                        amount={e.amount}
+                        currency={e.currency}
+                        occurred={e.occurred}
+                        description={e.description}
+                        location={e.location}
+                        timeZoneId={timeZoneId}
+                        onClick={() => (selectedExpense.value = e)}
+                        userAmount={getUserAmount(e)}
+                        labels={e.labels}
+                      />
+                    </div>
+                  ))}
                 </div>
-              );
-            }
-          )}
+              </div>
+            );
+          })}
         </>
       )}
 
@@ -224,7 +264,7 @@ const Expenses = () => {
 
       {selectedExpense.value && (
         <DetailedExpense
-          expenseType={expenseType}
+          expenseType={transactionType}
           selectedExpense={selectedExpense}
           amount={selectedExpense.value.amount}
           currency={selectedExpense.value.currency}
@@ -238,16 +278,19 @@ const Expenses = () => {
           timeZoneCoordinates={userInfo.timeZoneCoordinates}
           creator={selectedExpense.value.creatorId}
           created={selectedExpense.value.created}
-          members={allParticipants}
+          participants={allParticipants} //change
           errorMessage={errorMessage}
           userMemberId={userMemberId || ""}
           group={group}
-
         />
       )}
 
       <MenuAnimationBackground menu={menu} />
-      <ErrorMenuAnimation menu={menu} message={errorMessage.value} type="expense" />
+      <ErrorMenuAnimation
+        menu={menu}
+        message={errorMessage.value}
+        type="expense"
+      />
       <GroupTotalsByCurrencyAnimation
         menu={menu}
         bar1Legend="Group Total"

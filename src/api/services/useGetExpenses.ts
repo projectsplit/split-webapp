@@ -1,13 +1,8 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import {
   ExpenseParsedFilters,
-  GetGroupExpensesResponse,
-  GetGroupsResponse,
-  Group,
-  GroupExpenseResponseItem,
-  NonGroupExpenseResponseItem,
-  PersonalExpenseResponseItem,
-  TransactionType,
+  GetExpensesResponse,
+  Group
 } from "../../types";
 import { apiClient } from "../apiClients";
 import { AxiosResponse } from "axios";
@@ -66,7 +61,7 @@ const getExpenses = async (
   parsedFilters: ExpenseParsedFilters = {},
   queryParams: ExpenseQueryParams,
   next?: string
-): Promise<GetExpensesResponseItem> => {
+): Promise<GetExpensesResponse> => {
   const {
     participantsIds = [],
     payersIds = [],
@@ -103,17 +98,13 @@ const getExpenses = async (
   payersIds.forEach((id) => params.append("payerIds", id));
   labels.forEach((label) => params.append("labelIds", label));
 
-
-
   const response = await apiClient.get<
     void,
-    AxiosResponse<GetExpensesResponseItem>
+    AxiosResponse<GetExpensesResponse>
   >(endpoint, { params });
-
+console.log(response.data)
   return response.data;
 
 };
-
-type GetExpensesResponseItem = | GroupExpenseResponseItem | NonGroupExpenseResponseItem | PersonalExpenseResponseItem;
 
 export default useGetExpenses;

@@ -46,7 +46,7 @@ export const NonGroupExpenseUsersMenu = ({
     userInfo: UserInfo;
   }>();
 
-  const result = useSearchFriendsToInvite(
+  const result = useSearchFriendsToInvite( //TODO
     "f7637b50-e77d-4609-9e38-eb0acc9c9c51",
     debouncedKeyword,
     pageSize
