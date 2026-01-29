@@ -2,7 +2,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import {
   ExpenseParsedFilters,
   GetExpensesResponse,
-  Group
 } from "../../types";
 import { apiClient } from "../apiClients";
 import { AxiosResponse } from "axios";
@@ -10,35 +9,14 @@ import { DateTime } from "luxon";
 import { reformatDate } from "../../components/SearchTransactions/helpers/reformatDate";
 import { Signal } from "@preact/signals-react";
 
-type ExpenseQueryParams =
-  | { transactionType: "Personal" | "NonGroup"; group?: never }
-  | { transactionType: "Group"; group: Group };
-
-const getExpenseEndpoint = (params: ExpenseQueryParams): string => {
-  switch (params.transactionType) {
-    case "Group":
-      return "/expenses"; // or "/group-expenses" if you prefer clearer naming
-    case "NonGroup":
-      return "/expenses/non-group";
-    case "Personal":
-      return "/expenses/personal";
-    default:
-      // This should never happen thanks to TypeScript + exhaustive check
-      throw new Error(`Unsupported transactionType: ${(params as any).transactionType}`);
-  }
-};
-
-const useGetExpenses = (
+export const useGetNonGroupExpenses = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   pageSize: number,
   timeZoneId: string,
-  params: ExpenseQueryParams
+  enabled: boolean = true
 ) => {
-
   const queryKey = [
-    "expenses",
-    params.transactionType,
-    params.transactionType === "Group" ? params.group.id : null,
+    "nonGroupExpenses",
     pageSize,
     expenseParsedFilters.value,
     timeZoneId,
@@ -47,19 +25,18 @@ const useGetExpenses = (
   const query = useInfiniteQuery({
     queryKey: queryKey,
     queryFn: ({ pageParam: next }) =>
-      getExpenses(pageSize, expenseParsedFilters.value,
-        params, next),
+      getNonGroupExpenses(pageSize, expenseParsedFilters.value, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: "",
+    enabled,
   });
 
   return { ...query };
 };
 
-const getExpenses = async (
+const getNonGroupExpenses = async (
   pageSize: number,
   parsedFilters: ExpenseParsedFilters = {},
-  queryParams: ExpenseQueryParams,
   next?: string
 ): Promise<GetExpensesResponse> => {
   const {
@@ -71,12 +48,8 @@ const getExpenses = async (
     labels = [],
   } = parsedFilters;
 
-  const endpoint = getExpenseEndpoint(queryParams);
   const params = new URLSearchParams();
 
-  if (queryParams.transactionType === "Group") {
-    params.append("groupId", queryParams.group.id);
-  }
   params.append("pageSize", pageSize.toString());
   if (next) params.append("next", next);
   if (freeText) params.append("searchTerm", freeText);
@@ -101,10 +74,7 @@ const getExpenses = async (
   const response = await apiClient.get<
     void,
     AxiosResponse<GetExpensesResponse>
-  >(endpoint, { params });
-console.log(response.data)
+  >("/expenses/non-group", { params });
+
   return response.data;
-
 };
-
-export default useGetExpenses;

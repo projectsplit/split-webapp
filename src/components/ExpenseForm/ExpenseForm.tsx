@@ -5,8 +5,10 @@ import CurrencyOptionsAnimation from "@/components/Menus/MenuAnimations/Currency
 import InputMonetary from "@/components/InputMonetary/InputMonetary";
 import { useSignal } from "@preact/signals-react";
 import { ExpenseFormProps } from "@/interfaces";
-import { useExpense } from "@/api/services/useExpense";
+
 import { useEditExpense } from "@/api/services/useEditExpense";
+import { useCreateGroupExpense } from "@/api/services/useCreateGroupExpense";
+import { useCreateNonGroupExpense } from "@/api/services/useCreateNonGroupExpense";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { StyledExpenseForm } from "./ExpenseForm.styled";
 import { LocationDisplay } from "./components/LocationDisplay/LocationDisplay";
@@ -154,12 +156,37 @@ export default function ExpenseForm({
     validateForm({ showErrors: true })
   };
 
-  const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
-    useExpense(menu, groupId, navigate, setIsSubmitting, nonGroupUsers,
+  const { mutate: createGroupExpenseMutation, isPending: isPendingCreateGroupExpense } =
+    useCreateGroupExpense(
+      menu,
+      groupId,
+      navigate,
+      setIsSubmitting,
+      makePersonalClicked,
+      nonGroupUsers,
       nonGroupGroup,
       groupMembers,
-      makePersonalClicked,
-      isnonGroupExpense);
+      fromHome,
+    );
+
+  const { mutate: createNonGroupExpenseMutation, isPending: isPendingCreateNonGroupExpense } =
+    useCreateNonGroupExpense(
+      menu,
+      navigate,
+      setIsSubmitting,
+      nonGroupUsers,
+      nonGroupGroup,
+      groupMembers,
+      makePersonalClicked
+    );
+
+  const createExpenseMutation = isnonGroupExpense?.value
+    ? createNonGroupExpenseMutation
+    : createGroupExpenseMutation;
+
+  const isPendingCreateExpense = isnonGroupExpense?.value
+    ? isPendingCreateNonGroupExpense
+    : isPendingCreateGroupExpense;
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
     useEditExpense(menu, groupId, setIsSubmitting, nonGroupUsers,

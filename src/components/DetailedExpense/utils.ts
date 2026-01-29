@@ -64,40 +64,9 @@ export const buildFormExpense = (
   return { ...baseExpense };
 };
 
-export const getNonGroupUsers = (
-  expenseType: string,
-  shares: Share[] | GroupShare[] | undefined,
-  payments: Payment[] | GroupPayment[] | undefined,
-  members: TruncatedMember[]
-): User[] => {
-  if (expenseType !== "NonGroup") return [];
-  const uniqueUserIds = new Set<string>();
-  // Helper to safely add IDs
-  const addIds = (
-    transactions:
-      | Share[]
-      | GroupShare[]
-      | Payment[]
-      | GroupPayment[]
-      | undefined
-  ) => {
-    if (!transactions) return;
-    transactions.forEach((t) => {
-      if ("userId" in t) uniqueUserIds.add(t.userId);
-      if ("memberId" in t) uniqueUserIds.add(t.memberId);
-    });
+export const toUser = (member: TruncatedMember): User => {
+  return {
+    userId: member.id,
+    username: member.name,
   };
-
-  addIds(shares);
-  addIds(payments);
-  console.log(uniqueUserIds, members)
-  const users: User[] = [];
-  uniqueUserIds.forEach((id) => {
-    const member = members.find((m) => m.id === id);
-    if (member) {
-      users.push({ userId: id, username: member.name });
-    }
-  });
-
-  return users;
-};
+}

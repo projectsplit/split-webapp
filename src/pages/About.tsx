@@ -20,7 +20,7 @@ const About: React.FC = () => {
     mutationFn: logOut,
     onSuccess: () => {
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("nonGroupExpenseData");
+      localStorage.removeItem("submittedFromHomePersistData");
       navigate(routes.AUTH)
     },
     onError: (error) => {

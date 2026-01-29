@@ -2,7 +2,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import {
   ExpenseParsedFilters,
   GetExpensesResponse,
-  Group,
 } from "../../types";
 import { apiClient } from "../apiClients";
 import { AxiosResponse } from "axios";
@@ -10,35 +9,32 @@ import { DateTime } from "luxon";
 import { reformatDate } from "../../components/SearchTransactions/helpers/reformatDate";
 import { Signal } from "@preact/signals-react";
 
-const useGetGroupExpenses = (
-  group: Group,
+export const useGetPersonalExpenses = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   pageSize: number,
   timeZoneId: string,
   enabled: boolean = true
 ) => {
   const queryKey = [
-    "groupExpenses",
-    group?.id,
+    "personalExpenses",
     pageSize,
     expenseParsedFilters.value,
     timeZoneId,
-  ];
+  ].filter(Boolean);
 
   const query = useInfiniteQuery({
     queryKey: queryKey,
     queryFn: ({ pageParam: next }) =>
-      getGroupExpenses(group?.id!, pageSize, expenseParsedFilters.value, next),
+      getPersonalExpenses(pageSize, expenseParsedFilters.value, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: "",
-    enabled: enabled && !!group?.id,
+    enabled
   });
 
   return { ...query };
 };
 
-const getGroupExpenses = async (
-  groupId: string,
+const getPersonalExpenses = async (
   pageSize: number,
   parsedFilters: ExpenseParsedFilters = {},
   next?: string
@@ -52,9 +48,8 @@ const getGroupExpenses = async (
     labels = [],
   } = parsedFilters;
 
-  // Construct query parameters manually
   const params = new URLSearchParams();
-  params.append("groupId", groupId);
+
   params.append("pageSize", pageSize.toString());
   if (next) params.append("next", next);
   if (freeText) params.append("searchTerm", freeText);
@@ -79,9 +74,7 @@ const getGroupExpenses = async (
   const response = await apiClient.get<
     void,
     AxiosResponse<GetExpensesResponse>
-  >("/expenses", { params });
+  >("/expenses/personal", { params });
 
   return response.data;
 };
-
-export default useGetGroupExpenses;

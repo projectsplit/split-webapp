@@ -34,6 +34,7 @@ import {
   ExpenseType,
   GroupTransaction,
   NonGroupTransaction,
+  TransactionType,
 } from "./types";
 import { ReadonlySignal, Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
@@ -77,6 +78,8 @@ export interface MembersInfoBoxProps {
   currency: string;
   participants: TruncatedMember[];
   userMemberId: string;
+  userId: string;
+  transactionType: TransactionType;
 }
 
 export interface DetailedExpenseProps {
@@ -103,6 +106,8 @@ export interface DetailedExpenseProps {
   errorMessage: Signal<string>;
   userMemberId: string;
   group?: Group;
+  userId: string;
+  transactionType: TransactionType;
 }
 
 export interface DetailedTransferProps {
@@ -455,6 +460,7 @@ export interface NewExpenseAnimationProps {
   isnonGroupExpense?: Signal<boolean>;
   nonGroupUsers: Signal<User[]>;
   nonGroupMenu?: Signal<string | null>;
+  
 }
 
 export interface NewTransferAnimationProps {

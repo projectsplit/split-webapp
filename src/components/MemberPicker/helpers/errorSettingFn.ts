@@ -41,10 +41,14 @@ export const errorSettingFn = (
         ) !== currency(totalAmount).value);
 
   setError(
-    !areNumbersValid
-      ? "Amounts must be positive"
-      : isSumInvalid
-      ? "Amounts must add up to total"
+    !areNumbersValid&&description === "Participants"
+      ? "Participation amounts must be positive":
+      !areNumbersValid&&description === "Payers"
+      ? "Payment amounts must be positive":
+      isSumInvalid&&description === "Participants"
+      ? "Participation amounts must add up to total":
+      isSumInvalid&&description === "Payers"
+      ? "Payment amounts must add up to total"
       : ""
   );
 };

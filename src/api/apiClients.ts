@@ -39,7 +39,7 @@ apiClient.interceptors.request.use(
         catch (error) {
           await logOut();
           clearAccessToken();
-          clearNonGroupExpenseData()
+          clearSubmittedFromHomePersistData()
           window.location.href = routes.AUTH;
           throw new axios.Cancel("Session expired, logging out."); 
         } finally {
@@ -60,7 +60,7 @@ apiClient.interceptors.response.use(
     if (error instanceof AxiosError && error.response && error.response.status === 401){
       await logOut();
       clearAccessToken();
-      clearNonGroupExpenseData()
+      clearSubmittedFromHomePersistData()
       window.location.href = routes.AUTH;
     }
     return Promise.reject(error);
@@ -87,6 +87,6 @@ function getAccessToken() {
   return localStorage.getItem("accessToken");
 }
 
-function clearNonGroupExpenseData() {
-  localStorage.removeItem("nonGroupExpenseData");
-}
+function clearSubmittedFromHomePersistData() {
+  localStorage.removeItem("submittedFromHomePersistData");
+} 

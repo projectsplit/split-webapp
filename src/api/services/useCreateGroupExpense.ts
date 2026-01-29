@@ -1,32 +1,30 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
-import {
-  ExpenseRequest,
-  ExpenseResponseItem,
-  Group,
-  Guest,
-  Member,
-  User,
-} from "../../types";
+import { ExpenseRequest, Group, Guest, Member, User } from "../../types";
 import { Signal } from "@preact/signals-react";
+import { NavigateFunction } from "react-router-dom";
 
-export const useEditExpense = (
+export const useCreateGroupExpense = (
   menu: Signal<string | null>,
   groupId: string | undefined,
+  navigate: NavigateFunction,
   setIsSubmitting: (value: boolean) => void,
+  makePersonalClicked: boolean,
   nonGroupUsers: Signal<User[]>,
   nonGroupGroup: Signal<Group | null> | undefined,
   groupMembers: Signal<(Member | Guest)[]>,
-  makePersonalClicked: boolean,
-  isNonGroupExpense: Signal<boolean> | undefined,
-  selectedExpense?: Signal<ExpenseResponseItem | null>
+  fromHome: boolean | undefined
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, ExpenseRequest>({
-    mutationFn: (expense) => editExpense(expense),
+    mutationFn: (expense) => createGroupExpense(expense),
     onSuccess: async () => {
+      menu.value = null;
+      if (groupId) {
+        navigate(`/shared/${groupId}/expenses`);
+      }
       await queryClient.invalidateQueries({
         queryKey: ["debts"],
         exact: false,
@@ -35,7 +33,10 @@ export const useEditExpense = (
         queryKey: ["groupExpenses"],
         exact: false,
       });
-      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
+      await queryClient.invalidateQueries({
+        queryKey: ["home"],
+        exact: false,
+      });
       await queryClient.invalidateQueries({
         queryKey: ["shared"],
         exact: false,
@@ -48,10 +49,8 @@ export const useEditExpense = (
         queryKey: [groupId],
         exact: false,
       });
-      if (selectedExpense) {
-        selectedExpense.value = null;
-      }
-      if (isNonGroupExpense && isNonGroupExpense.value) {
+
+      if (fromHome) {
         const data = {
           nonGroupUsers: nonGroupUsers.value,
           nonGroupGroup: nonGroupGroup?.value,
@@ -64,10 +63,10 @@ export const useEditExpense = (
         )
           localStorage.setItem("submittedFromHomePersistData", JSON.stringify(data));
       }
+
       if (makePersonalClicked) {
         localStorage.removeItem("submittedFromHomePersistData");
       }
-      menu.value = null;
     },
     onSettled: () => {
       setIsSubmitting(false);
@@ -75,6 +74,6 @@ export const useEditExpense = (
   });
 };
 
-const editExpense = async (req: ExpenseRequest): Promise<void> => {
-  await apiClient.post<void, AxiosResponse<void>>("/expenses/edit", req);
+const createGroupExpense = async (req: ExpenseRequest): Promise<void> => {
+  await apiClient.post<void, AxiosResponse<void>>("/expenses/create", req);
 };

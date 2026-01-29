@@ -14,7 +14,7 @@ import DeleteExpenseAnimation from "../Menus/MenuAnimations/DeleteExpenseAnimati
 import { FormExpense, GeoLocation, User } from "../../types";
 import EditExpenseAnimation from "../Menus/MenuAnimations/EditExpenseAnimation";
 import labelColors from "../../labelColors";
-import { buildFormExpense, getNonGroupUsers } from "./utils";
+import { buildFormExpense, toUser } from "./utils";
 
 export default function DetailedExpense({
   selectedExpense,
@@ -35,6 +35,8 @@ export default function DetailedExpense({
   userMemberId,
   group,
   expenseType,
+  userId,
+  transactionType
 }: DetailedExpenseProps) {
   const googleUrl = "https://www.google.com/maps/search/?api=1&query=";
   // const theme = {
@@ -109,6 +111,8 @@ export default function DetailedExpense({
         currency={currency}
         participants={participants}
         userMemberId={userMemberId}
+        userId={userId}
+        transactionType={transactionType}
       />
       <MembersInfoBox
         transactions={payments}
@@ -116,13 +120,15 @@ export default function DetailedExpense({
         currency={currency}
         participants={participants}
         userMemberId={userMemberId}
+        userId={userId}
+        transactionType={transactionType}
       />
       <MapsInfoBox location={location} googleMapsUrl={googleMapsUrl} />
 
       <div className="editDeleteButtons">
         <div className="dummyDiv" />
 
-        {group && !group.isArchived ? (
+        {(group && !group.isArchived) || (transactionType === "NonGroup" && !group) ? (
           <div className="buttons">
             <div className="editButton">
               <MyButton onClick={() => (menu.value = "editExpense")}>
@@ -201,9 +207,9 @@ export default function DetailedExpense({
         timeZoneCoordinates={timeZoneCoordinates}
         currency={currency}
         groupMembers={group ? signal([...group.members, ...group.guests]) : signal([])}
-        nonGroupUsers={signal(getNonGroupUsers(expenseType, shares, payments, participants))}
+        nonGroupUsers={signal(participants.map(p => toUser(p)))}
         isPersonal={expenseType === "Personal" ? signal(true) : signal(false)}
-
+        isnonGroupExpense={expenseType === "NonGroup" ? signal(true) : signal(false)}
       />
     </StyledDetailedExpense>
   );

@@ -61,7 +61,7 @@ export default function SettingsMenu({
     mutationFn: logOut,
     onSuccess: () => {
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("nonGroupExpenseData");
+      localStorage.removeItem("submittedFromHomePersistData");
       queryClient.invalidateQueries();
       queryClient.removeQueries();
       navigate(routes.AUTH);

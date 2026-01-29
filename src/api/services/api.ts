@@ -1,8 +1,6 @@
 import { AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
 import {
-  GetGroupExpensesResponse,
-  GetGroupsResponse,
   UserInfo,
   GetGroupTransfersResponse,
   GroupsTotalAmountsResponse,
@@ -10,7 +8,6 @@ import {
   GroupRequest,
   MostRecentGroupDetailsResponse,
   DebtsResponse,
-  ExpenseParsedFilters,
   TransferParsedFilters,
 } from "../../types";
 import { reformatDate } from "../../components/SearchTransactions/helpers/reformatDate";
@@ -25,7 +22,7 @@ export const getGroupTransfers = async (
   next?: string
 ): Promise<GetGroupTransfersResponse> => {
 
-    const {
+  const {
     sendersIds = [],
     receiversIds = [],
     freeText = "",
@@ -40,7 +37,7 @@ export const getGroupTransfers = async (
   if (next) params.append("next", next);
   if (freeText) params.append("searchTerm", freeText);
 
-  if (before === after && before !== null && after!==null) {
+  if (before === after && before !== null && after !== null) {
 
     let beforeDate = DateTime.fromFormat(before, "dd-MM-yyyy");
     let afterDate = DateTime.fromFormat(after, "dd-MM-yyyy");
@@ -68,7 +65,7 @@ export const getGroupTransfers = async (
 export const getGroupsTotalAmounts = async (
   pageSize: number,
   next: string,
-  isArchived:boolean
+  isArchived: boolean
 ): Promise<GroupsTotalAmountsResponse> => {
   const params = { pageSize, next, isArchived };
   const response = await apiClient.get<GroupsTotalAmountsResponse>(

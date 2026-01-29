@@ -107,7 +107,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-      const saved = localStorage.getItem("nonGroupExpenseData");
+      const saved = localStorage.getItem("submittedFromHomePersistData");
       if (saved) {
         const {
           nonGroupUsers: u,

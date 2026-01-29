@@ -13,6 +13,8 @@ export default function MembersInfoBox({
   currency,
   participants,
   userMemberId,
+  userId,
+  transactionType
 }: MembersInfoBoxProps) {
   const [hide, setHide] = React.useState<boolean>(false);
 
@@ -43,23 +45,22 @@ export default function MembersInfoBox({
           {areShares ? (
             <div className="info">
               {sortedTransactions?.length === 1 ? (
-                <span>billed to {sortedTransactions?.length} member</span>
+                <span>billed to {sortedTransactions?.length} {transactionType === "Group" ? "member" : "user"}</span>
               ) : sortedTransactions?.length === 2 ? (
-                <span>Split between {sortedTransactions?.length} members</span>
+                <span>Split between {sortedTransactions?.length} {transactionType === "Group" ? "members" : "users"}</span>
               ) : (
-                <span> Split among {sortedTransactions?.length} members</span>
+                <span> Split among {sortedTransactions?.length} {transactionType === "Group" ? "members" : "users"}</span>
               )}
             </div>
           ) : (
             <div className="info">
               {sortedTransactions?.length === 1 ? (
-                <span>Paid by {sortedTransactions?.length} member</span>
+                <span>Paid by {sortedTransactions?.length} {transactionType === "Group" ? "member" : "user"}</span>
               ) : (
-                <span>Paid by {sortedTransactions?.length} members</span>
+                <span>Paid by {sortedTransactions?.length} {transactionType === "Group" ? "members" : "users"}</span>
               )}
             </div>
           )}
-
           <div className="hideDetalailsButton">
             {hide ? <IoIosArrowDown /> : <IoIosArrowUp />}{" "}
           </div>
@@ -72,15 +73,14 @@ export default function MembersInfoBox({
               return (
                 <div className="member" key={i}>
                   <span className="memberName">
-                    {id === userMemberId ? (
+                    {(id === userMemberId || id === userId) ? (
                       <span className="you">You</span>
                     ) : (
                       participants.find((x) => x.id === id)?.name
                     )}
                   </span>
-
                   <span className="amount">
-                    {id === userMemberId ? (
+                    {(id === userMemberId || id === userId) ? (
                       <span className="yourAmount">
                         {displayCurrencyAndAmount(
                           t.amount.toString(),
@@ -91,10 +91,9 @@ export default function MembersInfoBox({
                       displayCurrencyAndAmount(t.amount.toString(), currency)
                     )}
                   </span>
-
                   <span className="percentage">
                     {" "}
-                    {id === userMemberId ? (
+                    {(id === userMemberId || id === userId) ? (
                       <span className="yourPercentage">
                         {totalAmount && totalAmount.value !== 0
                           ? ((t.amount / totalAmount.value) * 100).toFixed(1)

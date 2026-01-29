@@ -8,7 +8,6 @@ import {
   TransactionType,
   UserInfo,
 } from "../../types";
-
 import { useOutletContext } from "react-router-dom";
 import { StyledExpenses } from "./Expenses.styled";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
@@ -33,8 +32,8 @@ import {
   isGroupExpense,
   isNonGroupExpense,
 } from "../../helpers/getExpenseType";
-import useGetExpenses from "@/api/services/useGetExpenses";
 import getAllParticipants from "@/helpers/getAllParticipants";
+import { useExpenseList } from "./hooks/useExpenseList";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -57,22 +56,24 @@ const Expenses = () => {
 
   const timeZoneId = userInfo?.timeZone;
   const pageSize = 10;
+  const userMemberId = group?.members?.find((m) => m.userId === userInfo?.userId)?.id;//group specific
 
-  const members = group?.members;//group specific
-  const guests = group?.guests;//group specific
-  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;//group specific
-
-  const params =
-    transactionType === "Group"
-      ? { transactionType: "Group" as const, group }
-      : { transactionType: transactionType };
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useGetExpenses(expenseParsedFilters, pageSize, timeZoneId, params);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching
+  } = useExpenseList(
+    transactionType,
+    group,
+    expenseParsedFilters,
+    pageSize,
+    timeZoneId
+  );
 
   const expenses = data?.pages.flatMap((p) => p.expenses);
-
-  const allParticipants = getAllParticipants(expenses, transactionType, members || [], guests || []);
+  const allParticipants = getAllParticipants(expenses, transactionType, group?.members || [], group?.guests || []);
 
   const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id);
   const totalSpent: Record<
@@ -84,8 +85,6 @@ const Expenses = () => {
   const userTotalsByCurrency = getCurrencyValues(totalSpent, userMemberId);
   const shouldOpenMultiCurrencyTable =
     Object.keys(groupTotalsByCurrency).length > 1;
-
-
 
   useEffect(() => {
     const expenseFilters = localStorage.getItem("expenseFilter");
@@ -152,7 +151,7 @@ const Expenses = () => {
       return e.shares.find((x) => x.memberId === userMemberId)?.amount ?? 0;
     }
     if (isNonGroupExpense(e)) {
-      return e.shares.find((x) => x.userId === userInfo.userId)?.amount ?? 0;
+      return e.shares.find((x) => x.userId === userInfo?.userId)?.amount ?? 0;
     }
     return e.amount;
   };
@@ -199,7 +198,6 @@ const Expenses = () => {
                   queryClient
                 )}
               </div>
-
               <BarsWithLegends
                 bar1Legend={
                   transactionType === "Group"
@@ -226,7 +224,6 @@ const Expenses = () => {
               />
             </div>
           )}
-
           {Object.entries(
             groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))
           ).map(([date, expenses]) => {
@@ -255,7 +252,6 @@ const Expenses = () => {
           })}
         </>
       )}
-
       <Sentinel
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}
@@ -278,10 +274,12 @@ const Expenses = () => {
           timeZoneCoordinates={userInfo.timeZoneCoordinates}
           creator={selectedExpense.value.creatorId}
           created={selectedExpense.value.created}
-          participants={allParticipants} //change
+          participants={allParticipants}
           errorMessage={errorMessage}
           userMemberId={userMemberId || ""}
           group={group}
+          userId={userInfo?.userId}
+          transactionType={transactionType}
         />
       )}
 
