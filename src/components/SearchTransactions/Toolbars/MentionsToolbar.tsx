@@ -1,8 +1,8 @@
-import SearchMemberButton from "../SearchCategoryButtons/SearchMemberButton/SearchMemberButton";
 import { MentionsToolbarProps } from "../../../interfaces";
 import SearchDateButton from "../SearchCategoryButtons/SearchDateButton/SearchDateButton";
 import SearchLabelButton from "../SearchCategoryButtons/SearchLabelButton/SearchLabelButton";
 import CurrentSearchField from "../CurrentSearchField/CurrentSearchField";
+import SearchPersonButton from "../SearchCategoryButtons/SearchMemberButton/SearchPersonButton";
 
 
 const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
@@ -12,7 +12,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
   transferFilterState,
   cancelled,
   removedFilter,
-  filteredMembers,
+  filteredPeople,
   calendarIsOpen,
   datePeriodClicked,
   filteredLabels,
@@ -20,7 +20,8 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
   showFreeTextPill
 }) => {
 
-
+const expensesType = expenseFilterState.value.groupId === "" ? "user" : "member";
+const transfersType = transferFilterState.value.groupId === "" ? "user" : "member";
   return (
     <>
       {showOptions.value && (
@@ -53,22 +54,22 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
           )}
           {category.value === "expenses" ? (
             <>
-              <SearchMemberButton
+              <SearchPersonButton
                 showOptions={showOptions}
                 category={"payer"}
-                type={"member"}
-                filteredMembers={filteredMembers}
+                type={expensesType}
+                filteredPeople={filteredPeople}
                 submitButtonIsActive={submitButtonIsActive}
                 expenseFilterState={expenseFilterState}
                 transferFilterState={transferFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
-              <SearchMemberButton
+              <SearchPersonButton
                 showOptions={showOptions}
                 category={"participant"}
-                type={"member"}
-                filteredMembers={filteredMembers}
+                type={expensesType}
+                filteredPeople={filteredPeople}
                 submitButtonIsActive={submitButtonIsActive}
                 expenseFilterState={expenseFilterState}
                 transferFilterState={transferFilterState}
@@ -124,22 +125,22 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
             </>
           ) : category.value === "transfers" ? (
             <>
-              <SearchMemberButton
+              <SearchPersonButton
                 showOptions={showOptions}
                 category={"sender"}
-                type={"member"}
-                filteredMembers={filteredMembers}
+                type={transfersType}
+                filteredPeople={filteredPeople}
                 submitButtonIsActive={submitButtonIsActive}
                 expenseFilterState={expenseFilterState}
                 transferFilterState={transferFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
-              <SearchMemberButton
+              <SearchPersonButton
                 showOptions={showOptions}
                 category={"receiver"}
-                type={"member"}
-                filteredMembers={filteredMembers}
+                type={transfersType}
+                filteredPeople={filteredPeople}
                 submitButtonIsActive={submitButtonIsActive}
                 expenseFilterState={expenseFilterState}
                 transferFilterState={transferFilterState}

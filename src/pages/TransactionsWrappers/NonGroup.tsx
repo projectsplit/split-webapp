@@ -42,7 +42,6 @@ export default function NonGroup() {
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const nonGroupUsers = useSignal<User[]>([]);
-  const navigate = useNavigate();
 
   const {
     userInfo,
@@ -134,14 +133,15 @@ export default function NonGroup() {
 
         <GroupQuickActionsAnimation menu={menu} />
 
-        {/* <SearchTransactionsAnimation
-              menu={menu}
-              group={null}
-              userInfo={userInfo}
-              timeZoneId={timeZoneId}
-              expenseParsedFilters={expenseParsedFilters}
-              transferParsedFilters={transferParsedFilters}
-            /> */}
+        <SearchTransactionsAnimation
+          menu={menu}
+          group={null}
+          userInfo={userInfo}
+          timeZoneId={timeZoneId}
+          expenseParsedFilters={expenseParsedFilters}
+          transferParsedFilters={transferParsedFilters}
+          nonGroupUsers={nonGroupUsers}
+        />
 
         <div className="bottomMenu">
           {" "}

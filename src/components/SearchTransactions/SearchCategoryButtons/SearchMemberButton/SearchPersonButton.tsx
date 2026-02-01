@@ -1,23 +1,24 @@
-import React from "react";
 import { StyledSearchCategoryButton } from "../SearchCategoryButton.styled";
-import { SearchMemberButtonProps } from "../../../../interfaces";
-import { MembersPillsDisplay } from "./MembersPillsDisplay/MembersPillsDisplay";
+import { SearchPeopleButtonProps } from "../../../../interfaces";
+import { PeoplePillsDisplay } from "./MembersPillsDisplay/PeoplePillsDisplay";
 
-export default function SearchMemberButton({
+export default function SearchPersonButton({
   category,
-  filteredMembers,
+  type,
+  filteredPeople,
   showOptions,
   submitButtonIsActive,
   expenseFilterState,
   transferFilterState,
   cancelled,
   removedFilter,
-}: SearchMemberButtonProps) {
+}: SearchPeopleButtonProps) {
   return (
     <StyledSearchCategoryButton>
-      <MembersPillsDisplay
+      <PeoplePillsDisplay
         category={category}
-        filteredMembers={filteredMembers}
+        type={type}
+        filteredPeople={filteredPeople}
         showOptions={showOptions}
         submitButtonIsActive={submitButtonIsActive}
         expenseFilterState={expenseFilterState}

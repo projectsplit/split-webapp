@@ -25,7 +25,7 @@ export default function TopMenu({
       navigate("/shared");
     }
   };
-  const isInShared = title !== "" && title !== "Shared";
+  const isInSharedAndNotInNonGroup = title !== "" && title !== "Shared" && title !== "Non Group Transactions";
 
   return (
     <StyledTopMenu title={title}>
@@ -37,7 +37,7 @@ export default function TopMenu({
           />
         ) : null}
 
-        {isInShared ? (
+        {isInSharedAndNotInNonGroup ? (
           <div className="titleStripe">
             <div
               className="title"
@@ -50,7 +50,7 @@ export default function TopMenu({
         ) : null}
       </div>
 
-      {!isInShared ? (
+      {!isInSharedAndNotInNonGroup ? (
         <div className="titleStripe">
           <div
             className="title"
@@ -64,7 +64,7 @@ export default function TopMenu({
 
       <div className="bellAndCog">
         {" "}
-        {isInShared ? (
+        {isInSharedAndNotInNonGroup ? (
           groupIsArchived ? (
             <div
               className="cogContainer"

@@ -6,7 +6,7 @@ import { IoClose } from "react-icons/io5";
 import { EditorState } from "lexical";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { useQueryClient } from "@tanstack/react-query";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
 import { EditorContent } from "./EditorContent/EditorContent";
 import { handleSubmitButton } from "./helpers/handleSubmitButton";
@@ -18,7 +18,7 @@ import {
   CreateExpenseFilterRequest,
   CreateTransferFilterRequest,
   FetchedLabel,
-  FilteredMembers,
+  FilteredPeople,
 } from "../../types";
 import MyButton from "../MyButton/MyButton";
 import { useMembers } from "./hooks/useMembers";
@@ -32,7 +32,8 @@ export default function SearchTransactions({
   userInfo,
   timeZoneId,
   expenseParsedFilters,
-  transferParsedFilters
+  transferParsedFilters,
+  nonGroupUsers
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
@@ -45,7 +46,7 @@ export default function SearchTransactions({
   const queryClient = useQueryClient();
 
   const expenseFilterState = useSignal<CreateExpenseFilterRequest>({
-    groupId: group.id,
+    groupId: group?.id || "",
     participantsIds: [],
     payersIds: [],
     freeText: "",
@@ -56,7 +57,7 @@ export default function SearchTransactions({
   });
 
   const transferFilterState = useSignal<CreateTransferFilterRequest>({
-    groupId: group.id,
+    groupId: group?.id || "",
     receiversIds: [],
     sendersIds: [],
     freeText: "",
@@ -65,7 +66,7 @@ export default function SearchTransactions({
     after: [],
   });
 
-  const filteredMembers = useSignal<FilteredMembers>({
+  const filteredPeople = useSignal<FilteredPeople>({
     payers: [],
     participants: [],
     senders: [],
@@ -77,17 +78,18 @@ export default function SearchTransactions({
   const editorContentRef = useRef<EditorContentHandle | null>(null);
   const params = useParams();
 
-  const { fetchedMembers, enhancedMembersWithProps } = useMembers(
+  const { fetchedPeople, enhancedPeopleWithProps } = useMembers(
     group,
-    userInfo
+    userInfo,
+    nonGroupUsers
   );
 
-  const fetchedLabels: FetchedLabel[] = group.labels.map((l) => ({
+  const fetchedLabels: FetchedLabel[] = group?.labels.map((l) => ({
     id: l.id,
     value: l.text,
     color: l.color,
     prop: "category",
-  }));
+  })) || [];
 
   useEffect(() => {
     if (path === "debts") {
@@ -115,7 +117,7 @@ export default function SearchTransactions({
       localStorage.getItem("expenseFilter"),
       localStorage.getItem("transferFilter")
     );
-  },[localStorage.getItem("expenseFilter"), localStorage.getItem("transferFilter")]);
+  }, [localStorage.getItem("expenseFilter"), localStorage.getItem("transferFilter")]);
 
   useEffect(() => {
     initializeFilterState(
@@ -124,21 +126,22 @@ export default function SearchTransactions({
       params,
       expenseFilterState,
       transferFilterState,
-      filteredMembers,
+      filteredPeople,
       filteredLabels,
-      group
+      group,
+      nonGroupUsers
     );
   }, [expenseFilter, transferFilter, params.groupid, cancelled.value]);
 
   useEffect(() => {
     const handleResize = () => {
       if ((category.value = "expenses")) {
-        expenseFilterState.value.groupId = params.groupid as string;
+        expenseFilterState.value.groupId = params.groupid as string || "";
         if (contentEditableWrapRef.current) {
           setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
         }
       } else {
-        transferFilterState.value.groupId = params.groupid as string;
+        transferFilterState.value.groupId = params.groupid as string || "";
         if (contentEditableWrapRef.current) {
           setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
         }
@@ -163,7 +166,7 @@ export default function SearchTransactions({
           <div className="gap"></div>
           <div className="searchingIn">
             Searching In:&nbsp;
-            <span className="groupName">{group.name}</span>
+            <span className="groupName">{group?.name || "Non Group"}</span>
           </div>
           <div className="closeSign" onClick={() => (menu.value = null)}>
             <IoClose name="close-outline" className="close" />
@@ -183,22 +186,22 @@ export default function SearchTransactions({
         <div className="searchBarAndCategories">
           <div className="lexicalSearch">
             <LexicalComposer initialConfig={initialConfig}>
-                <EditorContent
-                  ref={editorContentRef}
-                  contentEditableHeight={contentEditableHeight}
-                  enhancedMembersWithProps={enhancedMembersWithProps}
-                  submitButtonIsActive={submitButtonIsActive}
-                  expenseFilterState={expenseFilterState}
-                  transferFilterState={transferFilterState}
-                  setEditorState={setEditorState}
-                  members={fetchedMembers}
-                  labels={fetchedLabels}
-                  cancelled={cancelled}
-                  filteredMembers={filteredMembers}
-                  timeZoneId={timeZoneId}
-                  filteredLabels={filteredLabels}
-                  category={category}
-                />
+              <EditorContent
+                ref={editorContentRef}
+                contentEditableHeight={contentEditableHeight}
+                enhancedPeopleWithProps={enhancedPeopleWithProps}
+                submitButtonIsActive={submitButtonIsActive}
+                expenseFilterState={expenseFilterState}
+                transferFilterState={transferFilterState}
+                setEditorState={setEditorState}
+                people={fetchedPeople}
+                labels={fetchedLabels}
+                cancelled={cancelled}
+                filteredPeople={filteredPeople}
+                timeZoneId={timeZoneId}
+                filteredLabels={filteredLabels}
+                category={category}
+              />
             </LexicalComposer>
           </div>
         </div>
@@ -214,7 +217,7 @@ export default function SearchTransactions({
                 category,
                 queryClient,
                 expenseParsedFilters,
-                transferParsedFilters 
+                transferParsedFilters
               )
             }
             disabled={!submitButtonIsActive.value}

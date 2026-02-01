@@ -88,14 +88,19 @@ const Expenses = () => {
 
   useEffect(() => {
     const expenseFilters = localStorage.getItem("expenseFilter");
+
     if (expenseFilters) {
       const paresedFilter = JSON.parse(expenseFilters);
-      if (paresedFilter.groupId === group.id) {
+      if (paresedFilter.groupId === group?.id || paresedFilter.groupId === "") {
         expenseParsedFilters.value = JSON.parse(expenseFilters);
       } else {
         localStorage.removeItem("expenseFilter");
         queryClient.invalidateQueries({
           queryKey: ["groupExpenses"],
+          exact: false,
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["nonGroupExpenses"],
           exact: false,
         });
       }
@@ -164,6 +169,7 @@ const Expenses = () => {
             <div className="pills">
               {renderExpenseFilterPills(
                 expenseParsedFilters,
+                allParticipants,
                 group,
                 queryClient
               )}
@@ -194,6 +200,7 @@ const Expenses = () => {
               <div className="pills">
                 {renderExpenseFilterPills(
                   expenseParsedFilters,
+                  allParticipants,
                   group,
                   queryClient
                 )}

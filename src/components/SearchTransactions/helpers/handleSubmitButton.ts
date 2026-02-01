@@ -20,8 +20,8 @@ export const handleSubmitButton = (
   menu: Signal<string | null>,
   category: Signal<string>,
   queryClient: QueryClient,
-  expenseParsedFilters:Signal<ExpenseParsedFilters>,
-  transferParsedFilters:Signal<TransferParsedFilters>
+  expenseParsedFilters: Signal<ExpenseParsedFilters>,
+  transferParsedFilters: Signal<TransferParsedFilters>
 ) => {
   if (editorState === null) return;
 
@@ -196,9 +196,24 @@ export const handleSubmitButton = (
     localStorage.setItem("transferFilter", JSON.stringify(transferFilter));
     expenseParsedFilters.value = expenseFilter;
     transferParsedFilters.value = transferFilter;
-    queryClient.invalidateQueries({ queryKey: ["groupExpenses"], exact: false });
-    queryClient.invalidateQueries({ queryKey: ["groupTransfers"], exact: false });
+
+    if (expenseFilterState.value.groupId) {
+      queryClient.invalidateQueries({
+        queryKey: ["groupExpenses"],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["groupTransfers"],
+        exact: false,
+      });
+    } else {
+      queryClient.invalidateQueries({
+        queryKey: ["nonGroupExpenses"],
+        exact: false,
+      });
+      // Add nonGroupTransfers invalidation if/when implemented
+    }
     menu.value = null;
-   
+
   }
 };

@@ -1,37 +1,54 @@
+import { Signal } from "@preact/signals-react";
 import { useMemo } from "react";
 import {
-  EnhancedMembersWithProps,
-  FetchedMembers,
+  EnhancedPeopleWithProps,
+  FetchedPeople,
   Guest,
   Member,
+  User,
 } from "../../../types";
 
 export const useMembers = (
-  group: { guests: Guest[]; members: Member[] } | undefined,
-  userInfo: { userId: string }|undefined
+  group: { guests: Guest[]; members: Member[] } | null,
+  userInfo: { userId: string } | undefined,
+  nonGroupUsers?: Signal<User[]>
 ) => {
-  if (!userInfo) return { fetchedMembers: [], enhancedMembersWithProps: [] };
+  if (!userInfo) return { fetchedPeople: [], enhancedPeopleWithProps: [] };
   const memberProps: string[] = ["participant", "payer", "sender", "receiver"];
 
-  const { fetchedMembers, enhancedMembersWithProps } = useMemo(() => {
-    const allMembers = [...(group?.guests ?? []), ...(group?.members ?? [])];
+  const { fetchedPeople, enhancedPeopleWithProps } = useMemo(() => {
+    let allMembers: { id: string; name: string }[] = [];
+    let isUserCheck: (m: { id: string }) => boolean = () => false;
 
-    const fetchedMembers: FetchedMembers = allMembers.map((m) => ({
-      memberId: m.id,
+    if (group) {
+      allMembers = [...(group.guests ?? []), ...(group.members ?? [])];
+      isUserCheck = (m) =>
+        group.members?.find((gm) => gm.userId === userInfo?.userId)?.id ===
+        m.id;
+    } else if (nonGroupUsers && nonGroupUsers.value) {
+      allMembers = nonGroupUsers.value.map((u) => ({
+        id: u.userId,
+        name: u.username,
+      }));
+      isUserCheck = (m) => m.id === userInfo.userId;
+    }
+
+    const fetchedPeople: FetchedPeople = allMembers.map((m) => ({
+      id: m.id,
       value: m.name,
-      isUser: group?.members?.find((m) => m.userId === userInfo?.userId)?.id===m.id,
+      isUser: isUserCheck(m),
     }));
 
-    const enhancedMembersWithProps: EnhancedMembersWithProps =
-      fetchedMembers.flatMap((member) =>
+    const enhancedPeopleWithProps: EnhancedPeopleWithProps =
+      fetchedPeople.flatMap((person) =>
         memberProps.map((prop) => ({
-          ...member,
+          ...person,
           prop,
         }))
       );
 
-    return { fetchedMembers, enhancedMembersWithProps };
-  }, [group]);
+    return { fetchedPeople, enhancedPeopleWithProps };
+  }, [group, nonGroupUsers?.value, userInfo]);
 
-  return { fetchedMembers, enhancedMembersWithProps };
+  return { fetchedPeople, enhancedPeopleWithProps };
 };

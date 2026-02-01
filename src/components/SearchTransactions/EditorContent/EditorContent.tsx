@@ -32,14 +32,14 @@ export const EditorContent = forwardRef<
 >((props, ref) => {
   const {
     contentEditableHeight,
-    enhancedMembersWithProps,
+    enhancedPeopleWithProps,
     submitButtonIsActive,
     expenseFilterState,
     transferFilterState,
     setEditorState,
-    members,
+    people,
     cancelled,
-    filteredMembers,
+    filteredPeople,
     timeZoneId,
     labels,
     filteredLabels,
@@ -73,7 +73,7 @@ export const EditorContent = forwardRef<
   // mentionItems["after:"] = [];
   mentionItems["category:"] = [];
 
-  updateMembersMentions(members, mentionItems);
+  updateMembersMentions(people, mentionItems);
   updateFiltersMentions(labels, mentionItems);
 
   const clearEditor = () => {
@@ -112,7 +112,7 @@ export const EditorContent = forwardRef<
             setEditorState,
             showOptions,
             setFilteredResults,
-            enhancedMembersWithProps,
+            enhancedPeopleWithProps,
             submitButtonIsActive,
             removedFilter,
             setEditorStateString,
@@ -147,7 +147,7 @@ export const EditorContent = forwardRef<
       ) : filteredResults.length === 0 || editorStateString === "" ? (
         <MentionsToolbar
           showOptions={showOptions}
-          filteredMembers={filteredMembers}
+          filteredPeople={filteredPeople}
           submitButtonIsActive={submitButtonIsActive}
           expenseFilterState={expenseFilterState}
           transferFilterState = {transferFilterState}

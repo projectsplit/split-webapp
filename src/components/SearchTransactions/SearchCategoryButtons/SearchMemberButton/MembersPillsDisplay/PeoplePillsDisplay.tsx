@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { MembersPillsDisplayProps } from "../../../../../interfaces";
-
-import { StyledMemberPillsDisplay } from "./MembersPillsDisplay.styled";
+import { PeoplePillsDisplayProps } from "../../../../../interfaces";
+import { StyledPeoplePillsDisplay } from "./PeoplePillsDisplay.styled";
 import { useBeautifulMentions } from "lexical-beautiful-mentions";
-import { FetchedMembers } from "../../../../../types";
+import { FetchedPeople } from "../../../../../types";
 import Pill from "../../../../Pill/Pill";
 
-export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
+export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
   category,
-  filteredMembers,
+  type,
+  filteredPeople,
   showOptions,
   submitButtonIsActive,
   expenseFilterState,
@@ -17,48 +17,48 @@ export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
   removedFilter,
 }) => {
 
-  const [showFilteredMembers, setShowFilteredMembers] =
-    useState<FetchedMembers>([]);
+  const [showFilteredPeople, setShowFilteredPeople] =
+    useState<FetchedPeople>([]);
   const { insertMention } = useBeautifulMentions();
 
-  const updateFilteredMembers = () => {
- 
+  const updateFilteredPeople = () => {
+
     switch (category) {
       case "payer":
-        return filteredMembers.value.payers;
+        return filteredPeople.value.payers;
       case "participant":
-        return filteredMembers.value.participants;
+        return filteredPeople.value.participants;
       case "sender":
-        return filteredMembers.value.senders;
+        return filteredPeople.value.senders;
       case "receiver":
-        return filteredMembers.value.receivers;
+        return filteredPeople.value.receivers;
       default:
         return [];
     }
   };
-// console.log(filteredMembers.value,showFilteredMembers)
-useEffect(() => {
-  setShowFilteredMembers(updateFilteredMembers());
-  if (cancelled.value === true) {
-    cancelled.value = false;
-  }
-}, [filteredMembers.value, category, cancelled.value]);
+  // console.log(filteredMembers.value,showFilteredMembers)
+  useEffect(() => {
+    setShowFilteredPeople(updateFilteredPeople());
+    if (cancelled.value === true) {
+      cancelled.value = false;
+    }
+  }, [filteredPeople.value, category, cancelled.value]);
 
-  const removeFilter = (memberId: string) => {
+  const removeFilter = (id: string) => {
     removedFilter.value = true;
-    const updatedFilteredMembers = showFilteredMembers.filter(
-      (member) => member.memberId !== memberId
+    const updatedFilteredPeople = showFilteredPeople.filter(
+      (person) => person.id !== id
     );
 
-    setShowFilteredMembers(updatedFilteredMembers);
+    setShowFilteredPeople(updatedFilteredPeople);
 
     switch (category) {
       case "payer":
         if (expenseFilterState) {
           expenseFilterState.value.payersIds =
-            expenseFilterState.value.payersIds.filter((id) => id !== memberId);
-          filteredMembers.value.payers = filteredMembers.value.payers.filter(
-            (member) => member.memberId !== memberId
+            expenseFilterState.value.payersIds.filter((payerId) => payerId !== id);
+          filteredPeople.value.payers = filteredPeople.value.payers.filter(
+            (person) => person.id !== id
           );
         }
         break;
@@ -66,11 +66,11 @@ useEffect(() => {
         if (expenseFilterState) {
           expenseFilterState.value.participantsIds =
             expenseFilterState.value.participantsIds.filter(
-              (id) => id !== memberId
+              (participantId) => participantId !== id
             );
-          filteredMembers.value.participants =
-            filteredMembers.value.participants.filter(
-              (member) => member.memberId !== memberId
+          filteredPeople.value.participants =
+            filteredPeople.value.participants.filter(
+              (person) => person.id !== id
             );
         }
         break;
@@ -78,10 +78,10 @@ useEffect(() => {
         if (transferFilterState) {
           transferFilterState.value.sendersIds =
             transferFilterState.value.sendersIds.filter(
-              (id) => id !== memberId
+              (senderId) => senderId !== id
             );
-          filteredMembers.value.senders = filteredMembers.value.senders.filter(
-            (member) => member.memberId !== memberId
+          filteredPeople.value.senders = filteredPeople.value.senders.filter(
+            (person) => person.id !== id
           );
         }
         break;
@@ -89,11 +89,11 @@ useEffect(() => {
         if (transferFilterState) {
           transferFilterState.value.receiversIds =
             transferFilterState.value.receiversIds.filter(
-              (id) => id !== memberId
+              (receiverId) => receiverId !== id
             );
-          filteredMembers.value.receivers =
-            filteredMembers.value.receivers.filter(
-              (member) => member.memberId !== memberId
+          filteredPeople.value.receivers =
+            filteredPeople.value.receivers.filter(
+              (person) => person.id !== id
             );
         }
         break;
@@ -106,7 +106,7 @@ useEffect(() => {
   };
 
   return (
-    <StyledMemberPillsDisplay>
+    <StyledPeoplePillsDisplay>
       <div
         className="category"
         onClick={() => {
@@ -121,25 +121,25 @@ useEffect(() => {
       </div>
       &nbsp;
       <div className="pills">
-        {showFilteredMembers.length > 0 ? (
-          showFilteredMembers.map((member) => (
-            <div key={member.value}>
+        {showFilteredPeople.length > 0 ? (
+          showFilteredPeople.map((person) => (
+            <div key={person.value}>
               <Pill
-                title={member.value}
+                title={person.value}
                 color="#ffffff"
                 closeButton={true}
-                onClose={() => removeFilter(member.memberId)}
+                onClose={() => removeFilter(person.id)}
                 $textColor="#000000c8"
                 $border={false}
                 fontSize="16px"
-          
+
               />
             </div>
           ))
         ) : (
-          <div className="type">member</div>
+          <div className="type">{type}</div>
         )}
       </div>
-    </StyledMemberPillsDisplay>
+    </StyledPeoplePillsDisplay>
   );
 };

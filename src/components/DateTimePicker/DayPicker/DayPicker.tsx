@@ -93,7 +93,14 @@ const DayPicker = (props: DayPickerProps) => {
         ))}
       </div>
 
-      <div className="month-grid" onClick={()=>isDateShowing.value=true}>
+      <div
+        className="month-grid"
+        onClick={() => {
+          if (isDateShowing) {
+            isDateShowing.value = true;
+          }
+        }}
+      >
         {calendarGrid.map((week, i) => (
           <div key={i} className="week-row">
             {week.map((day, j) => {
@@ -104,9 +111,8 @@ const DayPicker = (props: DayPickerProps) => {
               return (
                 <div
                   key={j}
-                  className={`day${isInactive ? " inactive" : ""}${
-                    isToday ? " today" : ""
-                  }${isSelected ? " selected" : ""}`}
+                  className={`day${isInactive ? " inactive" : ""}${isToday ? " today" : ""
+                    }${isSelected ? " selected" : ""}`}
                   onClick={() => onDayClick(day)}
                 >
                   {day.day}

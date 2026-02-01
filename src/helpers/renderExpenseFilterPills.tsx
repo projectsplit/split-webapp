@@ -1,6 +1,6 @@
 import { Signal } from "@preact/signals-react";
 import Pill from "../components/Pill/Pill";
-import { ExpenseParsedFilters, Group } from "../types";
+import { ExpenseParsedFilters, Group, TruncatedMember } from "../types";
 import { QueryClient } from "@tanstack/react-query";
 import labelColors from "../labelColors";
 import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
@@ -23,16 +23,15 @@ const updateFiltersAndSave = (
 
 export const renderExpenseFilterPills = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
+  allParticipants: TruncatedMember[],
   group: Group,
   queryClient: QueryClient
 ) => {
-  const members = group?.members;
-  const guests = group?.guests;
-  const allParticipants = mergeMembersAndGuests(members || [], guests || []);
 
   const { freeText, before, after, participantsIds, payersIds, labels } =
     expenseParsedFilters.value;
   const pills = [];
+  
   if (freeText && freeText != "") {
     pills.push(
       <Pill

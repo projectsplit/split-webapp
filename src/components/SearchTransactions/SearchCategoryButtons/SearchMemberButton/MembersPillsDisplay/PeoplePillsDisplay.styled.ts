@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledMemberPillsDisplay = styled.div`
+export const StyledPeoplePillsDisplay = styled.div`
   display: flex;
   flex-direction: row;
 

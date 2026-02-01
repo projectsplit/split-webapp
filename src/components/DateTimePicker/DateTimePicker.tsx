@@ -18,7 +18,7 @@ const DateTimePicker = ({
   calendarIsOpen,
   showOptions,
   withLexicalContext
-  ,category,
+  , category,
   isDateShowing
 }: DateTimePickerProps) => {
   const MINUTE_STEP = 1;
@@ -26,46 +26,46 @@ const DateTimePicker = ({
 
   const timePickerUtils = showTimeControls
     ? {
-        hours: Array.from({ length: 24 }, (_, i) =>
-          LuxonDateTime.local().set({ hour: i }).toFormat("HH")
-        ),
-        minutes: Array.from({ length: 60 / MINUTE_STEP }, (_, i) =>
-          LuxonDateTime.local()
-            .set({ minute: i * MINUTE_STEP })
-            .toFormat("mm")
-        ),
-        onTimeClick: () => {
-          setShowTimePicker((prev) => !prev);
-        },
-        closestMinuteIndex: (dateTimeISO: string) => {
-          const dt = toLuxon(dateTimeISO, timeZoneId);
-          const closestMinute = round(dt.minute, MINUTE_STEP);
-          return closestMinute / MINUTE_STEP;
-        },
-        onNowClick: () => {
-          setSelectedDateTime(
-            toUtcString(LuxonDateTime.utc().setZone(timeZoneId))
-          );
-          setRealtimeUpdate?.(true);
-          setShowTimePicker(false);
-        },
-        onHourChange: (i: number) => {
-          setSelectedDateTime((prev) =>
-            toUtcString(toLuxon(prev, timeZoneId).set({ hour: i }))
-          );
-          setRealtimeUpdate?.(false);
-        },
-        onMinuteChange: (i: number) => {
-          setSelectedDateTime((prev) =>
-            toUtcString(
-              toLuxon(prev, timeZoneId).set({ minute: i * MINUTE_STEP })
-            )
-          );
-          setRealtimeUpdate?.(false);
-        },
-       
-      }
-     
+      hours: Array.from({ length: 24 }, (_, i) =>
+        LuxonDateTime.local().set({ hour: i }).toFormat("HH")
+      ),
+      minutes: Array.from({ length: 60 / MINUTE_STEP }, (_, i) =>
+        LuxonDateTime.local()
+          .set({ minute: i * MINUTE_STEP })
+          .toFormat("mm")
+      ),
+      onTimeClick: () => {
+        setShowTimePicker((prev) => !prev);
+      },
+      closestMinuteIndex: (dateTimeISO: string) => {
+        const dt = toLuxon(dateTimeISO, timeZoneId);
+        const closestMinute = round(dt.minute, MINUTE_STEP);
+        return closestMinute / MINUTE_STEP;
+      },
+      onNowClick: () => {
+        setSelectedDateTime(
+          toUtcString(LuxonDateTime.utc().setZone(timeZoneId))
+        );
+        setRealtimeUpdate?.(true);
+        setShowTimePicker(false);
+      },
+      onHourChange: (i: number) => {
+        setSelectedDateTime((prev) =>
+          toUtcString(toLuxon(prev, timeZoneId).set({ hour: i }))
+        );
+        setRealtimeUpdate?.(false);
+      },
+      onMinuteChange: (i: number) => {
+        setSelectedDateTime((prev) =>
+          toUtcString(
+            toLuxon(prev, timeZoneId).set({ minute: i * MINUTE_STEP })
+          )
+        );
+        setRealtimeUpdate?.(false);
+      },
+
+    }
+
     : null;
 
   useEffect(() => {
@@ -153,10 +153,17 @@ const DateTimePicker = ({
         showOptions={showOptions}
         withLexicalContext={withLexicalContext}
         category={category}
-       isDateShowing={isDateShowing}
+        isDateShowing={isDateShowing}
       />
       {showTimeControls && timePickerUtils && (
-        <div className="bottom-menu" onClick={()=>isDateShowing.value=true}>
+        <div
+          className="bottom-menu"
+          onClick={() => {
+            if (isDateShowing) {
+              isDateShowing.value = true;
+            }
+          }}
+        >
           <div
             className={`button ${isNow(selectedDateTime) ? "active" : ""}`}
             onClick={timePickerUtils.onNowClick}

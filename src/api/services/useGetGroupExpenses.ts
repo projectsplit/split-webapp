@@ -54,6 +54,7 @@ const getGroupExpenses = async (
 
   // Construct query parameters manually
   const params = new URLSearchParams();
+ 
   params.append("groupId", groupId);
   params.append("pageSize", pageSize.toString());
   if (next) params.append("next", next);

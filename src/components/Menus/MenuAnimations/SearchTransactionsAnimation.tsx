@@ -9,11 +9,17 @@ export default function SearchTransactionsAnimation({
   userInfo,
   timeZoneId,
   expenseParsedFilters,
-  transferParsedFilters
+  transferParsedFilters,
+  nonGroupUsers
 }: SearchTransactionAnimationProps) {
   const nodeRef = useRef(null);
   return (
-    <CSSTransition in={menu.value === "search"} timeout={0} unmountOnExit>
+    <CSSTransition
+      in={menu.value === "search"}
+      timeout={0}
+      unmountOnExit
+      nodeRef={nodeRef}
+    >
       <div ref={nodeRef}>
         <SearchTransactions
           menu={menu}
@@ -22,6 +28,7 @@ export default function SearchTransactionsAnimation({
           timeZoneId={timeZoneId}
           expenseParsedFilters={expenseParsedFilters}
           transferParsedFilters={transferParsedFilters}
+          nonGroupUsers={nonGroupUsers}
         />
       </div>
     </CSSTransition>

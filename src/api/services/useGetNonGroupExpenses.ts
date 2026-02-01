@@ -70,7 +70,6 @@ const getNonGroupExpenses = async (
   participantsIds.forEach((id) => params.append("participantIds", id));
   payersIds.forEach((id) => params.append("payerIds", id));
   labels.forEach((label) => params.append("labelIds", label));
-
   const response = await apiClient.get<
     void,
     AxiosResponse<GetExpensesResponse>

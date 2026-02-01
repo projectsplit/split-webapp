@@ -1,7 +1,6 @@
 import { StyledBarWithLegends } from "./BarsWithLegends.styled";
 import { BarsWithLegendsProps } from "../../interfaces";
 import { BarsAndAmounts } from "./BarsAndAmounts/BarsAndAmounts";
-import Pill from "../Pill/Pill";
 
 export default function BarsWithLegends({
   bar1Total,

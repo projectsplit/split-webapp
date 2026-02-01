@@ -5,87 +5,124 @@ import {
   CreateTransferFilterRequest,
   ExpenseFilter,
   FetchedLabel,
-  FetchedMember,
-  FilteredMembers,
+  FetchedPerson,
+  FilteredPeople,
   Group,
   TransferFilter,
+  User,
 } from "../../../types";
 
 export const initializeFilterState = (
-  groupExpenseFiltersData: ExpenseFilter,
-  groupTransferFiltersData:TransferFilter,
+  expenseFiltersData: ExpenseFilter,
+  transferFiltersData: TransferFilter,
   params: Readonly<Params<string>>,
   expenseFilterState: Signal<CreateExpenseFilterRequest>,
-  transferFilterState:Signal<CreateTransferFilterRequest>,
-  filteredMembers: Signal<FilteredMembers>,
-  filteredLabels:Signal<FetchedLabel[]>,
-  group:Group
+  transferFilterState: Signal<CreateTransferFilterRequest>,
+  filteredPeople: Signal<FilteredPeople>,
+  filteredLabels: Signal<FetchedLabel[]>,
+  group: Group | null,
+  nonGroupUsers?: Signal<User[]>
 ) => {
-  
-  const allMembers = [...group.members, ...group.guests]
-  const allLabels = group.labels
+  let allPeople: { id: string; name: string }[] = [];
+  let allLabels: { id: string; text: string; color: string }[] = [];
 
-  const showExpenseDuring = groupExpenseFiltersData.before===groupExpenseFiltersData.after&&groupExpenseFiltersData.before!==null && groupExpenseFiltersData.before!==''
-  const showTransferDuring = groupTransferFiltersData.before===groupTransferFiltersData.after&&groupTransferFiltersData.before!==null && groupTransferFiltersData.before!==''
+  if (group) {
+    allPeople = [...group.members, ...group.guests];
+    allLabels = group.labels;
+  } else if (nonGroupUsers && nonGroupUsers.value) {
+    allPeople = nonGroupUsers.value.map((u) => ({
+      id: u.userId,
+      name: u.username,
+    }));
+  }
+
+  const showExpenseDuring =
+    expenseFiltersData.before === expenseFiltersData.after &&
+    expenseFiltersData.before !== null &&
+    expenseFiltersData.before !== "";
+  const showTransferDuring =
+    transferFiltersData.before === transferFiltersData.after &&
+    transferFiltersData.before !== null &&
+    transferFiltersData.before !== "";
 
   expenseFilterState.value = {
     groupId: params.groupid || "",
-    participantsIds:groupExpenseFiltersData.participantsIds?.map( (id) => id) || [],
-    payersIds: groupExpenseFiltersData.payersIds?.map((id) => id) || [],
-    freeText: groupExpenseFiltersData.freeText,
-    before: showExpenseDuring? [] : groupExpenseFiltersData.before ? [groupExpenseFiltersData.before] : [],
-    during: showExpenseDuring ? [groupExpenseFiltersData.after] : [],
-    after:  showExpenseDuring ? [] : groupExpenseFiltersData.after ? [groupExpenseFiltersData.after] : [],
-    labels: groupExpenseFiltersData.labels?.map((id) => id) || [],
+    participantsIds:
+      expenseFiltersData.participantsIds?.map((id) => id) || [],
+    payersIds: expenseFiltersData.payersIds?.map((id) => id) || [],
+    freeText: expenseFiltersData.freeText,
+    before: showExpenseDuring
+      ? []
+      : expenseFiltersData.before
+        ? [expenseFiltersData.before]
+        : [],
+    during: showExpenseDuring ? [expenseFiltersData.after] : [],
+    after: showExpenseDuring
+      ? []
+      : expenseFiltersData.after
+        ? [expenseFiltersData.after]
+        : [],
+    labels: expenseFiltersData.labels?.map((id) => id) || [],
   };
 
   transferFilterState.value = {
     groupId: params.groupid || "",
-    receiversIds:groupTransferFiltersData.receiversIds?.map((id) => id) || [],
-    sendersIds: groupTransferFiltersData.sendersIds?.map((id) => id) || [],
-    freeText: groupTransferFiltersData.freeText,
-    before: showTransferDuring ? [] : groupTransferFiltersData.before? [groupTransferFiltersData.before]:[],
-    during: showTransferDuring ? [groupTransferFiltersData.after] : [],
-    after: showTransferDuring ? [] : groupTransferFiltersData.after? [groupTransferFiltersData.after]:[],
+    receiversIds: transferFiltersData.receiversIds?.map((id) => id) || [],
+    sendersIds: transferFiltersData.sendersIds?.map((id) => id) || [],
+    freeText: transferFiltersData.freeText,
+    before: showTransferDuring
+      ? []
+      : transferFiltersData.before
+        ? [transferFiltersData.before]
+        : [],
+    during: showTransferDuring ? [transferFiltersData.after] : [],
+    after: showTransferDuring
+      ? []
+      : transferFiltersData.after
+        ? [transferFiltersData.after]
+        : [],
   };
 
-  
-
-    const createFetchedMember = (id: string): FetchedMember | null => {
-    const member = allMembers.find((m) => m.id === id);
-    if (!member) return null; 
+  const createFetchedPerson = (id: string): FetchedPerson | null => {
+    const person = allPeople.find((p) => p.id === id);
+    if (!person) return null;
     return {
-      memberId: id,
-      value: member.name,
-      isUser: 'userId' in member, 
+      id: id,
+      value: person.name,
+      isUser: 'userId' in person,
     };
   };
 
-filteredMembers.value = {
-    participants: groupExpenseFiltersData.participantsIds
-      ?.map(createFetchedMember)
-      .filter((m): m is FetchedMember => m !== null) || [],
-    payers: groupExpenseFiltersData.payersIds
-      ?.map(createFetchedMember)
-      .filter((m): m is FetchedMember => m !== null) || [],
-    senders: groupTransferFiltersData.sendersIds
-      ?.map(createFetchedMember)
-      .filter((m): m is FetchedMember => m !== null) || [],
-    receivers: groupTransferFiltersData.receiversIds
-      ?.map(createFetchedMember)
-      .filter((m): m is FetchedMember => m !== null) || [],
+  filteredPeople.value = {
+    participants:
+      expenseFiltersData.participantsIds
+        ?.map(createFetchedPerson)
+        .filter((p): p is FetchedPerson => p !== null) || [],
+    payers:
+      expenseFiltersData.payersIds
+        ?.map(createFetchedPerson)
+        .filter((p): p is FetchedPerson => p !== null) || [],
+    senders:
+      transferFiltersData.sendersIds
+        ?.map(createFetchedPerson)
+        .filter((p): p is FetchedPerson => p !== null) || [],
+    receivers:
+      transferFiltersData.receiversIds
+        ?.map(createFetchedPerson)
+        .filter((p): p is FetchedPerson => p !== null) || [],
   };
 
- filteredLabels.value = groupExpenseFiltersData.labels
-    ?.map((id) => {
-      const label = allLabels.find((l) => l.id === id);
-      if (!label) return null;
-      return {
-        id: label.id,
-        value: label.text, 
-        color: label.color,
-        prop: "", 
-      };
-    })
-    .filter((label): label is FetchedLabel => label !== null) || [];
+  filteredLabels.value =
+    expenseFiltersData.labels
+      ?.map((id) => {
+        const label = allLabels.find((l) => l.id === id);
+        if (!label) return null;
+        return {
+          id: label.id,
+          value: label.text,
+          color: label.color,
+          prop: "",
+        };
+      })
+      .filter((label): label is FetchedLabel => label !== null) || [];
 };

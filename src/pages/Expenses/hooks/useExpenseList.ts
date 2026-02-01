@@ -15,6 +15,7 @@ export const useExpenseList = (
   pageSize: number,
   timeZoneId: string
 ) => {
+
   const isGroup = transactionType === "Group";
   const isNonGroup = transactionType === "NonGroup";
   const isPersonal = transactionType === "Personal";

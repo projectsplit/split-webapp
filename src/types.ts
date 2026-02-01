@@ -592,29 +592,29 @@ export type ExpenseFormState = {
   };
 };
 
-export type FetchedMember = {
-  memberId: string;
+export type FetchedPerson = {
+  id: string;
   value: string;
   isUser: boolean;
 };
 
-export type FetchedMembers = FetchedMember[];
+export type FetchedPeople = FetchedPerson[];
 
-export type EnhancedMembersWithProps = {
+export type EnhancedPeopleWithProps = {
   value: string;
-  memberId: string;
+  id: string;
   isUser: boolean;
   prop: string;
 }[];
 
-export type Members = {
-  payers: FetchedMembers;
-  participants: FetchedMembers;
-  senders: FetchedMembers;
-  receivers: FetchedMembers;
+export type People = {
+  payers: FetchedPeople;
+  participants: FetchedPeople;
+  senders: FetchedPeople;
+  receivers: FetchedPeople;
 };
 
-export type FilteredMembers = Members;
+export type FilteredPeople = People;
 
 export type FetchedLabel = {
   id: string;
@@ -647,7 +647,7 @@ export type CreateExpenseFilterRequest = {
 };
 
 export type ExpenseFilter = {
-  groupId: string;
+  groupId?: string;
   participantsIds: string[];
   payersIds: string[];
   freeText: string;
@@ -669,7 +669,7 @@ export type CreateTransferFilterRequest = {
 };
 
 export type TransferFilter = {
-  groupId: string;
+  groupId?: string;
   receiversIds: string[];
   sendersIds: string[];
   freeText: string;
@@ -711,8 +711,8 @@ export type SerializedElementNode = SerializedLexicalNode & {
 // };
 
 export type ExpenseFilterResponse = {
-  payers: FetchedMembers;
-  participants: FetchedMembers;
+  payers: FetchedPeople;
+  participants: FetchedPeople;
   before: string[];
   during: string[];
   after: string[];
@@ -721,8 +721,8 @@ export type ExpenseFilterResponse = {
 };
 
 export type TransferFilterResponse = {
-  senders: FetchedMembers;
-  receivers: FetchedMembers;
+  senders: FetchedPeople;
+  receivers: FetchedPeople;
   before: string[];
   during: string[];
   after: string[];
