@@ -1,7 +1,6 @@
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-
 import {
   BeautifulMentionsPlugin,
   BeautifulMentionsItemData,
@@ -11,7 +10,7 @@ import { Menu } from "../Menu/Menu";
 import MentionsToolbar from "../Toolbars/MentionsToolbar";
 import OptionsToolBar from "../Toolbars/OptionsToolbar/OptionsToolBar";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { CLEAR_EDITOR_COMMAND } from "lexical";
 import { useSignal } from "@preact/signals-react";
@@ -43,14 +42,18 @@ export const EditorContent = forwardRef<
     timeZoneId,
     labels,
     filteredLabels,
-    category
+    category,
+    searchKeyword,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = props;
 
 
   const [editor] = useLexicalComposerContext();
   const [isEmpty, setIsEmpty] = useState(true);
   const [filteredResults, setFilteredResults] = useState<
-    { value: string; [key: string]: BeautifulMentionsItemData }[]
+    { value: string;[key: string]: BeautifulMentionsItemData }[]
   >([]);
 
   const [editorStateString, setEditorStateString] = useState<string>();
@@ -62,19 +65,18 @@ export const EditorContent = forwardRef<
   const showFreeTextPill = useSignal<boolean>(true)
 
 
-  const mentionItems: Record<string, BeautifulMentionsItem[]> = {};
-
-  mentionItems["payer:"] = [];
-  mentionItems["participant:"] = [];
-  mentionItems["sender:"] = [];
-  mentionItems["receiver:"] = [];
-  // mentionItems["before:"] = [];
-  // mentionItems["during:"] = [];
-  // mentionItems["after:"] = [];
-  mentionItems["category:"] = [];
-
-  updateMembersMentions(people, mentionItems);
-  updateFiltersMentions(labels, mentionItems);
+  const mentionItems = useMemo(() => {
+    const items: Record<string, BeautifulMentionsItem[]> = {
+      "payer:": [],
+      "participant:": [],
+      "sender:": [],
+      "receiver:": [],
+      "category:": [],
+    };
+    updateMembersMentions(people, items);
+    updateFiltersMentions(labels, items);
+    return items;
+  }, [people, labels]);
 
   const clearEditor = () => {
     editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
@@ -119,14 +121,21 @@ export const EditorContent = forwardRef<
             setIsEmpty,
             calendarIsOpen,
             datePeriodClicked,
-            labels
+            labels,
+            searchKeyword
           )
         }
       />
       <BeautifulMentionsPlugin
         items={mentionItems}
         menuComponent={(props) => (
-          <Menu {...props} contentEditableHeight={contentEditableHeight} />
+          <Menu
+            {...props}
+            contentEditableHeight={contentEditableHeight}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
         )}
         menuItemComponent={MenuItem}
         onMenuItemSelect={() => {
@@ -150,7 +159,7 @@ export const EditorContent = forwardRef<
           filteredPeople={filteredPeople}
           submitButtonIsActive={submitButtonIsActive}
           expenseFilterState={expenseFilterState}
-          transferFilterState = {transferFilterState}
+          transferFilterState={transferFilterState}
           cancelled={cancelled}
           removedFilter={removedFilter}
           calendarIsOpen={calendarIsOpen}

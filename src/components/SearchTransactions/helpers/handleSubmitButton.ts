@@ -66,30 +66,31 @@ export const handleSubmitButton = (
       // Deduplicate
       if (
         c.trigger === "payer:" &&
-        !expenseFilterState.value.payersIds.includes(c.data.memberId)
+        !expenseFilterState.value.payersIds.includes(c.data.id)
       ) {
-        expenseFilterState.value.payersIds.push(c.data.memberId);
+        console.log("payer", c.data);
+        expenseFilterState.value.payersIds.push(c.data.id);
       }
 
       if (
         c.trigger === "participant:" &&
-        !expenseFilterState.value.participantsIds.includes(c.data.memberId)
+        !expenseFilterState.value.participantsIds.includes(c.data.id)
       ) {
-        expenseFilterState.value.participantsIds.push(c.data.memberId);
+        expenseFilterState.value.participantsIds.push(c.data.id);
       }
 
       if (
         c.trigger === "sender:" &&
-        !transferFilterState.value.sendersIds.includes(c.data.memberId)
+        !transferFilterState.value.sendersIds.includes(c.data.id)
       ) {
-        transferFilterState.value.sendersIds.push(c.data.memberId);
+        transferFilterState.value.sendersIds.push(c.data.id);
       }
 
       if (
         c.trigger === "receiver:" &&
-        !transferFilterState.value.receiversIds.includes(c.data.memberId)
+        !transferFilterState.value.receiversIds.includes(c.data.id)
       ) {
-        transferFilterState.value.receiversIds.push(c.data.memberId);
+        transferFilterState.value.receiversIds.push(c.data.id);
       }
 
       if (c.trigger === "before:") {

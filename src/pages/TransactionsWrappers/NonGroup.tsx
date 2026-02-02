@@ -140,7 +140,7 @@ export default function NonGroup() {
           timeZoneId={timeZoneId}
           expenseParsedFilters={expenseParsedFilters}
           transferParsedFilters={transferParsedFilters}
-          nonGroupUsers={nonGroupUsers}
+          // nonGroupUsers={nonGroupUsers}
         />
 
         <div className="bottomMenu">

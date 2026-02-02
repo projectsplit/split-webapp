@@ -46,7 +46,7 @@ export const NonGroupExpenseUsersMenu = ({
     userInfo: UserInfo;
   }>();
 
-  const result = useSearchFriendsToInvite( //TODO
+  const result = useSearchFriendsToInvite( //TODO we need new endpoint to bring users (so we can do useSearchUsers)
     "f7637b50-e77d-4609-9e38-eb0acc9c9c51",
     debouncedKeyword,
     pageSize

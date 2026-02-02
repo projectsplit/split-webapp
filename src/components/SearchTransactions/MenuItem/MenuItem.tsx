@@ -6,9 +6,14 @@ import labelColors from "../../../labelColors";
 export const MenuItem = React.forwardRef<
   HTMLLIElement,
   BeautifulMentionsMenuItemProps
->(({ ...props }, ref) => {
-  const { label, itemValue, memberId, item, ...restProps } = props;
-  const bgColor = labelColors[item?.data?.color]||"#ffffff";
+>(({ label, item, ...restProps }, ref) => {
+  const { color } = item?.data || {};
+  const itemValue = item?.value;
+  const bgColor = labelColors[color] || "#ffffff";
 
-  return <StyledMenuItem ref={ref} {...restProps} $bgColor={bgColor}/>;
+  return (
+    <StyledMenuItem ref={ref} {...restProps} $bgColor={bgColor}>
+      {itemValue}
+    </StyledMenuItem>
+  );
 });

@@ -13,7 +13,7 @@ export function updateFiltersMentions(
     mentionItems["category:"].push({
       value: filter.value,
       id: filter.id,
-      color:filter.color
+     color:filter.color
     });
   });
 }

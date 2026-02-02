@@ -19,6 +19,7 @@ const updateFiltersAndSave = (
     JSON.stringify(expenseParsedFilters.value)
   );
   queryClient.invalidateQueries({ queryKey: ["groupExpenses"], exact: false });
+  queryClient.invalidateQueries({ queryKey: ["nonGroupExpenses"], exact: false });
 };
 
 export const renderExpenseFilterPills = (
@@ -31,7 +32,7 @@ export const renderExpenseFilterPills = (
   const { freeText, before, after, participantsIds, payersIds, labels } =
     expenseParsedFilters.value;
   const pills = [];
-  
+
   if (freeText && freeText != "") {
     pills.push(
       <Pill

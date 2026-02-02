@@ -4,7 +4,7 @@ import { handleInputChange } from "./handleInputChange";
 import { Signal } from "@preact/signals-react";
 import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
 import { findLastTextNode } from "./findLastTextNode";
-import { EnhancedMembersWithProps, FetchedLabel } from "../../../types";
+import { EnhancedPeopleWithProps, FetchedLabel } from "../../../types";
 
 export const onChangeEditorContent = (
   editorState: EditorState,
@@ -18,7 +18,7 @@ export const onChangeEditorContent = (
       }[]
     >
   >,
-  enhancedMembersWithProps: EnhancedMembersWithProps,
+  enhancedPeopleWithProps: EnhancedPeopleWithProps,
   submitButtonIsActive: Signal<boolean>,
   removedFilter: Signal<boolean>,
   setEditorStateString: (
@@ -27,7 +27,8 @@ export const onChangeEditorContent = (
   setIsEmpty: (value: React.SetStateAction<boolean>) => void,
   calendarIsOpen: Signal<boolean>,
   datePeriodClicked: Signal<string>,
-  labels: FetchedLabel[]
+  labels: FetchedLabel[],
+  searchKeyword: Signal<string>
 ) => {
   setEditorState(editorState);
   const excludedTerms = [
@@ -44,6 +45,13 @@ export const onChangeEditorContent = (
     const root = $getRoot();
     return root.getTextContent();
   });
+
+  // Extract the query following any mention trigger (e.g., "j" from "payer:j")
+  const triggerMatch = searchTerm.match(
+    new RegExp(`(?:${excludedTerms.join("|")})([^\\s]*)`, "i")
+  );
+  searchKeyword.value = triggerMatch ? triggerMatch[1] : searchTerm;
+
   if (excludedTerms.includes(searchTerm)) {
     showOptions.value = false;
   }
@@ -80,7 +88,7 @@ export const onChangeEditorContent = (
       handleInputChange(
         lastTextNode.text.trimStart(),
         setFilteredResults,
-        enhancedMembersWithProps,
+        enhancedPeopleWithProps,
         labels
       );
     }

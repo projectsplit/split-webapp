@@ -21,6 +21,7 @@ export const useSearchFriendsToInvite = (
       searchUsersToinvite(groupId, keyword, pageSize, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: "",
+    placeholderData: (previousData) => previousData,
     // enabled: !!keyword && keyword.length > 1
   });
 
@@ -41,8 +42,8 @@ export const useSearchFriendsToInvite = (
             guestId && guestId !== "" && isInvited
               ? { ...user, isAlreadyInvited: user.userId === userId }
               : user.userId === userId
-              ? { ...user, isAlreadyInvited: isInvited }
-              : user
+                ? { ...user, isAlreadyInvited: isInvited }
+                : user
           );
 
         return {

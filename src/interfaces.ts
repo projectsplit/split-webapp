@@ -989,6 +989,10 @@ export interface LexicalEditorProps {
   timeZoneId: string;
   filteredLabels: Signal<FetchedLabel[]>;
   category: Signal<string>;
+  searchKeyword: Signal<string>;
+  fetchNextPage: () => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
 }
 
 export interface FilterCalendarProps {
@@ -1003,7 +1007,11 @@ export interface SearchMenuProps {
 }
 export interface CombinedMenuProps
   extends SearchMenuProps,
-  BeautifulMentionsMenuProps { }
+  BeautifulMentionsMenuProps {
+  fetchNextPage?: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+}
 
 export interface StyledMenuItemProps {
   selected?: boolean;
@@ -1105,7 +1113,7 @@ export interface SearchTransactionsProps {
   timeZoneId: string;
   expenseParsedFilters: Signal<ExpenseParsedFilters>;
   transferParsedFilters: Signal<TransferParsedFilters>;
-  nonGroupUsers?: Signal<User[]>;
+  //nonGroupUsers?: Signal<User[]>;
 }
 export interface SearchTransactionAnimationProps {
   menu: Signal<string | null>;
@@ -1114,7 +1122,7 @@ export interface SearchTransactionAnimationProps {
   timeZoneId: string;
   expenseParsedFilters: Signal<ExpenseParsedFilters>;
   transferParsedFilters: Signal<TransferParsedFilters>;
-  nonGroupUsers?: Signal<User[]>;
+  // nonGroupUsers?: Signal<User[]>;
 }
 
 export interface CycleSelectionProps {

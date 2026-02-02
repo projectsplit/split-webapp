@@ -21,7 +21,7 @@ export const initializeFilterState = (
   filteredPeople: Signal<FilteredPeople>,
   filteredLabels: Signal<FetchedLabel[]>,
   group: Group | null,
-  nonGroupUsers?: Signal<User[]>
+  users?: User[]
 ) => {
   let allPeople: { id: string; name: string }[] = [];
   let allLabels: { id: string; text: string; color: string }[] = [];
@@ -29,8 +29,8 @@ export const initializeFilterState = (
   if (group) {
     allPeople = [...group.members, ...group.guests];
     allLabels = group.labels;
-  } else if (nonGroupUsers && nonGroupUsers.value) {
-    allPeople = nonGroupUsers.value.map((u) => ({
+  } else if (users) {
+    allPeople = users.map((u) => ({
       id: u.userId,
       name: u.username,
     }));

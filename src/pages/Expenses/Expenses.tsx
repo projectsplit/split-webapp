@@ -74,7 +74,7 @@ const Expenses = () => {
 
   const expenses = data?.pages.flatMap((p) => p.expenses);
   const allParticipants = getAllParticipants(expenses, transactionType, group?.members || [], group?.guests || []);
-
+  
   const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id);
   const totalSpent: Record<
     string,
