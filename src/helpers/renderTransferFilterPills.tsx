@@ -4,18 +4,20 @@ import { Group, TransferParsedFilters } from "../types";
 import { QueryClient } from "@tanstack/react-query";
 
 import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
+import { getFilterStorageKey } from "../components/SearchTransactions/helpers/localStorageStringParser";
 
 const updateFiltersAndSave = (
   transferParsedFilters: Signal<TransferParsedFilters>,
   updatedFilters: any,
-  queryClient: QueryClient
+  queryClient: QueryClient,
+  groupId?: string
 ) => {
   transferParsedFilters.value = {
     ...transferParsedFilters.value,
     ...updatedFilters,
   };
   localStorage.setItem(
-    "transferFilter",
+    getFilterStorageKey("transfer", groupId),
     JSON.stringify(transferParsedFilters.value)
   );
   queryClient.invalidateQueries({ queryKey: ["groupTransfers"], exact: false });
@@ -48,33 +50,35 @@ export const renderTransferFilterPills = (
           updateFiltersAndSave(
             transferParsedFilters,
             { freeText: "" },
-            queryClient
+            queryClient,
+            group?.id
           )
         }
       />
     );
   }
-    if (before && after && before === after) {
-      pills.push(
-        <Pill
-          key="during"
-          title={`during: ${before}`}
-          color="#e0e0e0"
-          closeButton={true}
-          fontSize="14px"
-          $textColor="black"
-          $border={false}
-          $closeButtonColor="black"
-          onClose={() =>
-            updateFiltersAndSave(
-              transferParsedFilters,
-              { before: null, after: null },
-              queryClient
-            )
-          }
-        />
-      );
-    }
+  if (before && after && before === after) {
+    pills.push(
+      <Pill
+        key="during"
+        title={`during: ${before}`}
+        color="#e0e0e0"
+        closeButton={true}
+        fontSize="14px"
+        $textColor="black"
+        $border={false}
+        $closeButtonColor="black"
+        onClose={() =>
+          updateFiltersAndSave(
+            transferParsedFilters,
+            { before: null, after: null },
+            queryClient,
+            group?.id
+          )
+        }
+      />
+    );
+  }
   // Handle before
   if (before && before !== after) {
     pills.push(
@@ -91,7 +95,8 @@ export const renderTransferFilterPills = (
           updateFiltersAndSave(
             transferParsedFilters,
             { before: null },
-            queryClient
+            queryClient,
+            group?.id
           )
         }
       />
@@ -114,7 +119,8 @@ export const renderTransferFilterPills = (
           updateFiltersAndSave(
             transferParsedFilters,
             { after: null },
-            queryClient
+            queryClient,
+            group?.id
           )
         }
       />
@@ -142,7 +148,8 @@ export const renderTransferFilterPills = (
               {
                 sendersIds: sendersIds.filter((sid) => sid !== id),
               },
-              queryClient
+              queryClient,
+              group?.id
             )
           }
         />
@@ -171,7 +178,8 @@ export const renderTransferFilterPills = (
               {
                 receiversIds: receiversIds.filter((rid) => rid !== id),
               },
-              queryClient
+              queryClient,
+              group?.id
             )
           }
         />

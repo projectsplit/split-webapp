@@ -651,9 +651,9 @@ export type ExpenseFilter = {
   participantsIds: string[];
   payersIds: string[];
   freeText: string;
-  before: string;
-  during: string;
-  after: string;
+  before: string | null;
+  during: string | null;
+  after: string | null;
   labels: string[];
 };
 
@@ -673,9 +673,9 @@ export type TransferFilter = {
   receiversIds: string[];
   sendersIds: string[];
   freeText: string;
-  before: string;
-  during: string;
-  after: string;
+  before: string | null;
+  during: string | null;
+  after: string | null;
 };
 
 export type SerializedLexicalNode = {

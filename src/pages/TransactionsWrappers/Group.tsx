@@ -28,6 +28,7 @@ import Spinner from "../../components/Spinner/Spinner";
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
 import GroupError from "./GroupError";
 import SearchTransactionsAnimation from "../../components/Menus/MenuAnimations/SearchTransactionsAnimation";
+import { localStorageStringParser, getFilterStorageKey } from "../../components/SearchTransactions/helpers/localStorageStringParser";
 
 type errorObject = {
   message: string;
@@ -35,18 +36,25 @@ type errorObject = {
   status: number | undefined;
   config: InternalAxiosRequestConfig<any> | undefined;
 };
+
 export default function Group() {
+  const { groupid } = useParams();
   const menu = useSignal<string | null>(null);
   const showBottomBar = useSignal<boolean>(false);
   const groupError = useSignal<errorObject>();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
-  const expenseParsedFilters = useSignal<ExpenseParsedFilters>({});
-  const transferParsedFilters = useSignal<TransferParsedFilters>({});
+
+  const { expenseFilter, transferFilter } = localStorageStringParser(
+    localStorage.getItem(getFilterStorageKey("expense", groupid)),
+    localStorage.getItem(getFilterStorageKey("transfer", groupid))
+  );
+
+  const expenseParsedFilters = useSignal<ExpenseParsedFilters>(expenseFilter);
+  const transferParsedFilters = useSignal<TransferParsedFilters>(transferFilter);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
-  const { groupid } = useParams();
   const navigate = useNavigate();
-  const transactionType: TransactionType = 'Group' as const
+  const transactionType: TransactionType = "Group" as const;
 
   const {
     userInfo,

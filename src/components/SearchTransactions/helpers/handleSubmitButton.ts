@@ -11,7 +11,7 @@ import {
 import { QueryClient } from "@tanstack/react-query";
 import { addExistingTriggerElement } from "./addExistingTriggerElement";
 import { finalProcessConstraints } from "./finalProcessConstraints";
-
+import { getFilterStorageKey } from "./localStorageStringParser";
 
 export const handleSubmitButton = (
   editorState: EditorState | null,
@@ -43,10 +43,19 @@ export const handleSubmitButton = (
   const expensesDateTriggerOrder: DateConstraint[] = [];
   const transfersDateTriggerOrder: DateConstraint[] = [];
 
+  // Important: reset collections before re-extracting from editor
+  expenseFilterState.value.payersIds = [];
+  expenseFilterState.value.participantsIds = [];
+  expenseFilterState.value.labels = [];
+  transferFilterState.value.sendersIds = [];
+  transferFilterState.value.receiversIds = [];
+
   if (isElementNode(jsonObject[0])) {
     const children = jsonObject[0].children;
 
-    children.map((c) => {
+    children.map((c: any) => {
+      const actualId = c.id || c.data?.id || c.data?.memberId;
+
       if (
         c.type === "beautifulMention" &&
         ["before:", "during:", "after:"].includes(c.trigger) &&
@@ -66,31 +75,34 @@ export const handleSubmitButton = (
       // Deduplicate
       if (
         c.trigger === "payer:" &&
-        !expenseFilterState.value.payersIds.includes(c.data.id)
+        actualId &&
+        !expenseFilterState.value.payersIds.includes(actualId)
       ) {
-        console.log("payer", c.data);
-        expenseFilterState.value.payersIds.push(c.data.id);
+        expenseFilterState.value.payersIds.push(actualId);
       }
 
       if (
         c.trigger === "participant:" &&
-        !expenseFilterState.value.participantsIds.includes(c.data.id)
+        actualId &&
+        !expenseFilterState.value.participantsIds.includes(actualId)
       ) {
-        expenseFilterState.value.participantsIds.push(c.data.id);
+        expenseFilterState.value.participantsIds.push(actualId);
       }
 
       if (
         c.trigger === "sender:" &&
-        !transferFilterState.value.sendersIds.includes(c.data.id)
+        actualId &&
+        !transferFilterState.value.sendersIds.includes(actualId)
       ) {
-        transferFilterState.value.sendersIds.push(c.data.id);
+        transferFilterState.value.sendersIds.push(actualId);
       }
 
       if (
         c.trigger === "receiver:" &&
-        !transferFilterState.value.receiversIds.includes(c.data.id)
+        actualId &&
+        !transferFilterState.value.receiversIds.includes(actualId)
       ) {
-        transferFilterState.value.receiversIds.push(c.data.id);
+        transferFilterState.value.receiversIds.push(actualId);
       }
 
       if (c.trigger === "before:") {
@@ -144,9 +156,10 @@ export const handleSubmitButton = (
       // Deduplicate labels
       if (
         c.trigger === "category:" &&
-        !expenseFilterState.value.labels.includes(c.data.id)
+        actualId &&
+        !expenseFilterState.value.labels.includes(actualId)
       ) {
-        expenseFilterState.value.labels.push(c.data.id);
+        expenseFilterState.value.labels.push(actualId);
       }
 
       if (category.value === "expenses") {
@@ -164,8 +177,6 @@ export const handleSubmitButton = (
       addExistingTriggerElement(transferFilterState, transfersDateTriggerOrder)
     );
 
-    //TODO actual submit
-
     const expenseFilter = {
       groupId: expenseFilterState.value.groupId,
       participantsIds: expenseFilterState.value.participantsIds,
@@ -178,7 +189,6 @@ export const handleSubmitButton = (
         expenseDatesBackend?.find((e) => e.trigger === "after:")?.value || null,
       labels: expenseFilterState.value.labels,
     };
-
 
     const transferFilter = {
       groupId: transferFilterState.value.groupId,
@@ -193,8 +203,15 @@ export const handleSubmitButton = (
         null,
     };
 
-    localStorage.setItem("expenseFilter", JSON.stringify(expenseFilter));
-    localStorage.setItem("transferFilter", JSON.stringify(transferFilter));
+    localStorage.setItem(
+      getFilterStorageKey("expense", expenseFilter.groupId),
+      JSON.stringify(expenseFilter)
+    );
+    localStorage.setItem(
+      getFilterStorageKey("transfer", transferFilter.groupId),
+      JSON.stringify(transferFilter)
+    );
+
     expenseParsedFilters.value = expenseFilter;
     transferParsedFilters.value = transferFilter;
 
@@ -212,9 +229,7 @@ export const handleSubmitButton = (
         queryKey: ["nonGroupExpenses"],
         exact: false,
       });
-      // Add nonGroupTransfers invalidation if/when implemented
     }
     menu.value = null;
-
   }
 };

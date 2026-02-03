@@ -4,18 +4,20 @@ import { ExpenseParsedFilters, Group, TruncatedMember } from "../types";
 import { QueryClient } from "@tanstack/react-query";
 import labelColors from "../labelColors";
 import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
+import { getFilterStorageKey } from "../components/SearchTransactions/helpers/localStorageStringParser";
 
 const updateFiltersAndSave = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   updatedFilters: any,
-  queryClient: QueryClient
+  queryClient: QueryClient,
+  groupId?: string
 ) => {
   expenseParsedFilters.value = {
     ...expenseParsedFilters.value,
     ...updatedFilters,
   };
   localStorage.setItem(
-    "expenseFilter",
+    getFilterStorageKey("expense", groupId),
     JSON.stringify(expenseParsedFilters.value)
   );
   queryClient.invalidateQueries({ queryKey: ["groupExpenses"], exact: false });
@@ -48,7 +50,8 @@ export const renderExpenseFilterPills = (
           updateFiltersAndSave(
             expenseParsedFilters,
             { freeText: "" },
-            queryClient
+            queryClient,
+            group?.id
           )
         }
       />
@@ -70,7 +73,8 @@ export const renderExpenseFilterPills = (
           updateFiltersAndSave(
             expenseParsedFilters,
             { before: null, after: null },
-            queryClient
+            queryClient,
+            group?.id
           )
         }
       />
@@ -92,7 +96,8 @@ export const renderExpenseFilterPills = (
           updateFiltersAndSave(
             expenseParsedFilters,
             { before: null },
-            queryClient
+            queryClient,
+            group?.id
           )
         }
       />
@@ -115,7 +120,8 @@ export const renderExpenseFilterPills = (
           updateFiltersAndSave(
             expenseParsedFilters,
             { after: null },
-            queryClient
+            queryClient,
+            group?.id
           )
         }
       />
@@ -143,7 +149,8 @@ export const renderExpenseFilterPills = (
               {
                 participantsIds: participantsIds.filter((pid) => pid !== id),
               },
-              queryClient
+              queryClient,
+              group?.id
             )
           }
         />
@@ -172,7 +179,8 @@ export const renderExpenseFilterPills = (
               {
                 payersIds: payersIds.filter((pid) => pid !== id),
               },
-              queryClient
+              queryClient,
+              group?.id
             )
           }
         />
@@ -203,7 +211,8 @@ export const renderExpenseFilterPills = (
               {
                 labels: labels.filter((lid) => lid !== id),
               },
-              queryClient
+              queryClient,
+              group?.id
             )
           }
         />

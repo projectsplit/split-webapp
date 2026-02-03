@@ -54,7 +54,7 @@ const getPersonalExpenses = async (
   if (next) params.append("next", next);
   if (freeText) params.append("searchTerm", freeText);
 
-  if (before === after && before !== null && after !== null) {
+  if (before && after && before === after) {
     let beforeDate = DateTime.fromFormat(before, "dd-MM-yyyy");
     let afterDate = DateTime.fromFormat(after, "dd-MM-yyyy");
 

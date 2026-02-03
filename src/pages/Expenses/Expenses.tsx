@@ -34,6 +34,7 @@ import {
 } from "../../helpers/getExpenseType";
 import getAllParticipants from "@/helpers/getAllParticipants";
 import { useExpenseList } from "./hooks/useExpenseList";
+import { getFilterStorageKey } from "@/components/SearchTransactions/helpers/localStorageStringParser";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -74,7 +75,7 @@ const Expenses = () => {
 
   const expenses = data?.pages.flatMap((p) => p.expenses);
   const allParticipants = getAllParticipants(expenses, transactionType, group?.members || [], group?.guests || []);
-  
+
   const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id);
   const totalSpent: Record<
     string,
@@ -87,14 +88,13 @@ const Expenses = () => {
     Object.keys(groupTotalsByCurrency).length > 1;
 
   useEffect(() => {
-    const expenseFilters = localStorage.getItem("expenseFilter");
-
+    const expenseFilters = localStorage.getItem(getFilterStorageKey("expense", group?.id));
     if (expenseFilters) {
       const paresedFilter = JSON.parse(expenseFilters);
       if (paresedFilter.groupId === group?.id || paresedFilter.groupId === "") {
         expenseParsedFilters.value = JSON.parse(expenseFilters);
       } else {
-        localStorage.removeItem("expenseFilter");
+        localStorage.removeItem(getFilterStorageKey("expense", group?.id));
         queryClient.invalidateQueries({
           queryKey: ["groupExpenses"],
           exact: false,
@@ -138,10 +138,8 @@ const Expenses = () => {
       : totalSpent[userInfo?.userId]?.[userInfo?.currency] ?? 0;
 
   const hasAnySearchParams =
-    (expenseParsedFilters.value.before !== null &&
-      expenseParsedFilters.value.before !== undefined) ||
-    (expenseParsedFilters.value.after !== null &&
-      expenseParsedFilters.value.after !== undefined) ||
+    !!expenseParsedFilters.value.before ||
+    !!expenseParsedFilters.value.after ||
     (expenseParsedFilters.value.freeText !== "" &&
       expenseParsedFilters.value.freeText !== undefined) ||
     (expenseParsedFilters.value.labels !== undefined &&

@@ -23,7 +23,10 @@ import {
 import MyButton from "../MyButton/MyButton";
 
 import { CategorySelector } from "../CategorySelector/CategorySelector";
-import { localStorageStringParser } from "./helpers/localStorageStringParser";
+import {
+  getFilterStorageKey,
+  localStorageStringParser,
+} from "./helpers/localStorageStringParser";
 import { useSearchFriendsToInvite } from "@/api/services/useSearchFriendsToInvite";
 import useDebounce from "@/hooks/useDebounce";
 import { usePeople } from "./hooks/usePeople";
@@ -51,7 +54,7 @@ export default function SearchTransactions({
     searchKeyword.value.length > 1 ? searchKeyword.value : "",
     300
   );
-  const pageSize =10;
+  const pageSize = 10;
 
   const expenseFilterState = useSignal<CreateExpenseFilterRequest>({
     groupId: group?.id || "",
@@ -131,10 +134,14 @@ export default function SearchTransactions({
 
   const { expenseFilter, transferFilter } = useMemo(() => {
     return localStorageStringParser(
-      localStorage.getItem("expenseFilter"),
-      localStorage.getItem("transferFilter")
+      localStorage.getItem(getFilterStorageKey("expense", group?.id)),
+      localStorage.getItem(getFilterStorageKey("transfer", group?.id))
     );
-  }, [localStorage.getItem("expenseFilter"), localStorage.getItem("transferFilter")]);
+  }, [
+    localStorage.getItem(getFilterStorageKey("expense", group?.id)),
+    localStorage.getItem(getFilterStorageKey("transfer", group?.id)),
+    group?.id,
+  ]);
 
   useEffect(() => {
     initializeFilterState(

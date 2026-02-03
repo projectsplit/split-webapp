@@ -14,6 +14,7 @@ import NewTransferAnimation from '../../components/Menus/MenuAnimations/NewTrans
 import { StyledGroup } from './Group.styled';
 import NonGroupExpenseUsersAnimation from '../../components/Menus/MenuAnimations/NonGroupExpenseUsersAnimation';
 import NonGroupTransferAnimation from '../../components/Menus/MenuAnimations/NonGroupTransferAnimation';
+import { localStorageStringParser, getFilterStorageKey } from '../../components/SearchTransactions/helpers/localStorageStringParser';
 
 
 
@@ -37,8 +38,14 @@ export default function NonGroup() {
     receiverId: "",
     receiverName: "",
   });
-  const expenseParsedFilters = useSignal<ExpenseParsedFilters>({});
-  const transferParsedFilters = useSignal<TransferParsedFilters>({});
+
+  const { expenseFilter, transferFilter } = localStorageStringParser(
+    localStorage.getItem(getFilterStorageKey("expense", undefined)),
+    localStorage.getItem(getFilterStorageKey("transfer", undefined))
+  );
+
+  const expenseParsedFilters = useSignal<ExpenseParsedFilters>(expenseFilter);
+  const transferParsedFilters = useSignal<TransferParsedFilters>(transferFilter);
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const nonGroupUsers = useSignal<User[]>([]);
@@ -140,7 +147,7 @@ export default function NonGroup() {
           timeZoneId={timeZoneId}
           expenseParsedFilters={expenseParsedFilters}
           transferParsedFilters={transferParsedFilters}
-          // nonGroupUsers={nonGroupUsers}
+        // nonGroupUsers={nonGroupUsers}
         />
 
         <div className="bottomMenu">
