@@ -1,6 +1,6 @@
 import { DeleteExpenseConfirmationProps } from "../../../interfaces";
-import { useDeleteExpense } from "../../../api/services/useDeleteExpense";
 import Confirmation from "./Confirmation";
+import { useDeleteExpenseMutation } from "@/api/services/useDeleteExpenseMutation";
 
 export default function DeleteExpenseConfirmation({
   menu,
@@ -8,7 +8,8 @@ export default function DeleteExpenseConfirmation({
   selectedExpense,
   errorMessage,
 }: DeleteExpenseConfirmationProps) {
-  const { mutate: deleteExpense, isPending } = useDeleteExpense(
+  
+  const { mutate: deleteExpense, isPending } = useDeleteExpenseMutation(
     menu,
     errorMessage,
     selectedExpense
