@@ -201,13 +201,13 @@ export type GroupPayment = {
 
 export type Share = {
   userId: string;
-  userName: string;
+  username: string;
   amount: number;
 };
 
 export type Payment = {
   userId: string;
-  userName: string;
+  username: string;
   amount: number;
 };
 
@@ -223,11 +223,21 @@ export type SearchUserToInviteResponse = {
   next: string | null;
 };
 
+export type SearchUserResponse = {
+  users: SearchUserResponseItem[];
+  next: string | null;
+};
+
 export type SearchUserToInviteResponseItem = {
   userId: string;
   username: string;
   isGroupMember: boolean;
   isAlreadyInvited: boolean;
+};
+
+export type SearchUserResponseItem = {
+  userId: string;
+  username: string;
 };
 
 export type Group = {

@@ -44,9 +44,7 @@ export const EditorContent = forwardRef<
     filteredLabels,
     category,
     searchKeyword,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
+
   } = props;
 
 
@@ -132,9 +130,6 @@ export const EditorContent = forwardRef<
           <Menu
             {...props}
             contentEditableHeight={contentEditableHeight}
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
           />
         )}
         menuItemComponent={MenuItem}

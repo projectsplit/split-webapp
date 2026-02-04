@@ -990,9 +990,7 @@ export interface LexicalEditorProps {
   filteredLabels: Signal<FetchedLabel[]>;
   category: Signal<string>;
   searchKeyword: Signal<string>;
-  fetchNextPage: () => void;
-  hasNextPage: boolean;
-  isFetchingNextPage: boolean;
+
 }
 
 export interface FilterCalendarProps {

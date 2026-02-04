@@ -35,6 +35,7 @@ import {
 import getAllParticipants from "@/helpers/getAllParticipants";
 import { useExpenseList } from "./hooks/useExpenseList";
 import { getFilterStorageKey } from "@/components/SearchTransactions/helpers/localStorageStringParser";
+import { useGetNonGroupExpenseUsers } from "@/api/services/useGetNonGroupExpenseUsers";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -73,8 +74,18 @@ const Expenses = () => {
     timeZoneId
   );
 
+  const { data: nonGroupUsersData } = useGetNonGroupExpenseUsers(transactionType);
   const expenses = data?.pages.flatMap((p) => p.expenses);
-  const allParticipants = getAllParticipants(expenses, transactionType, group?.members || [], group?.guests || []);
+  const allParticipants = getAllParticipants(
+    expenses,
+    transactionType,
+    group?.members || [],
+    group?.guests || [],
+    nonGroupUsersData?.data.users.map((u) => ({
+      id: u.userId,
+      name: u.username,
+    })) || []
+  );
 
   const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id);
   const totalSpent: Record<

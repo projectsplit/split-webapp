@@ -8,7 +8,6 @@ import Sentinel from "../../../Sentinel";
 import { useCallback, useMemo, useRef, useState } from "react";
 import AutoWidthInput from "../../../AutoWidthInput";
 import {
-  SearchUserToInviteResponseItem,
   User,
   UserInfo,
 } from "../../../../types";
@@ -17,9 +16,9 @@ import React from "react";
 import { SelectedUsers } from "../SelectionLists/SelectedUsers";
 import { useSearchGroupsByName } from "../../../../api/services/useSearchGroupsByName";
 import { useOutletContext } from "react-router-dom";
-import { useSearchFriendsToInvite } from "../../../../api/services/useSearchFriendsToInvite";
 import useDebounce from "../../../../hooks/useDebounce";
 import { SelectedGroup } from "../SelectionLists/SelectedGroup";
+import { useSearchUsers } from "@/api/services/useSearchUsers";
 
 export const NonGroupExpenseUsersMenu = ({
   menu,
@@ -46,11 +45,10 @@ export const NonGroupExpenseUsersMenu = ({
     userInfo: UserInfo;
   }>();
 
-  const result = useSearchFriendsToInvite( //TODO we need new endpoint to bring users (so we can do useSearchUsers)
-    "f7637b50-e77d-4609-9e38-eb0acc9c9c51",
+  const result = useSearchUsers( //TODO we need new endpoint to bring users (so we can do useSearchUsers)
     debouncedKeyword,
     pageSize
-  );
+  )
 
   if (!result) return null;
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = result;
@@ -99,12 +97,9 @@ export const NonGroupExpenseUsersMenu = ({
       nonGroupUsers.value = [...nonGroupUsers.value, currentUser];
     }
 
-    const newUser: SearchUserToInviteResponseItem = {
-      //TODO will have to change to friend list rather than users to invite
+    const newUser: User = {
       userId: existingUser.userId,
       username: existingUser.username,
-      isGroupMember: existingUser.isGroupMember,
-      isAlreadyInvited: existingUser.isAlreadyInvited,
     };
 
     if (

@@ -3,7 +3,6 @@ import Pill from "../components/Pill/Pill";
 import { ExpenseParsedFilters, Group, TruncatedMember } from "../types";
 import { QueryClient } from "@tanstack/react-query";
 import labelColors from "../labelColors";
-import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
 import { getFilterStorageKey } from "../components/SearchTransactions/helpers/localStorageStringParser";
 
 const updateFiltersAndSave = (
@@ -127,7 +126,6 @@ export const renderExpenseFilterPills = (
       />
     );
   }
-
 
   if (participantsIds && participantsIds?.length > 0) {
     participantsIds?.forEach((id, index) => {

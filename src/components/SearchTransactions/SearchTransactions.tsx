@@ -27,9 +27,8 @@ import {
   getFilterStorageKey,
   localStorageStringParser,
 } from "./helpers/localStorageStringParser";
-import { useSearchFriendsToInvite } from "@/api/services/useSearchFriendsToInvite";
-import useDebounce from "@/hooks/useDebounce";
 import { usePeople } from "./hooks/usePeople";
+import { useGetNonGroupExpenseUsers } from "@/api/services/useGetNonGroupExpenseUsers";
 
 export default function SearchTransactions({
   menu,
@@ -50,11 +49,6 @@ export default function SearchTransactions({
   const category = useSignal<string>("expenses");
   const queryClient = useQueryClient();
   const searchKeyword = useSignal<string>("");
-  const [debouncedKeyword, isDebouncing] = useDebounce(
-    searchKeyword.value.length > 1 ? searchKeyword.value : "",
-    300
-  );
-  const pageSize = 10;
 
   const expenseFilterState = useSignal<CreateExpenseFilterRequest>({
     groupId: group?.id || "",
@@ -89,13 +83,10 @@ export default function SearchTransactions({
   const editorContentRef = useRef<EditorContentHandle | null>(null);
   const params = useParams();
 
-  const users = useSearchFriendsToInvite(//TODO need an endpoint that only fetches non group expense users that are in non group expenses same as user.
-    "f7637b50-e77d-4609-9e38-eb0acc9c9c51",
-    debouncedKeyword,
-    pageSize
-  );
+  const users = useGetNonGroupExpenseUsers(group?.id ? "Group" : "NonGroup")
+
   const allUsers = useMemo(() => {
-    return users.data?.pages.flatMap((page) => page.users) || [];
+    return users.data?.data.users || [];
   }, [users.data]);
 
   const { fetchedPeople, enhancedPeopleWithProps } = usePeople(
@@ -226,9 +217,7 @@ export default function SearchTransactions({
                 timeZoneId={timeZoneId}
                 filteredLabels={filteredLabels}
                 category={category}
-                fetchNextPage={() => users.fetchNextPage()}
-                hasNextPage={users.hasNextPage}
-                isFetchingNextPage={users.isFetchingNextPage}
+
               />
             </LexicalComposer>
           </div>

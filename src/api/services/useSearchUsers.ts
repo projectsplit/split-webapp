@@ -1,37 +1,35 @@
 import { AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { GetGroupsResponse } from "../../types";
+import { SearchUserResponse } from "../../types";
 
-export const useSearchGroupsByName = (
+export const useSearchUsers = (
   keyword: string,
   pageSize: number,
-
 ) => {
-  const queryKey = ["searchGroupsByName", keyword, pageSize];
+
+  const queryKey = ["searchUsers", keyword, pageSize];
   const query = useInfiniteQuery({
     queryKey,
     queryFn: ({ pageParam: next }) =>
-      searchGroupsByName(keyword, pageSize, next),
+      searchUsers(keyword, pageSize, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: "",
+    placeholderData: (previousData) => previousData,
   });
-
 
   return { ...query };
 };
 
-const searchGroupsByName = async (
+const searchUsers = async (
   keyword: string,
   pageSize: number,
   next?: string
-): Promise<GetGroupsResponse> => {
+): Promise<SearchUserResponse> => {
   const params = { pageSize, next, keyword };
   const response = await apiClient.get<
     void,
-    AxiosResponse<GetGroupsResponse>
-  >("/groups/search", { params });
+    AxiosResponse<SearchUserResponse>
+  >("/users/search-all-users", { params });
   return response.data;
 };
-
-
