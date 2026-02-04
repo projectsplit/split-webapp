@@ -82,14 +82,7 @@ export const getMe = async () => {
   return response.data;
 };
 
-export const getGroupDebts = async (
-  groupId: string
-): Promise<DebtsResponse> => {
-  const params = { groupId };
-  const response = await apiClient.get<void, AxiosResponse<DebtsResponse>>("/debts", { params });
 
-  return response.data;
-};
 
 
 

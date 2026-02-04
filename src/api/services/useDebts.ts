@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { getGroupDebts } from "./api";
 import { DebtsResponse } from "../../types";
+import { apiClient } from "../apiClients";
+import { AxiosResponse } from "axios";
 
 
 const useDebts = (groupId: string | undefined) => {
@@ -17,4 +18,12 @@ const useDebts = (groupId: string | undefined) => {
   });
 };
 
+const getGroupDebts = async (
+  groupId: string
+): Promise<DebtsResponse> => {
+  const params = { groupId };
+  const response = await apiClient.get<void, AxiosResponse<DebtsResponse>>("/debts", { params });
+
+  return response.data;
+};
 export default useDebts;

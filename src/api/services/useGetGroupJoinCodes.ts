@@ -1,7 +1,6 @@
 import { AxiosResponse } from "axios";
 import { apiClient } from "../apiClients";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Signal } from "@preact/signals-react";
 import { GetJoinCodesResponse } from "../../types";
 
 export const useGetGroupJoinCodes = (groupId: string, pageSize: number) => {
