@@ -265,6 +265,7 @@ export default function Home() {
           nonGroupUsers={nonGroupUsers}
           nonGroupGroup={nonGroupGroup}
           nonGroupMenu={nonGroupTransferMenu}
+          fromHome={true}
         />
       )}
 

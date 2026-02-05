@@ -180,7 +180,6 @@ export default function TransferForm({
     }
   }, [senderId, receiverId]);
 
-
   return (
     <StyledTransferForm
       $inputError={showIdError}
