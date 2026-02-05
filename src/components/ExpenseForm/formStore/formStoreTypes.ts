@@ -1,6 +1,6 @@
 import { Signal } from "@preact/signals-react";
 import {
-    ExpenseRequest,
+  ExpenseRequest,
   FormExpense,
   GeoLocation,
   Guest,
@@ -11,7 +11,7 @@ import {
   UserInfo,
 } from "../../../types";
 
-export type CategoryKey = "Amounts" | "Shares" | "Percentages";
+export type SplitMethod = "Amounts" | "Shares" | "Percentages";
 
 export type CategoryMap<T> = {
   readonly Amounts: T;
@@ -39,8 +39,8 @@ export interface ExpenseState {
   participantsByCategory: CategoryMap<PickerMember[]>;
   payersByCategory: CategoryMap<PickerMember[]>;
 
-  participantsCategory: Signal<CategoryKey>;
-  payersCategory: Signal<CategoryKey>;
+  participantsCategory: Signal<SplitMethod>;
+  payersCategory: Signal<SplitMethod>;
   makePersonalClicked: boolean;
   showPicker: boolean;
   // ── Actions
@@ -77,12 +77,12 @@ export interface ExpenseState {
   ) => void;
 
   updateParticipantsInCategory: (
-    category: CategoryKey,
+    category: SplitMethod,
     updater: (prev: PickerMember[]) => PickerMember[]
   ) => void;
 
   updatePayersInCategory: (
-    category: CategoryKey,
+    category: SplitMethod,
     updater: (prev: PickerMember[]) => PickerMember[]
   ) => void;
 
@@ -110,8 +110,8 @@ export interface ExpenseState {
   validateForm: (options?: { showErrors: boolean } | undefined) => {
     isValid: boolean;
     errors:
-      | { amount: string; participants: string; payers: string }
-      | { amount?: undefined; participants?: undefined; payers?: undefined };
+    | { amount: string; participants: string; payers: string }
+    | { amount?: undefined; participants?: undefined; payers?: undefined };
   };
 
   resetForm: () => void;

@@ -36,6 +36,7 @@ import {
   EnhancedPeopleWithProps,
   FetchedPeople,
   FilteredPeople,
+  SplitCategory,
 } from "./types";
 import { ReadonlySignal, Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
@@ -49,7 +50,7 @@ import {
   InfiniteQueryObserverResult,
   UseMutateFunction,
 } from "@tanstack/react-query";
-import { CategoryKey } from "./components/ExpenseForm/formStore/formStoreTypes";
+import { SplitMethod } from "./components/ExpenseForm/formStore/formStoreTypes";
 
 
 export interface ExpenseProps {
@@ -175,7 +176,7 @@ export interface MemberPickerProps {
   error?: string;
   // group: Group;
   selectedCurrency: string;
-  category: Signal<string>;
+  category: Signal<SplitMethod>;
   userMemberId: string | undefined;
   setError: React.Dispatch<React.SetStateAction<string>>;
   isnonGroupExpense?: Signal<boolean>;
@@ -882,6 +883,12 @@ export interface RemoveWarningAnimationProps extends MenuProps {
 export interface ParticipantsPayersAnimationProps extends MenuProps {
   error: string | undefined;
 }
+export interface GeneralWarningMenuProps extends MenuProps {
+  message: string | undefined;
+}
+export interface GeneralWarningMenuAnimationProps extends MenuProps {
+  message: string | undefined;
+}
 export interface RenameGroupMenuProps extends MenuProps {
   groupId: string | undefined;
   groupName: string | undefined;
@@ -946,13 +953,10 @@ export interface GroupErrorProps {
 }
 
 export interface NameAndAmountsProps {
-  category: Signal<string>;
+  category: Signal<SplitMethod>;
   m: PickerMember;
   onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
   currency: string;
-  isnonGroupExpense: Signal<boolean> | undefined;
-  userId: string;
-  description: string;
 }
 
 export interface CurrentSearchFieldProps {
@@ -1331,4 +1335,32 @@ export interface SendMenuWrapperInterface {
   userMemberId: string | undefined;
   setId: (value: React.SetStateAction<string>) => void;
   setShowIdError: (value: React.SetStateAction<boolean>) => void;
+}
+
+
+export interface DetailedSharedExpenseTextProps {
+  nonGroupGroup: Signal<Group | null> | undefined;
+  isCreateExpense: boolean;
+  isPendingCreateExpense: boolean;
+  isPendingEditExpense: boolean;
+  amountNumber: number;
+  adjustParticipants: PickerMember[];
+  setParticipants: (newParticipants: PickerMember[]) => void;
+  participantsError: string;
+  currencySymbol: string;
+  participantsCategory: Signal<SplitMethod>;
+  userMemberId: string;
+  setParticipantsError: (msgOrUpdater: string | ((prev: string) => string)) => void;
+  isnonGroupExpense: Signal<boolean> | undefined;
+  userInfo: UserInfo;
+  groupMembers: Signal<(Member | Guest)[]>;
+  nonGroupUsers: Signal<User[]>;
+  nonGroupMenu: Signal<string | null> | undefined
+  adjustPayers: PickerMember[];
+  setPayers: (newPayers: PickerMember[]) => void;
+  payersError: string;
+  setPayersError: (msgOrUpdater: string | ((prev: string) => string)) => void;
+  payersCategory: Signal<SplitMethod>;
+  isPersonal: Signal<boolean>;
+  userExistsInCategory: Signal<Record<SplitCategory, boolean | undefined>>
 }

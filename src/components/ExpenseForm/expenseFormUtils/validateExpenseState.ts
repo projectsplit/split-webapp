@@ -1,12 +1,12 @@
 import currency from "currency.js";
-import { CategoryKey, CategoryMap } from "../formStore/formStoreTypes";
+import { SplitMethod, CategoryMap } from "../formStore/formStoreTypes";
 import { PickerMember } from "../../../types";
 import { significantDigitsFromTicker } from "../../../helpers/openExchangeRates";
 
 export const validateExpenseState = (
   amount: string,
-  participantsCategory: CategoryKey,
-  payersCategory: CategoryKey,
+  participantsCategory: SplitMethod,
+  payersCategory: SplitMethod,
   currencySymbol: string,
   participantsByCategory: CategoryMap<PickerMember[]>,
   payersByCategory: CategoryMap<PickerMember[]>
@@ -84,8 +84,8 @@ export const validateExpenseState = (
   participantsErr = !areParticipantsValid
     ? "Participation amounts must be positive"
     : isParticipantsSumInvalid
-    ? "Participation amounts must add up to total"
-    : "";
+      ? "Participation amounts must add up to total"
+      : "";
 
   // Payers validation
   const arePayersValid = selectedPayers.every(
@@ -111,8 +111,8 @@ export const validateExpenseState = (
   payersErr = !arePayersValid
     ? "Payment amounts must be positive"
     : isPayersSumInvalid
-    ? "Payment amounts must add up to total"
-    : "";
+      ? "Payment amounts must add up to total"
+      : "";
 
   const isValid = !amountErr && !participantsErr && !payersErr;
 

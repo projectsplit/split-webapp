@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { ExpenseState, CategoryKey } from "./formStoreTypes";
+import { ExpenseState, SplitMethod } from "./formStoreTypes";
 import {
   FormExpense,
   Guest,
@@ -47,8 +47,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   makePersonalClicked: false,
   showPicker: false,
 
-  participantsCategory: signal<CategoryKey>("Amounts"),
-  payersCategory: signal<CategoryKey>("Amounts"),
+  participantsCategory: signal<SplitMethod>("Amounts"),
+  payersCategory: signal<SplitMethod>("Amounts"),
 
   // ── Simple setters ──────────────────────────────────────────────
   setAmount: (value) => set({ amount: value }),

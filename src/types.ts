@@ -552,7 +552,7 @@ export type GetUserInvitationsResponseItem = {
   guestId: string | null;
   guestName: string | null;
 };
-
+export type SplitCategory = 'Participants' | 'Payers';
 export type DeleteExpenseRequest = {
   expenseId: string;
 };

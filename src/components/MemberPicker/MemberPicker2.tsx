@@ -31,6 +31,8 @@ import IonIcon from "@reacticons/ionicons";
 import { useTotalSelectedAmount } from "./helpers/hooks/useTotalSelectedAmount";
 import { BuildRemainingAmountText } from "./helpers/components/BuildRemainingAmountText";
 
+
+
 const MemberPickerPreMemo2 = ({
   memberAmounts,
   setMemberAmounts,
@@ -140,12 +142,12 @@ const MemberPickerPreMemo2 = ({
 
   const deselectMember = (id: string): void => {
     const newFormMembers = memberAmounts.map((m) => {
-      if (
-        isnonGroupExpense?.value &&
-        m.id === userId &&
-        description === "Participants"
-      )
-        return m;
+      // if (
+      //   isnonGroupExpense?.value &&
+      //   m.id === userId &&
+      //   description === "Participants"
+      // )
+      //   return m;
 
       if (m.id === id) {
         return {
@@ -362,7 +364,7 @@ const MemberPickerPreMemo2 = ({
   }, [memberAmounts]);
 
   const isEquallySplitValue = isEquallySplit.value;
-  const totalSelectedAmount = useTotalSelectedAmount(memberAmounts,selectedCurrency)
+  const totalSelectedAmount = useTotalSelectedAmount(memberAmounts, selectedCurrency)
 
   return (
     <StyledMemberPicker
@@ -401,13 +403,13 @@ const MemberPickerPreMemo2 = ({
             <div className="title">
               {description === "Participants"
                 ? `Split ${displayCurrencyAndAmount(
-                    totalAmount.toString(),
-                    selectedCurrency
-                  )} by`
+                  totalAmount.toString(),
+                  selectedCurrency
+                )} by`
                 : `${displayCurrencyAndAmount(
-                    totalAmount.toString(),
-                    selectedCurrency
-                  )} paid by`}
+                  totalAmount.toString(),
+                  selectedCurrency
+                )} paid by`}
             </div>
             <div className="gap"></div>
           </div>
@@ -430,9 +432,6 @@ const MemberPickerPreMemo2 = ({
               .map((m) => (
                 <div key={m.id} className="selected option">
                   <NameAndAmounts
-                    description={description}
-                    isnonGroupExpense={isnonGroupExpense}
-                    userId={userId}
                     category={category}
                     m={m}
                     onClick={() => deselectMember(m.id)}

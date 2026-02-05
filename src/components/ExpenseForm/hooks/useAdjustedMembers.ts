@@ -2,15 +2,15 @@ import { useMemo } from "react";
 import { Signal } from "@preact/signals-react";
 import { PickerMember, User } from "@/types";
 import {
-  CategoryKey,
+  SplitMethod,
   CategoryMap,
 } from "@/components/ExpenseForm/formStore/formStoreTypes";
 
 interface UseAdjustedMembersParams {
   participantsByCategory: CategoryMap<PickerMember[]>;
   payersByCategory: CategoryMap<PickerMember[]>;
-  participantsCategory: Signal<CategoryKey>;
-  payersCategory: Signal<CategoryKey>;
+  participantsCategory: Signal<SplitMethod>;
+  payersCategory: Signal<SplitMethod>;
   nonGroupUsers: Signal<User[]>;
   isnonGroupExpense: Signal<boolean> | undefined;
   userInfo: { userId: string } | undefined;
@@ -29,7 +29,7 @@ export function useAdjustedMembers({
 }: UseAdjustedMembersParams) {
   const participants =
     participantsByCategory[
-      participantsCategory.value as keyof typeof participantsByCategory
+    participantsCategory.value as keyof typeof participantsByCategory
     ];
 
   const payers =

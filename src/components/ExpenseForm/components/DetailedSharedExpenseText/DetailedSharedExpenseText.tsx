@@ -2,9 +2,10 @@ import { StyledDetailedSharedExpenseText } from './DetailedSharedExpenseText.sty
 import MemberPicker2 from '@/components/MemberPicker/MemberPicker2'
 import { TiGroup } from 'react-icons/ti'
 import { FaRegEdit } from 'react-icons/fa'
-import { Signal } from '@preact/signals-react'
-import { Group, Guest, Member, PickerMember, User, UserInfo } from '@/types'
-import { CategoryKey } from '@/components/ExpenseForm/formStore/formStoreTypes'
+import { useSignal } from '@preact/signals-react'
+import { SplitCategory } from '@/types'
+
+import { DetailedSharedExpenseTextProps } from '@/interfaces'
 
 export default function DetailedSharedExpenseText({
   nonGroupGroup,
@@ -29,7 +30,25 @@ export default function DetailedSharedExpenseText({
   payersError,
   setPayersError,
   payersCategory,
-  isPersonal }: DetailedSharedExpenseTextProps) {
+  isPersonal,
+  userExistsInCategory }: DetailedSharedExpenseTextProps) {
+
+  const userIdToCheck =
+    nonGroupUsers.value.length > 0 || isnonGroupExpense?.value
+      ? userInfo?.userId
+      : userMemberId;
+
+  const isUserSelectedInParticipants = adjustParticipants.some(
+    (m) => m.id === userIdToCheck && m.selected
+  );
+  const isUserSelectedInPayers = adjustPayers.some(
+    (m) => m.id === userIdToCheck && m.selected
+  );
+
+  userExistsInCategory.value = {
+    Participants: isUserSelectedInParticipants,
+    Payers: isUserSelectedInPayers,
+  };
 
   const showDetailedSharedExpenseText =
     (nonGroupUsers?.value.length > 0 || groupMembers?.value.length > 0) &&
@@ -112,28 +131,3 @@ export default function DetailedSharedExpenseText({
 }
 
 
-interface DetailedSharedExpenseTextProps {
-  nonGroupGroup: Signal<Group | null> | undefined;
-  isCreateExpense: boolean;
-  isPendingCreateExpense: boolean;
-  isPendingEditExpense: boolean;
-  amountNumber: number;
-  adjustParticipants: PickerMember[];
-  setParticipants: (newParticipants: PickerMember[]) => void;
-  participantsError: string;
-  currencySymbol: string;
-  participantsCategory: Signal<CategoryKey>;
-  userMemberId: string;
-  setParticipantsError: (msgOrUpdater: string | ((prev: string) => string)) => void;
-  isnonGroupExpense: Signal<boolean> | undefined;
-  userInfo: UserInfo;
-  groupMembers: Signal<(Member | Guest)[]>;
-  nonGroupUsers: Signal<User[]>;
-  nonGroupMenu: Signal<string | null> | undefined
-  adjustPayers: PickerMember[];
-  setPayers: (newPayers: PickerMember[]) => void;
-  payersError: string;
-  setPayersError: (msgOrUpdater: string | ((prev: string) => string)) => void;
-  payersCategory: Signal<CategoryKey>;
-  isPersonal: Signal<boolean>;
-}

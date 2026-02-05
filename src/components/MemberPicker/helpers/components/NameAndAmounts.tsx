@@ -8,29 +8,13 @@ export const NameAndAmounts = ({
   m,
   onClick,
   currency,
-  isnonGroupExpense,
-  userId,
-  description,
 }: NameAndAmountsProps) => {
-  
-  const criteriaForLockedUser =
-    isnonGroupExpense &&
-    isnonGroupExpense.value &&
-    m.id === userId &&
-    description === "Participants";
   return (
     <>
       {category.value === "Shares" || category.value === "Percentages" ? (
         <div className="textAndCheck">
           <div className="tick-cube" onClick={onClick}>
-            {criteriaForLockedUser ? (
-              <div className="checkmarkAndLock">
-                <FaCheck className="checkmark" style={{ color: "#9e9e9e" }} />
-                <HiLockClosed className="locked-icon" />
-              </div>
-            ) : (
-              <FaCheck className="checkmark" />
-            )}
+            <FaCheck className="checkmark" />
           </div>
           <div className="nameAndAmount">
             <div className="name"> {m.name}</div>
@@ -45,14 +29,7 @@ export const NameAndAmounts = ({
       ) : (
         <div className="textAndCheck">
           <div className="tick-cube" onClick={onClick}>
-            {criteriaForLockedUser ? (
-              <div className="checkmarkAndLock">
-                <FaCheck className="checkmark" style={{ color: "#9e9e9e" }} />
-                <HiLockClosed className="locked-icon" />
-              </div>
-            ) : (
-              <FaCheck className="checkmark" />
-            )}
+            <FaCheck className="checkmark" />
           </div>
           {m.name}
         </div>
