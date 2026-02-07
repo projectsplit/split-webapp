@@ -12,12 +12,14 @@ import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackgr
 import CurrencyOptionsAnimation from "../Menus/MenuAnimations/CurrencyOptionsAnimation";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { CreateTransferRequest, Member, UserInfo } from "../../types";
-import { useTransfer } from "../../api/services/useTransfers";
 import FormInput from "../FormInput/FormInput";
 import DateDisplay from "../ExpenseForm/components/DateDisplay/DateDisplay";
 import SendMenuWrapper from "./SendMenuWrapper/SendMenuWrapper";
 import { TiGroup } from "react-icons/ti";
 import { SelectedGroup } from "../Menus/NonGroupUsersMenus/SelectionLists/SelectedGroup";
+import { useCreateGroupTransfer } from "@/api/services/useCreateGroupTransfer";
+import { useCreateNonGroupTransfer } from "@/api/services/useCreateNonGroupTransfer";
+
 
 export default function TransferForm({
   groupMembers,
@@ -56,12 +58,13 @@ export default function TransferForm({
   const [transferTime, setTransferTime] = useState<string>(
     new Date().toISOString()
   );
-  const [senderId, setSenderId] = useState<string>("");
+  const [senderId, setSenderId] = useState<string>(isnonGroupTransfer?.value ? userInfo?.userId : "");
   const [receiverId, setReceiverId] = useState<string>("");
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [showSamePersonError, setShowSamePersonError] =
     useState<boolean>(false);
   const isDateShowing = useSignal<boolean>(false);
+
   const handleInputBlur = useCallback(() => {
     setShowAmountError(true);
     amountIsValid(amount, setAmountError);
@@ -83,13 +86,27 @@ export default function TransferForm({
     };
   }, [nonGroupMenu?.value.senderId, nonGroupMenu?.value.receiverId]);
 
-  const { mutate: createTransferMutation, isPending } = useTransfer(
+  const { mutate: createGroupTransferMutation, isPending: isGroupTransferPending } = useCreateGroupTransfer(
     menu,
     groupId,
     navigate,
     isSubmitting,
     nonGroupGroup
   );
+
+  const { mutate: createNonGroupTransferMutation, isPending: isNonGroupTransferPending } = useCreateNonGroupTransfer(
+    menu,
+    navigate,
+    isSubmitting,
+  );
+
+  const createTransferMutation = isnonGroupTransfer?.value
+    ? createNonGroupTransferMutation
+    : createGroupTransferMutation;
+
+  const isPendingCreateTransfer = isnonGroupTransfer?.value
+    ? isNonGroupTransferPending
+    : isGroupTransferPending;
 
   const handldeCurrencyOptionsClick = useCallback(
     (curr: string) => {
@@ -101,8 +118,11 @@ export default function TransferForm({
     [currencyMenu]
   );
 
+
   const submitTransfer = useCallback(() => {
+
     setShowAmountError(true);
+
     setShowIdError(true);
     if (noReceiverSelected) {
       setUserSelectionError({
@@ -117,10 +137,12 @@ export default function TransferForm({
       });
       setShowSamePersonError(true);
     }
+
     if (!amountIsValid(amount, setAmountError)) return;
+
     if (!!idError.error) return;
 
-    const createTransferRequest: CreateTransferRequest = {
+    let createTransferRequest: CreateTransferRequest = {
       amount: Number(amount),
       groupId: groupId,
       currency: currencySymbol,
@@ -149,6 +171,16 @@ export default function TransferForm({
       a.id === userMemberId ? -1 : b.id === userMemberId ? 1 : 0
     );
   });
+
+  // Sync senderId and receiverId from nonGroupMenu when changed
+  useEffect(() => {
+    if (nonGroupMenu?.value.senderId) {
+      setSenderId(nonGroupMenu.value.senderId);
+    }
+    if (nonGroupMenu?.value.receiverId) {
+      setReceiverId(nonGroupMenu.value.receiverId);
+    }
+  }, [nonGroupMenu?.value.senderId, nonGroupMenu?.value.receiverId]);
 
   useEffect(() => {
     if (senderId === receiverId && senderId !== "") {
@@ -237,6 +269,7 @@ export default function TransferForm({
                     ...userSelectionError,
                     isSameUserError: "",
                   });
+                  setShowIdError(false);
                 }}
               >
                 {nonGroupMenu.value.senderName}
@@ -257,6 +290,7 @@ export default function TransferForm({
                     ...userSelectionError,
                     isSameUserError: "",
                   });
+                  setShowIdError(false);
                 }}
               >
                 {nonGroupMenu.value.receiverName === ""
@@ -274,6 +308,7 @@ export default function TransferForm({
             {showAmountError && userSelectionError.isSameUserError
               ? userSelectionError.isSameUserError
               : ""}
+            {showIdError && idError.error ? idError.error : ""}
           </span>
           {fromHome && <div className="buttonWrapper">
             <div
@@ -350,7 +385,7 @@ export default function TransferForm({
           <MyButton
             fontSize="16"
             onClick={submitTransfer}
-            isLoading={isPending}
+            isLoading={isPendingCreateTransfer}
           >
             Submit
           </MyButton>

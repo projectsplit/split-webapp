@@ -28,7 +28,8 @@ import {
   localStorageStringParser,
 } from "./helpers/localStorageStringParser";
 import { usePeople } from "./hooks/usePeople";
-import { useGetNonGroupExpenseUsers } from "@/api/services/useGetNonGroupExpenseUsers";
+import { useGetNonGroupExpensesUsers } from "@/api/services/useGetNonGroupExpensesUsers";
+
 
 export default function SearchTransactions({
   menu,
@@ -83,7 +84,7 @@ export default function SearchTransactions({
   const editorContentRef = useRef<EditorContentHandle | null>(null);
   const params = useParams();
 
-  const users = useGetNonGroupExpenseUsers(group?.id ? "Group" : "NonGroup")
+  const users = useGetNonGroupExpensesUsers(group?.id ? "Group" : "NonGroup")
 
   const allUsers = useMemo(() => {
     return users.data?.data.users || [];

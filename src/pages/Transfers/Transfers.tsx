@@ -3,17 +3,16 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
 import {
   Group,
+  TransactionType,
   TransferParsedFilters,
   TransferResponseItem,
   UserInfo,
 } from "../../types";
-import { getGroupTransfers } from "../../api/services/api";
 import { StyledTransfers } from "./Transfers.styled";
 import { BiTransfer } from "react-icons/bi";
 import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
-import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
 import { DateOnly } from "../../helpers/timeHelpers";
 import DetailedTransfer from "../../components/DetailedTransfer/DetailedTransfer";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
@@ -25,16 +24,22 @@ import { getCurrencyValues } from "../../helpers/getGroupTotalByCurrency";
 import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalsByCurrencyAnimation";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { renderTransferFilterPills } from "../../helpers/renderTransferFilterPills";
+import getAllTransfersParticipants from "@/helpers/getAllTransfersParticipants";
+import { useGetNonGroupTransferUsers } from "@/api/services/useGetNonGroupTransfersUsers";
+import { useTransferList } from "./hooks/useTransferList";
+import { getFilterStorageKey } from "@/components/SearchTransactions/helpers/localStorageStringParser";
+
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
 
-  const { userInfo, group, showBottomBar, transferParsedFilters } =
+  const { userInfo, group, showBottomBar, transferParsedFilters, transactionType } =
     useOutletContext<{
       userInfo: UserInfo;
       group: Group;
       showBottomBar: Signal<boolean>;
       transferParsedFilters: Signal<TransferParsedFilters>;
+      transactionType: TransactionType;
     }>();
 
   const errorMessage = useSignal<string>("");
@@ -48,55 +53,53 @@ const Transfers: React.FC = () => {
   const members = group?.members;
   const guests = group?.guests;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
-  const allParticipants = mergeMembersAndGuests(members || [], guests || []);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useInfiniteQuery({
-      queryKey: [
-        "groupTransfers",
-        group?.id,
-        pageSize,
-        transferParsedFilters.value,
-        timeZoneId,
-      ],
-      queryFn: ({ pageParam: next }) =>
-        getGroupTransfers(
-          group?.id!,
-          pageSize,
-          transferParsedFilters.value,
-          next
-        ),
-      getNextPageParam: (lastPage) => lastPage?.next || undefined,
-      initialPageParam: "",
-      enabled: !!group,
-    });
 
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching
+  } = useTransferList(
+    transactionType, group, transferParsedFilters, pageSize, timeZoneId
+  );
+
+  const { data: nonGroupUsersData } = useGetNonGroupTransferUsers(transactionType);
   const transfers = data?.pages.flatMap((p) => p.transfers);
+  const allParticipants = getAllTransfersParticipants(transfers, transactionType, members, guests, nonGroupUsersData?.data.users.map((u) => ({
+    id: u.userId,
+    name: u.username,
+  })) || [])
 
   useEffect(() => {
-    const transferilters = localStorage.getItem("transferFilter");
+    const transferilters = localStorage.getItem(getFilterStorageKey("transfer", group?.id))
     if (transferilters) {
       const paresedFilter = JSON.parse(transferilters);
-      if (paresedFilter.groupId === group.id) {
+      if (paresedFilter.groupId === group?.id) {
         transferParsedFilters.value = JSON.parse(transferilters);
       } else {
-        localStorage.removeItem("transferFilter");
+        localStorage.removeItem(getFilterStorageKey("transfer", group?.id));
         queryClient.invalidateQueries({
           queryKey: ["groupTransfers"],
+          exact: false,
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["nonGroupTransfers"],
           exact: false,
         });
       }
     }
   }, []);
 
-  const groupIsArchived = group.isArchived;
+  const groupIsArchived = group?.isArchived;
   useEffect(() => {
     isFetching && !isFetchingNextPage
       ? (showBottomBar.value = false)
       : (showBottomBar.value = true);
   }, [isFetching]);
 
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(group.id);
+  const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id);
 
   const groupTotalReceived: Record<
     string,
@@ -132,10 +135,8 @@ const Transfers: React.FC = () => {
   }
 
   const hasAnySearchParams =
-    (transferParsedFilters.value.before !== null &&
-      transferParsedFilters.value.before !== undefined) ||
-    (transferParsedFilters.value.after !== null &&
-      transferParsedFilters.value.after !== undefined) ||
+    !!transferParsedFilters.value.before ||
+    !!transferParsedFilters.value.after ||
     (transferParsedFilters.value.freeText !== "" &&
       transferParsedFilters.value.freeText !== undefined) ||
     (transferParsedFilters.value.sendersIds !== undefined &&
@@ -152,6 +153,7 @@ const Transfers: React.FC = () => {
               {" "}
               {renderTransferFilterPills(
                 transferParsedFilters,
+                  allParticipants,
                 group,
                 queryClient
               )}
@@ -183,6 +185,7 @@ const Transfers: React.FC = () => {
                 {" "}
                 {renderTransferFilterPills(
                   transferParsedFilters,
+                  allParticipants,
                   group,
                   queryClient
                 )}
@@ -192,7 +195,7 @@ const Transfers: React.FC = () => {
                 bar2Legend="Total Received"
                 bar1Total={usertotalSent || 0}
                 bar2Total={usertotalReceived || 0}
-                currency={group.currency}
+                currency={group?.currency||userInfo?.currency}
                 bar1Color="#0CA0A0"
                 bar2Color="#D79244"
                 onClick={() => {
@@ -220,15 +223,15 @@ const Transfers: React.FC = () => {
                       description: t.description,
                       id: t.id,
                       senderName:
-                        t.senderId === memberId
+                        t.senderId === memberId || t.senderId === userInfo?.userId
                           ? "You"
                           : allParticipants.find((x) => x.id === t.senderId)
-                              ?.name ?? "",
+                            ?.name ?? "",
                       receiverName:
-                        t.receiverId === memberId
+                        t.receiverId === memberId || t.receiverId === userInfo?.userId
                           ? "You"
                           : allParticipants.find((x) => x.id === t.receiverId)
-                              ?.name ?? "",
+                            ?.name ?? "",
                     }}
                     timeZoneId={timeZoneId}
                   />

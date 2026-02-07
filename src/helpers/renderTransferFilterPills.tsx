@@ -1,9 +1,7 @@
 import { Signal } from "@preact/signals-react";
 import Pill from "../components/Pill/Pill";
-import { Group, TransferParsedFilters } from "../types";
+import { Group, TransferParsedFilters, TruncatedMember } from "../types";
 import { QueryClient } from "@tanstack/react-query";
-
-import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
 import { getFilterStorageKey } from "../components/SearchTransactions/helpers/localStorageStringParser";
 
 const updateFiltersAndSave = (
@@ -21,19 +19,18 @@ const updateFiltersAndSave = (
     JSON.stringify(transferParsedFilters.value)
   );
   queryClient.invalidateQueries({ queryKey: ["groupTransfers"], exact: false });
+  queryClient.invalidateQueries({ queryKey: ["nonGroupTransfers"], exact: false });
 };
 
 export const renderTransferFilterPills = (
   transferParsedFilters: Signal<TransferParsedFilters>,
+  allParticipants: TruncatedMember[],
   group: Group,
   queryClient: QueryClient
 ) => {
-  const members = group?.members;
-  const guests = group?.guests;
-  const allParticipants = mergeMembersAndGuests(members || [], guests || []);
 
-  const { freeText, before, after, sendersIds, receiversIds } =
-    transferParsedFilters.value;
+  const { freeText, before, after, sendersIds, receiversIds } = transferParsedFilters.value;
+
   const pills = [];
   if (freeText && freeText != "") {
     pills.push(

@@ -6,7 +6,6 @@ import AutoWidthInput from "../../../AutoWidthInput";
 import Sentinel from "../../../Sentinel";
 import { useCallback, useMemo, useRef, useState } from "react";
 import useDebounce from "../../../../hooks/useDebounce";
-import { useSearchFriendsToInvite } from "../../../../api/services/useSearchFriendsToInvite";
 import { useOutletContext } from "react-router-dom";
 import { UserInfo } from "../../../../types";
 import User from "../User/User";
@@ -14,6 +13,7 @@ import { useSearchGroupsByName } from "../../../../api/services/useSearchGroupsB
 import Item from "../Item/Item";
 import { SelectedGroup } from "../SelectionLists/SelectedGroup";
 import Spinner from "../../../Spinner/Spinner";
+import { useSearchUsers } from "@/api/services/useSearchUsers";
 
 export default function NonGroupTransferMenu({
   nonGroupTransferMenu,
@@ -58,8 +58,8 @@ export default function NonGroupTransferMenu({
           receiverId: userInfo.userId,
           receiverName: "You",
 
-          senderId: menu.receiverId || menu.senderId,
-          senderName: menu.receiverId ? menu.receiverName : menu.senderName,
+          senderId:  menu.senderId,
+          senderName: menu.senderName,
         };
       } else {
         nonGroupTransferMenu.value = {
@@ -67,8 +67,8 @@ export default function NonGroupTransferMenu({
           senderId: userInfo.userId,
           senderName: "You",
 
-          receiverId: menu.senderId || menu.receiverId,
-          receiverName: menu.senderId ? menu.senderName : menu.receiverName,
+          receiverId:  menu.receiverId,
+          receiverName: menu.receiverName,
         };
       }
       return;
@@ -97,8 +97,7 @@ export default function NonGroupTransferMenu({
     inputRef.current?.focus();
   };
 
-  const result = useSearchFriendsToInvite(
-    "f7637b50-e77d-4609-9e38-eb0acc9c9c51",
+  const result = useSearchUsers(
     debouncedKeyword,
     pageSize
   );

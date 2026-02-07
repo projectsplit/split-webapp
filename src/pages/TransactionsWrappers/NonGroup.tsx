@@ -1,9 +1,7 @@
 import { signal, Signal, useSignal } from '@preact/signals-react';
-import React, { useEffect } from 'react'
-import { Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
+import { useEffect } from 'react'
+import { Outlet, useLocation, useOutletContext } from 'react-router-dom';
 import { ExpenseParsedFilters, ExpenseResponseItem, TransactionType, TransferParsedFilters, User, UserInfo } from '../../types';
-import { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import Spinner from '../../components/Spinner/Spinner';
 import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
 import MenuAnimationBackground from '../../components/Menus/MenuAnimations/MenuAnimationBackground';
 import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';

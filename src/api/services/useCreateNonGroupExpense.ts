@@ -30,7 +30,18 @@ export const useCreateNonGroupExpense = (
         queryKey: ["nonGroupExpenses"],
         exact: false,
       });
-
+      await queryClient.invalidateQueries({
+        queryKey: ["shared"],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["mostRecentGroup"],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["home"],
+        exact: false,
+      });
       const data = {
         nonGroupUsers: nonGroupUsers.value,
         nonGroupGroup: nonGroupGroup?.value,

@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
-export const StyledMenuItem = styled.li<{ $bgColor?: string }>`
+export const StyledMenuItem = styled.li<{
+  $bgColor?: string;
+  $selected?: boolean;
+}>`
   font-weight: 400;
   font-size: 18px;
   background-color: ${(props) => props.$bgColor || "#131519c9"};

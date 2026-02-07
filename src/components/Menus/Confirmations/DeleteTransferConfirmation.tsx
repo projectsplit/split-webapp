@@ -1,13 +1,14 @@
 import { DeleteTransferConfirmationProps } from "../../../interfaces";
-import { useDeleteTransfer } from "../../../api/services/useDeleteTransfer";
 import Confirmation from "./Confirmation";
+import { useDeleteTransferMutation } from "@/api/services/useDeleteTransferMutation";
 
 export default function DeleteTransferConfirmation({
   menu,
   selectedTransfer,
   errorMessage,
 }: DeleteTransferConfirmationProps) {
-  const { mutate: deleteTransfer, isPending } = useDeleteTransfer(
+
+  const { mutate: deleteTransfer, isPending } = useDeleteTransferMutation(
     menu,
     errorMessage,
     selectedTransfer

@@ -179,7 +179,7 @@ export type TransferResponseItem = {
   id: string;
   created: string;
   updated: string;
-  groupId: string;
+  groupId?: string;
   creatorId: string;
   amount: number;
   occurred: string;
@@ -511,7 +511,7 @@ export type CreateTransfersRequest = {
 };
 
 export type CreateTransferRequest = {
-  groupId: string | undefined;
+  groupId?: string;
   description: string;
   amount: number;
   currency: string;

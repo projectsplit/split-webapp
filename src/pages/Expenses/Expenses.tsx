@@ -32,10 +32,10 @@ import {
   isGroupExpense,
   isNonGroupExpense,
 } from "../../helpers/getExpenseType";
-import getAllParticipants from "@/helpers/getAllParticipants";
 import { useExpenseList } from "./hooks/useExpenseList";
 import { getFilterStorageKey } from "@/components/SearchTransactions/helpers/localStorageStringParser";
-import { useGetNonGroupExpenseUsers } from "@/api/services/useGetNonGroupExpenseUsers";
+import { useGetNonGroupExpensesUsers } from "@/api/services/useGetNonGroupExpensesUsers";
+import getAllExpenseParticipants from "@/helpers/getAllExpenseParticipants";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -74,9 +74,9 @@ const Expenses = () => {
     timeZoneId
   );
 
-  const { data: nonGroupUsersData } = useGetNonGroupExpenseUsers(transactionType);
+  const { data: nonGroupUsersData } = useGetNonGroupExpensesUsers(transactionType);
   const expenses = data?.pages.flatMap((p) => p.expenses);
-  const allParticipants = getAllParticipants(
+  const allParticipants = getAllExpenseParticipants(
     expenses,
     transactionType,
     group?.members || [],

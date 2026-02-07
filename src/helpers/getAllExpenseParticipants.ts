@@ -1,7 +1,7 @@
 import { ExpenseResponseItem, Guest, Member, TransactionType, TruncatedMember } from "@/types";
 import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
 
-function getAllParticipants(
+export default function getAllExpenseParticipants(
   expenses: ExpenseResponseItem[] | undefined,
   transactionType: TransactionType,
   members: Member[],
@@ -42,5 +42,3 @@ function getAllParticipants(
     name,
   }));
 }
-
-export default getAllParticipants;

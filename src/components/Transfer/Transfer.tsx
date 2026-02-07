@@ -12,7 +12,6 @@ const Transfer: React.FC<TransferProps> = ({ transfer, timeZoneId,onClick }) => 
       ? "#D79244"
       : "rgb(54,54,54)";
 
-      
   return (
     <StyledTransfer $outlineColor={outlineColor} onClick={onClick}>
       <div className="main">

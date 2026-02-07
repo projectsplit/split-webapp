@@ -6,7 +6,7 @@ import { TransactionType, User } from "@/types";
 type Users = {
 	users: User[];
 }
-const getNonGroupExpenseUsers = async () => {
+const getNonGroupExpensesUsers = async () => {
 	const response = apiClient.get<
 		void,
 		AxiosResponse<Users>
@@ -14,10 +14,10 @@ const getNonGroupExpenseUsers = async () => {
 	return response;
 }
 
-export const useGetNonGroupExpenseUsers = (transactionType: TransactionType) => {
+export const useGetNonGroupExpensesUsers = (transactionType: TransactionType) => {
 	return useQuery({
 		queryKey: ["non-group-expense-users"],
-		queryFn: () => getNonGroupExpenseUsers(),
+		queryFn: () => getNonGroupExpensesUsers(),
 		enabled: transactionType === "NonGroup",
 	});
 }
