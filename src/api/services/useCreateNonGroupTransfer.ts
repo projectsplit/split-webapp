@@ -11,7 +11,6 @@ export const useCreateNonGroupTransfer = (
   isSubmitting: Signal<boolean>,
 ) => {
   const queryClient = useQueryClient();
-
   return useMutation<any, AxiosError, CreateTransferRequest>({
     mutationFn: (transfer) => submitTransfer(transfer),
     onSuccess: async () => {
@@ -36,6 +35,10 @@ export const useCreateNonGroupTransfer = (
       });
       await queryClient.invalidateQueries({
         queryKey: ["mostRecentGroup"],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["non-group-transfer-users"],
         exact: false,
       });
       isSubmitting.value = false;

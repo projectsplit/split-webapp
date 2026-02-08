@@ -125,6 +125,7 @@ export interface DetailedTransferProps {
   members: TruncatedMember[];
   errorMessage: Signal<string>;
   groupIsArchived: boolean;
+  userId: string;
 }
 
 export interface TransferProps {

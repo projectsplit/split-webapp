@@ -18,7 +18,7 @@ export const MenuItem = React.forwardRef<
       $bgColor={bgColor}
       $selected={selected}
     >
-      {itemvalue}
+      {item?.data.$isUser ? "You" : itemvalue}
     </StyledMenuItem>
   );
 });

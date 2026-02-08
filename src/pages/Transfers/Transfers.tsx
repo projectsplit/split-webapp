@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
 import {
   Group,
@@ -153,7 +153,7 @@ const Transfers: React.FC = () => {
               {" "}
               {renderTransferFilterPills(
                 transferParsedFilters,
-                  allParticipants,
+                allParticipants,
                 group,
                 queryClient
               )}
@@ -195,7 +195,7 @@ const Transfers: React.FC = () => {
                 bar2Legend="Total Received"
                 bar1Total={usertotalSent || 0}
                 bar2Total={usertotalReceived || 0}
-                currency={group?.currency||userInfo?.currency}
+                currency={group?.currency || userInfo?.currency}
                 bar1Color="#0CA0A0"
                 bar2Color="#D79244"
                 onClick={() => {
@@ -260,6 +260,7 @@ const Transfers: React.FC = () => {
           userMemberId={userMemberId || ""}
           members={allParticipants}
           groupIsArchived={groupIsArchived}
+          userId={userInfo?.userId || ""}
         />
       )}
       <MenuAnimationBackground menu={menu} />

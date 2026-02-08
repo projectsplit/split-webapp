@@ -22,6 +22,7 @@ export default function DetailedTransfer({
   members,
   errorMessage,
   groupIsArchived,
+  userId,
 }: DetailedTransferProps) {
   const menu = useSignal<string | null>(null);
 
@@ -41,11 +42,17 @@ export default function DetailedTransfer({
   };
 
   const outlineColor =
-    selectedTransfer.value?.senderId === userMemberId
+    selectedTransfer.value?.senderId === userMemberId ||selectedTransfer.value?.senderId===userId
       ? "#0CA0A0"
-      : selectedTransfer.value?.receiverId === userMemberId
-      ? "#D79244"
-      : "rgb(54,54,54)";
+      : selectedTransfer.value?.receiverId === userMemberId||selectedTransfer.value?.receiverId===userId
+        ? "#D79244"
+        : "rgb(54,54,54)";
+
+  const sender = members.find((x) => x.id === selectedTransfer.value?.senderId);
+  const receiver = members.find((x) => x.id === selectedTransfer.value?.receiverId);
+
+  const isUserSender = sender?.id === userMemberId || sender?.id === userId;
+  const isUserReceiver = receiver?.id === userMemberId || receiver?.id === userId;
 
   return (
     <StyledDetailedTransfer $outlineColor={outlineColor}>
@@ -66,18 +73,12 @@ export default function DetailedTransfer({
         <div className="sentFrom">
           <span>Sent from</span>&nbsp;
           <span className="name">
-            {
-              members.find((x) => x.id === selectedTransfer.value?.senderId)
-                ?.name
-            }
+            {isUserSender ? "You" : sender?.name}
           </span>
         </div>
         <span className="to">to</span>
         <div className="sentTo">
-          {
-            members.find((x) => x.id === selectedTransfer.value?.receiverId)
-              ?.name
-          }
+          {isUserReceiver ? "You" : receiver?.name}
         </div>
         <div className="descr">
           {selectedTransfer.value?.description
@@ -100,25 +101,25 @@ export default function DetailedTransfer({
       <div className="createdBy">
         Created by {members.find((x) => x.id === creator)?.name}{" "}
         {DateOnly(occurred, timeZoneId) === "Today" ||
-        DateOnly(occurred, timeZoneId) === "Yesterday"
+          DateOnly(occurred, timeZoneId) === "Yesterday"
           ? DateOnly(created, timeZoneId)
           : "on" +
-            " " +
-            DateOnly(occurred, timeZoneId) +
-            " " +
-            YearOnly(occurred, timeZoneId)}{" "}
+          " " +
+          DateOnly(occurred, timeZoneId) +
+          " " +
+          YearOnly(occurred, timeZoneId)}{" "}
         at {TimeOnly(created, timeZoneId)}
       </div>
       <div className="date">
         Occurred{" "}
         {DateOnly(occurred, timeZoneId) === "Today" ||
-        DateOnly(occurred, timeZoneId) === "Yesterday"
+          DateOnly(occurred, timeZoneId) === "Yesterday"
           ? DateOnly(occurred, timeZoneId)
           : "on" +
-            " " +
-            DateOnly(occurred, timeZoneId) +
-            " " +
-            YearOnly(occurred, timeZoneId)}{" "}
+          " " +
+          DateOnly(occurred, timeZoneId) +
+          " " +
+          YearOnly(occurred, timeZoneId)}{" "}
         at {TimeOnly(occurred, timeZoneId)}
       </div>
       <div className="commentSection">

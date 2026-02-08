@@ -42,6 +42,10 @@ export const useCreateNonGroupExpense = (
         queryKey: ["home"],
         exact: false,
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["non-group-expense-users"],
+        exact: false,
+      });
       const data = {
         nonGroupUsers: nonGroupUsers.value,
         nonGroupGroup: nonGroupGroup?.value,
