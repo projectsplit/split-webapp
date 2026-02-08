@@ -1,22 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
 import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
 import { StyledProtected } from "./Protected.styled";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import NotificationsMenuAnimation from "../../components/Menus/MenuAnimations/NotificationsMenuAnimation";
 import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
-import { getMe } from "../../api/services/api";
 import TopMenu from "../../components/Menus/TopMenu/TopMenu";
 import { JoinOverlay } from "../Join/JoinOverslay";
+import { useGetMe } from "@/api/auth/QueryHooks/useGetMe";
 
 const Protected: React.FC = () => {
   const location = useLocation();
   const { code } = useParams<{ code?: string }>();
-  const { data: userInfo } = useQuery({
-    queryKey: ["getMe"],
-    queryFn: getMe,
-    enabled: isUserAuthenticated(),
-  });
+  const { data: userInfo } = useGetMe()
 
   const groupIsArchived = useSignal<boolean>(false);
 

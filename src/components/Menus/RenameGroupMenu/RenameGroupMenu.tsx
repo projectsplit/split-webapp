@@ -4,7 +4,7 @@ import { RenameGroupMenuProps } from "../../../interfaces";
 import MyButton from "../../MyButton/MyButton";
 import Separator from "../../Separator/Separator";
 import IonIcon from "@reacticons/ionicons";
-import { useUpdateGroupName } from "../../../api/services/useUpdateGroupName";
+import { useUpdateGroupName } from "../../../api/auth/CommandHooks/useUpdateGroupName";
 import { useSignal } from "@preact/signals-react";
 
 export default function RenameGroupMenu({
@@ -34,7 +34,7 @@ export default function RenameGroupMenu({
             </div>
             <span className="exclamation">❗</span>
             <span className="error">
-             {changeNameError}
+              {changeNameError}
             </span>
           </div>
         </div>
@@ -42,7 +42,7 @@ export default function RenameGroupMenu({
         <>
           <div className="headerSeparator">
             <div className="header">
-              
+
 
               <input
                 className="input"

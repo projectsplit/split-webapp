@@ -5,8 +5,8 @@ import CurrencyOptionsAnimation from "@/components/Menus/MenuAnimations/Currency
 import InputMonetary from "@/components/InputMonetary/InputMonetary";
 import { useSignal } from "@preact/signals-react";
 import { ExpenseFormProps } from "@/interfaces";
-import { useCreateGroupExpense } from "@/api/services/useCreateGroupExpense";
-import { useCreateNonGroupExpense } from "@/api/services/useCreateNonGroupExpense";
+import { useCreateGroupExpense } from "@/api/auth/CommandHooks/useCreateGroupExpense";
+import { useCreateNonGroupExpense } from "@/api/auth/CommandHooks/useCreateNonGroupExpense";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { StyledExpenseForm } from "./ExpenseForm.styled";
 import { LocationDisplay } from "./components/LocationDisplay/LocationDisplay";
@@ -21,7 +21,7 @@ import { useExpenseFormStore } from "./hooks/useExpenseFormStore";
 import { ExpenseFormHeader } from "./components/ExpenseFormHeader/ExpenseFormHeader";
 import { ExpenseFormFooter } from "./components/ExpenseFormFooter/ExpenseFormFooter";
 import { useHandlers } from "./hooks/useHandlers";
-import { useEditExpenseMutation } from "@/api/services/useEditExpenseMutation";
+import { useEditExpenseMutation } from "@/api/auth/CommandHooks/useEditExpenseMutation";
 import GeneralWarningMenuAnimation from "../Menus/MenuAnimations/GeneralWarningMenuAnimation";
 
 export default function ExpenseForm({

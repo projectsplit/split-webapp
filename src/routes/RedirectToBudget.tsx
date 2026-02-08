@@ -1,5 +1,5 @@
 import { useRedirectToBudget } from "../hooks/useRedirectToBudget";
-import useBudgetInfo from "../api/services/useBudgetInfo";
+import useBudgetInfo from "../api/auth/QueryHooks/useBudgetInfo";
 import { useOutletContext } from "react-router-dom";
 import { UserInfo } from "../types";
 

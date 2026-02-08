@@ -17,8 +17,8 @@ import DateDisplay from "../ExpenseForm/components/DateDisplay/DateDisplay";
 import SendMenuWrapper from "./SendMenuWrapper/SendMenuWrapper";
 import { TiGroup } from "react-icons/ti";
 import { SelectedGroup } from "../Menus/NonGroupUsersMenus/SelectionLists/SelectedGroup";
-import { useCreateGroupTransfer } from "@/api/services/useCreateGroupTransfer";
-import { useCreateNonGroupTransfer } from "@/api/services/useCreateNonGroupTransfer";
+import { useCreateGroupTransfer } from "@/api/auth/CommandHooks/useCreateGroupTransfer";
+import { useCreateNonGroupTransfer } from "@/api/auth/CommandHooks/useCreateNonGroupTransfer";
 
 
 export default function TransferForm({

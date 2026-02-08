@@ -2,8 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { ConfirmLeaveGroupProps } from "../../../interfaces";
 import Confirmation from "./Confirmation";
 import { useSignal } from "@preact/signals-react";
-import { useLeaveGroup } from "../../../api/services/useLeaveGroup";
-import { useMostRecentGroup } from "../../../api/services/useMostRecentGroup";
+import { useLeaveGroup } from "../../../api/auth/CommandHooks/useLeaveGroup";
+import { useMostRecentGroup } from "../../../api/auth/CommandHooks/useMostRecentGroup";
 
 export default function ConfirmLeaveGroup({
   menu,
@@ -21,7 +21,7 @@ export default function ConfirmLeaveGroup({
     openGroupOptionsMenu
   );
 
- useMostRecentGroup();
+  useMostRecentGroup();
 
   const handleConfirm = () => {
     if (groupError.value === "") {

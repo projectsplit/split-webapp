@@ -28,7 +28,7 @@ import {
   localStorageStringParser,
 } from "./helpers/localStorageStringParser";
 import { usePeople } from "./hooks/usePeople";
-import { useGetNonGroupExpensesUsers } from "@/api/services/useGetNonGroupExpensesUsers";
+import { useGetNonGroupExpensesUsers } from "@/api/auth/QueryHooks/useGetNonGroupExpensesUsers";
 
 
 export default function SearchTransactions({

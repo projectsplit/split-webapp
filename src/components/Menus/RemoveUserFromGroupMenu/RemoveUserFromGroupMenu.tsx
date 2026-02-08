@@ -6,12 +6,12 @@ import { FaAngleLeft } from "react-icons/fa";
 import { useSignal } from "@preact/signals-react";
 import MemberItem from "./MemberItem/MemberItem";
 import MenuAnimationBackground from "../MenuAnimations/MenuAnimationBackground";
-import useGroup from "../../../api/services/useGroup";
+import useGroup from "../../../api/auth/QueryHooks/useGroup";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { GroupMember } from "../../../types";
 import RemoveWarningAnimation from "../MenuAnimations/RemoveWarningAnimation";
-import { useRemoveMemberFromGroup } from "../../../api/services/useRemoveMemberFromGroup";
+import { useRemoveMemberFromGroup } from "../../../api/auth/CommandHooks/useRemoveMemberFromGroup";
 
 export default function RemoveUserFromGroupMenu({
   openRemoveUserMenu,
@@ -22,10 +22,10 @@ export default function RemoveUserFromGroupMenu({
 
   const noGroupError = useSignal<string>("");
   const noMemberError = useSignal<string>("");
-  const cannotBeRemovedClickedWarning = useSignal<string|null>(null);
-  const cannotRemoveMemberWarning = useSignal<string|null>(null);
+  const cannotBeRemovedClickedWarning = useSignal<string | null>(null);
+  const cannotRemoveMemberWarning = useSignal<string | null>(null);
   const [searchItem, setSearchItem] = useState<string>("");
-  const [memberClicked, setMemberClicked] = useState<{name:string;id:string}>({name:"",id:""}) 
+  const [memberClicked, setMemberClicked] = useState<{ name: string; id: string }>({ name: "", id: "" })
   const { data: group } = useGroup(groupId);
 
   const groupUsers =
@@ -47,7 +47,7 @@ export default function RemoveUserFromGroupMenu({
   };
 
   const handleCannotRemoveMember = (member: GroupMember) => {
-    setMemberClicked({name:member.name, id:member.id})
+    setMemberClicked({ name: member.name, id: member.id })
     cannotRemoveMemberWarning.value = "userWarning";
 
 
@@ -77,9 +77,9 @@ export default function RemoveUserFromGroupMenu({
     };
   }, [openRemoveUserMenu, groupId, queryClient]);
 
- const { mutate: removeUser, isPending: isPendingMember } =
+  const { mutate: removeUser, isPending: isPendingMember } =
     useRemoveMemberFromGroup(groupId, noGroupError, noMemberError, cannotRemoveMemberWarning);
-    
+
   return (
     <StyledRemoveUserFromGroup>
       <div className="fixed-header-container">
@@ -116,7 +116,7 @@ export default function RemoveUserFromGroupMenu({
               onCannotRemoveClick={
                 "canBeRemoved" in member
                   ? handleCannotRemoveGuest
-                  : ()=>handleCannotRemoveMember(member)
+                  : () => handleCannotRemoveMember(member)
               }
             />
           ))}
@@ -140,7 +140,7 @@ export default function RemoveUserFromGroupMenu({
         }
         menuValue="userWarning"
         header='Warning!'
-        onConfirm={()=>removeUser(memberClicked.id)}
+        onConfirm={() => removeUser(memberClicked.id)}
         isLoading={isPendingMember}
       />
     </StyledRemoveUserFromGroup>

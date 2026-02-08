@@ -2,26 +2,26 @@ import { useEffect, useState } from "react";
 import { StyledEditUsername } from "./EditUsername.styled";
 import MyButton from "../../MyButton/MyButton";
 import Separator from "../../Separator/Separator";
-import { useGetUsernameStatus } from "../../../api/services/useGetUsernameStatus";
+import { useGetUsernameStatus } from "../../../api/auth/QueryHooks/useGetUsernameStatus";
 import { EditUsernameProps } from "../../../interfaces";
-import { useEditUsername } from "../../../api/services/useEditUsername";
+import { useEditUsername } from "../../../api/auth/CommandHooks/useEditUsername";
 import Spinner from "../../Spinner/Spinner";
 import { GrFormCheckmark } from "react-icons/gr";
 import { FiAlertTriangle } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 
-export default function EditUsername({ existingUsername ,editUsernameMenu}: EditUsernameProps) {
+export default function EditUsername({ existingUsername, editUsernameMenu }: EditUsernameProps) {
 
   const [username, setUsername] = useState(existingUsername)
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
   const params = useParams();
   const groupId = params?.groupid;
- 
+
   const usernameStatus = useGetUsernameStatus(username)
 
   const {
     mutate: editUsername,
-    isPending,   
+    isPending,
   } = useEditUsername(groupId);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function EditUsername({ existingUsername ,editUsernameMenu}: Edit
   const handleConfirm = (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    editUsername(username ||'', {
+    editUsername(username || '', {
       onSuccess: () => {
         editUsernameMenu.value = null;
       }
@@ -70,7 +70,7 @@ export default function EditUsername({ existingUsername ,editUsernameMenu}: Edit
             onChange={handleInputChange}
             autoFocus={true}
           />
-          {username&&username.length > 0 && (!usernameStatus.isSuccess ? <Spinner fontSize={"25px"} /> : !errorMessage ? <GrFormCheckmark className="checkmark"/> : <FiAlertTriangle className="warning"/>)}
+          {username && username.length > 0 && (!usernameStatus.isSuccess ? <Spinner fontSize={"25px"} /> : !errorMessage ? <GrFormCheckmark className="checkmark" /> : <FiAlertTriangle className="warning" />)}
         </div>
         <div className="separator">
           <Separator />
@@ -81,7 +81,7 @@ export default function EditUsername({ existingUsername ,editUsernameMenu}: Edit
         <MyButton isLoading={isPending} onClick={handleConfirm}>
           Confirm
         </MyButton>
-        <MyButton variant="secondary" onClick={()=>editUsernameMenu.value=null}>
+        <MyButton variant="secondary" onClick={() => editUsernameMenu.value = null}>
           Cancel
         </MyButton>
       </div>

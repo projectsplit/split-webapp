@@ -24,7 +24,7 @@ import { useWeeklyDatesMemo } from "../../components/SearchTransactions/hooks/us
 import { CategoryButton } from "../../components/CategoryButton/CategoryButton";
 import TopBarWithBackButton from "../../components/TopBarWithBackButton/TopBarWithBackButton";
 import Spinner from "../../components/Spinner/Spinner";
-import { useCumulativeSpendingArray } from "../../api/services/useCumulativeSpendingArray";
+import { useCumulativeSpendingArray } from "../../api/auth/QueryHooks/useCumulativeSpendingArray";
 import { timeZones } from "../../helpers/timeZones";
 
 export default function Analytics() {

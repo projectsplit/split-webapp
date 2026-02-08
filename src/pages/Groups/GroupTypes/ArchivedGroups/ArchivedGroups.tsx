@@ -1,6 +1,4 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { GoArchive } from "react-icons/go";
-import { getGroupsTotalAmounts } from "../../../../api/services/api";
 import { StyledGroups } from "../Groups.styled";
 import Spinner from "../../../../components/Spinner/Spinner";
 import TreeAdjustedContainer from "../../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
@@ -8,20 +6,15 @@ import { TreeItemBuilderForHomeAndGroups } from "../../../../components/TreeItem
 import Sentinel from "../../../../components/Sentinel";
 import ConfirmUnArchiveGroupAnimation from "../../../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
 import { useSignal } from "@preact/signals-react";
+import { useGetTotalsArchiveGroups } from "@/api/auth/QueryHooks/useGetTotalsArchivedGroups";
 
 export default function ArchivedGroups() {
   const pageSize = 10;
   const menu = useSignal<string|null>(null)
   const groupId = useSignal<string|undefined>("")
   const openGroupOptionsMenu = useSignal<boolean>(true)
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useInfiniteQuery({
-      queryKey: ["shared", "archived"],
-      queryFn: ({ pageParam: next }) =>
-        getGroupsTotalAmounts(pageSize, next, true),
-      getNextPageParam: (lastPage) => lastPage?.next || undefined,
-      initialPageParam: "",
-    });
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useGetTotalsArchiveGroups(pageSize);
 
   const groups = data?.pages.flatMap((p) => p.groups);
 

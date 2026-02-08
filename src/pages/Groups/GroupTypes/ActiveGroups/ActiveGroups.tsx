@@ -1,25 +1,18 @@
 import { StyledGroups } from "../Groups.styled";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import TreeAdjustedContainer from "../../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import Spinner from "../../../../components/Spinner/Spinner";
-import { getGroupsTotalAmounts } from "../../../../api/services/api";
-import { useMostRecentGroup } from "../../../../api/services/useMostRecentGroup";
+import { useMostRecentGroup } from "../../../../api/auth/CommandHooks/useMostRecentGroup";
 import { TreeItemBuilderForHomeAndGroups } from "../../../../components/TreeItemBuilderForHomeAndGroups";
 import Sentinel from "../../../../components/Sentinel";
 import { MdOutlineGroupOff } from "react-icons/md";
+import { useGetTotalsActiveGroups } from "@/api/auth/QueryHooks/useGetTotalsActiveGroups";
 
 export default function ActiveGroups() {
   const navigate = useNavigate();
   const pageSize = 10;
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useInfiniteQuery({
-      queryKey: ["shared", "active"],
-      queryFn: ({ pageParam: next }) => getGroupsTotalAmounts(pageSize, next, false),
-      getNextPageParam: (lastPage) => lastPage?.next || undefined,
-      initialPageParam: "",
-    });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useGetTotalsActiveGroups(pageSize)
 
   const groups = data?.pages.flatMap((p) => p.groups);
   const updateMostRecentGroupId = useMostRecentGroup();
@@ -57,7 +50,7 @@ export default function ActiveGroups() {
               </TreeAdjustedContainer>
             </div>
           ))}
-  
+
           <Sentinel
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}

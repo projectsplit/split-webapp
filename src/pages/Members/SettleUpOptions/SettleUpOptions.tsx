@@ -5,7 +5,7 @@ import { SettleUpOptionsProps } from "../../../interfaces";
 import { StyledSettleUpOptions } from "./SettleUpOptions.Styled";
 import { CreateTransfersRequest, Transfer } from "../../../types";
 import { DateTime } from "luxon";
-import { useMultipleTransfers } from "../../../api/services/useMultipleTransfers";
+import { useMultipleTransfers } from "../../../api/auth/CommandHooks/useMultipleTransfers";
 import MyButton from "../../../components/MyButton/MyButton";
 
 export default function SettleUpOptions({
@@ -17,7 +17,7 @@ export default function SettleUpOptions({
   const selectedItem = useSignal<number[]>([0]);
   const params = useParams();
   const groupId = params?.groupid;
-  const {mutate:submitMultipleTransfers, isPending} = useMultipleTransfers(menu);
+  const { mutate: submitMultipleTransfers, isPending } = useMultipleTransfers(menu);
   const enabled = selectedItem.value.length > 0;
 
   const memberPendingTransactions = pendingTransactions.filter(
@@ -44,7 +44,7 @@ export default function SettleUpOptions({
     };
 
     submitMultipleTransfers(createTransfersRequest);
-    
+
   };
 
   return (
@@ -53,9 +53,8 @@ export default function SettleUpOptions({
 
       {memberPendingTransactions.map((p, index) => (
         <div
-          className={`settleUpOption ${
-            selectedItem.value.includes(index) ? "clicked" : ""
-          }`}
+          className={`settleUpOption ${selectedItem.value.includes(index) ? "clicked" : ""
+            }`}
           key={index}
           onClick={() => {
             if (selectedItem.value.includes(index)) {

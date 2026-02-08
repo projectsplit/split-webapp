@@ -1,20 +1,17 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import React from "react";
 
 import routes from "../routes";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
-import { getUserId } from "../api/services/api";
 import { logOut } from "../api/auth/api";
+import { useGetUserId } from "@/api/auth/QueryHooks/useGetUserId";
 
 const About: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["getUserId"],
-    queryFn: getUserId,
-  });
+  const { data, error, isLoading } = useGetUserId()
 
   const logOutMutation = useMutation<any, Error, void>({
     mutationFn: logOut,

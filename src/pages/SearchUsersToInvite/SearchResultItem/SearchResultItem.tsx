@@ -1,6 +1,6 @@
 import { Signal } from "@preact/signals-react";
-import { useRevokeInvitation } from "../../../api/services/useRevokeInvitation";
-import { useSendInvitation } from "../../../api/services/useSendInvitation";
+import { useRevokeInvitation } from "../../../api/auth/CommandHooks/useRevokeInvitation";
+import { useSendInvitation } from "../../../api/auth/CommandHooks/useSendInvitation";
 import MyButton from "../../../components/MyButton/MyButton";
 
 export const SearchResultItem: React.FC<{

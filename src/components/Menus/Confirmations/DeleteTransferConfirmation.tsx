@@ -1,6 +1,6 @@
 import { DeleteTransferConfirmationProps } from "../../../interfaces";
 import Confirmation from "./Confirmation";
-import { useDeleteTransferMutation } from "@/api/services/useDeleteTransferMutation";
+import { useDeleteTransferMutation } from "@/api/auth/CommandHooks/useDeleteTransferMutation";
 
 export default function DeleteTransferConfirmation({
   menu,

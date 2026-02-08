@@ -9,11 +9,11 @@ import useDebounce from "../../../../hooks/useDebounce";
 import { useOutletContext } from "react-router-dom";
 import { UserInfo } from "../../../../types";
 import User from "../User/User";
-import { useSearchGroupsByName } from "../../../../api/services/useSearchGroupsByName";
+import { useSearchGroupsByName } from "../../../../api/auth/QueryHooks/useSearchGroupsByName";
 import Item from "../Item/Item";
 import { SelectedGroup } from "../SelectionLists/SelectedGroup";
 import Spinner from "../../../Spinner/Spinner";
-import { useSearchUsers } from "@/api/services/useSearchUsers";
+import { useSearchUsers } from "@/api/auth/QueryHooks/useSearchUsers";
 
 export default function NonGroupTransferMenu({
   nonGroupTransferMenu,
@@ -58,7 +58,7 @@ export default function NonGroupTransferMenu({
           receiverId: userInfo.userId,
           receiverName: "You",
 
-          senderId:  menu.senderId,
+          senderId: menu.senderId,
           senderName: menu.senderName,
         };
       } else {
@@ -67,7 +67,7 @@ export default function NonGroupTransferMenu({
           senderId: userInfo.userId,
           senderName: "You",
 
-          receiverId:  menu.receiverId,
+          receiverId: menu.receiverId,
           receiverName: menu.receiverName,
         };
       }
@@ -177,8 +177,8 @@ export default function NonGroupTransferMenu({
             {nonGroupTransferMenu.value.attribute === "sender"
               ? "Select sender"
               : nonGroupTransferMenu.value.attribute === "receiver"
-              ? "Select receiver"
-              : "Select Group"}
+                ? "Select receiver"
+                : "Select Group"}
           </div>
           <div className="gap"></div>
         </div>

@@ -1,5 +1,5 @@
 import { StyledMembers } from "./Members.styled";
-import useDebts from "../../api/services/useDebts";
+import useDebts from "../../api/auth/QueryHooks/useDebts";
 import { useOutletContext, useParams } from "react-router-dom";
 import { useEffect, useMemo } from "react";
 import { groupTransactions } from "../../helpers/groupTransactions";
@@ -91,7 +91,7 @@ export default function Members() {
         memberIdSelectedToSettleUp={memberIdSelectedToSettleUp}
         members={allParticipants || []}
       />
-       <AddNewUserAnimation menu={menu} groupName={group.name} guestToBeReplaced={guestToBeReplaced.value} />
+      <AddNewUserAnimation menu={menu} groupName={group.name} guestToBeReplaced={guestToBeReplaced.value} />
     </StyledMembers>
   );
 }

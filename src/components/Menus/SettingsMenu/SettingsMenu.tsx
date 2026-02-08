@@ -17,10 +17,10 @@ import ToggleSwitch from "../../ToggleSwitch/ToggleSwitch";
 import { logOut } from "../../../api/auth/api";
 import routes from "../../../routes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSelectedCurrency } from "../../../api/services/useSelectedCurrency";
+import { useSelectedCurrency } from "../../../api/auth/CommandHooks/useSelectedCurrency";
 import { RiTimeZoneLine } from "react-icons/ri";
 import TimeZoneOptionsAnimation from "../MenuAnimations/TimeZoneOptionsAnimation";
-import { useTimeZone } from "../../../api/services/useTimeZone";
+import { useTimeZone } from "../../../api/auth/CommandHooks/useTimeZone";
 import { getInitials } from "../../../helpers/getInitials";
 import { timeZones } from "../../../helpers/timeZones";
 import EditUsernameAnimation from "../MenuAnimations/EditUsernameAnimation";
@@ -35,7 +35,7 @@ export default function SettingsMenu({
   const allTimeZones = timeZones;
   const currencyMenu = useSignal<string | null>(null);
   const timeZoneMenu = useSignal<string | null>(null);
-  const editUsernameMenu = useSignal<string|null>(null);
+  const editUsernameMenu = useSignal<string | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -134,7 +134,7 @@ export default function SettingsMenu({
         </div>
 
         <div className="option" onClick={() => editUsernameMenu.value = 'editUsername'}>
-        <FaUserPen className="icon"/>
+          <FaUserPen className="icon" />
           <div className="description">Change username</div>
         </div>
 
@@ -161,7 +161,7 @@ export default function SettingsMenu({
         clickHandler={handldeCurrencyOptionsClick}
         selectedCurrency={userCurrency}
       />
-     <EditUsernameAnimation editUsernameMenu={editUsernameMenu} existingUsername={userInfo?.username}/>
+      <EditUsernameAnimation editUsernameMenu={editUsernameMenu} existingUsername={userInfo?.username} />
     </StyledSettingsMenu>
   );
 }

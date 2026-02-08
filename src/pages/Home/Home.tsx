@@ -12,18 +12,12 @@ import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAd
 import {
   ExpenseResponseItem,
   Group,
-  GroupsAllBalancesResponse,
   Guest,
   Member,
-  MostRecentGroupDetailsResponse,
   User,
   UserInfo,
 } from "../../types";
-import {
-  getGroupsAllBalances,
-  getMostRecentGroup,
-} from "../../api/services/api";
-import useBudgetInfo from "../../api/services/useBudgetInfo";
+import useBudgetInfo from "../../api/auth/QueryHooks/useBudgetInfo";
 
 import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
 import { useOutletContext } from "react-router-dom";
@@ -34,11 +28,13 @@ import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilde
 import Spinner from "../../components/Spinner/Spinner";
 import { AiFillThunderbolt } from "react-icons/ai";
 import HomeQuickActionsAnimation from "../../components/Menus/MenuAnimations/HomeQuickActionsAnimation";
-import useGroup from "../../api/services/useGroup";
+import useGroup from "../../api/auth/QueryHooks/useGroup";
 import CreateExpenseForm from "../../components/CreateExpenseForm/CreateExpenseForm";
 import TransferForm from "../../components/TransferForm/TransferForm";
 import NonGroupExpenseUsersAnimation from "../../components/Menus/MenuAnimations/NonGroupExpenseUsersAnimation";
 import NonGroupTransferAnimation from "../../components/Menus/MenuAnimations/NonGroupTransferAnimation";
+import { useGetMostRecentGroups } from "@/api/auth/QueryHooks/useGetMostRecentGroups";
+import { useGetGroupsAllBalances } from "@/api/auth/QueryHooks/useGetGroupsAllBalances";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -84,45 +80,34 @@ export default function Home() {
     data,
     isFetching,
     isLoading: isLoadingAllBalancesResponse,
-  } = useQuery<GroupsAllBalancesResponse>({
-    queryKey: ["home"],
-    queryFn: getGroupsAllBalances,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-  });
+  } = useGetGroupsAllBalances()
 
   const {
     data: mostRecentGroupData,
     isFetching: mostRecentGroupDataIsFetching,
-  } = useQuery<MostRecentGroupDetailsResponse>({
-    queryKey: ["mostRecentGroup", recentGroupId],
-    queryFn: () => getMostRecentGroup(recentGroupId),
-    enabled: recentGroupId !== undefined && recentGroupId !== null,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-  });
+  } = useGetMostRecentGroups(recentGroupId)
 
   useEffect(() => {
     topMenuTitle.value = "";
   }, []);
 
   useEffect(() => {
-      const saved = localStorage.getItem("submittedFromHomePersistData");
-      if (saved) {
-        const {
-          nonGroupUsers: u,
-          nonGroupGroup: g,
-          groupMembers: m,
-        } = JSON.parse(saved);
-        nonGroupUsers.value = u ?? [];
-        nonGroupGroup.value = g ?? null;
-        groupMembers.value = m ?? [];
-        isPersonal.value = false;
-        if(nonGroupGroup.value !== null){
-          isNonGroupExpense.value = false;
-        }
+    const saved = localStorage.getItem("submittedFromHomePersistData");
+    if (saved) {
+      const {
+        nonGroupUsers: u,
+        nonGroupGroup: g,
+        groupMembers: m,
+      } = JSON.parse(saved);
+      nonGroupUsers.value = u ?? [];
+      nonGroupGroup.value = g ?? null;
+      groupMembers.value = m ?? [];
+      isPersonal.value = false;
+      if (nonGroupGroup.value !== null) {
+        isNonGroupExpense.value = false;
       }
-  },[]);
+    }
+  }, []);
 
   const isGlowing = quickActionsMenu.value === "quickActions";
 

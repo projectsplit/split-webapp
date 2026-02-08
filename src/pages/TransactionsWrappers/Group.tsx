@@ -19,7 +19,7 @@ import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
 import GroupQuickActionsAnimation from "../../components/Menus/MenuAnimations/MenuWithOptionsToAddAnimation";
-import useGroup from "../../api/services/useGroup";
+import useGroup from "../../api/auth/QueryHooks/useGroup";
 import { useEffect } from "react";
 import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTransferAnimation";
 import GroupOptions from "../Groups/GroupOptions/GroupOptions";

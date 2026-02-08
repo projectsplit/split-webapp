@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { StyledGenerateInvitationCode } from "./GenerateInvitationCode.styled";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGenerateInvitationCode } from "../../api/services/useGenerateInvitationCode";
+import { useGenerateInvitationCode } from "../../api/auth/CommandHooks/useGenerateInvitationCode";
 import { IoClose } from "react-icons/io5";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { useSignal } from "@preact/signals-react";
 import ShareGroup from "./ShareGroup/ShareGroup";
 import RevokeAccess from "./RevokeAccess/RevokeAcces";
-import useGroup from "../../api/services/useGroup";
-import { useGetGroupJoinCodes } from "../../api/services/useGetGroupJoinCodes";
+import useGroup from "../../api/auth/QueryHooks/useGroup";
+import { useGetGroupJoinCodes } from "../../api/auth/QueryHooks/useGetGroupJoinCodes";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function GenerateInvitationCode() {
@@ -109,7 +109,7 @@ export default function GenerateInvitationCode() {
           mutate={mutateGenerate}
           groupId={params.groupid || ""}
           setInvitationCode={setInvitationCode}
-          expires ={codesData[0]?.expires}
+          expires={codesData[0]?.expires}
         />
       ) : (
         <RevokeAccess

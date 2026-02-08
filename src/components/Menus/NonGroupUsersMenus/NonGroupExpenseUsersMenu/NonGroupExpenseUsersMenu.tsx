@@ -14,11 +14,11 @@ import {
 import Item from "../Item/Item";
 import React from "react";
 import { SelectedUsers } from "../SelectionLists/SelectedUsers";
-import { useSearchGroupsByName } from "../../../../api/services/useSearchGroupsByName";
+import { useSearchGroupsByName } from "../../../../api/auth/QueryHooks/useSearchGroupsByName";
 import { useOutletContext } from "react-router-dom";
 import useDebounce from "../../../../hooks/useDebounce";
 import { SelectedGroup } from "../SelectionLists/SelectedGroup";
-import { useSearchUsers } from "@/api/services/useSearchUsers";
+import { useSearchUsers } from "@/api/auth/QueryHooks/useSearchUsers";
 
 export const NonGroupExpenseUsersMenu = ({
   menu,

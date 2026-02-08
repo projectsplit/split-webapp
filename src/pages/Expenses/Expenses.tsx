@@ -18,7 +18,7 @@ import { DateOnly } from "../../helpers/timeHelpers";
 import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
-import useDebts from "../../api/services/useDebts";
+import useDebts from "../../api/auth/QueryHooks/useDebts";
 import {
   getAllCurrencyTotals,
   getGroupTotalByCurrency,
@@ -34,7 +34,7 @@ import {
 } from "../../helpers/getExpenseType";
 import { useExpenseList } from "./hooks/useExpenseList";
 import { getFilterStorageKey } from "@/components/SearchTransactions/helpers/localStorageStringParser";
-import { useGetNonGroupExpensesUsers } from "@/api/services/useGetNonGroupExpensesUsers";
+import { useGetNonGroupExpensesUsers } from "@/api/auth/QueryHooks/useGetNonGroupExpensesUsers";
 import getAllExpenseParticipants from "@/helpers/getAllExpenseParticipants";
 
 const Expenses = () => {

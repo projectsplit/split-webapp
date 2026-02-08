@@ -13,7 +13,7 @@ import { FaArchive } from "react-icons/fa";
 import ConfirmArchiveGroupAnimation from "../../../components/Menus/MenuAnimations/ConfirmArchiveGroupAnimation";
 import ConfirmLeaveGroupAnimation from "../../../components/Menus/MenuAnimations/ConfirmLeaveGroupAnimation";
 import RenameGroupAnimationAnimation from "../../../components/Menus/MenuAnimations/RenameGroupAnimation";
-import { useChangeGroupCurrency } from "../../../api/services/useChangeGroupCurrency";
+import { useChangeGroupCurrency } from "../../../api/auth/CommandHooks/useChangeGroupCurrency";
 import { useQueryClient } from "@tanstack/react-query";
 import RemoveUserFromGroupMenu from "../../../components/Menus/RemoveUserFromGroupMenu/RemoveUserFromGroupMenu";
 import { useEffect } from "react";
@@ -149,7 +149,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
             const searchParams = new URLSearchParams(location.search);
             searchParams.set("in", "true");
             navigate(
-                `/shared/generatecode/${group?.id}?${searchParams.toString()}`,
+              `/shared/generatecode/${group?.id}?${searchParams.toString()}`,
               {
                 replace: true,
               }

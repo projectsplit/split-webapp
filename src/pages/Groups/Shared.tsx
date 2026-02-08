@@ -4,9 +4,8 @@ import { Signal, useSignal } from "@preact/signals-react";
 import CreateGroupAnimation from "../../components/Menus/MenuAnimations/CreateGroupAnimation";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { useEffect } from "react";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { getGroupsTotalAmounts } from "../../api/services/api";
-import { useMostRecentGroup } from "../../api/services/useMostRecentGroup";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMostRecentGroup } from "../../api/auth/CommandHooks/useMostRecentGroup";
 import { StyledGroups } from "./GroupTypes/Groups.styled";
 import { MdGroupOff, MdOutlineGroupOff } from "react-icons/md";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
@@ -22,6 +21,7 @@ import Separator from "../../components/Separator/Separator";
 import VerticalSeparator from "../../components/VerticalSeparator/VerticalSeparator";
 import { TiGroup } from "react-icons/ti";
 import { IoIosArchive } from "react-icons/io";
+import { useGetGroupsTotalAmounts } from "@/api/auth/QueryHooks/useGetGroupsTotalAmounts";
 
 export default function Shared() {
   const queryClient = useQueryClient();
@@ -40,18 +40,7 @@ export default function Shared() {
   const pageSize = 10;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useInfiniteQuery({
-      queryKey: ["shared", activeGroupCatAsState.value.toLowerCase()],
-      queryFn: ({ pageParam: next }) =>
-        getGroupsTotalAmounts(
-          pageSize,
-          next,
-          activeGroupCatAsState.value === "Archived"
-        ),
-      getNextPageParam: (lastPage) => lastPage?.next || undefined,
-      initialPageParam: "",
-      staleTime: 0,
-    });
+    useGetGroupsTotalAmounts(pageSize, activeGroupCatAsState);
 
   const groups = data?.pages.flatMap((p) => p.groups);
   const filteredGroups = groups?.filter((g) =>

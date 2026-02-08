@@ -15,8 +15,8 @@ import { useSignal } from "@preact/signals-react";
 import MyButton from "../../../components/MyButton/MyButton";
 import TopBarWithBackButton from "../../../components/TopBarWithBackButton/TopBarWithBackButton";
 import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
-import { useCreateBudget } from "../../../api/services/useCreateBudget";
-import { useSpendingInfo } from "../../../api/services/useSpengindInfo";
+import { useCreateBudget } from "../../../api/auth/CommandHooks/useCreateBudget";
+import { useSpendingInfo } from "../../../api/auth/QueryHooks/useSpengindInfo";
 import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
 import InfoBoxAnimation from "../../../components/Menus/MenuAnimations/InfoBoxAnimation";
 import CreateBudgetConfirmationAnimation from "../../../components/Menus/MenuAnimations/BudgetAnimations/CreateBudgetConfirmationAnimation";
@@ -32,7 +32,7 @@ export default function CreateBudget() {
   const hasSwitchedBudgetType = useSignal<boolean>(false);
   const submitBudgetErrors = useSignal<any[]>([]);
   const menu = useSignal<string | null>(null);
-   const { userInfo } = useOutletContext<{
+  const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
 
@@ -42,7 +42,7 @@ export default function CreateBudget() {
   const budgetInfoQueryKey = ["budget"];
   const spendingInfoQueryKey = ["spending", budgettype.value, currencySymbol];
 
-  const createBudget = useCreateBudget(navigate,submitBudgetErrors)
+  const createBudget = useCreateBudget(navigate, submitBudgetErrors)
 
   useEffect(() => {
     if (userInfo?.currency) {
@@ -59,15 +59,15 @@ export default function CreateBudget() {
     "budgetSubmitted": false,
     "totalAmountSpent": "0",
     "currency": "USD"
-}
-  const isFetching=false;
-  const isStale=false;
+  }
+  const isFetching = false;
+  const isStale = false;
 
 
   const handleInputChangeCallback = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       handleInputChange(e, currencySymbol, displayedAmount, setAmount);
-  
+
     },
     [currencySymbol, displayedAmount, setAmount]
   );
@@ -98,7 +98,7 @@ export default function CreateBudget() {
 
     submitBudgetErrors.value = [];
     openCalendar.value = false;
-   queryClient.invalidateQueries({ queryKey: budgetInfoQueryKey, exact:false});
+    queryClient.invalidateQueries({ queryKey: budgetInfoQueryKey, exact: false });
     hasSwitchedBudgetType.value = false;
     displayedAmount.value = "";
     menu.value = null;
@@ -170,7 +170,7 @@ export default function CreateBudget() {
 
       <div className="submitButton">
         <MyButton
-        fontSize="16"
+          fontSize="16"
           onClick={() => {
             if (querydata.budgetSubmitted) {
               menu.value = "createBudgetConfirmation";

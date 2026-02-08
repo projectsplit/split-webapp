@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { StyledJoin } from "./Join.styled";
 import { generatePath, useNavigate, useParams } from "react-router-dom";
-import { useJoinWithCode } from "../../api/services/useJoinWithCode";
+import { useJoinWithCode } from "../../api/auth/CommandHooks/useJoinWithCode";
 import MyButton from "../../components/MyButton/MyButton";
-import { useGetJoinCode } from "../../api/services/useGetJoinCode";
+import { useGetJoinCode } from "../../api/auth/QueryHooks/useGetJoinCode";
 import routes from "../../routes";
 import Spinner from "../../components/Spinner/Spinner";
 import Separator from "../../components/Separator/Separator";

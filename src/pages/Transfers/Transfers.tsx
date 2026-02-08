@@ -19,13 +19,13 @@ import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuA
 import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
 import Spinner from "../../components/Spinner/Spinner";
-import useDebts from "../../api/services/useDebts";
+import useDebts from "../../api/auth/QueryHooks/useDebts";
 import { getCurrencyValues } from "../../helpers/getGroupTotalByCurrency";
 import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalsByCurrencyAnimation";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { renderTransferFilterPills } from "../../helpers/renderTransferFilterPills";
 import getAllTransfersParticipants from "@/helpers/getAllTransfersParticipants";
-import { useGetNonGroupTransferUsers } from "@/api/services/useGetNonGroupTransfersUsers";
+import { useGetNonGroupTransferUsers } from "@/api/auth/QueryHooks/useGetNonGroupTransfersUsers";
 import { useTransferList } from "./hooks/useTransferList";
 import { getFilterStorageKey } from "@/components/SearchTransactions/helpers/localStorageStringParser";
 

@@ -4,9 +4,9 @@ import {
   Group,
   TransactionType,
 } from "../../../types";
-import useGetGroupExpenses from "../../../api/services/useGetGroupExpenses";
-import { useGetNonGroupExpenses } from "../../../api/services/useGetNonGroupExpenses";
-import { useGetPersonalExpenses } from "../../../api/services/useGetPersonalExpenses";
+import useGetGroupExpenses from "../../../api/auth/QueryHooks/useGetGroupExpenses";
+import { useGetNonGroupExpenses } from "../../../api/auth/QueryHooks/useGetNonGroupExpenses";
+import { useGetPersonalExpenses } from "../../../api/auth/QueryHooks/useGetPersonalExpenses";
 
 export const useExpenseList = (
   transactionType: TransactionType,

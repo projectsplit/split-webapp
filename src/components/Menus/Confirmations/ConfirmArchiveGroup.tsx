@@ -1,7 +1,7 @@
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { ConfirmArchiveGroupProps } from "../../../interfaces";
 import Confirmation from "./Confirmation";
-import { useArchiveGroup } from "../../../api/services/useArchiveGroup";
+import { useArchiveGroup } from "../../../api/auth/CommandHooks/useArchiveGroup";
 import { Signal, useSignal } from "@preact/signals-react";
 
 export default function ConfirmArchiveGroup({
@@ -14,9 +14,9 @@ export default function ConfirmArchiveGroup({
   const noGroupFoundError = useSignal<string>("");
   const navigate = useNavigate();
 
-  const { activeGroupCatAsState,groupIsArchived } = useOutletContext<{
+  const { activeGroupCatAsState, groupIsArchived } = useOutletContext<{
     activeGroupCatAsState: Signal<string>;
-    groupIsArchived:Signal<boolean>
+    groupIsArchived: Signal<boolean>
   }>();
 
   const { mutate: archiveGroup, isPending } = useArchiveGroup(
@@ -30,7 +30,7 @@ export default function ConfirmArchiveGroup({
     if (navigateToGroups && isPending === false) {
       openGroupOptionsMenu.value = false;
       activeGroupCatAsState.value = "Archived";
- 
+
       navigate("/shared");
     }
   };

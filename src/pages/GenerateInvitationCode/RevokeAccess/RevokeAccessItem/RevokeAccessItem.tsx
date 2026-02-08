@@ -1,7 +1,7 @@
 import { StyledRevokeAccessItem } from "./RevokeAccessItem.styled";
 import MyButton from "../../../../components/MyButton/MyButton";
 import { RevokeAccessItemProps } from "../../../../interfaces";
-import { useRevokeInvitationCode } from "../../../../api/services/useRevokeInvitationCode";
+import { useRevokeInvitationCode } from "../../../../api/auth/CommandHooks/useRevokeInvitationCode";
 import { IoCopy } from "react-icons/io5";
 import { copyToClipboard } from "../../../../helpers/copyToClipboars";
 import { useEffect, useState } from "react";
@@ -41,7 +41,7 @@ export default function RevokeAccessItem({
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
         // setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
-       if (isNaN(minutes) || isNaN(seconds)) {
+        if (isNaN(minutes) || isNaN(seconds)) {
           setTimeLeft("NaN");
         } else if (minutes === 0) {
           setTimeLeft(`${seconds}s`);
@@ -66,8 +66,8 @@ export default function RevokeAccessItem({
       <div className="infoAndRevokeButton">
         <div className="infoContainer">
           <div className="infoAndData">
-            {!timeLeft.length  || timeLeft === "NaN" ? (
-           <ShimerPlaceholder/>
+            {!timeLeft.length || timeLeft === "NaN" ? (
+              <ShimerPlaceholder />
             ) : (
               <div className="expires">
                 {timeLeft && timeLeft === "Expired" ? (

@@ -1,7 +1,7 @@
 import { Signal } from "@preact/signals-react";
 import { TransactionType, Group, TransferParsedFilters } from "../../../types";
-import useGetGroupTransfers from "../../../api/services/useGetGroupTransfers";
-import useGetNonGroupTransfers from "../../../api/services/useGetNonGroupTransfers";
+import useGetGroupTransfers from "../../../api/auth/QueryHooks/useGetGroupTransfers";
+import useGetNonGroupTransfers from "../../../api/auth/QueryHooks/useGetNonGroupTransfers";
 
 
 export const useTransferList = (

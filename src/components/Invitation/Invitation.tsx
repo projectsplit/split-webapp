@@ -1,14 +1,14 @@
 import React from "react";
 import { StyledInvitation } from "./Invitation.styled";
-import { useAcceptInvitation } from "../../api/services/useAcceptInvitation";
-import { useDeclineInvitation } from "../../api/services/useDeclineInvitation";
+import { useAcceptInvitation } from "../../api/auth/CommandHooks/useAcceptInvitation";
+import { useDeclineInvitation } from "../../api/auth/CommandHooks/useDeclineInvitation";
 import MyButton from "../MyButton/MyButton";
 import { useNavigate } from "react-router-dom";
 import { Signal } from "@preact/signals-react";
 
-const Invitation: React.FC<InvitationProps> = ({ invitation,menu }) => {
+const Invitation: React.FC<InvitationProps> = ({ invitation, menu }) => {
   const navigate = useNavigate();
-  const accept = useAcceptInvitation(navigate, invitation,menu);
+  const accept = useAcceptInvitation(navigate, invitation, menu);
   const decline = useDeclineInvitation();
 
   return (

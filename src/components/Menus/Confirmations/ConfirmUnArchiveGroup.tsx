@@ -1,7 +1,7 @@
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { ConfirmArchiveGroupProps } from "../../../interfaces";
 import Confirmation from "./Confirmation";
-import { useArchiveGroup } from "../../../api/services/useArchiveGroup";
+import { useArchiveGroup } from "../../../api/auth/CommandHooks/useArchiveGroup";
 import { Signal, useSignal } from "@preact/signals-react";
 
 export default function ConfirmUnArchiveGroup({

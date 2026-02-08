@@ -3,11 +3,11 @@ import AutoWidthInput from "../AutoWidthInput";
 import { IoClose } from "react-icons/io5";
 import { StyledLabelPicker } from "./LabelPicker.styled";
 import { LabelPickerProps } from "../../interfaces";
-import { useGetGroupLabels } from "../../api/services/useGetGroupLabels";
+import { useGetGroupLabels } from "../../api/auth/QueryHooks/useGetGroupLabels";
 import { Label } from "../../types";
 import labelColors from "../../labelColors";
 import { AiFillDelete } from "react-icons/ai";
-import { useRemoveLabel } from "../../api/services/useRemoveLabel";
+import { useRemoveLabel } from "../../api/auth/CommandHooks/useRemoveLabel";
 
 const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
 
@@ -128,7 +128,7 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
           <div style={{ position: "absolute", flex: 1 }}>Select or create label</div>
         )}
       </div>
-      { 
+      {
         <div className="dropdown" ref={dropdownRef}>
           {remainingSuggestedLabels.map(x => (
             <div
