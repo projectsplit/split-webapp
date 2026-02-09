@@ -272,6 +272,8 @@ export interface BottomMainMenuProps {
   group?: Group;
   isLoading?: boolean;
   menu?: Signal<string | null>;
+  onGroupSearchClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  bottomBarRef?: React.RefObject<HTMLDivElement>;
 }
 export interface OverspentMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -427,6 +429,11 @@ export interface CreateGroupAnimationProps extends MenuProps {
 export interface CreateGroupProps extends MenuProps {
   nodeRef: React.MutableRefObject<null>;
   currencyMenu: Signal<string | null>;
+}
+
+export interface GroupSearchBarAnimationProps {
+  showSearchBar: Signal<boolean>;
+  searchBarRef: React.MutableRefObject<any>;
 }
 
 export interface SettingsMenuProps {

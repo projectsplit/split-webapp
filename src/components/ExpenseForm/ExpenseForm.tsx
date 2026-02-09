@@ -1,7 +1,7 @@
 import { useEffect, useRef, } from "react";
 import { PickerMember, SplitCategory, UserInfo, } from "@/types";
-import MenuAnimationBackground from "@/components/Menus/MenuAnimations/MenuAnimationBackground";
-import CurrencyOptionsAnimation from "@/components/Menus/MenuAnimations/CurrencyOptionsAnimation";
+import MenuAnimationBackground from "@/components/Animations/MenuAnimationBackground";
+import CurrencyOptionsAnimation from "@/components/Animations/CurrencyOptionsAnimation";
 import InputMonetary from "@/components/InputMonetary/InputMonetary";
 import { useSignal } from "@preact/signals-react";
 import { ExpenseFormProps } from "@/interfaces";
@@ -22,7 +22,7 @@ import { ExpenseFormHeader } from "./components/ExpenseFormHeader/ExpenseFormHea
 import { ExpenseFormFooter } from "./components/ExpenseFormFooter/ExpenseFormFooter";
 import { useHandlers } from "./hooks/useHandlers";
 import { useEditExpenseMutation } from "@/api/auth/CommandHooks/useEditExpenseMutation";
-import GeneralWarningMenuAnimation from "../Menus/MenuAnimations/GeneralWarningMenuAnimation";
+import GeneralWarningMenuAnimation from "../Animations/GeneralWarningMenuAnimation";
 
 export default function ExpenseForm({
   groupMembers,

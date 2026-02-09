@@ -4,14 +4,14 @@ import Spinner from "../../../../components/Spinner/Spinner";
 import TreeAdjustedContainer from "../../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import { TreeItemBuilderForHomeAndGroups } from "../../../../components/TreeItemBuilderForHomeAndGroups";
 import Sentinel from "../../../../components/Sentinel";
-import ConfirmUnArchiveGroupAnimation from "../../../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
+import ConfirmUnArchiveGroupAnimation from "../../../../components/Animations/ConfirmUnArchiveGroupAnimation";
 import { useSignal } from "@preact/signals-react";
 import { useGetTotalsArchiveGroups } from "@/api/auth/QueryHooks/useGetTotalsArchivedGroups";
 
 export default function ArchivedGroups() {
   const pageSize = 10;
-  const menu = useSignal<string|null>(null)
-  const groupId = useSignal<string|undefined>("")
+  const menu = useSignal<string | null>(null)
+  const groupId = useSignal<string | undefined>("")
   const openGroupOptionsMenu = useSignal<boolean>(true)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useGetTotalsArchiveGroups(pageSize);
@@ -19,8 +19,8 @@ export default function ArchivedGroups() {
   const groups = data?.pages.flatMap((p) => p.groups);
 
   const onGroupClickHandler = (id: string) => {
-    menu.value="unarchiveGroup"
-    groupId.value=id;
+    menu.value = "unarchiveGroup"
+    groupId.value = id;
   };
 
   return (
@@ -47,7 +47,7 @@ export default function ArchivedGroups() {
                 right={0.8}
                 items={TreeItemBuilderForHomeAndGroups(g?.details)}
                 $optionColor="#D79244"
-               
+
               >
                 <div className="groupName">{g.name}</div>
               </TreeAdjustedContainer>

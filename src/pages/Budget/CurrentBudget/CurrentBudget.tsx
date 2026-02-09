@@ -12,12 +12,12 @@ import { StyledCurrentBudget } from "./CurrentBudget.styled";
 
 import MyButton from "../../../components/MyButton/MyButton";
 import { BudgetInfoMessage } from "../../../components/BudgetMessages/BudgetInfoMessage";
-import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import MenuAnimationBackground from "../../../components/Animations/MenuAnimationBackground";
 import { useSignal } from "@preact/signals-react";
-import DeleteBudgetConfirmationAnimation from "../../../components/Menus/MenuAnimations/BudgetAnimations/DeleteBudgetConfirmationAnimation";
+import DeleteBudgetConfirmationAnimation from "../../../components/Animations/BudgetAnimations/DeleteBudgetConfirmationAnimation";
 
 import Spinner from "../../../components/Spinner/Spinner";
-import ManageBudgetAnimation from "../../../components/Menus/MenuAnimations/BudgetAnimations/ManageBudgetAnimation";
+import ManageBudgetAnimation from "../../../components/Animations/BudgetAnimations/ManageBudgetAnimation";
 
 export default function CurrentBudget() {
   const menu = useSignal<string | null>(null);
@@ -30,23 +30,23 @@ export default function CurrentBudget() {
 
   // const { isFetching, data } = useBudgetInfo();
 
-  const data:BudgetInfoResponse = {
-      "budgetSubmitted": false,
-      "totalAmountSpent": '123',
-      "remainingDays": '5',
-      "averageSpentPerDay": '10',
-      "goal": '1300',
-      "currency": 'USD',
-      "budgetType": 1,
-      "startDate": "0001-01-01T00:00:00",
-      "endDate": "0001-01-01T00:00:00"
+  const data: BudgetInfoResponse = {
+    "budgetSubmitted": false,
+    "totalAmountSpent": '123',
+    "remainingDays": '5',
+    "averageSpentPerDay": '10',
+    "goal": '1300',
+    "currency": 'USD',
+    "budgetType": 1,
+    "startDate": "0001-01-01T00:00:00",
+    "endDate": "0001-01-01T00:00:00"
   }
-  const isFetching=false
+  const isFetching = false
 
   useEffect(() => {
     //prevents user from landing on this component after budget is deleted using <- of browser
     if (!isFetching && !data?.budgetSubmitted) {
-     //navigate("/budget/create");
+      //navigate("/budget/create");
       navigate("/");
     }
   }, []);
@@ -65,8 +65,8 @@ export default function CurrentBudget() {
 
   const removeBudget = async () => {
     //deleteBudget.mutate({});
-    menu.value=(null);
-    queryClient.invalidateQueries({ queryKey:queryKey, exact: false });
+    menu.value = (null);
+    queryClient.invalidateQueries({ queryKey: queryKey, exact: false });
     navigate("/budget/create");
   };
 
@@ -100,7 +100,7 @@ export default function CurrentBudget() {
           )}
 
           <div className="submitButton">
-            <MyButton onClick={() => (menu.value = "manageBudgetMenu")}  fontSize="16">
+            <MyButton onClick={() => (menu.value = "manageBudgetMenu")} fontSize="16">
               Manage Budget
             </MyButton>
           </div>

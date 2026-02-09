@@ -5,12 +5,12 @@ import Input from "../../Input/Input";
 import { FaAngleLeft } from "react-icons/fa";
 import { useSignal } from "@preact/signals-react";
 import MemberItem from "./MemberItem/MemberItem";
-import MenuAnimationBackground from "../MenuAnimations/MenuAnimationBackground";
+import MenuAnimationBackground from "../../Animations/MenuAnimationBackground";
 import useGroup from "../../../api/auth/QueryHooks/useGroup";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { GroupMember } from "../../../types";
-import RemoveWarningAnimation from "../MenuAnimations/RemoveWarningAnimation";
+import RemoveWarningAnimation from "../../Animations/RemoveWarningAnimation";
 import { useRemoveMemberFromGroup } from "../../../api/auth/CommandHooks/useRemoveMemberFromGroup";
 
 export default function RemoveUserFromGroupMenu({

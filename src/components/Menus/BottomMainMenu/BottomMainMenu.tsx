@@ -9,7 +9,9 @@ import { RiProhibited2Line } from "react-icons/ri";
 export default function BottomMainMenu({
   onClick,
   group,
-  menu
+  menu,
+  onGroupSearchClick,
+  bottomBarRef,
 }: BottomMainMenuProps) {
   const navigate = useNavigate();
   return (
@@ -30,8 +32,7 @@ export default function BottomMainMenu({
             <FaPlus />
           </div>
         )}
-
-        <div className="search">
+        <div className="search" onClick={onGroupSearchClick} ref={bottomBarRef}>
           <IoMdSearch
             onClick={() => {
               if (menu) {

@@ -3,21 +3,21 @@ import { StyledGroupOptions } from "./GroupOptions.styled";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
 import Separator from "../../../components/Separator/Separator";
-import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
+import MenuAnimationBackground from "../../../components/Animations/MenuAnimationBackground";
+import CurrencyOptionsAnimation from "../../../components/Animations/CurrencyOptionsAnimation";
 import { Currency, UserInfo } from "../../../types";
 import { currencyData } from "../../../helpers/openExchangeRates";
 import { GroupOptionsProps } from "../../../interfaces";
 import { MdEdit } from "react-icons/md";
 import { FaArchive } from "react-icons/fa";
-import ConfirmArchiveGroupAnimation from "../../../components/Menus/MenuAnimations/ConfirmArchiveGroupAnimation";
-import ConfirmLeaveGroupAnimation from "../../../components/Menus/MenuAnimations/ConfirmLeaveGroupAnimation";
-import RenameGroupAnimationAnimation from "../../../components/Menus/MenuAnimations/RenameGroupAnimation";
+import ConfirmArchiveGroupAnimation from "../../../components/Animations/ConfirmArchiveGroupAnimation";
+import ConfirmLeaveGroupAnimation from "../../../components/Animations/ConfirmLeaveGroupAnimation";
+import RenameGroupAnimationAnimation from "../../../components/Animations/RenameGroupAnimation";
 import { useChangeGroupCurrency } from "../../../api/auth/CommandHooks/useChangeGroupCurrency";
 import { useQueryClient } from "@tanstack/react-query";
 import RemoveUserFromGroupMenu from "../../../components/Menus/RemoveUserFromGroupMenu/RemoveUserFromGroupMenu";
 import { useEffect } from "react";
-import AddNewUserAnimation from "../../../components/Menus/MenuAnimations/AddNewUserAnimation";
+import AddNewUserAnimation from "../../../components/Animations/AddNewUserAnimation";
 
 export default function GroupOptions({ group }: GroupOptionsProps) {
   const navigate = useNavigate();

@@ -4,11 +4,11 @@ import { IoClose } from "react-icons/io5";
 import { CreateGroupProps } from "../../../interfaces";
 import { Currency, UserInfo } from "../../../types";
 import { FaAngleDown } from "react-icons/fa";
-import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import MenuAnimationBackground from "../../../components/Animations/MenuAnimationBackground";
 import { useSignal } from "@preact/signals-react";
 import { currencyData } from "../../../helpers/openExchangeRates";
 import { useOutletContext } from "react-router-dom";
-import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
+import CurrencyOptionsAnimation from "../../../components/Animations/CurrencyOptionsAnimation";
 import MyButton from "../../../components/MyButton/MyButton";
 import FormInput from "../../../components/FormInput/FormInput";
 import { useCreateGroup } from "@/api/auth/CommandHooks/useCreateGroup";
@@ -32,7 +32,7 @@ export default function CreateGroup({
   const selectedCurrency = allCurrencies.value.find(
     (c) => c.symbol === currencySymbol
   );
-  const {mutate:createGroup, isPending} = useCreateGroup();
+  const { mutate: createGroup, isPending } = useCreateGroup();
 
   const onClickHandler = () => {
     createGroup({ name: groupName, currency: currencySymbol });
@@ -82,7 +82,7 @@ export default function CreateGroup({
           disabled={groupName.trim() === "" ? true : false}
           onClick={onClickHandler}
           isLoading={isPending}
-         fontSize="16"
+          fontSize="16"
         >
           Create Group
         </MyButton>

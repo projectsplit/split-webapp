@@ -17,6 +17,7 @@ export const useGetGroupsTotalAmounts = (pageSize: number, activeGroupCatAsState
     staleTime: 0,
   });
 }
+
 const getGroupsTotalAmounts = async (
   pageSize: number,
   next: string,

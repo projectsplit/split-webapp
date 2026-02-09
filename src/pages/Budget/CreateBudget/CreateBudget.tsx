@@ -14,12 +14,12 @@ import SpendingCycle from "./SpendingCycle/SpendingCycle";
 import { useSignal } from "@preact/signals-react";
 import MyButton from "../../../components/MyButton/MyButton";
 import TopBarWithBackButton from "../../../components/TopBarWithBackButton/TopBarWithBackButton";
-import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
+import CurrencyOptionsAnimation from "../../../components/Animations/CurrencyOptionsAnimation";
 import { useCreateBudget } from "../../../api/auth/CommandHooks/useCreateBudget";
 import { useSpendingInfo } from "../../../api/auth/QueryHooks/useSpengindInfo";
-import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import InfoBoxAnimation from "../../../components/Menus/MenuAnimations/InfoBoxAnimation";
-import CreateBudgetConfirmationAnimation from "../../../components/Menus/MenuAnimations/BudgetAnimations/CreateBudgetConfirmationAnimation";
+import MenuAnimationBackground from "../../../components/Animations/MenuAnimationBackground";
+import InfoBoxAnimation from "../../../components/Animations/InfoBoxAnimation";
+import CreateBudgetConfirmationAnimation from "../../../components/Animations/BudgetAnimations/CreateBudgetConfirmationAnimation";
 import { handleInputChange } from "../../../helpers/handleInputChange";
 
 export default function CreateBudget() {

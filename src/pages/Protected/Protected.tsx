@@ -1,9 +1,9 @@
 import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
 import { StyledProtected } from "./Protected.styled";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import NotificationsMenuAnimation from "../../components/Menus/MenuAnimations/NotificationsMenuAnimation";
-import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
+import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
+import NotificationsMenuAnimation from "../../components/Animations/NotificationsMenuAnimation";
+import SettingsMenuAnimation from "../../components/Animations/SettingsMenuAnimation";
 import TopMenu from "../../components/Menus/TopMenu/TopMenu";
 import { JoinOverlay } from "../Join/JoinOverslay";
 import { useGetMe } from "@/api/auth/QueryHooks/useGetMe";

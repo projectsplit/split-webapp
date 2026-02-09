@@ -15,8 +15,8 @@ import { CiReceipt } from "react-icons/ci";
 import { Signal, useSignal } from "@preact/signals-react";
 import DetailedExpense from "../../components/DetailedExpense/DetailedExpense";
 import { DateOnly } from "../../helpers/timeHelpers";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
+import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
+import ErrorMenuAnimation from "../../components/Animations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
 import useDebts from "../../api/auth/QueryHooks/useDebts";
 import {
@@ -24,7 +24,7 @@ import {
   getGroupTotalByCurrency,
   getCurrencyValues,
 } from "../../helpers/getGroupTotalByCurrency";
-import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalsByCurrencyAnimation";
+import GroupTotalsByCurrencyAnimation from "../../components/Animations/GroupTotalsByCurrencyAnimation";
 import Spinner from "../../components/Spinner/Spinner";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { renderExpenseFilterPills } from "../../helpers/renderExpenseFilterPills";

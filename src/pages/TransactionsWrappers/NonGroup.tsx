@@ -3,15 +3,15 @@ import { useEffect } from 'react'
 import { Outlet, useLocation, useOutletContext } from 'react-router-dom';
 import { ExpenseParsedFilters, ExpenseResponseItem, TransactionType, TransferParsedFilters, User, UserInfo } from '../../types';
 import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
-import MenuAnimationBackground from '../../components/Menus/MenuAnimations/MenuAnimationBackground';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
 import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';
-import SearchTransactionsAnimation from '../../components/Menus/MenuAnimations/SearchTransactionsAnimation';
-import GroupQuickActionsAnimation from '../../components/Menus/MenuAnimations/MenuWithOptionsToAddAnimation';
-import NewExpenseAnimation from '../../components/Menus/MenuAnimations/NewExpenseAnimation';
-import NewTransferAnimation from '../../components/Menus/MenuAnimations/NewTransferAnimation';
+import SearchTransactionsAnimation from '../../components/Animations/SearchTransactionsAnimation';
+import GroupQuickActionsAnimation from '../../components/Animations/MenuWithOptionsToAddAnimation';
+import NewExpenseAnimation from '../../components/Animations/NewExpenseAnimation';
+import NewTransferAnimation from '../../components/Animations/NewTransferAnimation';
 import { StyledGroup } from './Group.styled';
-import NonGroupExpenseUsersAnimation from '../../components/Menus/MenuAnimations/NonGroupExpenseUsersAnimation';
-import NonGroupTransferAnimation from '../../components/Menus/MenuAnimations/NonGroupTransferAnimation';
+import NonGroupExpenseUsersAnimation from '../../components/Animations/NonGroupExpenseUsersAnimation';
+import NonGroupTransferAnimation from '../../components/Animations/NonGroupTransferAnimation';
 import { localStorageStringParser, getFilterStorageKey } from '../../components/SearchTransactions/helpers/localStorageStringParser';
 
 

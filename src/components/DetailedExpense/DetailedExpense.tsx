@@ -8,11 +8,11 @@ import { DetailedExpenseProps } from "../../interfaces";
 import Pill from "../Pill/Pill";
 import { DateOnly, TimeOnly, YearOnly } from "../../helpers/timeHelpers";
 import MapsInfoBox from "./MapsInfoBox/MapsInfoBox";
-import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
+import MenuAnimationBackground from "../Animations/MenuAnimationBackground";
 import { signal, useSignal } from "@preact/signals-react";
-import DeleteExpenseAnimation from "../Menus/MenuAnimations/DeleteExpenseAnimation";
+import DeleteExpenseAnimation from "../Animations/DeleteExpenseAnimation";
 import { FormExpense, GeoLocation, User } from "../../types";
-import EditExpenseAnimation from "../Menus/MenuAnimations/EditExpenseAnimation";
+import EditExpenseAnimation from "../Animations/EditExpenseAnimation";
 import labelColors from "../../labelColors";
 import { buildFormExpense, toUser } from "./utils";
 

@@ -7,8 +7,8 @@ import { useSignal } from "@preact/signals-react";
 import { DateOnly, TimeOnly, YearOnly } from "../../helpers/timeHelpers";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 import { HeadingNode } from "@lexical/rich-text";
-import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
-import DeleteTransferAnimation from "../Menus/MenuAnimations/DeleteTransferAnimation";
+import MenuAnimationBackground from "../Animations/MenuAnimationBackground";
+import DeleteTransferAnimation from "../Animations/DeleteTransferAnimation";
 
 export default function DetailedTransfer({
   selectedTransfer,
@@ -42,9 +42,9 @@ export default function DetailedTransfer({
   };
 
   const outlineColor =
-    selectedTransfer.value?.senderId === userMemberId ||selectedTransfer.value?.senderId===userId
+    selectedTransfer.value?.senderId === userMemberId || selectedTransfer.value?.senderId === userId
       ? "#0CA0A0"
-      : selectedTransfer.value?.receiverId === userMemberId||selectedTransfer.value?.receiverId===userId
+      : selectedTransfer.value?.receiverId === userMemberId || selectedTransfer.value?.receiverId === userId
         ? "#D79244"
         : "rgb(54,54,54)";
 

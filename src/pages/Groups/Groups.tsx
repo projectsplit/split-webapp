@@ -1,10 +1,10 @@
 import { StyledGroupsContainer } from "./GroupsContainer.styled";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
-import CreateGroupAnimation from "../../components/Menus/MenuAnimations/CreateGroupAnimation";
+import CreateGroupAnimation from "../../components/Animations/CreateGroupAnimation";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { useEffect } from "react";
-import {  useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMostRecentGroup } from "../../api/auth/CommandHooks/useMostRecentGroup";
 import { StyledGroups } from "./GroupTypes/Groups.styled";
 import { MdOutlineGroupOff } from "react-icons/md";
@@ -13,8 +13,8 @@ import Sentinel from "../../components/Sentinel";
 import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
 import { GoArchive } from "react-icons/go";
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
-import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import ConfirmUnArchiveGroupAnimation from "../../components/Animations/ConfirmUnArchiveGroupAnimation";
+import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
 import Spinner from "../../components/Spinner/Spinner";
 import { useGetGroupsTotalAmounts } from "@/api/auth/QueryHooks/useGetGroupsTotalAmounts";
 

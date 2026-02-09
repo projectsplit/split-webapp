@@ -5,12 +5,12 @@ import { useEffect, useMemo } from "react";
 import { groupTransactions } from "../../helpers/groupTransactions";
 import { Group, UserInfo } from "../../types";
 import { Signal, useSignal } from "@preact/signals-react";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
 import MemberFC from "./Member/MemberFC";
-import SettleUpAnimation from "../../components/Menus/MenuAnimations/SettleUpAnimation";
+import SettleUpAnimation from "../../components/Animations/SettleUpAnimation";
 import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
 import Spinner from "../../components/Spinner/Spinner";
-import AddNewUserAnimation from "../../components/Menus/MenuAnimations/AddNewUserAnimation";
+import AddNewUserAnimation from "../../components/Animations/AddNewUserAnimation";
 
 export default function Members() {
   const memberIdSelectedToSettleUp = useSignal<string>("");

@@ -15,21 +15,19 @@ import PeriodOption from "./Charts/PeriodOption/PeriodOption";
 import { initialiseSelectedTimeCycle } from "../../helpers/initialiseSelectedTimeCycle";
 import { buildStartAndEndDates } from "./helpers/buildStartAndEndDates";
 import { useQueryClient } from "@tanstack/react-query";
-import CurrencyOptionsAnimation from "../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
-import AnalyticsTimePeriodSelectionAnimation from "../../components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsTimePeriodSelectionAnimation";
-import AnalyticsCycleSelectionAnimation from "../../components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsCycleSelectionAnimation";
-import AnalyticsYearSelectionAnimation from "../../components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsYearSelectionAnimation";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import CurrencyOptionsAnimation from "../../components/Animations/CurrencyOptionsAnimation";
+import AnalyticsTimePeriodSelectionAnimation from "../../components/Animations/AnalyticsMenuAnimations/AnalyticsTimePeriodSelectionAnimation";
+import AnalyticsCycleSelectionAnimation from "../../components/Animations/AnalyticsMenuAnimations/AnalyticsCycleSelectionAnimation";
+import AnalyticsYearSelectionAnimation from "../../components/Animations/AnalyticsMenuAnimations/AnalyticsYearSelectionAnimation";
+import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
 import { useWeeklyDatesMemo } from "../../components/SearchTransactions/hooks/useWeeklyDatesMemo";
 import { CategoryButton } from "../../components/CategoryButton/CategoryButton";
 import TopBarWithBackButton from "../../components/TopBarWithBackButton/TopBarWithBackButton";
 import Spinner from "../../components/Spinner/Spinner";
 import { useCumulativeSpendingArray } from "../../api/auth/QueryHooks/useCumulativeSpendingArray";
-import { timeZones } from "../../helpers/timeZones";
 
 export default function Analytics() {
-  const [selectedChart, setSelectedChart] =
-    useState<string>("cumulativeSpending");
+  const [selectedChart, setSelectedChart] = useState<string>("cumulativeSpending");
   const selectedCycle = useSignal<Frequency>(Frequency.Monthly);
   const selectedYear = useSignal<number>(new Date().getFullYear());
   const cyclehaschanged = useSignal<boolean>(false);

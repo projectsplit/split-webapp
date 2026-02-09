@@ -9,8 +9,8 @@ import Separator from "../../Separator/Separator";
 import { TbLogout2 } from "react-icons/tb";
 import packackageJson from "../../../../package.json";
 import { FaCoins } from "react-icons/fa";
-import MenuAnimationBackground from "../MenuAnimations/MenuAnimationBackground";
-import CurrencyOptionsAnimation from "../MenuAnimations/CurrencyOptionsAnimation";
+import MenuAnimationBackground from "../../Animations/MenuAnimationBackground";
+import CurrencyOptionsAnimation from "../../Animations/CurrencyOptionsAnimation";
 import { useSignal } from "@preact/signals-react";
 import { currencyData } from "../../../helpers/openExchangeRates";
 import ToggleSwitch from "../../ToggleSwitch/ToggleSwitch";
@@ -19,11 +19,11 @@ import routes from "../../../routes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelectedCurrency } from "../../../api/auth/CommandHooks/useSelectedCurrency";
 import { RiTimeZoneLine } from "react-icons/ri";
-import TimeZoneOptionsAnimation from "../MenuAnimations/TimeZoneOptionsAnimation";
+import TimeZoneOptionsAnimation from "../../Animations/TimeZoneOptionsAnimation";
 import { useTimeZone } from "../../../api/auth/CommandHooks/useTimeZone";
 import { getInitials } from "../../../helpers/getInitials";
 import { timeZones } from "../../../helpers/timeZones";
-import EditUsernameAnimation from "../MenuAnimations/EditUsernameAnimation";
+import EditUsernameAnimation from "../../Animations/EditUsernameAnimation";
 import { FaUserPen } from "react-icons/fa6";
 
 export default function SettingsMenu({

@@ -1,9 +1,9 @@
 import { StyledGroupsContainer } from "./GroupsContainer.styled";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
-import CreateGroupAnimation from "../../components/Menus/MenuAnimations/CreateGroupAnimation";
+import CreateGroupAnimation from "../../components/Animations/CreateGroupAnimation";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMostRecentGroup } from "../../api/auth/CommandHooks/useMostRecentGroup";
 import { StyledGroups } from "./GroupTypes/Groups.styled";
@@ -13,8 +13,8 @@ import Sentinel from "../../components/Sentinel";
 import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
 import { GoArchive } from "react-icons/go";
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
-import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
+import ConfirmUnArchiveGroupAnimation from "../../components/Animations/ConfirmUnArchiveGroupAnimation";
+import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
 import Spinner from "../../components/Spinner/Spinner";
 import { StyledSharedContainer } from "./SharedContainer.styled";
 import Separator from "../../components/Separator/Separator";
@@ -22,12 +22,16 @@ import VerticalSeparator from "../../components/VerticalSeparator/VerticalSepara
 import { TiGroup } from "react-icons/ti";
 import { IoIosArchive } from "react-icons/io";
 import { useGetGroupsTotalAmounts } from "@/api/auth/QueryHooks/useGetGroupsTotalAmounts";
+import GroupSearchBarAnimation from "../../components/Animations/GroupSearchBarAnimation";
 
 export default function Shared() {
   const queryClient = useQueryClient();
   const menu = useSignal<string | null>(null);
   const currencyMenu = useSignal<string | null>(null);
   const groupIdClicked = useSignal<string>("");
+  const showSearchBar = useSignal(false);
+  const searchBarRef = useRef<any>(null);
+  const bottomBarRef = useRef<any>(null);
 
   const { topMenuTitle, activeGroupCatAsState, openGroupOptionsMenu } =
     useOutletContext<{
@@ -48,12 +52,23 @@ export default function Shared() {
   );
 
   useEffect(() => {
+    if (!showSearchBar.value) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+    if (searchBarRef.current && !searchBarRef.current.contains(e.target as Node) && bottomBarRef.current && !bottomBarRef.current.contains(e.target as Node)) { showSearchBar.value = false; }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSearchBar.value]);
+
+  useEffect(() => {
     topMenuTitle.value = "Shared";
     queryClient.invalidateQueries({
       queryKey: ["shared", activeGroupCatAsState.value.toLowerCase()],
       exact: true,
     });
   }, [activeGroupCatAsState.value]);
+
 
   const updateMostRecentGroupId = useMostRecentGroup();
 
@@ -130,6 +145,10 @@ export default function Shared() {
             <Spinner />
           ) : (
             <div className="groups">
+              <GroupSearchBarAnimation
+                showSearchBar={showSearchBar}
+                searchBarRef={searchBarRef}
+              />
               {groups?.length === 0 ? (
                 activeGroupCatAsState.value === "Active" ? (
                   <div className="noData">
@@ -193,12 +212,9 @@ export default function Shared() {
                   ]}
                   optionname={'chevron-forward-outline'}
                 >
-
                   <div className="groupName">Non Group transactions</div>
-
                 </TreeAdjustedContainer>
               )}
-
               <Sentinel
                 fetchNextPage={fetchNextPage}
                 hasNextPage={hasNextPage}
@@ -209,7 +225,7 @@ export default function Shared() {
         </StyledGroups>
       </div>
       <MenuAnimationBackground menu={menu} />
-      <BottomMainMenu onClick={() => (menu.value = "createGroup")} />
+      <BottomMainMenu onClick={() => (menu.value = "createGroup")} onGroupSearchClick={() => {activeGroupCatAsState.value !== "NonGroup" ? showSearchBar.value = true : null}} bottomBarRef={bottomBarRef} />
       <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
       <ConfirmUnArchiveGroupAnimation
         menu={menu}
