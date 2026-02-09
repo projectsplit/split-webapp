@@ -2,20 +2,24 @@ import { apiClient } from "@/api/apiClients";
 import { GroupRequest } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+type GroupResponse= {
+    groupId:string
+}
 export const useCreateGroup = () => {
     const queryClient = useQueryClient();
 
-    return useMutation<any, any, GroupRequest>({
+    return useMutation<GroupResponse, any, GroupRequest>({
         mutationKey: ["group", "create"],
         mutationFn: createGroupFn,
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["group"], exact: false });
             queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
+            return data;
         },
     });
 }
 
 const createGroupFn = async (request: GroupRequest) => {
-    const response = await apiClient.post("/groups/create", request);
+    const response = await apiClient.post<GroupResponse>("/groups/create", request);
     return response.data;
 };

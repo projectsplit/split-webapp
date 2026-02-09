@@ -9,7 +9,6 @@ export default function GroupSearchBarAnimation({
   setKeyword,
 }: GroupSearchBarAnimationProps) {
   return (
-    /* @ts-ignore */
     <CSSTransition
       in={showSearchBar.value}
       timeout={300}

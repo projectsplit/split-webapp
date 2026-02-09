@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
 import CreateGroupAnimation from "../../components/Animations/CreateGroupAnimation";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMostRecentGroup } from "../../api/auth/CommandHooks/useMostRecentGroup";
 import { StyledGroups } from "./GroupTypes/Groups.styled";
@@ -24,6 +24,7 @@ import { IoIosArchive } from "react-icons/io";
 import { useGetGroupsTotalAmounts } from "@/api/auth/QueryHooks/useGetGroupsTotalAmounts";
 import GroupSearchBarAnimation from "../../components/Animations/GroupSearchBarAnimation";
 import useDebounce from "@/hooks/useDebounce";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 export default function Shared() {
   const queryClient = useQueryClient();
@@ -36,7 +37,7 @@ export default function Shared() {
   const [keyword, setKeyword] = useState("");
   const [debouncedKeyword] = useDebounce(
     keyword.length > 1 ? keyword : "",
-    300
+    400
   );
 
   const { topMenuTitle, activeGroupCatAsState, openGroupOptionsMenu } =
@@ -53,17 +54,20 @@ export default function Shared() {
     useGetGroupsTotalAmounts(pageSize, debouncedKeyword, activeGroupCatAsState);
 
   const groups = data?.pages.flatMap((p) => p.groups);
-  const filteredGroups = groups?.filter((g) => {
-    if (activeGroupCatAsState.value === "Active") return !g.isArchived;
-    if (activeGroupCatAsState.value === "Archived") return g.isArchived;
-    return false;
-  });
+
+  const filteredGroups = useMemo(() => {
+    return groups?.filter((g) => {
+      if (activeGroupCatAsState.value === "Active") return !g.isArchived;
+      if (activeGroupCatAsState.value === "Archived") return g.isArchived;
+      return false;
+    });
+  }, [groups, activeGroupCatAsState.value])
 
   useEffect(() => {
     if (!showSearchBar.value) return;
 
     const handleClickOutside = (e: MouseEvent) => {
-      if (searchBarRef.current && !searchBarRef.current.contains(e.target as Node) && generalRef.current && !generalRef.current.contains(e.target as Node)) { showSearchBar.value = false; }
+      if (searchBarRef.current && !searchBarRef.current.contains(e.target as Node) && generalRef.current && !generalRef.current.contains(e.target as Node)) { showSearchBar.value = false; setKeyword("") }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -73,7 +77,6 @@ export default function Shared() {
     topMenuTitle.value = "Shared";
     queryClient.invalidateQueries({
       queryKey: ["shared", activeGroupCatAsState.value.toLowerCase()],
-      exact: true,
     });
   }, [activeGroupCatAsState.value]);
 
@@ -99,6 +102,7 @@ export default function Shared() {
       menu.value = "unarchiveGroup";
     }
   };
+
   return (
     <StyledSharedContainer $groupState={activeGroupCatAsState.value}>
       <Separator />
@@ -148,33 +152,39 @@ export default function Shared() {
         </div>
         <VerticalSeparator />
         <StyledGroups>
+          <GroupSearchBarAnimation
+            showSearchBar={showSearchBar}
+            searchBarRef={searchBarRef}
+            keyword={keyword}
+            setKeyword={setKeyword}
+          />
           {isFetching && !isFetchingNextPage ? (
             <Spinner />
           ) : (
             <div className="groups">
-              <GroupSearchBarAnimation
-                showSearchBar={showSearchBar}
-                searchBarRef={searchBarRef}
-                keyword={keyword}
-                setKeyword={setKeyword}
-              />
-              {activeGroupCatAsState.value !== "NonGroup" && filteredGroups?.length === 0 ? (
-                activeGroupCatAsState.value === "Active" ? (
-                  <div className="noData">
-                    <div className="msg">
-                      There are currently no active groups
-                    </div>
-                    <MdOutlineGroupOff className="icon" />
-                  </div>
-                ) : (
-                  <div className="noData">
-                    <div className="msg">
-                      There are currently no archived groups
-                    </div>
-                    <GoArchive className="icon" />
-                  </div>
-                )
-              ) : null}
+
+              {activeGroupCatAsState.value === "Active" && filteredGroups?.length === 0 && keyword.length !== 0? (
+                <div className="noData">
+                  <div className="msg">No active groups found based on current search 🤔</div>
+                  <FaMagnifyingGlass className="icon" />
+                </div>
+              ) :activeGroupCatAsState.value === "Active" && filteredGroups?.length === 0  ? (
+                <div className="noData">
+                  <div className="msg">There are currently no active groups </div>
+                  <MdOutlineGroupOff className="icon" />
+                </div>
+              ) : activeGroupCatAsState.value === "Archived" && filteredGroups?.length === 0 && keyword.length !== 0 ? (
+                <div className="noData">
+                  <div className="msg">No archived groups found based on current search 🤔</div>
+                  <FaMagnifyingGlass className="icon" />
+                </div>
+              ) : activeGroupCatAsState.value === "Archived" && filteredGroups?.length === 0 ? (
+                <div className="noData">
+                  <div className="msg">There are currently no archived groups</div>
+                  <GoArchive className="icon" />
+                </div>
+              ) : 
+              null}
               {filteredGroups?.map((g: any) => (
                 <div key={g.id}>
                   <TreeAdjustedContainer

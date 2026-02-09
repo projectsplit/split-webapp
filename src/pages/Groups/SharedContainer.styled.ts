@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const StyledSharedContainer = styled.div<{ $groupState: string }>`
-  overflow: auto;
+  overflow: hidden;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -12,7 +12,9 @@ export const StyledSharedContainer = styled.div<{ $groupState: string }>`
   .optionButtonsAndGroups {
     display: flex;
     flex-direction: row;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
+
 
     .optionButtons {
       .buttonWrapper {
@@ -40,11 +42,11 @@ export const StyledSharedContainer = styled.div<{ $groupState: string }>`
             display: flex;
             justify-self: center;
             color: ${({ theme, $groupState }) =>
-    $groupState === "Active"
-      ? theme.activeActive
-      : theme.activeInactive};
-            font-size: 30px;
-            transition: color 0.2s ease-in-out;
+		$groupState === "Active"
+			? theme.activeActive
+			: theme.activeInactive};
+                  font-size: 30px;
+                  transition: color 0.2s ease-in-out;
           }
           &:hover .groupIcon.active {
             color: ${({ theme }) => theme.activeActive};
@@ -54,7 +56,7 @@ export const StyledSharedContainer = styled.div<{ $groupState: string }>`
             display: flex;
             justify-self: center;
             color: ${({ theme, $groupState }) =>
-    $groupState === "NonGroup" ? theme.nonActive : theme.nonInactive};
+		$groupState === "NonGroup" ? theme.nonActive : theme.nonInactive};
             font-size: 30px;
             transition: color 0.2s ease-in-out;
           }
@@ -66,9 +68,9 @@ export const StyledSharedContainer = styled.div<{ $groupState: string }>`
             display: flex;
             justify-self: center;
             color: ${({ theme, $groupState }) =>
-    $groupState === "Archived"
-      ? theme.archivedActive
-      : theme.archivedInactive};
+		$groupState === "Archived"
+			? theme.archivedActive
+			: theme.archivedInactive};
             font-size: 30px;
             transition: color 0.2s ease-in-out;
           }
@@ -77,7 +79,7 @@ export const StyledSharedContainer = styled.div<{ $groupState: string }>`
           }
           &:has(.groupIcon.active) .descr {
             color: ${({ theme, $groupState }) =>
-    $groupState === "Active" ? "inherit" : theme.layer6};
+		$groupState === "Active" ? "inherit" : theme.layer6};
           }
           &:hover:has(.groupIcon.active) .descr {
             color: inherit;
@@ -86,7 +88,7 @@ export const StyledSharedContainer = styled.div<{ $groupState: string }>`
           /* NonGroups button text */
           &:has(.groupIcon.non) .descr {
             color: ${({ theme, $groupState }) =>
-    $groupState === "NonGroup" ? "inherit" : theme.layer6};
+		$groupState === "NonGroup" ? "inherit" : theme.layer6};
           }
           &:hover:has(.groupIcon.non) .descr {
             color: inherit;
@@ -94,8 +96,8 @@ export const StyledSharedContainer = styled.div<{ $groupState: string }>`
 
           /* Archived button text */
           &:has(.groupIcon.archived) .descr {
-            color: ${({ theme, $groupState }) =>
-    $groupState === "Archived" ? "inherit" : theme.layer6};
+                  color: ${({ theme, $groupState }) =>
+		$groupState === "Archived" ? "inherit" : theme.layer6};
           }
           &:hover:has(.groupIcon.archived) .descr {
             color: inherit;
@@ -111,14 +113,27 @@ export const StyledSharedContainer = styled.div<{ $groupState: string }>`
       }
     }
 
-    .searchWrapper {
-      overflow: hidden;
-      margin-top: 8px;
+    .groups {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		overflow-y: auto;      
+		overflow-x: hidden;
+		.noData{
+			.msg{
+				text-wrap: wrap;
+				text-align: center;
+			}
+		}
+      .searchWrapper {
+        overflow: hidden;
+        margin-top: 8px;
+      }
     }
-
-
   }
+
   .bottom-bar {
     margin-top: auto;
   }
+    
 `;

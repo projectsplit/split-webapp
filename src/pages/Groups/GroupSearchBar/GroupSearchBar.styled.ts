@@ -9,8 +9,10 @@ export const StyledGroupSearchBar = styled.input`
   color: white;
   background-color: ${({ theme }) => theme.inputGrey};
   margin-top: 8px;
+  margin-bottom: 8px;
   width: 100%;
   box-sizing: border-box;
+
 
   &::placeholder {
    

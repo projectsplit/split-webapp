@@ -7,7 +7,7 @@ import { FaAngleDown } from "react-icons/fa";
 import MenuAnimationBackground from "../../../components/Animations/MenuAnimationBackground";
 import { useSignal } from "@preact/signals-react";
 import { currencyData } from "../../../helpers/openExchangeRates";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import CurrencyOptionsAnimation from "../../../components/Animations/CurrencyOptionsAnimation";
 import MyButton from "../../../components/MyButton/MyButton";
 import FormInput from "../../../components/FormInput/FormInput";
@@ -20,10 +20,10 @@ export default function CreateGroup({
   nodeRef,
 }: CreateGroupProps) {
   const [groupName, setGroupName] = useState<string>("");
-
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
+  const navigate = useNavigate();
 
   const userCurrency = userInfo?.currency;
   const [currencySymbol, setCurrencySymbol] = useState<string>(userCurrency);
@@ -35,7 +35,15 @@ export default function CreateGroup({
   const { mutate: createGroup, isPending } = useCreateGroup();
 
   const onClickHandler = () => {
-    createGroup({ name: groupName, currency: currencySymbol });
+    createGroup(
+      { name: groupName, currency: currencySymbol },
+      {
+        onSuccess: (data) => {
+          menu.value = null;
+          navigate(`/shared/${data.groupId}/expenses`, { state: { groupName } });
+        },
+      }
+    );
   };
 
   const handldeCurrencyOptionsClick = (curr: string) => {
