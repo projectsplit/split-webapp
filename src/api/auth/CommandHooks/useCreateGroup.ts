@@ -10,6 +10,7 @@ export const useCreateGroup = () => {
         mutationFn: createGroupFn,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["group"], exact: false });
+            queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
         },
     });
 }

@@ -434,6 +434,8 @@ export interface CreateGroupProps extends MenuProps {
 export interface GroupSearchBarAnimationProps {
   showSearchBar: Signal<boolean>;
   searchBarRef: React.MutableRefObject<any>;
+  keyword: string;
+  setKeyword: (keyword: string) => void;
 }
 
 export interface SettingsMenuProps {

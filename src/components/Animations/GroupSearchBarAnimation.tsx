@@ -5,6 +5,8 @@ import GroupSearchBar from "../../pages/Groups/GroupSearchBar/GroupSearchBar";
 export default function GroupSearchBarAnimation({
   showSearchBar,
   searchBarRef,
+  keyword,
+  setKeyword,
 }: GroupSearchBarAnimationProps) {
   return (
     /* @ts-ignore */
@@ -18,7 +20,8 @@ export default function GroupSearchBarAnimation({
       <div ref={searchBarRef} className="searchWrapper">
         <GroupSearchBar
           autoFocus
-         
+          keyword={keyword}
+          setKeyword={setKeyword}
         />
       </div>
     </CSSTransition>

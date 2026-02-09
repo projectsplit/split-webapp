@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
 import CreateGroupAnimation from "../../components/Animations/CreateGroupAnimation";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMostRecentGroup } from "../../api/auth/CommandHooks/useMostRecentGroup";
 import { StyledGroups } from "./GroupTypes/Groups.styled";
@@ -23,6 +23,7 @@ import { TiGroup } from "react-icons/ti";
 import { IoIosArchive } from "react-icons/io";
 import { useGetGroupsTotalAmounts } from "@/api/auth/QueryHooks/useGetGroupsTotalAmounts";
 import GroupSearchBarAnimation from "../../components/Animations/GroupSearchBarAnimation";
+import useDebounce from "@/hooks/useDebounce";
 
 export default function Shared() {
   const queryClient = useQueryClient();
@@ -31,7 +32,12 @@ export default function Shared() {
   const groupIdClicked = useSignal<string>("");
   const showSearchBar = useSignal(false);
   const searchBarRef = useRef<any>(null);
-  const bottomBarRef = useRef<any>(null);
+  const generalRef = useRef<any>(null);
+  const [keyword, setKeyword] = useState("");
+  const [debouncedKeyword] = useDebounce(
+    keyword.length > 1 ? keyword : "",
+    300
+  );
 
   const { topMenuTitle, activeGroupCatAsState, openGroupOptionsMenu } =
     useOutletContext<{
@@ -44,18 +50,20 @@ export default function Shared() {
   const pageSize = 10;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useGetGroupsTotalAmounts(pageSize, activeGroupCatAsState);
+    useGetGroupsTotalAmounts(pageSize, debouncedKeyword, activeGroupCatAsState);
 
   const groups = data?.pages.flatMap((p) => p.groups);
-  const filteredGroups = groups?.filter((g) =>
-    activeGroupCatAsState.value === "Active" ? !g.isArchived : g.isArchived
-  );
+  const filteredGroups = groups?.filter((g) => {
+    if (activeGroupCatAsState.value === "Active") return !g.isArchived;
+    if (activeGroupCatAsState.value === "Archived") return g.isArchived;
+    return false;
+  });
 
   useEffect(() => {
     if (!showSearchBar.value) return;
 
     const handleClickOutside = (e: MouseEvent) => {
-    if (searchBarRef.current && !searchBarRef.current.contains(e.target as Node) && bottomBarRef.current && !bottomBarRef.current.contains(e.target as Node)) { showSearchBar.value = false; }
+      if (searchBarRef.current && !searchBarRef.current.contains(e.target as Node) && generalRef.current && !generalRef.current.contains(e.target as Node)) { showSearchBar.value = false; }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -91,32 +99,31 @@ export default function Shared() {
       menu.value = "unarchiveGroup";
     }
   };
-
   return (
     <StyledSharedContainer $groupState={activeGroupCatAsState.value}>
       <Separator />
       <div className="optionButtonsAndGroups">
-        <div className="optionButtons">
-          <div className="buttonWrapper">
+        <div className="optionButtons" >
+          <div className="buttonWrapper" ref={generalRef}>
             {activeGroupCatAsState.value === "NonGroup" && (
               <div className="activeBar" />
             )}
             <div
               className="button"
-              onClick={() => (activeGroupCatAsState.value = "NonGroup")}
+              onClick={() => { setKeyword(""); (activeGroupCatAsState.value = "NonGroup"); showSearchBar.value = false }}
             >
               <MdGroupOff className="groupIcon non" />
               <span className="descr">Non</span>
               <span className="descr">Group</span>
             </div>
           </div>
-          <div className="buttonWrapper">
+          <div className="buttonWrapper" ref={generalRef}>
             {activeGroupCatAsState.value === "Active" && (
               <div className="activeBar" />
             )}
             <div
               className="button"
-              onClick={() => (activeGroupCatAsState.value = "Active")}
+              onClick={() => { setKeyword(""); (activeGroupCatAsState.value = "Active"); showSearchBar.value = false }}
             >
               <TiGroup className="groupIcon active" />
               <span className="descr">Active</span>
@@ -124,14 +131,14 @@ export default function Shared() {
             </div>
           </div>
 
-          <div className="buttonWrapper">
+          <div className="buttonWrapper" ref={generalRef}>
             {activeGroupCatAsState.value === "Archived" && (
               <div className="activeBar" />
             )}
 
             <div
               className="button"
-              onClick={() => (activeGroupCatAsState.value = "Archived")}
+              onClick={() => { setKeyword(""); (activeGroupCatAsState.value = "Archived"); showSearchBar.value = false }}
             >
               <IoIosArchive className="groupIcon archived" />
               <span className="descr">Archived </span>
@@ -148,8 +155,10 @@ export default function Shared() {
               <GroupSearchBarAnimation
                 showSearchBar={showSearchBar}
                 searchBarRef={searchBarRef}
+                keyword={keyword}
+                setKeyword={setKeyword}
               />
-              {groups?.length === 0 ? (
+              {activeGroupCatAsState.value !== "NonGroup" && filteredGroups?.length === 0 ? (
                 activeGroupCatAsState.value === "Active" ? (
                   <div className="noData">
                     <div className="msg">
@@ -225,7 +234,7 @@ export default function Shared() {
         </StyledGroups>
       </div>
       <MenuAnimationBackground menu={menu} />
-      <BottomMainMenu onClick={() => (menu.value = "createGroup")} onGroupSearchClick={() => {activeGroupCatAsState.value !== "NonGroup" ? showSearchBar.value = true : null}} bottomBarRef={bottomBarRef} />
+      <BottomMainMenu onClick={() => (menu.value = "createGroup")} onGroupSearchClick={() => { activeGroupCatAsState.value !== "NonGroup" ? showSearchBar.value = true : null }} bottomBarRef={generalRef} />
       <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
       <ConfirmUnArchiveGroupAnimation
         menu={menu}
