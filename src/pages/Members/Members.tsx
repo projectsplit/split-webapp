@@ -9,8 +9,9 @@ import MemberFC from "./Member/MemberFC";
 import SettleUpAnimation from "../../components/Animations/SettleUpAnimation";
 import Spinner from "../../components/Spinner/Spinner";
 import AddNewUserAnimation from "../../components/Animations/AddNewUserAnimation";
-import { useDebts } from "@/api/auth/QueryHooks/useDebts";
+
 import getAllDebtsParticipants from "@/helpers/getAllDebtsParticipants";
+import { useDebts } from "@/api/auth/QueryHooks/useDebts";
 
 export default function Members() {
   const idSelectedToSettleUp = useSignal<string>("");

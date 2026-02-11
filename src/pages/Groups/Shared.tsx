@@ -5,11 +5,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMostRecentGroup } from "../../api/auth/CommandHooks/useMostRecentGroup";
 import { StyledGroups } from "./GroupTypes/Groups.styled";
-import { MdGroupOff, MdOutlineGroupOff } from "react-icons/md";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import Sentinel from "../../components/Sentinel";
 import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
-import { GoArchive } from "react-icons/go";
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
 import ConfirmUnArchiveGroupAnimation from "../../components/Animations/ConfirmUnArchiveGroupAnimation";
 import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
@@ -17,12 +15,16 @@ import Spinner from "../../components/Spinner/Spinner";
 import { StyledSharedContainer } from "./SharedContainer.styled";
 import Separator from "../../components/Separator/Separator";
 import VerticalSeparator from "../../components/VerticalSeparator/VerticalSeparator";
-import { TiGroup } from "react-icons/ti";
-import { IoIosArchive } from "react-icons/io";
 import { useGetGroupsTotalAmounts } from "@/api/auth/QueryHooks/useGetGroupsTotalAmounts";
 import GroupSearchBarAnimation from "../../components/Animations/GroupSearchBarAnimation";
 import useDebounce from "@/hooks/useDebounce";
-import { FaMagnifyingGlass } from "react-icons/fa6";
+import NoGroupsFound from "./NoGroupsFound/NoGroupsFound";
+import OptionsButtons from "./OptionsButtons/OptionsButtons";
+import { useDebts } from "@/api/auth/QueryHooks/useDebts";
+import { groupTransactions } from "@/helpers/groupTransactions";
+import getAllDebtsParticipants from "@/helpers/getAllDebtsParticipants";
+import { UserInfo } from "@/types";
+import { computeNetPerCurrency } from "@/helpers/computeNetPerCurrency";
 
 export default function Shared() {
   const queryClient = useQueryClient();
@@ -38,16 +40,18 @@ export default function Shared() {
     400
   );
 
-  const { topMenuTitle, activeGroupCatAsState, openGroupOptionsMenu } =
+  const { topMenuTitle, activeGroupCatAsState, openGroupOptionsMenu,userInfo } =
     useOutletContext<{
       topMenuTitle: Signal<string>;
       openGroupOptionsMenu: Signal<boolean>;
       activeGroupCatAsState: Signal<string>;
+      userInfo: UserInfo;
     }>();
 
   const navigate = useNavigate();
   const pageSize = 10;
 
+///////////////////////////////////////////////////
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useGetGroupsTotalAmounts(pageSize, debouncedKeyword, activeGroupCatAsState);
 
@@ -60,6 +64,23 @@ export default function Shared() {
       return false;
     });
   }, [groups, activeGroupCatAsState.value])
+//////////////////////////////////////////////////////////
+  const { data:debtsData, isFetching:isFetchingDebts, isLoading:isLoadingDebts } = useDebts();
+  const { debts, totalSpent } = debtsData ?? { debts: [], totalSpent: {} };
+   const allParticipants = getAllDebtsParticipants(debts,
+      "NonGroup",
+      [],
+      []);
+  const { groupedTransactions } = useMemo(() => {
+    const groupedTransactions = groupTransactions(
+      debts ?? [],
+      allParticipants ?? [],
+      userInfo.userId || ""
+    );
+
+    return { groupedTransactions };
+  }, [debtsData]);
+/////////////////////////////////////////////////////////
 
   useEffect(() => {
     if (!showSearchBar.value) return;
@@ -105,49 +126,7 @@ export default function Shared() {
     <StyledSharedContainer $groupState={activeGroupCatAsState.value}>
       <Separator />
       <div className="optionButtonsAndGroups">
-        <div className="optionButtons" >
-          <div className="buttonWrapper" ref={generalRef}>
-            {activeGroupCatAsState.value === "NonGroup" && (
-              <div className="activeBar" />
-            )}
-            <div
-              className="button"
-              onClick={() => { setKeyword(""); (activeGroupCatAsState.value = "NonGroup"); showSearchBar.value = false }}
-            >
-              <MdGroupOff className="groupIcon non" />
-              <span className="descr">Non</span>
-              <span className="descr">Group</span>
-            </div>
-          </div>
-          <div className="buttonWrapper" ref={generalRef}>
-            {activeGroupCatAsState.value === "Active" && (
-              <div className="activeBar" />
-            )}
-            <div
-              className="button"
-              onClick={() => { setKeyword(""); (activeGroupCatAsState.value = "Active"); showSearchBar.value = false }}
-            >
-              <TiGroup className="groupIcon active" />
-              <span className="descr">Active</span>
-              <span className="descr">Groups</span>
-            </div>
-          </div>
-
-          <div className="buttonWrapper" ref={generalRef}>
-            {activeGroupCatAsState.value === "Archived" && (
-              <div className="activeBar" />
-            )}
-
-            <div
-              className="button"
-              onClick={() => { setKeyword(""); (activeGroupCatAsState.value = "Archived"); showSearchBar.value = false }}
-            >
-              <IoIosArchive className="groupIcon archived" />
-              <span className="descr">Archived </span>
-              <span className="descr">Groups</span>
-            </div>
-          </div>
-        </div>
+        <OptionsButtons activeGroupCatAsState={activeGroupCatAsState} generalRef={generalRef} setKeyword={setKeyword} showSearchBar={showSearchBar} />
         <VerticalSeparator />
         <StyledGroups>
           <GroupSearchBarAnimation
@@ -160,29 +139,7 @@ export default function Shared() {
             <Spinner />
           ) : (
             <div className="groups">
-
-              {activeGroupCatAsState.value === "Active" && filteredGroups?.length === 0 && keyword.length !== 0? (
-                <div className="noData">
-                  <div className="msg">No active groups found based on current search 🤔</div>
-                  <FaMagnifyingGlass className="icon" />
-                </div>
-              ) :activeGroupCatAsState.value === "Active" && filteredGroups?.length === 0  ? (
-                <div className="noData">
-                  <div className="msg">There are currently no active groups </div>
-                  <MdOutlineGroupOff className="icon" />
-                </div>
-              ) : activeGroupCatAsState.value === "Archived" && filteredGroups?.length === 0 && keyword.length !== 0 ? (
-                <div className="noData">
-                  <div className="msg">No archived groups found based on current search 🤔</div>
-                  <FaMagnifyingGlass className="icon" />
-                </div>
-              ) : activeGroupCatAsState.value === "Archived" && filteredGroups?.length === 0 ? (
-                <div className="noData">
-                  <div className="msg">There are currently no archived groups</div>
-                  <GoArchive className="icon" />
-                </div>
-              ) : 
-              null}
+              <NoGroupsFound activeGroupCatAsState={activeGroupCatAsState} filteredGroups={filteredGroups} keyword={keyword} />
               {filteredGroups?.map((g: any) => (
                 <div key={g.id}>
                   <TreeAdjustedContainer
@@ -219,14 +176,7 @@ export default function Shared() {
                 <TreeAdjustedContainer
                   onClick={() => navigate(`/shared/nongroup/expenses`)}
                   hasOption={true}
-                  items={[
-                    <div className="groupsInfo" key="settled">
-                      <div className="settled">
-                        <div>You are settled </div>
-                        {/* <IonIcon name="checkmark-sharp" className="checkmark" /> */}
-                      </div>
-                    </div>,
-                  ]}
+                  items={TreeItemBuilderForHomeAndGroups(computeNetPerCurrency(groupedTransactions, userInfo.userId || ""))}
                   optionname={'chevron-forward-outline'}
                 >
                   <div className="groupName">Non Group transactions</div>

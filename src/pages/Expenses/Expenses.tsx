@@ -18,12 +18,11 @@ import { DateOnly } from "../../helpers/timeHelpers";
 import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
 import ErrorMenuAnimation from "../../components/Animations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
-import useDebts from "../../api/auth/QueryHooks/useGroupDebts";
 import {
   getAllCurrencyTotals,
-  getGroupTotalByCurrency,
   getCurrencyValues,
-} from "../../helpers/getGroupTotalByCurrency";
+  getTotalByCurrency,
+} from "../../helpers/getTotalsByCurrency";
 import GroupTotalsByCurrencyAnimation from "../../components/Animations/GroupTotalsByCurrencyAnimation";
 import Spinner from "../../components/Spinner/Spinner";
 import { FaMagnifyingGlass } from "react-icons/fa6";
@@ -36,6 +35,8 @@ import { useExpenseList } from "./hooks/useExpenseList";
 import { getFilterStorageKey } from "@/components/SearchTransactions/helpers/localStorageStringParser";
 import { useGetNonGroupExpensesUsers } from "@/api/auth/QueryHooks/useGetNonGroupExpensesUsers";
 import getAllExpenseParticipants from "@/helpers/getAllExpenseParticipants";
+import { useDebts } from "@/api/auth/QueryHooks/useDebts";
+import { groupBy } from "../../helpers/groupBy";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -76,6 +77,7 @@ const Expenses = () => {
 
   const { data: nonGroupUsersData } = useGetNonGroupExpensesUsers(transactionType);
   const expenses = data?.pages.flatMap((p) => p.expenses);
+
   const allParticipants = getAllExpenseParticipants(
     expenses,
     transactionType,
@@ -91,10 +93,11 @@ const Expenses = () => {
   const totalSpent: Record<
     string,
     Record<string, number>
-  > = debts?.totalSpent ?? {};//group specific
+  > = debts?.totalSpent ?? {};
 
-  const groupTotalsByCurrency = getAllCurrencyTotals(totalSpent);//group specific
-  const userTotalsByCurrency = getCurrencyValues(totalSpent, userMemberId);
+  const groupTotalsByCurrency = getAllCurrencyTotals(totalSpent);
+  const userTotalsByCurrency = transactionType === "Group" ? getCurrencyValues(totalSpent, userMemberId) : getCurrencyValues(totalSpent, userInfo?.userId);
+
   const shouldOpenMultiCurrencyTable =
     Object.keys(groupTotalsByCurrency).length > 1;
 
@@ -136,9 +139,9 @@ const Expenses = () => {
     );
   }
 
-  const totalExpense = getGroupTotalByCurrency(
+  const totalExpense = getTotalByCurrency(
     totalSpent,
-    group?.currency
+    group?.currency || userInfo?.currency
   );//group specific
 
   const userExpense =
@@ -320,8 +323,3 @@ const Expenses = () => {
 
 export default Expenses;
 
-const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
-  arr.reduce((groups, item) => {
-    (groups[key(item)] ||= []).push(item);
-    return groups;
-  }, {} as Record<K, T[]>);

@@ -1,7 +1,7 @@
 import currency from "currency.js";
 import { TotalSpent } from "../types";
 
-export function getGroupTotalByCurrency(
+export function getTotalByCurrency(
   totalSpent: TotalSpent,
   currencyCode: string | undefined
 ): number {
@@ -41,11 +41,11 @@ export function getAllCurrencyTotals(
 
 export function getCurrencyValues(
     totalSpent: TotalSpent,
-    userMemberId: string | undefined
+    id: string | undefined
   ): Record<string, number> {
-    if (!userMemberId || !totalSpent[userMemberId]) {
+    if (!id || !totalSpent[id]) {
       return {};
     }
   
-    return totalSpent[userMemberId];
+    return totalSpent[id];
   }

@@ -19,8 +19,7 @@ import MenuAnimationBackground from "../../components/Animations/MenuAnimationBa
 import ErrorMenuAnimation from "../../components/Animations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
 import Spinner from "../../components/Spinner/Spinner";
-import useDebts from "../../api/auth/QueryHooks/useGroupDebts";
-import { getCurrencyValues } from "../../helpers/getGroupTotalByCurrency";
+import { getCurrencyValues } from "../../helpers/getTotalsByCurrency";
 import GroupTotalsByCurrencyAnimation from "../../components/Animations/GroupTotalsByCurrencyAnimation";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { renderTransferFilterPills } from "../../helpers/renderTransferFilterPills";
@@ -28,6 +27,9 @@ import getAllTransfersParticipants from "@/helpers/getAllTransfersParticipants";
 import { useGetNonGroupTransferUsers } from "@/api/auth/QueryHooks/useGetNonGroupTransfersUsers";
 import { useTransferList } from "./hooks/useTransferList";
 import { getFilterStorageKey } from "@/components/SearchTransactions/helpers/localStorageStringParser";
+import { useDebts } from "@/api/auth/QueryHooks/useDebts";
+import { groupBy } from "../../helpers/groupBy";
+import { totalsCalculator } from "./utilities.ts/totalsCalculator";
 
 
 const Transfers: React.FC = () => {
@@ -110,21 +112,10 @@ const Transfers: React.FC = () => {
     Record<string, number>
   > = debts?.totalSent ?? {};
 
-  const userTotalSent = getCurrencyValues(groupTotalSent, userMemberId);
-  const userTotalReceived = getCurrencyValues(groupTotalReceived, userMemberId);
+  const userTotalSentByCurr = transactionType === "Group" ? getCurrencyValues(groupTotalSent, userMemberId) : getCurrencyValues(groupTotalSent, userInfo?.userId);
+  const userTotalReceivedByCurr = transactionType === "Group" ? getCurrencyValues(groupTotalReceived, userMemberId) : getCurrencyValues(groupTotalReceived, userInfo?.userId);
 
-  const shouldOpenMultiCurrencyTable =
-    Object.keys(groupTotalReceived).length > 1 ||
-    Object.keys(groupTotalSent).length > 1;
-
-  const usertotalReceived =
-    userMemberId && group.currency
-      ? groupTotalReceived[userMemberId]?.[group.currency] ?? 0
-      : 0;
-  const usertotalSent =
-    userMemberId && group.currency
-      ? groupTotalSent[userMemberId]?.[group.currency] ?? 0
-      : 0;
+  const { usertotalReceived, usertotalSent, shouldOpenMultiCurrencyTable } = totalsCalculator(debts, transactionType, userMemberId, group, userInfo);
 
   if (isFetching && !isFetchingNextPage) {
     return (
@@ -275,8 +266,8 @@ const Transfers: React.FC = () => {
         bar2Legend="You Received"
         bar1Color="#0CA0A0"
         bar2Color="#D79244"
-        groupTotalsByCurrency={userTotalSent}
-        userTotalsByCurrency={userTotalReceived}
+        groupTotalsByCurrency={userTotalSentByCurr}
+        userTotalsByCurrency={userTotalReceivedByCurr}
       />
     </StyledTransfers>
   );
@@ -284,8 +275,4 @@ const Transfers: React.FC = () => {
 
 export default Transfers;
 
-const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
-  arr.reduce((groups, item) => {
-    (groups[key(item)] ||= []).push(item);
-    return groups;
-  }, {} as Record<K, T[]>);
+
