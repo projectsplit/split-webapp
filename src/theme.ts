@@ -10,7 +10,7 @@ export const theme = {
   inactiveTabButtonTextColor: "#696e80",
   tabButtonTextHoverColor: "#2f3139",
   textActiveColor: "#FFFFFF",
-  textInactiveColor: "#A8AEBF",
+  textInactiveColor: "#bfc3cfff",
   body: "#0E0E10",
   text: "#26272B",
   clicked: "#464689",

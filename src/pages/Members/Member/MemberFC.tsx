@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { StyledMemberFC } from "./MemberFC.styled";
 import { MemberProps } from "../../../interfaces";
 import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-
 import {
   RenderBoth,
   RenderOwedOnly,
@@ -11,6 +10,9 @@ import {
 } from "./RenderScenarios/RenderScenarios";
 import SettleUpButton from "./SettleUpButton/SettleUpButton";
 import { joinAmounts } from "../../../helpers/joinAmounts";
+import { Group, TransactionType } from "@/types";
+import { getUserName } from "@/helpers/getUserName";
+import { useOutletContext } from "react-router-dom";
 
 export default function MemberFC({
   pendingTransactions,
@@ -24,15 +26,27 @@ export default function MemberFC({
   participants,
   totalSpent,
   group,
-  guestToBeReplaced
+  guestToBeReplaced,
+  userOrMemberId
 }: MemberProps) {
+
+  const { transactionType } = useOutletContext<{
+    transactionType: TransactionType;
+  }>();
+
   const totalsSpent = totalSpent[id] || {};
   const removeZeroesValuesFromTotalSpent = Object.fromEntries(
     Object.entries(totalsSpent).filter(([_, amount]) => amount !== 0)
   );
 
-  const showSettleUpButton =
-    (isGuest || isLogedUser) && pendingTransactions.filter((p) => p.debtor === id).length > 0 && !group.isArchived;
+  const showSettleUpButtonFn = (group?: Group) => {
+    if (group) {
+      return (isGuest || isLogedUser) && pendingTransactions.length > 0 && !group.isArchived
+    } else
+      return isLogedUser && pendingTransactions.length > 0
+  }
+  const showSettleUpButton = showSettleUpButtonFn(group)
+
 
   const memberOwesItems = pendingTransactions
     .filter((p) => p.debtor === id)
@@ -43,7 +57,7 @@ export default function MemberFC({
         </span>{" "}
         <span className="preposition">to</span>{" "}
         <strong>
-          {participants.find((participant) => participant.id === p.creditor)?.name}
+          {getUserName(p, participants, userOrMemberId, "to")}
         </strong>
       </div>
     ));
@@ -57,7 +71,7 @@ export default function MemberFC({
         </span>{" "}
         <span className="preposition">from</span>{" "}
         <strong>
-          {participants.find((participant) => participant.id === p.debtor)?.name}
+          {getUserName(p, participants, userOrMemberId, "from")}
         </strong>
       </div>
     ));
@@ -132,6 +146,8 @@ export default function MemberFC({
                       pendingTransactions={pendingTransactions}
                       treeItems={memberIsOwedItems}
                       participants={participants}
+                      userOrMemberId={userOrMemberId}
+                      transactionType={transactionType}
                     />
                   </>
                 );
@@ -151,6 +167,8 @@ export default function MemberFC({
                       pendingTransactions={pendingTransactions}
                       treeItems={memberOwesItems}
                       participants={participants}
+                      userOrMemberId={userOrMemberId}
+                      transactionType={transactionType}
                     />
                   </>
                 );
@@ -170,6 +188,8 @@ export default function MemberFC({
                     memberIsOwedItems={memberIsOwedItems}
                     memberOwesItems={memberOwesItems}
                     participants={participants}
+                    userOrMemberId={userOrMemberId}
+                    transactionType={transactionType}
                   />
                 );
               }
@@ -177,15 +197,16 @@ export default function MemberFC({
             })()}
           </div>
 
-          {Object.keys(removeZeroesValuesFromTotalSpent).length === 0 ? <div className="totalSpent">No recorded spending 💰</div> :
-            <div className="totalSpent">
-              Total spent:{" "}
-              <span className="amounts">
-                {" "} {joinAmounts(Object.entries(removeZeroesValuesFromTotalSpent))}
-              </span>
-            </div>}
+          {(transactionType === "Group" || isLogedUser) && <div>
+            {Object.keys(removeZeroesValuesFromTotalSpent).length === 0 ? <div className="totalSpent">No recorded spending 💰</div> :
+              <div className="totalSpent">
+                Total spent:{" "}
+                <span className="amounts">
+                  {" "} {joinAmounts(Object.entries(removeZeroesValuesFromTotalSpent))}
+                </span>
+              </div>}
+          </div>}
         </div>
-
         {showSettleUpButton ? (
           <div className="settleUpPos">
             <SettleUpButton
@@ -199,9 +220,9 @@ export default function MemberFC({
       </div>
       <div className="guest">{isGuest ? <SettleUpButton
         onClick={() => {
-           menu.value = "newUser";
-           guestToBeReplaced.value.guestId=id
-           guestToBeReplaced.value.guestName=name
+          menu.value = "newUser";
+          guestToBeReplaced.value.guestId = id
+          guestToBeReplaced.value.guestName = name
         }}
       >Invite</SettleUpButton> : null}</div>
     </StyledMemberFC>

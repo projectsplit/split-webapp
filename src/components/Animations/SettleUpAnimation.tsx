@@ -8,6 +8,7 @@ export default function SettleUpAnimation({
   pendingTransactions,
   idSelectedToSettleUp,
   members,
+  userId
 }: SettleUpAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -23,6 +24,7 @@ export default function SettleUpAnimation({
         idSelectedToSettleUp={idSelectedToSettleUp}
         menu={menu}
         members={members}
+        userId={userId}
       />
     </CSSTransition>
   );

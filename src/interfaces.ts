@@ -678,6 +678,7 @@ export interface MemberProps {
   totalSpent: Record<string, Record<string, number>>;
   group: Group;
   guestToBeReplaced: Signal<{ guestId: string; guestName: string }>;
+  userOrMemberId: string;
 }
 
 export interface RenderScenariosProps {
@@ -689,6 +690,8 @@ export interface RenderScenariosProps {
   showTree: boolean;
   treeItems: React.JSX.Element[];
   participants: TruncatedMember[];
+  userOrMemberId: string;
+  transactionType: TransactionType;
 }
 export interface RenderSettledProps {
   name: string;
@@ -706,6 +709,8 @@ export interface RenderBothScenariosProps {
   memberIsOwedItems: React.JSX.Element[];
   memberOwesItems: React.JSX.Element[];
   participants: TruncatedMember[];
+  userOrMemberId: string;
+  transactionType: TransactionType;
 }
 
 export interface MemberDetailedDescriptionProps {
@@ -716,6 +721,8 @@ export interface MemberDetailedDescriptionProps {
   isOwed: boolean;
   name: string;
   participants: TruncatedMember[];
+  userOrMemberId: string;
+  transactionType: TransactionType;
 }
 
 export interface DescriptionAndTreeProps {
@@ -728,6 +735,8 @@ export interface DescriptionAndTreeProps {
   showTree: boolean;
   treeItems: React.JSX.Element[];
   participants: TruncatedMember[];
+  userOrMemberId: string;
+  transactionType: TransactionType;
 }
 
 export interface SettleUpButtonProps {
@@ -740,12 +749,14 @@ export interface SettleUpAnimationProps {
   pendingTransactions: Debt[];
   idSelectedToSettleUp: Signal<string>;
   members: TruncatedMember[];
+  userId: string
 }
 export interface SettleUpOptionsProps {
   pendingTransactions: Debt[];
   idSelectedToSettleUp: Signal<string>;
   menu: Signal<string | null>;
   members: TruncatedMember[];
+  userId: string;
 }
 export interface PillProps {
   title: string;
@@ -759,7 +770,7 @@ export interface PillProps {
   $closeButtonColor?: string;
 }
 export interface AddNewUserAnimationProps extends MenuProps {
- guestToBeReplaced?: { guestId: string; guestName: string };
+  guestToBeReplaced?: { guestId: string; guestName: string };
 }
 
 export interface SearchUsersToInviteProps extends MenuProps {

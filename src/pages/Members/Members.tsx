@@ -77,13 +77,14 @@ export default function Members() {
             groupedTransactions={groupedTransactions}
             id={p.id}
             name={p.name}
-            isLogedUser={p.id === userMemberId}
+            isLogedUser={p.id === userMemberId || p.id === userInfo.userId}
             isGuest={guests?.some((g) => g.id === p.id) ?? false}
             menu={menu}
             idSelectedToSettleUp={idSelectedToSettleUp}
             participants={allParticipants || []}
             totalSpent={totalSpent}
             guestToBeReplaced={guestToBeReplaced}
+            userOrMemberId={userMemberId ?? userInfo.userId}
           />
         ))
       )}
@@ -94,6 +95,7 @@ export default function Members() {
         pendingTransactions={debts ?? []}
         idSelectedToSettleUp={idSelectedToSettleUp}
         members={allParticipants || []}
+        userId={userMemberId ?? userInfo.userId}
       />
       <AddNewUserAnimation menu={menu} guestToBeReplaced={guestToBeReplaced.value} />
     </StyledMembers>

@@ -46,7 +46,25 @@ export const StyledSettleUpOptions = styled(StyledBottomMenu)`
     z-index: 1;
     background-color: ${({ theme }) => theme.layer2};
   }
-  .currencyOwes {
-    color: ${({ theme }) => theme.redish};
+
+  .text {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* Allow wrapping */
+    
+    .preposition {
+      display: flex;
+      flex-direction: row;
+      font-weight: 600;
+      white-space: nowrap; 
+     
+    }
+  
+    .word1 {
+      font-weight: 400;
+      color: ${({ theme }) => theme.textInactiveColor};
+      margin-right: 5px;
+    }
   }
+
 `;

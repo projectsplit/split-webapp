@@ -53,6 +53,7 @@ export const StyledMemberFC = styled.div.withConfig({
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        
 
         .descAndButton {
           display: flex;
@@ -63,6 +64,7 @@ export const StyledMemberFC = styled.div.withConfig({
           flex-direction: column;
           flex-grow: 1;
           justify-content: space-between;
+          
         }
         .owes,
         .isOwed {

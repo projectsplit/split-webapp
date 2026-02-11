@@ -12,6 +12,8 @@ export const StyledMemberDetailedDescription = styled.div.withConfig({
   font-size: 15px;
   flex-grow: 1;
   line-height:1.4;
+  margin-top: 5px;
+  margin-bottom: 5px;
   .owingText {
     white-space: nowrap;
     color: ${({ theme }) => theme.layer6};

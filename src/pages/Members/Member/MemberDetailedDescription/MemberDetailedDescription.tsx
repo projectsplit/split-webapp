@@ -1,8 +1,8 @@
 import React from "react";
-
 import { displayCurrencyAndAmount } from "../../../../helpers/displayCurrencyAndAmount";
 import { StyledMemberDetailedDescription } from "./MemberDetailedDescription.Styled";
 import { MemberDetailedDescriptionProps } from "../../../../interfaces";
+import { getUserName } from "@/helpers/getUserName";
 
 
 export const MemberDetailedDescription = ({
@@ -13,6 +13,8 @@ export const MemberDetailedDescription = ({
   isOwed,
   name,
   participants,
+  userOrMemberId,
+  transactionType
 }: MemberDetailedDescriptionProps) => {
 
   const doNotshowTreeWhenMemberOwes =
@@ -56,7 +58,16 @@ export const MemberDetailedDescription = ({
                 {" "}
                 <span className="owingText">and</span>{" "}
                 <span className="amount">{formattedAmount} </span>
-                <span className="owingText">in total</span>
+                <span className="owingText">
+                  {transactionType === "NonGroup" && !isLogedUser ? (
+                    <>
+                      {isOwed ? "from " : "to "}
+                      <strong style={{ color: "#FFFFFF" }}>you</strong>
+                    </>
+                  ) : (
+                    "in total"
+                  )}
+                </span>
               </div>
             );
           }
@@ -68,55 +79,58 @@ export const MemberDetailedDescription = ({
                 style={{
                   marginRight:
                     array.length === 1 &&
-                    (doNotshowTreeWhenMemberOwes ||
-                      doNotshowTreeWhenMemberIsOwed)
+                      (doNotshowTreeWhenMemberOwes ||
+                        doNotshowTreeWhenMemberIsOwed)
                       ? "4px"
                       : "0px",
                 }}
               >
                 {formattedAmount}{" "}
                 {array.length === 1 &&
-                !doNotshowTreeWhenMemberOwes &&
-                !doNotshowTreeWhenMemberIsOwed ? (
-                  <span className="owingText">in total</span>
+                  !doNotshowTreeWhenMemberOwes &&
+                  !doNotshowTreeWhenMemberIsOwed ? (
+                  <span className="owingText">
+                    {transactionType === "NonGroup" && !isLogedUser ? (
+                      <>
+                        {isOwed ? "from " : "to "}
+                        <strong style={{ color: "#FFFFFF" }}>you</strong>
+                      </>
+                    ) : (
+                      "in total"
+                    )}
+                  </span>
                 ) : (
                   ""
                 )}
               </span>
               <div className="transaction-container">
                 {array.length === 1 &&
-                doNotshowTreeWhenMemberOwes &&
-                isOwed === false
+                  doNotshowTreeWhenMemberOwes &&
+                  isOwed === false
                   ? pendingTransactions
-                      .filter((p) => p.debtor === id)
-                      .map((p, index) => (
-                        <div className="transaction" key={index}>
-                          <span className="preposition">to</span>{" "}
-                          <strong>
-                            {
-                              participants.find((participant) => participant.id === p.creditor)
-                                ?.name
-                            }
-                          </strong>
-                        </div>
-                      ))
+                    .filter((p) => p.debtor === id)
+                    .map((p, index) => (
+                      <div className="transaction" key={index}>
+                        <span className="preposition">to</span>{" "}
+                        <strong>
+                          {getUserName(p, participants, userOrMemberId, "to")}
+                        </strong>
+                      </div>
+                    ))
                   : array.length === 1 &&
                     doNotshowTreeWhenMemberIsOwed &&
                     isOwed
-                  ? pendingTransactions
+                    ? pendingTransactions
                       .filter((p) => p.creditor === id)
                       .map((p, index) => (
                         <div className="transaction" key={index}>
                           <span className="preposition">from</span>{" "}
                           <strong>
-                            {
-                              participants.find((participant) => participant.id === p.debtor)
-                                ?.name
-                            }
+                            {getUserName(p, participants, userOrMemberId, "from")}
                           </strong>
                         </div>
                       ))
-                  : ""}
+                    : ""}
               </div>
               {!isLast && !isSecondToLast && <span className="comma">,</span>}
               &nbsp;

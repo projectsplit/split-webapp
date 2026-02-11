@@ -3,25 +3,29 @@ import { useSignal } from "@preact/signals-react";
 import { useParams } from "react-router-dom";
 import { SettleUpOptionsProps } from "../../../interfaces";
 import { StyledSettleUpOptions } from "./SettleUpOptions.Styled";
-import { CreateTransfersRequest, Transfer } from "../../../types";
+import { CreateTransfersRequest, Debt, Transfer, TruncatedMember } from "../../../types";
 import { DateTime } from "luxon";
 import { useMultipleTransfers } from "../../../api/auth/CommandHooks/useMultipleTransfers";
 import MyButton from "../../../components/MyButton/MyButton";
+import { useTheme } from "styled-components";
+import { getUserName } from "@/helpers/getUserName";
 
 export default function SettleUpOptions({
   pendingTransactions,
   idSelectedToSettleUp,
   menu,
   members,
+  userId
 }: SettleUpOptionsProps) {
   const selectedItem = useSignal<number[]>([0]);
   const params = useParams();
   const groupId = params?.groupid;
   const { mutate: submitMultipleTransfers, isPending } = useMultipleTransfers(menu);
   const enabled = selectedItem.value.length > 0;
+  const theme = useTheme();
 
   const memberPendingTransactions = pendingTransactions.filter(
-    (p) => p.debtor === idSelectedToSettleUp.value
+    (p) => p.debtor === idSelectedToSettleUp.value || p.creditor === idSelectedToSettleUp.value
   );
 
   const submitButtonHandler = () => {
@@ -66,14 +70,20 @@ export default function SettleUpOptions({
             }
           }}
         >
-          <span className="currencyOwes">
+          <span className="currencyOwes" style={{ color: p.creditor === idSelectedToSettleUp.value ? theme.green : theme.redish }}>
             {displayCurrencyAndAmount(p.amount.toString(), p.currency)}
           </span>{" "}
           &nbsp;
-          <span className="preposition">to</span> &nbsp;
-          <span>
-            {members.find((member) => member.id === p.creditor)?.name}
-          </span>
+          <div className="text">
+            <span className="preposition">
+              <span className="word1">from</span>
+              <span className="word2">{getUserName(p, members, userId, "from")}</span>
+            </span>&nbsp;
+            <span className="preposition">
+              <span className="word1">to</span>
+               <span className="word2">{getUserName(p, members, userId, "to")}</span>
+            </span> &nbsp;
+          </div>
         </div>
       ))}
 
@@ -86,3 +96,4 @@ export default function SettleUpOptions({
     </StyledSettleUpOptions>
   );
 }
+
