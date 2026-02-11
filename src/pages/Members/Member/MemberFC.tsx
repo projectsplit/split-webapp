@@ -15,27 +15,27 @@ import { joinAmounts } from "../../../helpers/joinAmounts";
 export default function MemberFC({
   pendingTransactions,
   groupedTransactions,
-  memberId,
+  id,
   name,
   isLogedUser,
   isGuest,
   menu,
-  memberIdSelectedToSettleUp,
-  members,
+  idSelectedToSettleUp,
+  participants,
   totalSpent,
   group,
   guestToBeReplaced
 }: MemberProps) {
-  const totalsSpent = totalSpent[memberId] || {};
+  const totalsSpent = totalSpent[id] || {};
   const removeZeroesValuesFromTotalSpent = Object.fromEntries(
     Object.entries(totalsSpent).filter(([_, amount]) => amount !== 0)
   );
 
   const showSettleUpButton =
-    (isGuest || isLogedUser) && pendingTransactions.filter((p) => p.debtor === memberId).length > 0 && !group.isArchived;
+    (isGuest || isLogedUser) && pendingTransactions.filter((p) => p.debtor === id).length > 0 && !group.isArchived;
 
   const memberOwesItems = pendingTransactions
-    .filter((p) => p.debtor === memberId)
+    .filter((p) => p.debtor === id)
     .map((p, index) => (
       <div key={index}>
         <span className="currencyOwes">
@@ -43,13 +43,13 @@ export default function MemberFC({
         </span>{" "}
         <span className="preposition">to</span>{" "}
         <strong>
-          {members.find((member) => member.id === p.creditor)?.name}
+          {participants.find((participant) => participant.id === p.creditor)?.name}
         </strong>
       </div>
     ));
 
   const memberIsOwedItems = pendingTransactions
-    .filter((p) => p.creditor === memberId)
+    .filter((p) => p.creditor === id)
     .map((p, index) => (
       <div key={index}>
         <span className="currencyIsOwed">
@@ -57,7 +57,7 @@ export default function MemberFC({
         </span>{" "}
         <span className="preposition">from</span>{" "}
         <strong>
-          {members.find((member) => member.id === p.debtor)?.name}
+          {participants.find((participant) => participant.id === p.debtor)?.name}
         </strong>
       </div>
     ));
@@ -72,20 +72,20 @@ export default function MemberFC({
     memberTransactions,
   } = useMemo(() => {
     const memberTransactions = groupedTransactions.filter(
-      (gt) => gt.id === memberId
+      (gt) => gt.id === id
     );
 
     const timesMemberIsOwed = pendingTransactions.filter(
-      (tx) => tx.creditor === memberId
+      (tx) => tx.creditor === id
     ).length;
     const timesMemberOwes = pendingTransactions.filter(
-      (tx) => tx.debtor === memberId
+      (tx) => tx.debtor === id
     ).length;
 
     const memberIsOwed = pendingTransactions.some(
-      (x) => x.creditor === memberId
+      (x) => x.creditor === id
     );
-    const memberOwes = pendingTransactions.some((x) => x.debtor === memberId);
+    const memberOwes = pendingTransactions.some((x) => x.debtor === id);
 
     let doNotShowTreeWhenMemberIsOwed = false;
     let doNotShowTreeWhenMemberOwes = false;
@@ -112,7 +112,7 @@ export default function MemberFC({
       positionSettleUpButtonUnderTotal,
       doNotShowSettleUpButtonIfSettled,
     };
-  }, [groupedTransactions, memberId, pendingTransactions]);
+  }, [groupedTransactions, id, pendingTransactions]);
 
   return (
     <StyledMemberFC isGuest={isGuest} isLogedUser={isLogedUser}>
@@ -127,11 +127,11 @@ export default function MemberFC({
                       showTree={!doNotShowTreeWhenMemberIsOwed}
                       memberTransactions={memberTransactions}
                       isLogedUser={isLogedUser}
-                      memberId={memberId}
+                      id={id}
                       name={name}
                       pendingTransactions={pendingTransactions}
                       treeItems={memberIsOwedItems}
-                      members={members}
+                      participants={participants}
                     />
                   </>
                 );
@@ -146,11 +146,11 @@ export default function MemberFC({
                       showTree={!doNotShowTreeWhenMemberOwes}
                       memberTransactions={memberTransactions}
                       isLogedUser={isLogedUser}
-                      memberId={memberId}
+                      id={id}
                       name={name}
                       pendingTransactions={pendingTransactions}
                       treeItems={memberOwesItems}
-                      members={members}
+                      participants={participants}
                     />
                   </>
                 );
@@ -164,12 +164,12 @@ export default function MemberFC({
                     doNotshowTreeWhenMemberOwes={doNotShowTreeWhenMemberOwes}
                     memberTransactions={memberTransactions}
                     isLogedUser={isLogedUser}
-                    memberId={memberId}
+                    id={id}
                     name={name}
                     pendingTransactions={pendingTransactions}
                     memberIsOwedItems={memberIsOwedItems}
                     memberOwesItems={memberOwesItems}
-                    members={members}
+                    participants={participants}
                   />
                 );
               }
@@ -191,7 +191,7 @@ export default function MemberFC({
             <SettleUpButton
               onClick={() => {
                 menu.value = "SettleUp";
-                memberIdSelectedToSettleUp.value = memberId;
+                idSelectedToSettleUp.value = id;
               }}
             >Settle Up</SettleUpButton>
           </div>
@@ -200,7 +200,7 @@ export default function MemberFC({
       <div className="guest">{isGuest ? <SettleUpButton
         onClick={() => {
            menu.value = "newUser";
-           guestToBeReplaced.value.guestId=memberId
+           guestToBeReplaced.value.guestId=id
            guestToBeReplaced.value.guestName=name
         }}
       >Invite</SettleUpButton> : null}</div>

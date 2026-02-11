@@ -668,12 +668,12 @@ export interface TransfersProps {
 export interface MemberProps {
   pendingTransactions: Debt[];
   groupedTransactions: GroupedTransaction[];
-  memberId: string;
+  id: string;
   name: string;
   isLogedUser: boolean;
   menu: Signal<string | null>;
-  memberIdSelectedToSettleUp: Signal<string>;
-  members: TruncatedMember[];
+  idSelectedToSettleUp: Signal<string>;
+  participants: TruncatedMember[];
   isGuest: boolean;
   totalSpent: Record<string, Record<string, number>>;
   group: Group;
@@ -684,11 +684,11 @@ export interface RenderScenariosProps {
   memberTransactions: GroupedTransaction[];
   pendingTransactions: Debt[];
   isLogedUser: boolean;
-  memberId: string;
+  id: string;
   name: string;
   showTree: boolean;
   treeItems: React.JSX.Element[];
-  members: TruncatedMember[];
+  participants: TruncatedMember[];
 }
 export interface RenderSettledProps {
   name: string;
@@ -699,35 +699,35 @@ export interface RenderBothScenariosProps {
   memberTransactions: GroupedTransaction[];
   pendingTransactions: Debt[];
   isLogedUser: boolean;
-  memberId: string;
+  id: string;
   name: string;
   doNotshowTreeWhenMemberIsOwed: boolean;
   doNotshowTreeWhenMemberOwes: boolean;
   memberIsOwedItems: React.JSX.Element[];
   memberOwesItems: React.JSX.Element[];
-  members: TruncatedMember[];
+  participants: TruncatedMember[];
 }
 
 export interface MemberDetailedDescriptionProps {
   pendingTransactions: Debt[];
   memberTransactions: GroupedTransaction[];
-  memberId: string;
+  id: string;
   isLogedUser: boolean;
   isOwed: boolean;
   name: string;
-  members: TruncatedMember[];
+  participants: TruncatedMember[];
 }
 
 export interface DescriptionAndTreeProps {
   memberTransactions: GroupedTransaction[];
   pendingTransactions: Debt[];
   isLogedUser: boolean;
-  memberId: string;
+  id: string;
   name: string;
   isOwed: boolean;
   showTree: boolean;
   treeItems: React.JSX.Element[];
-  members: TruncatedMember[];
+  participants: TruncatedMember[];
 }
 
 export interface SettleUpButtonProps {
@@ -738,12 +738,12 @@ export interface SettleUpButtonProps {
 export interface SettleUpAnimationProps {
   menu: Signal<string | null>;
   pendingTransactions: Debt[];
-  memberIdSelectedToSettleUp: Signal<string>;
+  idSelectedToSettleUp: Signal<string>;
   members: TruncatedMember[];
 }
 export interface SettleUpOptionsProps {
   pendingTransactions: Debt[];
-  memberIdSelectedToSettleUp: Signal<string>;
+  idSelectedToSettleUp: Signal<string>;
   menu: Signal<string | null>;
   members: TruncatedMember[];
 }
@@ -759,12 +759,11 @@ export interface PillProps {
   $closeButtonColor?: string;
 }
 export interface AddNewUserAnimationProps extends MenuProps {
-  groupName: string | undefined;
-  guestToBeReplaced?: { guestId: string; guestName: string };
+ guestToBeReplaced?: { guestId: string; guestName: string };
 }
 
 export interface SearchUsersToInviteProps extends MenuProps {
-  groupName: string | undefined;
+
   guestToBeReplaced?: { guestId: string; guestName: string };
 }
 export interface DetailedExpenseAnimationProps extends DetailedExpenseProps { }

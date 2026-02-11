@@ -17,7 +17,7 @@ export const useCreateNonGroupTransfer = (
       menu.value = null;
       navigate(`/shared/nongroup/transfers`);
       await queryClient.invalidateQueries({
-        queryKey: ["debts"],
+        queryKey: ["nonGroupDebts"],
         exact: false,
       });
       await queryClient.invalidateQueries({

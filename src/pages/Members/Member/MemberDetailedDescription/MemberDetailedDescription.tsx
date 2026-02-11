@@ -8,17 +8,17 @@ import { MemberDetailedDescriptionProps } from "../../../../interfaces";
 export const MemberDetailedDescription = ({
   memberTransactions,
   pendingTransactions,
-  memberId,
+  id,
   isLogedUser,
   isOwed,
   name,
-  members,
+  participants,
 }: MemberDetailedDescriptionProps) => {
 
   const doNotshowTreeWhenMemberOwes =
-    pendingTransactions.filter((p) => p.debtor === memberId).length === 1;
+    pendingTransactions.filter((p) => p.debtor === id).length === 1;
   const doNotshowTreeWhenMemberIsOwed =
-    pendingTransactions.filter((p) => p.creditor === memberId).length === 1;
+    pendingTransactions.filter((p) => p.creditor === id).length === 1;
 
 
   return (
@@ -88,13 +88,13 @@ export const MemberDetailedDescription = ({
                 doNotshowTreeWhenMemberOwes &&
                 isOwed === false
                   ? pendingTransactions
-                      .filter((p) => p.debtor === memberId)
+                      .filter((p) => p.debtor === id)
                       .map((p, index) => (
                         <div className="transaction" key={index}>
                           <span className="preposition">to</span>{" "}
                           <strong>
                             {
-                              members.find((member) => member.id === p.creditor)
+                              participants.find((participant) => participant.id === p.creditor)
                                 ?.name
                             }
                           </strong>
@@ -104,13 +104,13 @@ export const MemberDetailedDescription = ({
                     doNotshowTreeWhenMemberIsOwed &&
                     isOwed
                   ? pendingTransactions
-                      .filter((p) => p.creditor === memberId)
+                      .filter((p) => p.creditor === id)
                       .map((p, index) => (
                         <div className="transaction" key={index}>
                           <span className="preposition">from</span>{" "}
                           <strong>
                             {
-                              members.find((member) => member.id === p.debtor)
+                              participants.find((participant) => participant.id === p.debtor)
                                 ?.name
                             }
                           </strong>

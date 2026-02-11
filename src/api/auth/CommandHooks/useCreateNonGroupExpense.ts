@@ -23,7 +23,7 @@ export const useCreateNonGroupExpense = (
       navigate(`/shared/nongroup/expenses`);
 
       await queryClient.invalidateQueries({
-        queryKey: ["debts"],
+        queryKey: ["nonGroupDebts"],
         exact: false,
       });
       await queryClient.invalidateQueries({

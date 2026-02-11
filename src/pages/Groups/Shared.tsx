@@ -1,8 +1,6 @@
-import { StyledGroupsContainer } from "./GroupsContainer.styled";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
 import CreateGroupAnimation from "../../components/Animations/CreateGroupAnimation";
-import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMostRecentGroup } from "../../api/auth/CommandHooks/useMostRecentGroup";

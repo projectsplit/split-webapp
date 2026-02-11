@@ -7,12 +7,12 @@ export const DescriptionAndTree = ({
   memberTransactions,
     pendingTransactions,
     isLogedUser,
-    memberId,
+    id,
     name,
     isOwed,
     showTree,
     treeItems,
-    members
+    participants
   }: DescriptionAndTreeProps) => {
     
 
@@ -23,9 +23,9 @@ export const DescriptionAndTree = ({
           pendingTransactions={pendingTransactions}
           isOwed={isOwed}
           isLogedUser={isLogedUser}
-          memberId={memberId}
+          id={id}
           name={name}
-          members={members}
+          participants={participants}
         />
         {showTree && <Tree items={treeItems} />}
    

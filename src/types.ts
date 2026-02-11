@@ -527,10 +527,13 @@ export type GetUserInvitationsResponse = {
 
 export type Debt = {
   debtor: string;
+  debtorName?:string;
   creditor: string;
+  creditorName?:string;
   amount: number;
   currency: string;
 };
+
 
 export type DebtsResponse = {
   debts: Debt[];

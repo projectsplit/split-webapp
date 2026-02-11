@@ -27,7 +27,7 @@ export const useEditNonGroupExpense = (
     mutationFn: (expense) => editExpense(expense),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["debts"],
+        queryKey: ["nonGroupDebts"],
         exact: false,
       });
       await queryClient.invalidateQueries({

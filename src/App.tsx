@@ -53,7 +53,7 @@ const App = () => {
             <Route index element={<RedirectToNonGroupExpenses />} />
             <Route path="expenses" element={<Expenses />} />
             <Route path="transfers" element={<Transfers />} />
-            <Route path="debts" element={<div style={{ overflowY: "auto", height: "100%" }}></div>} />
+            <Route path="debts" element={<Members />} />
             <Route path="*" element={<RedirectToNonGroupExpenses />} />
           </Route>
 

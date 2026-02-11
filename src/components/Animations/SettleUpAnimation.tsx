@@ -6,7 +6,7 @@ import { useRef } from "react";
 export default function SettleUpAnimation({
   menu,
   pendingTransactions,
-  memberIdSelectedToSettleUp,
+  idSelectedToSettleUp,
   members,
 }: SettleUpAnimationProps) {
   const nodeRef = useRef(null);
@@ -20,7 +20,7 @@ export default function SettleUpAnimation({
     >
       <SettleUpOptions
         pendingTransactions={pendingTransactions}
-        memberIdSelectedToSettleUp={memberIdSelectedToSettleUp}
+        idSelectedToSettleUp={idSelectedToSettleUp}
         menu={menu}
         members={members}
       />

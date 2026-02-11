@@ -18,7 +18,7 @@ import { DateOnly } from "../../helpers/timeHelpers";
 import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
 import ErrorMenuAnimation from "../../components/Animations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
-import useDebts from "../../api/auth/QueryHooks/useDebts";
+import useDebts from "../../api/auth/QueryHooks/useGroupDebts";
 import {
   getAllCurrencyTotals,
   getGroupTotalByCurrency,

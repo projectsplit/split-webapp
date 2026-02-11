@@ -10,7 +10,7 @@ import MyButton from "../../../components/MyButton/MyButton";
 
 export default function SettleUpOptions({
   pendingTransactions,
-  memberIdSelectedToSettleUp,
+  idSelectedToSettleUp,
   menu,
   members,
 }: SettleUpOptionsProps) {
@@ -21,7 +21,7 @@ export default function SettleUpOptions({
   const enabled = selectedItem.value.length > 0;
 
   const memberPendingTransactions = pendingTransactions.filter(
-    (p) => p.debtor === memberIdSelectedToSettleUp.value
+    (p) => p.debtor === idSelectedToSettleUp.value
   );
 
   const submitButtonHandler = () => {

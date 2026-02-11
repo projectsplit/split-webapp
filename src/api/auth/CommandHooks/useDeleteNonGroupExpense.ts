@@ -14,7 +14,7 @@ export const useDeleteNonGroupExpense = (
   return useMutation<any, AxiosError, string>({
     mutationFn: (expenseId) => deleteExpense({ expenseId }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["debts"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ["nonGroupDebts"], exact: false });
       await queryClient.invalidateQueries({
         queryKey: ["nonGroupExpenses"],
         exact: false,

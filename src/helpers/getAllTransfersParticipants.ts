@@ -12,11 +12,9 @@ export default function getAllTransfersParticipants(
     return mergeMembersAndGuests(members || [], guests || []);
   }
 
-  // Create a lookup map from nonGroupUsers for quick name resolution
   const nonGroupUserMap = new Map<string, string>();
   nonGroupUsers.forEach((u) => nonGroupUserMap.set(u.id, u.name));
 
-  // Collect unique sender and receiver IDs from transfers
   const uniqueUserIds = new Set<string>();
 
   if (transfers) {
@@ -30,7 +28,6 @@ export default function getAllTransfersParticipants(
     }
   }
 
-  // Map unique IDs to TruncatedMember objects using nonGroupUsers names
   return Array.from(uniqueUserIds)
     .filter((id) => nonGroupUserMap.has(id))
     .map((id) => ({
