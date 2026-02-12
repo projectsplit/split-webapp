@@ -13,6 +13,7 @@ interface UseTotalUserBalanceResult {
 }
 
 export function useTotalUserBalance(userId: string): UseTotalUserBalanceResult {
+
     const {
         data: groupsData,
         isFetching: isFetchingGroups,
@@ -48,7 +49,7 @@ export function useTotalUserBalance(userId: string): UseTotalUserBalanceResult {
 
     const isLoading = isLoadingGroups || isLoadingDebts;
     const isFetching = isFetchingGroups || isFetchingDebts;
-
+    console.log(totalBalances)
     return {
         totalBalances,
         isLoading,
