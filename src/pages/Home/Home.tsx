@@ -39,6 +39,8 @@ import { useGetGroupsAllBalances } from "@/api/auth/QueryHooks/useGetGroupsAllBa
 import { useFetchAndGroupNonGroupDebts } from "../Groups/hooks/useFetchAndGroupNonGroupDebts";
 import { computeNetPerCurrency } from "@/helpers/computeNetPerCurrency";
 import { useTotalUserBalance } from "./hooks/useTotalUserBalance";
+import MostRecentSection from "./MostRecentSection/MostRecentSection";
+import ScrollableMenuButtons from "./ScrollableMenuButtons/ScrollableMenuButtons";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -127,103 +129,18 @@ export default function Home() {
               Welcome, <strong>{userInfo?.username}</strong>
             </div>
           </div>
-          <div className="scrollableContent">
-            <div className="optionsStripe">
-              {/* {showAdvice && budgetData?.budgetSubmitted && (
-              <>
-                {BudgetInfoMessage(theme, true, budgetData, () =>
-                  setShowAdvice(false)
-                )}
-              </>
-            )} */}
-
-              {mostRecentGroupDataIsFetching ? (
-                <Spinner />
-              ) : mostRecentGroupData ? (
-                <div className="mostRecent">
-                  <div className="mostRecentMsg">Most recent</div>
-                  <TreeAdjustedContainer
-                    onClick={() => {
-                      navigate(`/shared/${mostRecentGroupData.id}`);
-                    }}
-                    hasOption={true}
-                    optionname="chevron-forward-outline"
-                    items={TreeItemBuilderForHomeAndGroups(
-                      mostRecentGroupData?.details
-                    )}
-                  >
-                    <div className="groupName">{mostRecentGroupData?.name}</div>
-                  </TreeAdjustedContainer>
-                </div>
-              ) : recentContextId === "NON_GROUP" ?
-                <div className="mostRecent">
-                  <div className="mostRecentMsg">Most recent</div>
-                  <TreeAdjustedContainer
-                    onClick={() => {
-                      navigate(`/shared/nonGroup/expenses`);
-                    }}
-                    hasOption={true}
-                    optionname="chevron-forward-outline"
-                    items={TreeItemBuilderForHomeAndGroups(
-                      computeNetPerCurrency(nonGroupGroupedTransactions, userInfo.userId || "")
-                    )}
-                  >
-                    <div className="groupName">Non Group Transactions</div>
-                  </TreeAdjustedContainer>
-                </div>
-                : null}
-
-              {!isLoading && !isFetching &&
-                groupsData?.groupCount === 0 ? (
-                <OptionButton
-                  onClick={() => navigate("/shared")}
-                  name="Groups"
-                  description="Keep track of your shared finances"
-                  hasArrow={false}
-                >
-                  <TiGroup className="groupIcon" />
-                </OptionButton>
-              ) : (
-                <TreeAdjustedContainer
-                  hasOption={false}
-                  optionname="chevron-forward-outline"
-                  onClick={() => navigate("/shared")}
-                  items={TreeItemBuilderForHomeAndGroups(totalBalances)}
-                >
-                  <div className="groups">
-                    <div className="groupIconAndNumberOfGroups">
-                      <TiGroup className="groupIcon" />
-                      {/* <span className="groupCount">{data?.groupCount}</span> */}
-                    </div>
-                    <div className="groupName">Shared</div>
-                  </div>
-                </TreeAdjustedContainer>
-              )}
-              <OptionButton
-                name="Personal"
-                description="Your personal expense tracker"
-                hasArrow={false}
-              >
-                <BsFillPersonFill className="personalIcon" />
-              </OptionButton>
-              <OptionButton
-                name="Analytics"
-                description="View your spending trends"
-                onClick={() => navigate("/analytics")}
-                hasArrow={false}
-              >
-                <BsBarChartFill className="analyticsIcon" />
-              </OptionButton>
-              <OptionButton
-                name="Budget"
-                description="Set up a spending cap or goal"
-                onClick={() => navigate("/budget")}
-                hasArrow={false}
-              >
-                <BsFillPiggyBankFill className="budgetIcon" />
-              </OptionButton>
-            </div>
-          </div>
+          <ScrollableMenuButtons
+            mostRecentGroupDataIsFetching={mostRecentGroupDataIsFetching}
+            mostRecentGroupData={mostRecentGroupData}
+            recentContextId={recentContextId}
+            nonGroupGroupedTransactions={nonGroupGroupedTransactions}
+            userInfo={userInfo}
+            navigate={navigate}
+            isLoading={isLoading}
+            isFetching={isFetching}
+            groupsData={groupsData}
+            totalBalances={totalBalances}
+          />
           <div
             className={`actions ${isGlowing ? "glow" : ""}`}
             onClick={() =>

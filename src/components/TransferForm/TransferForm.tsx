@@ -167,9 +167,15 @@ export default function TransferForm({
   ]);
 
   const sortedMembers = useComputed(() => {
-    return [...groupMembers.value].sort((a, b) =>
-      a.id === userMemberId ? -1 : b.id === userMemberId ? 1 : 0
-    );
+    if (!!groupId) {
+      return [...groupMembers.value].sort((a, b) =>
+        a.id === userMemberId ? -1 : b.id === userMemberId ? 1 : 0
+      );
+    } else {
+      return [...groupMembers.value].sort((a, b) =>
+        a.id === userInfo?.userId ? -1 : b.id === userInfo?.userId ? 1 : 0
+      );
+    }
   });
 
   // Sync senderId and receiverId from nonGroupMenu when changed

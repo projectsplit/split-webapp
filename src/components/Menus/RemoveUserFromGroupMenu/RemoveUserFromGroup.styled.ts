@@ -87,6 +87,25 @@ export const StyledRemoveUserFromGroup = styled.div`
           }
         }
       }
+      .noData {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        margin-top: 100px;
+        .msg {
+          font-size: 16px;
+          color: ${({ theme }) => theme.textInactiveColor};
+          text-wrap: wrap;
+          text-align: center;
+        }
+        .icon {
+          margin-top: 10px;
+
+          color: ${({ theme }) => theme.textInactiveColor};
+        }
+      }
     }
   }
   .input {

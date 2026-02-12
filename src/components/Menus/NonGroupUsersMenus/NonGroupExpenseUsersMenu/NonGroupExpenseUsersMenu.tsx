@@ -19,6 +19,7 @@ import { useOutletContext } from "react-router-dom";
 import useDebounce from "../../../../hooks/useDebounce";
 import { SelectedGroup } from "../SelectionLists/SelectedGroup";
 import { useSearchUsers } from "@/api/auth/QueryHooks/useSearchUsers";
+import { MdOutlineGroupOff } from "react-icons/md";
 
 export const NonGroupExpenseUsersMenu = ({
   menu,
@@ -30,7 +31,7 @@ export const NonGroupExpenseUsersMenu = ({
   fromNonGroup
 }: NonGroupUsersProps) => {
 
-  const category = useSignal<string>("Friends");
+  const category = useSignal<string>("Users");
   const [keyword, setKeyword] = useState("");
   const pageSize = 10;
   const [debouncedKeyword] = useDebounce(
@@ -209,7 +210,7 @@ export const NonGroupExpenseUsersMenu = ({
           <CategorySelector
             activeCat={"Amounts"}
             categories={{
-              cat1: "Friends",
+              cat1: "Users",
               cat2: "Groups",
             }}
             navLinkUse={false}
@@ -251,7 +252,7 @@ export const NonGroupExpenseUsersMenu = ({
           </div>
         </div>
 
-        {category.value === "Friends"
+        {category.value === "Users"
           ? remainingSuggestedUsers.length > 0 && (
             <div className="dropdown" ref={dropdownRef}>
               {remainingSuggestedUsers.map((user) =>
@@ -268,7 +269,7 @@ export const NonGroupExpenseUsersMenu = ({
               )}
             </div>
           )
-          : !fromNonGroup && remainingSuggestedGroups.length > 0 && (
+          : !fromNonGroup && remainingSuggestedGroups.length > 0 ? (
             <div className="dropdown" ref={dropdownRef}>
               {remainingSuggestedGroups.map((group) => (
                 <Item
@@ -282,7 +283,10 @@ export const NonGroupExpenseUsersMenu = ({
                 />
               ))}
             </div>
-          )}
+          ) : <div className="noData">
+            <div className="msg">You are currently not a member of any group </div>
+            <MdOutlineGroupOff className="icon" />
+          </div>}
         <Sentinel
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}

@@ -2,7 +2,7 @@ import { StyledRemoveUserFromGroup } from "./RemoveUserFromGroup.styled";
 import { RemoveUserFromGroupMenuProps } from "../../../interfaces";
 import Separator from "../../Separator/Separator";
 import Input from "../../Input/Input";
-import { FaAngleLeft } from "react-icons/fa";
+import { FaAngleLeft, FaUsersSlash } from "react-icons/fa";
 import { useSignal } from "@preact/signals-react";
 import MemberItem from "./MemberItem/MemberItem";
 import MenuAnimationBackground from "../../Animations/MenuAnimationBackground";
@@ -120,6 +120,12 @@ export default function RemoveUserFromGroupMenu({
               }
             />
           ))}
+          {filteredMembers.length === 0 && (
+            <div className="noData">
+              <div className="msg">No members found</div>
+              <FaUsersSlash className="icon" />
+            </div>
+          )}
         </div>
       </div>
       <MenuAnimationBackground menu={cannotBeRemovedClickedWarning} />

@@ -202,7 +202,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
           userInfo={userInfo}
         />
       )}
-      {group && <AddNewUserAnimation menu={newUserMenu} groupName={groupName} />}
+      {group && <AddNewUserAnimation menu={newUserMenu} />}
     </StyledGroupOptions>
   );
 }

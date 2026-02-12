@@ -26,11 +26,20 @@ export default function MembersInfoBox({
   };
 
   const sortedTransactions = [...(transactions || [])].sort((a, b) => {
-    const aId = getId(a);
-    const bId = getId(b);
-    if (aId === userMemberId) return -1;
-    if (bId === userMemberId) return 1;
-    return 0;
+    if (transactionType === "Group") {
+      const aId = getId(a);
+      const bId = getId(b);
+      if (aId === userMemberId) return -1;
+      if (bId === userMemberId) return 1;
+      return 0;
+    } else {
+      const aId = getId(a);
+      const bId = getId(b);
+      if (aId === userId) return -1;
+      if (bId === userId) return 1;
+      return 0;
+    }
+
   });
 
   const totalAmount = transactions?.reduce(

@@ -138,6 +138,25 @@ export const StyledNonGroupExpenseUsersMenu = styled.div`
         }
       }
     }
+    .noData{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      margin-top: 100px;
+			.msg{
+        color: ${({ theme }) => theme.textInactiveColor};
+				text-wrap: wrap;
+				text-align: center;
+			}
+      .icon{
+        display: flex;
+        font-size: 100px;
+        opacity: 0.5;
+        margin-top: 20px;
+      }
+		}
   }
   .doneButton {
     position: fixed;

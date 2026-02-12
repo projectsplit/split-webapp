@@ -9,7 +9,6 @@ import MemberFC from "./Member/MemberFC";
 import SettleUpAnimation from "../../components/Animations/SettleUpAnimation";
 import Spinner from "../../components/Spinner/Spinner";
 import AddNewUserAnimation from "../../components/Animations/AddNewUserAnimation";
-
 import getAllDebtsParticipants from "@/helpers/getAllDebtsParticipants";
 import { useDebts } from "@/api/auth/QueryHooks/useDebts";
 
@@ -63,11 +62,16 @@ export default function Members() {
     );
   }//TODO Maybe replace with a message after it fails for a while?
 
-  const sortedParticipants = [...allParticipants].sort((a, b) => {
+  const sortedParticipants = transactionType === "Group" ? [...allParticipants].sort((a, b) => {
     if (a.id === userMemberId) return -1;
     if (b.id === userMemberId) return 1;
     return 0;
+  }) : [...allParticipants].sort((a, b) => {
+    if (a.id === userInfo?.userId) return -1;
+    if (b.id === userInfo?.userId) return 1;
+    return 0;
   });
+
 
   return (
     <StyledMembers>
