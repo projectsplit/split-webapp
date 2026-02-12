@@ -2,7 +2,7 @@ import { StyledGroups } from "../Groups.styled";
 import { useNavigate } from "react-router-dom";
 import TreeAdjustedContainer from "../../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import Spinner from "../../../../components/Spinner/Spinner";
-import { useMostRecentGroup } from "../../../../api/auth/CommandHooks/useMostRecentContext";
+import { useMostRecentContext} from "../../../../api/auth/CommandHooks/useMostRecentContext";
 import { TreeItemBuilderForHomeAndGroups } from "../../../../components/TreeItemBuilderForHomeAndGroups";
 import Sentinel from "../../../../components/Sentinel";
 import { MdOutlineGroupOff } from "react-icons/md";
@@ -15,7 +15,7 @@ export default function ActiveGroups() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useGetTotalsActiveGroups(pageSize)
 
   const groups = data?.pages.flatMap((p) => p.groups);
-  const updateMostRecentGroupId = useMostRecentGroup();
+  const updateMostRecentGroupId = useMostRecentContext();
 
   const onGroupClickHandler = (id: string, groupName: string) => {
     navigate(`/shared/active/${id}/expenses`, { state: { groupName } });
