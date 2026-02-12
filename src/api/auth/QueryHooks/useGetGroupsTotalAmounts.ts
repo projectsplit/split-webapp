@@ -3,7 +3,7 @@ import { Signal } from "@preact/signals-react";
 import { GroupsTotalAmountsResponse } from "@/types";
 import { apiClient } from "@/api/apiClients";
 
-export const useGetGroupsTotalAmounts = (pageSize: number, keyword: string, activeGroupCatAsState: Signal<string>) => {
+export const useGetGroupsTotalAmounts = (pageSize: number, keyword: string, activeGroupCatAsState: Signal<string>,) => {
   return useInfiniteQuery({
     queryKey: ["shared", activeGroupCatAsState.value.toLowerCase(), keyword],
     queryFn: ({ pageParam: next }) =>
@@ -16,6 +16,7 @@ export const useGetGroupsTotalAmounts = (pageSize: number, keyword: string, acti
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: "",
     staleTime: 0,
+    enabled: activeGroupCatAsState.value !== "NonGroup",
   });
 }
 

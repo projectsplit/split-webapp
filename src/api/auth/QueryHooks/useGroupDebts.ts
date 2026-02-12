@@ -14,7 +14,7 @@ const useGroupDebts = (groupId: string | undefined) => {
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     staleTime: 9000,
-    enabled: true,
+    enabled: !!groupId,
   });
 };
 

@@ -25,6 +25,8 @@ import { groupTransactions } from "@/helpers/groupTransactions";
 import getAllDebtsParticipants from "@/helpers/getAllDebtsParticipants";
 import { UserInfo } from "@/types";
 import { computeNetPerCurrency } from "@/helpers/computeNetPerCurrency";
+import { useGroupsList } from "./hooks/useGroupList";
+import { useNonGroupDebts } from "./hooks/useNonGroupDebts";
 
 export default function Shared() {
   const queryClient = useQueryClient();
@@ -40,7 +42,7 @@ export default function Shared() {
     400
   );
 
-  const { topMenuTitle, activeGroupCatAsState, openGroupOptionsMenu,userInfo } =
+  const { topMenuTitle, activeGroupCatAsState, openGroupOptionsMenu, userInfo } =
     useOutletContext<{
       topMenuTitle: Signal<string>;
       openGroupOptionsMenu: Signal<boolean>;
@@ -51,36 +53,19 @@ export default function Shared() {
   const navigate = useNavigate();
   const pageSize = 10;
 
-///////////////////////////////////////////////////
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useGetGroupsTotalAmounts(pageSize, debouncedKeyword, activeGroupCatAsState);
+const {
+  filteredGroups,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  isFetching: isFetchingGroups,
+} = useGroupsList(pageSize, debouncedKeyword, activeGroupCatAsState);
 
-  const groups = data?.pages.flatMap((p) => p.groups);
+const {
+  groupedTransactions,
+  isFetchingDebts,
+} = useNonGroupDebts(userInfo?.userId || "",activeGroupCatAsState);
 
-  const filteredGroups = useMemo(() => {
-    return groups?.filter((g) => {
-      if (activeGroupCatAsState.value === "Active") return !g.isArchived;
-      if (activeGroupCatAsState.value === "Archived") return g.isArchived;
-      return false;
-    });
-  }, [groups, activeGroupCatAsState.value])
-//////////////////////////////////////////////////////////
-  const { data:debtsData, isFetching:isFetchingDebts, isLoading:isLoadingDebts } = useDebts();
-  const { debts, totalSpent } = debtsData ?? { debts: [], totalSpent: {} };
-   const allParticipants = getAllDebtsParticipants(debts,
-      "NonGroup",
-      [],
-      []);
-  const { groupedTransactions } = useMemo(() => {
-    const groupedTransactions = groupTransactions(
-      debts ?? [],
-      allParticipants ?? [],
-      userInfo.userId || ""
-    );
-
-    return { groupedTransactions };
-  }, [debtsData]);
-/////////////////////////////////////////////////////////
 
   useEffect(() => {
     if (!showSearchBar.value) return;
@@ -135,7 +120,7 @@ export default function Shared() {
             keyword={keyword}
             setKeyword={setKeyword}
           />
-          {isFetching && !isFetchingNextPage ? (
+          {(isFetchingGroups && !isFetchingNextPage) ||isFetchingDebts? (
             <Spinner />
           ) : (
             <div className="groups">
