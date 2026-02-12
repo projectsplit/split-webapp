@@ -4,7 +4,7 @@ import { groupTransactions } from "@/helpers/groupTransactions";
 import { TransactionType } from "@/types";
 import { useMemo } from "react";
 
-export function useNonGroupDebts(userId: string, transactionType: TransactionType) {
+export function useFetchAndGroupNonGroupDebts(userId: string, transactionType: TransactionType) {
     const isNonGroupMode = transactionType === "NonGroup";
 
     const { data: debtsData, isFetching, isLoading } = useDebts();

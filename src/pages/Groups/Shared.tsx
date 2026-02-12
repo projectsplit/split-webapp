@@ -22,7 +22,8 @@ import OptionsButtons from "./OptionsButtons/OptionsButtons";
 import { TransactionType, UserInfo } from "@/types";
 import { computeNetPerCurrency } from "@/helpers/computeNetPerCurrency";
 import { useGroupsList } from "./hooks/useGroupList";
-import { useNonGroupDebts } from "./hooks/useNonGroupDebts";
+import { useFetchAndGroupNonGroupDebts } from "./hooks/useFetchAndGroupNonGroupDebts";
+
 
 export default function Shared() {
   const queryClient = useQueryClient();
@@ -49,18 +50,18 @@ export default function Shared() {
   const navigate = useNavigate();
   const pageSize = 10;
 
-const {
-  filteredGroups,
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
-  isFetching: isFetchingGroups,
-} = useGroupsList(pageSize, debouncedKeyword, activeGroupCatAsState);
+  const {
+    filteredGroups,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching: isFetchingGroups,
+  } = useGroupsList(pageSize, debouncedKeyword, activeGroupCatAsState);
 
-const {
-  groupedTransactions,
-  isFetchingDebts,
-} = useNonGroupDebts(userInfo?.userId || "",activeGroupCatAsState.value as TransactionType);
+  const {
+    groupedTransactions,
+    isFetchingDebts,
+  } = useFetchAndGroupNonGroupDebts(userInfo?.userId || "", activeGroupCatAsState.value as TransactionType);
 
 
   useEffect(() => {
@@ -116,7 +117,7 @@ const {
             keyword={keyword}
             setKeyword={setKeyword}
           />
-          {(isFetchingGroups && !isFetchingNextPage) ||isFetchingDebts? (
+          {(isFetchingGroups && !isFetchingNextPage) || isFetchingDebts ? (
             <Spinner />
           ) : (
             <div className="groups">

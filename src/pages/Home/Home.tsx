@@ -36,8 +36,9 @@ import NonGroupExpenseUsersAnimation from "../../components/Animations/NonGroupE
 import NonGroupTransferAnimation from "../../components/Animations/NonGroupTransferAnimation";
 import { useGetMostRecentGroups } from "@/api/auth/QueryHooks/useGetMostRecentGroups";
 import { useGetGroupsAllBalances } from "@/api/auth/QueryHooks/useGetGroupsAllBalances";
-import { useNonGroupDebts } from "../Groups/hooks/useNonGroupDebts";
+import { useFetchAndGroupNonGroupDebts } from "../Groups/hooks/useFetchAndGroupNonGroupDebts";
 import { computeNetPerCurrency } from "@/helpers/computeNetPerCurrency";
+import { useTotalUserBalance } from "./hooks/useTotalUserBalance";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -79,37 +80,12 @@ export default function Home() {
   const quickActionsMenu = useSignal<string | null>(null);
   const recentGroupId = userInfo?.recentGroupId;
 
-  const {
-    data,
+const {
+    totalBalances,
+    isLoading,
     isFetching,
-    isLoading: isLoadingAllBalancesResponse,
-  } = useGetGroupsAllBalances()
-
-  const {
-    groupedTransactions,
-    isFetchingDebts,
-    isLoadingDebts,
-  } = useNonGroupDebts(userInfo?.userId || "", "NonGroup");
-
-  const totalFromUserTransactions = useMemo(() => {
-    const nonGroupBalances = computeNetPerCurrency(groupedTransactions, userInfo?.userId || "");
-
-    const groupBalances = data?.balances ?? {};
-
-    const totalBalances: Details = {};
-
-    for (const [currency, amount] of Object.entries(nonGroupBalances)) {
-      totalBalances[currency] = amount + (groupBalances[currency] ?? 0);
-    }
-
-    for (const [currency, amount] of Object.entries(groupBalances)) {
-      if (!(currency in totalBalances)) {
-        totalBalances[currency] = amount;
-      }
-    }
-
-    return totalBalances;
-  }, [groupedTransactions, userInfo?.userId, data?.balances]);
+    groupsData
+  } = useTotalUserBalance(userInfo?.userId || "");
 
   const {
     data: mostRecentGroupData,
@@ -180,9 +156,8 @@ export default function Home() {
                 </div>
               ) : null}
 
-              {(!isLoadingAllBalancesResponse || !isLoadingDebts) &&
-                (!isFetching || !isFetchingDebts) &&
-                data?.groupCount === 0 ? (
+              {!isLoading && !isFetching &&
+                groupsData?.groupCount === 0 ? (
                 <OptionButton
                   onClick={() => navigate("/shared")}
                   name="Groups"
@@ -196,7 +171,7 @@ export default function Home() {
                   hasOption={false}
                   optionname="chevron-forward-outline"
                   onClick={() => navigate("/shared")}
-                  items={TreeItemBuilderForHomeAndGroups(totalFromUserTransactions)}
+                  items={TreeItemBuilderForHomeAndGroups(totalBalances)}
                 >
                   <div className="groups">
                     <div className="groupIconAndNumberOfGroups">
