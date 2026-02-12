@@ -5,7 +5,7 @@ import CreateGroupAnimation from "../../components/Animations/CreateGroupAnimati
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMostRecentGroup } from "../../api/auth/CommandHooks/useMostRecentGroup";
+import { useMostRecentGroup } from "../../api/auth/CommandHooks/useMostRecentContext";
 import { StyledGroups } from "./GroupTypes/Groups.styled";
 import { MdOutlineGroupOff } from "react-icons/md";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";

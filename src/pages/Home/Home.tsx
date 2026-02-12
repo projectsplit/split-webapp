@@ -78,19 +78,20 @@ export default function Home() {
   });
 
   const quickActionsMenu = useSignal<string | null>(null);
-  const recentGroupId = userInfo?.recentGroupId;
+  const recentContextId = userInfo?.recentContextId;
 
-const {
+  const {
     totalBalances,
     isLoading,
     isFetching,
-    groupsData
+    groupsData,
+    nonGroupGroupedTransactions
   } = useTotalUserBalance(userInfo?.userId || "");
 
   const {
     data: mostRecentGroupData,
     isFetching: mostRecentGroupDataIsFetching,
-  } = useGetMostRecentGroups(recentGroupId)
+  } = useGetMostRecentGroups(recentContextId)
 
 
   useEffect(() => {
@@ -154,7 +155,23 @@ const {
                     <div className="groupName">{mostRecentGroupData?.name}</div>
                   </TreeAdjustedContainer>
                 </div>
-              ) : null}
+              ) : recentContextId === "NON_GROUP" ?
+                <div className="mostRecent">
+                  <div className="mostRecentMsg">Most recent</div>
+                  <TreeAdjustedContainer
+                    onClick={() => {
+                      navigate(`/shared/nonGroup/expenses`);
+                    }}
+                    hasOption={true}
+                    optionname="chevron-forward-outline"
+                    items={TreeItemBuilderForHomeAndGroups(
+                      computeNetPerCurrency(nonGroupGroupedTransactions, userInfo.userId || "")
+                    )}
+                  >
+                    <div className="groupName">Non Group Transactions</div>
+                  </TreeAdjustedContainer>
+                </div>
+                : null}
 
               {!isLoading && !isFetching &&
                 groupsData?.groupCount === 0 ? (

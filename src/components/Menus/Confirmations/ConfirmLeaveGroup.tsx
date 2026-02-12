@@ -3,7 +3,7 @@ import { ConfirmLeaveGroupProps } from "../../../interfaces";
 import Confirmation from "./Confirmation";
 import { useSignal } from "@preact/signals-react";
 import { useLeaveGroup } from "../../../api/auth/CommandHooks/useLeaveGroup";
-import { useMostRecentGroup } from "../../../api/auth/CommandHooks/useMostRecentGroup";
+import { useMostRecentGroup } from "../../../api/auth/CommandHooks/useMostRecentContext";
 
 export default function ConfirmLeaveGroup({
   menu,

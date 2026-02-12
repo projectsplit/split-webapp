@@ -6,7 +6,7 @@ export const useGetMostRecentGroups = (groupId: string) => {
     return useQuery<MostRecentGroupDetailsResponse>({
         queryKey: ["mostRecentGroup", groupId],
         queryFn: () => getMostRecentGroup(groupId),
-        enabled: groupId !== undefined && groupId !== null,
+        enabled: groupId !== undefined && groupId !== null && groupId !=="NON_GROUP",
         refetchOnWindowFocus: false,
         refetchOnMount: true,
     });

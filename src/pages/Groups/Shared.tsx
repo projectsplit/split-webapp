@@ -3,7 +3,7 @@ import { Signal, useSignal } from "@preact/signals-react";
 import CreateGroupAnimation from "../../components/Animations/CreateGroupAnimation";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMostRecentGroup } from "../../api/auth/CommandHooks/useMostRecentGroup";
+import { useMostRecentContext } from "../../api/auth/CommandHooks/useMostRecentContext";
 import { StyledGroups } from "./GroupTypes/Groups.styled";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import Sentinel from "../../components/Sentinel";
@@ -82,11 +82,15 @@ export default function Shared() {
   }, [activeGroupCatAsState.value]);
 
 
-  const updateMostRecentGroupId = useMostRecentGroup();
+  const updateMostRecentContextId = useMostRecentContext();
 
   const onGroupClickHandler = (id: string, groupName: string) => {
     navigate(`/shared/${id}/expenses`, { state: { groupName } });
-    updateMostRecentGroupId.mutate(id);
+    updateMostRecentContextId.mutate(id);
+  };
+  const onNonGroupClickHandler = () => {
+    navigate(`/shared/nongroup/expenses`);
+    updateMostRecentContextId.mutate("NON_GROUP");
   };
 
   const onIconClick = (
@@ -156,12 +160,12 @@ export default function Shared() {
               ))}
               {activeGroupCatAsState.value === "NonGroup" && (
                 <TreeAdjustedContainer
-                  onClick={() => navigate(`/shared/nongroup/expenses`)}
+                  onClick={() => onNonGroupClickHandler()}
                   hasOption={true}
                   items={TreeItemBuilderForHomeAndGroups(computeNetPerCurrency(groupedTransactions, userInfo.userId || ""))}
                   optionname={'chevron-forward-outline'}
                 >
-                  <div className="groupName">Non Group transactions</div>
+                  <div className="groupName">Non Group Transactions</div>
                 </TreeAdjustedContainer>
               )}
               <Sentinel

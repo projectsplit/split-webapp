@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
-import { UpdateMostRecentGroupRequest } from "../../../types";
+import { UpdateMostRecentContextRequest } from "../../../types";
 import { apiClient } from "../../apiClients";
 
-export const useMostRecentGroup = () => {
+export const useMostRecentContext = () => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, string>({
-    mutationFn: (groupId) => updateMostRecentGroup({ groupId }),
-    onSuccess: async () => {
+    mutationFn: (contextId) => updateMostRecentContext({contextId}),
+    onSuccess: async () => {  
       await queryClient.invalidateQueries({
         queryKey: ["getMe"],
         exact: false,
@@ -24,13 +24,14 @@ export const useMostRecentGroup = () => {
       console.log(error);
     },
   });
-};
+};  
 
-const updateMostRecentGroup = async (
-  req: UpdateMostRecentGroupRequest
+const updateMostRecentContext = async (
+  req: UpdateMostRecentContextRequest
 ): Promise<void> => {
+  console.log(req);
   const response = await apiClient.put<void, AxiosResponse<void>>(
-    "/users/activity/recent-group",
+    "/users/activity/recent-context",
     req
   );
   return response.data;

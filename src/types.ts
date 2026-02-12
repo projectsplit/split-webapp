@@ -37,7 +37,7 @@ export type UserInfo = {
   username: string;
   timeZone: string;
   timeZoneCoordinates: Coordinates;
-  recentGroupId: string;
+  recentContextId: string;
   hasNewerNotifications: boolean;
   currency: string;
 };
@@ -567,8 +567,8 @@ export type UpdateNotificationRequest = {
   timestamp: string | undefined;
 };
 
-export type UpdateMostRecentGroupRequest = {
-  groupId: string;
+export type UpdateMostRecentContextRequest = {
+  contextId: string;
 };
 export type UpdateSelectedCurrencyRequest = {
   currency: string;

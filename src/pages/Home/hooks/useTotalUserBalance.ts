@@ -1,7 +1,7 @@
 import { useGetGroupsAllBalances } from "@/api/auth/QueryHooks/useGetGroupsAllBalances";
 import { computeNetPerCurrency } from "@/helpers/computeNetPerCurrency";
 import { useFetchAndGroupNonGroupDebts } from "@/pages/Groups/hooks/useFetchAndGroupNonGroupDebts";
-import { Details, GroupsAllBalancesResponse } from "@/types";
+import { Details, GroupedTransaction, GroupsAllBalancesResponse } from "@/types";
 import { useMemo } from "react";
 
 
@@ -10,6 +10,7 @@ interface UseTotalUserBalanceResult {
     isLoading: boolean;
     isFetching: boolean;
     groupsData?: GroupsAllBalancesResponse;
+    nonGroupGroupedTransactions: GroupedTransaction[];
 }
 
 export function useTotalUserBalance(userId: string): UseTotalUserBalanceResult {
@@ -49,11 +50,12 @@ export function useTotalUserBalance(userId: string): UseTotalUserBalanceResult {
 
     const isLoading = isLoadingGroups || isLoadingDebts;
     const isFetching = isFetchingGroups || isFetchingDebts;
-    console.log(totalBalances)
+    const nonGroupGroupedTransactions = groupedTransactions;
     return {
         totalBalances,
         isLoading,
         isFetching,
-        groupsData
+        groupsData,
+        nonGroupGroupedTransactions,
     };
 }
