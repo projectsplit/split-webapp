@@ -506,7 +506,7 @@ export type Transfer = {
 };
 
 export type CreateTransfersRequest = {
-  groupId: string;
+  groupId?: string;
   transfers: Transfer[];
 };
 

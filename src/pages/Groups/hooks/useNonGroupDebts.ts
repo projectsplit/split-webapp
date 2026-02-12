@@ -1,11 +1,11 @@
 import { useDebts } from "@/api/auth/QueryHooks/useDebts";
 import getAllDebtsParticipants from "@/helpers/getAllDebtsParticipants";
 import { groupTransactions } from "@/helpers/groupTransactions";
-import { Signal } from "@preact/signals-react";
+import { TransactionType } from "@/types";
 import { useMemo } from "react";
 
-export function useNonGroupDebts(userId: string, activeGroupCatAsState: Signal<string>) {
-    const isNonGroupMode = activeGroupCatAsState.value === "NonGroup";
+export function useNonGroupDebts(userId: string, transactionType: TransactionType) {
+    const isNonGroupMode = transactionType === "NonGroup";
 
     const { data: debtsData, isFetching, isLoading } = useDebts();
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StyledHomepage } from "./Home.Styled";
 import { BsBarChartFill } from "react-icons/bs";
 import { BsFillPiggyBankFill } from "react-icons/bs";
@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "styled-components";
 import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import {
+  Details,
   ExpenseResponseItem,
   Group,
   Guest,
@@ -35,6 +36,8 @@ import NonGroupExpenseUsersAnimation from "../../components/Animations/NonGroupE
 import NonGroupTransferAnimation from "../../components/Animations/NonGroupTransferAnimation";
 import { useGetMostRecentGroups } from "@/api/auth/QueryHooks/useGetMostRecentGroups";
 import { useGetGroupsAllBalances } from "@/api/auth/QueryHooks/useGetGroupsAllBalances";
+import { useNonGroupDebts } from "../Groups/hooks/useNonGroupDebts";
+import { computeNetPerCurrency } from "@/helpers/computeNetPerCurrency";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -83,15 +86,39 @@ export default function Home() {
   } = useGetGroupsAllBalances()
 
   const {
+    groupedTransactions,
+    isFetchingDebts,
+    isLoadingDebts,
+  } = useNonGroupDebts(userInfo?.userId || "", "NonGroup");
+
+  const totalFromUserTransactions = useMemo(() => {
+    const nonGroupBalances = computeNetPerCurrency(groupedTransactions, userInfo?.userId || "");
+
+    const groupBalances = data?.balances ?? {};
+
+    const totalBalances: Details = {};
+
+    for (const [currency, amount] of Object.entries(nonGroupBalances)) {
+      totalBalances[currency] = amount + (groupBalances[currency] ?? 0);
+    }
+
+    for (const [currency, amount] of Object.entries(groupBalances)) {
+      if (!(currency in totalBalances)) {
+        totalBalances[currency] = amount;
+      }
+    }
+
+    return totalBalances;
+  }, [groupedTransactions, userInfo?.userId, data?.balances]);
+
+  const {
     data: mostRecentGroupData,
     isFetching: mostRecentGroupDataIsFetching,
   } = useGetMostRecentGroups(recentGroupId)
 
-  useEffect(() => {
-    topMenuTitle.value = "";
-  }, []);
 
   useEffect(() => {
+    topMenuTitle.value = "";
     const saved = localStorage.getItem("submittedFromHomePersistData");
     if (saved) {
       const {
@@ -153,8 +180,8 @@ export default function Home() {
                 </div>
               ) : null}
 
-              {!isLoadingAllBalancesResponse &&
-                !isFetching &&
+              {(!isLoadingAllBalancesResponse || !isLoadingDebts) &&
+                (!isFetching || !isFetchingDebts) &&
                 data?.groupCount === 0 ? (
                 <OptionButton
                   onClick={() => navigate("/shared")}
@@ -169,12 +196,12 @@ export default function Home() {
                   hasOption={false}
                   optionname="chevron-forward-outline"
                   onClick={() => navigate("/shared")}
-                  items={TreeItemBuilderForHomeAndGroups(data?.balances)}
+                  items={TreeItemBuilderForHomeAndGroups(totalFromUserTransactions)}
                 >
                   <div className="groups">
                     <div className="groupIconAndNumberOfGroups">
                       <TiGroup className="groupIcon" />
-                      <span className="groupCount">{data?.groupCount}</span>
+                      {/* <span className="groupCount">{data?.groupCount}</span> */}
                     </div>
                     <div className="groupName">Shared</div>
                   </div>

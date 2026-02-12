@@ -39,12 +39,15 @@ export default function Members() {
     guests);
 
   const { groupedTransactions } = useMemo(() => {
-    const groupedTransactions = groupTransactions(
+    const groupedTransactions = transactionType === "Group" ? groupTransactions(
       debts ?? [],
       allParticipants ?? [],
       userMemberId || ""
+    ) : groupTransactions(
+      debts ?? [],
+      allParticipants ?? [],
+      userInfo?.userId || ""
     );
-
     return { groupedTransactions };
   }, [debts]);
 
@@ -58,13 +61,14 @@ export default function Members() {
         <Spinner />
       </div>
     );
-  }
+  }//TODO Maybe replace with a message after it fails for a while?
 
   const sortedParticipants = [...allParticipants].sort((a, b) => {
     if (a.id === userMemberId) return -1;
     if (b.id === userMemberId) return 1;
     return 0;
   });
+
   return (
     <StyledMembers>
       {isFetching ? (

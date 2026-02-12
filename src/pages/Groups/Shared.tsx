@@ -1,7 +1,7 @@
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
 import CreateGroupAnimation from "../../components/Animations/CreateGroupAnimation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMostRecentGroup } from "../../api/auth/CommandHooks/useMostRecentGroup";
 import { StyledGroups } from "./GroupTypes/Groups.styled";
@@ -15,15 +15,11 @@ import Spinner from "../../components/Spinner/Spinner";
 import { StyledSharedContainer } from "./SharedContainer.styled";
 import Separator from "../../components/Separator/Separator";
 import VerticalSeparator from "../../components/VerticalSeparator/VerticalSeparator";
-import { useGetGroupsTotalAmounts } from "@/api/auth/QueryHooks/useGetGroupsTotalAmounts";
 import GroupSearchBarAnimation from "../../components/Animations/GroupSearchBarAnimation";
 import useDebounce from "@/hooks/useDebounce";
 import NoGroupsFound from "./NoGroupsFound/NoGroupsFound";
 import OptionsButtons from "./OptionsButtons/OptionsButtons";
-import { useDebts } from "@/api/auth/QueryHooks/useDebts";
-import { groupTransactions } from "@/helpers/groupTransactions";
-import getAllDebtsParticipants from "@/helpers/getAllDebtsParticipants";
-import { UserInfo } from "@/types";
+import { TransactionType, UserInfo } from "@/types";
 import { computeNetPerCurrency } from "@/helpers/computeNetPerCurrency";
 import { useGroupsList } from "./hooks/useGroupList";
 import { useNonGroupDebts } from "./hooks/useNonGroupDebts";
@@ -64,7 +60,7 @@ const {
 const {
   groupedTransactions,
   isFetchingDebts,
-} = useNonGroupDebts(userInfo?.userId || "",activeGroupCatAsState);
+} = useNonGroupDebts(userInfo?.userId || "",activeGroupCatAsState.value as TransactionType);
 
 
   useEffect(() => {
