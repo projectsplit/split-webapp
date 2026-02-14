@@ -6,9 +6,8 @@ import {
 } from "../../../types";
 import { apiClient } from "../../apiClients";
 import { AxiosResponse } from "axios";
-import { DateTime } from "luxon";
-import { reformatDate } from "../../../components/SearchTransactions/helpers/reformatDate";
 import { Signal } from "@preact/signals-react";
+import { appendFilterToParams } from "../helpers/appendFilterToParams";
 
 const useGetGroupTransfers = (
   group: Group,
@@ -48,38 +47,17 @@ const getGroupTransfers = async (
   next?: string
 ): Promise<GetGroupTransfersResponse> => {
 
-  const {
-    sendersIds = [],
-    receiversIds = [],
-    freeText = "",
-    before = null,
-    after = null,
-  } = parsedFilters;
 
-  // Construct query parameters manually
-  const params = new URLSearchParams();
-  params.append("groupId", groupId);
-  params.append("pageSize", pageSize.toString());
-  if (next) params.append("next", next);
-  if (freeText) params.append("searchTerm", freeText);
+  const { sendersIds = [], receiversIds = [], ...base } = parsedFilters;
 
-  if (before === after && before !== null && after !== null) {
-
-    let beforeDate = DateTime.fromFormat(before, "dd-MM-yyyy");
-    let afterDate = DateTime.fromFormat(after, "dd-MM-yyyy");
-
-    beforeDate = beforeDate.plus({ days: 1 });
-
-    params.append("before", reformatDate(beforeDate.toFormat("dd-MM-yyyy")));
-    params.append("after", reformatDate(afterDate.toFormat("dd-MM-yyyy")));
-
-  } else {
-    if (before) params.append("before", reformatDate(before));
-    if (after) params.append("after", reformatDate(after));
-  }
-
-  sendersIds.forEach((id) => params.append("senderIds", id));
-  receiversIds.forEach((id) => params.append("receiverIds", id));
+  const params = appendFilterToParams(groupId, base, {
+    pageSize,
+    next,
+    arrayMappings: [
+      { key: "senderIds", values: sendersIds },
+      { key: "receiverIds", values: receiversIds },
+    ],
+  });
 
   const response = await apiClient.get<
     void,

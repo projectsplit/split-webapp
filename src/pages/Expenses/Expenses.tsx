@@ -89,7 +89,7 @@ const Expenses = () => {
     })) || []
   );
 
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id);
+  const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id,expenseParsedFilters);
   const totalSpent: Record<
     string,
     Record<string, number>

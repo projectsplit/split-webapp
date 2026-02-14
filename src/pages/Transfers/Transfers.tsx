@@ -101,7 +101,7 @@ const Transfers: React.FC = () => {
       : (showBottomBar.value = true);
   }, [isFetching]);
 
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id);
+  const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id, transferParsedFilters);
 
   const groupTotalReceived: Record<
     string,
