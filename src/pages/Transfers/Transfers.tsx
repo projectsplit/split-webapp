@@ -1,16 +1,8 @@
 import React, { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
-import {
-  Group,
-  TransactionType,
-  TransferParsedFilters,
-  TransferResponseItem,
-  UserInfo,
-} from "../../types";
+import { Group, TransactionType, TransferParsedFilters, TransferResponseItem, UserInfo } from "../../types";
 import { StyledTransfers } from "./Transfers.styled";
-import { BiTransfer } from "react-icons/bi";
-import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
 import { useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
 import { DateOnly } from "../../helpers/timeHelpers";
@@ -19,109 +11,48 @@ import MenuAnimationBackground from "../../components/Animations/MenuAnimationBa
 import ErrorMenuAnimation from "../../components/Animations/ErrorMenuAnimation";
 import Sentinel from "../../components/Sentinel";
 import Spinner from "../../components/Spinner/Spinner";
-import { getCurrencyValues } from "../../helpers/getTotalsByCurrency";
 import GroupTotalsByCurrencyAnimation from "../../components/Animations/GroupTotalsByCurrencyAnimation";
-import { FaMagnifyingGlass } from "react-icons/fa6";
-import { renderTransferFilterPills } from "../../helpers/renderTransferFilterPills";
 import getAllTransfersParticipants from "@/helpers/getAllTransfersParticipants";
 import { useGetAllNonGroupUsers } from "@/api/auth/QueryHooks/useGetAllNonGroupUsers";
 import { useTransferList } from "./hooks/useTransferList";
-import { getFilterStorageKey } from "@/components/SearchTransactions/helpers/localStorageStringParser";
-import { useDebts } from "@/api/auth/QueryHooks/useDebts";
 import { groupBy } from "../../helpers/groupBy";
-import { totalsCalculator } from "./utilities.ts/totalsCalculator";
-
+import { NoTransfersFound } from "./NoTransfersFound/NoTransfersFound";
+import { FiltersAndBars } from "./FiltersAndBars/FiltersAndBars";
+import { useTransferTotals } from "./hooks/useTransferTotals";
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
-
-  const { userInfo, group, showBottomBar, transferParsedFilters, transactionType } =
-    useOutletContext<{
-      userInfo: UserInfo;
-      group: Group;
-      showBottomBar: Signal<boolean>;
-      transferParsedFilters: Signal<TransferParsedFilters>;
-      transactionType: TransactionType;
-    }>();
-
+  const { userInfo, group, showBottomBar, transferParsedFilters, transactionType } = useOutletContext<{ userInfo: UserInfo; group: Group; showBottomBar: Signal<boolean>; transferParsedFilters: Signal<TransferParsedFilters>; transactionType: TransactionType; }>();
+  const groupIsArchived = group?.isArchived;
   const errorMessage = useSignal<string>("");
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
   const queryClient = useQueryClient();
-
   const timeZoneId = userInfo?.timeZone;
-  const memberId = group?.members.find((x) => x.userId === userInfo?.userId)
-    ?.id!;
+  const memberId = group?.members.find((x) => x.userId === userInfo?.userId)?.id;
   const selectedTransfer = useSignal<TransferResponseItem | null>(null);
   const members = group?.members;
   const guests = group?.guests;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
-
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isFetching
-  } = useTransferList(
-    transactionType, group, transferParsedFilters, pageSize, timeZoneId
-  );
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useTransferList(transactionType, group, transferParsedFilters, pageSize, timeZoneId);
 
   const { allUsers } = useGetAllNonGroupUsers(transactionType);
   const transfers = data?.pages.flatMap((p) => p.transfers);
-  const allParticipants = getAllTransfersParticipants(
-    transfers,
-    transactionType,
-    members,
-    guests,
-    allUsers.map((u) => ({
-      id: u.userId,
-      name: u.username,
-    }))
+  const allParticipants = getAllTransfersParticipants(transfers, transactionType, members, guests, allUsers.map((u) => ({
+    id: u.userId,
+    name: u.username,
+  }))
   );
 
   useEffect(() => {
-    const transferilters = localStorage.getItem(getFilterStorageKey("transfer", group?.id))
-    if (transferilters) {
-      const paresedFilter = JSON.parse(transferilters);
-      if (paresedFilter.groupId === group?.id) {
-        transferParsedFilters.value = JSON.parse(transferilters);
-      } else {
-        localStorage.removeItem(getFilterStorageKey("transfer", group?.id));
-        queryClient.invalidateQueries({
-          queryKey: ["groupTransfers"],
-          exact: false,
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["nonGroupTransfers"],
-          exact: false,
-        });
-      }
+    if (isFetching && !isFetchingNextPage) {
+      showBottomBar.value = false;
+    } else {
+      showBottomBar.value = true;
     }
-  }, []);
+  }, [isFetching, isFetchingNextPage, showBottomBar]);
 
-  const groupIsArchived = group?.isArchived;
-  useEffect(() => {
-    isFetching && !isFetchingNextPage
-      ? (showBottomBar.value = false)
-      : (showBottomBar.value = true);
-  }, [isFetching]);
-
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id, transferParsedFilters);
-
-  const groupTotalReceived: Record<
-    string,
-    Record<string, number>
-  > = debts?.totalReceived ?? {};
-  const groupTotalSent: Record<
-    string,
-    Record<string, number>
-  > = debts?.totalSent ?? {};
-
-  const userTotalSentByCurr = transactionType === "Group" ? getCurrencyValues(groupTotalSent, userMemberId) : getCurrencyValues(groupTotalSent, userInfo?.userId);
-  const userTotalReceivedByCurr = transactionType === "Group" ? getCurrencyValues(groupTotalReceived, userMemberId) : getCurrencyValues(groupTotalReceived, userInfo?.userId);
-
-  const { usertotalReceived, usertotalSent, shouldOpenMultiCurrencyTable } = totalsCalculator(debts, transactionType, userMemberId, group, userInfo);
+  const { userTotalSentByCurr, userTotalReceivedByCurr } = useTransferTotals(group, transactionType, userInfo, userMemberId, transferParsedFilters);
 
   if (isFetching && !isFetchingNextPage) {
     return (
@@ -131,78 +62,28 @@ const Transfers: React.FC = () => {
     );
   }
 
-  const hasAnySearchParams =
-    !!transferParsedFilters.value.before ||
-    !!transferParsedFilters.value.after ||
-    (transferParsedFilters.value.freeText !== "" &&
-      transferParsedFilters.value.freeText !== undefined) ||
-    (transferParsedFilters.value.sendersIds !== undefined &&
-      transferParsedFilters.value.sendersIds.length > 0) ||
-    (transferParsedFilters.value.receiversIds !== undefined &&
-      transferParsedFilters.value.receiversIds.length > 0);
-
   return (
     <StyledTransfers>
       {!transfers || transfers.length === 0 ? (
-        hasAnySearchParams ? (
-          <div className="noFilteredData">
-            <div className="pills">
-              {" "}
-              {renderTransferFilterPills(
-                transferParsedFilters,
-                allParticipants,
-                group,
-                queryClient
-              )}
-            </div>
-            <div className="textAndIcon">
-              <span className="text">
-                No transfers found. Have a go and refine your search!{" "}
-              </span>
-              <span className="emoji">🧐</span>
-              <FaMagnifyingGlass className="icon" />
-            </div>
-            <div />
-          </div>
-        ) : (
-          <div className="noData">
-            <div className="msg">There are currently no transfers</div>
-            <BiTransfer className="icon" />
-          </div>
-        )
+        <NoTransfersFound
+          transferParsedFilters={transferParsedFilters}
+          allParticipants={allParticipants}
+          group={group}
+          queryClient={queryClient}
+        />
       ) : (
         <>
-          {totalsAreFetching ? (
-            <div className="spinnerTotals">
-              <Spinner />
-            </div>
-          ) : (
-            <div className="filtersAndBars">
-              <div className="pills">
-                {" "}
-                {renderTransferFilterPills(
-                  transferParsedFilters,
-                  allParticipants,
-                  group,
-                  queryClient
-                )}
-              </div>
-              <BarsWithLegends
-                bar1Legend="Total Sent"
-                bar2Legend="Total Received"
-                bar1Total={usertotalSent || 0}
-                bar2Total={usertotalReceived || 0}
-                currency={group?.currency || userInfo?.currency}
-                bar1Color="#0CA0A0"
-                bar2Color="#D79244"
-                onClick={() => {
-                  if (shouldOpenMultiCurrencyTable) {
-                    menu.value = "epensesByCurrency";
-                  } else null;
-                }}
-              />
-            </div>
-          )}
+          <FiltersAndBars
+            transferParsedFilters={transferParsedFilters}
+            allParticipants={allParticipants}
+            group={group}
+            queryClient={queryClient}
+            userInfo={userInfo}
+            transactionType={transactionType}
+            userMemberId={userMemberId}
+            menu={menu}
+            currency={group?.currency || userInfo?.currency}
+          />
           {Object.entries(
             groupBy(transfers, (x) => DateOnly(x.occurred, timeZoneId))
           ).map(([date, transfers]) => (
@@ -243,7 +124,6 @@ const Transfers: React.FC = () => {
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
       />
-
       {selectedTransfer.value && (
         <DetailedTransfer
           selectedTransfer={selectedTransfer}
