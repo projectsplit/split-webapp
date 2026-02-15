@@ -136,7 +136,7 @@ export interface TransferProps {
 
 export interface DateTimePickerProps {
   selectedDateTime: string;
-  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedDateTime: (value: string | ((prev: string) => string)) => void
   realtimeUpdate?: boolean;
   setRealtimeUpdate?: React.Dispatch<React.SetStateAction<boolean>>;
   showTimeControls: boolean;
@@ -151,7 +151,7 @@ export interface DateTimePickerProps {
 
 export interface DateTimeProps {
   selectedDateTime: string;
-  setSelectedDateTime: (value: string | ((prev: string) => string)) => void;
+  setSelectedDateTime: (value: string | ((prev: string) => string)) => void
   timeZoneId: string;
   isEdit: boolean;
   withLexicalContext?: boolean;
@@ -190,7 +190,7 @@ export interface MemberPickerProps {
 
 export interface DayPickerProps {
   selectedDateTime: string;
-  setSelectedDateTime: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedDateTime: (value: string | ((prev: string) => string)) => void
   timeZoneId: string;
   datePeriodClicked?: Signal<string>;
   calendarIsOpen?: Signal<boolean>;
@@ -1352,8 +1352,8 @@ export interface SendMenuWrapperInterface {
   sortedMembers: ReadonlySignal<(Member | Guest)[]>;
   id: string;
   userMemberId: string | undefined;
-  setId: (value: React.SetStateAction<string>) => void;
-  setShowIdError: (value: React.SetStateAction<boolean>) => void;
+  setId: (id: string) => void
+  setShowIdError: (val: boolean) => void;
 }
 
 

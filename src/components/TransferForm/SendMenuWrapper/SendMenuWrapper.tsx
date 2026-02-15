@@ -36,7 +36,7 @@ const SendMenuWrapper = ({
                 color: id === m.id ? "#26272B" : "",
               }}
               onClick={() => {
-                setId((prev) => (prev === m.id ? "" : m.id));
+                setId(m.id);
                 setShowIdError(false);
               }}
             >

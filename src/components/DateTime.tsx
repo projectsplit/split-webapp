@@ -33,7 +33,6 @@ export const DateTime = ({
             minute: now.minute,
             second: now.second,
           });
-
           return toUtcString(updatedDateTime);
         });
       }, 1000);
@@ -62,7 +61,7 @@ export const DateTime = ({
 
   return (
     <StyledDateTime ref={ref}>
-      <div className="main" onClick={(_) => {setShowPicker(!showPicker), isDateShowing.value=true}}>
+      <div className="main" onClick={(_) => { setShowPicker(!showPicker), isDateShowing.value = true }}>
         <FaCalendar className="calendarIcon" />
       </div>
       {showPicker && (

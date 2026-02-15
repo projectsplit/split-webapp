@@ -2,7 +2,7 @@ import { IoClose } from "react-icons/io5";
 import { TransferFormProps } from "../../interfaces";
 import { StyledTransferForm } from "./TransferForm.styled";
 import InputMonetary from "../InputMonetary/InputMonetary";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { signal, useComputed, useSignal } from "@preact/signals-react";
 import { handleInputChange } from "../../helpers/handleInputChange";
 import { amountIsValid } from "../../helpers/amountIsValid";
@@ -19,7 +19,7 @@ import { TiGroup } from "react-icons/ti";
 import { SelectedGroup } from "../Menus/NonGroupUsersMenus/SelectionLists/SelectedGroup";
 import { useCreateGroupTransfer } from "@/api/auth/CommandHooks/useCreateGroupTransfer";
 import { useCreateNonGroupTransfer } from "@/api/auth/CommandHooks/useCreateNonGroupTransfer";
-
+import { useTransferActions, useTransferData } from "./hooks/useTransferFormStore";
 
 export default function TransferForm({
   groupMembers,
@@ -33,42 +33,25 @@ export default function TransferForm({
   nonGroupMenu,
   fromHome,
 }: TransferFormProps) {
-  const [currencySymbol, setCurrencySymbol] = useState<string>(currency);
+
+  const { userInfo } = useOutletContext<{ userInfo: UserInfo; }>();
   const isSubmitting = useSignal<boolean>(false);
   const navigate = useNavigate();
   const displayedAmount = useSignal<string>("");
-  const [amount, setAmount] = useState<string>("");
   const currencyMenu = useSignal<string | null>(null);
-  const [showAmountError, setShowAmountError] = useState<boolean>(false);
-  const [showIdError, setShowIdError] = useState<boolean>(false);
-  const [idError, setIdError] = useState<{
-    isSenderError: boolean;
-    isReceiverError: boolean;
-    error: string;
-  }>({ isSenderError: false, isReceiverError: false, error: "" });
-  const [amountError, setAmountError] = useState<string>("");
-  const [userSelectionError, setUserSelectionError] = useState<{
-    recipientError: string;
-    isSameUserError: string;
-  }>({ recipientError: "", isSameUserError: "" });
-  const [description, setDescription] = useState<string>("");
-  const { userInfo } = useOutletContext<{
-    userInfo: UserInfo;
-  }>();
-  const [transferTime, setTransferTime] = useState<string>(
-    new Date().toISOString()
-  );
-  const [senderId, setSenderId] = useState<string>(isnonGroupTransfer?.value ? userInfo?.userId : "");
-  const [receiverId, setReceiverId] = useState<string>("");
-  const [showPicker, setShowPicker] = useState<boolean>(false);
-  const [showSamePersonError, setShowSamePersonError] =
-    useState<boolean>(false);
   const isDateShowing = useSignal<boolean>(false);
 
+  const data = useTransferData();
+  const actions = useTransferActions();
+
+  useEffect(() => {
+    actions.initForm(currency, userInfo?.userId, !!isnonGroupTransfer?.value);
+  }, []);
+
   const handleInputBlur = useCallback(() => {
-    setShowAmountError(true);
-    amountIsValid(amount, setAmountError);
-  }, [amount, setShowAmountError, setAmountError]);
+    actions.setError('showAmountError', true);
+    amountIsValid(data.amount, (err) => actions.setError('amountError', err));
+  }, [data.amount, actions]);
 
   const userMembers = groupMembers?.value.filter(
     (item): item is Member => "userId" in item
@@ -108,62 +91,57 @@ export default function TransferForm({
     ? isNonGroupTransferPending
     : isGroupTransferPending;
 
-  const handldeCurrencyOptionsClick = useCallback(
+  const handleCurrencyOptionsClick = useCallback(
     (curr: string) => {
-      setCurrencySymbol(curr);
+      actions.setCurrencySymbol(curr);
       currencyMenu.value = null;
-      setAmount("");
+      actions.setAmount("");
       displayedAmount.value = "";
     },
-    [currencyMenu]
+    [actions, currencyMenu]
   );
 
 
   const submitTransfer = useCallback(() => {
+    actions.setError('showAmountError', true);
+    actions.setError('showIdError', true);
 
-    setShowAmountError(true);
-
-    setShowIdError(true);
     if (noReceiverSelected) {
-      setUserSelectionError({
-        ...userSelectionError,
-        recipientError: "Select a recipient",
-      });
+      actions.setError('recipientError', "Select a recipient");
     }
     if (isSamePerson) {
-      setUserSelectionError({
-        ...userSelectionError,
-        isSameUserError: "Sender and receiver cannot be the same person",
-      });
-      setShowSamePersonError(true);
+      actions.setError('isSameUserError', "Sender and receiver cannot be the same person");
+      actions.setError('showSamePersonError', true);
     }
 
-    if (!amountIsValid(amount, setAmountError)) return;
+    if (!amountIsValid(data.amount, (err) => actions.setError('amountError', err))) return;
 
-    if (!!idError.error) return;
+    if (!!data.errors.idErrorMessage) return;
 
     let createTransferRequest: CreateTransferRequest = {
-      amount: Number(amount),
+      amount: Number(data.amount),
       groupId: groupId,
-      currency: currencySymbol,
-      receiverId: receiverId,
-      senderId: senderId,
-      occurred: transferTime,
-      description: description,
+      currency: data.currencySymbol,
+      receiverId: data.receiverId,
+      senderId: data.senderId,
+      occurred: data.transferTime,
+      description: data.description,
     };
 
     createTransferMutation(createTransferRequest);
   }, [
-    setShowAmountError,
-    setShowIdError,
-    amount,
-    idError.error,
+    actions,
+    noReceiverSelected,
+    isSamePerson,
+    data.amount,
+    data.errors.idErrorMessage,
+    data.currencySymbol,
+    data.receiverId,
+    data.senderId,
+    data.transferTime,
+    data.description,
     groupId,
-    currencySymbol,
-    receiverId,
-    senderId,
-    transferTime,
-    description,
+    createTransferMutation,
   ]);
 
   const sortedMembers = useComputed(() => {
@@ -178,51 +156,44 @@ export default function TransferForm({
     }
   });
 
-  // Sync senderId and receiverId from nonGroupMenu when changed
   useEffect(() => {
     if (nonGroupMenu?.value.senderId) {
-      setSenderId(nonGroupMenu.value.senderId);
+      actions.setSenderId(nonGroupMenu.value.senderId);
     }
     if (nonGroupMenu?.value.receiverId) {
-      setReceiverId(nonGroupMenu.value.receiverId);
+      actions.setReceiverId(nonGroupMenu.value.receiverId);
     }
-  }, [nonGroupMenu?.value.senderId, nonGroupMenu?.value.receiverId]);
+  }, [nonGroupMenu?.value.senderId, nonGroupMenu?.value.receiverId, actions]);
 
   useEffect(() => {
-    if (senderId === receiverId && senderId !== "") {
-      setIdError({
-        isReceiverError: true,
-        isSenderError: true,
-        error: "Sender and receiver cannot be the same person",
-      });
-    } else if (senderId === "" && receiverId !== "") {
-      setIdError({
-        isReceiverError: false,
-        isSenderError: true,
-        error: "Select a sender",
-      });
-    } else if (receiverId === "" && senderId !== "") {
-      setIdError({
-        isReceiverError: true,
-        isSenderError: false,
-        error: "Select a receiver",
-      });
-    } else if (senderId === "" && receiverId === "") {
-      setIdError({
-        isReceiverError: true,
-        isSenderError: true,
-        error: "Select a sender and a receiver",
-      });
+    if (isnonGroupTransfer?.value && !data.senderId && userInfo?.userId) return;
+    if (data.senderId === data.receiverId && data.senderId !== "") {
+      actions.setError('isReceiverError', true);
+      actions.setError('isSenderError', true);
+      actions.setError('idErrorMessage', "Sender and receiver cannot be the same person");
+    } else if (data.senderId === "" && data.receiverId === "") {
+      actions.setError('idErrorMessage', "Select a sender and a receiver");
+      actions.setError('isReceiverError', true);
+      actions.setError('isSenderError', true);
     } else {
-      setIdError({ isSenderError: false, isReceiverError: false, error: "" });
+
+      actions.setError('idErrorMessage', "");
+      actions.setError('isReceiverError', false);
+      actions.setError('isSenderError', false);
     }
-  }, [senderId, receiverId]);
+  }, [data.senderId, data.receiverId]);
+
+  const idError = useMemo(() => ({
+    isSenderError: data.errors.isSenderError,
+    isReceiverError: data.errors.isReceiverError,
+    error: data.errors.idErrorMessage
+  }), [data.errors.isSenderError, data.errors.isReceiverError, data.errors.idErrorMessage]);
 
   return (
     <StyledTransferForm
-      $inputError={showIdError}
+      $inputError={data.errors.showIdError}
       $noReceiverSelected={noReceiverSelected}
-      $isSamePersonError={showSamePersonError}
+      $isSamePersonError={data.errors.showSamePersonError}
     >
       {" "}
       <div className="header">
@@ -240,18 +211,19 @@ export default function TransferForm({
           currencyMenu={currencyMenu}
           value={displayedAmount.value}
           onChange={(e) => {
-            handleInputChange(e, currencySymbol, displayedAmount, setAmount);
-            setShowAmountError(false);
-            setShowSamePersonError(false);
-            setUserSelectionError({ isSameUserError: "", recipientError: "" });
+            handleInputChange(e, data.currencySymbol, displayedAmount, actions.setAmount);
+            actions.setError('showAmountError', false);
+            actions.setError('showSamePersonError', false);
+            actions.setError('isSameUserError', "");
+            actions.setError('recipientError', "");
           }}
           onBlur={handleInputBlur}
-          currency={currencySymbol}
+          currency={data.currencySymbol}
           autoFocus={true}
-          $inputError={showAmountError && !!amountError}
+          $inputError={data.errors.showAmountError && !!data.errors.amountError}
         />
         <span className="errorMsg">
-          {showAmountError && amountError ? amountError : ""}
+          {data.errors.showAmountError && data.errors.amountError ? data.errors.amountError : ""}
         </span>
       </div>
       {isnonGroupTransfer &&
@@ -270,12 +242,10 @@ export default function TransferForm({
                     attribute: "sender",
                     menu: "nonGroupTransfer",
                   };
-                  setShowSamePersonError(false);
-                  setUserSelectionError({
-                    ...userSelectionError,
-                    isSameUserError: "",
-                  });
-                  setShowIdError(false);
+                  // setShowSamePersonError(false);
+                  actions.setError('showSamePersonError', false);
+                  actions.setError('isSameUserError', "");
+                  actions.setError('showIdError', false);
                 }}
               >
                 {nonGroupMenu.value.senderName}
@@ -291,12 +261,9 @@ export default function TransferForm({
                     attribute: "receiver",
                     menu: "nonGroupTransfer",
                   };
-                  setShowSamePersonError(false);
-                  setUserSelectionError({
-                    ...userSelectionError,
-                    isSameUserError: "",
-                  });
-                  setShowIdError(false);
+                  actions.setError('showSamePersonError', false);
+                  actions.setError('isSameUserError', "");
+                  actions.setError('showIdError', false);
                 }}
               >
                 {nonGroupMenu.value.receiverName === ""
@@ -306,22 +273,22 @@ export default function TransferForm({
             </div>
           </div>
           <span className="errorMsg">
-            {showAmountError &&
-              userSelectionError.recipientError &&
+            {data.errors.showAmountError &&
+              data.errors.recipientError &&
               noReceiverSelected
-              ? userSelectionError.recipientError
+              ? data.errors.recipientError
               : ""}
-            {showAmountError && userSelectionError.isSameUserError
-              ? userSelectionError.isSameUserError
+            {data.errors.showAmountError && data.errors.isSameUserError
+              ? data.errors.isSameUserError
               : ""}
-            {showIdError && idError.error ? idError.error : ""}
+            {data.errors.showIdError && data.errors.idErrorMessage ? data.errors.idErrorMessage : ""}
           </span>
           {fromHome && <div className="buttonWrapper">
             <div
               className="groupButton"
               onClick={() => {
-                setShowAmountError(false);
-                setShowIdError(false);
+                actions.setError('showAmountError', false);
+                actions.setError('showIdError', false);
                 nonGroupMenu.value = {
                   ...nonGroupMenu.value,
                   attribute: "groups",
@@ -351,21 +318,21 @@ export default function TransferForm({
           <SendMenuWrapper
             title="Sender"
             idError={idError}
-            id={senderId}
-            setId={setSenderId}
-            setShowIdError={setShowIdError}
+            id={data.senderId}
+            setId={actions.setSenderId}
+            setShowIdError={(val: boolean) => actions.setError('showIdError', val)}
             userMemberId={userMemberId}
-            showIdError={showIdError}
+            showIdError={data.errors.showIdError}
             sortedMembers={sortedMembers}
           />
           <SendMenuWrapper
             title="Receiver"
             idError={idError}
-            id={receiverId}
-            setId={setReceiverId}
-            setShowIdError={setShowIdError}
+            id={data.receiverId}
+            setId={actions.setReceiverId}
+            setShowIdError={(val: boolean) => actions.setError('showIdError', val)}
             userMemberId={userMemberId}
-            showIdError={showIdError}
+            showIdError={data.errors.showIdError}
             sortedMembers={sortedMembers}
           />
         </div>
@@ -373,16 +340,16 @@ export default function TransferForm({
       <FormInput
         description=""
         placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        value={data.description}
+        onChange={(e) => actions.setDescription(e.target.value)}
       />
       {isDateShowing.value && (
         <DateDisplay
-          selectedDateTime={transferTime}
+          selectedDateTime={data.transferTime}
           timeZoneId={timeZoneId}
-          setTime={setTransferTime}
+          setTime={actions.setTransferTime}
           isDateShowing={isDateShowing}
-          setShowPicker={setShowPicker}
+          setShowPicker={actions.setShowPicker}
         />
       )}
       <div className="spacer"></div>
@@ -398,21 +365,21 @@ export default function TransferForm({
         </div>
 
         <DateTime
-          selectedDateTime={transferTime}
-          setSelectedDateTime={setTransferTime}
+          selectedDateTime={data.transferTime}
+          setSelectedDateTime={actions.setTransferTime}
           timeZoneId={timeZoneId}
           isEdit={false}
           category={signal("Transfers")}
           isDateShowing={isDateShowing}
-          showPicker={showPicker}
-          setShowPicker={setShowPicker}
+          showPicker={data.showPicker}
+          setShowPicker={actions.setShowPicker}
         />
       </div>
       <MenuAnimationBackground menu={currencyMenu} />
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
-        clickHandler={handldeCurrencyOptionsClick}
-        selectedCurrency={currencySymbol}
+        clickHandler={handleCurrencyOptionsClick}
+        selectedCurrency={data.currencySymbol}
       />
     </StyledTransferForm>
   );
