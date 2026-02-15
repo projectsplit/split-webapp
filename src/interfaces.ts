@@ -1006,7 +1006,6 @@ export interface LexicalEditorProps {
   expenseFilterState: Signal<CreateExpenseFilterRequest>;
   transferFilterState: Signal<CreateTransferFilterRequest>;
   setEditorState: React.Dispatch<React.SetStateAction<EditorState | null>>;
-  contentEditableHeight: number;
   people: FetchedPeople | undefined;
   cancelled: Signal<boolean>;
   filteredPeople: Signal<FilteredPeople>;

@@ -126,6 +126,7 @@ export const renderTransferFilterPills = (
 
   // Handle participantsIds
   if (sendersIds && sendersIds?.length > 0) {
+
     sendersIds?.forEach((id, index) => {
       const participant = allParticipants.find((p) => p.id === id);
       const participantName = participant?.name || id;

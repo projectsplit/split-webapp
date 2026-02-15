@@ -14,7 +14,6 @@ export default function getAllTransfersParticipants(
 
   const nonGroupUserMap = new Map<string, string>();
   nonGroupUsers.forEach((u) => nonGroupUserMap.set(u.id, u.name));
-
   const uniqueUserIds = new Set<string>();
 
   if (transfers) {
@@ -28,10 +27,22 @@ export default function getAllTransfersParticipants(
     }
   }
 
+  if(uniqueUserIds.size === 0){
+    
+    return nonGroupUsers.map(u => u.id)
+    .filter((id) => nonGroupUserMap.has(id))
+    .map((id) => ({
+      id,
+      name: nonGroupUserMap.get(id)!,
+    }));
+
+  }
+
   return Array.from(uniqueUserIds)
     .filter((id) => nonGroupUserMap.has(id))
     .map((id) => ({
       id,
       name: nonGroupUserMap.get(id)!,
     }));
+
 }

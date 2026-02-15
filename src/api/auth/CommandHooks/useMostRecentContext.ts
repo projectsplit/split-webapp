@@ -29,7 +29,6 @@ export const useMostRecentContext = () => {
 const updateMostRecentContext = async (
   req: UpdateMostRecentContextRequest
 ): Promise<void> => {
-  console.log(req);
   const response = await apiClient.put<void, AxiosResponse<void>>(
     "/users/activity/recent-context",
     req

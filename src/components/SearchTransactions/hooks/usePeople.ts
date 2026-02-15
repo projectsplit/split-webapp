@@ -2,20 +2,21 @@ import { useMemo } from "react";
 import {
   EnhancedPeopleWithProps,
   FetchedPeople,
-  Guest,
-  Member,
-  User,
+  Group,
+  UserInfo,
 } from "../../../types";
+import { useGetAllNonGroupUsers } from "@/api/auth/QueryHooks/useGetAllNonGroupUsers";
 
 export const usePeople = (
-  group: { guests: Guest[]; members: Member[] } | null,
-  userInfo: { userId: string } | undefined,
-  nonGroupUsers?: User[]
+  group: Group | null,
+  userInfo: UserInfo | undefined
 ) => {
-  if (!userInfo) return { fetchedPeople: [], enhancedPeopleWithProps: [] };
-  const memberProps: string[] = ["participant", "payer", "sender", "receiver"];
+  const { allUsers } = useGetAllNonGroupUsers(group?.id ? "Group" : "NonGroup");
 
   const { fetchedPeople, enhancedPeopleWithProps } = useMemo(() => {
+    if (!userInfo) return { fetchedPeople: [], enhancedPeopleWithProps: [] };
+
+    const memberProps: string[] = ["participant", "payer", "sender", "receiver"];
     let allMembers: { id: string; name: string }[] = [];
     let isUserCheck: (m: { id: string }) => boolean = () => false;
 
@@ -24,8 +25,8 @@ export const usePeople = (
       isUserCheck = (m) =>
         group.members?.find((gm) => gm.userId === userInfo?.userId)?.id ===
         m.id;
-    } else if (nonGroupUsers) {
-      allMembers = nonGroupUsers.map((u) => ({
+    } else {
+      allMembers = allUsers.map((u) => ({
         id: u.userId,
         name: u.username,
       }));
@@ -47,7 +48,7 @@ export const usePeople = (
       );
 
     return { fetchedPeople, enhancedPeopleWithProps };
-  }, [group, nonGroupUsers, userInfo]);
+  }, [group, allUsers, userInfo]);
 
-  return { fetchedPeople, enhancedPeopleWithProps };
+  return { fetchedPeople, enhancedPeopleWithProps, allUsers };
 };

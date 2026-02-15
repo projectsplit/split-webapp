@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   StyledSearchTransactions,
 } from "./SearchTransactions.styled";
@@ -6,30 +6,20 @@ import { IoClose } from "react-icons/io5";
 import { EditorState } from "lexical";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
-import { useSignal } from "@preact/signals-react";
 import { EditorContent } from "./EditorContent/EditorContent";
 import { handleSubmitButton } from "./helpers/handleSubmitButton";
 import { handleCancelClick } from "./helpers/handleCancelClick";
-import { initializeFilterState } from "./helpers/initializeFilterState";
 import { initialConfig } from "./utils/lexicalThemeConfiguration";
 import { EditorContentHandle, SearchTransactionsProps } from "../../interfaces";
 import {
-  CreateExpenseFilterRequest,
-  CreateTransferFilterRequest,
   FetchedLabel,
-  FilteredPeople,
 } from "../../types";
 import MyButton from "../MyButton/MyButton";
-
 import { CategorySelector } from "../CategorySelector/CategorySelector";
 import {
-  getFilterStorageKey,
-  localStorageStringParser,
 } from "./helpers/localStorageStringParser";
 import { usePeople } from "./hooks/usePeople";
-import { useGetNonGroupExpensesUsers } from "@/api/auth/QueryHooks/useGetNonGroupExpensesUsers";
-
+import { useSearchFilters } from "./hooks/useSearchFilters";
 
 export default function SearchTransactions({
   menu,
@@ -41,75 +31,26 @@ export default function SearchTransactions({
   // nonGroupUsers
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
-  const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
-  // const submitFiltersError = useSignal<string>("");
-  const contentEditableWrapRef = useRef<HTMLDivElement>(null);
-  const submitButtonIsActive = useSignal<boolean>(false);
-  const cancelled = useSignal<boolean>(false);
-  const path = location.pathname.split("/").pop() || "";
-  const category = useSignal<string>("expenses");
   const queryClient = useQueryClient();
-  const searchKeyword = useSignal<string>("");
 
-  const expenseFilterState = useSignal<CreateExpenseFilterRequest>({
-    groupId: group?.id || "",
-    participantsIds: [],
-    payersIds: [],
-    freeText: "",
-    before: [],
-    during: [],
-    after: [],
-    labels: [],
-  });
-
-  const transferFilterState = useSignal<CreateTransferFilterRequest>({
-    groupId: group?.id || "",
-    receiversIds: [],
-    sendersIds: [],
-    freeText: "",
-    before: [],
-    during: [],
-    after: [],
-  });
-
-  const filteredPeople = useSignal<FilteredPeople>({
-    payers: [],
-    participants: [],
-    senders: [],
-    receivers: [],
-  });
-
-  const filteredLabels = useSignal<FetchedLabel[]>([]);
-
-  const editorContentRef = useRef<EditorContentHandle | null>(null);
-  const params = useParams();
-
-  const users = useGetNonGroupExpensesUsers(group?.id ? "Group" : "NonGroup")
-
-  const allUsers = useMemo(() => {
-    return users.data?.data.users || [];
-  }, [users.data]);
-
-  const { fetchedPeople, enhancedPeopleWithProps } = usePeople(
+  const { fetchedPeople, enhancedPeopleWithProps, allUsers } = usePeople(
     group,
-    userInfo,
-    allUsers
+    userInfo
   );
 
-  const fetchedLabels: FetchedLabel[] = group?.labels.map((l) => ({
-    id: l.id,
-    value: l.text,
-    color: l.color,
-    prop: "category",
-  })) || [];
+  const {
+    category,
+    expenseFilterState,
+    transferFilterState,
+    filteredPeople,
+    filteredLabels,
+    submitButtonIsActive,
+    cancelled,
+    searchKeyword,
+    path,
+  } = useSearchFilters(group, allUsers);
 
-  useEffect(() => {
-    if (path === "debts") {
-      category.value = "expenses";
-    } else {
-      category.value = path;
-    }
-  }, [path]);
+  const editorContentRef = useRef<EditorContentHandle | null>(null);
 
   useEffect(() => {
     const handleBackNavigation = () => {
@@ -123,57 +64,12 @@ export default function SearchTransactions({
     };
   }, [menu]);
 
-
-  const { expenseFilter, transferFilter } = useMemo(() => {
-    return localStorageStringParser(
-      localStorage.getItem(getFilterStorageKey("expense", group?.id)),
-      localStorage.getItem(getFilterStorageKey("transfer", group?.id))
-    );
-  }, [
-    localStorage.getItem(getFilterStorageKey("expense", group?.id)),
-    localStorage.getItem(getFilterStorageKey("transfer", group?.id)),
-    group?.id,
-  ]);
-
-  useEffect(() => {
-    initializeFilterState(
-      expenseFilter,
-      transferFilter,
-      params,
-      expenseFilterState,
-      transferFilterState,
-      filteredPeople,
-      filteredLabels,
-      group,
-      allUsers
-    );
-  }, [expenseFilter, transferFilter, params.groupid, cancelled.value, allUsers]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if ((category.value = "expenses")) {
-        expenseFilterState.value.groupId = params.groupid as string || "";
-        if (contentEditableWrapRef.current) {
-          setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
-        }
-      } else {
-        transferFilterState.value.groupId = params.groupid as string || "";
-        if (contentEditableWrapRef.current) {
-          setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
-        }
-      }
-    };
-    const resizeObserver = new ResizeObserver(handleResize);
-    if (contentEditableWrapRef.current) {
-      resizeObserver.observe(contentEditableWrapRef.current);
-    }
-
-    return () => {
-      if (contentEditableWrapRef.current) {
-        resizeObserver.unobserve(contentEditableWrapRef.current);
-      }
-    };
-  }, []);
+  const fetchedLabels: FetchedLabel[] = group?.labels.map((l) => ({
+    id: l.id,
+    value: l.text,
+    color: l.color,
+    prop: "category",
+  })) || [];
 
   return (
     <StyledSearchTransactions>
@@ -205,7 +101,6 @@ export default function SearchTransactions({
               <EditorContent
                 searchKeyword={searchKeyword}
                 ref={editorContentRef}
-                contentEditableHeight={contentEditableHeight}
                 enhancedPeopleWithProps={enhancedPeopleWithProps}
                 submitButtonIsActive={submitButtonIsActive}
                 expenseFilterState={expenseFilterState}

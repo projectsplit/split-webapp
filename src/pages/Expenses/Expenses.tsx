@@ -33,7 +33,7 @@ import {
 } from "../../helpers/getExpenseType";
 import { useExpenseList } from "./hooks/useExpenseList";
 import { getFilterStorageKey } from "@/components/SearchTransactions/helpers/localStorageStringParser";
-import { useGetNonGroupExpensesUsers } from "@/api/auth/QueryHooks/useGetNonGroupExpensesUsers";
+import { useGetAllNonGroupUsers } from "@/api/auth/QueryHooks/useGetAllNonGroupUsers";
 import getAllExpenseParticipants from "@/helpers/getAllExpenseParticipants";
 import { useDebts } from "@/api/auth/QueryHooks/useDebts";
 import { groupBy } from "../../helpers/groupBy";
@@ -75,7 +75,7 @@ const Expenses = () => {
     timeZoneId
   );
 
-  const { data: nonGroupUsersData } = useGetNonGroupExpensesUsers(transactionType);
+  const { allUsers } = useGetAllNonGroupUsers(transactionType);
   const expenses = data?.pages.flatMap((p) => p.expenses);
 
   const allParticipants = getAllExpenseParticipants(
@@ -83,13 +83,13 @@ const Expenses = () => {
     transactionType,
     group?.members || [],
     group?.guests || [],
-    nonGroupUsersData?.data.users.map((u) => ({
+    allUsers.map((u) => ({
       id: u.userId,
       name: u.username,
-    })) || []
+    }))
   );
 
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id,expenseParsedFilters);
+  const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id, expenseParsedFilters);
   const totalSpent: Record<
     string,
     Record<string, number>
@@ -100,6 +100,7 @@ const Expenses = () => {
 
   const shouldOpenMultiCurrencyTable =
     Object.keys(groupTotalsByCurrency).length > 1;
+
 
   useEffect(() => {
     const expenseFilters = localStorage.getItem(getFilterStorageKey("expense", group?.id));

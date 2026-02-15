@@ -24,8 +24,8 @@ export const totalsCalculator = (debts: DebtsResponse | undefined, transactionTy
       ? groupTotalReceived[userMemberId]?.[group.currency] ?? 0
       : 0;
   } else {
-    usertotalReceived = userInfo.userId && userInfo.currency
-      ? groupTotalReceived[userInfo.userId]?.[userInfo.currency] ?? 0
+    usertotalReceived = userInfo?.userId && userInfo?.currency
+      ? groupTotalReceived[userInfo?.userId]?.[userInfo?.currency] ?? 0
       : 0;
   }
 
@@ -36,8 +36,8 @@ export const totalsCalculator = (debts: DebtsResponse | undefined, transactionTy
         : 0;
   } else {
     usertotalSent =
-      userInfo.userId && userInfo.currency
-        ? groupTotalSent[userInfo.userId]?.[userInfo.currency] ?? 0
+      userInfo?.userId && userInfo?.currency
+        ? groupTotalSent[userInfo?.userId]?.[userInfo?.currency] ?? 0
         : 0;
   }
 

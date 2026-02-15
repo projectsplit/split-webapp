@@ -24,7 +24,7 @@ import GroupTotalsByCurrencyAnimation from "../../components/Animations/GroupTot
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { renderTransferFilterPills } from "../../helpers/renderTransferFilterPills";
 import getAllTransfersParticipants from "@/helpers/getAllTransfersParticipants";
-import { useGetNonGroupTransferUsers } from "@/api/auth/QueryHooks/useGetNonGroupTransfersUsers";
+import { useGetAllNonGroupUsers } from "@/api/auth/QueryHooks/useGetAllNonGroupUsers";
 import { useTransferList } from "./hooks/useTransferList";
 import { getFilterStorageKey } from "@/components/SearchTransactions/helpers/localStorageStringParser";
 import { useDebts } from "@/api/auth/QueryHooks/useDebts";
@@ -67,12 +67,18 @@ const Transfers: React.FC = () => {
     transactionType, group, transferParsedFilters, pageSize, timeZoneId
   );
 
-  const { data: nonGroupUsersData } = useGetNonGroupTransferUsers(transactionType);
+  const { allUsers } = useGetAllNonGroupUsers(transactionType);
   const transfers = data?.pages.flatMap((p) => p.transfers);
-  const allParticipants = getAllTransfersParticipants(transfers, transactionType, members, guests, nonGroupUsersData?.data.users.map((u) => ({
-    id: u.userId,
-    name: u.username,
-  })) || [])
+  const allParticipants = getAllTransfersParticipants(
+    transfers,
+    transactionType,
+    members,
+    guests,
+    allUsers.map((u) => ({
+      id: u.userId,
+      name: u.username,
+    }))
+  );
 
   useEffect(() => {
     const transferilters = localStorage.getItem(getFilterStorageKey("transfer", group?.id))

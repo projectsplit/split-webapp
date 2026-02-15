@@ -10,7 +10,7 @@ import { Menu } from "../Menu/Menu";
 import MentionsToolbar from "../Toolbars/MentionsToolbar";
 import OptionsToolBar from "../Toolbars/OptionsToolbar/OptionsToolBar";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
-import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { CLEAR_EDITOR_COMMAND } from "lexical";
 import { useSignal } from "@preact/signals-react";
@@ -30,7 +30,7 @@ export const EditorContent = forwardRef<
   LexicalEditorProps
 >((props, ref) => {
   const {
-    contentEditableHeight,
+    // contentEditableHeight,
     enhancedPeopleWithProps,
     submitButtonIsActive,
     expenseFilterState,
@@ -44,12 +44,11 @@ export const EditorContent = forwardRef<
     filteredLabels,
     category,
     searchKeyword,
-
   } = props;
-
 
   const [editor] = useLexicalComposerContext();
   const [isEmpty, setIsEmpty] = useState(true);
+  const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
   const [filteredResults, setFilteredResults] = useState<
     { value: string;[key: string]: BeautifulMentionsItemData }[]
   >([]);
@@ -61,7 +60,6 @@ export const EditorContent = forwardRef<
   const removedFilter = useSignal<boolean>(false);
   const datePeriodClicked = useSignal<string>("");
   const showFreeTextPill = useSignal<boolean>(true)
-
 
   const mentionItems = useMemo(() => {
     const items: Record<string, BeautifulMentionsItem[]> = {
@@ -75,6 +73,24 @@ export const EditorContent = forwardRef<
     updateFiltersMentions(labels, items);
     return items;
   }, [people, labels]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (contentEditableWrapRef.current) {
+        setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
+      }
+    };
+    const resizeObserver = new ResizeObserver(handleResize);
+    const element = contentEditableWrapRef.current;
+    if (element) {
+      resizeObserver.observe(element);
+    }
+    return () => {
+      if (element) {
+        resizeObserver.unobserve(element);
+      }
+    };
+  }, [setContentEditableHeight]);
 
   const clearEditor = () => {
     editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);

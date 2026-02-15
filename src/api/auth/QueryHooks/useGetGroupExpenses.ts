@@ -6,10 +6,8 @@ import {
 } from "../../../types";
 import { apiClient } from "../../apiClients";
 import { AxiosResponse } from "axios";
-import { DateTime } from "luxon";
-import { reformatDate } from "../../../components/SearchTransactions/helpers/reformatDate";
 import { Signal } from "@preact/signals-react";
-import { appendFilterToParams } from "../helpers/appendFilterToParams";
+import { appendGroupFilterToParams } from "../helpers/appendGroupFilterToParams";
 
 const useGetGroupExpenses = (
   group: Group,
@@ -46,7 +44,7 @@ const getGroupExpenses = async (
 ): Promise<GetExpensesResponse> => {
   const { participantsIds = [], payersIds = [], labels = [], ...base } = parsedFilters;
 
-  const params = appendFilterToParams(groupId, base, {
+  const params = appendGroupFilterToParams(groupId, base, {
     pageSize,
     next,
     arrayMappings: [

@@ -1,25 +1,8 @@
 import { reformatDate } from "@/components/SearchTransactions/helpers/reformatDate";
 import { DateTime } from "luxon";
+import { AppendFilterOptions, BaseFilters } from "./appendGroupFilterToParams";
 
-interface BaseFilters {
-  freeText?: string;
-  before?: string | null;
-  after?: string | null;
-}
-
-export interface ParamMapping {
-  key: string;
-  values: string[];
-}
-
-export interface AppendFilterOptions {
-  pageSize?: number;
-  next?: string;
-  arrayMappings?: ParamMapping[];
-}
-
-export const appendFilterToParams = (
-  groupId: string,
+export const appendNonGroupFilterToParams = (
   filters: BaseFilters,
   options: AppendFilterOptions = {}
 ): URLSearchParams => {
@@ -27,7 +10,6 @@ export const appendFilterToParams = (
   const { freeText, before, after } = filters;
   const params = new URLSearchParams();
 
-  params.append("groupId", groupId);
   if (pageSize) params.append("pageSize", pageSize.toString());
   if (next) params.append("next", next);
   if (freeText) params.append("searchTerm", freeText);

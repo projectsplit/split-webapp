@@ -3,7 +3,7 @@ import { DebtsResponse, ExpenseParsedFilters, TransferParsedFilters } from "../.
 import { apiClient } from "../../apiClients";
 import { AxiosResponse } from "axios";
 import { Signal } from "@preact/signals-react";
-import { appendFilterToParams } from "../helpers/appendFilterToParams";
+import { appendGroupFilterToParams } from "../helpers/appendGroupFilterToParams";
 
 
 const useGroupDebts = (
@@ -34,7 +34,7 @@ const getGroupDebts = async (
 
   const { participantsIds = [], payersIds = [], labels = [], sendersIds = [], receiversIds = [], ...base } = parsedFilters;
 
-  const params = appendFilterToParams(groupId, base, {
+  const params = appendGroupFilterToParams(groupId, base, {
     arrayMappings: [
       { key: "participantIds", values: participantsIds },
       { key: "payerIds", values: payersIds },

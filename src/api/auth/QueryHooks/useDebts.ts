@@ -4,8 +4,8 @@ import useNonGroupDebts from "./useNonGroupDebts";
 import { ExpenseParsedFilters, TransferParsedFilters } from "../../../types";
 
 export const useDebts = (groupId?: string, expenseParsedFilters?: Signal<ExpenseParsedFilters>, transferParsedFilters?: Signal<TransferParsedFilters>) => {
-  const normal = useGroupDebts(groupId,expenseParsedFilters,transferParsedFilters);
-  const nonGroup = useNonGroupDebts();
+  const normal = useGroupDebts(groupId, expenseParsedFilters, transferParsedFilters);
+  const nonGroup = useNonGroupDebts(expenseParsedFilters, transferParsedFilters);
 
   return !!groupId ? normal : nonGroup;
 };
