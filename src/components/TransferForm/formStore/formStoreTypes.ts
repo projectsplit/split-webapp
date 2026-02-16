@@ -27,6 +27,8 @@ export interface TransferState {
   setTransferTime: (value: string | ((prev: string) => string)) => void;
   setSenderId: (id: string) => void;
   setReceiverId: (id: string) => void;
+  toggleSenderId: (id: string) => void;
+  toggleReceiverId: (id: string) => void;
   setShowPicker: (show: boolean) => void;
 
   setError: (key: keyof TransferState['errors'], value: string | boolean) => void;

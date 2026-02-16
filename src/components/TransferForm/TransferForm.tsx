@@ -45,8 +45,11 @@ export default function TransferForm({
   const actions = useTransferActions();
 
   useEffect(() => {
-    actions.initForm(currency, userInfo?.userId, !!isnonGroupTransfer?.value);
-  }, []);
+    if (userInfo?.userId) {
+      console.log(userInfo.userId, !!isnonGroupTransfer?.value)
+      actions.initForm(currency, userInfo.userId, !!isnonGroupTransfer?.value);
+    }
+  }, [userInfo?.userId, currency, isnonGroupTransfer?.value]);
 
   const handleInputBlur = useCallback(() => {
     actions.setError('showAmountError', true);
@@ -319,8 +322,8 @@ export default function TransferForm({
             title="Sender"
             idError={idError}
             id={data.senderId}
-            setId={actions.setSenderId}
-            setShowIdError={(val: boolean) => actions.setError('showIdError', val)}
+            setId={actions.toggleSenderId}
+            setShowIdError={(val) => actions.setError('showIdError', val)}
             userMemberId={userMemberId}
             showIdError={data.errors.showIdError}
             sortedMembers={sortedMembers}
@@ -329,8 +332,8 @@ export default function TransferForm({
             title="Receiver"
             idError={idError}
             id={data.receiverId}
-            setId={actions.setReceiverId}
-            setShowIdError={(val: boolean) => actions.setError('showIdError', val)}
+            setId={actions.toggleReceiverId}
+            setShowIdError={(val) => actions.setError('showIdError', val)}
             userMemberId={userMemberId}
             showIdError={data.errors.showIdError}
             sortedMembers={sortedMembers}

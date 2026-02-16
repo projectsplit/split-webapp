@@ -9,6 +9,8 @@ export const useTransferActions = () => {
         setTransferTime: state.setTransferTime,
         setSenderId: state.setSenderId,
         setReceiverId: state.setReceiverId,
+        toggleSenderId: state.toggleSenderId,
+        toggleReceiverId: state.toggleReceiverId,
         setShowPicker: state.setShowPicker,
         setError: state.setError,
         resetForm: state.resetForm,

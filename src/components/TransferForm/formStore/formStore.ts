@@ -35,10 +35,12 @@ export const useTransferStore = create<TransferState>()((set, get) => ({
           ? valueOrFn(state.transferTime)
           : valueOrFn,
     })),
-  setSenderId: (id) => set((state) => ({
+  setSenderId: (id) => set({ senderId: id }),
+  setReceiverId: (id) => set({ receiverId: id }),
+  toggleSenderId: (id) => set((state) => ({
     senderId: state.senderId === id ? "" : id
   })),
-  setReceiverId: (id) => set((state) => ({
+  toggleReceiverId: (id) => set((state) => ({
     receiverId: state.receiverId === id ? "" : id
   })),
   setShowPicker: (show: boolean) => set({ showPicker: show }),
