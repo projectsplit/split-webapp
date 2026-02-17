@@ -47,7 +47,6 @@ export const useCreateNonGroupTransfer = (
 };
 
 const submitTransfer = async (req: CreateTransferRequest): Promise<void> => {
-  console.log(req)
   const response = await apiClient.post<void, AxiosResponse<void>>(
     "/transfers/create-non-group",
     req
