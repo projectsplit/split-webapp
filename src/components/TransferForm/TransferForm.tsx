@@ -36,14 +36,8 @@ export default function TransferForm({ groupMembers, nonGroupUsers, currency, ti
     }
   }, [userInfo?.userId, currency, isnonGroupTransfer?.value, actions]);
 
-  useEffect(() => {
-    if (userInfo?.userId) {
-      actions.initForm(currency, userInfo.userId, !!isnonGroupTransfer?.value);
-    }
-  }, [userInfo?.userId, currency, isnonGroupTransfer?.value]);
-
   const { handleInputBlur, handleCurrencyOptionsClick, submitTransfer, userMemberId,
-    noReceiverSelected, isSamePerson, sortedMembers, idError, isPendingCreateTransfer } = useTransferFormLogic({
+    noReceiverSelected, sortedMembers, idError, isPendingCreateTransfer } = useTransferFormLogic({
       userInfo, groupId, groupMembers, menu, nonGroupUsers, isnonGroupTransfer,
       nonGroupMenu, nonGroupGroup, navigate, isSubmitting, displayedAmount, currencyMenu, data, actions,
     })
