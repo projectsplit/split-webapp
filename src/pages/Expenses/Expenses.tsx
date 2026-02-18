@@ -29,7 +29,10 @@ const Expenses = () => {
   const queryClient = useQueryClient();
 
   const { userInfo, group, showBottomBar, expenseParsedFilters, transactionType,
-  } = useOutletContext<{ userInfo: UserInfo; group: Group; showBottomBar: Signal<boolean>; expenseParsedFilters: Signal<ExpenseParsedFilters>; transactionType: TransactionType; }>();
+  } = useOutletContext<{
+    userInfo: UserInfo; group: Group; showBottomBar: Signal<boolean>;
+    expenseParsedFilters: Signal<ExpenseParsedFilters>; transactionType: TransactionType;
+  }>();
 
   const timeZoneId = userInfo?.timeZone;
   const pageSize = 10;
@@ -38,16 +41,18 @@ const Expenses = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching
   } = useExpenseList(transactionType, group, expenseParsedFilters, pageSize, timeZoneId);
 
-  const { allUsers } = useGetAllNonGroupUsers(transactionType);
+  const { allUsers } = useGetAllNonGroupUsers(transactionType);//TODO add condition inside hook if transactionType is Personal to exclude from running
   const expenses = data?.pages.flatMap((p) => p.expenses);
 
-  const allParticipants = getAllExpenseParticipants(expenses, transactionType, group?.members || [], group?.guests || [],
-    allUsers.map((u) => ({
-      id: u.userId,
-      name: u.username,
-    }))
-  );
+  const allParticipants =
+    getAllExpenseParticipants(expenses, transactionType, group?.members || [], group?.guests || [],
+      allUsers.map((u) => ({//TODO add condition - not required for personal
+        id: u.userId,
+        name: u.username,
+      }))
+    );
 
+  //TODO: add condition to exlcude if transaction type is Personal as different endpoint will be used.
   const { groupTotalsByCurrency, userTotalsByCurrency, totalExpense, userExpense, shouldOpenMultiCurrencyTable, totalsAreFetching } =
     useExpenseTotals(group, transactionType, userInfo, userMemberId, expenseParsedFilters);
 

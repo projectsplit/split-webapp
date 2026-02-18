@@ -1,23 +1,6 @@
 import { reformatDate } from "@/components/SearchTransactions/helpers/reformatDate";
 import { DateTime } from "luxon";
 
-export interface BaseFilters {
-  freeText?: string;
-  before?: string | null;
-  after?: string | null;
-}
-
-export interface ParamMapping {
-  key: string;
-  values: string[];
-}
-
-export interface AppendFilterOptions {
-  pageSize?: number;
-  next?: string;
-  arrayMappings?: ParamMapping[];
-}
-
 export const appendGroupFilterToParams = (
   groupId: string,
   filters: BaseFilters,
@@ -50,3 +33,20 @@ export const appendGroupFilterToParams = (
 
   return params;
 };
+
+export interface BaseFilters {
+  freeText?: string;
+  before?: string | null;
+  after?: string | null;
+}
+
+export interface ParamMapping {
+  key: string;
+  values: string[];
+}
+
+export interface AppendFilterOptions {
+  pageSize?: number;
+  next?: string;
+  arrayMappings?: ParamMapping[];
+}

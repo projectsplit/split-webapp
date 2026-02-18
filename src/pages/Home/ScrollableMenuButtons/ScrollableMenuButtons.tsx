@@ -1,4 +1,4 @@
-import { Details, GroupedTransaction, GroupsAllBalancesResponse, MostRecentGroupDetailsResponse, UserInfo } from "@/types";
+import { Details, GroupedTransaction, GroupsAllBalancesResponse, MostRecentGroupDetailsResponse, TransactionType, UserInfo } from "@/types";
 import { StyledScrollableMenuButtons } from "./ScrollableMenuButtons.styled";
 import { NavigateFunction } from "react-router-dom";
 import MostRecentSection from "../MostRecentSection/MostRecentSection";
@@ -9,6 +9,7 @@ import OptionButton from "../SelectionButton/SelectionButton";
 import { BsBarChartFill } from "react-icons/bs";
 import { BsFillPiggyBankFill } from "react-icons/bs";
 import { BsFillPersonFill } from "react-icons/bs";
+import { Signal } from "@preact/signals-react";
 
 export default function ScrollableMenuButtons({
   mostRecentGroupDataIsFetching,
@@ -20,7 +21,8 @@ export default function ScrollableMenuButtons({
   isLoading,
   isFetching,
   groupsData,
-  totalBalances
+  totalBalances,
+  topMenuTitle,
 }: {
   mostRecentGroupDataIsFetching: boolean;
   mostRecentGroupData: MostRecentGroupDetailsResponse | undefined;
@@ -32,6 +34,7 @@ export default function ScrollableMenuButtons({
   isFetching: boolean;
   groupsData: GroupsAllBalancesResponse | undefined,
   totalBalances:Details
+  topMenuTitle: Signal<string>
 }) {
   return (
     <StyledScrollableMenuButtons>
@@ -82,6 +85,7 @@ export default function ScrollableMenuButtons({
         name="Personal"
         description="Your personal expense tracker"
         hasArrow={false}
+        onClick={() => {topMenuTitle.value = "Your Expenses"; navigate("/personal")}}
       >
         <BsFillPersonFill className="personalIcon" />
       </OptionButton>

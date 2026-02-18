@@ -1,14 +1,13 @@
 import { useEffect, useRef, } from "react";
-import { PickerMember, SplitCategory, UserInfo, } from "@/types";
+import { PickerMember, SplitCategory, UserInfo} from "@/types";
 import MenuAnimationBackground from "@/components/Animations/MenuAnimationBackground";
 import CurrencyOptionsAnimation from "@/components/Animations/CurrencyOptionsAnimation";
 import InputMonetary from "@/components/InputMonetary/InputMonetary";
 import { useSignal } from "@preact/signals-react";
 import { ExpenseFormProps } from "@/interfaces";
-import { useCreateGroupExpense } from "@/api/auth/CommandHooks/useCreateGroupExpense";
-import { useCreateNonGroupExpense } from "@/api/auth/CommandHooks/useCreateNonGroupExpense";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { StyledExpenseForm } from "./ExpenseForm.styled";
+import { useCreateExpenseMutation } from "./hooks/useCreateExpenseMutation";
 import { LocationDisplay } from "./components/LocationDisplay/LocationDisplay";
 import DateDisplay from "./components/DateDisplay/DateDisplay";
 import { LabelMenu } from "./components/LabelMenu/LabelMenu";
@@ -40,7 +39,8 @@ export default function ExpenseForm({
   currency,
   nonGroupMenu,
   nonGroupGroup,
-  fromHome
+  fromHome,
+  fromPersonal
 }: ExpenseFormProps) {
 
   const isInitialRender = useRef<boolean>(true);
@@ -126,8 +126,8 @@ export default function ExpenseForm({
     inputs.validateForm({ showErrors: true })
   };
 
-  const { mutate: createGroupExpenseMutation, isPending: isPendingCreateGroupExpense } =
-    useCreateGroupExpense(
+  const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
+    useCreateExpenseMutation(
       menu,
       groupId,
       navigate,
@@ -137,26 +137,8 @@ export default function ExpenseForm({
       nonGroupGroup,
       groupMembers,
       fromHome,
+      isnonGroupExpense
     );
-
-  const { mutate: createNonGroupExpenseMutation, isPending: isPendingCreateNonGroupExpense } =
-    useCreateNonGroupExpense(
-      menu,
-      navigate,
-      inputs.setIsSubmitting,
-      nonGroupUsers,
-      nonGroupGroup,
-      groupMembers,
-      inputs.makePersonalClicked
-    );
-
-  const createExpenseMutation = isnonGroupExpense?.value
-    ? createNonGroupExpenseMutation
-    : createGroupExpenseMutation;
-
-  const isPendingCreateExpense = isnonGroupExpense?.value
-    ? isPendingCreateNonGroupExpense
-    : isPendingCreateGroupExpense;
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
     useEditExpenseMutation(menu, inputs.setIsSubmitting, nonGroupUsers,
@@ -174,8 +156,9 @@ export default function ExpenseForm({
     inputs.submitExpense({
       groupId,
       createExpenseMutation,
-      editExpenseMutation,
+      editExpenseMutation: editExpenseMutation as any,
       isnonGroupExpense,
+      fromPersonal,
       isCreateExpense,
       expense,
     });
@@ -244,7 +227,7 @@ export default function ExpenseForm({
         onChange={handleDescriptionChange}
         labelMenuIsOpen={labelMenuIsOpen}
       />
-      <ShareExpenseButtons
+      {fromPersonal?.value ? null : <ShareExpenseButtons
         isPersonal={isPersonal}
         amountNumber={amountNumber}
         nonGroupUsers={nonGroupUsers}
@@ -253,7 +236,7 @@ export default function ExpenseForm({
         fromHome={fromHome}
         nonGroupMenu={nonGroupMenu}
         setMakePersonalClicked={inputs.setMakePersonalClicked}
-      />
+      />}
       {labelMenuIsOpen.value && (
         <LabelMenu
           labelMenuIsOpen={labelMenuIsOpen}
@@ -262,7 +245,6 @@ export default function ExpenseForm({
           groupId={groupId}
         />
       )}
-
       <LocationDisplay location={inputs.location} isMapOpen={isMapOpen} setLocation={inputs.setLocation} />
       {isDateShowing.value && (
         <DateDisplay

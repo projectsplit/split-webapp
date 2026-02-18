@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
 import { apiClient } from "../../apiClients";
-import { ExpenseRequest, Group, Guest, Member, User } from "../../../types";
+import { NonGroupExpenseRequest, Group, Guest, Member, User } from "../../../types";
 import { Signal } from "@preact/signals-react";
 import { NavigateFunction } from "react-router-dom";
 
@@ -16,7 +16,7 @@ export const useCreateNonGroupExpense = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, AxiosError, ExpenseRequest>({
+  return useMutation<any, AxiosError, NonGroupExpenseRequest>({
     mutationFn: (expense) => createNonGroupExpense(expense),
     onSuccess: async () => {
       menu.value = null;
@@ -68,7 +68,7 @@ export const useCreateNonGroupExpense = (
   });
 };
 
-const createNonGroupExpense = async (req: ExpenseRequest): Promise<void> => {
+const createNonGroupExpense = async (req: NonGroupExpenseRequest): Promise<void> => {
   await apiClient.post<void, AxiosResponse<void>>(
     "/expenses/create-non-group",
     req

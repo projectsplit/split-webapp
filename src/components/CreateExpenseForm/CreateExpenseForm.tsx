@@ -16,7 +16,8 @@ const CreateExpenseForm: React.FC<ExpenseFormProps> = ({
   nonGroupUsers,
   nonGroupMenu,
   nonGroupGroup,
-  fromHome
+  fromHome,
+  fromPersonal
 }) => {
   return (
     <ExpenseForm
@@ -36,6 +37,7 @@ const CreateExpenseForm: React.FC<ExpenseFormProps> = ({
       nonGroupMenu={nonGroupMenu}
       nonGroupGroup={nonGroupGroup}
       fromHome={fromHome}
+      fromPersonal={fromPersonal}
     />
   );
 };

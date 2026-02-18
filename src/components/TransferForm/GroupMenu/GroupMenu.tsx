@@ -5,7 +5,6 @@ import { ReadonlySignal, Signal } from "@preact/signals-react";
 import { Group, Guest, Member } from "@/types";
 import { TransferState } from "../formStore/formStoreTypes";
 
-
 interface GroupMenuProps {
   nonGroupGroup: Signal<Group | null> | undefined;
   isnonGroupTransfer: Signal<boolean> | undefined;

@@ -1,12 +1,15 @@
 import { create } from "zustand";
 import { ExpenseState, SplitMethod } from "./formStoreTypes";
 import {
+  ExpenseRequest,
   FormExpense,
   Guest,
   Member,
   User,
   UserInfo,
 } from "../../../types";
+
+
 import { signal, Signal } from "@preact/signals-react";
 import {
   generatePickerArrays,
@@ -402,7 +405,17 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       errors: validationErrors,
     };
   },
-  submitExpense: (inputs) => {
+  submitExpense: (inputs: {
+    groupId?: string;
+    createExpenseMutation: (req: ExpenseRequest) => void;
+    editExpenseMutation: (req: ExpenseRequest) => void;
+    isCreateExpense: boolean;
+    expense: FormExpense | null;
+    isnonGroupExpense?: Signal<boolean>;
+    isPersonal?: Signal<boolean>;
+    fromPersonal?: Signal<boolean>;
+  }) => {
+
     const state = get();
     submitExpenseFromState(
       {
@@ -420,7 +433,10 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
         setDescriptionError: state.setDescriptionError,
         setIsSubmitting: state.setIsSubmitting,
       },
-      inputs
+      {
+        ...inputs,
+        fromPersonal: inputs.fromPersonal ? inputs.fromPersonal.peek() : undefined
+      }
     );
   },
 }));

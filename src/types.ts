@@ -339,20 +339,10 @@ export type Label = {
 //   }[];
 // };
 
-export type CreateEditExpenseRequest = {
-  expenseId: string;
+export type BaseExpenseRequest = {
+  expenseId?: string;
   amount: number;
   currency: string;
-  payments: {
-    userId?: string;
-    memberId?: string;
-    amount: number;
-  }[];
-  shares: {
-    userId?: string;
-    memberId?: string;
-    amount: number;
-  }[];
   description: string;
   location: GeoLocation | null;
   occurred: string;
@@ -362,29 +352,40 @@ export type CreateEditExpenseRequest = {
   }[];
 };
 
-export type ExpenseRequest = {
-  expenseId?: string;
+export type GroupExpenseRequest = BaseExpenseRequest & {
   groupId?: string;
-  amount: number;
-  currency: string;
   payments: {
-    userId?: string;
-    memberId?: string;
+    memberId: string;
     amount: number;
   }[];
   shares: {
-    userId?: string;
-    memberId?: string;
+    memberId: string;
     amount: number;
   }[];
-  description: string;
-  location: GeoLocation | null;
-  occurred: string;
-  labels: {
-    text: string;
-    color: string;
+};
+
+export type NonGroupExpenseRequest = BaseExpenseRequest & {
+  payments: {
+    userId: string;
+    amount: number;
+  }[];
+  shares: {
+    userId: string;
+    amount: number;
   }[];
 };
+
+export type PersonalExpenseRequest = BaseExpenseRequest;
+
+export type ExpenseRequest =
+  | GroupExpenseRequest
+  | NonGroupExpenseRequest
+  | PersonalExpenseRequest;
+
+export type ExpenseRequestWithType =
+  | (GroupExpenseRequest & { type?: "group" })
+  | (NonGroupExpenseRequest & { type?: "non-group" })
+  | (PersonalExpenseRequest & { type?: "personal" });
 
 export type GeoLocation = {
   coordinates: Coordinates;
@@ -527,9 +528,9 @@ export type GetUserInvitationsResponse = {
 
 export type Debt = {
   debtor: string;
-  debtorName?:string;
+  debtorName?: string;
   creditor: string;
-  creditorName?:string;
+  creditorName?: string;
   amount: number;
   currency: string;
 };

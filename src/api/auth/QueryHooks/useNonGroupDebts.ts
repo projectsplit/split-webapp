@@ -1,5 +1,5 @@
 import { apiClient } from "@/api/apiClients";
-import { DebtsResponse } from "@/types";
+import { DebtsResponse, TransactionType } from "@/types";
 import { Signal } from "@preact/signals-react";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
@@ -7,28 +7,30 @@ import { ExpenseParsedFilters, TransferParsedFilters } from "../../../types";
 import { appendNonGroupFilterToParams } from "../helpers/appendNonGroupFilterToParams";
 
 const useNonGroupDebts = (
+  transactionType: TransactionType,
   expenseParsedFilters?: Signal<ExpenseParsedFilters>,
-  transferParsedFilters?: Signal<TransferParsedFilters>
+  transferParsedFilters?: Signal<TransferParsedFilters>,
+
 ) => {
 
   return useQuery<DebtsResponse>({
-    queryKey: ["nonGroupDebts",expenseParsedFilters?.value, transferParsedFilters?.value],
+    queryKey: ["nonGroupDebts", expenseParsedFilters?.value, transferParsedFilters?.value],
     queryFn: () => getNonGroupDebts({
-          ...expenseParsedFilters?.value,
-          ...transferParsedFilters?.value,
-        }),
+      ...expenseParsedFilters?.value,
+      ...transferParsedFilters?.value,
+    }),
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     staleTime: 9000,
-    enabled: true,
+    enabled: transactionType === "NonGroup",
   });
 };
 
 const getNonGroupDebts = async (
-   parsedFilters: ExpenseParsedFilters & TransferParsedFilters= {}
+  parsedFilters: ExpenseParsedFilters & TransferParsedFilters = {}
 ): Promise<DebtsResponse> => {
 
-  const { participantsIds = [], payersIds = [], labels = [], sendersIds = [], receiversIds = [], ...base } = parsedFilters ;
+  const { participantsIds = [], payersIds = [], labels = [], sendersIds = [], receiversIds = [], ...base } = parsedFilters;
 
   const params = appendNonGroupFilterToParams(base, {
     arrayMappings: [

@@ -25,7 +25,7 @@ export default function TopMenu({
       navigate("/shared");
     }
   };
-  const isInSharedAndNotInNonGroup = title !== "" && title !== "Shared" && title !== "Non Group Transactions";
+  const isInSharedAndNotInNonGroup = title !== "" && title !== "Shared" && title !== "Non Group Transactions" && title !== "Your Expenses";
 
   return (
     <StyledTopMenu title={title}>

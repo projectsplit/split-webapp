@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
 import { apiClient } from "../../apiClients";
 import {
-  ExpenseRequest,
+  GroupExpenseRequest,
   ExpenseResponseItem,
   Group,
   Guest,
@@ -24,7 +24,7 @@ export const useEditExpense = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, AxiosError, ExpenseRequest>({
+  return useMutation<any, AxiosError, GroupExpenseRequest>({
     mutationFn: (expense) => editExpense(expense),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -75,6 +75,6 @@ export const useEditExpense = (
   });
 };
 
-const editExpense = async (req: ExpenseRequest): Promise<void> => {
+const editExpense = async (req: GroupExpenseRequest): Promise<void> => {
   await apiClient.post<void, AxiosResponse<void>>("/expenses/edit", req);
 };

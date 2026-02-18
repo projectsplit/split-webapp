@@ -16,7 +16,8 @@ export default function NewExpenseAnimation({
   currency,
   nonGroupUsers,
   isnonGroupExpense,
-  nonGroupMenu
+  nonGroupMenu,
+  fromPersonal
 }: NewExpenseAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -41,6 +42,7 @@ export default function NewExpenseAnimation({
         nonGroupUsers={nonGroupUsers}
         isnonGroupExpense={isnonGroupExpense}
         nonGroupMenu={nonGroupMenu}
+        fromPersonal={fromPersonal}
       />
     </CSSTransition>
   );

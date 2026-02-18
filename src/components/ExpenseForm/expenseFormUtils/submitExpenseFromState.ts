@@ -5,6 +5,7 @@ import {
   FormExpense,
   GeoLocation,
   Label,
+  PersonalExpenseRequest,
   PickerMember,
 } from "../../../types";
 import { Signal } from "@preact/signals-react";
@@ -32,6 +33,7 @@ export function submitExpenseFromState(
     isCreateExpense: boolean;
     expense: FormExpense | null;
     isnonGroupExpense?: Signal<boolean>;
+    fromPersonal?: boolean;
   }
 ) {
   const {
@@ -39,19 +41,20 @@ export function submitExpenseFromState(
     createExpenseMutation,
     editExpenseMutation,
     isnonGroupExpense,
+    fromPersonal,
     isCreateExpense,
     expense,
   } = inputs;
 
   const participants =
     state.participantsByCategory[
-      state.participantsCategory
-        .value as keyof typeof state.participantsByCategory
+    state.participantsCategory
+      .value as keyof typeof state.participantsByCategory
     ];
 
   const payers =
     state.payersByCategory[
-      state.payersCategory.value as keyof typeof state.payersByCategory
+    state.payersCategory.value as keyof typeof state.payersByCategory
     ];
 
   // Deselect participants with zero amount in Shares mode
@@ -79,8 +82,18 @@ export function submitExpenseFromState(
     return;
   }
 
-  let expenseRequest: ExpenseRequest;
-  if (isnonGroupExpense?.value) {
+  let expenseRequest: ExpenseRequest | PersonalExpenseRequest;
+  if (fromPersonal) {
+    expenseRequest = {
+      amount: Number(state.amount),
+      ...(isCreateExpense ? {} : { expenseId: expense?.id }),
+      currency: state.currencySymbol,
+      description: state.description,
+      location: state.location ?? null,
+      occurred: state.expenseTime,
+      labels: state.labels.map((x) => ({ text: x.text, color: x.color })),
+    };
+  } else if (isnonGroupExpense?.value) {
     expenseRequest = {
       amount: Number(state.amount),
       ...(isCreateExpense ? {} : { expenseId: expense?.id }),

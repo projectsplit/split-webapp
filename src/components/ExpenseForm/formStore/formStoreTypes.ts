@@ -11,6 +11,7 @@ import {
   UserInfo,
 } from "../../../types";
 
+
 export type SplitMethod = "Amounts" | "Shares" | "Percentages";
 
 export type CategoryMap<T> = {
@@ -119,8 +120,12 @@ export interface ExpenseState {
     groupId?: string;
     createExpenseMutation: (req: ExpenseRequest) => void;
     editExpenseMutation: (req: ExpenseRequest) => void;
+
     isCreateExpense: boolean;
     expense: FormExpense | null;
     isnonGroupExpense?: Signal<boolean>;
+    isPersonal?: Signal<boolean>;
+    fromPersonal?: Signal<boolean>;
   }) => void;
+
 }

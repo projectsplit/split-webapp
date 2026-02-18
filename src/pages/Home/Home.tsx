@@ -15,6 +15,7 @@ import {
   Group,
   Guest,
   Member,
+  TransactionType,
   User,
   UserInfo,
 } from "../../types";
@@ -140,6 +141,7 @@ export default function Home() {
             isFetching={isFetching}
             groupsData={groupsData}
             totalBalances={totalBalances}
+            topMenuTitle={topMenuTitle}
           />
           <div
             className={`actions ${isGlowing ? "glow" : ""}`}

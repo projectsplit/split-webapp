@@ -21,7 +21,7 @@ export const ShareExpenseButtons = ({ isPersonal, amountNumber, nonGroupUsers, a
 
   return (
     <StyledShareExpenseButtons>
-      {showShareExpenseButton && fromHome && nonGroupMenu ? (
+      {showShareExpenseButton && fromHome && nonGroupMenu  ? (
         <div className="shareExpenseOption">
           <div
             className="button"

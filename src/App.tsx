@@ -8,7 +8,6 @@ import Auth from "./pages/Auth/AuthPage";
 import routes from "./routes";
 import GoogleCallback from "./pages/GoogleCallback";
 import Home from "./pages/Home/Home";
-import Groups from "./pages/Groups/Groups";
 import RedirectToExpenses from "./routes/RedirectToExpenses";
 import Group from "./pages/TransactionsWrappers/Group";
 import Expenses from "./pages/Expenses/Expenses";
@@ -26,7 +25,7 @@ import GenerateInvitationCode from "./pages/GenerateInvitationCode/GenerateInvit
 import Shared from "./pages/Groups/Shared";
 import RedirectToNonGroupExpenses from "./routes/RedirectToNonGroupExpenses";
 import NonGroup from "./pages/TransactionsWrappers/NonGroup";
-
+import { Personal } from "./pages/Personal/Personal";
 
 const App = () => {
   return (
@@ -56,6 +55,11 @@ const App = () => {
             <Route path="debts" element={<Members />} />
             <Route path="*" element={<RedirectToNonGroupExpenses />} />
           </Route>
+
+          <Route path="/personal" element={<Personal />}>
+            <Route index element={<Expenses />} />
+          </Route>
+
 
           <Route path="/analytics/*" element={<RedirectToAnalytics />} />
           <Route path="/analytics" element={<Analytics />} />

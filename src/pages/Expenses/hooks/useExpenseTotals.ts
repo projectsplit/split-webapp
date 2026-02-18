@@ -11,7 +11,9 @@ export const useExpenseTotals = (
   userMemberId: string | undefined,
   expenseParsedFilters: Signal<ExpenseParsedFilters>
 ) => {
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id, expenseParsedFilters);
+  //TODO: add condition to exlcude if transaction type is Personal as different endpoint will be used.
+  //I think that due to enabled these will never run anyway
+  const { data: debts, isFetching: totalsAreFetching } = useDebts(transactionType, group?.id, expenseParsedFilters);
 
   const totals = useMemo(() => {
     const totalSpent: Record<string, Record<string, number>> = debts?.totalSpent ?? {};
@@ -33,7 +35,7 @@ export const useExpenseTotals = (
           : 0
         : totalSpent[userInfo?.userId]?.[userInfo?.currency] ?? 0;
 
-    const shouldOpenMultiCurrencyTable = Object.keys(groupTotalsByCurrency).length > 1;
+    const shouldOpenMultiCurrencyTable = Object.keys(groupTotalsByCurrency).length > 1||Object.keys(userTotalsByCurrency).length > 1;
 
     return {
       groupTotalsByCurrency,

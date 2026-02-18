@@ -14,8 +14,6 @@ import NonGroupExpenseUsersAnimation from '../../components/Animations/NonGroupE
 import NonGroupTransferAnimation from '../../components/Animations/NonGroupTransferAnimation';
 import { localStorageStringParser, getFilterStorageKey } from '../../components/SearchTransactions/helpers/localStorageStringParser';
 
-
-
 export default function NonGroup() {
   const menu = useSignal<string | null>(null);
   const showBottomBar = useSignal<boolean>(false);

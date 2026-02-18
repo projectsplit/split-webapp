@@ -472,7 +472,7 @@ export interface NewExpenseAnimationProps {
   isnonGroupExpense?: Signal<boolean>;
   nonGroupUsers: Signal<User[]>;
   nonGroupMenu?: Signal<string | null>;
-
+  fromPersonal?: Signal<boolean>;
 }
 
 export interface NewTransferAnimationProps {
@@ -512,6 +512,7 @@ export interface ExpenseFormProps {
   nonGroupMenu?: Signal<string | null>;
   nonGroupGroup?: Signal<Group | null>;
   fromHome?: boolean;
+  fromPersonal?: Signal<boolean>;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {
