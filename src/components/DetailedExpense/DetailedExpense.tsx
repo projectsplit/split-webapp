@@ -11,7 +11,7 @@ import MapsInfoBox from "./MapsInfoBox/MapsInfoBox";
 import MenuAnimationBackground from "../Animations/MenuAnimationBackground";
 import { signal, useSignal } from "@preact/signals-react";
 import DeleteExpenseAnimation from "../Animations/DeleteExpenseAnimation";
-import { FormExpense, GeoLocation, User } from "../../types";
+import { TransactionType, GeoLocation } from "../../types";
 import EditExpenseAnimation from "../Animations/EditExpenseAnimation";
 import labelColors from "../../labelColors";
 import { buildFormExpense, toUser } from "./utils";
@@ -34,7 +34,6 @@ export default function DetailedExpense({
   errorMessage,
   userMemberId,
   group,
-  expenseType,
   userId,
   transactionType
 }: DetailedExpenseProps) {
@@ -67,7 +66,7 @@ export default function DetailedExpense({
   };
   const googleMapsUrl = googleMapsUrlBuilder(location);
 
-  const expenseToEdit = buildFormExpense(selectedExpense, expenseType, group);
+  const expenseToEdit = buildFormExpense(selectedExpense, transactionType, group);
 
   return (
     <StyledDetailedExpense>
@@ -128,7 +127,7 @@ export default function DetailedExpense({
       <div className="editDeleteButtons">
         <div className="dummyDiv" />
 
-        {(group && !group.isArchived) || (transactionType === "NonGroup" && !group) ? (
+        {(group && !group.isArchived) || (transactionType === TransactionType.NonGroup && !group) ? (
           <div className="buttons">
             <div className="editButton">
               <MyButton onClick={() => (menu.value = "editExpense")}>
@@ -208,8 +207,8 @@ export default function DetailedExpense({
         currency={currency}
         groupMembers={group ? signal([...group.members, ...group.guests]) : signal([])}
         nonGroupUsers={signal(participants.map(p => toUser(p)))}
-        isPersonal={expenseType === "Personal" ? signal(true) : signal(false)}
-        isnonGroupExpense={expenseType === "NonGroup" ? signal(true) : signal(false)}
+        isPersonal={transactionType===TransactionType.Personal ? signal(true) : signal(false)}
+        isnonGroupExpense={transactionType === TransactionType.NonGroup ? signal(true) : signal(false)}
       />
     </StyledDetailedExpense>
   );

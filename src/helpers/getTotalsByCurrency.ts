@@ -44,7 +44,7 @@ export function getCurrencyValues(
     id: string | undefined
   ): Record<string, number> {
     if (!id || !totalSpent[id]) {
-      return {};
+      return {} ;
     }
   
     return totalSpent[id];

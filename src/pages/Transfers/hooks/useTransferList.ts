@@ -12,7 +12,7 @@ export const useTransferList = (
   timeZoneId: string,
 ) => {
 
-  const isNonGroup = transactionType === "NonGroup";
+  const isNonGroup = transactionType === TransactionType.NonGroup;
 
 
   const groupQuery = useGetGroupTransfers(

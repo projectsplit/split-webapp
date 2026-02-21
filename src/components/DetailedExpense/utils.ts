@@ -1,6 +1,7 @@
 import { Signal } from "@preact/signals-react";
 import {
   ExpenseResponseItem,
+  TransactionType,
   FormExpense,
   Group,
   GroupPayment,
@@ -13,7 +14,7 @@ import {
 
 export const buildFormExpense = (
   selectedExpense: Signal<ExpenseResponseItem | undefined | null>,
-  expenseType: string,
+  expenseType: TransactionType,
   group: Group | undefined
 ): FormExpense | undefined => {
   if (!selectedExpense.value) return undefined;
@@ -29,7 +30,7 @@ export const buildFormExpense = (
     lastUpdateTime: new Date(selectedExpense.value.updated),
   };
 
-  if (expenseType === "Group") {
+  if (expenseType === TransactionType.Group) {
     return {
       ...baseExpense,
       groupId: group?.id,
@@ -48,7 +49,7 @@ export const buildFormExpense = (
     };
   }
 
-  if (expenseType === "NonGroup") {
+  if (expenseType === TransactionType.NonGroup) {
     return {
       ...baseExpense,
       participants: (selectedExpense.value.shares as Share[]).map((share) => ({

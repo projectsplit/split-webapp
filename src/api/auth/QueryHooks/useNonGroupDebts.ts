@@ -22,7 +22,7 @@ const useNonGroupDebts = (
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     staleTime: 9000,
-    enabled: transactionType === "NonGroup",
+    enabled: transactionType === TransactionType.NonGroup,
   });
 };
 

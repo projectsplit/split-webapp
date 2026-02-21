@@ -7,7 +7,7 @@ export default function getAllDebtsParticipants(
   members: Member[],
   guests: Guest[],
 ): TruncatedMember[] {
-  if (transactionType === "Group") {
+  if (transactionType === TransactionType.Group) {
     return mergeMembersAndGuests(members || [], guests || []);
   }
 

@@ -51,9 +51,9 @@ export const FiltersAndBars = ({
           </div>
           <BarsWithLegends
             bar1Legend={
-              transactionType === "Group"
+              transactionType === TransactionType.Group
                 ? "Group Total"
-                : transactionType === "NonGroup"
+                : transactionType === TransactionType.NonGroup
                   ? "Total"
                   : ""
             }

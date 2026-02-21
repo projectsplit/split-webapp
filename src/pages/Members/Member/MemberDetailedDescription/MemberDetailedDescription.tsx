@@ -3,6 +3,7 @@ import { displayCurrencyAndAmount } from "../../../../helpers/displayCurrencyAnd
 import { StyledMemberDetailedDescription } from "./MemberDetailedDescription.Styled";
 import { MemberDetailedDescriptionProps } from "../../../../interfaces";
 import { getUserName } from "@/helpers/getUserName";
+import { TransactionType } from "@/types";
 
 
 export const MemberDetailedDescription = ({
@@ -59,7 +60,7 @@ export const MemberDetailedDescription = ({
                 <span className="owingText">and</span>{" "}
                 <span className="amount">{formattedAmount} </span>
                 <span className="owingText">
-                  {transactionType === "NonGroup" && !isLogedUser ? (
+                  {transactionType === TransactionType.NonGroup && !isLogedUser ? (
                     <>
                       {isOwed ? "from " : "to "}
                       <strong style={{ color: "#FFFFFF" }}>you</strong>
@@ -90,7 +91,7 @@ export const MemberDetailedDescription = ({
                   !doNotshowTreeWhenMemberOwes &&
                   !doNotshowTreeWhenMemberIsOwed ? (
                   <span className="owingText">
-                    {transactionType === "NonGroup" && !isLogedUser ? (
+                    {transactionType === TransactionType.NonGroup && !isLogedUser ? (
                       <>
                         {isOwed ? "from " : "to "}
                         <strong style={{ color: "#FFFFFF" }}>you</strong>

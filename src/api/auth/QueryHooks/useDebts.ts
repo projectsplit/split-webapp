@@ -3,9 +3,9 @@ import useGroupDebts from "./useGroupDebts";
 import useNonGroupDebts from "./useNonGroupDebts";
 import { ExpenseParsedFilters, TransactionType, TransferParsedFilters } from "../../../types";
 
-export const useDebts = (transactionType: TransactionType,groupId?: string, expenseParsedFilters?: Signal<ExpenseParsedFilters>, transferParsedFilters?: Signal<TransferParsedFilters>,) => {
+export const useDebts = (transactionType: TransactionType, groupId?: string, expenseParsedFilters?: Signal<ExpenseParsedFilters>, transferParsedFilters?: Signal<TransferParsedFilters>,) => {
   const normal = useGroupDebts(groupId, expenseParsedFilters, transferParsedFilters);
-  const nonGroup = useNonGroupDebts(transactionType,expenseParsedFilters, transferParsedFilters);
+  const nonGroup = useNonGroupDebts(transactionType, expenseParsedFilters, transferParsedFilters);
 
-  return !!groupId ? normal : nonGroup;
+  return transactionType === TransactionType.Group ? normal : nonGroup;
 };

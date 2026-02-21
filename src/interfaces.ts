@@ -29,10 +29,9 @@ import {
   User,
   GroupPayment,
   GroupShare,
-  ExpenseType,
+  TransactionType,
   GroupTransaction,
   NonGroupTransaction,
-  TransactionType,
   EnhancedPeopleWithProps,
   FetchedPeople,
   FilteredPeople,
@@ -85,7 +84,6 @@ export interface MembersInfoBoxProps {
 }
 
 export interface DetailedExpenseProps {
-  expenseType: ExpenseType;
   timeZoneId: string;
   timeZoneCoordinates: Coordinates;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;

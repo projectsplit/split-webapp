@@ -19,7 +19,7 @@ export const totalsCalculator = (debts: DebtsResponse | undefined, transactionTy
   let usertotalReceived: number;
   let usertotalSent: number;
 
-  if (transactionType === "Group") {
+  if (transactionType === TransactionType.Group) {
     usertotalReceived = userMemberId && group.currency
       ? groupTotalReceived[userMemberId]?.[group.currency] ?? 0
       : 0;
@@ -29,7 +29,7 @@ export const totalsCalculator = (debts: DebtsResponse | undefined, transactionTy
       : 0;
   }
 
-  if (transactionType === "Group") {
+  if (transactionType === TransactionType.Group) {
     usertotalSent =
       userMemberId && group.currency
         ? groupTotalSent[userMemberId]?.[group.currency] ?? 0

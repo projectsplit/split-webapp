@@ -5,14 +5,14 @@ import { TransactionType } from "@/types";
 import { useMemo } from "react";
 
 export function useFetchAndGroupNonGroupDebts(userId: string, transactionType: TransactionType) {
-    const isNonGroupMode = transactionType === "NonGroup";
+    const isNonGroupMode = transactionType === TransactionType.NonGroup;
 
-    const { data: debtsData, isFetching, isLoading } = useDebts();
+    const { data: debtsData, isFetching, isLoading } = useDebts(transactionType);
 
     const { debts = [], totalSpent = {} } = debtsData ?? {};
 
     const allParticipants = useMemo(
-        () => (isNonGroupMode ? getAllDebtsParticipants(debts, "NonGroup", [], []) : []),
+        () => (isNonGroupMode ? getAllDebtsParticipants(debts, TransactionType.NonGroup, [], []) : []),
         [debts, isNonGroupMode]
     );
 

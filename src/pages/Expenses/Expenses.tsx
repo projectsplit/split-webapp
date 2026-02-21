@@ -41,12 +41,12 @@ const Expenses = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching
   } = useExpenseList(transactionType, group, expenseParsedFilters, pageSize, timeZoneId);
 
-  const { allUsers } = useGetAllNonGroupUsers(transactionType);//TODO add condition inside hook if transactionType is Personal to exclude from running
+  const { allUsers } = useGetAllNonGroupUsers(transactionType);
   const expenses = data?.pages.flatMap((p) => p.expenses);
 
   const allParticipants =
-    getAllExpenseParticipants(expenses, transactionType, group?.members || [], group?.guests || [],
-      allUsers.map((u) => ({//TODO add condition - not required for personal
+    transactionType === TransactionType.Personal ? [] : getAllExpenseParticipants(expenses, transactionType, group?.members || [], group?.guests || [],
+      allUsers.map((u) => ({
         id: u.userId,
         name: u.username,
       }))
@@ -146,7 +146,6 @@ const Expenses = () => {
       />
       {selectedExpense.value && (
         <DetailedExpense
-          expenseType={transactionType}
           selectedExpense={selectedExpense}
           amount={selectedExpense.value.amount}
           currency={selectedExpense.value.currency}

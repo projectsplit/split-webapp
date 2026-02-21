@@ -18,6 +18,6 @@ export const useGetNonGroupExpensesUsers = (transactionType: TransactionType) =>
 	return useQuery({
 		queryKey: ["non-group-expense-users"],
 		queryFn: () => getNonGroupExpensesUsers(),
-		enabled: transactionType === "NonGroup",
+		enabled: transactionType === TransactionType.NonGroup,
 	});
 }

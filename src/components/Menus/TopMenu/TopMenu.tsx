@@ -21,7 +21,7 @@ export default function TopMenu({
     useState<boolean>(true);
 
   const handleNavigate = (title: string) => {
-    if (title !== "" && title !== "Shared") {
+    if (title !== "" && title !== "Shared" && title !== "Your Expenses") {
       navigate("/shared");
     }
   };
@@ -42,7 +42,7 @@ export default function TopMenu({
             <div
               className="title"
               onClick={() => handleNavigate(title)}
-              style={{ cursor: title !== "Shared" ? "pointer" : "" }}
+              style={{ cursor: title !== "Shared" && title !== "Your Expenses" ? "pointer" : "" }}
             >
               {title}
             </div>
@@ -55,7 +55,7 @@ export default function TopMenu({
           <div
             className="title"
             onClick={() => handleNavigate(title)}
-            style={{ cursor: title !== "Shared" ? "pointer" : "" }}
+            style={{ cursor: title !== "Shared" && title !== "Your Expenses" ? "pointer" : "" }}
           >
             {title}
           </div>
@@ -68,7 +68,7 @@ export default function TopMenu({
           groupIsArchived ? (
             <div
               className="cogContainer"
-              onClick={() => (confirmUnarchiveMenu.value='unarchiveGroup')}
+              onClick={() => (confirmUnarchiveMenu.value = 'unarchiveGroup')}
             >
               {" "}
               <IonIcon name="arrow-undo-outline" className="arrow" />

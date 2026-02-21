@@ -19,7 +19,7 @@ export const useExpenseTotals = (
     const totalSpent: Record<string, Record<string, number>> = debts?.totalSpent ?? {};
 
     const groupTotalsByCurrency = getAllCurrencyTotals(totalSpent);
-    const userTotalsByCurrency = transactionType === "Group"
+    const userTotalsByCurrency = transactionType === TransactionType.Group
       ? getCurrencyValues(totalSpent, userMemberId)
       : getCurrencyValues(totalSpent, userInfo?.userId);
 
@@ -29,13 +29,13 @@ export const useExpenseTotals = (
     );
 
     const userExpense =
-      transactionType === "Group"
+      transactionType === TransactionType.Group
         ? userMemberId && group?.currency
           ? totalSpent[userMemberId]?.[group?.currency] ?? 0
           : 0
         : totalSpent[userInfo?.userId]?.[userInfo?.currency] ?? 0;
 
-    const shouldOpenMultiCurrencyTable = Object.keys(groupTotalsByCurrency).length > 1||Object.keys(userTotalsByCurrency).length > 1;
+    const shouldOpenMultiCurrencyTable = Object.keys(groupTotalsByCurrency).length > 1 || Object.keys(userTotalsByCurrency).length > 1;
 
     return {
       groupTotalsByCurrency,

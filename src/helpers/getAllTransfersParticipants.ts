@@ -8,7 +8,7 @@ export default function getAllTransfersParticipants(
   guests: Guest[],
   nonGroupUsers: TruncatedMember[] = []
 ): TruncatedMember[] {
-  if (transactionType === "Group") {
+  if (transactionType === TransactionType.Group) {
     return mergeMembersAndGuests(members || [], guests || []);
   }
 

@@ -12,17 +12,17 @@ export const useTransferTotals = (
   userMemberId: string | undefined,
   transferParsedFilters: Signal<TransferParsedFilters>
 ) => {
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(group?.id, transferParsedFilters);
+  const { data: debts, isFetching: totalsAreFetching } = useDebts(transactionType, group?.id, undefined, transferParsedFilters);
 
   const totals = useMemo(() => {
     const groupTotalReceived = debts?.totalReceived ?? {};
     const groupTotalSent = debts?.totalSent ?? {};
 
-    const userTotalSentByCurr = transactionType === "Group"
+    const userTotalSentByCurr = transactionType === TransactionType.Group
       ? getCurrencyValues(groupTotalSent, userMemberId)
       : getCurrencyValues(groupTotalSent, userInfo?.userId);
 
-    const userTotalReceivedByCurr = transactionType === "Group"
+    const userTotalReceivedByCurr = transactionType === TransactionType.Group
       ? getCurrencyValues(groupTotalReceived, userMemberId)
       : getCurrencyValues(groupTotalReceived, userInfo?.userId);
 

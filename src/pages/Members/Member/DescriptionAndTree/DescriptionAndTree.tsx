@@ -20,7 +20,7 @@ export const DescriptionAndTree = ({
   transactionType
 }: DescriptionAndTreeProps) => {
 
-  const conditionForTree = (showTree && transactionType === "Group") || (showTree && isLogedUser);
+  const conditionForTree = (showTree && transactionType === TransactionType.Group) || (showTree && isLogedUser);
   return (
     <StyledDescriptionAndTree>
       <MemberDetailedDescription

@@ -110,11 +110,6 @@ export type FormPersonalExpense = FormExpense & {
   shares?: never;
 };
 
-export type ExpenseType =
-  | "Group"
-  | "NonGroup"
-  | "Personal"
-  | "undefined expense";
 
 export type GroupTransaction = {
   memberId: string;
@@ -126,6 +121,7 @@ export type NonGroupTransaction = {
 };
 
 export type ExpenseResponseItem = {
+  transactionType: TransactionType;
   id: string;
   created: string;
   updated: string;
@@ -276,6 +272,7 @@ export type Guest = {
   name: string;
   joined: Date;
 };
+
 export type Invitation = {
   id: string;
   created: string;
@@ -815,4 +812,8 @@ export type SpendingChartsResponseItem = {
 
 export type Variant = "non" | "active" | "archived";
 
-export type TransactionType = "Group" | "NonGroup" | "Personal" 
+export enum TransactionType {
+  Group = "Group",
+  NonGroup = "NonGroup",
+  Personal = "Personal",
+}

@@ -4,6 +4,9 @@ import { useGetNonGroupTransferUsers } from "./useGetNonGroupTransfersUsers";
 import { TransactionType, User } from "../../../types";
 
 export const useGetAllNonGroupUsers = (transactionType: TransactionType) => {
+    if (transactionType === TransactionType.Personal) {
+        return { allUsers: [], isLoading: false, isError: false };
+    }
     const expenseUsers = useGetNonGroupExpensesUsers(transactionType);
     const transferUsers = useGetNonGroupTransferUsers(transactionType);
 

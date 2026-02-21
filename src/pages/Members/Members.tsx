@@ -25,7 +25,7 @@ export default function Members() {
     transactionType: TransactionType;
   }>();
 
-  const { data, isFetching, isLoading } = useDebts(groupid);
+  const { data, isFetching, isLoading } = useDebts(transactionType, groupid);
   const { debts, totalSpent } = data ?? { debts: [], totalSpent: {} };
 
   const members = group?.members;
@@ -38,7 +38,7 @@ export default function Members() {
     guests);
 
   const { groupedTransactions } = useMemo(() => {
-    const groupedTransactions = transactionType === "Group" ? groupTransactions(
+    const groupedTransactions = transactionType === TransactionType.Group ? groupTransactions(
       debts ?? [],
       allParticipants ?? [],
       userMemberId || ""

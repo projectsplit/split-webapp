@@ -197,7 +197,7 @@ export default function MemberFC({
             })()}
           </div>
 
-          {(transactionType === "Group" || isLogedUser) && <div>
+          {(transactionType === TransactionType.Group || isLogedUser) && <div>
             {Object.keys(removeZeroesValuesFromTotalSpent).length === 0 ? <div className="totalSpent">No recorded spending 💰</div> :
               <div className="totalSpent">
                 Total spent:{" "}

@@ -1,44 +1,20 @@
 import {
   ExpenseResponseItem,
-  ExpenseType,
   GroupExpenseResponseItem,
   NonGroupExpenseResponseItem,
+  PersonalExpenseResponseItem,
+  TransactionType,
 } from "../types";
 
 
 
-export function isGroupExpense(
-  expense: ExpenseResponseItem
-): expense is GroupExpenseResponseItem {
-  return expense.groupId !== undefined;
+export function isGroupExpense(expense: ExpenseResponseItem): expense is GroupExpenseResponseItem {
+  return expense.transactionType === TransactionType.Group;
+}
+export function isNonGroupExpense(expense: ExpenseResponseItem): expense is NonGroupExpenseResponseItem {
+  return expense.transactionType === TransactionType.NonGroup;
+}
+export function isPersonalExpense(expense: ExpenseResponseItem): expense is PersonalExpenseResponseItem {
+  return expense.transactionType === TransactionType.Personal;
 }
 
-export function isNonGroupExpense(
-  expense: ExpenseResponseItem
-): expense is NonGroupExpenseResponseItem {
-  return (
-    expense.groupId === undefined &&
-    ((!!expense.payments &&
-      expense.payments.length > 0 &&
-      "userId" in expense.payments[0]) ||
-      (!!expense.shares &&
-        expense.shares.length > 0 &&
-        "userId" in expense.shares[0]))
-  );
-}
-
-export const getExpenseType = (
-  expense: ExpenseResponseItem | undefined
-): ExpenseType => {
-  if (!expense) {
-    return "undefined expense";
-  }
-  if (isGroupExpense(expense)) {
-    return "Group";
-  }
-  if (isNonGroupExpense(expense)) {
-    return "NonGroup";
-  }
-  
-  return "Personal";
-};

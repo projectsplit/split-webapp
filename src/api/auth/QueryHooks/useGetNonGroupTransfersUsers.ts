@@ -18,6 +18,6 @@ export const useGetNonGroupTransferUsers = (transactionType: TransactionType) =>
 	return useQuery({
 		queryKey: ["non-group-transfer-users"],
 		queryFn: () => getNonGroupTransferUsers(),
-		enabled: transactionType === "NonGroup",
+		enabled: transactionType === TransactionType.NonGroup,
 	});
 }

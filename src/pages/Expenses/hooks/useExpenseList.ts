@@ -16,9 +16,9 @@ export const useExpenseList = (
   timeZoneId: string
 ) => {
 
-  const isGroup = transactionType === "Group";
-  const isNonGroup = transactionType === "NonGroup";
-  const isPersonal = transactionType === "Personal";
+  const isGroup = transactionType === TransactionType.Group;
+  const isNonGroup = transactionType === TransactionType.NonGroup;
+  const isPersonal = transactionType === TransactionType.Personal;
 
   const groupQuery = useGetGroupExpenses(
     group,
