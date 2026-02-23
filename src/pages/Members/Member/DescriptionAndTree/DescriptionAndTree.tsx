@@ -1,9 +1,8 @@
-import { useOutletContext } from "react-router-dom";
 import Tree from "../../../../components/Tree/Tree";
 import { DescriptionAndTreeProps } from "../../../../interfaces";
 import { MemberDetailedDescription } from "../MemberDetailedDescription/MemberDetailedDescription";
 import { StyledDescriptionAndTree } from "./DescriptionAndTree.Styled";
-import { TransactionType } from "@/types";
+import { Mode } from "@/types";
 
 
 export const DescriptionAndTree = ({
@@ -17,10 +16,10 @@ export const DescriptionAndTree = ({
   treeItems,
   participants,
   userOrMemberId,
-  transactionType
+  mode
 }: DescriptionAndTreeProps) => {
 
-  const conditionForTree = (showTree && transactionType === TransactionType.Group) || (showTree && isLogedUser);
+  const conditionForTree = (showTree && mode === Mode.Group) || (showTree && isLogedUser);
   return (
     <StyledDescriptionAndTree>
       <MemberDetailedDescription
@@ -32,7 +31,7 @@ export const DescriptionAndTree = ({
         name={name}
         participants={participants}
         userOrMemberId={userOrMemberId}
-        transactionType={transactionType}
+        mode={mode}
       />
       {conditionForTree && <Tree items={treeItems} />}
 

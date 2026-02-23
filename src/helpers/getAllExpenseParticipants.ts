@@ -1,14 +1,14 @@
-import { ExpenseResponseItem, Guest, Member, TransactionType, TruncatedMember } from "@/types";
+import { ExpenseResponseItem, Guest, Member, Mode, TruncatedMember } from "@/types";
 import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
 
 export default function getAllExpenseParticipants(
   expenses: ExpenseResponseItem[] | undefined,
-  transactionType: TransactionType,
+  mode: Mode,
   members: Member[],
   guests: Guest[],
   nonGroupUsers: TruncatedMember[] = []
 ): TruncatedMember[] {
-  if (transactionType === TransactionType.Group) {
+  if (mode === Mode.Group) {
     return mergeMembersAndGuests(members || [], guests || []);
   }
 

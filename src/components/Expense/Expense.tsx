@@ -5,6 +5,7 @@ import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount
 import { TimeOnly } from "../../helpers/timeHelpers";
 import Pill from "../Pill/Pill";
 import labelColors from "../../labelColors";
+import { Mode } from "@/types";
 
 const Expense = ({
   timeZoneId,
@@ -16,6 +17,7 @@ const Expense = ({
   occurred,
   userAmount,
   labels,
+  mode,
 }: ExpenseProps) => {
   return (
     <StyledExpense onClick={onClick} userAmount={userAmount}>
@@ -43,20 +45,28 @@ const Expense = ({
         <div className="descr">
           {description ? <span>{description}</span> : location ? <span>{location.google?.name}</span> : ""}
         </div>
-        <div className="amounts">
-          <div className="groupTotal">
-            {amount === 0 ? "" : <div className="legendGroup" />}
-            <div className="amount">
-              {displayCurrencyAndAmount(Math.abs(amount).toString(), currency)}
-            </div>
-          </div>
+        {mode === Mode.Personal ? <div className="amounts">
           <div className="userShare">
-            {userAmount === 0 ? "" : <div className="legendUser" />}
+            {amount === 0 ? "" : <div className="legendUser" />}
             <div className="amount">
-              {userAmount === 0 ? "" : displayCurrencyAndAmount(Math.abs(userAmount).toString(), currency)}
+              {amount === 0 ? "" : displayCurrencyAndAmount(Math.abs(amount).toString(), currency)}
             </div>
           </div>
-        </div>
+        </div> :
+          <div className="amounts">
+            <div className="groupTotal">
+              {amount === 0 ? "" : <div className="legendGroup" />}
+              <div className="amount">
+                {displayCurrencyAndAmount(Math.abs(amount).toString(), currency)}
+              </div>
+            </div>
+            <div className="userShare">
+              {userAmount === 0 ? "" : <div className="legendUser" />}
+              <div className="amount">
+                {userAmount === 0 ? "" : displayCurrencyAndAmount(Math.abs(userAmount).toString(), currency)}
+              </div>
+            </div>
+          </div>}
       </div>
     </StyledExpense>
   );

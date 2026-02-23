@@ -2,24 +2,24 @@ import { useMemo } from "react";
 import { Signal } from "@preact/signals-react";
 import { useDebts } from "@/api/auth/QueryHooks/useDebts";
 import { getAllCurrencyTotals, getCurrencyValues, getTotalByCurrency } from "@/helpers/getTotalsByCurrency";
-import { ExpenseParsedFilters, Group, TransactionType, UserInfo } from "@/types";
+import { ExpenseParsedFilters, Group, Mode, UserInfo } from "@/types";
 
 export const useExpenseTotals = (
   group: Group | null,
-  transactionType: TransactionType,
+  mode: Mode,
   userInfo: UserInfo,
   userMemberId: string | undefined,
   expenseParsedFilters: Signal<ExpenseParsedFilters>
 ) => {
   //TODO: add condition to exlcude if transaction type is Personal as different endpoint will be used.
   //I think that due to enabled these will never run anyway
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(transactionType, group?.id, expenseParsedFilters);
+  const { data: debts, isFetching: totalsAreFetching } = useDebts(mode, group?.id, expenseParsedFilters);
 
   const totals = useMemo(() => {
     const totalSpent: Record<string, Record<string, number>> = debts?.totalSpent ?? {};
 
     const groupTotalsByCurrency = getAllCurrencyTotals(totalSpent);
-    const userTotalsByCurrency = transactionType === TransactionType.Group
+    const userTotalsByCurrency = mode === Mode.Group
       ? getCurrencyValues(totalSpent, userMemberId)
       : getCurrencyValues(totalSpent, userInfo?.userId);
 
@@ -29,7 +29,7 @@ export const useExpenseTotals = (
     );
 
     const userExpense =
-      transactionType === TransactionType.Group
+      mode === Mode.Group
         ? userMemberId && group?.currency
           ? totalSpent[userMemberId]?.[group?.currency] ?? 0
           : 0
@@ -44,7 +44,7 @@ export const useExpenseTotals = (
       userExpense,
       shouldOpenMultiCurrencyTable,
     };
-  }, [debts, transactionType, userMemberId, userInfo, group]);
+  }, [debts, mode, userMemberId, userInfo, group]);
 
   return { ...totals, totalsAreFetching };
 };

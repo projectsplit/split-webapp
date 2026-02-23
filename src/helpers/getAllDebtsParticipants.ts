@@ -1,13 +1,13 @@
-import { Debt, Guest, Member, TransactionType, TransferResponseItem, TruncatedMember } from "@/types";
+import { Debt, Guest, Member, Mode, TruncatedMember } from "@/types";
 import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
 
 export default function getAllDebtsParticipants(
   debts: Debt[],
-  transactionType: TransactionType,
+  mode: Mode,
   members: Member[],
   guests: Guest[],
 ): TruncatedMember[] {
-  if (transactionType === TransactionType.Group) {
+  if (mode === Mode.Group) {
     return mergeMembersAndGuests(members || [], guests || []);
   }
 

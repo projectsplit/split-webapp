@@ -1,18 +1,18 @@
 import { Signal } from "@preact/signals-react";
-import { TransactionType, Group, TransferParsedFilters } from "../../../types";
+import { Mode, Group, TransferParsedFilters } from "../../../types";
 import useGetGroupTransfers from "../../../api/auth/QueryHooks/useGetGroupTransfers";
 import useGetNonGroupTransfers from "../../../api/auth/QueryHooks/useGetNonGroupTransfers";
 
 
 export const useTransferList = (
-  transactionType: TransactionType,
+  mode: Mode,
   group: Group,
   transferParsedFilters: Signal<TransferParsedFilters>,
   pageSize: number,
   timeZoneId: string,
 ) => {
 
-  const isNonGroup = transactionType === TransactionType.NonGroup;
+  const isNonGroup = mode === Mode.NonGroup;
 
 
   const groupQuery = useGetGroupTransfers(

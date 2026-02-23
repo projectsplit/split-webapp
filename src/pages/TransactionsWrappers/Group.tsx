@@ -8,13 +8,7 @@ import {
 import { StyledGroup } from "./Group.styled";
 import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
 import { signal, Signal, useSignal } from "@preact/signals-react";
-import {
-  ExpenseParsedFilters,
-  ExpenseResponseItem,
-  TransactionType,
-  TransferParsedFilters,
-  UserInfo,
-} from "../../types";
+import { type ExpenseParsedFilters, type ExpenseResponseItem, type Group, Mode, type UserInfo, type TransferParsedFilters } from '../../types'
 import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
 import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
 import NewExpenseAnimation from "../../components/Animations/NewExpenseAnimation";
@@ -54,7 +48,7 @@ export default function Group() {
   const location = useLocation();
   const path = location.pathname.split("/").pop() || "";
   const navigate = useNavigate();
-  const transactionType: TransactionType = "Group" as const;
+  const mode: Mode = Mode.Group;
 
   const {
     userInfo,
@@ -143,7 +137,7 @@ export default function Group() {
               showBottomBar,
               expenseParsedFilters,
               transferParsedFilters,
-              transactionType
+              mode,
             }}
           />
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}

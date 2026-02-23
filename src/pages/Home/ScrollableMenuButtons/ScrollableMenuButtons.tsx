@@ -1,4 +1,4 @@
-import { Details, GroupedTransaction, GroupsAllBalancesResponse, MostRecentGroupDetailsResponse, TransactionType, UserInfo } from "@/types";
+import { Details, GroupedTransaction, GroupsAllBalancesResponse, MostRecentGroupDetailsResponse, UserInfo } from "@/types";
 import { StyledScrollableMenuButtons } from "./ScrollableMenuButtons.styled";
 import { NavigateFunction } from "react-router-dom";
 import MostRecentSection from "../MostRecentSection/MostRecentSection";

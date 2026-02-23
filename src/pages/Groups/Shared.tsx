@@ -19,7 +19,7 @@ import GroupSearchBarAnimation from "../../components/Animations/GroupSearchBarA
 import useDebounce from "@/hooks/useDebounce";
 import NoGroupsFound from "./NoGroupsFound/NoGroupsFound";
 import OptionsButtons from "./OptionsButtons/OptionsButtons";
-import { TransactionType, UserInfo } from "@/types";
+import { Mode, UserInfo } from "@/types";
 import { computeNetPerCurrency } from "@/helpers/computeNetPerCurrency";
 import { useGroupsList } from "./hooks/useGroupList";
 import { useFetchAndGroupNonGroupDebts } from "./hooks/useFetchAndGroupNonGroupDebts";
@@ -47,6 +47,7 @@ export default function Shared() {
       userInfo: UserInfo;
     }>();
 
+  const mode = activeGroupCatAsState.value === "NonGroup" ? Mode.NonGroup : Mode.Group;
   const navigate = useNavigate();
   const pageSize = 10;
 
@@ -61,8 +62,7 @@ export default function Shared() {
   const {
     groupedTransactions,
     isFetchingDebts,
-  } = useFetchAndGroupNonGroupDebts(userInfo?.userId || "", activeGroupCatAsState.value as TransactionType);
-
+  } = useFetchAndGroupNonGroupDebts(userInfo?.userId || "", mode);
 
   useEffect(() => {
     if (!showSearchBar.value) return;

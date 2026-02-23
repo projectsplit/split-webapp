@@ -1,5 +1,5 @@
 import { apiClient } from "@/api/apiClients";
-import { DebtsResponse, TransactionType } from "@/types";
+import { DebtsResponse, Mode } from "@/types";
 import { Signal } from "@preact/signals-react";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
@@ -7,7 +7,7 @@ import { ExpenseParsedFilters, TransferParsedFilters } from "../../../types";
 import { appendNonGroupFilterToParams } from "../helpers/appendNonGroupFilterToParams";
 
 const useNonGroupDebts = (
-  transactionType: TransactionType,
+  mode: Mode,
   expenseParsedFilters?: Signal<ExpenseParsedFilters>,
   transferParsedFilters?: Signal<TransferParsedFilters>,
 
@@ -22,7 +22,7 @@ const useNonGroupDebts = (
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     staleTime: 9000,
-    enabled: transactionType === TransactionType.NonGroup,
+    enabled: mode === Mode.NonGroup,
   });
 };
 

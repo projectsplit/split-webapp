@@ -1,14 +1,14 @@
-import { Guest, Member, TransactionType, TransferResponseItem, TruncatedMember } from "@/types";
+import { Guest, Member, Mode, TransferResponseItem, TruncatedMember } from "@/types";
 import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
 
 export default function getAllTransfersParticipants(
   transfers: TransferResponseItem[] | undefined,
-  transactionType: TransactionType,
+  mode: Mode,
   members: Member[],
   guests: Guest[],
   nonGroupUsers: TruncatedMember[] = []
 ): TruncatedMember[] {
-  if (transactionType === TransactionType.Group) {
+  if (mode === Mode.Group) {
     return mergeMembersAndGuests(members || [], guests || []);
   }
 
@@ -27,14 +27,14 @@ export default function getAllTransfersParticipants(
     }
   }
 
-  if(uniqueUserIds.size === 0){
-    
+  if (uniqueUserIds.size === 0) {
+
     return nonGroupUsers.map(u => u.id)
-    .filter((id) => nonGroupUserMap.has(id))
-    .map((id) => ({
-      id,
-      name: nonGroupUserMap.get(id)!,
-    }));
+      .filter((id) => nonGroupUserMap.has(id))
+      .map((id) => ({
+        id,
+        name: nonGroupUserMap.get(id)!,
+      }));
 
   }
 

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useOutletContext } from "react-router-dom";
 import { StyledPersonal } from "./Personal.styled";
-import { ExpenseParsedFilters, ExpenseResponseItem, User, UserInfo } from "@/types";
+import { ExpenseParsedFilters, ExpenseResponseItem, Mode, UserInfo } from "../../types";
 import { useSignal, Signal, signal } from "@preact/signals-react";
 import NewExpenseAnimation from "@/components/Animations/NewExpenseAnimation";
 import MenuAnimationBackground from "@/components/Animations/MenuAnimationBackground";
@@ -31,7 +31,7 @@ export const Personal = () => {
           showBottomBar,
           expenseParsedFilters,
           transferParsedFilters,
-          transactionType: "Personal",
+          mode: Mode.Personal,
           group: null,
         }}
 

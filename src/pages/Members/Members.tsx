@@ -2,7 +2,7 @@ import { StyledMembers } from "./Members.styled";
 import { useOutletContext, useParams } from "react-router-dom";
 import { useEffect, useMemo } from "react";
 import { groupTransactions } from "../../helpers/groupTransactions";
-import { Group, TransactionType, UserInfo } from "../../types";
+import { Group, Mode, UserInfo } from "../../types";
 import { Signal, useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
 import MemberFC from "./Member/MemberFC";
@@ -18,14 +18,14 @@ export default function Members() {
   const guestToBeReplaced = useSignal<{ guestId: string; guestName: string }>({ guestId: "", guestName: "" });
 
   const { groupid } = useParams();
-  const { userInfo, group, showBottomBar, transactionType } = useOutletContext<{
+  const { userInfo, group, showBottomBar, mode } = useOutletContext<{
     userInfo: UserInfo;
     group: Group;
     showBottomBar: Signal<boolean>;
-    transactionType: TransactionType;
+    mode: Mode;
   }>();
 
-  const { data, isFetching, isLoading } = useDebts(transactionType, groupid);
+  const { data, isFetching } = useDebts(mode, groupid);
   const { debts, totalSpent } = data ?? { debts: [], totalSpent: {} };
 
   const members = group?.members;
@@ -33,12 +33,12 @@ export default function Members() {
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
   const allParticipants = getAllDebtsParticipants(debts,
-    transactionType,
+    mode,
     members,
     guests);
 
   const { groupedTransactions } = useMemo(() => {
-    const groupedTransactions = transactionType === TransactionType.Group ? groupTransactions(
+    const groupedTransactions = mode === Mode.Group ? groupTransactions(
       debts ?? [],
       allParticipants ?? [],
       userMemberId || ""
@@ -62,7 +62,7 @@ export default function Members() {
     );
   }//TODO Maybe replace with a message after it fails for a while?
 
-  const sortedParticipants = transactionType === "Group" ? [...allParticipants].sort((a, b) => {
+  const sortedParticipants = mode === Mode.Group ? [...allParticipants].sort((a, b) => {
     if (a.id === userMemberId) return -1;
     if (b.id === userMemberId) return 1;
     return 0;

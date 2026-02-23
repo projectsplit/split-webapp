@@ -3,7 +3,7 @@ import { StyledFiltersAndBars } from "./FiltersAndBars.styled"
 import { renderTransferFilterPills } from "@/helpers/renderTransferFilterPills";
 import BarsWithLegends from "@/components/BarsWithLegends/BarsWithLegends";
 import { Signal } from "@preact/signals-react";
-import { TransferParsedFilters, Group, TruncatedMember, UserInfo, TransactionType } from "@/types";
+import { TransferParsedFilters, Group, TruncatedMember, UserInfo, Mode } from "@/types";
 import { QueryClient } from "@tanstack/react-query";
 import { useTransferTotals } from "../hooks/useTransferTotals";
 
@@ -13,7 +13,7 @@ interface FiltersAndBarsInterface {
   group: Group
   queryClient: QueryClient
   userInfo: UserInfo
-  transactionType: TransactionType
+  mode: Mode
   userMemberId: string | undefined
   menu: Signal<string | null>
   currency: string
@@ -25,7 +25,7 @@ export const FiltersAndBars = ({
   group,
   queryClient,
   userInfo,
-  transactionType,
+  mode,
   userMemberId,
   menu,
   currency
@@ -36,7 +36,7 @@ export const FiltersAndBars = ({
     usertotalSent,
     shouldOpenMultiCurrencyTable,
     totalsAreFetching
-  } = useTransferTotals(group, transactionType, userInfo, userMemberId, transferParsedFilters);
+  } = useTransferTotals(group, mode, userInfo, userMemberId, transferParsedFilters);
 
   return (
     <StyledFiltersAndBars>

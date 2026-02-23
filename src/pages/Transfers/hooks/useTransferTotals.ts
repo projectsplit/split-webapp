@@ -2,33 +2,33 @@ import { useMemo } from "react";
 import { Signal } from "@preact/signals-react";
 import { useDebts } from "@/api/auth/QueryHooks/useDebts";
 import { getCurrencyValues } from "@/helpers/getTotalsByCurrency";
-import { TransferParsedFilters, Group, TransactionType, UserInfo } from "@/types";
+import { Mode, TransferParsedFilters, Group, UserInfo } from "@/types";
 import { totalsCalculator } from "../utilities.ts/totalsCalculator";
 
 export const useTransferTotals = (
   group: Group | null,
-  transactionType: TransactionType,
+  mode: Mode,
   userInfo: UserInfo,
   userMemberId: string | undefined,
   transferParsedFilters: Signal<TransferParsedFilters>
 ) => {
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(transactionType, group?.id, undefined, transferParsedFilters);
+  const { data: debts, isFetching: totalsAreFetching } = useDebts(mode, group?.id, undefined, transferParsedFilters);
 
   const totals = useMemo(() => {
     const groupTotalReceived = debts?.totalReceived ?? {};
     const groupTotalSent = debts?.totalSent ?? {};
 
-    const userTotalSentByCurr = transactionType === TransactionType.Group
+    const userTotalSentByCurr = mode === Mode.Group
       ? getCurrencyValues(groupTotalSent, userMemberId)
       : getCurrencyValues(groupTotalSent, userInfo?.userId);
 
-    const userTotalReceivedByCurr = transactionType === TransactionType.Group
+    const userTotalReceivedByCurr = mode === Mode.Group
       ? getCurrencyValues(groupTotalReceived, userMemberId)
       : getCurrencyValues(groupTotalReceived, userInfo?.userId);
 
     const { usertotalReceived, usertotalSent, shouldOpenMultiCurrencyTable } = totalsCalculator(
       debts,
-      transactionType,
+      mode,
       userMemberId,
       group!,
       userInfo
@@ -41,7 +41,7 @@ export const useTransferTotals = (
       usertotalSent,
       shouldOpenMultiCurrencyTable,
     };
-  }, [debts, transactionType, userMemberId, userInfo, group]);
+  }, [debts, mode, userMemberId, userInfo, group]);
 
   return { ...totals, totalsAreFetching };
 };

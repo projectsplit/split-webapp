@@ -1,18 +1,18 @@
 import { useDebts } from "@/api/auth/QueryHooks/useDebts";
 import getAllDebtsParticipants from "@/helpers/getAllDebtsParticipants";
 import { groupTransactions } from "@/helpers/groupTransactions";
-import { TransactionType } from "@/types";
+import { Mode } from "@/types";
 import { useMemo } from "react";
 
-export function useFetchAndGroupNonGroupDebts(userId: string, transactionType: TransactionType) {
-    const isNonGroupMode = transactionType === TransactionType.NonGroup;
+export function useFetchAndGroupNonGroupDebts(userId: string, mode: Mode) {
+    const isNonGroupMode = mode === Mode.NonGroup;
 
-    const { data: debtsData, isFetching, isLoading } = useDebts(transactionType);
+    const { data: debtsData, isFetching, isLoading } = useDebts(mode);
 
     const { debts = [], totalSpent = {} } = debtsData ?? {};
 
     const allParticipants = useMemo(
-        () => (isNonGroupMode ? getAllDebtsParticipants(debts, TransactionType.NonGroup, [], []) : []),
+        () => (isNonGroupMode ? getAllDebtsParticipants(debts, Mode.NonGroup, [], []) : []),
         [debts, isNonGroupMode]
     );
 

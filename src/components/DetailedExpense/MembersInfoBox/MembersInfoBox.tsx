@@ -14,7 +14,7 @@ export default function MembersInfoBox({
   participants,
   userMemberId,
   userId,
-  transactionType
+  expenseType
 }: MembersInfoBoxProps) {
   const [hide, setHide] = React.useState<boolean>(false);
 
@@ -26,7 +26,7 @@ export default function MembersInfoBox({
   };
 
   const sortedTransactions = [...(transactions || [])].sort((a, b) => {
-    if (transactionType === TransactionType.Group) {
+    if (expenseType === TransactionType.Group) {
       const aId = getId(a);
       const bId = getId(b);
       if (aId === userMemberId) return -1;
@@ -43,7 +43,7 @@ export default function MembersInfoBox({
   });
 
   const totalAmount = transactions?.reduce(
-    (acc, { amount }) => acc.add(amount),
+    (acc: any, { amount }: { amount: number }) => acc.add(amount),
     Currency(0)
   );
 
@@ -54,19 +54,19 @@ export default function MembersInfoBox({
           {areShares ? (
             <div className="info">
               {sortedTransactions?.length === 1 ? (
-                <span>billed to {sortedTransactions?.length} {transactionType === TransactionType.Group ? "member" : "user"}</span>
+                <span>billed to {sortedTransactions?.length} {expenseType === TransactionType.Group ? "member" : "user"}</span>
               ) : sortedTransactions?.length === 2 ? (
-                <span>Split between {sortedTransactions?.length} {transactionType === TransactionType.Group ? "members" : "users"}</span>
+                <span>Split between {sortedTransactions?.length} {expenseType === TransactionType.Group ? "members" : "users"}</span>
               ) : (
-                <span> Split among {sortedTransactions?.length} {transactionType === TransactionType.Group ? "members" : "users"}</span>
+                <span> Split among {sortedTransactions?.length} {expenseType === TransactionType.Group ? "members" : "users"}</span>
               )}
             </div>
           ) : (
             <div className="info">
               {sortedTransactions?.length === 1 ? (
-                <span>Paid by {sortedTransactions?.length} {transactionType === TransactionType.Group ? "member" : "user"}</span>
+                <span>Paid by {sortedTransactions?.length} {expenseType === TransactionType.Group ? "member" : "user"}</span>
               ) : (
-                <span>Paid by {sortedTransactions?.length} {transactionType === TransactionType.Group ? "members" : "users"}</span>
+                <span>Paid by {sortedTransactions?.length} {expenseType === TransactionType.Group ? "members" : "users"}</span>
               )}
             </div>
           )}

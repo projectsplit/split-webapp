@@ -1,3 +1,4 @@
+import { Mode } from "@/types";
 import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
 import { BarsAndAmountsProps } from "../../../interfaces";
 import { StyledBarsAndAmounts } from "./BarsAndAmounts.styled";
@@ -9,6 +10,7 @@ export const BarsAndAmounts = ({
   bar2Total,
   bar1Color,
   bar2Color,
+  mode,
 }: BarsAndAmountsProps) => {
 
   const scalingFactor =0.05;
@@ -20,6 +22,7 @@ export const BarsAndAmounts = ({
 
   return (
     <StyledBarsAndAmounts onClick={onClick}>
+      {mode !== Mode.Personal && (
       <div className="barAndAmount">
         <div
           className="bar1"
@@ -33,6 +36,7 @@ export const BarsAndAmounts = ({
           {displayCurrencyAndAmount(bar1Total.toString(), currency)}
         </div>
       </div>
+      )}
       <div className="barAndAmount">
         <div
           className="bar2"

@@ -2,23 +2,23 @@ import { Signal } from "@preact/signals-react";
 import {
   ExpenseParsedFilters,
   Group,
-  TransactionType,
+  Mode,
 } from "../../../types";
 import useGetGroupExpenses from "../../../api/auth/QueryHooks/useGetGroupExpenses";
 import { useGetNonGroupExpenses } from "../../../api/auth/QueryHooks/useGetNonGroupExpenses";
 import { useGetPersonalExpenses } from "../../../api/auth/QueryHooks/useGetPersonalExpenses";
 
 export const useExpenseList = (
-  transactionType: TransactionType,
+  mode: Mode,
   group: Group,
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   pageSize: number,
   timeZoneId: string
 ) => {
 
-  const isGroup = transactionType === TransactionType.Group;
-  const isNonGroup = transactionType === TransactionType.NonGroup;
-  const isPersonal = transactionType === TransactionType.Personal;
+  const isGroup = mode === Mode.Group;
+  const isNonGroup = mode === Mode.NonGroup;
+  const isPersonal = mode === Mode.Personal;
 
   const groupQuery = useGetGroupExpenses(
     group,

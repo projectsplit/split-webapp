@@ -1,9 +1,15 @@
 import styled from "styled-components";
 import { StyledMiddleScreenMenu } from "../Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import { Mode } from "@/types";
 
-export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
+interface StyledDetailedExpenseProps {
+  mode: Mode;
+}
+
+export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetailedExpenseProps>`
   display: flex;
   flex-direction: column;
+  
   height: 99vh;
   top: 0.3%;
   overflow: auto;
@@ -34,6 +40,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
   .descriptionAndCloseButton {
     display: flex;
     flex-direction: row;
+    
     align-items: center;
     justify-content: space-between;
     .expenseName {
@@ -73,7 +80,9 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 18px;
+    margin-top: ${({ mode }) => (mode === Mode.Personal ? "50px" : "15px")};
+    margin-bottom: ${({ mode }) => (mode === Mode.Personal ? "30px" : "15px")};
+    font-size: ${({ mode }) => mode === Mode.Personal ? "60px" : "18px"};
     font-weight: 400;
     color: ${({ theme }) => theme.whiteText};
 

@@ -15,7 +15,6 @@ import {
   Group,
   Guest,
   Member,
-  TransactionType,
   User,
   UserInfo,
 } from "../../types";

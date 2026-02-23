@@ -11,7 +11,7 @@ import MapsInfoBox from "./MapsInfoBox/MapsInfoBox";
 import MenuAnimationBackground from "../Animations/MenuAnimationBackground";
 import { signal, useSignal } from "@preact/signals-react";
 import DeleteExpenseAnimation from "../Animations/DeleteExpenseAnimation";
-import { TransactionType, GeoLocation } from "../../types";
+import { Mode, TransactionType, GeoLocation } from "../../types";
 import EditExpenseAnimation from "../Animations/EditExpenseAnimation";
 import labelColors from "../../labelColors";
 import { buildFormExpense, toUser } from "./utils";
@@ -35,9 +35,11 @@ export default function DetailedExpense({
   userMemberId,
   group,
   userId,
-  transactionType
+  mode
 }: DetailedExpenseProps) {
+  const expenseType = selectedExpense.value?.transactionType;
   const googleUrl = "https://www.google.com/maps/search/?api=1&query=";
+  console.log(selectedExpense.value)
   // const theme = {
   //   text: {
   //     bold: "editor-bold",
@@ -66,10 +68,10 @@ export default function DetailedExpense({
   };
   const googleMapsUrl = googleMapsUrlBuilder(location);
 
-  const expenseToEdit = buildFormExpense(selectedExpense, transactionType, group);
+  const expenseToEdit = buildFormExpense(selectedExpense, mode, group);
 
   return (
-    <StyledDetailedExpense>
+    <StyledDetailedExpense mode={mode}>
       <div className="descriptionAndCloseButton">
         <div />
         <div className="descreption">
@@ -86,7 +88,7 @@ export default function DetailedExpense({
         <div className="dateAndLabels">
           <div className="labelsWrapper">
             <div className="labels">
-              {labels.map((l, i) => (
+              {labels.map((l: { text: string; color: string }, i: number) => (
                 <Pill
                   key={i}
                   title={l.text}
@@ -104,30 +106,32 @@ export default function DetailedExpense({
       <div className="total">
         {displayCurrencyAndAmount(amount.toString(), currency)}
       </div>
-      <MembersInfoBox
-        transactions={shares}
-        areShares={true}
-        currency={currency}
-        participants={participants}
-        userMemberId={userMemberId}
-        userId={userId}
-        transactionType={transactionType}
-      />
-      <MembersInfoBox
-        transactions={payments}
-        areShares={false}
-        currency={currency}
-        participants={participants}
-        userMemberId={userMemberId}
-        userId={userId}
-        transactionType={transactionType}
-      />
-      <MapsInfoBox location={location} googleMapsUrl={googleMapsUrl} />
+      {mode !== Mode.Personal && <div>
+        <MembersInfoBox
+          transactions={shares}
+          areShares={true}
+          currency={currency}
+          participants={participants}
+          userMemberId={userMemberId}
+          userId={userId}
+          expenseType={expenseType}
+        />
+        <MembersInfoBox
+          transactions={payments}
+          areShares={false}
+          currency={currency}
+          participants={participants}
+          userMemberId={userMemberId}
+          userId={userId}
+          expenseType={expenseType}
+        />
+      </div>}
+      {mode === Mode.Personal && !location ? null : <MapsInfoBox location={location} googleMapsUrl={googleMapsUrl} />}
 
       <div className="editDeleteButtons">
         <div className="dummyDiv" />
 
-        {(group && !group.isArchived) || (transactionType === TransactionType.NonGroup && !group) ? (
+        {(group && !group.isArchived) || (mode === Mode.NonGroup && !group) || expenseType === TransactionType.Personal ? (
           <div className="buttons">
             <div className="editButton">
               <MyButton onClick={() => (menu.value = "editExpense")}>
@@ -154,7 +158,7 @@ export default function DetailedExpense({
         <div className="dummyDiv" />
       </div>
       <div className="createdBy">
-        Created by {participants.find((x) => x.id === creator)?.name}{" "}
+        Created {mode === Mode.Personal ? "" : participants.find((x) => x.id === creator)?.name} {" "}
         {DateOnly(occurred, timeZoneId) === "Today" ||
           DateOnly(occurred, timeZoneId) === "Yesterday"
           ? DateOnly(created, timeZoneId)
@@ -207,8 +211,8 @@ export default function DetailedExpense({
         currency={currency}
         groupMembers={group ? signal([...group.members, ...group.guests]) : signal([])}
         nonGroupUsers={signal(participants.map(p => toUser(p)))}
-        isPersonal={transactionType===TransactionType.Personal ? signal(true) : signal(false)}
-        isnonGroupExpense={transactionType === TransactionType.NonGroup ? signal(true) : signal(false)}
+        isPersonal={mode === Mode.Personal ? signal(true) : signal(false)}
+        isnonGroupExpense={mode === Mode.NonGroup ? signal(true) : signal(false)}
       />
     </StyledDetailedExpense>
   );

@@ -813,7 +813,13 @@ export type SpendingChartsResponseItem = {
 export type Variant = "non" | "active" | "archived";
 
 export enum TransactionType {
-  Group = "Group",
-  NonGroup = "NonGroup",
-  Personal = "Personal",
+  Personal = 0,
+  Group = 1,
+  NonGroup = 2,
+}
+
+export enum Mode {
+  Personal = 0,
+  Group = 1,
+  NonGroup = 2,
 }

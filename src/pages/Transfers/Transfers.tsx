@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
-import { Group, TransactionType, TransferParsedFilters, TransferResponseItem, UserInfo } from "../../types";
+import { Group, Mode, TransferParsedFilters, TransferResponseItem, UserInfo } from "../../types";
 import { StyledTransfers } from "./Transfers.styled";
 import { useOutletContext } from "react-router-dom";
 import { Signal, useSignal } from "@preact/signals-react";
@@ -22,7 +22,7 @@ import { useTransferTotals } from "./hooks/useTransferTotals";
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
-  const { userInfo, group, showBottomBar, transferParsedFilters, transactionType } = useOutletContext<{ userInfo: UserInfo; group: Group; showBottomBar: Signal<boolean>; transferParsedFilters: Signal<TransferParsedFilters>; transactionType: TransactionType; }>();
+  const { userInfo, group, showBottomBar, transferParsedFilters, mode } = useOutletContext<{ userInfo: UserInfo; group: Group; showBottomBar: Signal<boolean>; transferParsedFilters: Signal<TransferParsedFilters>; mode: Mode; }>();
   const groupIsArchived = group?.isArchived;
   const errorMessage = useSignal<string>("");
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
@@ -34,11 +34,11 @@ const Transfers: React.FC = () => {
   const guests = group?.guests;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useTransferList(transactionType, group, transferParsedFilters, pageSize, timeZoneId);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useTransferList(mode, group, transferParsedFilters, pageSize, timeZoneId);
 
-  const { allUsers } = useGetAllNonGroupUsers(transactionType);
+  const { allUsers } = useGetAllNonGroupUsers(mode);
   const transfers = data?.pages.flatMap((p) => p.transfers);
-  const allParticipants = getAllTransfersParticipants(transfers, transactionType, members, guests, allUsers.map((u) => ({
+  const allParticipants = getAllTransfersParticipants(transfers, mode, members, guests, allUsers.map((u) => ({
     id: u.userId,
     name: u.username,
   }))
@@ -52,7 +52,7 @@ const Transfers: React.FC = () => {
     }
   }, [isFetching, isFetchingNextPage, showBottomBar]);
 
-  const { userTotalSentByCurr, userTotalReceivedByCurr } = useTransferTotals(group, transactionType, userInfo, userMemberId, transferParsedFilters);
+  const { userTotalSentByCurr, userTotalReceivedByCurr } = useTransferTotals(group, mode, userInfo, userMemberId, transferParsedFilters);
 
   if (isFetching && !isFetchingNextPage) {
     return (
@@ -79,7 +79,7 @@ const Transfers: React.FC = () => {
             group={group}
             queryClient={queryClient}
             userInfo={userInfo}
-            transactionType={transactionType}
+            mode={mode}
             userMemberId={userMemberId}
             menu={menu}
             currency={group?.currency || userInfo?.currency}

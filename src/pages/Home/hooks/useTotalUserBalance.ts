@@ -1,7 +1,7 @@
 import { useGetGroupsAllBalances } from "@/api/auth/QueryHooks/useGetGroupsAllBalances";
 import { computeNetPerCurrency } from "@/helpers/computeNetPerCurrency";
 import { useFetchAndGroupNonGroupDebts } from "@/pages/Groups/hooks/useFetchAndGroupNonGroupDebts";
-import { Details, GroupedTransaction, GroupsAllBalancesResponse } from "@/types";
+import { Details, GroupedTransaction, GroupsAllBalancesResponse, Mode } from "@/types";
 import { useMemo } from "react";
 
 
@@ -25,7 +25,7 @@ export function useTotalUserBalance(userId: string): UseTotalUserBalanceResult {
         groupedTransactions,
         isFetchingDebts,
         isLoadingDebts,
-    } = useFetchAndGroupNonGroupDebts(userId, "NonGroup");
+    } = useFetchAndGroupNonGroupDebts(userId, Mode.NonGroup);
 
     const totalBalances = useMemo<Details>(() => {
         if (!userId) return {};

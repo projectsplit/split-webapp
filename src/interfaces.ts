@@ -29,13 +29,14 @@ import {
   User,
   GroupPayment,
   GroupShare,
-  TransactionType,
   GroupTransaction,
   NonGroupTransaction,
   EnhancedPeopleWithProps,
   FetchedPeople,
   FilteredPeople,
   SplitCategory,
+  Mode,
+  TransactionType,
 } from "./types";
 import { ReadonlySignal, Signal } from "@preact/signals-react";
 import { EditorState } from "lexical";
@@ -62,6 +63,7 @@ export interface ExpenseProps {
   location: GeoLocation | undefined;
   userAmount: number;
   labels: Label[];
+ mode: Mode;
 }
 
 export interface MapsInfoBoxProps {
@@ -80,7 +82,7 @@ export interface MembersInfoBoxProps {
   participants: TruncatedMember[];
   userMemberId: string;
   userId: string;
-  transactionType: TransactionType;
+  expenseType?: TransactionType;
 }
 
 export interface DetailedExpenseProps {
@@ -107,7 +109,7 @@ export interface DetailedExpenseProps {
   userMemberId: string;
   group?: Group;
   userId: string;
-  transactionType: TransactionType;
+  mode: Mode;
 }
 
 export interface DetailedTransferProps {
@@ -656,6 +658,7 @@ export interface BarsWithLegendsProps {
   bar1Color: string;
   bar2Color: string;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  mode?: Mode;
 }
 
 export interface TransfersProps {
@@ -690,7 +693,7 @@ export interface RenderScenariosProps {
   treeItems: React.JSX.Element[];
   participants: TruncatedMember[];
   userOrMemberId: string;
-  transactionType: TransactionType;
+  mode: Mode;
 }
 export interface RenderSettledProps {
   name: string;
@@ -709,7 +712,7 @@ export interface RenderBothScenariosProps {
   memberOwesItems: React.JSX.Element[];
   participants: TruncatedMember[];
   userOrMemberId: string;
-  transactionType: TransactionType;
+  mode: Mode;
 }
 
 export interface MemberDetailedDescriptionProps {
@@ -721,7 +724,7 @@ export interface MemberDetailedDescriptionProps {
   name: string;
   participants: TruncatedMember[];
   userOrMemberId: string;
-  transactionType: TransactionType;
+  mode: Mode;
 }
 
 export interface DescriptionAndTreeProps {
@@ -735,7 +738,7 @@ export interface DescriptionAndTreeProps {
   treeItems: React.JSX.Element[];
   participants: TruncatedMember[];
   userOrMemberId: string;
-  transactionType: TransactionType;
+  mode: Mode;
 }
 
 export interface SettleUpButtonProps {
@@ -947,6 +950,7 @@ export interface BarsAndAmountsProps {
   bar2Total: number;
   bar1Color: string;
   bar2Color: string;
+  mode?: Mode;
 }
 
 export interface EditUsernameProps {

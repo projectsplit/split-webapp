@@ -1,7 +1,7 @@
 import { Signal } from "@preact/signals-react";
 import {
   ExpenseResponseItem,
-  TransactionType,
+  Mode,
   FormExpense,
   Group,
   GroupPayment,
@@ -14,7 +14,7 @@ import {
 
 export const buildFormExpense = (
   selectedExpense: Signal<ExpenseResponseItem | undefined | null>,
-  expenseType: TransactionType,
+  mode: Mode,
   group: Group | undefined
 ): FormExpense | undefined => {
   if (!selectedExpense.value) return undefined;
@@ -30,17 +30,17 @@ export const buildFormExpense = (
     lastUpdateTime: new Date(selectedExpense.value.updated),
   };
 
-  if (expenseType === TransactionType.Group) {
+  if (mode === Mode.Group) {
     return {
       ...baseExpense,
       groupId: group?.id,
-      participants: (selectedExpense.value.shares as GroupShare[]).map(
+      participants: (selectedExpense.value.shares as GroupShare[])?.map(
         (share) => ({
           memberId: share.memberId,
           participationAmount: share.amount.toString(),
         })
       ),
-      payers: (selectedExpense.value.payments as GroupPayment[]).map(
+      payers: (selectedExpense.value.payments as GroupPayment[])?.map(
         (payment) => ({
           memberId: payment.memberId,
           paymentAmount: payment.amount.toString(),
@@ -49,14 +49,14 @@ export const buildFormExpense = (
     };
   }
 
-  if (expenseType === TransactionType.NonGroup) {
+  if (mode === Mode.NonGroup) {
     return {
       ...baseExpense,
-      participants: (selectedExpense.value.shares as Share[]).map((share) => ({
+      participants: (selectedExpense.value.shares as Share[])?.map((share) => ({
         userId: share.userId,
         participationAmount: share.amount.toString(),
       })),
-      payers: (selectedExpense.value.payments as Payment[]).map((payment) => ({
+      payers: (selectedExpense.value.payments as Payment[])?.map((payment) => ({
         userId: payment.userId,
         paymentAmount: payment.amount.toString(),
       })),

@@ -12,7 +12,7 @@ export const RenderOwedOnly = ({
   treeItems,
   participants,
   userOrMemberId,
-  transactionType
+  mode
 }: RenderScenariosProps) => {
   return (
     <div className="isOwed">
@@ -27,7 +27,7 @@ export const RenderOwedOnly = ({
         treeItems={treeItems}
         participants={participants}
         userOrMemberId={userOrMemberId}
-        transactionType={transactionType}
+        mode={mode}
       />
     </div>
   );
@@ -43,7 +43,7 @@ export const RenderOwesOnly = ({
   treeItems,
   participants,
   userOrMemberId,
-  transactionType
+  mode
 }: RenderScenariosProps) => {
   return (
     <div className="owes">
@@ -58,7 +58,7 @@ export const RenderOwesOnly = ({
         treeItems={treeItems}
         participants={participants}
         userOrMemberId={userOrMemberId}
-        transactionType={transactionType}
+        mode={mode}
       />
     </div>
   );
@@ -94,7 +94,7 @@ export const RenderBoth = ({
   memberOwesItems,
   participants,
   userOrMemberId,
-  transactionType
+  mode
 }: RenderBothScenariosProps) => {
   const showOwedFirst =
     !doNotshowTreeWhenMemberIsOwed && doNotshowTreeWhenMemberOwes;
@@ -113,7 +113,7 @@ export const RenderBoth = ({
           treeItems={memberOwesItems}
           participants={participants}
           userOrMemberId={userOrMemberId}
-          transactionType={transactionType}
+          mode={mode}
         />
         <DescriptionAndTree
           memberTransactions={memberTransactions}
@@ -126,7 +126,7 @@ export const RenderBoth = ({
           treeItems={memberIsOwedItems}
           participants={participants}
           userOrMemberId={userOrMemberId}
-          transactionType={transactionType}
+          mode={mode}
         />
       </div>
     );
@@ -144,7 +144,7 @@ export const RenderBoth = ({
           treeItems={memberIsOwedItems}
           participants={participants}
           userOrMemberId={userOrMemberId}
-          transactionType={transactionType}
+          mode={mode}
         />
         <DescriptionAndTree
           memberTransactions={memberTransactions}
@@ -157,7 +157,7 @@ export const RenderBoth = ({
           treeItems={memberOwesItems}
           participants={participants}
           userOrMemberId={userOrMemberId}
-          transactionType={transactionType}
+          mode={mode}
         />
       </div>
     );
@@ -175,7 +175,7 @@ export const RenderBoth = ({
           treeItems={memberIsOwedItems}
           participants={participants}
           userOrMemberId={userOrMemberId}
-          transactionType={transactionType}
+          mode={mode}
         />
         <DescriptionAndTree
           memberTransactions={memberTransactions}
@@ -188,7 +188,7 @@ export const RenderBoth = ({
           treeItems={memberOwesItems}
           participants={participants}
           userOrMemberId={userOrMemberId}
-          transactionType={transactionType}
+          mode={mode}
         />
       </div>
     );

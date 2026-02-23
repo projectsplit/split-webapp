@@ -2,7 +2,7 @@ import Spinner from "@/components/Spinner/Spinner";
 import { StyledFiltersAndBars } from "./FiltersAndBars.styled";
 import { renderExpenseFilterPills } from "@/helpers/renderExpenseFilterPills";
 import BarsWithLegends from "@/components/BarsWithLegends/BarsWithLegends";
-import { ExpenseParsedFilters, Group, TransactionType, TruncatedMember } from "@/types";
+import { ExpenseParsedFilters, Group, Mode, TruncatedMember } from "@/types";
 import { Signal } from "@preact/signals-react";
 import { QueryClient } from "@tanstack/react-query";
 
@@ -11,7 +11,7 @@ interface FiltersAndBarsProps {
   allParticipants: TruncatedMember[];
   group: Group;
   queryClient: QueryClient;
-  transactionType: TransactionType;
+  mode: Mode;
   menu: Signal<string | null>;
   totalsAreFetching: boolean;
   totalExpense: number;
@@ -24,7 +24,7 @@ export const FiltersAndBars = ({
   allParticipants,
   group,
   queryClient,
-  transactionType,
+  mode,
   menu,
   totalsAreFetching,
   totalExpense,
@@ -50,14 +50,15 @@ export const FiltersAndBars = ({
             )}
           </div>
           <BarsWithLegends
+            mode={mode}
             bar1Legend={
-              transactionType === TransactionType.Group
+              mode === Mode.Group
                 ? "Group Total"
-                : transactionType === TransactionType.NonGroup
+                : mode === Mode.NonGroup
                   ? "Total"
                   : ""
             }
-            bar2Legend="Your Share"
+            bar2Legend={"Your Share"}
             bar1Total={totalExpense || 0}
             bar2Total={userExpense || 0}
             currency={currency}

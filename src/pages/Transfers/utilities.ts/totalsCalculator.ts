@@ -1,6 +1,6 @@
-import { DebtsResponse, Group, TransactionType, UserInfo } from "@/types";
+import { DebtsResponse, Group, Mode, UserInfo } from "@/types";
 
-export const totalsCalculator = (debts: DebtsResponse | undefined, transactionType: TransactionType, userMemberId: string | undefined, group: Group, userInfo: UserInfo) => {
+export const totalsCalculator = (debts: DebtsResponse | undefined, mode: Mode, userMemberId: string | undefined, group: Group, userInfo: UserInfo) => {
 
   const groupTotalReceived: Record<
     string,
@@ -19,7 +19,7 @@ export const totalsCalculator = (debts: DebtsResponse | undefined, transactionTy
   let usertotalReceived: number;
   let usertotalSent: number;
 
-  if (transactionType === TransactionType.Group) {
+  if (mode === Mode.Group) {
     usertotalReceived = userMemberId && group.currency
       ? groupTotalReceived[userMemberId]?.[group.currency] ?? 0
       : 0;
@@ -29,7 +29,7 @@ export const totalsCalculator = (debts: DebtsResponse | undefined, transactionTy
       : 0;
   }
 
-  if (transactionType === TransactionType.Group) {
+  if (mode === Mode.Group) {
     usertotalSent =
       userMemberId && group.currency
         ? groupTotalSent[userMemberId]?.[group.currency] ?? 0

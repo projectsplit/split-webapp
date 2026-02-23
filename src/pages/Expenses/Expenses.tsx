@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import Expense from "../../components/Expense/Expense";
 import { useQueryClient } from "@tanstack/react-query";
-import { ExpenseParsedFilters, ExpenseResponseItem, Group, TransactionType, UserInfo, } from "../../types";
+import { ExpenseParsedFilters, ExpenseResponseItem, Group, UserInfo, Mode } from "../../types";
 import { useOutletContext } from "react-router-dom";
 import { StyledExpenses } from "./Expenses.styled";
 import { Signal, useSignal } from "@preact/signals-react";
@@ -28,10 +28,10 @@ const Expenses = () => {
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
   const queryClient = useQueryClient();
 
-  const { userInfo, group, showBottomBar, expenseParsedFilters, transactionType,
+  const { userInfo, group, showBottomBar, expenseParsedFilters, mode,
   } = useOutletContext<{
     userInfo: UserInfo; group: Group; showBottomBar: Signal<boolean>;
-    expenseParsedFilters: Signal<ExpenseParsedFilters>; transactionType: TransactionType;
+    expenseParsedFilters: Signal<ExpenseParsedFilters>; mode: Mode;
   }>();
 
   const timeZoneId = userInfo?.timeZone;
@@ -39,22 +39,22 @@ const Expenses = () => {
   const userMemberId = group?.members?.find((m) => m.userId === userInfo?.userId)?.id;//group specific
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching
-  } = useExpenseList(transactionType, group, expenseParsedFilters, pageSize, timeZoneId);
-
-  const { allUsers } = useGetAllNonGroupUsers(transactionType);
+  } = useExpenseList(mode, group, expenseParsedFilters, pageSize, timeZoneId);
+  const { allUsers } = useGetAllNonGroupUsers(mode);
   const expenses = data?.pages.flatMap((p) => p.expenses);
 
+
   const allParticipants =
-    transactionType === TransactionType.Personal ? [] : getAllExpenseParticipants(expenses, transactionType, group?.members || [], group?.guests || [],
+    mode === Mode.Personal ? [] : getAllExpenseParticipants(expenses, mode, group?.members || [], group?.guests || [],
       allUsers.map((u) => ({
         id: u.userId,
         name: u.username,
       }))
     );
 
-  //TODO: add condition to exlcude if transaction type is Personal as different endpoint will be used.
+  //TODO: add condition to exlcude if mode is Personal as different endpoint will be used.
   const { groupTotalsByCurrency, userTotalsByCurrency, totalExpense, userExpense, shouldOpenMultiCurrencyTable, totalsAreFetching } =
-    useExpenseTotals(group, transactionType, userInfo, userMemberId, expenseParsedFilters);
+    useExpenseTotals(group, mode, userInfo, userMemberId, expenseParsedFilters);
 
 
   useEffect(() => {
@@ -79,10 +79,10 @@ const Expenses = () => {
 
   const getUserAmount = (e: ExpenseResponseItem) => {
     if (isGroupExpense(e)) {
-      return e.shares.find((x) => x.memberId === userMemberId)?.amount ?? 0;
+      return e.shares?.find((x) => x.memberId === userMemberId)?.amount ?? 0;
     }
     if (isNonGroupExpense(e)) {
-      return e.shares.find((x) => x.userId === userInfo?.userId)?.amount ?? 0;
+      return e.shares?.find((x) => x.userId === userInfo?.userId)?.amount ?? 0;
     }
     return e.amount;
   };
@@ -103,7 +103,7 @@ const Expenses = () => {
             allParticipants={allParticipants}
             group={group}
             queryClient={queryClient}
-            transactionType={transactionType}
+            mode={mode}
             menu={menu}
             totalsAreFetching={totalsAreFetching}
             totalExpense={totalExpense}
@@ -130,6 +130,7 @@ const Expenses = () => {
                         onClick={() => (selectedExpense.value = e)}
                         userAmount={getUserAmount(e)}
                         labels={e.labels}
+                        mode={mode}
                       />
                     </div>
                   ))}
@@ -164,7 +165,8 @@ const Expenses = () => {
           userMemberId={userMemberId || ""}
           group={group}
           userId={userInfo?.userId}
-          transactionType={transactionType}
+          mode={mode}
+
         />
       )}
       <MenuAnimationBackground menu={menu} />

@@ -3,6 +3,7 @@ import {
   EnhancedPeopleWithProps,
   FetchedPeople,
   Group,
+  Mode,
   UserInfo,
 } from "../../../types";
 import { useGetAllNonGroupUsers } from "@/api/auth/QueryHooks/useGetAllNonGroupUsers";
@@ -11,7 +12,7 @@ export const usePeople = (
   group: Group | null,
   userInfo: UserInfo | undefined
 ) => {
-  const { allUsers } = useGetAllNonGroupUsers(group?.id ? "Group" : "NonGroup");
+  const { allUsers } = useGetAllNonGroupUsers(group?.id ? Mode.Group : Mode.NonGroup);
 
   const { fetchedPeople, enhancedPeopleWithProps } = useMemo(() => {
     if (!userInfo) return { fetchedPeople: [], enhancedPeopleWithProps: [] };

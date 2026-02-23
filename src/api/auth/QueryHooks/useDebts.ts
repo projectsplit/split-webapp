@@ -1,11 +1,11 @@
 import { Signal } from "@preact/signals-react";
 import useGroupDebts from "./useGroupDebts";
 import useNonGroupDebts from "./useNonGroupDebts";
-import { ExpenseParsedFilters, TransactionType, TransferParsedFilters } from "../../../types";
+import { ExpenseParsedFilters, Mode, TransferParsedFilters } from "../../../types";
 
-export const useDebts = (transactionType: TransactionType, groupId?: string, expenseParsedFilters?: Signal<ExpenseParsedFilters>, transferParsedFilters?: Signal<TransferParsedFilters>,) => {
+export const useDebts = (mode: Mode, groupId?: string, expenseParsedFilters?: Signal<ExpenseParsedFilters>, transferParsedFilters?: Signal<TransferParsedFilters>,) => {
   const normal = useGroupDebts(groupId, expenseParsedFilters, transferParsedFilters);
-  const nonGroup = useNonGroupDebts(transactionType, expenseParsedFilters, transferParsedFilters);
+  const nonGroup = useNonGroupDebts(mode, expenseParsedFilters, transferParsedFilters);
 
-  return transactionType === TransactionType.Group ? normal : nonGroup;
+  return mode === Mode.Group ? normal : nonGroup;
 };

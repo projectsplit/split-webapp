@@ -1,7 +1,7 @@
 import { signal, Signal, useSignal } from '@preact/signals-react';
 import { useEffect } from 'react'
 import { Outlet, useLocation, useOutletContext } from 'react-router-dom';
-import { ExpenseParsedFilters, ExpenseResponseItem, TransactionType, TransferParsedFilters, User, UserInfo } from '../../types';
+import { ExpenseParsedFilters, ExpenseResponseItem, Mode, TransferParsedFilters, User, UserInfo } from '../../types';
 import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
 import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';
@@ -56,7 +56,7 @@ export default function NonGroup() {
 
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
-  const transactionType: TransactionType = 'NonGroup' as const
+  const mode: Mode = Mode.NonGroup;
 
   useEffect(() => {
     topMenuTitle.value = 'Non Group Transactions';
@@ -100,7 +100,7 @@ export default function NonGroup() {
             showBottomBar,
             expenseParsedFilters,
             transferParsedFilters,
-            transactionType
+            mode: mode
 
           }}
         />

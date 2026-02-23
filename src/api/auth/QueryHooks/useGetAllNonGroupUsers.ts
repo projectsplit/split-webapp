@@ -1,14 +1,14 @@
 import { useMemo } from "react";
 import { useGetNonGroupExpensesUsers } from "./useGetNonGroupExpensesUsers";
 import { useGetNonGroupTransferUsers } from "./useGetNonGroupTransfersUsers";
-import { TransactionType, User } from "../../../types";
+import { Mode, User } from "../../../types";
 
-export const useGetAllNonGroupUsers = (transactionType: TransactionType) => {
-    if (transactionType === TransactionType.Personal) {
+export const useGetAllNonGroupUsers = (mode: Mode) => {
+    if (mode === Mode.Personal) {
         return { allUsers: [], isLoading: false, isError: false };
     }
-    const expenseUsers = useGetNonGroupExpensesUsers(transactionType);
-    const transferUsers = useGetNonGroupTransferUsers(transactionType);
+    const expenseUsers = useGetNonGroupExpensesUsers(mode);
+    const transferUsers = useGetNonGroupTransferUsers(mode);
 
     const allUsers = useMemo(() => {
         const combinedUsers = [

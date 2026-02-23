@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../apiClients";
 import { AxiosResponse } from "axios";
-import { TransactionType, User } from "@/types";
+import { Mode, User } from "@/types";
 
 type Users = {
 	users: User[];
@@ -14,10 +14,10 @@ const getNonGroupTransferUsers = async () => {
 	return response;
 }
 
-export const useGetNonGroupTransferUsers = (transactionType: TransactionType) => {
+export const useGetNonGroupTransferUsers = (mode: Mode) => {
 	return useQuery({
 		queryKey: ["non-group-transfer-users"],
 		queryFn: () => getNonGroupTransferUsers(),
-		enabled: transactionType === TransactionType.NonGroup,
+		enabled: mode === Mode.NonGroup,
 	});
 }
