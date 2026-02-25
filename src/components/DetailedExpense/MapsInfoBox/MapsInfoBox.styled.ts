@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const StyledMapsInfoBox = styled.div`
+  position: relative;
+  flex-shrink: 0;
   .topStripe {
     display: flex;
     flex-direction: row;
@@ -35,6 +37,8 @@ export const StyledMapsInfoBox = styled.div`
   .map {
     height: 450px;
     margin-top: 1rem;
+    position: relative;
+    z-index: 1;
   }
   .noLocation {
     display: flex;

@@ -13,7 +13,8 @@ export const useExpenseList = (
   group: Group,
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   pageSize: number,
-  timeZoneId: string
+  timeZoneId: string,
+  jumpToken?: string
 ) => {
 
   const isGroup = mode === Mode.Group;
@@ -25,14 +26,16 @@ export const useExpenseList = (
     expenseParsedFilters,
     pageSize,
     timeZoneId,
-    isGroup
+    isGroup,
+    jumpToken
   );
 
   const nonGroupQuery = useGetNonGroupExpenses(
     expenseParsedFilters,
     pageSize,
     timeZoneId,
-    isNonGroup
+    isNonGroup,
+    jumpToken
   );
 
   const personalQuery = useGetPersonalExpenses(

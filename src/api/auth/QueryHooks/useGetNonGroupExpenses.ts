@@ -12,13 +12,15 @@ export const useGetNonGroupExpenses = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   pageSize: number,
   timeZoneId: string,
-  enabled: boolean = true
+  enabled: boolean = true,
+  jumpToken?: string
 ) => {
   const queryKey = [
     "nonGroupExpenses",
     pageSize,
     expenseParsedFilters.value,
     timeZoneId,
+    jumpToken
   ].filter(Boolean);
 
   const query = useInfiniteQuery({
@@ -26,7 +28,8 @@ export const useGetNonGroupExpenses = (
     queryFn: ({ pageParam: next }) =>
       getNonGroupExpenses(pageSize, expenseParsedFilters.value, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
-    initialPageParam: "",
+    getPreviousPageParam: (firstPage) => firstPage?.previous || undefined,
+    initialPageParam: jumpToken || "",
     enabled,
   });
 

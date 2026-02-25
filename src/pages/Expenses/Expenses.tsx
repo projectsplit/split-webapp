@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Expense from "../../components/Expense/Expense";
 import { useQueryClient } from "@tanstack/react-query";
 import { ExpenseParsedFilters, ExpenseResponseItem, Group, UserInfo, Mode } from "../../types";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 import { StyledExpenses } from "./Expenses.styled";
 import { Signal, useSignal } from "@preact/signals-react";
 import DetailedExpense from "../../components/DetailedExpense/DetailedExpense";
@@ -27,6 +27,8 @@ const Expenses = () => {
   const errorMessage = useSignal<string>("");
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
   const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+  const jumpToken = searchParams.get("jumpTo") || "";
 
   const { userInfo, group, showBottomBar, expenseParsedFilters, mode,
   } = useOutletContext<{
@@ -38,8 +40,8 @@ const Expenses = () => {
   const pageSize = 10;
   const userMemberId = group?.members?.find((m) => m.userId === userInfo?.userId)?.id;//group specific
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching
-  } = useExpenseList(mode, group, expenseParsedFilters, pageSize, timeZoneId);
+  const { data, fetchNextPage, hasNextPage, fetchPreviousPage, hasPreviousPage, isFetchingNextPage, isFetching
+  } = useExpenseList(mode, group, expenseParsedFilters, pageSize, timeZoneId, jumpToken);
   const { allUsers } = useGetAllNonGroupUsers(mode);
   const expenses = data?.pages.flatMap((p) => p.expenses);
 

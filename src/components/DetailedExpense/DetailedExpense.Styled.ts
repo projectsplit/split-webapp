@@ -9,7 +9,6 @@ interface StyledDetailedExpenseProps {
 export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetailedExpenseProps>`
   display: flex;
   flex-direction: column;
-  
   height: 99vh;
   top: 0.3%;
   overflow: auto;
@@ -21,6 +20,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetai
     display: flex;
     flex-direction: column;
     gap: 15px;
+    flex-shrink: 0;
 
     .labelsWrapper {
       overflow-x: auto;
@@ -43,6 +43,9 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetai
     
     align-items: center;
     justify-content: space-between;
+    position: relative;
+
+    flex-shrink: 0;
     .expenseName {
       font-size: 20px;
     }
@@ -85,9 +88,10 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetai
     font-size: ${({ mode }) => mode === Mode.Personal ? "60px" : "18px"};
     font-weight: 400;
     color: ${({ theme }) => theme.whiteText};
-
     min-height: 21px;
     font-weight: bold;
+    position: relative;
+    flex-shrink: 0;
   }
   .editDeleteButtons {
     display: flex;
@@ -110,6 +114,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetai
     font-size: 15px;
     font-weight: 600;
     color: ${({ theme }) => theme.grey};
+    flex-shrink: 0;
   }
   p {
     margin: 0;
@@ -195,6 +200,22 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetai
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+     .navigatePrompt {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .info {
+          font-size: 14px; 
+        }
+        .navigateButton {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          margin: 50px;
+        }
+      }
 
     .buttons {
       display: flex;
@@ -211,6 +232,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetai
         }
         flex: 1; /* Optional: Make buttons take equal space */
       }
+     
     }
   }
 `;

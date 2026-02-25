@@ -15,6 +15,7 @@ import { Mode, TransactionType, GeoLocation } from "../../types";
 import EditExpenseAnimation from "../Animations/EditExpenseAnimation";
 import labelColors from "../../labelColors";
 import { buildFormExpense, toUser } from "./utils";
+import NavigateToExpenseAnimation from "../Animations/NavigateToExpenseAnimation";
 
 export default function DetailedExpense({
   selectedExpense,
@@ -39,7 +40,6 @@ export default function DetailedExpense({
 }: DetailedExpenseProps) {
   const expenseType = selectedExpense.value?.transactionType;
   const googleUrl = "https://www.google.com/maps/search/?api=1&query=";
-  console.log(selectedExpense.value)
   // const theme = {
   //   text: {
   //     bold: "editor-bold",
@@ -153,7 +153,22 @@ export default function DetailedExpense({
               </MyButton>
             </div>
           </div>
-        ) : null}
+        ) : <div>
+          <div className= "navigatePrompt">
+            <span className="info">{`This is your share from a ${expenseType === TransactionType.Group ? "group" : "non group"} expense`}</span>
+            <div className="navigateButton">
+              <MyButton
+                onClick={() => (menu.value = "navigateToExpense")}
+                variant="primary"
+              >
+                <div className="buttonChildren">
+
+                  <span>{`Go to ${expenseType === TransactionType.Group ? "group" : "non group"} expense`}</span>
+                </div>
+              </MyButton>
+            </div>
+          </div>
+        </div>}
 
         <div className="dummyDiv" />
       </div>
@@ -213,6 +228,11 @@ export default function DetailedExpense({
         nonGroupUsers={signal(participants.map(p => toUser(p)))}
         isPersonal={mode === Mode.Personal ? signal(true) : signal(false)}
         isnonGroupExpense={mode === Mode.NonGroup ? signal(true) : signal(false)}
+      />
+      <NavigateToExpenseAnimation
+        menu={menu}
+        selectedExpense={selectedExpense}
+        errorMessage={errorMessage}
       />
     </StyledDetailedExpense>
   );

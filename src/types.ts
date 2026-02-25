@@ -144,6 +144,7 @@ export type ExpenseResponseItem = {
 export type GetExpensesResponse = {
   expenses: ExpenseResponseItem[];
   next: string | null;
+  previous: string | null;
 };
 
 export type GetGroupTransfersResponse = {

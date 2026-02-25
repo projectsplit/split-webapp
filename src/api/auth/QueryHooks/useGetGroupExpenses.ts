@@ -14,7 +14,8 @@ const useGetGroupExpenses = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   pageSize: number,
   timeZoneId: string,
-  enabled: boolean = true
+  enabled: boolean = true,
+  jumpToken?: string
 ) => {
   const queryKey = [
     "groupExpenses",
@@ -22,6 +23,7 @@ const useGetGroupExpenses = (
     pageSize,
     expenseParsedFilters.value,
     timeZoneId,
+    jumpToken
   ];
 
   const query = useInfiniteQuery({
@@ -29,7 +31,8 @@ const useGetGroupExpenses = (
     queryFn: ({ pageParam: next }) =>
       getGroupExpenses(group?.id!, pageSize, expenseParsedFilters.value, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
-    initialPageParam: "",
+    getPreviousPageParam: (firstPage) => firstPage?.previous || undefined,
+    initialPageParam: jumpToken || "",
     enabled: enabled && !!group?.id,
   });
 
@@ -40,13 +43,13 @@ const getGroupExpenses = async (
   groupId: string,
   pageSize: number,
   parsedFilters: ExpenseParsedFilters = {},
-  next?: string
+  token?: string
 ): Promise<GetExpensesResponse> => {
   const { participantsIds = [], payersIds = [], labels = [], ...base } = parsedFilters;
 
   const params = appendGroupFilterToParams(groupId, base, {
     pageSize,
-    next,
+    next: token,
     arrayMappings: [
       { key: "participantIds", values: participantsIds },
       { key: "payerIds", values: payersIds },

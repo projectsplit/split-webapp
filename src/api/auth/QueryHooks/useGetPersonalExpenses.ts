@@ -26,6 +26,7 @@ export const useGetPersonalExpenses = (
     queryFn: ({ pageParam: next }) =>
       getPersonalExpenses(pageSize, expenseParsedFilters.value, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
+    getPreviousPageParam: (firstPage) => firstPage?.previous || undefined,
     initialPageParam: "",
     enabled
   });
