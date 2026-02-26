@@ -8,6 +8,8 @@ import { AxiosResponse } from "axios";
 import { Signal } from "@preact/signals-react";
 import { appendNonGroupFilterToParams } from "../helpers/appendNonGroupFilterToParams";
 
+const PREV_PREFIX = "prev::";
+
 export const useGetNonGroupExpenses = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   pageSize: number,
@@ -25,10 +27,11 @@ export const useGetNonGroupExpenses = (
 
   const query = useInfiniteQuery({
     queryKey: queryKey,
-    queryFn: ({ pageParam: next }) =>
-      getNonGroupExpenses(pageSize, expenseParsedFilters.value, next),
+    queryFn: ({ pageParam: rawParam }) =>
+      getNonGroupExpenses(pageSize, expenseParsedFilters.value, rawParam as string | undefined),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
-    getPreviousPageParam: (firstPage) => firstPage?.previous || undefined,
+    getPreviousPageParam: (firstPage) =>
+      firstPage?.previous ? `${PREV_PREFIX}${firstPage.previous}` : undefined,
     initialPageParam: jumpToken || "",
     enabled,
   });
@@ -39,13 +42,17 @@ export const useGetNonGroupExpenses = (
 const getNonGroupExpenses = async (
   pageSize: number,
   parsedFilters: ExpenseParsedFilters = {},
-  next?: string
+  rawParam?: string
 ): Promise<GetExpensesResponse> => {
   const { participantsIds = [], payersIds = [], labels = [], ...base } = parsedFilters;
 
+  const isPrev = rawParam?.startsWith(PREV_PREFIX);
+  const token = isPrev ? rawParam!.slice(PREV_PREFIX.length) : rawParam;
+
   const params = appendNonGroupFilterToParams(base, {
     pageSize,
-    next,
+    next: isPrev ? undefined : token || undefined,
+    previous: isPrev ? token : undefined,
     arrayMappings: [
       { key: "participantIds", values: participantsIds },
       { key: "payerIds", values: payersIds },

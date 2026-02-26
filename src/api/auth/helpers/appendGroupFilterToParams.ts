@@ -6,13 +6,14 @@ export const appendGroupFilterToParams = (
   filters: BaseFilters,
   options: AppendFilterOptions = {}
 ): URLSearchParams => {
-  const { pageSize, next, arrayMappings = [] } = options;
+  const { pageSize, next, previous, arrayMappings = [] } = options;
   const { freeText, before, after } = filters;
   const params = new URLSearchParams();
 
   params.append("groupId", groupId);
   if (pageSize) params.append("pageSize", pageSize.toString());
   if (next) params.append("next", next);
+  if (previous) params.append("previous", previous);
   if (freeText) params.append("searchTerm", freeText);
 
   if (before && after && before === after) {
@@ -48,5 +49,6 @@ export interface ParamMapping {
 export interface AppendFilterOptions {
   pageSize?: number;
   next?: string;
+  previous?: string;
   arrayMappings?: ParamMapping[];
 }

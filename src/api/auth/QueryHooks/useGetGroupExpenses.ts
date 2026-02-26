@@ -9,6 +9,8 @@ import { AxiosResponse } from "axios";
 import { Signal } from "@preact/signals-react";
 import { appendGroupFilterToParams } from "../helpers/appendGroupFilterToParams";
 
+const PREV_PREFIX = "prev::";
+
 const useGetGroupExpenses = (
   group: Group,
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
@@ -28,10 +30,11 @@ const useGetGroupExpenses = (
 
   const query = useInfiniteQuery({
     queryKey: queryKey,
-    queryFn: ({ pageParam: next }) =>
-      getGroupExpenses(group?.id!, pageSize, expenseParsedFilters.value, next),
+    queryFn: ({ pageParam: rawParam }) =>
+      getGroupExpenses(group?.id!, pageSize, expenseParsedFilters.value, rawParam as string | undefined),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
-    getPreviousPageParam: (firstPage) => firstPage?.previous || undefined,
+    getPreviousPageParam: (firstPage) =>
+      firstPage?.previous ? `${PREV_PREFIX}${firstPage.previous}` : undefined,
     initialPageParam: jumpToken || "",
     enabled: enabled && !!group?.id,
   });
@@ -43,13 +46,17 @@ const getGroupExpenses = async (
   groupId: string,
   pageSize: number,
   parsedFilters: ExpenseParsedFilters = {},
-  token?: string
+  rawParam?: string
 ): Promise<GetExpensesResponse> => {
   const { participantsIds = [], payersIds = [], labels = [], ...base } = parsedFilters;
 
+  const isPrev = rawParam?.startsWith(PREV_PREFIX);
+  const token = isPrev ? rawParam!.slice(PREV_PREFIX.length) : rawParam;
+
   const params = appendGroupFilterToParams(groupId, base, {
     pageSize,
-    next: token,
+    next: isPrev ? undefined : token || undefined,
+    previous: isPrev ? token : undefined,
     arrayMappings: [
       { key: "participantIds", values: participantsIds },
       { key: "payerIds", values: payersIds },

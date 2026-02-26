@@ -55,9 +55,9 @@ export default function ArchivedGroups() {
           ))}
 
           <Sentinel
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
+            fetchPage={fetchNextPage}
+            hasMore={hasNextPage}
+            isFetchingPage={isFetchingNextPage}
           />
         </div>
       )}

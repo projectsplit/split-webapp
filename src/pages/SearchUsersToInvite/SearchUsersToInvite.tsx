@@ -134,9 +134,9 @@ const SearchUsersToInvite = ({
             ))
           )}
           <Sentinel
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
+            fetchPage={fetchNextPage}
+            hasMore={hasNextPage}
+            isFetchingPage={isFetchingNextPage}
           />
         </div>
       ) : (

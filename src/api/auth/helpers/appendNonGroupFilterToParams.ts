@@ -6,12 +6,13 @@ export const appendNonGroupFilterToParams = (
   filters: BaseFilters,
   options: AppendFilterOptions = {}
 ): URLSearchParams => {
-  const { pageSize, next, arrayMappings = [] } = options;
+  const { pageSize, next, previous, arrayMappings = [] } = options;
   const { freeText, before, after } = filters;
   const params = new URLSearchParams();
 
   if (pageSize) params.append("pageSize", pageSize.toString());
   if (next) params.append("next", next);
+  if (previous) params.append("previous", previous);
   if (freeText) params.append("searchTerm", freeText);
 
   if (before && after && before === after) {

@@ -288,14 +288,14 @@ export const NonGroupExpenseUsersMenu = ({
             <MdOutlineGroupOff className="icon" />
           </div>}
         <Sentinel
-          fetchNextPage={fetchNextPage}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
+          fetchPage={fetchNextPage}
+          hasMore={hasNextPage}
+          isFetchingPage={isFetchingNextPage}
         />
         {!fromNonGroup && <Sentinel
-          fetchNextPage={fetchNextGroupsPage}
-          hasNextPage={hasNextGroupsPage}
-          isFetchingNextPage={isFetchingNextGroupsPage}
+          fetchPage={fetchNextGroupsPage}
+          hasMore={hasNextGroupsPage}
+          isFetchingPage={isFetchingNextGroupsPage}
         />}
       </div>
       <div className="doneButton">

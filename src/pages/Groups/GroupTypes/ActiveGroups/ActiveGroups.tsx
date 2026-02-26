@@ -2,7 +2,7 @@ import { StyledGroups } from "../Groups.styled";
 import { useNavigate } from "react-router-dom";
 import TreeAdjustedContainer from "../../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
 import Spinner from "../../../../components/Spinner/Spinner";
-import { useMostRecentContext} from "../../../../api/auth/CommandHooks/useMostRecentContext";
+import { useMostRecentContext } from "../../../../api/auth/CommandHooks/useMostRecentContext";
 import { TreeItemBuilderForHomeAndGroups } from "../../../../components/TreeItemBuilderForHomeAndGroups";
 import Sentinel from "../../../../components/Sentinel";
 import { MdOutlineGroupOff } from "react-icons/md";
@@ -52,9 +52,9 @@ export default function ActiveGroups() {
           ))}
 
           <Sentinel
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
+            fetchPage={fetchNextPage}
+            hasMore={hasNextPage}
+            isFetchingPage={isFetchingNextPage}
           />
         </div>
       )}

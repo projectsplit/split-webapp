@@ -169,9 +169,9 @@ export default function Shared() {
                 </TreeAdjustedContainer>
               )}
               <Sentinel
-                fetchNextPage={fetchNextPage}
-                hasNextPage={hasNextPage}
-                isFetchingNextPage={isFetchingNextPage}
+                fetchPage={fetchNextPage}
+                hasMore={hasNextPage}
+                isFetchingPage={isFetchingNextPage}
               />
             </div>
           )}

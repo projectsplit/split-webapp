@@ -70,9 +70,9 @@ export default function RevokeAccess({
           ))
         )}
         <Sentinel
-          fetchNextPage={fetchNextPage}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
+          fetchPage={fetchNextPage}
+          hasMore={hasNextPage}
+          isFetchingPage={isFetchingNextPage}
         />
       </div>
     </StyledRevokeAccess>

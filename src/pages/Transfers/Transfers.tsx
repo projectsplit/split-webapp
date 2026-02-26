@@ -120,9 +120,9 @@ const Transfers: React.FC = () => {
         </>
       )}
       <Sentinel
-        fetchNextPage={fetchNextPage}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
+        fetchPage={fetchNextPage}
+        hasMore={hasNextPage}
+        isFetchingPage={isFetchingNextPage}
       />
       {selectedTransfer.value && (
         <DetailedTransfer

@@ -3,13 +3,20 @@ import styled from "styled-components";
 export const StyledExpenses = styled.div`
   min-width: 100%;
   display: flex;
-  padding: 16px 8px;
   flex-direction: column;
-  overflow-y: auto;
-  height: 100%;
-  gap: 16px;
+  height: 100%; /* Important: parent must have a defined height */
+  overflow: hidden; /* Stops the whole page from scrolling */
   flex: 1;
 
+  .scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 8px; /* Moves the list padding here */
+    gap: 16px;
+  }
+  
   .same-date-container {
     display: flex;
     flex-direction: column;
