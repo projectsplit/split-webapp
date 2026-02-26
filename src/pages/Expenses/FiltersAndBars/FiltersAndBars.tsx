@@ -18,6 +18,7 @@ interface FiltersAndBarsProps {
   userExpense: number;
   currency: string;
   shouldOpenMultiCurrencyTable: boolean;
+  collapsed: boolean;
 }
 export const FiltersAndBars = ({
   expenseParsedFilters,
@@ -31,10 +32,11 @@ export const FiltersAndBars = ({
   userExpense,
   currency,
   shouldOpenMultiCurrencyTable,
+  collapsed,
 }: FiltersAndBarsProps) => {
 
   return (
-    <StyledFiltersAndBars>
+    <StyledFiltersAndBars $collapsed={collapsed}>
       {totalsAreFetching ? (
         <div className="spinnerTotals">
           <Spinner />

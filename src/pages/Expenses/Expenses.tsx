@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import Expense from "../../components/Expense/Expense";
 import { useQueryClient } from "@tanstack/react-query";
 import { ExpenseParsedFilters, ExpenseResponseItem, Group, UserInfo, Mode } from "../../types";
@@ -20,20 +20,17 @@ import { groupBy } from "../../helpers/groupBy";
 import { NoExpensesFound } from "./NoExpensesFound/NoExpensesFound";
 import { FiltersAndBars } from "./FiltersAndBars/FiltersAndBars";
 import { useExpenseTotals } from "./hooks/useExpenseTotals";
+import { useCenterToExpense } from "./hooks/useCenterToExpense";
 
 const Expenses = () => {
-
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const errorMessage = useSignal<string>("");
   const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   const jumpToken = searchParams.get("jumpTo") || "";
-  const jumpToProcessed = useRef<string | null>(null);
-
-  // Scroll anchor refs — used to restore scroll position after prepending items
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
-  const savedScrollHeight = useRef<number>(0);
+  const isScrolled = useSignal<boolean>(false);
 
   const { userInfo, group, showBottomBar, expenseParsedFilters, mode,
   } = useOutletContext<{
@@ -63,10 +60,8 @@ const Expenses = () => {
       }))
     );
 
-  //TODO: add condition to exlcude if mode is Personal as different endpoint will be used.
   const { groupTotalsByCurrency, userTotalsByCurrency, totalExpense, userExpense, shouldOpenMultiCurrencyTable, totalsAreFetching } =
     useExpenseTotals(group, mode, userInfo, userMemberId, expenseParsedFilters);
-
 
   useEffect(() => {
     if (isFetching && !isFetchingNextPage) {
@@ -76,52 +71,11 @@ const Expenses = () => {
     }
   }, [isFetching, isFetchingNextPage, showBottomBar]);
 
+  useCenterToExpense(scrollAreaRef, isScrolled, expenses, jumpToken, isFetchingPreviousPage);
+  
   useEffect(() => {
     menu.value = errorMessage.value ? "error" : menu.value;
   }, [errorMessage.value, menu]);
-
-  // Before fetching the previous page, save the current scrollHeight so we can
-  // restore the visual position after new items are prepended to the list.
-  useEffect(() => {
-    if (isFetchingPreviousPage && scrollAreaRef.current) {
-      savedScrollHeight.current = scrollAreaRef.current.scrollHeight;
-    }
-  }, [isFetchingPreviousPage]);
-
-  // After the previous page has been fetched and the DOM has updated, adjust
-  // scrollTop so the user's viewport position appears unchanged.
-  useLayoutEffect(() => {
-    if (!isFetchingPreviousPage && savedScrollHeight.current > 0 && scrollAreaRef.current) {
-      const newScrollHeight = scrollAreaRef.current.scrollHeight;
-      scrollAreaRef.current.scrollTop += newScrollHeight - savedScrollHeight.current;
-      savedScrollHeight.current = 0;
-    }
-  }, [isFetchingPreviousPage, expenses?.length]);
-
-  useLayoutEffect(() => {
-    if (jumpToken && jumpToken !== jumpToProcessed.current && expenses && expenses.length > 0) {
-      try {
-        const tokenStr = atob(jumpToken);
-        const parsedToken = JSON.parse(tokenStr);
-        const targetOccurred = parsedToken.Occurred;
-        const targetCreated = parsedToken.Created;
-
-        const targetExpense = expenses.find(
-          (e) => e.occurred === targetOccurred && e.created === targetCreated
-        );
-
-        if (targetExpense) {
-          const element = document.getElementById(`expense-${targetExpense.id}`);
-          if (element) {
-            element.scrollIntoView({ block: "center" });
-            jumpToProcessed.current = jumpToken;
-          }
-        }
-      } catch (e) {
-        console.error("Failed to parse jump token", e);
-      }
-    }
-  }, [jumpToken, expenses]);
 
   if (isFetching && !isFetchingNextPage && !isFetchingPreviousPage) {
     return (
@@ -143,7 +97,6 @@ const Expenses = () => {
 
   return (
     <StyledExpenses>
-      {/* --- STATIC HEADER: Stays at the top --- */}
       {expenses && expenses.length > 0 && (
         <FiltersAndBars
           expenseParsedFilters={expenseParsedFilters}
@@ -157,10 +110,9 @@ const Expenses = () => {
           userExpense={userExpense}
           currency={group?.currency || userInfo?.currency}
           shouldOpenMultiCurrencyTable={shouldOpenMultiCurrencyTable}
+          collapsed={isScrolled.value}
         />
       )}
-
-      {/* --- SCROLLABLE AREA: Only this part scrolls --- */}
       <div className="scroll-area" ref={scrollAreaRef}>
         {!expenses || expenses.length === 0 ? (
           <NoExpensesFound
@@ -171,13 +123,13 @@ const Expenses = () => {
           />
         ) : (
           <>
-           <Sentinel
-            fetchPage={() => fetchPreviousPage()}
-            hasMore={hasPreviousPage}
-            isFetchingPage={isFetchingPreviousPage}
-            id="sentinel-top"
-            isTop={true}
-          />
+            <Sentinel
+              fetchPage={() => fetchPreviousPage()}
+              hasMore={hasPreviousPage}
+              isFetchingPage={isFetchingPreviousPage}
+              id="sentinel-top"
+              isTop={true}
+            />
             {Object.entries(
               groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))
             ).map(([date, items]) => (
@@ -203,7 +155,6 @@ const Expenses = () => {
                 </div>
               </div>
             ))}
-
             <Sentinel
               fetchPage={fetchNextPage}
               hasMore={hasNextPage}
@@ -212,8 +163,6 @@ const Expenses = () => {
           </>
         )}
       </div>
-
-      {/* --- OVERLAYS: Modals and Backgrounds --- */}
       {selectedExpense.value && (
         <DetailedExpense
           selectedExpense={selectedExpense}
