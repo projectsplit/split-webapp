@@ -1,6 +1,6 @@
 import { Signal } from "@preact/signals-react";
 import Pill from "../components/Pill/Pill";
-import { ExpenseParsedFilters, Group, TruncatedMember } from "../types";
+import { ExpenseParsedFilters, Group, Mode, TruncatedMember } from "../types";
 import { QueryClient } from "@tanstack/react-query";
 import labelColors from "../labelColors";
 import { getFilterStorageKey } from "../components/SearchTransactions/helpers/localStorageStringParser";
@@ -9,25 +9,28 @@ const updateFiltersAndSave = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   updatedFilters: any,
   queryClient: QueryClient,
-  groupId?: string
+  groupId?: string,
+   mode?: Mode,
 ) => {
   expenseParsedFilters.value = {
     ...expenseParsedFilters.value,
     ...updatedFilters,
   };
   localStorage.setItem(
-    getFilterStorageKey("expense", groupId),
+    getFilterStorageKey("expense", groupId, mode === Mode.Personal),
     JSON.stringify(expenseParsedFilters.value)
   );
   queryClient.invalidateQueries({ queryKey: ["groupExpenses"], exact: false });
   queryClient.invalidateQueries({ queryKey: ["nonGroupExpenses"], exact: false });
+  queryClient.invalidateQueries({ queryKey: ["personalExpenses"], exact: false });
 };
 
 export const renderExpenseFilterPills = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   allParticipants: TruncatedMember[],
   group: Group,
-  queryClient: QueryClient
+  queryClient: QueryClient,
+  mode?: Mode
 ) => {
 
   const { freeText, before, after, participantsIds, payersIds, labels } =
@@ -50,7 +53,8 @@ export const renderExpenseFilterPills = (
             expenseParsedFilters,
             { freeText: "" },
             queryClient,
-            group?.id
+            group?.id,
+            mode,
           )
         }
       />
@@ -73,7 +77,8 @@ export const renderExpenseFilterPills = (
             expenseParsedFilters,
             { before: null, after: null },
             queryClient,
-            group?.id
+            group?.id,
+            mode,
           )
         }
       />
@@ -96,7 +101,8 @@ export const renderExpenseFilterPills = (
             expenseParsedFilters,
             { before: null },
             queryClient,
-            group?.id
+            group?.id,
+            mode,
           )
         }
       />
@@ -120,7 +126,8 @@ export const renderExpenseFilterPills = (
             expenseParsedFilters,
             { after: null },
             queryClient,
-            group?.id
+            group?.id,
+            mode,
           )
         }
       />
@@ -210,7 +217,8 @@ export const renderExpenseFilterPills = (
                 labels: labels.filter((lid) => lid !== id),
               },
               queryClient,
-              group?.id
+              group?.id,
+              mode,
             )
           }
         />

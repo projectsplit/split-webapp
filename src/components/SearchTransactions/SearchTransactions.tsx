@@ -13,6 +13,7 @@ import { initialConfig } from "./utils/lexicalThemeConfiguration";
 import { EditorContentHandle, SearchTransactionsProps } from "../../interfaces";
 import {
   FetchedLabel,
+  Mode,
 } from "../../types";
 import MyButton from "../MyButton/MyButton";
 import { CategorySelector } from "../CategorySelector/CategorySelector";
@@ -28,6 +29,7 @@ export default function SearchTransactions({
   timeZoneId,
   expenseParsedFilters,
   transferParsedFilters,
+  isPersonal
   // nonGroupUsers
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
@@ -35,7 +37,8 @@ export default function SearchTransactions({
 
   const { fetchedPeople, enhancedPeopleWithProps, allUsers } = usePeople(
     group,
-    userInfo
+    userInfo,
+    isPersonal
   );
 
   const {
@@ -48,7 +51,7 @@ export default function SearchTransactions({
     cancelled,
     searchKeyword,
     path,
-  } = useSearchFilters(group, allUsers);
+  } = useSearchFilters(group, allUsers, isPersonal);
 
   const editorContentRef = useRef<EditorContentHandle | null>(null);
 
@@ -78,13 +81,13 @@ export default function SearchTransactions({
           <div className="gap"></div>
           <div className="searchingIn">
             Searching In:&nbsp;
-            <span className="groupName">{group?.name || "Non Group"}</span>
+            <span className="groupName">{isPersonal ? "Personal" : group?.name ? group?.name : "Non Group"}</span>
           </div>
           <div className="closeSign" onClick={() => (menu.value = null)}>
             <IoClose name="close-outline" className="close" />
           </div>
         </div>
-        <div className="catSelector">
+        {!isPersonal && <div className="catSelector">
           <CategorySelector
             activeCat={path}
             categories={{
@@ -94,7 +97,7 @@ export default function SearchTransactions({
             navLinkUse={true}
             activeCatAsState={category}
           />
-        </div>
+        </div>}
         <div className="searchBarAndCategories">
           <div className="lexicalSearch">
             <LexicalComposer initialConfig={initialConfig}>
@@ -113,7 +116,7 @@ export default function SearchTransactions({
                 timeZoneId={timeZoneId}
                 filteredLabels={filteredLabels}
                 category={category}
-
+                isPersonal={isPersonal}
               />
             </LexicalComposer>
           </div>
@@ -130,7 +133,8 @@ export default function SearchTransactions({
                 category,
                 queryClient,
                 expenseParsedFilters,
-                transferParsedFilters
+                transferParsedFilters,
+                isPersonal
               )
             }
             disabled={!submitButtonIsActive.value}

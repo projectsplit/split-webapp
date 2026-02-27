@@ -10,11 +10,15 @@ import { useGetAllNonGroupUsers } from "@/api/auth/QueryHooks/useGetAllNonGroupU
 
 export const usePeople = (
   group: Group | null,
-  userInfo: UserInfo | undefined
+  userInfo: UserInfo | undefined,
+  isPersonal?: boolean
 ) => {
+
   const { allUsers } = useGetAllNonGroupUsers(group?.id ? Mode.Group : Mode.NonGroup);
 
   const { fetchedPeople, enhancedPeopleWithProps } = useMemo(() => {
+
+    if (isPersonal) return { fetchedPeople: [], enhancedPeopleWithProps: [] };
     if (!userInfo) return { fetchedPeople: [], enhancedPeopleWithProps: [] };
 
     const memberProps: string[] = ["participant", "payer", "sender", "receiver"];

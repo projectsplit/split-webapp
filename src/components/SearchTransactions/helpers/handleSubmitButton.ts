@@ -21,7 +21,8 @@ export const handleSubmitButton = (
   category: Signal<string>,
   queryClient: QueryClient,
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
-  transferParsedFilters: Signal<TransferParsedFilters>
+  transferParsedFilters: Signal<TransferParsedFilters>,
+  isPersonal?: boolean,
 ) => {
   if (editorState === null) return;
 
@@ -204,7 +205,7 @@ export const handleSubmitButton = (
     };
 
     localStorage.setItem(
-      getFilterStorageKey("expense", expenseFilter.groupId),
+      getFilterStorageKey("expense", expenseFilter.groupId, isPersonal),
       JSON.stringify(expenseFilter)
     );
     localStorage.setItem(

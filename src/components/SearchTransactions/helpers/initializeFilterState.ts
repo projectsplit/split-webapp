@@ -56,7 +56,7 @@ export const initializeFilterState = (
       : expenseFiltersData.before
         ? [expenseFiltersData.before]
         : [],
-    during: showExpenseDuring ? [expenseFiltersData.after] : [],
+    during: showExpenseDuring && expenseFiltersData.after ? [expenseFiltersData.after] : [],
     after: showExpenseDuring
       ? []
       : expenseFiltersData.after
@@ -75,7 +75,7 @@ export const initializeFilterState = (
       : transferFiltersData.before
         ? [transferFiltersData.before]
         : [],
-    during: showTransferDuring ? [transferFiltersData.after] : [],
+    during: showTransferDuring && transferFiltersData.after ? [transferFiltersData.after] : [],
     after: showTransferDuring
       ? []
       : transferFiltersData.after

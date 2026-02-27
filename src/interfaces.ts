@@ -63,7 +63,7 @@ export interface ExpenseProps {
   location: GeoLocation | undefined;
   userAmount: number;
   labels: Label[];
- mode: Mode;
+  mode: Mode;
 }
 
 export interface MapsInfoBoxProps {
@@ -1016,7 +1016,7 @@ export interface LexicalEditorProps {
   filteredLabels: Signal<FetchedLabel[]>;
   category: Signal<string>;
   searchKeyword: Signal<string>;
-
+  isPersonal?:boolean;
 }
 
 export interface FilterCalendarProps {
@@ -1129,6 +1129,7 @@ export interface MentionsToolbarProps {
   filteredLabels: Signal<FetchedLabel[]>;
   category: Signal<string>;
   showFreeTextPill: Signal<boolean>;
+  isPersonal?: boolean;
 }
 export interface SearchTransactionsProps {
   menu: Signal<string | null>;
@@ -1137,6 +1138,7 @@ export interface SearchTransactionsProps {
   timeZoneId: string;
   expenseParsedFilters: Signal<ExpenseParsedFilters>;
   transferParsedFilters: Signal<TransferParsedFilters>;
+  isPersonal?: boolean;
   //nonGroupUsers?: Signal<User[]>;
 }
 export interface SearchTransactionAnimationProps {
@@ -1146,6 +1148,7 @@ export interface SearchTransactionAnimationProps {
   timeZoneId: string;
   expenseParsedFilters: Signal<ExpenseParsedFilters>;
   transferParsedFilters: Signal<TransferParsedFilters>;
+  isPersonal?: boolean;
   // nonGroupUsers?: Signal<User[]>;
 }
 

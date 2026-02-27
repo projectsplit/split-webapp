@@ -7,6 +7,7 @@ import {
     FetchedLabel,
     FilteredPeople,
     Group,
+    Mode,
     User,
 } from "../../../types";
 import {
@@ -17,7 +18,8 @@ import { initializeFilterState } from "../helpers/initializeFilterState";
 
 export const useSearchFilters = (
     group: Group | null,
-    allUsers: User[]
+    allUsers: User[],
+    isPersonal?:boolean
 ) => {
     const location = useLocation();
     const params = useParams();
@@ -68,7 +70,7 @@ export const useSearchFilters = (
 
     const { expenseFilter, transferFilter } = useMemo(() => {
         return localStorageStringParser(
-            localStorage.getItem(getFilterStorageKey("expense", group?.id)),
+            localStorage.getItem(getFilterStorageKey("expense", group?.id,isPersonal)),
             localStorage.getItem(getFilterStorageKey("transfer", group?.id))
         );
     }, [group?.id]);

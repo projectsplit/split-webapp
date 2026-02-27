@@ -44,6 +44,7 @@ export const EditorContent = forwardRef<
     filteredLabels,
     category,
     searchKeyword,
+    isPersonal
   } = props;
 
   const [editor] = useLexicalComposerContext();
@@ -60,6 +61,7 @@ export const EditorContent = forwardRef<
   const removedFilter = useSignal<boolean>(false);
   const datePeriodClicked = useSignal<string>("");
   const showFreeTextPill = useSignal<boolean>(true)
+  isPersonal ? category.value = "expenses" : category.value 
 
   const mentionItems = useMemo(() => {
     const items: Record<string, BeautifulMentionsItem[]> = {
@@ -178,6 +180,7 @@ export const EditorContent = forwardRef<
           filteredLabels={filteredLabels}
           category={category}
           showFreeTextPill={showFreeTextPill}
+          isPersonal={isPersonal}
         />
       ) : (
         <OptionsToolBar

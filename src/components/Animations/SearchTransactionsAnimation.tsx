@@ -10,6 +10,7 @@ export default function SearchTransactionsAnimation({
   timeZoneId,
   expenseParsedFilters,
   transferParsedFilters,
+  isPersonal
   // nonGroupUsers
 }: SearchTransactionAnimationProps) {
   const nodeRef = useRef(null);
@@ -28,6 +29,7 @@ export default function SearchTransactionsAnimation({
           timeZoneId={timeZoneId}
           expenseParsedFilters={expenseParsedFilters}
           transferParsedFilters={transferParsedFilters}
+          isPersonal={isPersonal}
         // nonGroupUsers={nonGroupUsers}
         />
       </div>

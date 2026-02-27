@@ -17,18 +17,19 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
   datePeriodClicked,
   filteredLabels,
   category,
-  showFreeTextPill
+  showFreeTextPill,
+  isPersonal
 }) => {
+  const expensesType = expenseFilterState.value.groupId === "" ? "user" : "member";
+  const transfersType = transferFilterState.value.groupId === "" ? "user" : "member";
 
-const expensesType = expenseFilterState.value.groupId === "" ? "user" : "member";
-const transfersType = transferFilterState.value.groupId === "" ? "user" : "member";
   return (
     <>
       {showOptions.value && (
         <div className="categoryButtons">
-          
+
           {expenseFilterState.value.freeText !== "" &&
-          category.value === "expenses"&&showFreeTextPill.value ? (
+            category.value === "expenses" && showFreeTextPill.value ? (
             <CurrentSearchField
               currentSearch={expenseFilterState.value.freeText}
               filterState={expenseFilterState}
@@ -41,7 +42,7 @@ const transfersType = transferFilterState.value.groupId === "" ? "user" : "membe
           )}
 
           {transferFilterState.value.freeText !== "" &&
-          category.value === "transfers" &&showFreeTextPill.value? (
+            category.value === "transfers" && showFreeTextPill.value ? (
             <CurrentSearchField
               currentSearch={transferFilterState.value.freeText}
               filterState={transferFilterState}
@@ -54,7 +55,7 @@ const transfersType = transferFilterState.value.groupId === "" ? "user" : "membe
           )}
           {category.value === "expenses" ? (
             <>
-              <SearchPersonButton
+              {isPersonal ? <></> : <><SearchPersonButton
                 showOptions={showOptions}
                 category={"payer"}
                 type={expensesType}
@@ -65,17 +66,17 @@ const transfersType = transferFilterState.value.groupId === "" ? "user" : "membe
                 cancelled={cancelled}
                 removedFilter={removedFilter}
               />
-              <SearchPersonButton
-                showOptions={showOptions}
-                category={"participant"}
-                type={expensesType}
-                filteredPeople={filteredPeople}
-                submitButtonIsActive={submitButtonIsActive}
-                expenseFilterState={expenseFilterState}
-                transferFilterState={transferFilterState}
-                cancelled={cancelled}
-                removedFilter={removedFilter}
-              />
+                <SearchPersonButton
+                  showOptions={showOptions}
+                  category={"participant"}
+                  type={expensesType}
+                  filteredPeople={filteredPeople}
+                  submitButtonIsActive={submitButtonIsActive}
+                  expenseFilterState={expenseFilterState}
+                  transferFilterState={transferFilterState}
+                  cancelled={cancelled}
+                  removedFilter={removedFilter}
+                /></>}
               <SearchDateButton
                 category={"before"}
                 type={"date"}

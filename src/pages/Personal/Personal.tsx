@@ -6,6 +6,7 @@ import { useSignal, Signal, signal } from "@preact/signals-react";
 import NewExpenseAnimation from "@/components/Animations/NewExpenseAnimation";
 import MenuAnimationBackground from "@/components/Animations/MenuAnimationBackground";
 import BottomMainMenu from "@/components/Menus/BottomMainMenu/BottomMainMenu";
+import SearchTransactionsAnimation from "@/components/Animations/SearchTransactionsAnimation";
 
 export const Personal = () => {
   const { userInfo, topMenuTitle } = useOutletContext<{ userInfo: UserInfo; topMenuTitle: Signal<string> }>();
@@ -34,8 +35,18 @@ export const Personal = () => {
           mode: Mode.Personal,
           group: null,
         }}
-
-      /> <div className="bottomMenu">
+      />
+      <SearchTransactionsAnimation
+        menu={menu}
+        group={null}
+        userInfo={userInfo}
+        timeZoneId={timeZoneId}
+        expenseParsedFilters={expenseParsedFilters}
+        transferParsedFilters={transferParsedFilters}
+        isPersonal={true}
+      // nonGroupUsers={nonGroupUsers}
+      />
+      <div className="bottomMenu">
         {" "}
         <BottomMainMenu
           menu={menu}

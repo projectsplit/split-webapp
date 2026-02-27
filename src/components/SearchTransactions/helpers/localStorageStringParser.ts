@@ -1,7 +1,7 @@
-import { ExpenseFilter, TransferFilter } from "../../../types";
+import { ExpenseFilter, Mode, TransferFilter } from "../../../types";
 
-export const getFilterStorageKey = (type: "expense" | "transfer", groupId?: string) => {
-  const suffix = groupId && groupId !== "" ? groupId : "nonGroup";
+export const getFilterStorageKey = (type: "expense" | "transfer", groupId?: string, isPersonal?:boolean) => {
+  const suffix = groupId && groupId !== "" ? groupId : isPersonal ? "personal" : "nonGroup";
   return `${type}Filter_${suffix}`;
 };
 

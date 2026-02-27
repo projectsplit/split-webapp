@@ -48,7 +48,8 @@ export const FiltersAndBars = ({
               expenseParsedFilters,
               allParticipants,
               group,
-              queryClient
+              queryClient,
+              mode
             )}
           </div>
           <BarsWithLegends
