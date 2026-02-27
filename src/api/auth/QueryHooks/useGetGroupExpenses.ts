@@ -21,7 +21,7 @@ const useGetGroupExpenses = (
 ) => {
   const queryKey = [
     "groupExpenses",
-    group.id,
+    group?.id,
     pageSize,
     expenseParsedFilters.value,
     timeZoneId,
@@ -32,7 +32,7 @@ const useGetGroupExpenses = (
     queryKey,
     queryFn: ({ pageParam }) => {
       const { next, previous } = pageParam as PageParam;
-      return getGroupExpenses(group.id, pageSize, expenseParsedFilters.value, next, previous);
+      return getGroupExpenses(group?.id!, pageSize, expenseParsedFilters.value, next, previous);
     },
     getNextPageParam: (lastPage): PageParam | undefined =>
       lastPage?.next ? { next: lastPage.next } : undefined,

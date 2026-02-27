@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import Transfer from "../../components/Transfer/Transfer";
 import { Group, Mode, TransferParsedFilters, TransferResponseItem, UserInfo } from "../../types";
@@ -33,6 +33,8 @@ const Transfers: React.FC = () => {
   const members = group?.members;
   const guests = group?.guests;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
+  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const isScrolled = useSignal<boolean>(false);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useTransferList(mode, group, transferParsedFilters, pageSize, timeZoneId);
 
@@ -52,6 +54,14 @@ const Transfers: React.FC = () => {
     }
   }, [isFetching, isFetchingNextPage, showBottomBar]);
 
+  useEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el) return;
+    const handleScroll = () => { isScrolled.value = el.scrollTop > 10; };
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [isScrolled, transfers]);
+
   const { userTotalSentByCurr, userTotalReceivedByCurr } = useTransferTotals(group, mode, userInfo, userMemberId, transferParsedFilters);
 
   if (isFetching && !isFetchingNextPage) {
@@ -64,66 +74,70 @@ const Transfers: React.FC = () => {
 
   return (
     <StyledTransfers>
-      {!transfers || transfers.length === 0 ? (
-        <NoTransfersFound
+      {transfers && transfers.length > 0 &&
+        <FiltersAndBars
           transferParsedFilters={transferParsedFilters}
           allParticipants={allParticipants}
           group={group}
           queryClient={queryClient}
-        />
-      ) : (
-        <>
-          <FiltersAndBars
+          userInfo={userInfo}
+          mode={mode}
+          userMemberId={userMemberId}
+          menu={menu}
+          currency={group?.currency || userInfo?.currency}
+          collapsed={isScrolled.value}
+        />}
+      <div className="scroll-area" ref={scrollAreaRef}>
+        {!transfers || transfers.length === 0 ? (
+          <NoTransfersFound
             transferParsedFilters={transferParsedFilters}
             allParticipants={allParticipants}
             group={group}
             queryClient={queryClient}
-            userInfo={userInfo}
-            mode={mode}
-            userMemberId={userMemberId}
-            menu={menu}
-            currency={group?.currency || userInfo?.currency}
           />
-          {Object.entries(
-            groupBy(transfers, (x) => DateOnly(x.occurred, timeZoneId))
-          ).map(([date, transfers]) => (
-            <div key={date} className="same-date-container">
-              <div className="date-only">{date}</div>
-              <div className="transfers">
-                {transfers.map((t) => (
-                  <Transfer
-                    onClick={() => (selectedTransfer.value = t)}
-                    key={t.id}
-                    transfer={{
-                      amount: t.amount,
-                      currency: t.currency,
-                      date: t.occurred,
-                      description: t.description,
-                      id: t.id,
-                      senderName:
-                        t.senderId === memberId || t.senderId === userInfo?.userId
-                          ? "You"
-                          : allParticipants.find((x) => x.id === t.senderId)
-                            ?.name ?? "",
-                      receiverName:
-                        t.receiverId === memberId || t.receiverId === userInfo?.userId
-                          ? "You"
-                          : allParticipants.find((x) => x.id === t.receiverId)
-                            ?.name ?? "",
-                    }}
-                    timeZoneId={timeZoneId}
-                  />
-                ))}
+        ) : (
+          <>
+            {Object.entries(
+              groupBy(transfers, (x) => DateOnly(x.occurred, timeZoneId))
+            ).map(([date, transfers]) => (
+              <div key={date} className="same-date-container">
+                <div className="date-only">{date}</div>
+                <div className="transfers">
+                  {transfers.map((t) => (
+                    <Transfer
+                      onClick={() => (selectedTransfer.value = t)}
+                      key={t.id}
+                      transfer={{
+                        amount: t.amount,
+                        currency: t.currency,
+                        date: t.occurred,
+                        description: t.description,
+                        id: t.id,
+                        senderName:
+                          t.senderId === memberId || t.senderId === userInfo?.userId
+                            ? "You"
+                            : allParticipants.find((x) => x.id === t.senderId)
+                              ?.name ?? "",
+                        receiverName:
+                          t.receiverId === memberId || t.receiverId === userInfo?.userId
+                            ? "You"
+                            : allParticipants.find((x) => x.id === t.receiverId)
+                              ?.name ?? "",
+                      }}
+                      timeZoneId={timeZoneId}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </>
-      )}
-      <Sentinel
-        fetchPage={fetchNextPage}
-        hasMore={hasNextPage}
-        isFetchingPage={isFetchingNextPage}
-      />
+            ))}
+          </>
+        )}
+        <Sentinel
+          fetchPage={fetchNextPage}
+          hasMore={hasNextPage}
+          isFetchingPage={isFetchingNextPage}
+        />
+      </div>
       {selectedTransfer.value && (
         <DetailedTransfer
           selectedTransfer={selectedTransfer}

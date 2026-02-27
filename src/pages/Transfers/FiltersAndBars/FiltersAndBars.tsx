@@ -16,7 +16,9 @@ interface FiltersAndBarsInterface {
   mode: Mode
   userMemberId: string | undefined
   menu: Signal<string | null>
-  currency: string
+  currency: string,
+  collapsed: boolean;
+
 }
 
 export const FiltersAndBars = ({
@@ -28,7 +30,8 @@ export const FiltersAndBars = ({
   mode,
   userMemberId,
   menu,
-  currency
+  currency,
+  collapsed
 }: FiltersAndBarsInterface) => {
 
   const {
@@ -39,7 +42,7 @@ export const FiltersAndBars = ({
   } = useTransferTotals(group, mode, userInfo, userMemberId, transferParsedFilters);
 
   return (
-    <StyledFiltersAndBars>
+    <StyledFiltersAndBars $collapsed={collapsed}>
       {totalsAreFetching ? (
         <div className="spinnerTotals">
           <Spinner />
