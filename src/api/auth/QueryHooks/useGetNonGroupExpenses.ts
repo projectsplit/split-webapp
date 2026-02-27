@@ -8,7 +8,7 @@ import { AxiosResponse } from "axios";
 import { Signal } from "@preact/signals-react";
 import { appendNonGroupFilterToParams } from "../helpers/appendNonGroupFilterToParams";
 
-const PREV_PREFIX = "prev::";
+type PageParam = { next?: string; previous?: string };
 
 export const useGetNonGroupExpenses = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
@@ -22,17 +22,20 @@ export const useGetNonGroupExpenses = (
     pageSize,
     expenseParsedFilters.value,
     timeZoneId,
-    jumpToken
+    jumpToken,
   ].filter(Boolean);
 
   const query = useInfiniteQuery({
-    queryKey: queryKey,
-    queryFn: ({ pageParam: rawParam }) =>
-      getNonGroupExpenses(pageSize, expenseParsedFilters.value, rawParam as string | undefined),
-    getNextPageParam: (lastPage) => lastPage?.next || undefined,
-    getPreviousPageParam: (firstPage) =>
-      firstPage?.previous ? `${PREV_PREFIX}${firstPage.previous}` : undefined,
-    initialPageParam: jumpToken || "",
+    queryKey,
+    queryFn: ({ pageParam }) => {
+      const { next, previous } = pageParam as PageParam;
+      return getNonGroupExpenses(pageSize, expenseParsedFilters.value, next, previous);
+    },
+    getNextPageParam: (lastPage): PageParam | undefined =>
+      lastPage?.next ? { next: lastPage.next } : undefined,
+    getPreviousPageParam: (firstPage): PageParam | undefined =>
+      firstPage?.previous ? { previous: firstPage.previous } : undefined,
+    initialPageParam: { next: jumpToken || "" } as PageParam,
     enabled,
   });
 
@@ -42,23 +45,22 @@ export const useGetNonGroupExpenses = (
 const getNonGroupExpenses = async (
   pageSize: number,
   parsedFilters: ExpenseParsedFilters = {},
-  rawParam?: string
+  next?: string,
+  previous?: string
 ): Promise<GetExpensesResponse> => {
   const { participantsIds = [], payersIds = [], labels = [], ...base } = parsedFilters;
 
-  const isPrev = rawParam?.startsWith(PREV_PREFIX);
-  const token = isPrev ? rawParam!.slice(PREV_PREFIX.length) : rawParam;
-
   const params = appendNonGroupFilterToParams(base, {
     pageSize,
-    next: isPrev ? undefined : token || undefined,
-    previous: isPrev ? token : undefined,
+    next,
+    previous,
     arrayMappings: [
       { key: "participantIds", values: participantsIds },
       { key: "payerIds", values: payersIds },
       { key: "labelIds", values: labels },
     ],
   });
+
   const response = await apiClient.get<
     void,
     AxiosResponse<GetExpensesResponse>

@@ -9,7 +9,7 @@ import { AxiosResponse } from "axios";
 import { Signal } from "@preact/signals-react";
 import { appendGroupFilterToParams } from "../helpers/appendGroupFilterToParams";
 
-const PREV_PREFIX = "prev::";
+type PageParam = { next?: string; previous?: string };
 
 const useGetGroupExpenses = (
   group: Group,
@@ -21,21 +21,24 @@ const useGetGroupExpenses = (
 ) => {
   const queryKey = [
     "groupExpenses",
-    group?.id,
+    group.id,
     pageSize,
     expenseParsedFilters.value,
     timeZoneId,
-    jumpToken
+    jumpToken,
   ];
 
   const query = useInfiniteQuery({
-    queryKey: queryKey,
-    queryFn: ({ pageParam: rawParam }) =>
-      getGroupExpenses(group?.id!, pageSize, expenseParsedFilters.value, rawParam as string | undefined),
-    getNextPageParam: (lastPage) => lastPage?.next || undefined,
-    getPreviousPageParam: (firstPage) =>
-      firstPage?.previous ? `${PREV_PREFIX}${firstPage.previous}` : undefined,
-    initialPageParam: jumpToken || "",
+    queryKey,
+    queryFn: ({ pageParam }) => {
+      const { next, previous } = pageParam as PageParam;
+      return getGroupExpenses(group.id, pageSize, expenseParsedFilters.value, next, previous);
+    },
+    getNextPageParam: (lastPage): PageParam | undefined =>
+      lastPage?.next ? { next: lastPage.next } : undefined,
+    getPreviousPageParam: (firstPage): PageParam | undefined =>
+      firstPage?.previous ? { previous: firstPage.previous } : undefined,
+    initialPageParam: { next: jumpToken || "" } as PageParam,
     enabled: enabled && !!group?.id,
   });
 
@@ -46,17 +49,15 @@ const getGroupExpenses = async (
   groupId: string,
   pageSize: number,
   parsedFilters: ExpenseParsedFilters = {},
-  rawParam?: string
+  next?: string,
+  previous?: string
 ): Promise<GetExpensesResponse> => {
   const { participantsIds = [], payersIds = [], labels = [], ...base } = parsedFilters;
 
-  const isPrev = rawParam?.startsWith(PREV_PREFIX);
-  const token = isPrev ? rawParam!.slice(PREV_PREFIX.length) : rawParam;
-
   const params = appendGroupFilterToParams(groupId, base, {
     pageSize,
-    next: isPrev ? undefined : token || undefined,
-    previous: isPrev ? token : undefined,
+    next,
+    previous,
     arrayMappings: [
       { key: "participantIds", values: participantsIds },
       { key: "payerIds", values: payersIds },
