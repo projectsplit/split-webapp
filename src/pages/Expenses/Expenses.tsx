@@ -21,6 +21,7 @@ import { NoExpensesFound } from "./NoExpensesFound/NoExpensesFound";
 import { FiltersAndBars } from "./FiltersAndBars/FiltersAndBars";
 import { useExpenseTotals } from "./hooks/useExpenseTotals";
 import { useCenterToExpense } from "./hooks/useCenterToExpense";
+import { hasActiveExpenseFilters } from "../../helpers/hasActiveExpenseFilters";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -72,7 +73,7 @@ const Expenses = () => {
   }, [isFetching, isFetchingNextPage, showBottomBar]);
 
   useCenterToExpense(scrollAreaRef, isScrolled, expenses, jumpToken, isFetchingPreviousPage);
-  
+
   useEffect(() => {
     menu.value = errorMessage.value ? "error" : menu.value;
   }, [errorMessage.value, menu]);
@@ -95,9 +96,11 @@ const Expenses = () => {
     return e.amount;
   };
 
+  const showFiltersAndBars = mode !== Mode.Personal || hasActiveExpenseFilters(expenseParsedFilters.value);
+
   return (
     <StyledExpenses>
-      {expenses && expenses.length > 0 && (
+      {expenses && expenses.length > 0 && showFiltersAndBars && (
         <FiltersAndBars
           expenseParsedFilters={expenseParsedFilters}
           allParticipants={allParticipants}
