@@ -1,22 +1,6 @@
 import currency from "currency.js";
 import { TotalSpent } from "../types";
 
-export function getTotalByCurrency(
-  totalSpent: TotalSpent,
-  currencyCode: string | undefined
-): number {
-  if (!currencyCode) {
-    return 0;
-  }
-  return Object.values(totalSpent).reduce(
-    (sum: currency, userCurrencies: Record<string, number>) => {
-      const value = userCurrencies[currencyCode] ?? 0;
-      return sum.add(value);
-    },
-    currency(0)
-  ).value;
-}
-
 export function getAllCurrencyTotals(
   totalSpent: TotalSpent
 ): Record<string, number> {

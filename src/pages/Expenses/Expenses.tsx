@@ -61,7 +61,7 @@ const Expenses = () => {
       }))
     );
 
-  const { groupTotalsByCurrency, userTotalsByCurrency, totalExpense, userExpense, shouldOpenMultiCurrencyTable, totalsAreFetching } =
+  const { groupTotalsByCurrency, userTotalsByCurrency, totalExpenseConverted, userExpenseConverted, shouldOpenMultiCurrencyTable, totalsAreFetching, } =
     useExpenseTotals(group, mode, userInfo, userMemberId, expenseParsedFilters);
 
   useEffect(() => {
@@ -109,8 +109,8 @@ const Expenses = () => {
           mode={mode}
           menu={menu}
           totalsAreFetching={totalsAreFetching}
-          totalExpense={totalExpense}
-          userExpense={userExpense}
+          totalExpense={totalExpenseConverted}
+          userExpense={userExpenseConverted}
           currency={group?.currency || userInfo?.currency}
           shouldOpenMultiCurrencyTable={shouldOpenMultiCurrencyTable}
           collapsed={isScrolled.value}
@@ -123,6 +123,7 @@ const Expenses = () => {
             allParticipants={allParticipants}
             group={group}
             queryClient={queryClient}
+            mode={mode}
           />
         ) : (
           <>

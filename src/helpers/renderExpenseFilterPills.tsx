@@ -9,13 +9,14 @@ const updateFiltersAndSave = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   updatedFilters: any,
   queryClient: QueryClient,
+  mode: Mode,
   groupId?: string,
-   mode?: Mode,
 ) => {
   expenseParsedFilters.value = {
     ...expenseParsedFilters.value,
     ...updatedFilters,
   };
+  console.log(mode)
   localStorage.setItem(
     getFilterStorageKey("expense", groupId, mode === Mode.Personal),
     JSON.stringify(expenseParsedFilters.value)
@@ -28,13 +29,14 @@ const updateFiltersAndSave = (
 export const renderExpenseFilterPills = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   allParticipants: TruncatedMember[],
-  group: Group,
+  group: Group | null,
   queryClient: QueryClient,
-  mode?: Mode
+  mode: Mode
 ) => {
 
   const { freeText, before, after, participantsIds, payersIds, labels } =
     expenseParsedFilters.value;
+
   const pills = [];
 
   if (freeText && freeText != "") {
@@ -53,8 +55,8 @@ export const renderExpenseFilterPills = (
             expenseParsedFilters,
             { freeText: "" },
             queryClient,
-            group?.id,
             mode,
+            group?.id,
           )
         }
       />
@@ -77,8 +79,8 @@ export const renderExpenseFilterPills = (
             expenseParsedFilters,
             { before: null, after: null },
             queryClient,
-            group?.id,
             mode,
+            group?.id,
           )
         }
       />
@@ -101,8 +103,8 @@ export const renderExpenseFilterPills = (
             expenseParsedFilters,
             { before: null },
             queryClient,
-            group?.id,
             mode,
+            group?.id,
           )
         }
       />
@@ -126,8 +128,8 @@ export const renderExpenseFilterPills = (
             expenseParsedFilters,
             { after: null },
             queryClient,
-            group?.id,
             mode,
+            group?.id,
           )
         }
       />
@@ -155,6 +157,7 @@ export const renderExpenseFilterPills = (
                 participantsIds: participantsIds.filter((pid) => pid !== id),
               },
               queryClient,
+              mode,
               group?.id
             )
           }
@@ -185,6 +188,7 @@ export const renderExpenseFilterPills = (
                 payersIds: payersIds.filter((pid) => pid !== id),
               },
               queryClient,
+              mode,
               group?.id
             )
           }
@@ -196,7 +200,7 @@ export const renderExpenseFilterPills = (
 
   if (labels && labels?.length > 0) {
     labels?.forEach((id, index) => {
-      const label = group.labels.find((l) => l.id === id);
+      const label = group?.labels?.find((l) => l.id === id);
       const labelTitle = label?.text;
       const labelColor = label?.color;
 
@@ -217,8 +221,8 @@ export const renderExpenseFilterPills = (
                 labels: labels.filter((lid) => lid !== id),
               },
               queryClient,
-              group?.id,
               mode,
+              group?.id,
             )
           }
         />
