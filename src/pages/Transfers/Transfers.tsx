@@ -62,7 +62,7 @@ const Transfers: React.FC = () => {
     return () => el.removeEventListener("scroll", handleScroll);
   }, [isScrolled, transfers]);
 
-  const { userTotalSentByCurr, userTotalReceivedByCurr, shouldOpenMultiCurrencyTable, userConvertedTotalReceived, userConvertedTotalSent, totalsAreFetching } = useTransferTotals(group, mode, userInfo, transferParsedFilters);
+  const { userTotalSentByCurr, userTotalReceivedByCurr, userConvertedTotalReceived, userConvertedTotalSent, totalsAreFetching } = useTransferTotals(group, mode, userInfo, transferParsedFilters);
 
   if (isFetching && !isFetchingNextPage) {
     return (
@@ -84,7 +84,6 @@ const Transfers: React.FC = () => {
           currency={userInfo?.currency} 
           collapsed={isScrolled.value}
           totalsAreFetching={totalsAreFetching}
-          shouldOpenMultiCurrencyTable={shouldOpenMultiCurrencyTable}
           userConvertedTotalReceived={userConvertedTotalReceived}
           userConvertedTotalSent={userConvertedTotalSent}
         />}

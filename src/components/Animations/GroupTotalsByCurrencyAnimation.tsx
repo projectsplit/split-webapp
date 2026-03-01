@@ -12,6 +12,7 @@ export default function GroupTotalsByCurrencyAnimation({
   bar2Legend,
   groupTotalsByCurrency,
   userTotalsByCurrency,
+  mode,
 }: GroupTotalsByCurrencyAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -30,6 +31,7 @@ export default function GroupTotalsByCurrencyAnimation({
         bar2Legend={bar2Legend}
         groupTotalsByCurrency={groupTotalsByCurrency}
         userTotalsByCurrency={userTotalsByCurrency}
+        mode={mode}
       />
     </CSSTransition>
   );

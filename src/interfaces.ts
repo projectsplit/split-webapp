@@ -933,6 +933,7 @@ export interface GroupTotalsByCurrencyAnimationProps extends MenuProps {
   bar2Legend: string;
   groupTotalsByCurrency: Record<string, number>;
   userTotalsByCurrency: Record<string, number>;
+  mode?:Mode;
 }
 export interface GroupTotalExpensesByCurrencyProps extends MenuProps {
   bar1Color: string;
@@ -941,6 +942,7 @@ export interface GroupTotalExpensesByCurrencyProps extends MenuProps {
   bar2Legend: string;
   groupTotalsByCurrency: Record<string, number>;
   userTotalsByCurrency: Record<string, number>;
+  mode?:Mode;
 }
 
 export interface BarsAndAmountsProps {

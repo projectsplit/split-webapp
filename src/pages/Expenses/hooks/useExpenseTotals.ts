@@ -34,14 +34,11 @@ export const useExpenseTotals = (
           : 0
         : convertedTotalSpent[userInfo?.userId] ?? 0;
 
-    const shouldOpenMultiCurrencyTable = Object.keys(groupTotalsByCurrency).length > 1 || Object.keys(userTotalsByCurrency).length > 1;
-
     return {
       groupTotalsByCurrency,
       userTotalsByCurrency,
       totalFromAllExpensesConverted,
       totalFromUserExpensesConverted,
-      shouldOpenMultiCurrencyTable,
     };
     
   }, [debts, mode, userMemberId, userInfo, group]);

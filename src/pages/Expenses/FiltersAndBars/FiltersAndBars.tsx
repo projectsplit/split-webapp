@@ -17,7 +17,6 @@ interface FiltersAndBarsProps {
   totalExpense: number;
   userExpense: number;
   currency: string;
-  shouldOpenMultiCurrencyTable: boolean;
   collapsed: boolean;
 }
 export const FiltersAndBars = ({
@@ -31,7 +30,7 @@ export const FiltersAndBars = ({
   totalExpense,
   userExpense,
   currency,
-  shouldOpenMultiCurrencyTable,
+
   collapsed,
 }: FiltersAndBarsProps) => {
 
@@ -68,9 +67,9 @@ export const FiltersAndBars = ({
             bar2Color="#e151ee"
             bar1Color="#5183ee"
             onClick={() => {
-              if (shouldOpenMultiCurrencyTable) {
+      
                 menu.value = "epensesByCurrency";
-              }
+
             }}
           />
         </div>

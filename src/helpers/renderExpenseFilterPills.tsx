@@ -16,7 +16,6 @@ const updateFiltersAndSave = (
     ...expenseParsedFilters.value,
     ...updatedFilters,
   };
-  console.log(mode)
   localStorage.setItem(
     getFilterStorageKey("expense", groupId, mode === Mode.Personal),
     JSON.stringify(expenseParsedFilters.value)

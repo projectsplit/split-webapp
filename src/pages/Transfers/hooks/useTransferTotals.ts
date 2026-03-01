@@ -3,7 +3,6 @@ import { Signal } from "@preact/signals-react";
 import { useDebts } from "@/api/auth/QueryHooks/useDebts";
 import { getCurrencyValues } from "@/helpers/getTotalsByCurrency";
 import { Mode, TransferParsedFilters, Group, UserInfo } from "@/types";
-import {  shouldOpenMultiCurrencyTableCalculator } from "../utilities.ts/shouldOpenMultiCurrencyTableCalculator";
 
 export const useTransferTotals = (
   group: Group | null,
@@ -37,14 +36,14 @@ export const useTransferTotals = (
       ? debts?.convertedTotalSent[userMemberId]
       : debts?.convertedTotalSent[userInfo?.userId];
 
-    const shouldOpenMultiCurrencyTable = shouldOpenMultiCurrencyTableCalculator(debts);
+    
 
     return {
       userTotalSentByCurr,
       userTotalReceivedByCurr,
       userConvertedTotalReceived,
       userConvertedTotalSent,
-      shouldOpenMultiCurrencyTable,
+      
     };
   }, [debts, mode, userMemberId, userInfo, group]);
 

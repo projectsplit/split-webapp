@@ -61,7 +61,7 @@ const Expenses = () => {
       }))
     );
 
-  const { groupTotalsByCurrency, userTotalsByCurrency, totalFromAllExpensesConverted, totalFromUserExpensesConverted, shouldOpenMultiCurrencyTable, totalsAreFetching, } =
+  const { groupTotalsByCurrency, userTotalsByCurrency, totalFromAllExpensesConverted, totalFromUserExpensesConverted, totalsAreFetching, } =
     useExpenseTotals(group, mode, userInfo, userMemberId, expenseParsedFilters);
 
   useEffect(() => {
@@ -112,7 +112,6 @@ const Expenses = () => {
           totalExpense={totalFromAllExpensesConverted}
           userExpense={totalFromUserExpensesConverted}
           currency={userInfo?.currency}
-          shouldOpenMultiCurrencyTable={shouldOpenMultiCurrencyTable}
           collapsed={isScrolled.value}
         />
       )}
@@ -199,11 +198,12 @@ const Expenses = () => {
       <GroupTotalsByCurrencyAnimation
         menu={menu}
         bar1Legend="Group Total"
-        bar2Legend="Your Share"
+        bar2Legend={mode === Mode.Personal ? "Your Total" : "Your Share"}
         bar2Color="#e151ee"
         bar1Color="#5183ee"
         groupTotalsByCurrency={groupTotalsByCurrency}
         userTotalsByCurrency={userTotalsByCurrency}
+        mode={mode}
       />
     </StyledExpenses>
   );
