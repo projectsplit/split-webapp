@@ -539,7 +539,9 @@ export type DebtsResponse = {
   totalSpent: Record<string, Record<string, number>>;
   convertedTotalSpent: Record<string, number>;
   totalSent: Record<string, Record<string, number>>;
+  convertedTotalSent: Record<string, number>;
   totalReceived: Record<string, Record<string, number>>;
+  convertedTotalReceived: Record<string, number>;
 };
 
 export type TotalSpent = Record<string, Record<string, number>>;

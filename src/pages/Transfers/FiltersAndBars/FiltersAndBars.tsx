@@ -12,13 +12,13 @@ interface FiltersAndBarsInterface {
   allParticipants: TruncatedMember[]
   group: Group
   queryClient: QueryClient
-  userInfo: UserInfo
-  mode: Mode
-  userMemberId: string | undefined
   menu: Signal<string | null>
   currency: string,
   collapsed: boolean;
-
+  totalsAreFetching: boolean;
+  shouldOpenMultiCurrencyTable: boolean;
+  userConvertedTotalReceived: number | undefined;
+  userConvertedTotalSent: number | undefined;
 }
 
 export const FiltersAndBars = ({
@@ -26,20 +26,15 @@ export const FiltersAndBars = ({
   allParticipants,
   group,
   queryClient,
-  userInfo,
-  mode,
-  userMemberId,
   menu,
   currency,
-  collapsed
+  collapsed,
+  totalsAreFetching,
+  shouldOpenMultiCurrencyTable,
+  userConvertedTotalReceived,
+  userConvertedTotalSent,
 }: FiltersAndBarsInterface) => {
 
-  const {
-    usertotalReceived,
-    usertotalSent,
-    shouldOpenMultiCurrencyTable,
-    totalsAreFetching
-  } = useTransferTotals(group, mode, userInfo, userMemberId, transferParsedFilters);
 
   return (
     <StyledFiltersAndBars $collapsed={collapsed}>
@@ -61,8 +56,8 @@ export const FiltersAndBars = ({
           <BarsWithLegends
             bar1Legend="Total Sent"
             bar2Legend="Total Received"
-            bar1Total={usertotalSent || 0}
-            bar2Total={usertotalReceived || 0}
+            bar1Total={userConvertedTotalSent || 0}
+            bar2Total={userConvertedTotalReceived || 0}
             currency={currency}
             bar1Color="#0CA0A0"
             bar2Color="#D79244"

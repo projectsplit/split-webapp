@@ -17,37 +17,33 @@ export const useExpenseTotals = (
   const { data: debts, isFetching: totalsAreFetching } = useDebts(mode, group?.id, expenseParsedFilters);
 
   const totals = useMemo(() => {
-    const totalSpent: Record<string, Record<string, number>> = debts?.totalSpent ?? {};
+    const totalSpentByCurrency: Record<string, Record<string, number>> = debts?.totalSpent ?? {};
     const convertedTotalSpent: Record<string, number> = debts?.convertedTotalSpent ?? {};
 
-    const groupTotalsByCurrency = getAllCurrencyTotals(totalSpent);
+    const groupTotalsByCurrency = getAllCurrencyTotals(totalSpentByCurrency);
     const userTotalsByCurrency = mode === Mode.Group
-      ? getCurrencyValues(totalSpent, userMemberId)
-      : getCurrencyValues(totalSpent, userInfo?.userId);
+      ? getCurrencyValues(totalSpentByCurrency, userMemberId)
+      : getCurrencyValues(totalSpentByCurrency, userInfo?.userId);
 
+    const totalFromAllExpensesConverted = Object.values(convertedTotalSpent).reduce((sum, val) => sum + (val ?? 0), 0);
 
-    const amounts = debts?.convertedTotalSpent ?? {};
-    const totalExpenseConverted = Object.values(amounts).reduce((sum, val) => sum + (val ?? 0), 0);
-
-
-    const userExpenseConverted =
+    const totalFromUserExpensesConverted =
       mode === Mode.Group
         ? userMemberId && group?.currency
           ? convertedTotalSpent[userMemberId] ?? 0
           : 0
         : convertedTotalSpent[userInfo?.userId] ?? 0;
 
-
-
     const shouldOpenMultiCurrencyTable = Object.keys(groupTotalsByCurrency).length > 1 || Object.keys(userTotalsByCurrency).length > 1;
 
     return {
       groupTotalsByCurrency,
       userTotalsByCurrency,
-      totalExpenseConverted,
-      userExpenseConverted,
+      totalFromAllExpensesConverted,
+      totalFromUserExpensesConverted,
       shouldOpenMultiCurrencyTable,
     };
+    
   }, [debts, mode, userMemberId, userInfo, group]);
 
   return { ...totals, totalsAreFetching };

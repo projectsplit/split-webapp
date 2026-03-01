@@ -62,11 +62,11 @@ const Transfers: React.FC = () => {
     return () => el.removeEventListener("scroll", handleScroll);
   }, [isScrolled, transfers]);
 
-  const { userTotalSentByCurr, userTotalReceivedByCurr } = useTransferTotals(group, mode, userInfo, userMemberId, transferParsedFilters);
+  const { userTotalSentByCurr, userTotalReceivedByCurr, shouldOpenMultiCurrencyTable, userConvertedTotalReceived, userConvertedTotalSent, totalsAreFetching } = useTransferTotals(group, mode, userInfo, transferParsedFilters);
 
   if (isFetching && !isFetchingNextPage) {
     return (
-      <div className="spinner">
+      <div className="spinner">``
         <Spinner />
       </div>
     );
@@ -80,12 +80,13 @@ const Transfers: React.FC = () => {
           allParticipants={allParticipants}
           group={group}
           queryClient={queryClient}
-          userInfo={userInfo}
-          mode={mode}
-          userMemberId={userMemberId}
           menu={menu}
-          currency={group?.currency || userInfo?.currency}
+          currency={userInfo?.currency} 
           collapsed={isScrolled.value}
+          totalsAreFetching={totalsAreFetching}
+          shouldOpenMultiCurrencyTable={shouldOpenMultiCurrencyTable}
+          userConvertedTotalReceived={userConvertedTotalReceived}
+          userConvertedTotalSent={userConvertedTotalSent}
         />}
       <div className="scroll-area" ref={scrollAreaRef}>
         {!transfers || transfers.length === 0 ? (
