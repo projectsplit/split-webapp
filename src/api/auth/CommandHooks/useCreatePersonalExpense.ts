@@ -1,11 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
 import { apiClient } from "../../apiClients";
-import {  PersonalExpenseRequest } from "../../../types";
+import { PersonalExpenseRequest } from "../../../types";
 import { Signal } from "@preact/signals-react";
+import { NavigateFunction } from "react-router-dom";
 
 export const useCreatePersonalExpense = (
   menu: Signal<string | null>,
+  navigate: NavigateFunction,
   setIsSubmitting: (value: boolean) => void,
 
 ) => {
@@ -15,6 +17,7 @@ export const useCreatePersonalExpense = (
     mutationFn: (expense) => createPersonalExpense(expense),
     onSuccess: async () => {
       menu.value = null;
+      navigate(`/personal`);
       await queryClient.invalidateQueries({
         queryKey: ["personalExpenses"],
         exact: false,
@@ -27,7 +30,6 @@ export const useCreatePersonalExpense = (
 };
 
 const createPersonalExpense = async (req: PersonalExpenseRequest): Promise<void> => {
-  console.log(req)
   await apiClient.post<void, AxiosResponse<void>>(
     "/expenses/create-personal",
     req

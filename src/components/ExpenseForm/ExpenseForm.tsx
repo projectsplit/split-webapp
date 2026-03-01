@@ -137,7 +137,8 @@ export default function ExpenseForm({
       nonGroupGroup,
       groupMembers,
       fromHome,
-      isnonGroupExpense
+      isnonGroupExpense,
+      isPersonal
     );
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
@@ -149,7 +150,7 @@ export default function ExpenseForm({
       selectedExpense);
 
   const onSubmit = () => {
-    if (isnonGroupExpense?.value && !userExistsInCategory.value.Participants && !userExistsInCategory.value.Payers) {
+    if (isnonGroupExpense?.value && !userExistsInCategory.value.Participants && !userExistsInCategory.value.Payers &&!isPersonal?.value) {
       warningMenu.value = "generalWarning";
       return;
     }

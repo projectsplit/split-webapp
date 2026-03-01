@@ -24,7 +24,8 @@ export const useCreateExpenseMutation = (
   nonGroupGroup: Signal<Group | null> | undefined,
   groupMembers: Signal<(Member | Guest)[]>,
   fromHome: boolean | undefined,
-  isnonGroupExpense: Signal<boolean> | undefined
+  isnonGroupExpense: Signal<boolean> | undefined,
+  isPersonal: Signal<boolean> | undefined
 ) => {
   const { mutate: createGroupExpenseMutation, isPending: isPendingCreateGroupExpense } =
     useCreateGroupExpense(
@@ -51,10 +52,10 @@ export const useCreateExpenseMutation = (
     );
 
   const { mutate: createPersonalExpenseMutation, isPending: isPendingCreatePersonalExpense } =
-    useCreatePersonalExpense(menu, setIsSubmitting);
+    useCreatePersonalExpense(menu, navigate, setIsSubmitting);
 
   const mutate = (req: ExpenseRequest) => {
-    if (isnonGroupExpense?.value) {
+    if (isnonGroupExpense?.value && !isPersonal?.value) {
       createNonGroupExpenseMutation(req as NonGroupExpenseRequest);
     } else if (groupId) {
       createGroupExpenseMutation(req as GroupExpenseRequest);
@@ -63,7 +64,7 @@ export const useCreateExpenseMutation = (
     }
   };
 
-  const isPending = isnonGroupExpense?.value
+  const isPending = isnonGroupExpense?.value && !isPersonal?.value
     ? isPendingCreateNonGroupExpense
     : groupId
       ? isPendingCreateGroupExpense
