@@ -1,7 +1,8 @@
-import { ExpenseResponseItem, Group, Guest, Member, User } from "@/types";
+import { ExpenseResponseItem, Group, Guest, Member, TransactionType, User } from "@/types";
 import { Signal } from "@preact/signals-react";
 import { useEditNonGroupExpense } from "./useEditNonGroupExpense";
 import { useEditExpense } from "./useEditExpense";
+import { useEditPersonalExpense } from "./useEditPersonalExpense";
 
 export const useEditExpenseMutation = (menu: Signal<string | null>,
   setIsSubmitting: (value: boolean) => void,
@@ -11,8 +12,6 @@ export const useEditExpenseMutation = (menu: Signal<string | null>,
   makePersonalClicked: boolean,
   isNonGroupExpense: Signal<boolean> | undefined,
   selectedExpense?: Signal<ExpenseResponseItem | null>) => {
-
-  const hasGroup = !!selectedExpense?.value?.groupId;
 
   const group = useEditExpense(
     menu,
@@ -37,5 +36,22 @@ export const useEditExpenseMutation = (menu: Signal<string | null>,
     selectedExpense
   );
 
-  return hasGroup ? group : nonGroup;
+  const personal = useEditPersonalExpense(
+    menu,
+    setIsSubmitting,
+    nonGroupUsers,
+    nonGroupGroup,
+    groupMembers,
+    makePersonalClicked,
+    isNonGroupExpense,
+    selectedExpense
+  )
+
+  if (selectedExpense?.value?.transactionType === TransactionType.Group) {
+    return group;
+  } else if (selectedExpense?.value?.transactionType === TransactionType.NonGroup) {
+    return nonGroup;
+  } else {
+    return personal;
+  }
 }
