@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const StyledExpense = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== "userAmount",
-})<{
+}) <{
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   userAmount: number;
 }>`
@@ -20,6 +20,7 @@ export const StyledExpense = styled.div.withConfig({
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
 
     .icons {
       display: flex;

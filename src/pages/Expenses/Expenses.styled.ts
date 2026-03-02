@@ -15,6 +15,11 @@ export const StyledExpenses = styled.div`
     flex-direction: column;
     padding: 16px 8px; /* Moves the list padding here */
     gap: 16px;
+
+    .expense-highlight {
+      animation: highlight-fade 8s ease-out;
+      border-radius: 10px;
+      }
   }
   
   .same-date-container {
@@ -40,5 +45,12 @@ export const StyledExpenses = styled.div`
       gap: 8px;
     }
   }
-
+  @keyframes highlight-fade {
+      0% {
+        box-shadow: 0 0 0 4px #8300e7, 0 0 10px #8300e7;
+      }
+      100% {
+        box-shadow: 0 0 0 0px transparent, 0 0 0px transparent;
+      }
+    }
 `;

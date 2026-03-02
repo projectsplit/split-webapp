@@ -15,7 +15,7 @@ export const useCenterToExpense = (scrollAreaRef: React.RefObject<HTMLDivElement
   }, [isScrolled, expenses]);
   // Before fetching the previous page, save the current scrollHeight so we can
   // restore the visual position after new items are prepended to the list.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isFetchingPreviousPage && scrollAreaRef.current) {
       savedScrollHeight.current = scrollAreaRef.current.scrollHeight;
     }
@@ -41,11 +41,17 @@ export const useCenterToExpense = (scrollAreaRef: React.RefObject<HTMLDivElement
         const targetExpense = expenses.find(
           (e) => e.occurred === targetOccurred && e.created === targetCreated
         );
-
         if (targetExpense) {
           const element = document.getElementById(`expense-${targetExpense.id}`);
           if (element) {
             element.scrollIntoView({ block: "center" });
+
+            element.classList.add("expense-highlight");
+
+            // setTimeout(() => {
+            //   element.classList.remove("expense-highlight");
+            // }, 100000000);
+
             jumpToProcessed.current = jumpToken;
           }
         }
