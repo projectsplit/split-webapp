@@ -17,7 +17,7 @@ export default function LabelsDisplay({
   return (
     <StyledLabelsDisplay>
       {" "}
-      <FaTags className="tagIcon"  onClick={()=>labelMenuIsOpen.value=true}/>
+      <FaTags className="tagIcon" onClick={() => labelMenuIsOpen.value = true} />
       <div className="labels">
         {" "}
         {labels.map((x) => {

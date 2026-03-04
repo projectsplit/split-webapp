@@ -380,6 +380,7 @@ export interface LabelPickerProps {
   labels: Label[];
   setLabels: (labels: Label[]) => void;
   groupId?: string;
+  userId?:string;
 }
 
 export interface LabelMenuProps {
@@ -387,6 +388,7 @@ export interface LabelMenuProps {
   labels: Label[];
   setLabels: (labels: Label[]) => void
   groupId?: string;
+  userId?:string;
 }
 
 export interface BottomMenuProps {

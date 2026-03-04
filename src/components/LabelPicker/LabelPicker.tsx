@@ -8,17 +8,24 @@ import { Label } from "../../types";
 import labelColors from "../../labelColors";
 import { AiFillDelete } from "react-icons/ai";
 import { useRemoveLabel } from "../../api/auth/CommandHooks/useRemoveLabel";
+import { useGetUserLabels } from "@/api/auth/QueryHooks/useGetUserLabels";
 
-const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
+const LabelPicker = ({ labels, setLabels, groupId, userId }: LabelPickerProps) => {
 
   const [text, setText] = useState<string>("");
   const removeLabelMutation = useRemoveLabel()
 
   const { data: suggestedLabelsResponse } = useGetGroupLabels(groupId);
+  const { data: suggestedUserLabelsResponse } = useGetUserLabels(userId);
 
   const groupLabels = suggestedLabelsResponse?.labels ?? [];
-  const usedColors = groupLabels?.map(x => x.color)?.concat(labels?.map(x => x.color)) ?? []
-  const availableColors = Object.keys(labelColors).filter(x => !usedColors.includes(x))
+  const userLabels = suggestedUserLabelsResponse?.labels ?? [];
+
+  const usedGroupColors = groupLabels?.map(x => x.color)?.concat(labels?.map(x => x.color)) ?? []
+  const usedUserColors = userLabels?.map(x => x.color)?.concat(labels?.map(x => x.color)) ?? []
+
+  const availableGroupColors = Object.keys(labelColors).filter(x => !usedGroupColors.includes(x))
+  const availableUserColors = Object.keys(labelColors).filter(x => !usedUserColors.includes(x))
 
   const addLabel = (labelText: string) => {
 
@@ -28,10 +35,16 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
     }
 
     const existingGroupLabel = groupLabels.find(x => x.text == labelText);
+    const existingUserLabel = userLabels.find(x => x.text == labelText);
 
-    const newExpenseLabel: Label = !!existingGroupLabel
-      ? { id: existingGroupLabel.id, color: existingGroupLabel.color, text: existingGroupLabel.text }
-      : { id: labelText, color: availableColors[0], text: labelText };
+    const newExpenseLabel: Label = !!groupId ?
+      !!existingGroupLabel
+        ? { id: existingGroupLabel.id, color: existingGroupLabel.color, text: existingGroupLabel.text }
+        : { id: labelText, color: availableGroupColors[0], text: labelText }
+      :
+      !!existingUserLabel
+        ? { id: existingUserLabel.id, color: existingUserLabel.color, text: existingUserLabel.text }
+        : { id: labelText, color: availableUserColors[0], text: labelText };
 
     setLabels([...labels, newExpenseLabel]);
     setText("");
@@ -83,7 +96,8 @@ const LabelPicker = ({ labels, setLabels, groupId }: LabelPickerProps) => {
     setText(trimmedText);
   };
 
-  const remainingSuggestedLabels = groupLabels.filter(x => !labels.map(x => x.text).includes(x.text));
+  const remainingSuggestedLabels = !!groupId ? groupLabels.filter(x => !labels.map(x => x.text).includes(x.text)) :
+    userLabels.filter(x => !labels.map(x => x.text).includes(x.text));
 
 
   const isEmpty = labels?.length === 0 && text.length === 0;

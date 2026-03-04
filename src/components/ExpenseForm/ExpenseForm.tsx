@@ -1,5 +1,5 @@
 import { useEffect, useRef, } from "react";
-import { PickerMember, SplitCategory, UserInfo} from "@/types";
+import { PickerMember, SplitCategory, UserInfo } from "@/types";
 import MenuAnimationBackground from "@/components/Animations/MenuAnimationBackground";
 import CurrencyOptionsAnimation from "@/components/Animations/CurrencyOptionsAnimation";
 import InputMonetary from "@/components/InputMonetary/InputMonetary";
@@ -150,7 +150,7 @@ export default function ExpenseForm({
       selectedExpense);
 
   const onSubmit = () => {
-    if (isnonGroupExpense?.value && !userExistsInCategory.value.Participants && !userExistsInCategory.value.Payers &&!isPersonal?.value) {
+    if (isnonGroupExpense?.value && !userExistsInCategory.value.Participants && !userExistsInCategory.value.Payers && !isPersonal?.value) {
       warningMenu.value = "generalWarning";
       return;
     }
@@ -166,7 +166,12 @@ export default function ExpenseForm({
   }
 
   const amountNumber = !inputs.amountError ? Number(inputs.amount) : 0;
-  const { handleInputBlur, handleCurrencyOptionsClick, handleInputChangeCallback, handleDescriptionChange } = useHandlers(participants, payers, inputs.setShowAmountError, inputs.amount, inputs.setAmountError, inputs.setCurrencySymbol, currencyMenu, displayedAmount, inputs.setAmount, inputs.setParticipantsError, inputs.setPayersError, isInitialRender, inputs.validateForm, isCreateExpense, inputs.setDescription, inputs.setDescriptionError, inputs.currencySymbol)
+  const { handleInputBlur, handleCurrencyOptionsClick, handleInputChangeCallback, handleDescriptionChange } =
+    useHandlers(participants, payers, inputs.setShowAmountError,
+      inputs.amount, inputs.setAmountError, inputs.setCurrencySymbol, currencyMenu,
+      displayedAmount, inputs.setAmount, inputs.setParticipantsError, inputs.setPayersError,
+      isInitialRender, inputs.validateForm, isCreateExpense, inputs.setDescription,
+      inputs.setDescriptionError, inputs.currencySymbol)
 
   return (
     <StyledExpenseForm>
@@ -244,6 +249,7 @@ export default function ExpenseForm({
           labels={inputs.labels}
           setLabels={inputs.setLabels}
           groupId={groupId}
+          userId={userInfo?.userId}
         />
       )}
       <LocationDisplay location={inputs.location} isMapOpen={isMapOpen} setLocation={inputs.setLocation} />

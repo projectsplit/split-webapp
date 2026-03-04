@@ -9,6 +9,7 @@ export const LabelMenu = ({
   groupId,
   labels,
   setLabels,
+  userId
 }: LabelMenuProps) => {
   return (
     <StyledLabelMenu>
@@ -27,7 +28,7 @@ export const LabelMenu = ({
        Type to add a new label (press space to confirm) or pick an existing one.
       </div>
       <div className="label-picker-wrapper">
-        <LabelPicker labels={labels} setLabels={setLabels} groupId={groupId} />
+        <LabelPicker labels={labels} setLabels={setLabels} groupId={groupId} userId={userId}/>
       </div>
 
       <MyButton fontSize="16" onClick={() => (labelMenuIsOpen.value = false)}>

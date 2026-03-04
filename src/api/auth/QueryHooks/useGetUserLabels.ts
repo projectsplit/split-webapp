@@ -2,24 +2,24 @@ import { AxiosResponse } from "axios";
 import { apiClient } from "../../apiClients";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetGroupLabels = (groupId: string | undefined) => {
+export const useGetUserLabels = (userId: string | undefined) => {
 
   return useQuery({
-    queryKey: ["groupLabels", groupId],
-    queryFn: () => getLabels(groupId),
+    queryKey: ["userLabels", userId],
+    queryFn: () => getLabels(userId),
     refetchOnMount: true,
     staleTime: 10000,
-    enabled: !!groupId
+    enabled: !!userId
   });
 };
 
-const getLabels = async (groupId: string | undefined) => {
-  const params = { groupId };
-  if (!groupId) {
+const getLabels = async (userId: string | undefined) => {
+  const params = { userId };
+  if (!userId) {
     return { labels: [] };
   }
   const response = await apiClient.get<void, AxiosResponse<GetLabelsResponse>>(
-    "/expenses/labels",
+    "/users/user-labels",
     { params }
   );
   return response.data;

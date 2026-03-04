@@ -19,6 +19,7 @@ const Expense = ({
   labels,
   mode,
 }: ExpenseProps) => {
+  console.log(labels)
   return (
     <StyledExpense onClick={onClick} userAmount={userAmount}>
       <div className="topRow">
@@ -31,7 +32,7 @@ const Expense = ({
                   $textColor={"#000000c8"}
                   key={index}
                   title={l.text}
-                  color={labelColors[l.color]}
+                  color={l.color === "" ? "white" : labelColors[l.color]}
                   closeButton={false}
                   $border={false}
                   fontSize="14px" />

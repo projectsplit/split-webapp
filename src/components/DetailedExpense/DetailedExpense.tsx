@@ -93,7 +93,7 @@ export default function DetailedExpense({
                   key={i}
                   title={l.text}
                   $textColor="#000000c8"
-                  color={labelColors[l.color]}
+                  color={l.color === "" ? "white" :labelColors[l.color]}
                   closeButton={false}
                   fontSize="18px"
                   $border={false}
