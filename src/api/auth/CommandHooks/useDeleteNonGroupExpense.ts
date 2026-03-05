@@ -19,6 +19,10 @@ export const useDeleteNonGroupExpense = (
         queryKey: ["nonGroupExpenses"],
         exact: false,
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["personalExpenses"],
+        exact: false,
+      });
       await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
       await queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
       await queryClient.invalidateQueries({
