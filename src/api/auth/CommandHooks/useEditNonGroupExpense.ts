@@ -43,6 +43,10 @@ export const useEditNonGroupExpense = (
         queryKey: ["mostRecentGroup"],
         exact: false,
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["cumulativeArray"],
+        exact: false,
+      });
       if (selectedExpense) {
         selectedExpense.value = null;
       }

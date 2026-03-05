@@ -46,6 +46,10 @@ export const useCreateGroupExpense = (
         exact: false,
       });
       await queryClient.invalidateQueries({
+        queryKey: ["cumulativeArray"],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
         queryKey: [groupId],
         exact: false,
       });

@@ -48,6 +48,10 @@ export const useEditExpense = (
         queryKey: [groupId],
         exact: false,
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["cumulativeArray"],
+        exact: false,
+      });
       if (selectedExpense) {
         selectedExpense.value = null;
       }

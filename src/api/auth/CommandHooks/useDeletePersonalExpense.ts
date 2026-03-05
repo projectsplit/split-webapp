@@ -18,6 +18,10 @@ export const useDeletePersonalExpense = (
         queryKey: ["personalExpenses"],
         exact: false,
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["cumulativeArray"],
+        exact: false,
+      });
       selectedExpense.value = null;
       menu.value = null;
     },

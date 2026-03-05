@@ -46,6 +46,10 @@ export const useCreateNonGroupExpense = (
         queryKey: ["non-group-expense-users"],
         exact: false,
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["cumulativeArray"],
+        exact: false,
+      });
       const data = {
         nonGroupUsers: nonGroupUsers.value,
         fromHomeGroup: fromHomeGroup?.value,

@@ -22,6 +22,10 @@ export const useCreatePersonalExpense = (
         queryKey: ["personalExpenses"],
         exact: false,
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["cumulativeArray"],
+        exact: false,
+      });
     },
     onSettled: () => {
       setIsSubmitting(false);
