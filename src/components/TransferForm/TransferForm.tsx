@@ -17,7 +17,7 @@ import { NonGroupMenu } from "./NonGroupMenu/NonGroupMenu";
 import { GroupMenu } from "./GroupMenu/GroupMenu";
 import { useTransferFormLogic } from "./hooks/useTransferFormLogic";
 
-export default function TransferForm({ groupMembers, nonGroupUsers, currency, timeZoneId, menu, nonGroupGroup,
+export default function TransferForm({ groupMembers, nonGroupUsers, currency, timeZoneId, menu, fromHomeGroup,
   groupId, isnonGroupTransfer, nonGroupMenu, fromHome }: TransferFormProps) {
 
   const { userInfo } = useOutletContext<{ userInfo: UserInfo; }>();
@@ -39,7 +39,7 @@ export default function TransferForm({ groupMembers, nonGroupUsers, currency, ti
   const { handleInputBlur, handleCurrencyOptionsClick, submitTransfer, userMemberId,
     noReceiverSelected, sortedMembers, idError, isPendingCreateTransfer } = useTransferFormLogic({
       userInfo, groupId, groupMembers, menu, nonGroupUsers, isnonGroupTransfer,
-      nonGroupMenu, nonGroupGroup, navigate, isSubmitting, displayedAmount, currencyMenu, data, actions,
+      nonGroupMenu, fromHomeGroup, navigate, isSubmitting, displayedAmount, currencyMenu, data, actions,
     })
 
 
@@ -58,7 +58,7 @@ export default function TransferForm({ groupMembers, nonGroupUsers, currency, ti
         actions={actions}
         handleInputBlur={handleInputBlur}
       />
-      {isnonGroupTransfer && isnonGroupTransfer.value && nonGroupMenu && nonGroupGroup?.value === null ? (
+      {isnonGroupTransfer && isnonGroupTransfer.value && nonGroupMenu && fromHomeGroup?.value === null ? (
         <NonGroupMenu
           $noReceiverSelected={noReceiverSelected}
           $isSamePersonError={data.errors.showSamePersonError}
@@ -70,7 +70,7 @@ export default function TransferForm({ groupMembers, nonGroupUsers, currency, ti
         />
       ) : (
         <GroupMenu
-          nonGroupGroup={nonGroupGroup}
+          fromHomeGroup={fromHomeGroup}
           isnonGroupTransfer={isnonGroupTransfer}
           idError={idError}
           data={data}

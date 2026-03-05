@@ -12,7 +12,7 @@ export default function NewTransferAnimation({
   isnonGroupTransfer,
   groupId,
   nonGroupMenu,
-  nonGroupGroup,
+  fromHomeGroup,
   fromHome,
 }: NewTransferAnimationProps) {
   const nodeRef = useRef(null);
@@ -32,7 +32,7 @@ export default function NewTransferAnimation({
         currency={currency}
         isnonGroupTransfer={isnonGroupTransfer}
         nonGroupMenu={nonGroupMenu}
-        nonGroupGroup={nonGroupGroup}
+        fromHomeGroup={fromHomeGroup}
         fromHome={fromHome}
       />
     </CSSTransition>

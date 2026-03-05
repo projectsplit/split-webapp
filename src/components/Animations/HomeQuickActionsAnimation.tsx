@@ -7,7 +7,7 @@ export default function HomeQuickActionsAnimation({
   quickActionsMenu,
   isNonGroupExpense,
   nonGroupTransferMenu,
-  nonGroupGroup,
+  fromHomeGroup,
   userInfo,
 }: HomeQuickActionsAnimationProps) {
   const nodeRef = useRef(null);
@@ -23,7 +23,7 @@ export default function HomeQuickActionsAnimation({
       <ActionsMenu
         onClickExpense={() => {
           quickActionsMenu.value = "newExpense";
-          if (!nonGroupGroup.value?.id) {
+          if (!fromHomeGroup.value?.id) {
             isNonGroupExpense.value = true;
           }
         }}

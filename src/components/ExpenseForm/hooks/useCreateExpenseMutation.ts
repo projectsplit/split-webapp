@@ -21,7 +21,7 @@ export const useCreateExpenseMutation = (
   setIsSubmitting: (value: boolean) => void,
   makePersonalClicked: boolean,
   nonGroupUsers: Signal<User[]>,
-  nonGroupGroup: Signal<Group | null> | undefined,
+  fromHomeGroup: Signal<Group | null> | undefined,
   groupMembers: Signal<(Member | Guest)[]>,
   fromHome: boolean | undefined,
   isnonGroupExpense: Signal<boolean> | undefined,
@@ -35,7 +35,7 @@ export const useCreateExpenseMutation = (
       setIsSubmitting,
       makePersonalClicked,
       nonGroupUsers,
-      nonGroupGroup,
+      fromHomeGroup,
       groupMembers,
       fromHome
     );
@@ -46,7 +46,7 @@ export const useCreateExpenseMutation = (
       navigate,
       setIsSubmitting,
       nonGroupUsers,
-      nonGroupGroup,
+      fromHomeGroup,
       groupMembers,
       makePersonalClicked
     );

@@ -17,7 +17,7 @@ import { useSearchUsers } from "@/api/auth/QueryHooks/useSearchUsers";
 
 export default function NonGroupTransferMenu({
   nonGroupTransferMenu,
-  nonGroupGroup,
+  fromHomeGroup,
   groupMembers,
   isNonGroupTransfer,
 }: NonGroupTransferMenuProps) {
@@ -115,13 +115,13 @@ export default function NonGroupTransferMenu({
     return (
       userGroups?.pages
         .flatMap((x) => x.groups)
-        .filter((x) => nonGroupGroup.value?.id !== x.id) ?? []
+        .filter((x) => fromHomeGroup.value?.id !== x.id) ?? []
     );
-  }, [userGroups, nonGroupGroup.value]);
+  }, [userGroups, fromHomeGroup.value]);
 
   const isEmpty = useMemo(
-    () => keyword.length === 0 && !nonGroupGroup.value,
-    [nonGroupGroup.value, keyword]
+    () => keyword.length === 0 && !fromHomeGroup.value,
+    [fromHomeGroup.value, keyword]
   );
 
   const handleSuggestedGroupClick = useCallback(
@@ -132,7 +132,7 @@ export default function NonGroupTransferMenu({
 
       if (!existingGroup) return;
       isNonGroupTransfer.value = false;
-      (nonGroupGroup.value = {
+      (fromHomeGroup.value = {
         id: existingGroup.id,
         name: existingGroup.name,
         created: existingGroup.created,
@@ -153,7 +153,7 @@ export default function NonGroupTransferMenu({
   );
 
   const handleSelectedGroupCick = () => {
-    nonGroupGroup.value = null;
+    fromHomeGroup.value = null;
     groupMembers.value = [];
     isNonGroupTransfer.value = true;
   };
@@ -193,7 +193,7 @@ export default function NonGroupTransferMenu({
             tabIndex={0}
           >
             <SelectedGroup
-              group={nonGroupGroup.value}
+              group={fromHomeGroup.value}
               onRemove={handleSelectedGroupCick}
             />
             <AutoWidthInput

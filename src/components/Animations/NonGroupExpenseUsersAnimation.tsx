@@ -8,7 +8,7 @@ export default function NonGroupExpenseUsersAnimation({
   nonGroupUsers,
   isPersonal,
   groupMembers,
-  nonGroupGroup,
+  fromHomeGroup,
   isNonGroupExpense,
   fromNonGroup
 }: NonGroupExpenseUsersAnimationProps) {
@@ -25,7 +25,7 @@ export default function NonGroupExpenseUsersAnimation({
         nonGroupUsers={nonGroupUsers}
         isPersonal={isPersonal}
         groupMembers={groupMembers}
-        nonGroupGroup={nonGroupGroup}
+        fromHomeGroup={fromHomeGroup}
         isNonGroupExpense={isNonGroupExpense}
         fromNonGroup={fromNonGroup}
       />

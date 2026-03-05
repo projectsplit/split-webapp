@@ -12,7 +12,7 @@ export const useCreateGroupExpense = (
   setIsSubmitting: (value: boolean) => void,
   makePersonalClicked: boolean,
   nonGroupUsers: Signal<User[]>,
-  nonGroupGroup: Signal<Group | null> | undefined,
+  fromHomeGroup: Signal<Group | null> | undefined,
   groupMembers: Signal<(Member | Guest)[]>,
   fromHome: boolean | undefined
 ) => {
@@ -53,13 +53,13 @@ export const useCreateGroupExpense = (
       if (fromHome) {
         const data = {
           nonGroupUsers: nonGroupUsers.value,
-          nonGroupGroup: nonGroupGroup?.value,
+          fromHomeGroup: fromHomeGroup?.value,
           groupMembers: groupMembers.value,
         };
         if (
           groupMembers.value.length > 0 ||
           nonGroupUsers.value.length > 0 ||
-          nonGroupGroup?.value
+          fromHomeGroup?.value
         )
           localStorage.setItem("submittedFromHomePersistData", JSON.stringify(data));
       }

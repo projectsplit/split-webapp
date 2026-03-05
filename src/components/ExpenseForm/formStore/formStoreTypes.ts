@@ -127,7 +127,7 @@ export interface ExpenseState {
     isnonGroupExpense?: Signal<boolean>;
     isPersonal?: Signal<boolean>;
     fromPersonal?: Signal<boolean>;
-    nonGroupGroup?: Signal<Group | null>;
+    fromHomeGroup?: Signal<Group | null>;
   }) => void;
 
 }

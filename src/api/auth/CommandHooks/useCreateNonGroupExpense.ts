@@ -10,7 +10,7 @@ export const useCreateNonGroupExpense = (
   navigate: NavigateFunction,
   setIsSubmitting: (value: boolean) => void,
   nonGroupUsers: Signal<User[]>,
-  nonGroupGroup: Signal<Group | null> | undefined,
+  fromHomeGroup: Signal<Group | null> | undefined,
   groupMembers: Signal<(Member | Guest)[]>,
   makePersonalClicked: boolean,
 ) => {
@@ -48,13 +48,13 @@ export const useCreateNonGroupExpense = (
       });
       const data = {
         nonGroupUsers: nonGroupUsers.value,
-        nonGroupGroup: nonGroupGroup?.value,
+        fromHomeGroup: fromHomeGroup?.value,
         groupMembers: groupMembers.value,
       };
       if (
         groupMembers.value.length > 0 ||
         nonGroupUsers.value.length > 0 ||
-        nonGroupGroup?.value
+        fromHomeGroup?.value
       ) {
         localStorage.setItem("submittedFromHomePersistData", JSON.stringify(data));
       }
@@ -69,7 +69,7 @@ export const useCreateNonGroupExpense = (
 };
 
 const createNonGroupExpense = async (req: NonGroupExpenseRequest): Promise<void> => {
-    console.log(req)
+  console.log(req)
   await apiClient.post<void, AxiosResponse<void>>(
     "/expenses/create-non-group",
     req

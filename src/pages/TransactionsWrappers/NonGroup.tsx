@@ -130,7 +130,7 @@ export default function NonGroup() {
           isnonGroupTransfer={signal(true)}
           nonGroupUsers={nonGroupUsers}
           nonGroupMenu={nonGroupTransferMenu}
-          nonGroupGroup={signal(null)}
+          fromHomeGroup={signal(null)}
           fromHome={false}
         />
 
@@ -161,14 +161,14 @@ export default function NonGroup() {
         nonGroupUsers={nonGroupUsers}
         isPersonal={signal(false)}
         groupMembers={signal([])}
-        nonGroupGroup={signal(null)}
+        fromHomeGroup={signal(null)}
         isNonGroupExpense={signal(true)}
         fromNonGroup={true}
 
       />
       <NonGroupTransferAnimation
         nonGroupTransferMenu={nonGroupTransferMenu}
-        nonGroupGroup={signal(null)}
+        fromHomeGroup={signal(null)}
         groupMembers={signal([])}
         isNonGroupTransfer={signal(true)}
       />

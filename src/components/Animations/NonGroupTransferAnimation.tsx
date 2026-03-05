@@ -6,7 +6,7 @@ import NonGroupTransferMenu from "../Menus/NonGroupUsersMenus/NonGroupTransferMe
 
 export default function NonGroupTransferAnimation({
   nonGroupTransferMenu,
-  nonGroupGroup,
+  fromHomeGroup,
   groupMembers,
   isNonGroupTransfer
 }: NonGroupTransferAnimationProps) {
@@ -20,7 +20,7 @@ export default function NonGroupTransferAnimation({
     >
       <NonGroupTransferMenu
         nonGroupTransferMenu={nonGroupTransferMenu}
-        nonGroupGroup={nonGroupGroup}
+        fromHomeGroup={fromHomeGroup}
         groupMembers={groupMembers}
         isNonGroupTransfer={isNonGroupTransfer}
       />

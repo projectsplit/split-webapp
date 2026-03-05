@@ -52,7 +52,7 @@ export default function Home() {
   const theme = useTheme();
 
   const nonGroupUsers = useSignal<User[]>([]);
-  const nonGroupGroup = useSignal<Group | null>(null);
+  const fromHomeGroup = useSignal<Group | null>(null);
   const groupMembers = useSignal<(Guest | Member)[]>([]);
   const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
@@ -102,14 +102,14 @@ export default function Home() {
     if (saved) {
       const {
         nonGroupUsers: u,
-        nonGroupGroup: g,
+        fromHomeGroup: g,
         groupMembers: m,
       } = JSON.parse(saved);
       nonGroupUsers.value = u ?? [];
-      nonGroupGroup.value = g ?? null;
+      fromHomeGroup.value = g ?? null;
       groupMembers.value = m ?? [];
       isPersonal.value = false;
-      if (nonGroupGroup.value !== null) {
+      if (fromHomeGroup.value !== null) {
         isNonGroupExpense.value = false;
       }
     }
@@ -159,7 +159,7 @@ export default function Home() {
 
       {quickActionsMenu.value === "newExpense" && (
         <CreateExpenseForm
-          groupId={nonGroupGroup.value?.id}
+          groupId={fromHomeGroup.value?.id}
           expense={null}
           timeZoneId={userInfo.timeZone}
           menu={quickActionsMenu}
@@ -172,20 +172,20 @@ export default function Home() {
           currency={userInfo.currency}
           nonGroupUsers={nonGroupUsers}
           nonGroupMenu={nonGroupExpenseMenu}
-          nonGroupGroup={nonGroupGroup}
+          fromHomeGroup={fromHomeGroup}
           fromHome={true}
         />
       )}
       {quickActionsMenu.value === "newTransfer" && (
         <TransferForm
-          groupId={nonGroupGroup.value?.id}
+          groupId={fromHomeGroup.value?.id}
           timeZoneId={userInfo.timeZone}
           menu={quickActionsMenu}
           isnonGroupTransfer={isNonGroupTransfer}
           groupMembers={groupMembers}
           currency={userInfo.currency}
           nonGroupUsers={nonGroupUsers}
-          nonGroupGroup={nonGroupGroup}
+          fromHomeGroup={fromHomeGroup}
           nonGroupMenu={nonGroupTransferMenu}
           fromHome={true}
         />
@@ -195,7 +195,7 @@ export default function Home() {
         quickActionsMenu={quickActionsMenu}
         isNonGroupExpense={isNonGroupExpense}
         nonGroupTransferMenu={nonGroupTransferMenu}
-        nonGroupGroup={nonGroupGroup}
+        fromHomeGroup={fromHomeGroup}
         userInfo={userInfo}
       />
       <NonGroupExpenseUsersAnimation
@@ -203,13 +203,13 @@ export default function Home() {
         nonGroupUsers={nonGroupUsers}
         isPersonal={isPersonal}
         groupMembers={groupMembers}
-        nonGroupGroup={nonGroupGroup}
+        fromHomeGroup={fromHomeGroup}
         isNonGroupExpense={isNonGroupExpense}
         fromNonGroup={false}
       />
       <NonGroupTransferAnimation
         nonGroupTransferMenu={nonGroupTransferMenu}
-        nonGroupGroup={nonGroupGroup}
+        fromHomeGroup={fromHomeGroup}
         groupMembers={groupMembers}
         isNonGroupTransfer={isNonGroupTransfer}
       />

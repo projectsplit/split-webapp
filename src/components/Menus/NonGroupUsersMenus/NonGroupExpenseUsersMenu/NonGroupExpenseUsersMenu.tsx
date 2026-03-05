@@ -26,7 +26,7 @@ export const NonGroupExpenseUsersMenu = ({
   nonGroupUsers,
   isPersonal,
   groupMembers,
-  nonGroupGroup,
+  fromHomeGroup,
   isNonGroupExpense,
   fromNonGroup
 }: NonGroupUsersProps) => {
@@ -72,7 +72,7 @@ export const NonGroupExpenseUsersMenu = ({
   };
 
   const handleSelectedGroupCick = () => {
-    nonGroupGroup.value = null;
+    fromHomeGroup.value = null;
     groupMembers.value = [];
   };
 
@@ -113,7 +113,7 @@ export const NonGroupExpenseUsersMenu = ({
 
   const handleSuggestedUserClick = useCallback(
     (username: string) => {
-      nonGroupGroup.value = null;
+      fromHomeGroup.value = null;
       groupMembers.value = [];
       addUser(username);
       isNonGroupExpense.value = true;
@@ -129,7 +129,7 @@ export const NonGroupExpenseUsersMenu = ({
         .find((x) => x.id === groupId);
 
       if (!existingGroup) return;
-      (nonGroupGroup.value = {
+      (fromHomeGroup.value = {
         id: existingGroup.id,
         name: existingGroup.name,
         created: existingGroup.created,
@@ -170,15 +170,15 @@ export const NonGroupExpenseUsersMenu = ({
     return (
       userGroups?.pages
         .flatMap((x) => x.groups)
-        .filter((x) => nonGroupGroup.value?.id !== x.id) ?? []
+        .filter((x) => fromHomeGroup.value?.id !== x.id) ?? []
     );
-  }, [userGroups, nonGroupGroup.value]);
+  }, [userGroups, fromHomeGroup.value]);
 
   const isEmpty = useMemo(() => {
     return (nonGroupUsers.value?.length === 0 || nonGroupUsers.value?.length === 1) &&
       keyword.length === 0 &&
-      !nonGroupGroup.value;
-  }, [nonGroupUsers.value, nonGroupGroup.value, keyword]);
+      !fromHomeGroup.value;
+  }, [nonGroupUsers.value, fromHomeGroup.value, keyword]);
 
   const isPersonalFn = () => {
     if (nonGroupUsers.value.length > 0 || groupMembers.value.length > 0) {
@@ -233,7 +233,7 @@ export const NonGroupExpenseUsersMenu = ({
               currentUserId={userInfo.userId}
             />
             {!fromNonGroup && <SelectedGroup
-              group={nonGroupGroup.value}
+              group={fromHomeGroup.value}
               onRemove={handleSelectedGroupCick}
             />}
 

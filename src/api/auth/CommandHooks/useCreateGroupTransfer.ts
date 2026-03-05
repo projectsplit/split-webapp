@@ -10,7 +10,7 @@ export const useCreateGroupTransfer = (
   groupId: string | undefined,
   navigate: NavigateFunction,
   isSubmitting: Signal<boolean>,
-  nonGroupGroup?: Signal<Group | null>
+  fromHomeGroup?: Signal<Group | null>
 ) => {
   const queryClient = useQueryClient();
 
@@ -40,7 +40,7 @@ export const useCreateGroupTransfer = (
       });
       isSubmitting.value = false;
       menu.value = null;
-      if (nonGroupGroup?.value) {
+      if (fromHomeGroup?.value) {
         navigate(`/shared/${groupId}/transfers`);
       }
     },

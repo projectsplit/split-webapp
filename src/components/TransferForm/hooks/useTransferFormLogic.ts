@@ -22,7 +22,7 @@ interface UseTransferFormLogicProps {
     receiverId: string;
     receiverName: string;
   }> | undefined;
-  nonGroupGroup: Signal<Group | null> | undefined;
+  fromHomeGroup: Signal<Group | null> | undefined;
   navigate: NavigateFunction;
   isSubmitting: Signal<boolean>;
   displayedAmount: Signal<string>;
@@ -39,7 +39,7 @@ export const useTransferFormLogic = ({
   nonGroupUsers,
   isnonGroupTransfer,
   nonGroupMenu,
-  nonGroupGroup,
+  fromHomeGroup,
   navigate,
   isSubmitting,
   displayedAmount,
@@ -74,7 +74,7 @@ export const useTransferFormLogic = ({
     groupId,
     navigate,
     isSubmitting,
-    nonGroupGroup
+    fromHomeGroup
   );
 
   const { mutate: createNonGroupTransferMutation, isPending: isNonGroupTransferPending } = useCreateNonGroupTransfer(

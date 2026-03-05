@@ -6,7 +6,7 @@ import { Group, Guest, Member } from "@/types";
 import { TransferState } from "../formStore/formStoreTypes";
 
 interface GroupMenuProps {
-  nonGroupGroup: Signal<Group | null> | undefined;
+  fromHomeGroup: Signal<Group | null> | undefined;
   isnonGroupTransfer: Signal<boolean> | undefined;
   idError: {
     isSenderError: boolean;
@@ -19,15 +19,15 @@ interface GroupMenuProps {
   sortedMembers: ReadonlySignal<(Member | Guest)[]>
 }
 
-export const GroupMenu = ({ nonGroupGroup, isnonGroupTransfer, idError, data, actions, userMemberId, sortedMembers }: GroupMenuProps) => {
+export const GroupMenu = ({ fromHomeGroup, isnonGroupTransfer, idError, data, actions, userMemberId, sortedMembers }: GroupMenuProps) => {
   return (
     <StyledGroupMenu>
-      {nonGroupGroup && isnonGroupTransfer && (
+      {fromHomeGroup && isnonGroupTransfer && (
         <div className="nonGroupGroupPill">
           <SelectedGroup
-            group={nonGroupGroup.value}
+            group={fromHomeGroup.value}
             onRemove={() => {
-              nonGroupGroup.value = null;
+              fromHomeGroup.value = null;
               isnonGroupTransfer.value = true;
             }}
           />

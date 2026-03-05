@@ -493,7 +493,7 @@ export interface NewTransferAnimationProps {
     receiverId: string;
     receiverName: string;
   }>;
-  nonGroupGroup?: Signal<Group | null>;
+  fromHomeGroup?: Signal<Group | null>;
   fromHome?: boolean;
 }
 
@@ -512,7 +512,7 @@ export interface ExpenseFormProps {
   isnonGroupExpense?: Signal<boolean>;
   currency: string;
   nonGroupMenu?: Signal<string | null>;
-  nonGroupGroup?: Signal<Group | null>;
+  fromHomeGroup?: Signal<Group | null>;
   fromHome?: boolean;
   fromPersonal?: Signal<boolean>;
 }
@@ -528,7 +528,7 @@ export interface TransferFormProps {
   currency: string;
   timeZoneId: string;
   menu: Signal<string | null>;
-  nonGroupGroup?: Signal<Group | null>;
+  fromHomeGroup?: Signal<Group | null>;
   groupId?: string;
   isnonGroupTransfer?: Signal<boolean>;
   nonGroupMenu?: Signal<{
@@ -546,7 +546,7 @@ export interface GroupQuickActionsAnimationProps extends MenuProps { }
 export interface HomeQuickActionsAnimationProps {
   quickActionsMenu: Signal<string | null>;
   isNonGroupExpense: Signal<boolean>;
-  nonGroupGroup: Signal<Group | null>;
+  fromHomeGroup: Signal<Group | null>;
   nonGroupTransferMenu: Signal<{
     attribute: string;
     menu: string | null;
@@ -561,7 +561,7 @@ export interface NonGroupExpenseUsersAnimationProps extends MenuProps {
   nonGroupUsers: Signal<User[]>;
   isPersonal: Signal<boolean>;
   groupMembers: Signal<(Guest | Member)[]>;
-  nonGroupGroup: Signal<Group | null>;
+  fromHomeGroup: Signal<Group | null>;
   isNonGroupExpense: Signal<boolean>;
   fromNonGroup: boolean;
 }
@@ -575,7 +575,7 @@ export interface NonGroupTransferAnimationProps {
     receiverId: string;
     receiverName: string;
   }>;
-  nonGroupGroup: Signal<Group | null>;
+  fromHomeGroup: Signal<Group | null>;
   groupMembers: Signal<(Guest | Member)[]>;
   isNonGroupTransfer: Signal<boolean>;
 }
@@ -589,7 +589,7 @@ export interface NonGroupTransferMenuProps {
     receiverId: string;
     receiverName: string;
   }>;
-  nonGroupGroup: Signal<Group | null>;
+  fromHomeGroup: Signal<Group | null>;
   groupMembers: Signal<(Guest | Member)[]>;
   isNonGroupTransfer: Signal<boolean>;
 }
@@ -598,7 +598,7 @@ export interface NonGroupUsersProps extends MenuProps {
   nonGroupUsers: Signal<User[]>;
   isPersonal: Signal<boolean>;
   groupMembers: Signal<(Guest | Member)[]>;
-  nonGroupGroup: Signal<Group | null>;
+  fromHomeGroup: Signal<Group | null>;
   isNonGroupExpense: Signal<boolean>;
   fromNonGroup: boolean;
 }
@@ -1369,7 +1369,7 @@ export interface SendMenuWrapperInterface {
 
 
 export interface DetailedSharedExpenseTextProps {
-  nonGroupGroup: Signal<Group | null> | undefined;
+  fromHomeGroup: Signal<Group | null> | undefined;
   isCreateExpense: boolean;
   isPendingCreateExpense: boolean;
   isPendingEditExpense: boolean;

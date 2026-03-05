@@ -38,7 +38,7 @@ export default function ExpenseForm({
   isnonGroupExpense,
   currency,
   nonGroupMenu,
-  nonGroupGroup,
+  fromHomeGroup,
   fromHome,
   fromPersonal
 }: ExpenseFormProps) {
@@ -134,7 +134,7 @@ export default function ExpenseForm({
       inputs.setIsSubmitting,
       inputs.makePersonalClicked,
       nonGroupUsers,
-      nonGroupGroup,
+      fromHomeGroup,
       groupMembers,
       fromHome,
       isnonGroupExpense,
@@ -143,7 +143,7 @@ export default function ExpenseForm({
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
     useEditExpenseMutation(menu, inputs.setIsSubmitting, nonGroupUsers,
-      nonGroupGroup,
+      fromHomeGroup,
       groupMembers,
       inputs.makePersonalClicked,
       isnonGroupExpense,
@@ -162,7 +162,7 @@ export default function ExpenseForm({
       fromPersonal,
       isCreateExpense,
       expense,
-      nonGroupGroup,
+      fromHomeGroup,
     });
   }
 
@@ -183,7 +183,7 @@ export default function ExpenseForm({
         nonGroupUsers={nonGroupUsers}
         groupMembers={groupMembers}
         isPersonal={isPersonal}
-        nonGroupGroup={nonGroupGroup}
+        fromHomeGroup={fromHomeGroup}
         menu={menu}
       />
       <div className="inputAndErrorsWrapper">
@@ -201,7 +201,7 @@ export default function ExpenseForm({
         </span>
       </div>
       <DetailedSharedExpenseText
-        nonGroupGroup={nonGroupGroup}
+        fromHomeGroup={fromHomeGroup}
         isCreateExpense={isCreateExpense}
         isPendingCreateExpense={isPendingCreateExpense}
         isPendingEditExpense={isPendingEditExpense}

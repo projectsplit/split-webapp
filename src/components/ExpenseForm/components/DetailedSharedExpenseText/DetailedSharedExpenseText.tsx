@@ -8,7 +8,7 @@ import { SplitCategory } from '@/types'
 import { DetailedSharedExpenseTextProps } from '@/interfaces'
 
 export default function DetailedSharedExpenseText({
-  nonGroupGroup,
+  fromHomeGroup,
   isCreateExpense,
   isPendingCreateExpense,
   isPendingEditExpense,
@@ -58,13 +58,13 @@ export default function DetailedSharedExpenseText({
   return (
     <>  {showDetailedSharedExpenseText ? (<StyledDetailedSharedExpenseText>
       <div className="textStyleInfo">
-        {nonGroupGroup && nonGroupGroup.value ? (
+        {fromHomeGroup && fromHomeGroup.value ? (
           <div className="definition">
             <span className="labelStyle">
               <div className="info">
                 {" "}
                 <TiGroup />
-                {nonGroupGroup.value.name}
+                {fromHomeGroup.value.name}
               </div>
             </span>
             :

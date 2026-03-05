@@ -35,7 +35,7 @@ export function submitExpenseFromState(
     expense: FormExpense | null;
     isnonGroupExpense?: Signal<boolean>;
     fromPersonal?: boolean;
-    nonGroupGroup?: Signal<Group | null>;
+    fromHomeGroup?: Signal<Group | null>;
   }
 ) {
   const {
@@ -46,7 +46,7 @@ export function submitExpenseFromState(
     fromPersonal,
     isCreateExpense,
     expense,
-    nonGroupGroup,
+    fromHomeGroup,
   } = inputs;
 
   const participants =
@@ -123,7 +123,7 @@ export function submitExpenseFromState(
     console.log("here2")
     expenseRequest = {
       amount: Number(state.amount),
-      ...(isCreateExpense ? { groupId: groupId || nonGroupGroup?.value?.id } : { expenseId: expense?.id }),
+      ...(isCreateExpense ? { groupId: groupId || fromHomeGroup?.value?.id } : { expenseId: expense?.id }),
       currency: state.currencySymbol,
       payments: payers
         .filter((value) => value.selected)
