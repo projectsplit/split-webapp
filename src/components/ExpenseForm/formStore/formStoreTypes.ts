@@ -3,6 +3,7 @@ import {
   ExpenseRequest,
   FormExpense,
   GeoLocation,
+  Group,
   Guest,
   Label,
   Member,
@@ -126,6 +127,7 @@ export interface ExpenseState {
     isnonGroupExpense?: Signal<boolean>;
     isPersonal?: Signal<boolean>;
     fromPersonal?: Signal<boolean>;
+    nonGroupGroup?: Signal<Group | null>;
   }) => void;
 
 }

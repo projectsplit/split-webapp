@@ -7,6 +7,7 @@ import {
   Label,
   PersonalExpenseRequest,
   PickerMember,
+  Group
 } from "../../../types";
 import { Signal } from "@preact/signals-react";
 
@@ -34,6 +35,7 @@ export function submitExpenseFromState(
     expense: FormExpense | null;
     isnonGroupExpense?: Signal<boolean>;
     fromPersonal?: boolean;
+    nonGroupGroup?: Signal<Group | null>;
   }
 ) {
   const {
@@ -44,6 +46,7 @@ export function submitExpenseFromState(
     fromPersonal,
     isCreateExpense,
     expense,
+    nonGroupGroup,
   } = inputs;
 
   const participants =
@@ -94,6 +97,7 @@ export function submitExpenseFromState(
       labels: state.labels.map((x) => ({ text: x.text, color: x.color })),
     };
   } else if (isnonGroupExpense?.value) {
+    console.log("here1")
     expenseRequest = {
       amount: Number(state.amount),
       ...(isCreateExpense ? {} : { expenseId: expense?.id }),
@@ -116,9 +120,10 @@ export function submitExpenseFromState(
       labels: state.labels.map((x) => ({ text: x.text, color: x.color })),
     };
   } else {
+    console.log("here2")
     expenseRequest = {
       amount: Number(state.amount),
-      ...(isCreateExpense ? { groupId: groupId } : { expenseId: expense?.id }),
+      ...(isCreateExpense ? { groupId: groupId || nonGroupGroup?.value?.id } : { expenseId: expense?.id }),
       currency: state.currencySymbol,
       payments: payers
         .filter((value) => value.selected)

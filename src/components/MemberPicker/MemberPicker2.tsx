@@ -31,8 +31,6 @@ import IonIcon from "@reacticons/ionicons";
 import { useTotalSelectedAmount } from "./helpers/hooks/useTotalSelectedAmount";
 import { BuildRemainingAmountText } from "./helpers/components/BuildRemainingAmountText";
 
-
-
 const MemberPickerPreMemo2 = ({
   memberAmounts,
   setMemberAmounts,
@@ -50,6 +48,7 @@ const MemberPickerPreMemo2 = ({
   isLoading,
   isCreateExpense,
 }: MemberPickerProps) => {
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);

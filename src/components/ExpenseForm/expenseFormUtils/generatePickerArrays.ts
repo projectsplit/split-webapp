@@ -38,7 +38,6 @@ export const generatePickerArrays = (
       isnonGroupExpense
     ),
   };
-
   const payersByCategory = {
     Amounts: createPayerPickerArray(
       groupMembers,

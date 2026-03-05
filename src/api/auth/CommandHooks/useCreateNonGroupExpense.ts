@@ -69,6 +69,7 @@ export const useCreateNonGroupExpense = (
 };
 
 const createNonGroupExpense = async (req: NonGroupExpenseRequest): Promise<void> => {
+    console.log(req)
   await apiClient.post<void, AxiosResponse<void>>(
     "/expenses/create-non-group",
     req

@@ -19,7 +19,7 @@ const Expense = ({
   labels,
   mode,
 }: ExpenseProps) => {
-  console.log(labels)
+  // console.log(labels)
   return (
     <StyledExpense onClick={onClick} userAmount={userAmount}>
       <div className="topRow">

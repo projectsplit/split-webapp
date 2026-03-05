@@ -162,6 +162,7 @@ export default function ExpenseForm({
       fromPersonal,
       isCreateExpense,
       expense,
+      nonGroupGroup,
     });
   }
 

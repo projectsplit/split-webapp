@@ -16,8 +16,8 @@ export const useRecalculateAmounts = (
   userId: string,
   groupMembers: Signal<(Member | Guest)[]>,
   nonGroupUsers: Signal<User[]>,
-  isCreateExpense:boolean,
-   isnonGroupExpense?: Signal<boolean>
+  isCreateExpense: boolean,
+  isnonGroupExpense?: Signal<boolean>
 ) => {
   useLayoutEffect(() => {
     setMemberAmounts(
@@ -41,6 +41,7 @@ export const useRecalculateAmounts = (
           selected: true,
           order: renderCounter.current,
         }));
+
         setMemberAmounts(
           recalculateAmounts(
             newFormMembers,
@@ -56,13 +57,14 @@ export const useRecalculateAmounts = (
         const newFormMembers = memberAmounts.map((m) => ({
           ...m,
           selected:
-           isnonGroupExpense&& isnonGroupExpense.value && nonGroupUsers.value.length > 0
+            isnonGroupExpense && isnonGroupExpense.value && nonGroupUsers.value.length > 0
               ? m.id === userId
-              : isnonGroupExpense&& isnonGroupExpense.value && groupMembers.value.length > 0
-              ? m.id === userMemberId
-              : m.id === userMemberId,
+              : isnonGroupExpense && isnonGroupExpense.value && groupMembers.value.length > 0
+                ? m.id === userMemberId
+                : m.id === userMemberId,
           order: renderCounter.current,
         }));
+
         setMemberAmounts(
           recalculateAmounts(
             newFormMembers,
@@ -86,12 +88,11 @@ export const useRecalculateAmounts = (
       }));
       setMemberAmounts(newFormMembers);
     }
-    return () => {};
+    return () => { };
   }, [
     totalAmount,
     category.value,
     memberAmounts.length,
-    groupMembers.value,
-    nonGroupUsers.value,
+    isnonGroupExpense?.value,
   ]);
 };

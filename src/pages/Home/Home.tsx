@@ -195,6 +195,7 @@ export default function Home() {
         quickActionsMenu={quickActionsMenu}
         isNonGroupExpense={isNonGroupExpense}
         nonGroupTransferMenu={nonGroupTransferMenu}
+        nonGroupGroup={nonGroupGroup}
         userInfo={userInfo}
       />
       <NonGroupExpenseUsersAnimation

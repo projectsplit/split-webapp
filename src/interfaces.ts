@@ -380,7 +380,7 @@ export interface LabelPickerProps {
   labels: Label[];
   setLabels: (labels: Label[]) => void;
   groupId?: string;
-  userId?:string;
+  userId?: string;
 }
 
 export interface LabelMenuProps {
@@ -388,7 +388,7 @@ export interface LabelMenuProps {
   labels: Label[];
   setLabels: (labels: Label[]) => void
   groupId?: string;
-  userId?:string;
+  userId?: string;
 }
 
 export interface BottomMenuProps {
@@ -546,6 +546,7 @@ export interface GroupQuickActionsAnimationProps extends MenuProps { }
 export interface HomeQuickActionsAnimationProps {
   quickActionsMenu: Signal<string | null>;
   isNonGroupExpense: Signal<boolean>;
+  nonGroupGroup: Signal<Group | null>;
   nonGroupTransferMenu: Signal<{
     attribute: string;
     menu: string | null;
@@ -935,7 +936,7 @@ export interface GroupTotalsByCurrencyAnimationProps extends MenuProps {
   bar2Legend: string;
   groupTotalsByCurrency: Record<string, number>;
   userTotalsByCurrency: Record<string, number>;
-  mode?:Mode;
+  mode?: Mode;
 }
 export interface GroupTotalExpensesByCurrencyProps extends MenuProps {
   bar1Color: string;
@@ -944,7 +945,7 @@ export interface GroupTotalExpensesByCurrencyProps extends MenuProps {
   bar2Legend: string;
   groupTotalsByCurrency: Record<string, number>;
   userTotalsByCurrency: Record<string, number>;
-  mode?:Mode;
+  mode?: Mode;
 }
 
 export interface BarsAndAmountsProps {
@@ -1020,7 +1021,7 @@ export interface LexicalEditorProps {
   filteredLabels: Signal<FetchedLabel[]>;
   category: Signal<string>;
   searchKeyword: Signal<string>;
-  isPersonal?:boolean;
+  isPersonal?: boolean;
 }
 
 export interface FilterCalendarProps {

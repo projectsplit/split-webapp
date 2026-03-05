@@ -14,6 +14,7 @@ export const recalculateAmounts = (
   ticker: string,
   isCreateExpense: boolean
 ): PickerMember[] => {
+
   const getCleanActual = (sq: string) => {
     const clean = removeCommas(sq);
     if (clean === "" || clean === ".") {
@@ -51,7 +52,7 @@ export const recalculateAmounts = (
         unlockedSelectedMembers.length,
         decimalDigits
       );
-  
+
       actualAmountsArray = [...screenArray];
       return synchronizedFormMembers.map((m) => {
         if (m.selected && !m.locked) {
@@ -60,8 +61,8 @@ export const recalculateAmounts = (
             ...m,
             screenQuantity: formatCurrency(screenValue, ticker),
             //screenQuantity:screenValue,
-            actualAmount:screenValue
-              // actualAmountsArray.shift()?.toFixed(decimalDigits) || "",
+            actualAmount: screenValue
+            // actualAmountsArray.shift()?.toFixed(decimalDigits) || "",
           };
         }
         return m;
