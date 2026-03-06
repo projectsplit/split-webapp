@@ -47,7 +47,7 @@ export default function MostRecentSection({
       <StyledMostRecentSection>
         <div className="mostRecentMsg">Most recent</div>
         <TreeAdjustedContainer
-          onClick={() => navigate('/shared/nonGroup/expenses')}
+          onClick={() => navigate('/shared/nongroup/expenses')}
           hasOption={true}
           optionname="chevron-forward-outline"
           items={TreeItemBuilderForHomeAndGroups(

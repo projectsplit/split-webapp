@@ -251,6 +251,7 @@ export default function ExpenseForm({
           setLabels={inputs.setLabels}
           groupId={groupId}
           userId={userInfo?.userId}
+          isPersonal={isPersonal.value}
         />
       )}
       <LocationDisplay location={inputs.location} isMapOpen={isMapOpen} setLocation={inputs.setLocation} />

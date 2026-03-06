@@ -379,6 +379,7 @@ export interface TimeZoneOptionsAnimationProps {
 export interface LabelPickerProps {
   labels: Label[];
   setLabels: (labels: Label[]) => void;
+  isPersonal:boolean;
   groupId?: string;
   userId?: string;
 }
@@ -387,6 +388,7 @@ export interface LabelMenuProps {
   labelMenuIsOpen: Signal<boolean>;
   labels: Label[];
   setLabels: (labels: Label[]) => void
+  isPersonal: boolean;
   groupId?: string;
   userId?: string;
 }

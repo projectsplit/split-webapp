@@ -8,15 +8,16 @@ import { Label } from "../../types";
 import labelColors from "../../labelColors";
 import { AiFillDelete } from "react-icons/ai";
 import { useRemoveLabel } from "../../api/auth/CommandHooks/useRemoveLabel";
-import { useGetUserLabels } from "@/api/auth/QueryHooks/useGetUserLabels";
+import { useLabels } from "@/api/auth/QueryHooks/useGetLabels";
 
-const LabelPicker = ({ labels, setLabels, groupId, userId }: LabelPickerProps) => {
+const LabelPicker = ({ labels, setLabels, groupId, userId, isPersonal }: LabelPickerProps) => {
 
   const [text, setText] = useState<string>("");
   const removeLabelMutation = useRemoveLabel()
 
   const { data: suggestedLabelsResponse } = useGetGroupLabels(groupId);
-  const { data: suggestedUserLabelsResponse } = useGetUserLabels(userId);
+  const { data: suggestedUserLabelsResponse } = useLabels(userId, isPersonal);
+
 
   const groupLabels = suggestedLabelsResponse?.labels ?? [];
   const userLabels = suggestedUserLabelsResponse?.labels ?? [];
