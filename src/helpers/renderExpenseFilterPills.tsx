@@ -4,6 +4,7 @@ import { ExpenseParsedFilters, Group, Mode, TruncatedMember } from "../types";
 import { QueryClient } from "@tanstack/react-query";
 import labelColors from "../labelColors";
 import { getFilterStorageKey } from "../components/SearchTransactions/helpers/localStorageStringParser";
+import {  GetUserAndGroupLabelsResponse } from "@/api/auth/QueryHooks/useGetUserAndGroupsLabels";
 
 const updateFiltersAndSave = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
@@ -11,6 +12,7 @@ const updateFiltersAndSave = (
   queryClient: QueryClient,
   mode: Mode,
   groupId?: string,
+
 ) => {
   expenseParsedFilters.value = {
     ...expenseParsedFilters.value,
@@ -30,7 +32,8 @@ export const renderExpenseFilterPills = (
   allParticipants: TruncatedMember[],
   group: Group | null,
   queryClient: QueryClient,
-  mode: Mode
+  mode: Mode,
+  fetchedUserAndGroupLabels: GetUserAndGroupLabelsResponse | undefined
 ) => {
 
   const { freeText, before, after, participantsIds, payersIds, labels } =
@@ -199,7 +202,7 @@ export const renderExpenseFilterPills = (
 
   if (labels && labels?.length > 0) {
     labels?.forEach((id, index) => {
-      const label = group?.labels?.find((l) => l.id === id);
+      const label = fetchedUserAndGroupLabels?.labels?.find((l) => l.id === id);
       const labelTitle = label?.text;
       const labelColor = label?.color;
 

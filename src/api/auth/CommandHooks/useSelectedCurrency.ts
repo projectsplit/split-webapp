@@ -17,10 +17,22 @@ export const useSelectedCurrency = () => {
         });
       }
     },
-
     onSuccess: async () => {
+      console.log("ran")
       queryClient.invalidateQueries({
         queryKey: ["getMe"],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["debts"],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["nonGroupDebts"],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["userTotals"],
         exact: false,
       });
     },

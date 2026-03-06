@@ -1,6 +1,5 @@
 import currency from "currency.js";
 import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
-import { DateTime } from "luxon";
 
 export type RefreshTokenResponse = {
   accessToken: string;
@@ -300,6 +299,10 @@ export type Label = {
   id: string;
   text: string;
   color: string;
+};
+
+export type GetLabelsResponse = {
+  labels: (Label & { count?: number })[];
 };
 
 // export type CreateExpenseRequest = {

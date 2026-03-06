@@ -7,7 +7,6 @@ import {
     FetchedLabel,
     FilteredPeople,
     Group,
-    Mode,
     User,
 } from "../../../types";
 import {
@@ -19,7 +18,7 @@ import { initializeFilterState } from "../helpers/initializeFilterState";
 export const useSearchFilters = (
     group: Group | null,
     allUsers: User[],
-    isPersonal?:boolean
+    isPersonal?: boolean
 ) => {
     const location = useLocation();
     const params = useParams();
@@ -61,16 +60,18 @@ export const useSearchFilters = (
     const filteredLabels = useSignal<FetchedLabel[]>([]);
 
     useEffect(() => {
-        if (path === "debts") {
+        if (isPersonal) {
+            category.value = "expenses";
+        } else if (path === "debts") {
             category.value = "expenses";
         } else {
             category.value = path;
         }
-    }, [path, category]);
+    }, [path, category, isPersonal]);
 
     const { expenseFilter, transferFilter } = useMemo(() => {
         return localStorageStringParser(
-            localStorage.getItem(getFilterStorageKey("expense", group?.id,isPersonal)),
+            localStorage.getItem(getFilterStorageKey("expense", group?.id, isPersonal)),
             localStorage.getItem(getFilterStorageKey("transfer", group?.id))
         );
     }, [group?.id]);

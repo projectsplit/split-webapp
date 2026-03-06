@@ -40,8 +40,8 @@ export const useExpenseTotals = (
       totalFromAllExpensesConverted,
       totalFromUserExpensesConverted,
     };
-    
-  }, [debts, mode, userMemberId, userInfo, group]);
+
+  }, [debts, mode, userMemberId,group, userInfo?.currency]);
 
   return { ...totals, totalsAreFetching };
 };

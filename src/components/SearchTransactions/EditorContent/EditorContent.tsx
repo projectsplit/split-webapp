@@ -60,9 +60,7 @@ export const EditorContent = forwardRef<
   const calendarIsOpen = useSignal<boolean>(false);
   const removedFilter = useSignal<boolean>(false);
   const datePeriodClicked = useSignal<string>("");
-  const showFreeTextPill = useSignal<boolean>(true)
-  isPersonal ? category.value = "expenses" : category.value 
-
+  const showFreeTextPill = useSignal<boolean>(true);
   const mentionItems = useMemo(() => {
     const items: Record<string, BeautifulMentionsItem[]> = {
       "payer:": [],

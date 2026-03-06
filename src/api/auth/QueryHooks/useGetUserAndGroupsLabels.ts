@@ -3,7 +3,7 @@ import { apiClient } from "../../apiClients";
 import { useQuery } from "@tanstack/react-query";
 import { GetLabelsResponse } from "../../../types";
 
-export const useGetUserLabels = (userId: string | undefined) => {
+export const useGetUserAndGroupsLabels = (userId: string | undefined) => {
 
   return useQuery({
     queryKey: ["userLabels", userId],
@@ -20,7 +20,7 @@ const getLabels = async (userId: string | undefined) => {
     return { labels: [] };
   }
   const response = await apiClient.get<void, AxiosResponse<GetLabelsResponse>>(
-    "/users/user-labels",
+    "/users/user-group-labels",
     { params }
   );
   return response.data;

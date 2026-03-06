@@ -5,6 +5,7 @@ import BarsWithLegends from "@/components/BarsWithLegends/BarsWithLegends";
 import { ExpenseParsedFilters, Group, Mode, TruncatedMember } from "@/types";
 import { Signal } from "@preact/signals-react";
 import { QueryClient } from "@tanstack/react-query";
+import { GetUserAndGroupLabelsResponse } from "@/api/auth/QueryHooks/useGetUserAndGroupsLabels";
 
 interface FiltersAndBarsProps {
   expenseParsedFilters: Signal<ExpenseParsedFilters>;
@@ -18,6 +19,7 @@ interface FiltersAndBarsProps {
   userExpense: number;
   currency: string;
   collapsed: boolean;
+  fetchedUserAndGroupLabels: GetUserAndGroupLabelsResponse | undefined
 }
 export const FiltersAndBars = ({
   expenseParsedFilters,
@@ -30,8 +32,8 @@ export const FiltersAndBars = ({
   totalExpense,
   userExpense,
   currency,
-
   collapsed,
+  fetchedUserAndGroupLabels
 }: FiltersAndBarsProps) => {
 
   return (
@@ -48,7 +50,8 @@ export const FiltersAndBars = ({
               allParticipants,
               group,
               queryClient,
-              mode
+              mode,
+              fetchedUserAndGroupLabels
             )}
           </div>
           <BarsWithLegends

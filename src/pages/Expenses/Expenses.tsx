@@ -22,6 +22,7 @@ import { FiltersAndBars } from "./FiltersAndBars/FiltersAndBars";
 import { useExpenseTotals } from "./hooks/useExpenseTotals";
 import { useCenterToExpense } from "./hooks/useCenterToExpense";
 import { hasActiveExpenseFilters } from "../../helpers/hasActiveExpenseFilters";
+import { useGetUserAndGroupsLabels } from "@/api/auth/QueryHooks/useGetUserAndGroupsLabels";
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -49,6 +50,7 @@ const Expenses = () => {
 
   // Deduplicate expenses by id to avoid React key conflicts when pages overlap
   const rawExpenses = data?.pages.flatMap((p) => p.expenses);
+ 
   const expenses = rawExpenses
     ? Array.from(new Map(rawExpenses.map((e) => [e.id, e])).values())
     : undefined;
@@ -73,6 +75,7 @@ const Expenses = () => {
   }, [isFetching, isFetchingNextPage, showBottomBar]);
 
   useCenterToExpense(scrollAreaRef, isScrolled, expenses, jumpToken, isFetchingPreviousPage);
+  const { data:fetchedUserAndGroupLabels } = useGetUserAndGroupsLabels(userInfo?.userId)
 
   useEffect(() => {
     menu.value = errorMessage.value ? "error" : menu.value;
@@ -100,7 +103,7 @@ const Expenses = () => {
 
   return (
     <StyledExpenses>
-      {expenses && expenses.length > 0 && showFiltersAndBars && (
+      {expenses && expenses.length > 0 && showFiltersAndBars && fetchedUserAndGroupLabels&&(
         <FiltersAndBars
           expenseParsedFilters={expenseParsedFilters}
           allParticipants={allParticipants}
@@ -113,6 +116,7 @@ const Expenses = () => {
           userExpense={totalFromUserExpensesConverted}
           currency={userInfo?.currency}
           collapsed={isScrolled.value}
+          fetchedUserAndGroupLabels={fetchedUserAndGroupLabels}
         />
       )}
       <div className="scroll-area" ref={scrollAreaRef}>

@@ -54,6 +54,5 @@ const getPersonalExpenses = async (
     void,
     AxiosResponse<GetExpensesResponse>
   >("/expenses/personal", { params });
-
   return response.data;
 };

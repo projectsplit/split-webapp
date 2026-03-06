@@ -13,9 +13,12 @@ export const displayCurrencyAndAmount = (
     return `${symbol}0`;
   }
 
+  const maxDigits = significantDigitsFromTicker(currency);
+  const isInteger = amount2decimal % 1 === 0;
+
   const formatter = new Intl.NumberFormat(getLocaleFromCurrency(currency), {
-    minimumFractionDigits: amount2decimal % 1 !== 0 ? 2 : 0,
-    maximumFractionDigits: amount2decimal % 1 !== 0 ? significantDigitsFromTicker(currency) : 0,
+    minimumFractionDigits: isInteger ? 0 : Math.min(2, maxDigits),
+    maximumFractionDigits: maxDigits,
   });
 
   return `${symbol}${formatter.format(amount2decimal)}`;
