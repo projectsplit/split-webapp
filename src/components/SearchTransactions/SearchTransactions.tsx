@@ -21,7 +21,7 @@ import {
 } from "./helpers/localStorageStringParser";
 import { usePeople } from "./hooks/usePeople";
 import { useSearchFilters } from "./hooks/useSearchFilters";
-import { useGetUserAndGroupsLabels } from "@/api/auth/QueryHooks/useGetUserAndGroupsLabels";
+import { useLabels } from "@/api/auth/QueryHooks/useGetLabels";
 
 export default function SearchTransactions({
   menu,
@@ -41,7 +41,8 @@ export default function SearchTransactions({
     userInfo,
     isPersonal
   );
-  const { data: suggestedUserLabelsResponse } = useGetUserAndGroupsLabels(userInfo?.userId);
+
+  const { data: suggestedLabels } = useLabels(userInfo?.userId, isPersonal);
 
   const {
     category,
@@ -69,12 +70,12 @@ export default function SearchTransactions({
     };
   }, [menu]);
 
-  const fetchedLabels: FetchedLabel[] =group? group?.labels.map((l) => ({
+  const fetchedLabels: FetchedLabel[] = group ? group?.labels.map((l) => ({
     id: l.id,
     value: l.text,
     color: l.color,
     prop: "category",
-  })) : suggestedUserLabelsResponse?.labels.map((l) => ({
+  })) : suggestedLabels?.labels.map((l) => ({
     id: l.id,
     value: l.text,
     color: l.color,

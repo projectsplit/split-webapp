@@ -18,7 +18,6 @@ export const useSelectedCurrency = () => {
       }
     },
     onSuccess: async () => {
-      console.log("ran")
       queryClient.invalidateQueries({
         queryKey: ["getMe"],
         exact: false,
