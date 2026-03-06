@@ -29,7 +29,7 @@ export default function BarsWithLegends({
         </div>
       </div>}
 
-      <BarsAndAmounts //TODO: create condition to show if personal AND expense filter is present.
+      <BarsAndAmounts 
         mode={mode}
         onClick={onClick}
         currency={currency}

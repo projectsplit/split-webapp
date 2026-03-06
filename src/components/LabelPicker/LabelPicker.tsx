@@ -18,7 +18,6 @@ const LabelPicker = ({ labels, setLabels, groupId, userId, isPersonal }: LabelPi
   const { data: suggestedLabelsResponse } = useGetGroupLabels(groupId);
   const { data: suggestedUserLabelsResponse } = useLabels(userId, isPersonal);
 
-
   const groupLabels = suggestedLabelsResponse?.labels ?? [];
   const userLabels = suggestedUserLabelsResponse?.labels ?? [];
 

@@ -174,6 +174,7 @@ export default function ExpenseForm({
       isInitialRender, inputs.validateForm, isCreateExpense, inputs.setDescription,
       inputs.setDescriptionError, inputs.currencySymbol)
 
+      console.log(inputs.showAmountError,inputs.amountError, inputs.amountError )
   return (
     <StyledExpenseForm>
       <ExpenseFormHeader

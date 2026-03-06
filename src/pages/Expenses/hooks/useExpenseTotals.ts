@@ -11,8 +11,6 @@ export const useExpenseTotals = (
   userMemberId: string | undefined,
   expenseParsedFilters: Signal<ExpenseParsedFilters>
 ) => {
-  //TODO: add condition to exlcude if transaction type is Personal as different endpoint will be used.
-  //I think that due to enabled these will never run anyway
 
   const { data: debts, isFetching: totalsAreFetching } = useDebts(mode, group?.id, expenseParsedFilters);
 

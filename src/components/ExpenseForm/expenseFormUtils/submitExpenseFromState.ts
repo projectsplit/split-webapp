@@ -26,6 +26,7 @@ export function submitExpenseFromState(
     setAmountError: (msg: string) => void;
     setDescriptionError: (msg: string) => void;
     setIsSubmitting: (value: boolean) => void;
+    setShowAmountError: (value: boolean) => void;
   },
   inputs: {
     groupId?: string;
@@ -78,7 +79,7 @@ export function submitExpenseFromState(
     });
   }
 
-  if (!amountIsValid(state.amount, state.setAmountError)) return;
+  if (!amountIsValid(state.amount, state.setAmountError, state.setShowAmountError)) return;
 
   if (!state.location && state.description.length === 0) {
     state.setDescriptionError("Select a description or a location");

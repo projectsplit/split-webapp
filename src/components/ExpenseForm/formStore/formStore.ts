@@ -471,6 +471,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
         setAmountError: state.setAmountError,
         setDescriptionError: state.setDescriptionError,
         setIsSubmitting: state.setIsSubmitting,
+        setShowAmountError: state.setShowAmountError,
       },
       {
         ...inputs,

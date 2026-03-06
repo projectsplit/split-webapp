@@ -14,9 +14,8 @@ export default function ConfirmArchiveGroup({
   const noGroupFoundError = useSignal<string>("");
   const navigate = useNavigate();
 
-  const { activeGroupCatAsState, groupIsArchived } = useOutletContext<{
+  const { activeGroupCatAsState } = useOutletContext<{
     activeGroupCatAsState: Signal<string>;
-    groupIsArchived: Signal<boolean>
   }>();
 
   const { mutate: archiveGroup, isPending } = useArchiveGroup(
