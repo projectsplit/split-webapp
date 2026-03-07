@@ -2,7 +2,7 @@ import { renderExpenseFilterPills } from "@/helpers/renderExpenseFilterPills";
 import { StyledNoExpensesFound } from "./NoExpensesFound.styled"
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { CiReceipt } from "react-icons/ci";
-import { ExpenseParsedFilters, Group, Mode, TruncatedMember } from "@/types";
+import { ExpenseParsedFilters, GetLabelsResponse, Group, Mode, TruncatedMember } from "@/types";
 import { Signal } from "@preact/signals-react";
 import { QueryClient } from "@tanstack/react-query";
 
@@ -12,8 +12,9 @@ interface NoExpensesFoundInterface {
   group: Group | null
   queryClient: QueryClient
   mode: Mode
+  fetchedUserAndGroupLabels: GetLabelsResponse | undefined
 }
-export const NoExpensesFound = ({ expenseParsedFilters, allParticipants, group, queryClient, mode }: NoExpensesFoundInterface) => {
+export const NoExpensesFound = ({ expenseParsedFilters, allParticipants, group, queryClient, mode, fetchedUserAndGroupLabels }: NoExpensesFoundInterface) => {
 
   const hasAnySearchParams =
     !!expenseParsedFilters.value.before ||
@@ -38,7 +39,8 @@ export const NoExpensesFound = ({ expenseParsedFilters, allParticipants, group, 
               allParticipants,
               group,
               queryClient,
-              mode
+              mode,
+              fetchedUserAndGroupLabels
             )}
           </div>
           <div className="textAndIcon">

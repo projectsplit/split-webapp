@@ -3,7 +3,7 @@ import { StyledFiltersAndBars } from "./FiltersAndBars.styled"
 import { renderTransferFilterPills } from "@/helpers/renderTransferFilterPills";
 import BarsWithLegends from "@/components/BarsWithLegends/BarsWithLegends";
 import { Signal } from "@preact/signals-react";
-import { TransferParsedFilters, Group, TruncatedMember} from "@/types";
+import { TransferParsedFilters, Group, TruncatedMember } from "@/types";
 import { QueryClient } from "@tanstack/react-query";
 
 interface FiltersAndBarsInterface {
@@ -13,7 +13,6 @@ interface FiltersAndBarsInterface {
   queryClient: QueryClient
   menu: Signal<string | null>
   currency: string,
-  collapsed: boolean;
   totalsAreFetching: boolean;
   userConvertedTotalReceived: number | undefined;
   userConvertedTotalSent: number | undefined;
@@ -26,7 +25,6 @@ export const FiltersAndBars = ({
   queryClient,
   menu,
   currency,
-  collapsed,
   totalsAreFetching,
   userConvertedTotalReceived,
   userConvertedTotalSent,
@@ -34,7 +32,7 @@ export const FiltersAndBars = ({
 
 
   return (
-    <StyledFiltersAndBars $collapsed={collapsed}>
+    <StyledFiltersAndBars>
       {totalsAreFetching ? (
         <div className="spinnerTotals">
           <Spinner />
@@ -59,9 +57,9 @@ export const FiltersAndBars = ({
             bar1Color="#0CA0A0"
             bar2Color="#D79244"
             onClick={() => {
-          
-                menu.value = "epensesByCurrency";
-   
+
+              menu.value = "epensesByCurrency";
+
             }}
           />
         </div>

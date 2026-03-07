@@ -1,10 +1,10 @@
 import { Signal } from "@preact/signals-react";
 import Pill from "../components/Pill/Pill";
-import { ExpenseParsedFilters, Group, Mode, TruncatedMember } from "../types";
+import { ExpenseParsedFilters, GetLabelsResponse, Group, Mode, TruncatedMember } from "../types";
 import { QueryClient } from "@tanstack/react-query";
 import labelColors from "../labelColors";
 import { getFilterStorageKey } from "../components/SearchTransactions/helpers/localStorageStringParser";
-import {  GetUserAndGroupLabelsResponse } from "@/api/auth/QueryHooks/useGetUserAndGroupsLabels";
+
 
 const updateFiltersAndSave = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
@@ -33,7 +33,7 @@ export const renderExpenseFilterPills = (
   group: Group | null,
   queryClient: QueryClient,
   mode: Mode,
-  fetchedUserAndGroupLabels: GetUserAndGroupLabelsResponse | undefined
+  fetchedUserAndGroupLabels: GetLabelsResponse | undefined
 ) => {
 
   const { freeText, before, after, participantsIds, payersIds, labels } =

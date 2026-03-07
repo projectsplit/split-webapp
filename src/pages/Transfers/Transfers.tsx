@@ -34,9 +34,8 @@ const Transfers: React.FC = () => {
   const guests = group?.guests;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
-  const isScrolled = useSignal<boolean>(false);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useTransferList(mode, group, transferParsedFilters, pageSize, timeZoneId);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching, hasPreviousPage } = useTransferList(mode, group, transferParsedFilters, pageSize, timeZoneId);
 
   const { allUsers } = useGetAllNonGroupUsers(mode);
   const transfers = data?.pages.flatMap((p) => p.transfers);
@@ -54,19 +53,11 @@ const Transfers: React.FC = () => {
     }
   }, [isFetching, isFetchingNextPage, showBottomBar]);
 
-  useEffect(() => {
-    const el = scrollAreaRef.current;
-    if (!el) return;
-    const handleScroll = () => { isScrolled.value = el.scrollTop > 10; };
-    el.addEventListener("scroll", handleScroll, { passive: true });
-    return () => el.removeEventListener("scroll", handleScroll);
-  }, [isScrolled, transfers]);
-
   const { userTotalSentByCurr, userTotalReceivedByCurr, userConvertedTotalReceived, userConvertedTotalSent, totalsAreFetching } = useTransferTotals(group, mode, userInfo, transferParsedFilters);
 
   if (isFetching && !isFetchingNextPage) {
     return (
-      <div className="spinner">``
+      <div className="spinner">
         <Spinner />
       </div>
     );
@@ -74,20 +65,20 @@ const Transfers: React.FC = () => {
 
   return (
     <StyledTransfers>
-      {transfers && transfers.length > 0 &&
-        <FiltersAndBars
-          transferParsedFilters={transferParsedFilters}
-          allParticipants={allParticipants}
-          group={group}
-          queryClient={queryClient}
-          menu={menu}
-          currency={userInfo?.currency} 
-          collapsed={isScrolled.value}
-          totalsAreFetching={totalsAreFetching}
-          userConvertedTotalReceived={userConvertedTotalReceived}
-          userConvertedTotalSent={userConvertedTotalSent}
-        />}
       <div className="scroll-area" ref={scrollAreaRef}>
+        {transfers && transfers.length > 0 && !hasPreviousPage &&
+          <FiltersAndBars
+            transferParsedFilters={transferParsedFilters}
+            allParticipants={allParticipants}
+            group={group}
+            queryClient={queryClient}
+            menu={menu}
+            currency={userInfo?.currency}
+            totalsAreFetching={totalsAreFetching}
+            userConvertedTotalReceived={userConvertedTotalReceived}
+            userConvertedTotalSent={userConvertedTotalSent}
+          />
+        }
         {!transfers || transfers.length === 0 ? (
           <NoTransfersFound
             transferParsedFilters={transferParsedFilters}

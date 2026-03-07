@@ -50,7 +50,7 @@ const Expenses = () => {
 
   // Deduplicate expenses by id to avoid React key conflicts when pages overlap
   const rawExpenses = data?.pages.flatMap((p) => p.expenses);
- 
+
   const expenses = rawExpenses
     ? Array.from(new Map(rawExpenses.map((e) => [e.id, e])).values())
     : undefined;
@@ -75,7 +75,7 @@ const Expenses = () => {
   }, [isFetching, isFetchingNextPage, showBottomBar]);
 
   useCenterToExpense(scrollAreaRef, isScrolled, expenses, jumpToken, isFetchingPreviousPage);
-  const { data:fetchedUserAndGroupLabels } = useGetUserAndGroupsLabels(userInfo?.userId, true)
+  const { data: fetchedUserAndGroupLabels } = useGetUserAndGroupsLabels(userInfo?.userId, true)
 
   useEffect(() => {
     menu.value = errorMessage.value ? "error" : menu.value;
@@ -103,23 +103,22 @@ const Expenses = () => {
 
   return (
     <StyledExpenses>
-      {expenses && expenses.length > 0 && showFiltersAndBars && fetchedUserAndGroupLabels&&(
-        <FiltersAndBars
-          expenseParsedFilters={expenseParsedFilters}
-          allParticipants={allParticipants}
-          group={group}
-          queryClient={queryClient}
-          mode={mode}
-          menu={menu}
-          totalsAreFetching={totalsAreFetching}
-          totalExpense={totalFromAllExpensesConverted}
-          userExpense={totalFromUserExpensesConverted}
-          currency={userInfo?.currency}
-          collapsed={isScrolled.value}
-          fetchedUserAndGroupLabels={fetchedUserAndGroupLabels}
-        />
-      )}
       <div className="scroll-area" ref={scrollAreaRef}>
+        {expenses && expenses.length > 0 && showFiltersAndBars && fetchedUserAndGroupLabels && !hasPreviousPage && (
+          <FiltersAndBars
+            expenseParsedFilters={expenseParsedFilters}
+            allParticipants={allParticipants}
+            group={group}
+            queryClient={queryClient}
+            mode={mode}
+            menu={menu}
+            totalsAreFetching={totalsAreFetching}
+            totalExpense={totalFromAllExpensesConverted}
+            userExpense={totalFromUserExpensesConverted}
+            currency={userInfo?.currency}
+            fetchedUserAndGroupLabels={fetchedUserAndGroupLabels}
+          />
+        )}
         {!expenses || expenses.length === 0 ? (
           <NoExpensesFound
             expenseParsedFilters={expenseParsedFilters}
@@ -127,6 +126,7 @@ const Expenses = () => {
             group={group}
             queryClient={queryClient}
             mode={mode}
+            fetchedUserAndGroupLabels={fetchedUserAndGroupLabels}
           />
         ) : (
           <>

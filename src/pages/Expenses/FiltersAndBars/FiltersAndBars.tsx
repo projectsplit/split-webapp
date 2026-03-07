@@ -2,10 +2,9 @@ import Spinner from "@/components/Spinner/Spinner";
 import { StyledFiltersAndBars } from "./FiltersAndBars.styled";
 import { renderExpenseFilterPills } from "@/helpers/renderExpenseFilterPills";
 import BarsWithLegends from "@/components/BarsWithLegends/BarsWithLegends";
-import { ExpenseParsedFilters, Group, Mode, TruncatedMember } from "@/types";
+import { ExpenseParsedFilters, GetLabelsResponse, Group, Mode, TruncatedMember } from "@/types";
 import { Signal } from "@preact/signals-react";
 import { QueryClient } from "@tanstack/react-query";
-import { GetUserAndGroupLabelsResponse } from "@/api/auth/QueryHooks/useGetUserAndGroupsLabels";
 
 interface FiltersAndBarsProps {
   expenseParsedFilters: Signal<ExpenseParsedFilters>;
@@ -18,8 +17,7 @@ interface FiltersAndBarsProps {
   totalExpense: number;
   userExpense: number;
   currency: string;
-  collapsed: boolean;
-  fetchedUserAndGroupLabels: GetUserAndGroupLabelsResponse | undefined
+  fetchedUserAndGroupLabels: GetLabelsResponse | undefined
 }
 export const FiltersAndBars = ({
   expenseParsedFilters,
@@ -32,12 +30,11 @@ export const FiltersAndBars = ({
   totalExpense,
   userExpense,
   currency,
-  collapsed,
   fetchedUserAndGroupLabels
 }: FiltersAndBarsProps) => {
 
   return (
-    <StyledFiltersAndBars $collapsed={collapsed}>
+    <StyledFiltersAndBars>
       {totalsAreFetching ? (
         <div className="spinnerTotals">
           <Spinner />
@@ -70,8 +67,8 @@ export const FiltersAndBars = ({
             bar2Color="#e151ee"
             bar1Color="#5183ee"
             onClick={() => {
-      
-                menu.value = "epensesByCurrency";
+
+              menu.value = "epensesByCurrency";
 
             }}
           />
