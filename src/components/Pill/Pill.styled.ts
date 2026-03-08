@@ -43,6 +43,15 @@ export const StyledPill = styled.div<StyledPillOptions>`
     justify-content: space-between;
     width: 100%; 
     gap: 10px; 
+    .childrenAndTitle{
+      display:flex ;
+      flex-direction: row;
+      align-items: center;
+      justify-content:center;
+      .children{
+        display:flex ;
+      }
+    }
     cursor: pointer;
     .title {
       color: ${(props) => props.$textColor};

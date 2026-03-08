@@ -639,6 +639,7 @@ export type FetchedLabel = {
   value: string;
   color: string;
   prop: string;
+  isPersonal?: boolean;
 };
 
 export type FilteredResultItem = {

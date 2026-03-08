@@ -75,7 +75,7 @@ const Expenses = () => {
   }, [isFetching, isFetchingNextPage, showBottomBar]);
 
   useCenterToExpense(scrollAreaRef, isScrolled, expenses, jumpToken, isFetchingPreviousPage);
-  const { data: fetchedUserAndGroupLabels } = useGetUserAndGroupsLabels(userInfo?.userId, true)
+  const { data: fetchedUserAndGroupLabels } = useGetUserAndGroupsLabels(userInfo?.userId, true,group?.id)
 
   useEffect(() => {
     menu.value = errorMessage.value ? "error" : menu.value;

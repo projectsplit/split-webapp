@@ -5,6 +5,7 @@ import Pill from "../../../../Pill/Pill";
 import { useEffect, useState } from "react";
 import { FetchedLabel } from "../../../../../types";
 import labelColors from "../../../../../labelColors";
+import { MdGroup } from "react-icons/md";
 
 export default function LabelsPillsDisplay({
   category,
@@ -14,6 +15,7 @@ export default function LabelsPillsDisplay({
   filterState,
   cancelled,
   removedFilter,
+  isPersonal,
 }: LabelsPillsDisplayProps) {
   const { insertMention } = useBeautifulMentions();
 
@@ -21,7 +23,7 @@ export default function LabelsPillsDisplay({
     []
   );
 
-useEffect(() => {
+  useEffect(() => {
     setShowFilteredLabels(filteredLabels.value);
     if (cancelled.value) {
       cancelled.value = false;
@@ -53,7 +55,7 @@ useEffect(() => {
       <div className="pills">
         {showFilteredLabels.length > 0 ? (
           showFilteredLabels.map((label) => (
-            <div key={label.value}>
+            <div key={label.id}>
               <Pill
                 key={label?.id}
                 title={label?.value}
@@ -62,8 +64,10 @@ useEffect(() => {
                 onClose={() => removeFilter(label?.id)}
                 $textColor="#000000c8"
                 $border={false}
-                 fontSize="16px"
-              />
+                fontSize="16px"
+              >
+                {isPersonal && !label.id.includes("_") && <MdGroup style={{ marginRight: "4px" }} />}
+              </Pill>
             </div>
           ))
         ) : (

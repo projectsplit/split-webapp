@@ -379,7 +379,7 @@ export interface TimeZoneOptionsAnimationProps {
 export interface LabelPickerProps {
   labels: Label[];
   setLabels: (labels: Label[]) => void;
-  isPersonal:boolean;
+  isPersonal: boolean;
   groupId?: string;
   userId?: string;
 }
@@ -775,6 +775,7 @@ export interface PillProps {
   fontSize?: string;
   $border: boolean;
   $closeButtonColor?: string;
+  children?: React.ReactNode;
 }
 export interface AddNewUserAnimationProps extends MenuProps {
   guestToBeReplaced?: { guestId: string; guestName: string };
@@ -1083,6 +1084,7 @@ export interface LabelsPillsDisplayProps {
   filterState: Signal<CreateExpenseFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
+  isPersonal?: boolean;
 }
 
 export interface SearchPeopleButtonProps extends SearchCategoryButtonProps {
@@ -1093,6 +1095,7 @@ export interface SearchPeopleButtonProps extends SearchCategoryButtonProps {
   transferFilterState: Signal<CreateTransferFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
+  isPersonal?: boolean;
 }
 
 export interface SearchLabelButtonProps extends SearchCategoryButtonProps {
@@ -1102,6 +1105,7 @@ export interface SearchLabelButtonProps extends SearchCategoryButtonProps {
   filterState: Signal<CreateExpenseFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
+  isPersonal?: boolean;
 }
 
 export interface OptionsToolbarProps {
@@ -1352,6 +1356,7 @@ export interface LabelsDisplayProps {
   labels: Label[];
   setLabels: (labels: Label[]) => void;
   labelMenuIsOpen: Signal<boolean>;
+  isPersonal?: boolean;
 }
 
 export interface SendMenuWrapperInterface {

@@ -3,7 +3,6 @@ import { CombinedMenuProps } from "../../../interfaces";
 
 export const StyledMenu = styled.div<CombinedMenuProps>`
   overflow: hidden;
-
   cursor: pointer;
   scrollbar-width: none;
   position: relative;

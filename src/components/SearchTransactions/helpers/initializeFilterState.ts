@@ -7,6 +7,7 @@ import {
   FetchedLabel,
   FetchedPerson,
   FilteredPeople,
+  GetLabelsResponse,
   Group,
   TransferFilter,
   User,
@@ -21,14 +22,13 @@ export const initializeFilterState = (
   filteredPeople: Signal<FilteredPeople>,
   filteredLabels: Signal<FetchedLabel[]>,
   group: Group | null,
+  suggestedLabels: GetLabelsResponse | undefined,
   users?: User[]
 ) => {
   let allPeople: { id: string; name: string }[] = [];
-  let allLabels: { id: string; text: string; color: string }[] = [];
 
   if (group) {
     allPeople = [...group.members, ...group.guests];
-    allLabels = group.labels;
   } else if (users) {
     allPeople = users.map((u) => ({
       id: u.userId,
@@ -64,7 +64,7 @@ export const initializeFilterState = (
         : [],
     labels: expenseFiltersData.labels?.map((id) => id) || [],
   };
-
+ 
   transferFilterState.value = {
     groupId: params.groupid || "",
     receiversIds: transferFiltersData.receiversIds?.map((id) => id) || [],
@@ -115,7 +115,7 @@ export const initializeFilterState = (
   filteredLabels.value =
     expenseFiltersData.labels
       ?.map((id) => {
-        const label = allLabels.find((l) => l.id === id);
+        const label = suggestedLabels?.labels?.find((l) => l.id === id);
         if (!label) return null;
         return {
           id: label.id,

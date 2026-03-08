@@ -44,13 +44,6 @@ export const handleSubmitButton = (
   const expensesDateTriggerOrder: DateConstraint[] = [];
   const transfersDateTriggerOrder: DateConstraint[] = [];
 
-  // Important: reset collections before re-extracting from editor
-  expenseFilterState.value.payersIds = [];
-  expenseFilterState.value.participantsIds = [];
-  expenseFilterState.value.labels = [];
-  transferFilterState.value.sendersIds = [];
-  transferFilterState.value.receiversIds = [];
-
   if (isElementNode(jsonObject[0])) {
     const children = jsonObject[0].children;
 

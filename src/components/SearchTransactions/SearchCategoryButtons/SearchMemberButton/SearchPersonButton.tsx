@@ -12,6 +12,7 @@ export default function SearchPersonButton({
   transferFilterState,
   cancelled,
   removedFilter,
+
 }: SearchPeopleButtonProps) {
   return (
     <StyledSearchCategoryButton>
@@ -25,6 +26,7 @@ export default function SearchPersonButton({
         transferFilterState={transferFilterState}
         cancelled={cancelled}
         removedFilter={removedFilter}
+
       />
     </StyledSearchCategoryButton>
   );

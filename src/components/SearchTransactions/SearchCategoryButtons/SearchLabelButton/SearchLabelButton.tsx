@@ -1,4 +1,3 @@
-import React from "react";
 import { StyledSearchCategoryButton } from "../SearchCategoryButton.styled";
 import { SearchLabelButtonProps } from "../../../../interfaces";
 import LabelsPillsDisplay from "./LabelsPillsDisplay/LabelsPillsDisplay";
@@ -11,6 +10,7 @@ export default function SearchLabelButton({
   filterState,
   cancelled,
   removedFilter,
+  isPersonal,
 }: SearchLabelButtonProps) {
   return (
     <StyledSearchCategoryButton>
@@ -22,6 +22,7 @@ export default function SearchLabelButton({
         filterState={filterState}
         cancelled={cancelled}
         removedFilter={removedFilter}
+        isPersonal={isPersonal}
       />
     </StyledSearchCategoryButton>
   );

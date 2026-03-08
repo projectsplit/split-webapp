@@ -10,13 +10,14 @@ import { AiFillDelete } from "react-icons/ai";
 import { useRemoveLabel } from "../../api/auth/CommandHooks/useRemoveLabel";
 import { useLabels } from "@/api/auth/QueryHooks/useGetLabels";
 
-const LabelPicker = ({ labels, setLabels, groupId, userId, isPersonal }: LabelPickerProps) => {
+const LabelPicker = ({ labels, setLabels, groupId, userId }: LabelPickerProps) => {
 
   const [text, setText] = useState<string>("");
   const removeLabelMutation = useRemoveLabel()
 
   const { data: suggestedLabelsResponse } = useGetGroupLabels(groupId);
-  const { data: suggestedUserLabelsResponse } = useLabels(userId, isPersonal);
+  const { data: suggestedUserLabelsResponse } = useLabels(userId, false,groupId);
+
 
   const groupLabels = suggestedLabelsResponse?.labels ?? [];
   const userLabels = suggestedUserLabelsResponse?.labels ?? [];
@@ -36,6 +37,7 @@ const LabelPicker = ({ labels, setLabels, groupId, userId, isPersonal }: LabelPi
 
     const existingGroupLabel = groupLabels.find(x => x.text == labelText);
     const existingUserLabel = userLabels.find(x => x.text == labelText);
+
 
     const newExpenseLabel: Label = !!groupId ?
       !!existingGroupLabel
@@ -64,12 +66,12 @@ const LabelPicker = ({ labels, setLabels, groupId, userId, isPersonal }: LabelPi
     }
   };
 
-  const handleSelectedLabelClick = (labelText: string) => {
-    setLabels(labels.filter(x => x.text !== labelText));
+  const handleSelectedLabelClick = (labelId: string) => {
+    setLabels(labels.filter(x => x.id !== labelId));
   };
 
-  const handleSuggestedLabelClick = (labelName: string): void => {
-    addLabel(labelName)
+  const handleSuggestedLabelClick = (label: Label): void => {
+    addLabel(label.text)
     inputRef.current?.focus();
   };
 
@@ -114,12 +116,12 @@ const LabelPicker = ({ labels, setLabels, groupId, userId, isPersonal }: LabelPi
         {labels.map((x) => {
           return (
             <span
-              key={x.text}
+              key={x.id}
               style={{
                 backgroundColor: labelColors[x.color],
                 color: "#000000c8",
               }}
-              onClick={() => handleSelectedLabelClick(x.text)}
+              onClick={() => handleSelectedLabelClick(x.id)}
               className="selected-label"
             >
               {x.text}
@@ -146,8 +148,8 @@ const LabelPicker = ({ labels, setLabels, groupId, userId, isPersonal }: LabelPi
         <div className="dropdown" ref={dropdownRef}>
           {remainingSuggestedLabels.map(x => (
             <div
-              onClick={() => handleSuggestedLabelClick(x.text)}
-              key={x.text}
+              onClick={() => handleSuggestedLabelClick(x)}
+              key={x.id}
               className="suggested-label-container"
             >
               <div

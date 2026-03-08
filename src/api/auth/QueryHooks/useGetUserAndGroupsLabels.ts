@@ -3,14 +3,14 @@ import { apiClient } from "../../apiClients";
 import { useQuery } from "@tanstack/react-query";
 import { GetLabelsResponse } from "../../../types";
 
-export const useGetUserAndGroupsLabels = (userId: string | undefined, isPersonal: boolean | undefined) => {
+export const useGetUserAndGroupsLabels = (userId: string | undefined, isPersonal: boolean | undefined, groupId:string|undefined) => {
 
   return useQuery({
     queryKey: ["userAndGroupsLabels", userId],
     queryFn: () => getLabels(userId),
     refetchOnMount: true,
     staleTime: 10000,
-    enabled: !!userId && isPersonal
+    enabled: !!userId && (isPersonal || !!groupId)
   });
 };
 

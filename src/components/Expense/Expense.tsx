@@ -1,6 +1,6 @@
 import { ExpenseProps } from "../../interfaces";
 import { StyledExpense } from "./Expense.styled";
-import { MdLocationOn } from "react-icons/md";
+import { MdLocationOn, MdGroup } from "react-icons/md";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 import { TimeOnly } from "../../helpers/timeHelpers";
 import Pill from "../Pill/Pill";
@@ -27,15 +27,18 @@ const Expense = ({
           {location ? <MdLocationOn className="locationIcon" /> : null}
           {labels.length > 0 ? (
             <div className="labels">
-              {labels.map((l, index) => (
+              {labels.map((l) => (
                 <Pill
                   $textColor={"#000000c8"}
-                  key={index}
+                  key={l.id}
                   title={l.text}
                   color={l.color === "" ? "white" : labelColors[l.color]}
                   closeButton={false}
                   $border={false}
-                  fontSize="14px" />
+                  fontSize="14px"
+                >
+                  {mode === Mode.Personal && !l.id.includes("_") && <MdGroup style={{ marginRight: "4px" }} />}
+                </Pill>
               ))}
             </div>
           ) : null}

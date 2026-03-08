@@ -22,4 +22,13 @@ export const StyledMenuItem = styled.li<{
   box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 4px;
   color: ${(props) => (props.$bgColor ? "black" : props.color || "inherit")};
   margin-bottom: 20px;
+ .childrenAndTitle{
+      display:flex ;
+      flex-direction: row;
+      align-items: center;
+      justify-content:center;
+      .children{
+        display:flex ;
+      }
+    }
 `;

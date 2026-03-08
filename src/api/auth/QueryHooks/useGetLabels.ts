@@ -1,12 +1,13 @@
 import { useGetUserAndGroupsLabels } from "./useGetUserAndGroupsLabels";
 import { useGetUserLabels } from "./useGetUserLabels";
 
-export const useLabels = (userId: string | undefined, isPersonal: boolean | undefined) => {
+export const useLabels = (userId: string | undefined, isPersonal: boolean | undefined, groupId:string|undefined) => {
 
-    const labelsForPersonalSearch = useGetUserAndGroupsLabels(userId, isPersonal);
+    const labelsForPersonalAndGroupSearch = useGetUserAndGroupsLabels(userId, isPersonal, groupId);
     const labelsForNonGroupExpense = useGetUserLabels(userId, isPersonal);
 
-    if (isPersonal) return labelsForPersonalSearch
+
+    if ((isPersonal||!!groupId)) return labelsForPersonalAndGroupSearch
     else return labelsForNonGroupExpense
 
 }

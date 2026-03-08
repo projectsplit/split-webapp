@@ -14,6 +14,7 @@ import DeleteExpenseAnimation from "../Animations/DeleteExpenseAnimation";
 import { Mode, TransactionType, GeoLocation } from "../../types";
 import EditExpenseAnimation from "../Animations/EditExpenseAnimation";
 import labelColors from "../../labelColors";
+import { MdGroup } from "react-icons/md";
 import { buildFormExpense, toUser } from "./utils";
 import NavigateToExpenseAnimation from "../Animations/NavigateToExpenseAnimation";
 
@@ -88,16 +89,18 @@ export default function DetailedExpense({
         <div className="dateAndLabels">
           <div className="labelsWrapper">
             <div className="labels">
-              {labels.map((l: { text: string; color: string }, i: number) => (
+              {labels.map((l: { id: string, text: string; color: string }) => (
                 <Pill
-                  key={i}
+                  key={l.id}
                   title={l.text}
                   $textColor="#000000c8"
-                  color={l.color === "" ? "white" :labelColors[l.color]}
+                  color={l.color === "" ? "white" : labelColors[l.color]}
                   closeButton={false}
                   fontSize="18px"
                   $border={false}
-                />
+                >
+                  {mode === Mode.Personal && !l.id.includes("_") && <MdGroup style={{ marginRight: "4px" }} />}
+                </Pill>
               ))}
             </div>
           </div>
@@ -154,7 +157,7 @@ export default function DetailedExpense({
             </div>
           </div>
         ) : <div>
-          <div className= "navigatePrompt">
+          <div className="navigatePrompt">
             <span className="info">{`This is your share from a ${expenseType === TransactionType.Group ? "group" : "non group"} expense`}</span>
             <div className="navigateButton">
               <MyButton

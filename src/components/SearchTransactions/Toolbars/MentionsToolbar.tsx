@@ -87,7 +87,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 datePeriodClicked={datePeriodClicked}
                 filterState={expenseFilterState}
                 cancelled={cancelled}
-                removedFilter={removedFilter}
+                removedFilter={removedFilter}      
               />
               <SearchDateButton
                 category={"during"}
@@ -122,6 +122,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
                 filterState={expenseFilterState}
                 cancelled={cancelled}
                 removedFilter={removedFilter}
+                isPersonal={isPersonal}
               />
             </>
           ) : category.value === "transfers" ? (

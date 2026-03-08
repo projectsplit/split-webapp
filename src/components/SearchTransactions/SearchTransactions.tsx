@@ -13,7 +13,6 @@ import { initialConfig } from "./utils/lexicalThemeConfiguration";
 import { EditorContentHandle, SearchTransactionsProps } from "../../interfaces";
 import {
   FetchedLabel,
-  Mode,
 } from "../../types";
 import MyButton from "../MyButton/MyButton";
 import { CategorySelector } from "../CategorySelector/CategorySelector";
@@ -42,7 +41,7 @@ export default function SearchTransactions({
     isPersonal
   );
 
-  const { data: suggestedLabels } = useLabels(userInfo?.userId, isPersonal);
+  const { data: suggestedLabels } = useLabels(userInfo?.userId, isPersonal, group?.id);
 
   const {
     category,
@@ -54,9 +53,10 @@ export default function SearchTransactions({
     cancelled,
     searchKeyword,
     path,
-  } = useSearchFilters(group, allUsers, isPersonal);
+  } = useSearchFilters(group, allUsers, suggestedLabels, isPersonal);
 
   const editorContentRef = useRef<EditorContentHandle | null>(null);
+
 
   useEffect(() => {
     const handleBackNavigation = () => {
@@ -80,6 +80,7 @@ export default function SearchTransactions({
     value: l.text,
     color: l.color,
     prop: "category",
+    isPersonal: isPersonal
   })) || [];
 
   return (

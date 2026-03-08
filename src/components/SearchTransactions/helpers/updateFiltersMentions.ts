@@ -13,7 +13,8 @@ export function updateFiltersMentions(
     mentionItems["category:"].push({
       value: filter.value,
       id: filter.id,
-     color:filter.color
+      isPersonal: filter.isPersonal ?? false,
+      color: filter.color
     });
   });
 }
