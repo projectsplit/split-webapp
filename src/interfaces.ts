@@ -380,6 +380,8 @@ export interface LabelPickerProps {
   labels: Label[];
   setLabels: (labels: Label[]) => void;
   isPersonal: boolean;
+  errorMessage:Signal<string>,
+  menu:Signal<string|null>,
   groupId?: string;
   userId?: string;
 }
@@ -913,6 +915,7 @@ export interface ParticipantsPayersAnimationProps extends MenuProps {
 }
 export interface GeneralWarningMenuProps extends MenuProps {
   message: string | undefined;
+  title?:string;
 }
 export interface GeneralWarningMenuAnimationProps extends MenuProps {
   message: string | undefined;

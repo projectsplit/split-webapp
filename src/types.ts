@@ -563,6 +563,9 @@ export type SplitCategory = 'Participants' | 'Payers';
 export type DeleteExpenseRequest = {
   expenseId: string;
 };
+export type DeleteUserLabelRequest = {
+  labelId: string;
+}
 export type DeleteTransferRequest = {
   transferId: string;
 };

@@ -10,6 +10,7 @@ const fadeIn = keyframes`
 
 export const StyledLabelPicker = styled.div<{
   $hasError?: boolean;
+  $deleteClicked: boolean;
   // $isOpen?: boolean;
 }>`
   color: ${({ theme }) => theme.secondaryTextColor};
@@ -20,8 +21,9 @@ export const StyledLabelPicker = styled.div<{
 
   .main {
     &:focus-within {
-      border-color: ${({ theme, $hasError }) =>
-        $hasError ? theme.errorColor : theme.highlightColor};
+      border-color: ${({ theme, $hasError, $deleteClicked }) =>
+    $hasError ? theme.errorColor :
+      $deleteClicked ? "" : theme.highlightColor};
     }
       transition: border-color 0.15s;
     background-color: ${({ theme }) => theme.layer2};
@@ -30,7 +32,7 @@ export const StyledLabelPicker = styled.div<{
     align-items: center;
     border: 1px solid
       ${({ theme, $hasError }) =>
-        $hasError ? theme.errorColor : theme.lineColor};
+    $hasError ? theme.errorColor : theme.lineColor};
     border-radius: 8px;
     padding: 8px 16px;
     flex-wrap: wrap;
@@ -101,6 +103,15 @@ export const StyledLabelPicker = styled.div<{
       align-items: center;
       padding: 10px 14px;
       box-sizing: content-box;
+      .spinnerAndTrash{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        align-self:center;
+        margin-right:${({ $deleteClicked }) => !$deleteClicked ? "0px" : "10px"};
+        width: 20px;
+        height: 20px;
+      }
 
       .suggested-label-text {
         display: flex;

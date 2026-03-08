@@ -9,7 +9,7 @@ const spin = keyframes`
 interface SpinnerProps{
   variant:string;
 }
-const Spinner = styled.span.withConfig({
+export const Spinner = styled.span.withConfig({
   shouldForwardProp: (prop) => prop !== "selected"
 })<SpinnerProps>`
   display: inline-block;

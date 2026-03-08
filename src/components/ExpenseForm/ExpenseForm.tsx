@@ -44,15 +44,9 @@ export default function ExpenseForm({
 }: ExpenseFormProps) {
 
   const isInitialRender = useRef<boolean>(true);
-  const userExistsInCategory = useSignal<
-    Record<SplitCategory, boolean | undefined>
-  >({
-    Participants: false,
-    Payers: false,
-  });
+  const userExistsInCategory = useSignal<Record<SplitCategory, boolean | undefined>>({ Participants: false, Payers: false });
   const navigate = useNavigate();
   const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
-
   const inputs = useExpenseFormStore();
 
   useEffect(() => {
@@ -174,7 +168,6 @@ export default function ExpenseForm({
       isInitialRender, inputs.validateForm, isCreateExpense, inputs.setDescription,
       inputs.setDescriptionError, inputs.currencySymbol)
 
-      console.log(inputs.showAmountError,inputs.amountError, inputs.amountError )
   return (
     <StyledExpenseForm>
       <ExpenseFormHeader

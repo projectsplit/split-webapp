@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { apiClient } from "../../apiClients";
 import { useQuery } from "@tanstack/react-query";
 import { GetLabelsResponse } from "../../../types";
+import { Signal } from "@preact/signals-react";
 
 export const useGetUserLabels = (userId: string | undefined, isPersonal: boolean | undefined) => {
 

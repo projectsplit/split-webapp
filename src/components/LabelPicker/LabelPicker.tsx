@@ -7,17 +7,21 @@ import { useGetGroupLabels } from "../../api/auth/QueryHooks/useGetGroupLabels";
 import { Label } from "../../types";
 import labelColors from "../../labelColors";
 import { AiFillDelete } from "react-icons/ai";
-import { useRemoveLabel } from "../../api/auth/CommandHooks/useRemoveLabel";
 import { useLabels } from "@/api/auth/QueryHooks/useGetLabels";
+import { useDeleteLabel } from "@/api/auth/CommandHooks/useDeleteLabel";
+import { Spinner } from "../MyButton/MyButton";
 
-const LabelPicker = ({ labels, setLabels, groupId, userId }: LabelPickerProps) => {
+
+const LabelPicker = ({ labels, setLabels, groupId, errorMessage, userId, isPersonal, menu }: LabelPickerProps) => {
 
   const [text, setText] = useState<string>("");
-  const removeLabelMutation = useRemoveLabel()
+  const [$deleteClicked, setDeleteClicked] = useState<boolean>(false)
+  const [deletingLabelId, setDeletingLabelId] = useState<string | null>(null);
+
+  const { mutate: removeLabelMutation, isPending } = useDeleteLabel(isPersonal, errorMessage, menu);
 
   const { data: suggestedLabelsResponse } = useGetGroupLabels(groupId);
-  const { data: suggestedUserLabelsResponse } = useLabels(userId, false,groupId);
-
+  const { data: suggestedUserLabelsResponse } = useLabels(userId, false, groupId);
 
   const groupLabels = suggestedLabelsResponse?.labels ?? [];
   const userLabels = suggestedUserLabelsResponse?.labels ?? [];
@@ -38,7 +42,6 @@ const LabelPicker = ({ labels, setLabels, groupId, userId }: LabelPickerProps) =
     const existingGroupLabel = groupLabels.find(x => x.text == labelText);
     const existingUserLabel = userLabels.find(x => x.text == labelText);
 
-
     const newExpenseLabel: Label = !!groupId ?
       !!existingGroupLabel
         ? { id: existingGroupLabel.id, color: existingGroupLabel.color, text: existingGroupLabel.text }
@@ -57,6 +60,7 @@ const LabelPicker = ({ labels, setLabels, groupId, userId }: LabelPickerProps) =
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFocus = () => {
+    setDeleteClicked(false)
     inputRef.current?.focus();
   };
 
@@ -77,8 +81,10 @@ const LabelPicker = ({ labels, setLabels, groupId, userId }: LabelPickerProps) =
 
   const removeLabel = (e: React.MouseEvent<SVGElement, MouseEvent>, labelId: string): void => {
     e.stopPropagation()
-    removeLabelMutation.mutate({ groupId, labelId })
+    setDeletingLabelId(labelId);
+    removeLabelMutation({ groupId, labelId })
     inputRef.current?.focus();
+    setDeleteClicked(true)
   };
 
   const handleInpuTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,11 +107,10 @@ const LabelPicker = ({ labels, setLabels, groupId, userId }: LabelPickerProps) =
   const remainingSuggestedLabels = !!groupId ? groupLabels.filter(x => !labels.map(x => x.text).includes(x.text)) :
     userLabels.filter(x => !labels.map(x => x.text).includes(x.text));
 
-
   const isEmpty = labels?.length === 0 && text.length === 0;
 
   return (
-    <StyledLabelPicker >
+    <StyledLabelPicker $deleteClicked={$deleteClicked}>
       <div
         className="main"
         onFocus={() => handleFocus()}
@@ -159,12 +164,17 @@ const LabelPicker = ({ labels, setLabels, groupId, userId }: LabelPickerProps) =
                   color: "#000000c8",
                 }}>{x.text}
               </div>
-              {x.count == 0 &&
-                <AiFillDelete
-                  style={{ color: "gray" }}
-                  onClick={e => removeLabel(e, x.id)}
-                />
-              }
+
+              <div className="spinnerAndTrash">
+                {isPending && deletingLabelId === x.id ? <Spinner variant="secondary" /> :
+                  <AiFillDelete
+                    style={{ color: "gray", cursor: "pointer" }
+                    }
+                    onClick={e => removeLabel(e, x.id)}
+                  />}
+              </div>
+
+
             </div>
           ))}
         </div>
