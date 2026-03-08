@@ -83,7 +83,6 @@ const LabelPicker = ({ labels, setLabels, groupId, errorMessage, userId, isPerso
     e.stopPropagation()
     setDeletingLabelId(labelId);
     removeLabelMutation({ groupId, labelId })
-    inputRef.current?.focus();
     setDeleteClicked(true)
   };
 
