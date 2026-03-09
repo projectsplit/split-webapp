@@ -3,7 +3,7 @@ import config from "../../config";
 import { StyledLocationPicker } from "./LocationPicker.styled";
 import { LocationPickerProps } from "../../interfaces";
 import PlacePicker from "../PlacePicker/PlacePicker";
-import { FaLocationArrow } from "react-icons/fa";
+import { MdLocationOn } from "react-icons/md";
 
 const LocationPicker: React.FC<LocationPickerProps> = ({
   location,
@@ -29,7 +29,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
           />
         )}
         <div className="main">
-          <FaLocationArrow
+          <MdLocationOn
             className="locationIcon"
             onClick={() => (isMapOpen.value = !isMapOpen.value)}
           />

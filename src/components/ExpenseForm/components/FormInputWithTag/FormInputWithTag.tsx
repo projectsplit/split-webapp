@@ -29,12 +29,13 @@ const FormInput = forwardRef<HTMLInputElement, InputProps>(
               onClick={() => (labelMenuIsOpen.value = true)}
             >
               <FaTags className="tagIcon" />
+              Labels
             </div>
           </div>
           <StyledInput $hasError={!!error}>
             <div className="input-container">
               <input
-              className='input'
+                className='input'
                 {...props}
                 ref={ref}
                 onFocus={handleFocus}
