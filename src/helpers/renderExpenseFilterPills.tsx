@@ -4,6 +4,7 @@ import { ExpenseParsedFilters, GetLabelsResponse, Group, Mode, TruncatedMember }
 import { QueryClient } from "@tanstack/react-query";
 import labelColors from "../labelColors";
 import { getFilterStorageKey } from "../components/SearchTransactions/helpers/localStorageStringParser";
+import { MdGroup } from "react-icons/md";
 
 
 const updateFiltersAndSave = (
@@ -61,6 +62,7 @@ export const renderExpenseFilterPills = (
             group?.id,
           )
         }
+
       />
     );
   }
@@ -163,6 +165,7 @@ export const renderExpenseFilterPills = (
               group?.id
             )
           }
+
         />
       );
     });
@@ -227,7 +230,9 @@ export const renderExpenseFilterPills = (
               group?.id,
             )
           }
-        />
+        >
+          {mode === Mode.Personal && !id.includes("_") && <MdGroup style={{ marginRight: "4px" }} />}
+        </Pill>
       );
     });
   }

@@ -23,15 +23,7 @@ const FormInput = forwardRef<HTMLInputElement, InputProps>(
     return (
       <StyledFormInputWithTag $hasError={!!error}>
         <div className="labelIconAndInputField">
-          <div className="labelSelectorWrapper">
-            <div
-              className="labelSelector"
-              onClick={() => (labelMenuIsOpen.value = true)}
-            >
-              <FaTags className="tagIcon" />
-              Labels
-            </div>
-          </div>
+         
           <StyledInput $hasError={!!error}>
             <div className="input-container">
               <input
@@ -43,6 +35,15 @@ const FormInput = forwardRef<HTMLInputElement, InputProps>(
               />
             </div>
           </StyledInput>
+           <div className="labelSelectorWrapper">
+            <div
+              className="labelSelector"
+              onClick={() => (labelMenuIsOpen.value = true)}
+            >
+              <FaTags className="tagIcon" />
+              Labels
+            </div>
+          </div>
         </div>
         <div className="meta">
           {error && <span className="error">{error}</span>}

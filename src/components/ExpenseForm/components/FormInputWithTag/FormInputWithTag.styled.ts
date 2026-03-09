@@ -30,11 +30,11 @@ export const StyledFormInputWithTag = styled.div<{ $hasError?: boolean }>`
       border-bottom: 1px solid
         ${({ theme, $hasError }) =>
     $hasError ? theme.errorColor : theme.lineColor};
-      border-left: 1px solid
+      border-right: 1px solid
         ${({ theme, $hasError }) =>
     $hasError ? theme.errorColor : theme.lineColor};
-      border-top-left-radius: 8px;
-      border-bottom-left-radius: 8px;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
       transition: border-color 0.15s;
 
       .labelSelector {
@@ -81,11 +81,11 @@ export const StyledInput = styled.div<{ $hasError?: boolean }>`
     border-bottom: 1px solid
       ${({ theme, $hasError }) =>
     $hasError ? theme.errorColor : theme.lineColor};
-    border-right: 1px solid
+    border-left: 1px solid
       ${({ theme, $hasError }) =>
     $hasError ? theme.errorColor : theme.lineColor};
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
     padding: 0.5em 1em;
     transition: border-color 0.15s;
     padding: 0.8rem;

@@ -223,6 +223,10 @@ export const handleSubmitButton = (
         queryKey: ["nonGroupExpenses"],
         exact: false,
       });
+      queryClient.invalidateQueries({
+        queryKey: ["personalExpenses"],
+        exact: false,
+      });
     }
     menu.value = null;
   }
