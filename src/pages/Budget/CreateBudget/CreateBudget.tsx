@@ -27,13 +27,18 @@ export default function CreateBudget() {
   const [amount, setAmount] = useState<string>("");
   const displayedAmount = useSignal<string>("");
   const openCalendar = useSignal<boolean>(false);
+  const openCustomDateCalendar = useSignal<boolean>(false);
+  const startDate = useSignal<string>("");
+  const endDate = useSignal<string>("");
+  const pickingTarget = useSignal<"start" | "end" | null>(null);
   const calendarDay = useSignal<string>("");
   const budgettype = useSignal<Frequency>(Frequency.Monthly);
   const hasSwitchedBudgetType = useSignal<boolean>(false);
   const submitBudgetErrors = useSignal<any[]>([]);
   const menu = useSignal<string | null>(null);
-  const { userInfo } = useOutletContext<{
+  const { userInfo, timeZoneId } = useOutletContext<{
     userInfo: UserInfo;
+    timeZoneId: string;
   }>();
 
   const [currencySymbol, setCurrencySymbol] = useState<string>('');
@@ -95,6 +100,16 @@ export default function CreateBudget() {
         day: getDayNumber(calendarDay.value),
       });
     }
+    if (budgettype.value === Frequency.Custom) {
+      createBudget.mutate({
+        amount: amount,
+        budgetType: budgettype.value,
+        currency: currencySymbol,
+        day: null,
+        startDate: startDate.value,
+        endDate: endDate.value,
+      });
+    }
 
     submitBudgetErrors.value = [];
     openCalendar.value = false;
@@ -103,6 +118,8 @@ export default function CreateBudget() {
     displayedAmount.value = "";
     menu.value = null;
     setAmount("");
+    startDate.value = "";
+    endDate.value = "";
   };
 
   const querydata = queryClient.getQueryData(
@@ -148,7 +165,12 @@ export default function CreateBudget() {
         menu={menu}
         isStale={isStale}
         openCalendar={openCalendar}
+        openCustomDateCalendar={openCustomDateCalendar}
         hasSwitchedBudgetType={hasSwitchedBudgetType}
+        timeZoneId={timeZoneId}
+        startDate={startDate}
+        endDate={endDate}
+        pickingTarget={pickingTarget}
       />
 
       {isFetching ? (

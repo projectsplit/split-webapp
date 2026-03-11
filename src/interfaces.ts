@@ -145,7 +145,7 @@ export interface DateTimePickerProps {
   calendarIsOpen?: Signal<boolean>;
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
-  category: Signal<string>;
+  category?: Signal<string>;
   isDateShowing?: Signal<boolean>;
 }
 
@@ -196,7 +196,7 @@ export interface DayPickerProps {
   calendarIsOpen?: Signal<boolean>;
   showOptions?: Signal<boolean>;
   withLexicalContext?: boolean;
-  category: Signal<string>;
+  category?: Signal<string>;
   isDateShowing?: Signal<boolean>;
 }
 
@@ -380,8 +380,8 @@ export interface LabelPickerProps {
   labels: Label[];
   setLabels: (labels: Label[]) => void;
   isPersonal: boolean;
-  errorMessage:Signal<string>,
-  menu:Signal<string|null>,
+  errorMessage: Signal<string>,
+  menu: Signal<string | null>,
   groupId?: string;
   userId?: string;
 }
@@ -915,7 +915,7 @@ export interface ParticipantsPayersAnimationProps extends MenuProps {
 }
 export interface GeneralWarningMenuProps extends MenuProps {
   message: string | undefined;
-  title?:string;
+  title?: string;
 }
 export interface GeneralWarningMenuAnimationProps extends MenuProps {
   message: string | undefined;
@@ -1036,6 +1036,15 @@ export interface FilterCalendarProps {
   datePeriodClicked: Signal<string>;
   timeZoneId: string;
   category: Signal<string>;
+}
+
+export interface CustomDateCalendarProps {
+  calendarIsOpen: Signal<boolean>;
+  datePeriodClicked: Signal<string>;
+  timeZoneId: string;
+  startDate: Signal<string>;
+  endDate: Signal<string>;
+  pickingTarget: Signal<"start" | "end" | null>;
 }
 export interface SearchMenuProps {
   $contentEditableHeight: number;
@@ -1296,6 +1305,11 @@ export interface SpendingCycleProps {
   isStale: boolean;
   openCalendar: Signal<boolean>;
   hasSwitchedBudgetType: Signal<boolean>;
+  timeZoneId: string;
+  openCustomDateCalendar: Signal<boolean>;
+  startDate: Signal<string>;
+  endDate: Signal<string>;
+  pickingTarget: Signal<"start" | "end" | null>;
 }
 
 export interface InfoBoxAnimationProps {

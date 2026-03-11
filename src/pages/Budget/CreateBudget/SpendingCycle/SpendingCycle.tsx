@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyledSpendingCycle } from "./SpendingCycle.styled";
 import IonIcon from "@reacticons/ionicons";
 import SpendingCycleSelector from "../../SpendingCycleSelector/SpendingCycleSelector";
@@ -9,6 +9,7 @@ import Calendar from "../../Calendar/Calendar";
 import { Frequency } from "../../../../types";
 import { SpendingCycleProps } from "../../../../interfaces";
 import { useQueryClient } from "@tanstack/react-query";
+import CustomDateCalendar from "../../CustomDateCalendar/CustomDateCalendar";
 
 export default function SpendingCycle({
   submitBudgetErrors,
@@ -18,8 +19,13 @@ export default function SpendingCycle({
   isStale,
   openCalendar,
   hasSwitchedBudgetType,
+  timeZoneId,
+  openCustomDateCalendar,
+  startDate,
+  endDate,
+  pickingTarget,
 }:
-SpendingCycleProps) {
+  SpendingCycleProps) {
   const queryClient = useQueryClient();
 
   const getDayNumber = (day: string): string | null => {
@@ -36,6 +42,11 @@ SpendingCycleProps) {
       : [29, 30, 31, "", "", "", ""]
   );
 
+  const formatDate = (date: string) => {
+    if (!date) return "";
+    return new Date(date).toLocaleDateString();
+  };
+
 
   const calendarTypeHandler = (budgetType: Frequency) => {
     if (calendarDay.value !== "" && budgetType === budgettype.value) {
@@ -44,6 +55,18 @@ SpendingCycleProps) {
       budgettype.value = budgetType;
       calendarDay.value = "";
     }
+
+    if (budgetType === Frequency.Custom) {
+      if (startDate.value === "" && endDate.value === "") {
+        openCustomDateCalendar.value = true;
+        pickingTarget.value = "start";
+      }
+    } else {
+      openCustomDateCalendar.value = false;
+      startDate.value = "";
+      endDate.value = "";
+    }
+
     if (!hasSwitchedBudgetType.value || isStale) {
       queryClient.invalidateQueries({ queryKey: ["budget"], exact: false });
     }
@@ -52,7 +75,19 @@ SpendingCycleProps) {
       hasSwitchedBudgetType.value = true;
     }
   };
-  
+
+  React.useEffect(() => {
+    if (
+      budgettype.value === Frequency.Custom &&
+      startDate.value !== "" &&
+      endDate.value === "" &&
+      !openCustomDateCalendar.value
+    ) {
+      openCustomDateCalendar.value = true;
+      pickingTarget.value = "end";
+    }
+  }, [startDate.value]);
+
   return (
     <StyledSpendingCycle>
       <div className="spendingCycleHeader">
@@ -65,13 +100,61 @@ SpendingCycleProps) {
       </div>
       <div className="calendarAndErrorsWrapper">
         <SpendingCycleSelector
-          onClick={() => (openCalendar.value = !openCalendar.value)}
+          onClick={() => {
+            openCalendar.value = !openCalendar.value;
+          }}
           open={openCalendar.value}
           inputError={submitBudgetErrors.value.find(
             (item) => item.field === "Day" || item.field === "BudgetType"
           )}
         >
-          {calendarDay.value === "" ? (
+          {budgettype.value === Frequency.Custom ? (
+            !startDate.value ? (
+              <span onClick={(e) => {
+                e.stopPropagation();
+                pickingTarget.value = "start";
+                openCustomDateCalendar.value = true;
+              }}>
+                Select start date
+              </span>
+            ) : !endDate.value ? (
+              <div className="customPropmtPills">
+                <span onClick={(e) => {
+                  e.stopPropagation();
+                  pickingTarget.value = "start";
+                  openCustomDateCalendar.value = true;
+                }}>
+                  {formatDate(startDate.value)}
+                </span>
+                {" "} - {" "}
+                <span onClick={(e) => {
+                  e.stopPropagation();
+                  pickingTarget.value = "end";
+                  openCustomDateCalendar.value = true;
+                }}>
+                  Select end date
+                </span>
+              </div>
+            ) : (
+              <div className="customPropmtPills">
+                <span onClick={(e) => {
+                  e.stopPropagation();
+                  pickingTarget.value = "start";
+                  openCustomDateCalendar.value = true;
+                }}>
+                  {formatDate(startDate.value)}
+                </span>
+                {" "} - {" "}
+                <span onClick={(e) => {
+                  e.stopPropagation();
+                  pickingTarget.value = "end";
+                  openCustomDateCalendar.value = true;
+                }}>
+                  {formatDate(endDate.value)}
+                </span>
+              </div>
+            )
+          ) : calendarDay.value === "" ? (
             budgettype.value === Frequency.Monthly ? (
               "Monthly"
             ) : (
@@ -89,45 +172,66 @@ SpendingCycleProps) {
         {submitBudgetErrors.value.find(
           (item) => item.field === "Day" || item.field === "BudgetType"
         ) && (
-          <span className="errorMsg">
-            {
-              submitBudgetErrors.value.find(
-                (item) => item.field === "Day" || item.field === "BudgetType"
-              ).errorMessage
-            }
-          </span>
+            <span className="errorMsg">
+              {
+                submitBudgetErrors.value.find(
+                  (item) => item.field === "Day" || item.field === "BudgetType"
+                ).errorMessage
+              }
+            </span>
+          )}
+      </div>
+
+      <div className="categoryButtons">
+        {openCalendar.value && (
+          <>
+            <CalendarOptionsButton
+              onClick={() => {
+                calendarTypeHandler(Frequency.Monthly);
+              }}
+              isactive={budgettype.value === Frequency.Monthly}
+            >
+              Monthly
+            </CalendarOptionsButton>
+            <CalendarOptionsButton
+              onClick={() => {
+                calendarTypeHandler(Frequency.Weekly);
+              }}
+              isactive={budgettype.value === Frequency.Weekly}
+            >
+              Weekly
+            </CalendarOptionsButton>
+            <CalendarOptionsButton
+              onClick={() => {
+                calendarTypeHandler(Frequency.Custom);
+              }}
+              isactive={budgettype.value === Frequency.Custom}
+            >
+              Custom
+            </CalendarOptionsButton>
+          </>
         )}
       </div>
-      {openCalendar.value && (
-        <div className="categoryButtons">
-          <CalendarOptionsButton
 
-            onClick={() => {
-              calendarTypeHandler(Frequency.Monthly);
-            }}
-            isactive={budgettype.value === Frequency.Monthly}
-          >
-            Monthly
-          </CalendarOptionsButton>
-          <CalendarOptionsButton
-            onClick={() => {
-              calendarTypeHandler(Frequency.Weekly);
-            }}
-            isactive={budgettype.value === Frequency.Weekly}
-          >
-            Weekly
-          </CalendarOptionsButton>
-        </div>
-      )}
-      {openCalendar.value && (
+      {openCalendar.value && budgettype.value !== Frequency.Custom && (
         <Calendar
           // setCalendarDay={setCalendarDay}
           budgettype={budgettype}
           calendarDay={calendarDay}
-         >
+        >
           {budgettype.value === Frequency.Monthly ? monthDaysArray : daysArray}
         </Calendar>
       )}
-    </StyledSpendingCycle>
+      {openCustomDateCalendar.value && budgettype.value === Frequency.Custom && (
+        <CustomDateCalendar
+          calendarIsOpen={openCustomDateCalendar}
+          datePeriodClicked={calendarDay}
+          timeZoneId={timeZoneId}
+          startDate={startDate}
+          endDate={endDate}
+          pickingTarget={pickingTarget}
+        />
+      )}
+    </StyledSpendingCycle >
   );
 }

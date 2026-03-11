@@ -408,7 +408,7 @@ export type Coordinates = {
 export enum Frequency {
   Weekly,
   Monthly,
-  Annually,
+  Custom,
 }
 
 export type BudgetInfoResponse = {
@@ -783,6 +783,8 @@ export type CreateBudgetRequest = {
   currency: string;
   budgetType: Frequency;
   day: string | null;
+  startDate?: string;
+  endDate?: string;
 };
 
 export type SpendingInfoResponse = {

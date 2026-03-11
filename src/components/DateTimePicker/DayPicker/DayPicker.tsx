@@ -69,7 +69,8 @@ const DayPicker = (props: DayPickerProps) => {
       calendarIsOpen &&
       showOptions &&
       editor &&
-      insertMention
+      insertMention &&
+      category
     ) {
       insertDateMention(
         day,

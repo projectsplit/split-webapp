@@ -18,11 +18,25 @@ export const StyledSpendingCycle = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 5px;
+
     .information {
       cursor: pointer;
       font-size: 23px;
       font-weight: bold;
       color: ${({ theme }) => theme.yellow};
+    }
+  }
+
+  .customPropmtPills {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    span {
+      cursor: pointer;
+      &:hover {
+        opacity: 0.7;
+      }
     }
   }
 `;
