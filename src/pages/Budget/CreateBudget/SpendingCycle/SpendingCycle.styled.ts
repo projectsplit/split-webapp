@@ -4,6 +4,7 @@ export const StyledSpendingCycle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  font-size:16px ;
   .errorMsg {
     font-size: 12px;
     color: ${({ theme }) => theme.pink};
@@ -27,16 +28,4 @@ export const StyledSpendingCycle = styled.div`
     }
   }
 
-  .customPropmtPills {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-
-    span {
-      cursor: pointer;
-      &:hover {
-        opacity: 0.7;
-      }
-    }
-  }
 `;

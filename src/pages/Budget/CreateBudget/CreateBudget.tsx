@@ -21,6 +21,7 @@ import MenuAnimationBackground from "../../../components/Animations/MenuAnimatio
 import InfoBoxAnimation from "../../../components/Animations/InfoBoxAnimation";
 import CreateBudgetConfirmationAnimation from "../../../components/Animations/BudgetAnimations/CreateBudgetConfirmationAnimation";
 import { handleInputChange } from "../../../helpers/handleInputChange";
+import {submitBudgetFn } from "./helpers/submitBudgetFn";
 
 export default function CreateBudget() {
 
@@ -68,7 +69,6 @@ export default function CreateBudget() {
   const isFetching = false;
   const isStale = false;
 
-
   const handleInputChangeCallback = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       handleInputChange(e, currencySymbol, displayedAmount, setAmount);
@@ -77,50 +77,23 @@ export default function CreateBudget() {
     [currencySymbol, displayedAmount, setAmount]
   );
 
-  const getDayNumber = (day: string): string | null => {
-    const index = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].indexOf(day);
-    if (index !== -1) return (index + 1).toString();
-    return null;
-  };
-
-  const submitBudget = async () => {
-    if (budgettype.value === Frequency.Monthly) {
-      createBudget.mutate({
-        amount: amount,
-        budgetType: budgettype.value,
-        currency: currencySymbol,
-        day: calendarDay.value.toString(),
-      });
-    }
-    if (budgettype.value === Frequency.Weekly) {
-      createBudget.mutate({
-        amount: amount,
-        budgetType: budgettype.value,
-        currency: currencySymbol,
-        day: getDayNumber(calendarDay.value),
-      });
-    }
-    if (budgettype.value === Frequency.Custom) {
-      createBudget.mutate({
-        amount: amount,
-        budgetType: budgettype.value,
-        currency: currencySymbol,
-        day: null,
-        startDate: startDate.value,
-        endDate: endDate.value,
-      });
-    }
-
-    submitBudgetErrors.value = [];
-    openCalendar.value = false;
-    queryClient.invalidateQueries({ queryKey: budgetInfoQueryKey, exact: false });
-    hasSwitchedBudgetType.value = false;
-    displayedAmount.value = "";
-    menu.value = null;
-    setAmount("");
-    startDate.value = "";
-    endDate.value = "";
-  };
+const submitBudget = () => submitBudgetFn(
+  budgettype,
+  createBudget,
+  amount,
+  currencySymbol,
+  calendarDay,
+  startDate,
+  endDate,
+  submitBudgetErrors,
+  openCalendar,
+  hasSwitchedBudgetType,
+  displayedAmount,
+  menu,
+  setAmount,
+  queryClient,
+  budgetInfoQueryKey,
+)
 
   const querydata = queryClient.getQueryData(
     spendingInfoQueryKey
@@ -133,7 +106,6 @@ export default function CreateBudget() {
       navigate(`/`);
     }
   };
-
 
   const handldeCurrencyOptionsClick = (curr: string) => {
     //setCurrency(currency);
@@ -206,14 +178,11 @@ export default function CreateBudget() {
       </div>
 
       <MenuAnimationBackground menu={menu} />
-
       <CreateBudgetConfirmationAnimation
         menu={menu}
         submitBudget={submitBudget}
       />
-
       <InfoBoxAnimation menu={menu} />
-
       <CurrencyOptionsAnimation
         currencyMenu={menu}
         clickHandler={handldeCurrencyOptionsClick}

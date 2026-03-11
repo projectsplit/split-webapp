@@ -1418,3 +1418,14 @@ export interface DetailedSharedExpenseTextProps {
   isPersonal: Signal<boolean>;
   userExistsInCategory: Signal<Record<SplitCategory, boolean | undefined>>
 }
+
+export interface CalendarAndErrorsWrapperProps {
+  openCalendar: Signal<boolean>;
+  budgettype: Signal<Frequency>;
+  calendarDay: Signal<string>;
+  submitBudgetErrors: Signal<any[]>;
+  startDate: Signal<string>;
+  endDate: Signal<string>;
+  openCustomDateCalendar: Signal<boolean>;
+  pickingTarget: Signal<"start" | "end" | null>;
+}

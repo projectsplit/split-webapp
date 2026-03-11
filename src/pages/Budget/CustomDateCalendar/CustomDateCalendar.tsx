@@ -12,21 +12,26 @@ export default function CustomDateCalendar({
   pickingTarget,
 }: CustomDateCalendarProps) {
   const calendarRef = useRef<HTMLDivElement>(null);
+  const lastClickRef = useRef<HTMLElement | null>(null);
   const [selectedDateTime, setSelectedDateTime] = useState<string>(
-    new Date().toISOString()
+    pickingTarget.value === "start" && startDate.value ? new Date(startDate.value).toISOString() : pickingTarget.value === "end" && endDate.value ? new Date(endDate.value).toISOString() : new Date().toISOString()
   );
 
-  const closeCalendar = (event: any) => {
+  const closeCalendar = (event: MouseEvent) => {
     if (!calendarRef.current) return;
-    if (calendarRef.current.contains(event.target)) return;
+    if (calendarRef.current.contains(event.target as Node)) return;
     calendarIsOpen.value = false;
     pickingTarget.value = null;
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", (e) => closeCalendar(e));
+    const handleMouseDown = (e: MouseEvent) => {
+      lastClickRef.current = e.target as HTMLElement;
+      closeCalendar(e);
+    };
+    document.addEventListener("mousedown", handleMouseDown);
     return () => {
-      document.removeEventListener("mousedown", (e) => closeCalendar(e));
+      document.removeEventListener("mousedown", handleMouseDown);
     };
   }, []);
 
@@ -39,6 +44,11 @@ export default function CustomDateCalendar({
     }
 
     setSelectedDateTime(finalValue);
+
+    // If the click was on the navigation (top-menu), don't close the calendar
+    if (lastClickRef.current?.closest(".top-menu")) {
+      return;
+    }
 
     if (pickingTarget.value === "start") {
       startDate.value = finalValue;
