@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledPeoplePillsDisplay = styled.div`
   display: flex;
@@ -33,7 +33,7 @@ export const StyledPeoplePillsDisplay = styled.div`
     cursor: pointer;
   } */
 
-  .type{
+  .type {
     color: ${({ theme }) => theme.grey};
   }
 `;

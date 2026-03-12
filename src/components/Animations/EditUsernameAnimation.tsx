@@ -1,7 +1,7 @@
-import { CSSTransition } from "react-transition-group";
-import { useRef } from "react";
-import { EditUsernameAnimationProps } from "../../interfaces";
-import EditUsername from "../Menus/EditUsername/EditUsername";
+import { CSSTransition } from 'react-transition-group';
+import { useRef } from 'react';
+import { EditUsernameAnimationProps } from '../../interfaces';
+import EditUsername from '../Menus/EditUsername/EditUsername';
 
 export default function EditUsernameAnimation({
   editUsernameMenu,
@@ -10,7 +10,7 @@ export default function EditUsernameAnimation({
   const nodeRef = useRef(null);
   return (
     <CSSTransition
-      in={editUsernameMenu.value === "editUsername"}
+      in={editUsernameMenu.value === 'editUsername'}
       timeout={100}
       classNames="infoBox"
       unmountOnExit

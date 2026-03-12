@@ -1,18 +1,18 @@
-import { forwardRef, useRef } from "react";
-import { StyledFormInputWithTag, StyledInput } from "./FormInputWithTag.styled";
-import { FaTags } from "react-icons/fa";
-import { Signal } from "@preact/signals-react";
+import { forwardRef, useRef } from 'react';
+import { StyledFormInputWithTag, StyledInput } from './FormInputWithTag.styled';
+import { FaTags } from 'react-icons/fa';
+import { Signal } from '@preact/signals-react';
 
 const FormInput = forwardRef<HTMLInputElement, InputProps>(
   ({ description, labelMenuIsOpen, error, ...props }, ref) => {
     const inputRef = useRef<HTMLInputElement>();
 
-    if (ref && typeof ref === "object" && ref.current) {
+    if (ref && typeof ref === 'object' && ref.current) {
       inputRef.current = ref.current;
     }
 
     const handleFocus = () => {
-      if (ref && typeof ref === "object" && ref.current) {
+      if (ref && typeof ref === 'object' && ref.current) {
         setTimeout(() => {
           const length = ref.current?.value.length || 0;
           ref.current?.setSelectionRange(length, length);
@@ -23,11 +23,10 @@ const FormInput = forwardRef<HTMLInputElement, InputProps>(
     return (
       <StyledFormInputWithTag $hasError={!!error}>
         <div className="labelIconAndInputField">
-         
           <StyledInput $hasError={!!error}>
             <div className="input-container">
               <input
-                className='input'
+                className="input"
                 {...props}
                 ref={ref}
                 onFocus={handleFocus}
@@ -35,7 +34,7 @@ const FormInput = forwardRef<HTMLInputElement, InputProps>(
               />
             </div>
           </StyledInput>
-           <div className="labelSelectorWrapper">
+          <div className="labelSelectorWrapper">
             <div
               className="labelSelector"
               onClick={() => (labelMenuIsOpen.value = true)}

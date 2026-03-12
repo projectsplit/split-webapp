@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledSpendingCycle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  font-size:16px ;
+  font-size: 16px;
   .errorMsg {
     font-size: 12px;
     color: ${({ theme }) => theme.pink};
@@ -27,5 +27,4 @@ export const StyledSpendingCycle = styled.div`
       color: ${({ theme }) => theme.yellow};
     }
   }
-
 `;

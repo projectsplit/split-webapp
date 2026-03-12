@@ -42,18 +42,18 @@ export const getWeekDates = (year: number, week: number) => {
 export const generateAllWeeksPerYear = (year: number) => {
   const allWeeks: Date[][] = [];
   const numberOfWeeks = numberOfweeksInYear(year);
-  
+
   // const startWeekIndex = numberOfWeeks === 53 ? 1 : 0;
   // const endWeekIndex = numberOfWeeks === 53 ? 53 : 52;
-  const startWeekIndex = getWeekDates(year,0).length===0?1:0
-  const endWeekIndex =getWeekDates(year,0).length===0?53:52
+  const startWeekIndex = getWeekDates(year, 0).length === 0 ? 1 : 0;
+  const endWeekIndex = getWeekDates(year, 0).length === 0 ? 53 : 52;
   for (let week = startWeekIndex; week <= endWeekIndex; week++) {
     const weekDates = getWeekDates(year, week)
       // .filter(
       //   (date, index, array) => index === 0 || index === array.length - 1 //keeps only first and last date of week
       // )
       .map((date) => new Date(date));
-     
+
     allWeeks.push(weekDates);
   }
   return allWeeks;
@@ -76,8 +76,6 @@ export function findIndexForCurrentDate(
   return foundIndex;
 }
 
-
-
 export const weeksToDateString = (weeks: Date[][]) => {
   return weeks.map((week) => week.map((day) => day.toDateString()));
 };
@@ -90,7 +88,7 @@ export function keepMonthAndNumberOfDay(dateArray: string[]): string[] {
   const formattedDates: string[] = [];
   dateArray.forEach((dateString) => {
     const date = new Date(dateString);
-    const month = date.toLocaleString("en-US", { month: "short" });
+    const month = date.toLocaleString('en-US', { month: 'short' });
     const day = date.getDate();
     const formattedDate = `${month} ${day} `;
     formattedDates.push(formattedDate);

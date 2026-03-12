@@ -1,10 +1,10 @@
-import OnTrackMessage from "./OnTrackMessage/OnTrackMessage";
-import OverspentMessage from "./OverspentMessage/OverspentMessage";
-import ReceivedMoreThanSpentMessage from "./ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage";
-import Recommendation from "./Recommendation/Recommendation";
-import SimpleOnTrackMessage from "./SimpleOnTrackMessage/SimpleOnTrackMessage";
-import { BudgetInfoResponse } from "../../types";
-import { DefaultTheme } from "styled-components";
+import OnTrackMessage from './OnTrackMessage/OnTrackMessage';
+import OverspentMessage from './OverspentMessage/OverspentMessage';
+import ReceivedMoreThanSpentMessage from './ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage';
+import Recommendation from './Recommendation/Recommendation';
+import SimpleOnTrackMessage from './SimpleOnTrackMessage/SimpleOnTrackMessage';
+import { BudgetInfoResponse } from '../../types';
+import { DefaultTheme } from 'styled-components';
 
 export const BudgetInfoMessage = (
   theme: DefaultTheme | undefined,
@@ -43,14 +43,14 @@ export const BudgetInfoMessage = (
           style={{
             backgroundColor: theme?.layer2,
             borderColor: theme?.layer2,
-            borderStyle: "solid",
-            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-            borderRadius: "6px",
-            padding: "0.8rem",
+            borderStyle: 'solid',
+            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+            borderRadius: '6px',
+            padding: '0.8rem',
           }}
         />
       );
-      
+
     if (totalAmountSpent < 0)
       return (
         <ReceivedMoreThanSpentMessage
@@ -62,10 +62,10 @@ export const BudgetInfoMessage = (
           style={{
             backgroundColor: theme?.layer2,
             borderColor: theme?.layer2,
-            borderStyle: "solid",
-            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-            borderRadius: "6px",
-            padding: "0.8rem",
+            borderStyle: 'solid',
+            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+            borderRadius: '6px',
+            padding: '0.8rem',
           }}
         />
       );
@@ -84,10 +84,10 @@ export const BudgetInfoMessage = (
           style={{
             backgroundColor: theme?.layer2,
             borderColor: theme?.layer2,
-            borderStyle: "solid",
+            borderStyle: 'solid',
             // boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-            borderRadius: "6px",
-            padding: "0.8rem",
+            borderRadius: '6px',
+            padding: '0.8rem',
           }}
         />
       );
@@ -117,10 +117,10 @@ export const BudgetInfoMessage = (
             style={{
               backgroundColor: theme?.layer2,
               borderColor: theme?.layer2,
-              borderStyle: "solid",
+              borderStyle: 'solid',
               //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-              borderRadius: "6px",
-              padding: "0.8rem",
+              borderRadius: '6px',
+              padding: '0.8rem',
             }}
           />
         );
@@ -136,10 +136,10 @@ export const BudgetInfoMessage = (
             style={{
               backgroundColor: theme?.layer2,
               borderColor: theme?.layer2,
-              borderStyle: "solid",
+              borderStyle: 'solid',
               //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-              borderRadius: "6px",
-              padding: "0.8rem",
+              borderRadius: '6px',
+              padding: '0.8rem',
             }}
           />
         );

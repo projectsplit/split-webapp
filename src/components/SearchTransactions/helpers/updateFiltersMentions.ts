@@ -1,20 +1,19 @@
-import { BeautifulMentionsItem } from "lexical-beautiful-mentions";
-import { FetchedLabel } from "../../../types";
+import { BeautifulMentionsItem } from 'lexical-beautiful-mentions';
+import { FetchedLabel } from '../../../types';
 
 export function updateFiltersMentions(
   fetchedLabels: FetchedLabel[] | undefined,
   mentionItems: Record<string, BeautifulMentionsItem[]>
 ) {
-
   if (!fetchedLabels) {
     return;
   }
   fetchedLabels.forEach((filter) => {
-    mentionItems["category:"].push({
+    mentionItems['category:'].push({
       value: filter.value,
       id: filter.id,
       isPersonal: filter.isPersonal ?? false,
-      color: filter.color
+      color: filter.color,
     });
   });
 }

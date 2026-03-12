@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledLabelMenu = styled.div`
   position: fixed;
@@ -46,7 +46,7 @@ export const StyledLabelMenu = styled.div`
     }
 
     .closeButtonContainer:hover::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;

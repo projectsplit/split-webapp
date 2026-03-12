@@ -1,4 +1,4 @@
-import { Signal } from "@preact/signals-react";
+import { Signal } from '@preact/signals-react';
 import {
   ExpenseRequest,
   FormExpense,
@@ -10,10 +10,9 @@ import {
   PickerMember,
   User,
   UserInfo,
-} from "../../../types";
+} from '../../../types';
 
-
-export type SplitMethod = "Amounts" | "Shares" | "Percentages";
+export type SplitMethod = 'Amounts' | 'Shares' | 'Percentages';
 
 export type CategoryMap<T> = {
   readonly Amounts: T;
@@ -112,8 +111,8 @@ export interface ExpenseState {
   validateForm: (options?: { showErrors: boolean } | undefined) => {
     isValid: boolean;
     errors:
-    | { amount: string; participants: string; payers: string }
-    | { amount?: undefined; participants?: undefined; payers?: undefined };
+      | { amount: string; participants: string; payers: string }
+      | { amount?: undefined; participants?: undefined; payers?: undefined };
   };
 
   resetForm: () => void;
@@ -129,5 +128,4 @@ export interface ExpenseState {
     fromPersonal?: Signal<boolean>;
     fromHomeGroup?: Signal<Group | null>;
   }) => void;
-
 }

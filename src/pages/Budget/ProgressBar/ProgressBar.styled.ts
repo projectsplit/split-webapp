@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface StyledProgressBarProps {
   percentage: number;
@@ -66,10 +66,10 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
       align-items: center;
       justify-content: end;
     }
-    
+
     .targetIcon {
       color: #bebebe;
-      box-shadow: 0 0 10px 2px ${(props) => props.color};;
+      box-shadow: 0 0 10px 2px ${(props) => props.color};
       font-size: 25px;
       align-self: center;
       margin-top: -20px;
@@ -104,7 +104,7 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
         border-radius: inherit;
       }
       .bar:after {
-        content: "";
+        content: '';
         width: 100%;
         height: 100%;
         background-color: ${(props) => props.color};

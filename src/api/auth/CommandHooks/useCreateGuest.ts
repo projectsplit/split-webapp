@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { Signal } from "@preact/signals-react";
-import { Group, Guest } from "../../../types";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { Signal } from '@preact/signals-react';
+import { Group, Guest } from '../../../types';
 
 export const useCreateGuest = (
   groupId: string | undefined,
@@ -15,15 +15,15 @@ export const useCreateGuest = (
   return useMutation<any, AxiosError>({
     mutationFn: () => {
       if (!groupId) {
-        noGroupError.value = "No group found";
-        return Promise.reject(new Error("No group found"));
+        noGroupError.value = 'No group found';
+        return Promise.reject(new Error('No group found'));
       }
       return createGuest(groupId, { guestName });
     },
     onSuccess: async (newGuest) => {
       if (!newGuest.id) {
-        console.error("createGuest returned no id:", newGuest);
-        noGroupError.value = "Failed to create guest: No ID returned";
+        console.error('createGuest returned no id:', newGuest);
+        noGroupError.value = 'Failed to create guest: No ID returned';
         return;
       }
 
@@ -43,18 +43,18 @@ export const useCreateGuest = (
           guests: [...previousGroup.guests, guestToAdd],
         });
       }
-      queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
       queryClient.invalidateQueries({
-        queryKey: ["debts", groupId],
+        queryKey: ['debts', groupId],
         exact: false,
       });
-      queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ['shared'], exact: false });
       queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
+        queryKey: ['mostRecentGroup'],
         exact: false,
       });
 
-      setGuestName("");
+      setGuestName('');
     },
   });
 };

@@ -1,8 +1,8 @@
-import { CSSTransition } from "react-transition-group";
-import { CurrencyOptionsAnimationProps } from "../../interfaces";
-import CurrencyOptions from "../Menus/CurrencyOptions/CurrencyOptions";
-import "../../styles/freakflags/freakflags.css";
-import { useRef } from "react";
+import { CSSTransition } from 'react-transition-group';
+import { CurrencyOptionsAnimationProps } from '../../interfaces';
+import CurrencyOptions from '../Menus/CurrencyOptions/CurrencyOptions';
+import '../../styles/freakflags/freakflags.css';
+import { useRef } from 'react';
 
 export default function CurrencyOptionsAnimation({
   currencyMenu,
@@ -13,7 +13,7 @@ export default function CurrencyOptionsAnimation({
   return (
     <CSSTransition
       nodeRef={nodeRef}
-      in={currencyMenu.value === "currencyOptions"}
+      in={currencyMenu.value === 'currencyOptions'}
       timeout={100}
       classNames="bottomslide"
       unmountOnExit

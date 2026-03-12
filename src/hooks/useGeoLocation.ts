@@ -56,7 +56,11 @@ const useGeolocation = (options?: PositionOptions): GeoLocationSensorState => {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(onEvent, onEventError, options);
-    watchId = navigator.geolocation.watchPosition(onEvent, onEventError, options);
+    watchId = navigator.geolocation.watchPosition(
+      onEvent,
+      onEventError,
+      options
+    );
 
     return () => {
       mounted = false;

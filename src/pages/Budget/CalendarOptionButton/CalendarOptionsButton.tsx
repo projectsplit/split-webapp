@@ -1,10 +1,8 @@
-
-
 import {
   CalendarOptionsButtonProps,
   OptionsButtonProps,
-} from "../../../interfaces";
-import { StyledCalendarOptionsButton } from "./CalendarOptionsButton.styled";
+} from '../../../interfaces';
+import { StyledCalendarOptionsButton } from './CalendarOptionsButton.styled';
 
 export default function CalendarOptionsButton({
   children,
@@ -12,7 +10,7 @@ export default function CalendarOptionsButton({
   isactive,
 }: OptionsButtonProps & CalendarOptionsButtonProps) {
   return (
-    <StyledCalendarOptionsButton onClick={onClick} isactive={isactive} >
+    <StyledCalendarOptionsButton onClick={onClick} isactive={isactive}>
       {children}
     </StyledCalendarOptionsButton>
   );

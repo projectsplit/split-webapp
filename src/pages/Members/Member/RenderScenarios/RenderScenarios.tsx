@@ -1,6 +1,10 @@
-import IonIcon from "@reacticons/ionicons";
-import { RenderBothScenariosProps, RenderScenariosProps, RenderSettledProps } from "../../../../interfaces";
-import { DescriptionAndTree } from "../DescriptionAndTree/DescriptionAndTree";
+import IonIcon from '@reacticons/ionicons';
+import {
+  RenderBothScenariosProps,
+  RenderScenariosProps,
+  RenderSettledProps,
+} from '../../../../interfaces';
+import { DescriptionAndTree } from '../DescriptionAndTree/DescriptionAndTree';
 
 export const RenderOwedOnly = ({
   memberTransactions,
@@ -12,7 +16,7 @@ export const RenderOwedOnly = ({
   treeItems,
   participants,
   userOrMemberId,
-  mode
+  mode,
 }: RenderScenariosProps) => {
   return (
     <div className="isOwed">
@@ -43,7 +47,7 @@ export const RenderOwesOnly = ({
   treeItems,
   participants,
   userOrMemberId,
-  mode
+  mode,
 }: RenderScenariosProps) => {
   return (
     <div className="owes">
@@ -73,9 +77,10 @@ export const RenderSettled = ({ isLogedUser, name }: RenderSettledProps) => {
         </div>
       ) : (
         <div>
-          <span className="you">{name}</span>&nbsp;<span className="is">is</span>
+          <span className="you">{name}</span>&nbsp;
+          <span className="is">is</span>
         </div>
-      )}{" "}
+      )}{' '}
       &nbsp;settled
       <IonIcon name="checkmark-sharp" className="checkmark" />
     </div>
@@ -94,7 +99,7 @@ export const RenderBoth = ({
   memberOwesItems,
   participants,
   userOrMemberId,
-  mode
+  mode,
 }: RenderBothScenariosProps) => {
   const showOwedFirst =
     !doNotshowTreeWhenMemberIsOwed && doNotshowTreeWhenMemberOwes;

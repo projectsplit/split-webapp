@@ -1,7 +1,7 @@
-import { AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { useMutation } from "@tanstack/react-query";
-import { Signal } from "@preact/signals-react";
+import { AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { useMutation } from '@tanstack/react-query';
+import { Signal } from '@preact/signals-react';
 
 export const useSendInvitation = (userInvitationSent: Signal<boolean>) => {
   return useMutation<
@@ -19,21 +19,21 @@ export const useSendInvitation = (userInvitationSent: Signal<boolean>) => {
       sendInvitation({ receiverId, groupId, guestId, guestName }),
     onSuccess: (_, variables) => {
       variables.onSuccess();
-      userInvitationSent.value = true
+      userInvitationSent.value = true;
     },
     onError: (error) => {
-      console.error("Failed to send invitation", error);
+      console.error('Failed to send invitation', error);
     },
   });
 };
 
 const sendInvitation = async (req: SendInvitationRequest): Promise<void> => {
-  await apiClient.post<void, AxiosResponse<void>>("/invitations/send", req);
+  await apiClient.post<void, AxiosResponse<void>>('/invitations/send', req);
 };
 
 type SendInvitationRequest = {
   receiverId: string;
   groupId: string;
   guestId: string | null;
-  guestName: string | null
+  guestName: string | null;
 };

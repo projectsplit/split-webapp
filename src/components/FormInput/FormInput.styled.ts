@@ -1,18 +1,18 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const StyledInput = styled.div<{ $hasError?: boolean }>`
   display: flex;
   flex-direction: column;
 
   .input-container {
-    padding:0.8rem;
+    padding: 0.8rem;
     background-color: ${({ theme }) => theme.layer2};
     border-radius: 8px;
     border-radius: 8px;
     border: 1px solid
       ${({ theme, $hasError }) =>
         $hasError ? theme.errorColor : theme.lineColor};
-  
+
     transition: border-color 0.15s;
 
     &:focus-within {

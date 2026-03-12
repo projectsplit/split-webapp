@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledMembers = styled.div`
   display: flex;
@@ -11,10 +11,10 @@ export const StyledMembers = styled.div`
   .spinner {
     display: flex;
     flex-direction: column;
-    flex: 1; 
+    flex: 1;
     align-items: center;
-    justify-content: center; 
-    margin-top: 2rem; 
-    height: 100%; 
+    justify-content: center;
+    margin-top: 2rem;
+    height: 100%;
   }
 `;

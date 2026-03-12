@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledOnTrackMessageProps } from "../../../interfaces";
+import styled from 'styled-components';
+import { StyledOnTrackMessageProps } from '../../../interfaces';
 
 export const StyledOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
   .main {

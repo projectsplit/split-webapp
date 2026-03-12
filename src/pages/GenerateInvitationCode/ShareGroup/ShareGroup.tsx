@@ -1,16 +1,16 @@
-import { StyledShareGroup } from "./ShareGroup.styled";
-import Spinner from "../../../components/Spinner/Spinner";
-import { ShareGroupProps } from "../../../interfaces";
-import { IoCopy } from "react-icons/io5";
-import { useEffect, useState } from "react";
-import QRCodeStyling from "qr-code-styling";
-import logo from "../../../styles/logo/logoRounded.png";
-import MyButton from "../../../components/MyButton/MyButton";
-import { copyToClipboard } from "../../../helpers/copyToClipboars";
-import { useQueryClient } from "@tanstack/react-query";
-import { IoIosWarning } from "react-icons/io";
-import ShimerPlaceholder from "../ShimerPlaceholder/ShimerPlaceholder";
-import config from "../../../config";
+import { StyledShareGroup } from './ShareGroup.styled';
+import Spinner from '../../../components/Spinner/Spinner';
+import { ShareGroupProps } from '../../../interfaces';
+import { IoCopy } from 'react-icons/io5';
+import { useEffect, useState } from 'react';
+import QRCodeStyling from 'qr-code-styling';
+import logo from '../../../styles/logo/logoRounded.png';
+import MyButton from '../../../components/MyButton/MyButton';
+import { copyToClipboard } from '../../../helpers/copyToClipboars';
+import { useQueryClient } from '@tanstack/react-query';
+import { IoIosWarning } from 'react-icons/io';
+import ShimerPlaceholder from '../ShimerPlaceholder/ShimerPlaceholder';
+import config from '../../../config';
 
 export default function ShareGroup({
   groupName,
@@ -24,7 +24,7 @@ export default function ShareGroup({
 }: ShareGroupProps) {
   const pageSize = 10;
   const queryClient = useQueryClient();
-  const [timeLeft, setTimeLeft] = useState("");
+  const [timeLeft, setTimeLeft] = useState('');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,7 +32,7 @@ export default function ShareGroup({
       const expiry = new Date(expires);
       const diff = expiry.getTime() - now.getTime();
       if (diff < 0) {
-        setTimeLeft("Expired");
+        setTimeLeft('Expired');
         clearInterval(interval);
       } else {
         // const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -40,7 +40,7 @@ export default function ShareGroup({
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
         // setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
         if (isNaN(minutes) || isNaN(seconds)) {
-          setTimeLeft("NaN");
+          setTimeLeft('NaN');
         } else if (minutes === 0) {
           setTimeLeft(`${seconds}s`);
         } else {
@@ -58,28 +58,28 @@ export default function ShareGroup({
         height: 250,
         data: `${config.clientUrl}/j/${invitationCode}`,
         dotsOptions: {
-          color: "#000000",
-          type: "rounded",
+          color: '#000000',
+          type: 'rounded',
         },
         cornersSquareOptions: {
-          type: "extra-rounded",
+          type: 'extra-rounded',
         },
         backgroundOptions: {
-          color: "#c5a1ff",
+          color: '#c5a1ff',
           round: 0.1,
         },
         image: logo,
         imageOptions: {
-          crossOrigin: "anonymous",
+          crossOrigin: 'anonymous',
           margin: 10,
           imageSize: 0.4,
         },
       });
-      qrRef.current.innerHTML = "";
+      qrRef.current.innerHTML = '';
       qrCode.append(qrRef.current);
       return () => {
         if (qrRef.current) {
-          qrRef.current.innerHTML = "";
+          qrRef.current.innerHTML = '';
         }
       };
     }
@@ -91,7 +91,7 @@ export default function ShareGroup({
         <div>
           {groupName.length > 0 ? (
             <div className="promptMessage">
-              Scan this QR code with another device to join{" "}
+              Scan this QR code with another device to join{' '}
               <strong className="groupName">{groupName}</strong>
             </div>
           ) : (
@@ -126,9 +126,9 @@ export default function ShareGroup({
               </div>
             </div>
             <div className="expires">
-              {!timeLeft.length || timeLeft === "NaN" ? (
+              {!timeLeft.length || timeLeft === 'NaN' ? (
                 <ShimerPlaceholder />
-              ) : timeLeft && timeLeft === "Expired" ? (
+              ) : timeLeft && timeLeft === 'Expired' ? (
                 <span className="text">
                   <IoIosWarning /> Expired
                 </span>
@@ -146,7 +146,7 @@ export default function ShareGroup({
                 {
                   onSuccess: (code: string) => {
                     queryClient.invalidateQueries({
-                      queryKey: ["getGroupJoinCodes", groupId, pageSize],
+                      queryKey: ['getGroupJoinCodes', groupId, pageSize],
                     });
                     setInvitationCode(code);
                   },

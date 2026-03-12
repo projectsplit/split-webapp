@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 import {
   CalendarOptionsButtonProps,
   OptionsButtonProps,
-} from "../../../interfaces";
-import { StyledOptionsButton } from "../../../components/OptionsButton/OptionsButton.styled";
+} from '../../../interfaces';
+import { StyledOptionsButton } from '../../../components/OptionsButton/OptionsButton.styled';
 
 export const StyledCalendarOptionsButton = styled(StyledOptionsButton)<
   OptionsButtonProps & CalendarOptionsButtonProps

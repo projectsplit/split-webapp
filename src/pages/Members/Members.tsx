@@ -1,21 +1,24 @@
-import { StyledMembers } from "./Members.styled";
-import { useOutletContext, useParams } from "react-router-dom";
-import { useEffect, useMemo } from "react";
-import { groupTransactions } from "../../helpers/groupTransactions";
-import { Group, Mode, UserInfo } from "../../types";
-import { Signal, useSignal } from "@preact/signals-react";
-import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
-import MemberFC from "./Member/MemberFC";
-import SettleUpAnimation from "../../components/Animations/SettleUpAnimation";
-import Spinner from "../../components/Spinner/Spinner";
-import AddNewUserAnimation from "../../components/Animations/AddNewUserAnimation";
-import getAllDebtsParticipants from "@/helpers/getAllDebtsParticipants";
-import { useDebts } from "@/api/auth/QueryHooks/useDebts";
+import { StyledMembers } from './Members.styled';
+import { useOutletContext, useParams } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { groupTransactions } from '../../helpers/groupTransactions';
+import { Group, Mode, UserInfo } from '../../types';
+import { Signal, useSignal } from '@preact/signals-react';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import MemberFC from './Member/MemberFC';
+import SettleUpAnimation from '../../components/Animations/SettleUpAnimation';
+import Spinner from '../../components/Spinner/Spinner';
+import AddNewUserAnimation from '../../components/Animations/AddNewUserAnimation';
+import getAllDebtsParticipants from '@/helpers/getAllDebtsParticipants';
+import { useDebts } from '@/api/auth/QueryHooks/useDebts';
 
 export default function Members() {
-  const idSelectedToSettleUp = useSignal<string>("");
+  const idSelectedToSettleUp = useSignal<string>('');
   const menu = useSignal<string | null>(null);
-  const guestToBeReplaced = useSignal<{ guestId: string; guestName: string }>({ guestId: "", guestName: "" });
+  const guestToBeReplaced = useSignal<{ guestId: string; guestName: string }>({
+    guestId: '',
+    guestName: '',
+  });
 
   const { groupid } = useParams();
   const { userInfo, group, showBottomBar, mode } = useOutletContext<{
@@ -32,21 +35,21 @@ export default function Members() {
   const guests = group?.guests;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
-  const allParticipants = getAllDebtsParticipants(debts,
-    mode,
-    members,
-    guests);
+  const allParticipants = getAllDebtsParticipants(debts, mode, members, guests);
 
   const { groupedTransactions } = useMemo(() => {
-    const groupedTransactions = mode === Mode.Group ? groupTransactions(
-      debts ?? [],
-      allParticipants ?? [],
-      userMemberId || ""
-    ) : groupTransactions(
-      debts ?? [],
-      allParticipants ?? [],
-      userInfo?.userId || ""
-    );
+    const groupedTransactions =
+      mode === Mode.Group
+        ? groupTransactions(
+            debts ?? [],
+            allParticipants ?? [],
+            userMemberId || ''
+          )
+        : groupTransactions(
+            debts ?? [],
+            allParticipants ?? [],
+            userInfo?.userId || ''
+          );
     return { groupedTransactions };
   }, [debts]);
 
@@ -60,18 +63,20 @@ export default function Members() {
         <Spinner />
       </div>
     );
-  }//TODO Maybe replace with a message after it fails for a while?
+  } //TODO Maybe replace with a message after it fails for a while?
 
-  const sortedParticipants = mode === Mode.Group ? [...allParticipants].sort((a, b) => {
-    if (a.id === userMemberId) return -1;
-    if (b.id === userMemberId) return 1;
-    return 0;
-  }) : [...allParticipants].sort((a, b) => {
-    if (a.id === userInfo?.userId) return -1;
-    if (b.id === userInfo?.userId) return 1;
-    return 0;
-  });
-
+  const sortedParticipants =
+    mode === Mode.Group
+      ? [...allParticipants].sort((a, b) => {
+          if (a.id === userMemberId) return -1;
+          if (b.id === userMemberId) return 1;
+          return 0;
+        })
+      : [...allParticipants].sort((a, b) => {
+          if (a.id === userInfo?.userId) return -1;
+          if (b.id === userInfo?.userId) return 1;
+          return 0;
+        });
 
   return (
     <StyledMembers>
@@ -106,7 +111,10 @@ export default function Members() {
         members={allParticipants || []}
         userId={userMemberId ?? userInfo.userId}
       />
-      <AddNewUserAnimation menu={menu} guestToBeReplaced={guestToBeReplaced.value} />
+      <AddNewUserAnimation
+        menu={menu}
+        guestToBeReplaced={guestToBeReplaced.value}
+      />
     </StyledMembers>
   );
 }

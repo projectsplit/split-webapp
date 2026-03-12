@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { SpendingCycleSelectorProps } from "../../../interfaces";
+import styled from 'styled-components';
+import { SpendingCycleSelectorProps } from '../../../interfaces';
 
 export const StyledSpendingCycleSelector = styled.button<SpendingCycleSelectorProps>`
   display: flex;
@@ -8,7 +8,8 @@ export const StyledSpendingCycleSelector = styled.button<SpendingCycleSelectorPr
   justify-content: space-evenly;
   border-style: ${({ inputError }) => (inputError ? 'solid' : 'none')};
   border-width: ${({ inputError }) => (inputError ? '1px' : '0')};
-  border-color: ${({ theme, inputError }) => (inputError ? theme.pink : 'transparent')};
+  border-color: ${({ theme, inputError }) =>
+    inputError ? theme.pink : 'transparent'};
 
   border-radius: 4px;
   padding: 0.8rem;
@@ -31,5 +32,4 @@ export const StyledSpendingCycleSelector = styled.button<SpendingCycleSelectorPr
   .angle {
     font-size: 25px;
   }
-
 `;

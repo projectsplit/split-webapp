@@ -1,42 +1,62 @@
-import { AdvancedMarker, Map, MapMouseEvent, Pin, useMap, useMapsLibrary, } from "@vis.gl/react-google-maps";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import useGeolocation from "../../hooks/useGeoLocation";
-import { SiGooglemaps } from "react-icons/si";
-import Button from "../Button";
-import { Coordinates, GeoLocation } from "../../types";
-import config from "../../config";
-import { IoClose } from "react-icons/io5";
-import { StyledPlacePicker } from "./PlacePicker.styled";
-import { PlacePickerProps } from "../../interfaces";
-import MyButton from "../MyButton/MyButton";
+import {
+  AdvancedMarker,
+  Map,
+  MapMouseEvent,
+  Pin,
+  useMap,
+  useMapsLibrary,
+} from '@vis.gl/react-google-maps';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import useGeolocation from '../../hooks/useGeoLocation';
+import { SiGooglemaps } from 'react-icons/si';
+import Button from '../Button';
+import { Coordinates, GeoLocation } from '../../types';
+import config from '../../config';
+import { IoClose } from 'react-icons/io5';
+import { StyledPlacePicker } from './PlacePicker.styled';
+import { PlacePickerProps } from '../../interfaces';
+import MyButton from '../MyButton/MyButton';
 
-const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultCoordinates, setLocation, isCreateExpense, setDescriptionError }) => {
+const PlacePicker: React.FC<PlacePickerProps> = ({
+  location,
+  isMapOpen,
+  defaultCoordinates,
+  setLocation,
+  isCreateExpense,
+  setDescriptionError,
+}) => {
   const mapId = `${config.googleMapId}`;
   const defaultZoom = 14;
-  const googleMapsBaseUrl = "https://www.google.com/maps/search/?api=1";
-  const buildGoogleUrl = (coords: Coordinates) => `${googleMapsBaseUrl}&query=${coords.latitude},${coords.longitude}`;
+  const googleMapsBaseUrl = 'https://www.google.com/maps/search/?api=1';
+  const buildGoogleUrl = (coords: Coordinates) =>
+    `${googleMapsBaseUrl}&query=${coords.latitude},${coords.longitude}`;
 
-  const localStorageUserLocation = localStorage.getItem("last_geo_location");
-  const lastUserGeoLocation: GeoLocation = localStorageUserLocation ? JSON.parse(localStorageUserLocation) : undefined;
+  const localStorageUserLocation = localStorage.getItem('last_geo_location');
+  const lastUserGeoLocation: GeoLocation = localStorageUserLocation
+    ? JSON.parse(localStorageUserLocation)
+    : undefined;
 
-  const initialLocation: GeoLocation = location ?? lastUserGeoLocation ?? {
-    coordinates: defaultCoordinates,
-    google: {
-      id: null,
-      address: undefined,
-      name: undefined,
-      url: undefined,
-    },
-  };
+  const initialLocation: GeoLocation = location ??
+    lastUserGeoLocation ?? {
+      coordinates: defaultCoordinates,
+      google: {
+        id: null,
+        address: undefined,
+        name: undefined,
+        url: undefined,
+      },
+    };
 
-  const [selectedLocation, setSelectedLocation] = useState<GeoLocation>(location ?? initialLocation);
+  const [selectedLocation, setSelectedLocation] = useState<GeoLocation>(
+    location ?? initialLocation
+  );
 
   const userLocation = useGeolocation();
   const map = useMap();
   const shouldPanToUserLocation = useRef(!location);
   const autocompleteInputRef = useRef<HTMLInputElement>(null);
 
-  const placesLib = useMapsLibrary("places");
+  const placesLib = useMapsLibrary('places');
 
   const placesService = useMemo(
     () => placesLib && map && new placesLib.PlacesService(map),
@@ -48,12 +68,12 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
       autocompleteInputRef.current &&
       placesLib &&
       new placesLib.Autocomplete(autocompleteInputRef.current, {
-        fields: ["place_id", "geometry", "name", "url"],
+        fields: ['place_id', 'geometry', 'name', 'url'],
       }),
     [autocompleteInputRef.current, placesLib]
   );
 
-  const geocodingLib = useMapsLibrary("geocoding");
+  const geocodingLib = useMapsLibrary('geocoding');
   const geocoder = useMemo(
     () => geocodingLib && new geocodingLib.Geocoder(),
     [geocodingLib]
@@ -62,7 +82,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
   useEffect(() => {
     return () => {
       document
-        .querySelectorAll(".pac-container")
+        .querySelectorAll('.pac-container')
         .forEach((container) => container.remove());
     };
   }, []);
@@ -100,11 +120,14 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
             longitude: userPosition.lng,
           }),
         },
-      }
+      };
 
       setSelectedLocation(userLocationWithGoogle);
 
-      localStorage.setItem("last_geo_location", JSON.stringify(userLocationWithGoogle))
+      localStorage.setItem(
+        'last_geo_location',
+        JSON.stringify(userLocationWithGoogle)
+      );
 
       shouldPanToUserLocation.current = false;
       map.panTo(userPosition);
@@ -122,7 +145,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
     if (!autocomplete || !map || !placesService) return;
 
     const autocompleteListener = autocomplete.addListener(
-      "place_changed",
+      'place_changed',
       async () => {
         const selectedPlace = autocomplete.getPlace();
         if (!selectedPlace?.geometry?.location) return;
@@ -135,17 +158,21 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
           },
           google: {
             id: selectedPlace.place_id!,
-            address: await fetchAddressFromPlaceId(selectedPlace.place_id!, placesService) ?? "",
+            address:
+              (await fetchAddressFromPlaceId(
+                selectedPlace.place_id!,
+                placesService
+              )) ?? '',
             name: selectedPlace.name,
             url: selectedPlace.url,
           },
         });
-        autocompleteInputRef.current!.value = "";
-        autocomplete.set("place", undefined);
+        autocompleteInputRef.current!.value = '';
+        autocomplete.set('place', undefined);
       }
     );
 
-    const centerChangeListener = map.addListener("center_changed", () => {
+    const centerChangeListener = map.addListener('center_changed', () => {
       const mapCenter = map.getCenter();
       if (!mapCenter) return;
 
@@ -161,7 +188,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
   const handleMapClick = useCallback(
     async (e: MapMouseEvent) => {
       e.stop();
-      shouldPanToUserLocation.current = false
+      shouldPanToUserLocation.current = false;
 
       if (!e.detail.placeId || !placesService) {
         const pos = e.detail.latLng!;
@@ -187,7 +214,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
       const placeLocation = await fetchPlaceLocation(e.detail.placeId);
       setSelectedLocation(placeLocation);
       if (!isCreateExpense) return;
-      setDescriptionError("");
+      setDescriptionError('');
     },
 
     [placesService, geocoder]
@@ -195,7 +222,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
 
   const submitLocation = () => {
     setLocation(selectedLocation);
-    isMapOpen.value = false
+    isMapOpen.value = false;
   };
 
   const fetchPlaceLocation = useCallback(
@@ -207,7 +234,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
       return new Promise((resolve) => {
         const request: google.maps.places.PlaceDetailsRequest = {
           placeId,
-          fields: ["name", "url", "geometry", "formatted_address"],
+          fields: ['name', 'url', 'geometry', 'formatted_address'],
         };
 
         placesService.getDetails(request, (placeResult, placeServiceStatus) => {
@@ -237,7 +264,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
   );
 
   return (
-    <StyledPlacePicker >
+    <StyledPlacePicker>
       <div className="map-container">
         <div className="searchAndClose">
           <input
@@ -247,7 +274,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
           />
           <IoClose
             className="closeButton"
-            onClick={() => isMapOpen.value = false}
+            onClick={() => (isMapOpen.value = false)}
           />
         </div>
 
@@ -272,9 +299,9 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
             }}
           >
             <Pin
-              background={"#FFEE34"}
-              borderColor={"#1f234e"}
-              glyphColor={"#1f234e"}
+              background={'#FFEE34'}
+              borderColor={'#1f234e'}
+              glyphColor={'#1f234e'}
               scale={1.2}
             />
           </AdvancedMarker>
@@ -309,18 +336,24 @@ const PlacePicker: React.FC<PlacePickerProps> = ({ location, isMapOpen, defaultC
 
 export default PlacePicker;
 
-const fetchAddressFromPlaceId = async (placeId: string, placesService: google.maps.places.PlacesService): Promise<string | undefined> => {
-
-  const placeDetails: google.maps.places.PlaceResult | null = await new Promise((resolve) => {
-    placesService.getDetails({ placeId, fields: ["formatted_address"] }, (place, status) => {
-      if (status == google.maps.places.PlacesServiceStatus.OK) {
-        resolve(place)
-      }
-      else {
-        resolve(null)
-      }
-    });
-  });
+const fetchAddressFromPlaceId = async (
+  placeId: string,
+  placesService: google.maps.places.PlacesService
+): Promise<string | undefined> => {
+  const placeDetails: google.maps.places.PlaceResult | null = await new Promise(
+    (resolve) => {
+      placesService.getDetails(
+        { placeId, fields: ['formatted_address'] },
+        (place, status) => {
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+            resolve(place);
+          } else {
+            resolve(null);
+          }
+        }
+      );
+    }
+  );
 
   return placeDetails?.formatted_address ?? undefined;
 };

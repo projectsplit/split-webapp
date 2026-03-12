@@ -1,8 +1,7 @@
-import { CSSTransition } from "react-transition-group";
-import { GroupTotalsByCurrencyAnimationProps } from "../../interfaces";
-import { useRef } from "react";
-import { GroupTotalsByCurrency } from "../../pages/TransactionsWrappers/GroupTotalsByCurrency/GroupTotalsByCurrency";
-
+import { CSSTransition } from 'react-transition-group';
+import { GroupTotalsByCurrencyAnimationProps } from '../../interfaces';
+import { useRef } from 'react';
+import { GroupTotalsByCurrency } from '../../pages/TransactionsWrappers/GroupTotalsByCurrency/GroupTotalsByCurrency';
 
 export default function GroupTotalsByCurrencyAnimation({
   menu,
@@ -17,7 +16,7 @@ export default function GroupTotalsByCurrencyAnimation({
   const nodeRef = useRef(null);
   return (
     <CSSTransition
-      in={menu.value === "epensesByCurrency"}
+      in={menu.value === 'epensesByCurrency'}
       classNames="infoBox"
       timeout={100}
       unmountOnExit

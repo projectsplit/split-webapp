@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface StyledOnTrackMessageProps {
   style?: React.CSSProperties;
@@ -23,7 +23,7 @@ export const StyledSimpleOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
         flex-direction: column;
         gap: 10px;
         font-size: 15px;
-        
+
         justify-content: center;
       }
       .information {

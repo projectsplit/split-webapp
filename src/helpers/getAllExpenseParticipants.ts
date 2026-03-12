@@ -1,5 +1,11 @@
-import { ExpenseResponseItem, Guest, Member, Mode, TruncatedMember } from "@/types";
-import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
+import {
+  ExpenseResponseItem,
+  Guest,
+  Member,
+  Mode,
+  TruncatedMember,
+} from '@/types';
+import { mergeMembersAndGuests } from './mergeMembersAndGuests';
 
 export default function getAllExpenseParticipants(
   expenses: ExpenseResponseItem[] | undefined,
@@ -21,7 +27,7 @@ export default function getAllExpenseParticipants(
     for (const expense of expenses) {
       if (expense.payments && Array.isArray(expense.payments)) {
         for (const p of expense.payments) {
-          if ("userId" in p && "username" in p) {
+          if ('userId' in p && 'username' in p) {
             userMap.set(p.userId, p.username);
           }
         }
@@ -29,7 +35,7 @@ export default function getAllExpenseParticipants(
 
       if (expense.shares && Array.isArray(expense.shares)) {
         for (const s of expense.shares) {
-          if ("userId" in s && "username" in s) {
+          if ('userId' in s && 'username' in s) {
             userMap.set(s.userId, s.username);
           }
         }

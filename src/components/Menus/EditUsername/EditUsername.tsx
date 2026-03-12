@@ -1,53 +1,50 @@
-import { useEffect, useState } from "react";
-import { StyledEditUsername } from "./EditUsername.styled";
-import MyButton from "../../MyButton/MyButton";
-import Separator from "../../Separator/Separator";
-import { useGetUsernameStatus } from "../../../api/auth/QueryHooks/useGetUsernameStatus";
-import { EditUsernameProps } from "../../../interfaces";
-import { useEditUsername } from "../../../api/auth/CommandHooks/useEditUsername";
-import Spinner from "../../Spinner/Spinner";
-import { GrFormCheckmark } from "react-icons/gr";
-import { FiAlertTriangle } from "react-icons/fi";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { StyledEditUsername } from './EditUsername.styled';
+import MyButton from '../../MyButton/MyButton';
+import Separator from '../../Separator/Separator';
+import { useGetUsernameStatus } from '../../../api/auth/QueryHooks/useGetUsernameStatus';
+import { EditUsernameProps } from '../../../interfaces';
+import { useEditUsername } from '../../../api/auth/CommandHooks/useEditUsername';
+import Spinner from '../../Spinner/Spinner';
+import { GrFormCheckmark } from 'react-icons/gr';
+import { FiAlertTriangle } from 'react-icons/fi';
+import { useParams } from 'react-router-dom';
 
-export default function EditUsername({ existingUsername, editUsernameMenu }: EditUsernameProps) {
-
-  const [username, setUsername] = useState(existingUsername)
-  const [errorMessage, setErrorMessage] = useState<string | undefined>()
+export default function EditUsername({
+  existingUsername,
+  editUsernameMenu,
+}: EditUsernameProps) {
+  const [username, setUsername] = useState(existingUsername);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const params = useParams();
   const groupId = params?.groupid;
 
-  const usernameStatus = useGetUsernameStatus(username)
+  const usernameStatus = useGetUsernameStatus(username);
 
-  const {
-    mutate: editUsername,
-    isPending,
-  } = useEditUsername(groupId);
+  const { mutate: editUsername, isPending } = useEditUsername(groupId);
 
   useEffect(() => {
     if (!usernameStatus.isSuccess) {
-      return
+      return;
     }
 
     if (!usernameStatus.data.isValid) {
-      setErrorMessage(usernameStatus.data.errorMessage!)
-      return
+      setErrorMessage(usernameStatus.data.errorMessage!);
+      return;
     }
 
     if (!usernameStatus.data.isAvailable) {
-      setErrorMessage("Already taken")
-      return
+      setErrorMessage('Already taken');
+      return;
     }
 
-    setErrorMessage(undefined)
-
-  }, [usernameStatus])
+    setErrorMessage(undefined);
+  }, [usernameStatus]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setErrorMessage(undefined)
-    setUsername(e.target.value)
-  }
-
+    setErrorMessage(undefined);
+    setUsername(e.target.value);
+  };
 
   const handleConfirm = (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -55,7 +52,7 @@ export default function EditUsername({ existingUsername, editUsernameMenu }: Edi
     editUsername(username || '', {
       onSuccess: () => {
         editUsernameMenu.value = null;
-      }
+      },
     });
   };
 
@@ -70,18 +67,29 @@ export default function EditUsername({ existingUsername, editUsernameMenu }: Edi
             onChange={handleInputChange}
             autoFocus={true}
           />
-          {username && username.length > 0 && (!usernameStatus.isSuccess ? <Spinner fontSize={"25px"} /> : !errorMessage ? <GrFormCheckmark className="checkmark" /> : <FiAlertTriangle className="warning" />)}
+          {username &&
+            username.length > 0 &&
+            (!usernameStatus.isSuccess ? (
+              <Spinner fontSize={'25px'} />
+            ) : !errorMessage ? (
+              <GrFormCheckmark className="checkmark" />
+            ) : (
+              <FiAlertTriangle className="warning" />
+            ))}
         </div>
         <div className="separator">
           <Separator />
         </div>
       </div>
-      <div className="username-status">{errorMessage ?? "\xa0"}</div>
+      <div className="username-status">{errorMessage ?? '\xa0'}</div>
       <div className="buttons">
         <MyButton isLoading={isPending} onClick={handleConfirm}>
           Confirm
         </MyButton>
-        <MyButton variant="secondary" onClick={() => editUsernameMenu.value = null}>
+        <MyButton
+          variant="secondary"
+          onClick={() => (editUsernameMenu.value = null)}
+        >
           Cancel
         </MyButton>
       </div>

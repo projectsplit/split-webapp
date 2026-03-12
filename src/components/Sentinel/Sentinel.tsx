@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import Spinner from "../Spinner/Spinner";
+import React, { useEffect, useRef } from 'react';
+import Spinner from '../Spinner/Spinner';
 
 interface SentinelProps {
   fetchPage: () => void;
@@ -13,7 +13,7 @@ const Sentinel: React.FC<SentinelProps> = ({
   fetchPage,
   hasMore,
   isFetchingPage,
-  id = "sentinel",
+  id = 'sentinel',
   isTop = false,
 }) => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -36,8 +36,15 @@ const Sentinel: React.FC<SentinelProps> = ({
   }, [fetchPage, hasMore, isFetchingPage, id]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", marginBottom: isTop ? "0px" : "20px" }}>
-      <div ref={sentinelRef} style={{ height: "1px" }} data-sentinel-id={id} />
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        marginBottom: isTop ? '0px' : '20px',
+      }}
+    >
+      <div ref={sentinelRef} style={{ height: '1px' }} data-sentinel-id={id} />
       {isFetchingPage && <Spinner />}
     </div>
   );

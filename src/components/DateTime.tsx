@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import DateTimePicker from "./DateTimePicker/DateTimePicker";
-import { styled } from "styled-components";
-import { DateTime as LuxonDateTime } from "luxon";
-import { toLuxon, toUtcString } from "../utils";
-import { DateTimeProps } from "../interfaces";
-import { FaCalendar } from "react-icons/fa";
+import { useEffect, useRef, useState } from 'react';
+import DateTimePicker from './DateTimePicker/DateTimePicker';
+import { styled } from 'styled-components';
+import { DateTime as LuxonDateTime } from 'luxon';
+import { toLuxon, toUtcString } from '../utils';
+import { DateTimeProps } from '../interfaces';
+import { FaCalendar } from 'react-icons/fa';
 
 export const DateTime = ({
   selectedDateTime,
@@ -15,9 +15,8 @@ export const DateTime = ({
   category,
   isDateShowing,
   showPicker,
-  setShowPicker
+  setShowPicker,
 }: DateTimeProps) => {
-
   const [realtimeUpdate, setRealtimeUpdate] = useState<boolean>(!isEdit);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -46,10 +45,10 @@ export const DateTime = ({
   }, [realtimeUpdate]);
 
   useEffect(() => {
-    window.addEventListener("mousedown", (e) => closeTimePicker(e));
+    window.addEventListener('mousedown', (e) => closeTimePicker(e));
 
     return () => {
-      window.removeEventListener("mousedown", closeTimePicker);
+      window.removeEventListener('mousedown', closeTimePicker);
     };
   }, []);
 
@@ -61,7 +60,12 @@ export const DateTime = ({
 
   return (
     <StyledDateTime ref={ref}>
-      <div className="main" onClick={(_) => { setShowPicker(!showPicker), isDateShowing.value = true }}>
+      <div
+        className="main"
+        onClick={(_) => {
+          (setShowPicker(!showPicker), (isDateShowing.value = true));
+        }}
+      >
         <FaCalendar className="calendarIcon" />
       </div>
       {showPicker && (

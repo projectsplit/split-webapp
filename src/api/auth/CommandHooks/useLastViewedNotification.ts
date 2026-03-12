@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { UpdateNotificationRequest, UserInfo } from "../../../types";
-import { apiClient } from "../../apiClients";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { UpdateNotificationRequest, UserInfo } from '../../../types';
+import { apiClient } from '../../apiClients';
 
 export const useLastViewedNotification = () => {
   const queryClient = useQueryClient();
@@ -14,9 +14,9 @@ export const useLastViewedNotification = () => {
       return updateLastViewedNotification({ timestamp });
     },
     onSuccess: async () => {
-      const currentUserInfo = queryClient.getQueryData<UserInfo>(["getMe"]);
+      const currentUserInfo = queryClient.getQueryData<UserInfo>(['getMe']);
       if (currentUserInfo) {
-        queryClient.setQueryData<UserInfo>(["getMe"], {
+        queryClient.setQueryData<UserInfo>(['getMe'], {
           ...currentUserInfo,
           hasNewerNotifications: false,
         });
@@ -32,7 +32,7 @@ const updateLastViewedNotification = async (
   req: UpdateNotificationRequest
 ): Promise<void> => {
   const response = await apiClient.put<void, AxiosResponse<void>>(
-    "/users/activity/last-viewed-notification",
+    '/users/activity/last-viewed-notification',
     req
   );
   return response.data;

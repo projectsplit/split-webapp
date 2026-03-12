@@ -1,6 +1,5 @@
-import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
-import { FetchedLabel, FetchedMembers } from "../../../types";
-
+import { BeautifulMentionsItemData } from 'lexical-beautiful-mentions';
+import { FetchedLabel, FetchedMembers } from '../../../types';
 
 export const handleInputChange = (
   searchTerm: string,
@@ -13,7 +12,7 @@ export const handleInputChange = (
     >
   >,
   fetchedMembers: FetchedMembers,
-  labels: FetchedLabel[],
+  labels: FetchedLabel[]
 ) => {
   if (!searchTerm) {
     setFilteredResults([]);
@@ -24,11 +23,10 @@ export const handleInputChange = (
     member.value.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-   const filteredLabels = labels
-    .filter((label) =>
-      label.value.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    
+  const filteredLabels = labels.filter((label) =>
+    label.value.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const combinedResults = [...filteredmembers, ...filteredLabels];
   setFilteredResults(combinedResults);
 };

@@ -1,6 +1,6 @@
-import { CSSTransition } from "react-transition-group";
-import ConfirmationForBudgetDeletion from "../../../pages/Budget/ConfirmationForBudgetDeletion/ConfirmationForBudgetDeletion";
-import { DeleteBudgetConfirmationAnimationProps } from "../../../interfaces";
+import { CSSTransition } from 'react-transition-group';
+import ConfirmationForBudgetDeletion from '../../../pages/Budget/ConfirmationForBudgetDeletion/ConfirmationForBudgetDeletion';
+import { DeleteBudgetConfirmationAnimationProps } from '../../../interfaces';
 
 export default function DeleteBudgetConfirmationAnimation({
   menu,
@@ -8,15 +8,12 @@ export default function DeleteBudgetConfirmationAnimation({
 }: DeleteBudgetConfirmationAnimationProps) {
   return (
     <CSSTransition
-      in={menu.value === "deleteBudgetConfirmation"}
+      in={menu.value === 'deleteBudgetConfirmation'}
       timeout={100}
       classNames="bottomslide"
       unmountOnExit
     >
-      <ConfirmationForBudgetDeletion
-        menu={menu}
-        removeBudget={removeBudget}
-      />
+      <ConfirmationForBudgetDeletion menu={menu} removeBudget={removeBudget} />
     </CSSTransition>
   );
 }

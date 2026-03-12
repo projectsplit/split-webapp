@@ -2,7 +2,7 @@ export const getLocaleFromCurrency = (currencyCode: string): string => {
   const currencyLocaleMap: { [key: string]: string } = {
     // INR: "ta-IN",
     // CNY: "zh-CN",
-   USD: "en-US",
+    USD: 'en-US',
     // EUR: "de-DE",
     // JPY: "ja-JP",
     // GBP: "en-GB",
@@ -119,7 +119,7 @@ export const getLocaleFromCurrency = (currencyCode: string): string => {
     // PGK: "en-PG",
     // PHP: "fil-PH",
     // PKR: "ur-PK",
-     PLN: "pl-PL",
+    PLN: 'pl-PL',
     // PYG: "gn-PY",
     // QAR: "ar-QA",
     // RON: "ro-RO",
@@ -167,5 +167,5 @@ export const getLocaleFromCurrency = (currencyCode: string): string => {
   };
 
   const locale = currencyLocaleMap[currencyCode];
-  return locale || "en-US";
+  return locale || 'en-US';
 };

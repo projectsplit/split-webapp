@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const StyledAnalytics = styled.div`
   display: flex;
@@ -59,13 +59,13 @@ export const StyledAnalytics = styled.div`
       height: 13px;
     }
   }
-   .spinner {
+  .spinner {
     display: flex;
     flex-direction: column;
     flex: 1;
     align-items: center;
     justify-content: center;
- 
+
     height: 100%;
   }
 `;

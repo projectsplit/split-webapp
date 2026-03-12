@@ -1,42 +1,40 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
-import {
-  Frequency,
-  SpendingInfoResponse,
-  UserInfo,
-} from "../../../types";
-import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import "../../../styles/freakflags/freakflags.css";
-import { StyledCreateBudget } from "./CreateBudget.styled";
-import SetUpSpendingGoal from "./SetUpSpendingGoal/SetUpSpendingGoal";
-import SpendingCycle from "./SpendingCycle/SpendingCycle";
-import { useSignal } from "@preact/signals-react";
-import MyButton from "../../../components/MyButton/MyButton";
-import TopBarWithBackButton from "../../../components/TopBarWithBackButton/TopBarWithBackButton";
-import CurrencyOptionsAnimation from "../../../components/Animations/CurrencyOptionsAnimation";
-import { useCreateBudget } from "../../../api/auth/CommandHooks/useCreateBudget";
-import { useSpendingInfo } from "../../../api/auth/QueryHooks/useSpengindInfo";
-import MenuAnimationBackground from "../../../components/Animations/MenuAnimationBackground";
-import InfoBoxAnimation from "../../../components/Animations/InfoBoxAnimation";
-import CreateBudgetConfirmationAnimation from "../../../components/Animations/BudgetAnimations/CreateBudgetConfirmationAnimation";
-import { handleInputChange } from "../../../helpers/handleInputChange";
-import {submitBudgetFn } from "./helpers/submitBudgetFn";
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { Frequency, SpendingInfoResponse, UserInfo } from '../../../types';
+import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
+import '../../../styles/freakflags/freakflags.css';
+import { StyledCreateBudget } from './CreateBudget.styled';
+import SetUpSpendingGoal from './SetUpSpendingGoal/SetUpSpendingGoal';
+import SpendingCycle from './SpendingCycle/SpendingCycle';
+import { useSignal } from '@preact/signals-react';
+import MyButton from '../../../components/MyButton/MyButton';
+import TopBarWithBackButton from '../../../components/TopBarWithBackButton/TopBarWithBackButton';
+import CurrencyOptionsAnimation from '../../../components/Animations/CurrencyOptionsAnimation';
+import { useCreateBudget } from '../../../api/auth/CommandHooks/useCreateBudget';
+import { useSpendingInfo } from '../../../api/auth/QueryHooks/useSpengindInfo';
+import MenuAnimationBackground from '../../../components/Animations/MenuAnimationBackground';
+import InfoBoxAnimation from '../../../components/Animations/InfoBoxAnimation';
+import CreateBudgetConfirmationAnimation from '../../../components/Animations/BudgetAnimations/CreateBudgetConfirmationAnimation';
+import { handleInputChange } from '../../../helpers/handleInputChange';
+import { submitBudgetFn } from './helpers/submitBudgetFn';
+import { ScopeSelector } from './ScopeSelector/ScopeSelector';
+import { ScopeSelectionMenu } from '@/components/Menus/ScopeSelectionMenu/ScopeSelectionMenu';
 
 export default function CreateBudget() {
-
-  const [amount, setAmount] = useState<string>("");
-  const displayedAmount = useSignal<string>("");
+  const [amount, setAmount] = useState<string>('');
+  const displayedAmount = useSignal<string>('');
   const openCalendar = useSignal<boolean>(false);
   const openCustomDateCalendar = useSignal<boolean>(false);
-  const startDate = useSignal<string>("");
-  const endDate = useSignal<string>("");
-  const pickingTarget = useSignal<"start" | "end" | null>(null);
-  const calendarDay = useSignal<string>("");
+  const startDate = useSignal<string>('');
+  const endDate = useSignal<string>('');
+  const pickingTarget = useSignal<'start' | 'end' | null>(null);
+  const calendarDay = useSignal<string>('');
   const budgettype = useSignal<Frequency>(Frequency.Monthly);
   const hasSwitchedBudgetType = useSignal<boolean>(false);
   const submitBudgetErrors = useSignal<any[]>([]);
   const menu = useSignal<string | null>(null);
+  const scopeMenu = useSignal<string | null>(null);
   const { userInfo, timeZoneId } = useOutletContext<{
     userInfo: UserInfo;
     timeZoneId: string;
@@ -45,10 +43,10 @@ export default function CreateBudget() {
   const [currencySymbol, setCurrencySymbol] = useState<string>('');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const budgetInfoQueryKey = ["budget"];
-  const spendingInfoQueryKey = ["spending", budgettype.value, currencySymbol];
+  const budgetInfoQueryKey = ['budget'];
+  const spendingInfoQueryKey = ['spending', budgettype.value, currencySymbol];
 
-  const createBudget = useCreateBudget(navigate, submitBudgetErrors)
+  const createBudget = useCreateBudget(navigate, submitBudgetErrors);
 
   useEffect(() => {
     if (userInfo?.currency) {
@@ -62,38 +60,38 @@ export default function CreateBudget() {
   // );
 
   const data = {
-    "budgetSubmitted": false,
-    "totalAmountSpent": "0",
-    "currency": "USD"
-  }
+    budgetSubmitted: false,
+    totalAmountSpent: '0',
+    currency: 'USD',
+  };
   const isFetching = false;
   const isStale = false;
 
   const handleInputChangeCallback = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       handleInputChange(e, currencySymbol, displayedAmount, setAmount);
-
     },
     [currencySymbol, displayedAmount, setAmount]
   );
 
-const submitBudget = () => submitBudgetFn(
-  budgettype,
-  createBudget,
-  amount,
-  currencySymbol,
-  calendarDay,
-  startDate,
-  endDate,
-  submitBudgetErrors,
-  openCalendar,
-  hasSwitchedBudgetType,
-  displayedAmount,
-  menu,
-  setAmount,
-  queryClient,
-  budgetInfoQueryKey,
-)
+  const submitBudget = () =>
+    submitBudgetFn(
+      budgettype,
+      createBudget,
+      amount,
+      currencySymbol,
+      calendarDay,
+      startDate,
+      endDate,
+      submitBudgetErrors,
+      openCalendar,
+      hasSwitchedBudgetType,
+      displayedAmount,
+      menu,
+      setAmount,
+      queryClient,
+      budgetInfoQueryKey
+    );
 
   const querydata = queryClient.getQueryData(
     spendingInfoQueryKey
@@ -110,8 +108,11 @@ const submitBudget = () => submitBudgetFn(
   const handldeCurrencyOptionsClick = (curr: string) => {
     //setCurrency(currency);
     setCurrencySymbol(curr);
-    queryClient.invalidateQueries({ queryKey: ["spending", budgettype, curr], exact: false });
-    queryClient.getQueryData(["spending", budgettype, curr]);
+    queryClient.invalidateQueries({
+      queryKey: ['spending', budgettype, curr],
+      exact: false,
+    });
+    queryClient.getQueryData(['spending', budgettype, curr]);
     menu.value = null;
   };
 
@@ -144,19 +145,19 @@ const submitBudget = () => submitBudgetFn(
         endDate={endDate}
         pickingTarget={pickingTarget}
       />
-
+      <ScopeSelector onClick={() => (scopeMenu.value = 'scopeSelector')} />
       {isFetching ? (
         <></>
       ) : (
         querydata && (
           <div className="spentInfo">
             <div>
-              You have spent{" "}
+              You have spent{' '}
               {displayCurrencyAndAmount(
                 data?.totalAmountSpent,
                 querydata?.currency
-              )}{" "}
-              this {budgettype.value === 1 ? "month" : "week"}
+              )}{' '}
+              this {budgettype.value === 1 ? 'month' : 'week'}
             </div>
           </div>
         )
@@ -167,7 +168,7 @@ const submitBudget = () => submitBudgetFn(
           fontSize="16"
           onClick={() => {
             if (querydata.budgetSubmitted) {
-              menu.value = "createBudgetConfirmation";
+              menu.value = 'createBudgetConfirmation';
             } else {
               submitBudget();
             }
@@ -178,6 +179,9 @@ const submitBudget = () => submitBudgetFn(
       </div>
 
       <MenuAnimationBackground menu={menu} />
+      {scopeMenu.value === 'scopeSelector' && (
+        <ScopeSelectionMenu menu={scopeMenu} />
+      )}
       <CreateBudgetConfirmationAnimation
         menu={menu}
         submitBudget={submitBudget}
@@ -188,7 +192,6 @@ const submitBudget = () => submitBudgetFn(
         clickHandler={handldeCurrencyOptionsClick}
         selectedCurrency={currencySymbol}
       />
-
     </StyledCreateBudget>
   );
 }

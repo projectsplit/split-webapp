@@ -1,10 +1,10 @@
-import { AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { useQuery } from "@tanstack/react-query";
+import { AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { useQuery } from '@tanstack/react-query';
 
 export const useGetJoinCode = (code: string) => {
   return useQuery<any, Error, GetJoinCodeResponse>({
-    queryKey: ["joinCode", code],
+    queryKey: ['joinCode', code],
     queryFn: () => getJoinCode(code),
   });
 };

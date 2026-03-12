@@ -1,11 +1,10 @@
-import IonIcon from "@reacticons/ionicons";
-import { Details } from "../types";
-import { displayCurrencyAndAmount } from "../helpers/displayCurrencyAndAmount";
+import IonIcon from '@reacticons/ionicons';
+import { Details } from '../types';
+import { displayCurrencyAndAmount } from '../helpers/displayCurrencyAndAmount';
 
 export const TreeItemBuilder = (
   details: Details | undefined
 ): JSX.Element[] => {
-
   if (!details) return [];
 
   const filteredDetails = Object.fromEntries(
@@ -18,10 +17,12 @@ export const TreeItemBuilder = (
     return [
       <div className="groupsInfo">
         <div className="settled">
-          <div><strong>You</strong>&nbsp;are settled&nbsp;</div>
+          <div>
+            <strong>You</strong>&nbsp;are settled&nbsp;
+          </div>
           <IonIcon name="checkmark-sharp" className="checkmark" />
         </div>
-      </div>
+      </div>,
     ];
   }
 
@@ -29,7 +30,7 @@ export const TreeItemBuilder = (
     if (amount > 0) {
       return (
         <div className="groupsInfo" key={index}>
-          <strong>You</strong> owe{" "}
+          <strong>You</strong> owe{' '}
           <span className="owe">
             {displayCurrencyAndAmount(Math.abs(amount).toString(), currency)}
           </span>
@@ -38,7 +39,7 @@ export const TreeItemBuilder = (
     } else if (amount < 0) {
       return (
         <div className="groupsInfo" key={index}>
-          <strong>You</strong> are owed{" "}
+          <strong>You</strong> are owed{' '}
           <span className="owed">
             {displayCurrencyAndAmount(Math.abs(amount).toString(), currency)}
           </span>

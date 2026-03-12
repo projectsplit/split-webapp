@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledMostRecentSection = styled.div`
   display: flex;
@@ -7,7 +7,7 @@ export const StyledMostRecentSection = styled.div`
   margin-bottom: 1rem;
 
   .mostRecentMsg {
-      font-size: 12px;
-      margin-left: 5px;
+    font-size: 12px;
+    margin-left: 5px;
   }
-  `;
+`;

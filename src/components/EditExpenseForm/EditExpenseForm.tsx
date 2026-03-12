@@ -1,5 +1,5 @@
-import { EditExpenseFormProps } from "../../interfaces";
-import ExpenseForm from "../ExpenseForm/ExpenseForm";
+import { EditExpenseFormProps } from '../../interfaces';
+import ExpenseForm from '../ExpenseForm/ExpenseForm';
 
 const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   groupId,
@@ -13,7 +13,7 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({
   currency,
   isnonGroupExpense,
   nonGroupUsers,
-  isCreateExpense
+  isCreateExpense,
 }) => {
   if (!expense) {
     return <div>Error: Expense not found.</div>;

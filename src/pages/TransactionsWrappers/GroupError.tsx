@@ -1,11 +1,11 @@
-import { RiWifiOffLine } from "react-icons/ri";
-import MyButton from "../../components/MyButton/MyButton";
-import { MdOutlineGroupOff, MdOutlineTimerOff } from "react-icons/md";
-import { LuServerOff } from "react-icons/lu";
-import { GroupErrorProps } from "../../interfaces";
+import { RiWifiOffLine } from 'react-icons/ri';
+import MyButton from '../../components/MyButton/MyButton';
+import { MdOutlineGroupOff, MdOutlineTimerOff } from 'react-icons/md';
+import { LuServerOff } from 'react-icons/lu';
+import { GroupErrorProps } from '../../interfaces';
 
-const GroupError = ({ groupError }:GroupErrorProps) => {
-  if (groupError?.value?.code === "ERR_NETWORK") {
+const GroupError = ({ groupError }: GroupErrorProps) => {
+  if (groupError?.value?.code === 'ERR_NETWORK') {
     return (
       <div className="group">
         <div className="noData">
@@ -15,13 +15,13 @@ const GroupError = ({ groupError }:GroupErrorProps) => {
           <RiWifiOffLine className="icon" />
         </div>
         <div className="retry">
-          <MyButton onClick={()=> window.location.reload()}>Retry</MyButton>
+          <MyButton onClick={() => window.location.reload()}>Retry</MyButton>
         </div>
       </div>
     );
   }
 
-  if (groupError?.value?.code === "ERR_CANCELED") {
+  if (groupError?.value?.code === 'ERR_CANCELED') {
     return (
       <div className="group">
         <div className="noData">
@@ -31,7 +31,7 @@ const GroupError = ({ groupError }:GroupErrorProps) => {
           <MdOutlineTimerOff className="icon" />
         </div>
         <div className="retry">
-          <MyButton onClick={()=> window.location.reload()}>Retry</MyButton>
+          <MyButton onClick={() => window.location.reload()}>Retry</MyButton>
         </div>
       </div>
     );
@@ -39,7 +39,7 @@ const GroupError = ({ groupError }:GroupErrorProps) => {
 
   if (
     groupError?.value &&
-    typeof groupError.value.status === "number" &&
+    typeof groupError.value.status === 'number' &&
     groupError.value.status >= 500
   ) {
     return (
@@ -49,7 +49,7 @@ const GroupError = ({ groupError }:GroupErrorProps) => {
           <LuServerOff className="icon" />
         </div>
         <div className="retry">
-          <MyButton onClick={()=>window.location.reload()}>Retry</MyButton>
+          <MyButton onClick={() => window.location.reload()}>Retry</MyButton>
         </div>
       </div>
     );
@@ -57,7 +57,7 @@ const GroupError = ({ groupError }:GroupErrorProps) => {
 
   if (
     groupError?.value &&
-    typeof groupError.value.status === "number" &&
+    typeof groupError.value.status === 'number' &&
     groupError.value.status === 404
   ) {
     return (

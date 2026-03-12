@@ -1,5 +1,5 @@
-import { ExpenseFormProps } from "../../interfaces";
-import ExpenseForm from "../ExpenseForm/ExpenseForm";
+import { ExpenseFormProps } from '../../interfaces';
+import ExpenseForm from '../ExpenseForm/ExpenseForm';
 
 const CreateExpenseForm: React.FC<ExpenseFormProps> = ({
   groupId,
@@ -17,7 +17,7 @@ const CreateExpenseForm: React.FC<ExpenseFormProps> = ({
   nonGroupMenu,
   fromHomeGroup,
   fromHome,
-  fromPersonal
+  fromPersonal,
 }) => {
   return (
     <ExpenseForm

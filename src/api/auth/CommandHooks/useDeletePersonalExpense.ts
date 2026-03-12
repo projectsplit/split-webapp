@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { DeleteExpenseRequest, ExpenseResponseItem } from "../../../types";
-import { apiClient } from "../../apiClients";
-import { Signal } from "@preact/signals-react";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { DeleteExpenseRequest, ExpenseResponseItem } from '../../../types';
+import { apiClient } from '../../apiClients';
+import { Signal } from '@preact/signals-react';
 
 export const useDeletePersonalExpense = (
   menu: Signal<string | null>,
@@ -15,11 +15,11 @@ export const useDeletePersonalExpense = (
     mutationFn: (expenseId) => deleteExpense({ expenseId }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["personalExpenses"],
+        queryKey: ['personalExpenses'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["cumulativeArray"],
+        queryKey: ['cumulativeArray'],
         exact: false,
       });
       selectedExpense.value = null;
@@ -35,7 +35,7 @@ export const useDeletePersonalExpense = (
 
 const deleteExpense = async (req: DeleteExpenseRequest): Promise<void> => {
   const response = await apiClient.post<void, AxiosResponse<void>>(
-    "/expenses/delete-personal",
+    '/expenses/delete-personal',
     req
   );
   return response.data;

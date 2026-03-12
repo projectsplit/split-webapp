@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,25 +9,25 @@ import {
   Tooltip,
   Legend,
   Filler,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-import { StyledBarChart } from "./BarChart.styled";
-import Carousel from "../../Carousel/Carousel";
-import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { StyledBarChart } from './BarChart.styled';
+import Carousel from '../../Carousel/Carousel';
+import { getCarouselItemsBasedOnCycle } from '../../helpers/getCarouselItemsBasedOnCycle';
 
-import { getAllDaysInMonth } from "../../../../helpers/monthlyDataHelpers";
-import { createGroupedLabels } from "../../helpers/createGroupedLabels";
-import { getChartOptions } from "./options/getChartOptions";
-import { groupExpensesPerWeek } from "../../helpers/groupExpensesPerWeek";
-import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
-import { noData } from "../plugins/noData";
-import { Frequency } from "../../../../types";
-import { deCumulArray } from "../../helpers/deCumulArray";
-import { horizontalLine } from "../plugins/horizontalLine";
-import { months, shortWeekdays } from "../../../../constants";
-import { BarChartProps } from "../../../../interfaces";
-import { getCumulativeShares } from "../../helpers/getCumulativeArray";
+import { getAllDaysInMonth } from '../../../../helpers/monthlyDataHelpers';
+import { createGroupedLabels } from '../../helpers/createGroupedLabels';
+import { getChartOptions } from './options/getChartOptions';
+import { groupExpensesPerWeek } from '../../helpers/groupExpensesPerWeek';
+import { useStartAndEndDatesEffect } from '../../hooks/useStartEndDatesEffect';
+import { noData } from '../plugins/noData';
+import { Frequency } from '../../../../types';
+import { deCumulArray } from '../../helpers/deCumulArray';
+import { horizontalLine } from '../plugins/horizontalLine';
+import { months, shortWeekdays } from '../../../../constants';
+import { BarChartProps } from '../../../../interfaces';
+import { getCumulativeShares } from '../../helpers/getCumulativeArray';
 
 ChartJS.register(
   CategoryScale,
@@ -128,9 +128,9 @@ export function BarChart({
     labels: labels,
     datasets: [
       {
-        label: "cumulative spending",
+        label: 'cumulative spending',
         data: expenseData,
-        backgroundColor: "rgba(153, 30, 251, 0.5)",
+        backgroundColor: 'rgba(153, 30, 251, 0.5)',
         borderWidth: 2,
       },
     ],

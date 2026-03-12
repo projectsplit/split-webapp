@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ToggleLabel = styled.label`
   position: relative;
@@ -7,7 +7,7 @@ export const ToggleLabel = styled.label`
   height: 34px;
 `;
 
-export const Checkbox = styled.input.attrs({ type: "checkbox" })`
+export const Checkbox = styled.input.attrs({ type: 'checkbox' })`
   opacity: 0;
   width: 0;
   height: 0;
@@ -36,7 +36,7 @@ export const Slider = styled.span`
 
   &:before {
     position: absolute;
-    content: "";
+    content: '';
     height: 26px;
     width: 26px;
     left: 4px;

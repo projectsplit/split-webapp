@@ -1,13 +1,13 @@
-import { Context } from "chartjs-plugin-datalabels/types/context";
-import { roundThousandsAndMillions } from "../../../../../helpers/roundThousandsAndMils";
-import { Frequency } from "../../../../../types";
-import { enhanceStringArray } from "../../../helpers/enhanceStringArray";
-import { generateYearsArray } from "../../../helpers/generateYearsArray";
-import { isCurrentPeriod } from "../../../helpers/isCurrentPeriod";
-import { swapMonthDayToDayMonth } from "../../../helpers/swapMonthDayToDayMonth";
-import { displayCurrencyAndAmount } from "../../../../../helpers/displayCurrencyAndAmount";
-import { months, shortWeekdays } from "../../../../../constants";
-import { getSymbolFromCurrency } from "../../../../../helpers/currency-symbol-map";
+import { Context } from 'chartjs-plugin-datalabels/types/context';
+import { roundThousandsAndMillions } from '../../../../../helpers/roundThousandsAndMils';
+import { Frequency } from '../../../../../types';
+import { enhanceStringArray } from '../../../helpers/enhanceStringArray';
+import { generateYearsArray } from '../../../helpers/generateYearsArray';
+import { isCurrentPeriod } from '../../../helpers/isCurrentPeriod';
+import { swapMonthDayToDayMonth } from '../../../helpers/swapMonthDayToDayMonth';
+import { displayCurrencyAndAmount } from '../../../../../helpers/displayCurrencyAndAmount';
+import { months, shortWeekdays } from '../../../../../constants';
+import { getSymbolFromCurrency } from '../../../../../helpers/currency-symbol-map';
 
 export const getChartOptions = (
   isSuccess: boolean,
@@ -25,22 +25,26 @@ export const getChartOptions = (
 ) => {
   const date = new Date(selectedYear, selectedTimeCycleIndex, 1);
 
-  const dateOptions: Intl.DateTimeFormatOptions = { month: "long" };
+  const dateOptions: Intl.DateTimeFormatOptions = { month: 'long' };
 
-  const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
+  const fullMonthName = date.toLocaleDateString('en-US', dateOptions);
 
   const enhancedWeekDays = enhanceStringArray(shortWeekdays, fractalFactor);
 
-  const abbreviatedMonths = months.map((month) => month.slice(0, 3))
+  const abbreviatedMonths = months.map((month) => month.slice(0, 3));
 
-  const enhancedAbbreviatedMonths = enhanceStringArray(abbreviatedMonths, fractalFactor);
+  const enhancedAbbreviatedMonths = enhanceStringArray(
+    abbreviatedMonths,
+    fractalFactor
+  );
 
-  const currencySymbol = getSymbolFromCurrency(currency)
+  const currencySymbol = getSymbolFromCurrency(currency);
 
   return {
     animation: {
       // duration: 500,
-      onProgress: function (animation: any) { //clears the top left part of the canvas where animation of datalabel is not shown correctly when moving from 30 to 31 datapoints
+      onProgress: function (animation: any) {
+        //clears the top left part of the canvas where animation of datalabel is not shown correctly when moving from 30 to 31 datapoints
         const chartInstance = animation.chart;
         const ctx = chartInstance.ctx;
         const width = chartInstance.width;
@@ -49,7 +53,7 @@ export const getChartOptions = (
         const topLeftHeight = height * 0.03;
         // Clear the canvas
         ctx.clearRect(0, 0, topLeftWidth, topLeftHeight);
-      }
+      },
     },
     isSuccess: isSuccess,
     responsive: true,
@@ -58,29 +62,28 @@ export const getChartOptions = (
     plugins: {
       legend: {
         onClick: function (e: Event) {
-          if (e.stopPropagation)
-            e.stopPropagation();
+          if (e.stopPropagation) e.stopPropagation();
         },
         display: isSuccess && expensePoints?.length !== 0,
-        position: "top",
-        align: "start",
+        position: 'top',
+        align: 'start',
         labels: {
           usePointStyle: false, // use a square instead of a rectangle
           boxWidth: 10, // set the width of the square
           boxHeight: 10, // set the height of the square
-          color: "#858585", // set the color of the square
+          color: '#858585', // set the color of the square
         },
       },
       title: {
         display: false, //isSuccess && cumulArrayData?.length !== 0,
-        text: "Total Spending",
-        color: "#a1a1a1",
+        text: 'Total Spending',
+        color: '#a1a1a1',
       },
       customCanvasBackgroundColor: {
-        color: "#27273C",
+        color: '#27273C',
       },
       tooltip: {
-        yAlign: "bottom",
+        yAlign: 'bottom',
         displayColors: false,
         enabled: true,
         callbacks: {
@@ -89,15 +92,19 @@ export const getChartOptions = (
             if (selectedCycle === Frequency.Monthly)
               return (
                 labels[index] +
-                " " +
+                ' ' +
                 fullMonthName +
-                " " +
+                ' ' +
                 selectedYear.toString()
               );
             if (selectedCycle === Frequency.Weekly)
-              return swapMonthDayToDayMonth(labels)[index] + " " + selectedYear.toString();
+              return (
+                swapMonthDayToDayMonth(labels)[index] +
+                ' ' +
+                selectedYear.toString()
+              );
             if (selectedCycle === Frequency.Annually)
-              return labels[index] + " " + selectedYear.toString();
+              return labels[index] + ' ' + selectedYear.toString();
           },
           label: (context: any) => {
             const value: number = context.parsed.y;
@@ -108,73 +115,99 @@ export const getChartOptions = (
                   selectedTimeCycleIndex === new Date().getMonth() &&
                   context.dataIndex === context.dataset.data.length - 1
                 ) {
-                  return value >= 0 ? `Forecast Spending: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Forecast Receipts: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
+                  return value >= 0
+                    ? `Forecast Spending: ${displayCurrencyAndAmount(value.toString(), currency)}`
+                    : `Forecast Receipts: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
                 }
-                return value >= 0 ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
+                return value >= 0
+                  ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}`
+                  : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
               case Frequency.Weekly:
                 if (
                   selectedTimeCycleIndex === currentWeekIndex &&
                   context.dataIndex === context.dataset.data.length - 1
                 ) {
-                  return value >= 0 ? `Forecast Spending: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Forecast Receipts: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
+                  return value >= 0
+                    ? `Forecast Spending: ${displayCurrencyAndAmount(value.toString(), currency)}`
+                    : `Forecast Receipts: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
                 }
-                return value >= 0 ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
+                return value >= 0
+                  ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}`
+                  : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
               case Frequency.Annually:
                 if (
-                  selectedTimeCycleIndex === generateYearsArray().indexOf(selectedYear) &&
+                  selectedTimeCycleIndex ===
+                    generateYearsArray().indexOf(selectedYear) &&
                   context.dataIndex === context.dataset.data.length - 1
                 ) {
-                  return value >= 0 ? `Forecast Spending: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Forecast Receipts: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
+                  return value >= 0
+                    ? `Forecast Spending: ${displayCurrencyAndAmount(value.toString(), currency)}`
+                    : `Forecast Receipts: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
                 }
-                return value >= 0 ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
+                return value >= 0
+                  ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}`
+                  : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
 
               default:
-                return value >= 0 ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
+                return value >= 0
+                  ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}`
+                  : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
             }
           },
         },
       },
       datalabels: {
         display: true,
-        color: "white",
+        color: 'white',
         font: {
           size: 14,
-          weight: "bold",
+          weight: 'bold',
         },
 
         align: (context: any) => {
           if (
-            isCurrentPeriod(selectedCycle, selectedTimeCycleIndex, isSuccess, expensePoints, currentWeekIndex,selectedYear)
-            &&
-            isNaN(context.dataset.data[context.dataIndex - 1])
-            &&
-            context.dataset.data.reduce((count: number, num: number) => isNaN(num) ? count + 1 : count, 0) === 1
-            &&
+            isCurrentPeriod(
+              selectedCycle,
+              selectedTimeCycleIndex,
+              isSuccess,
+              expensePoints,
+              currentWeekIndex,
+              selectedYear
+            ) &&
+            isNaN(context.dataset.data[context.dataIndex - 1]) &&
+            context.dataset.data.reduce(
+              (count: number, num: number) => (isNaN(num) ? count + 1 : count),
+              0
+            ) === 1 &&
             context.dataIndex !== 0
           ) {
-            return "bottom"
+            return 'bottom';
           } else {
-            return "top"
+            return 'top';
           }
-        },// if there is a forecast value and the current value is one datapoint away, show current datapoint at bottom
+        }, // if there is a forecast value and the current value is one datapoint away, show current datapoint at bottom
         padding: 10,
         formatter: (value: number, context: Context) => {
-
           // Show numeric value over graph for first, middle, and last data points
           if (
             context.dataIndex === 0 ||
             context.dataIndex === context.dataset.data.length - 1 ||
-            (enhancedDatesToNumbers[context.dataIndex] === 15
-              && !isCurrentPeriod(selectedCycle, selectedTimeCycleIndex, isSuccess, expensePoints, currentWeekIndex,selectedYear)) ||
+            (enhancedDatesToNumbers[context.dataIndex] === 15 &&
+              !isCurrentPeriod(
+                selectedCycle,
+                selectedTimeCycleIndex,
+                isSuccess,
+                expensePoints,
+                currentWeekIndex,
+                selectedYear
+              )) ||
             lastNumberBeforeNaN === context.dataIndex
           ) {
             if (value < 0) {
               // If negative, format within parentheses
-              return (
-                `(${currencySymbol}${((roundThousandsAndMillions(value)))})`
-              );
+              return `(${currencySymbol}${roundThousandsAndMillions(value)})`;
             } else {
-              return `${currencySymbol}` + roundThousandsAndMillions((value));
+              return `${currencySymbol}` + roundThousandsAndMillions(value);
             }
           } else {
             return null;
@@ -197,16 +230,19 @@ export const getChartOptions = (
           display: false,
         },
         ticks: {
-          color: "#DDDDDD",
+          color: '#DDDDDD',
           font: {
-            weight: "bold",
+            weight: 'bold',
             size: 20,
           },
           callback: (index: number, value: number) => {
             switch (selectedCycle) {
               case Frequency.Monthly:
                 // show the x axis for the first and last date of the month
-                if (index === 0 || index === enhancedDatesToNumbers.length - 1) {
+                if (
+                  index === 0 ||
+                  index === enhancedDatesToNumbers.length - 1
+                ) {
                   return labels[index];
                 }
                 // show x axis values for intervals of 5
@@ -216,13 +252,12 @@ export const getChartOptions = (
                 ) {
                   return Math.floor(parseFloat(labels[index]))
                     .toString()
-                    .padStart(2, "0");
+                    .padStart(2, '0');
                 }
 
                 break;
 
               case Frequency.Weekly:
-
                 if (
                   index === 0 ||
                   index === enhancedWeekDays.length - 1 ||
@@ -233,7 +268,6 @@ export const getChartOptions = (
                 break;
 
               case Frequency.Annually:
-
                 if (
                   index === 0 ||
                   index === enhancedAbbreviatedMonths.length - 1 ||
@@ -251,7 +285,7 @@ export const getChartOptions = (
         display: false,
         grid: {
           display: false,
-        }
+        },
       },
     },
     elements: {
@@ -260,9 +294,9 @@ export const getChartOptions = (
         borderWidth: 3,
         hitRadius: hitRadius,
         hoverRadius: 10,
-        pointStyle: "circle",
+        pointStyle: 'circle',
         pointLabelFontSize: 14,
-        pointLabelFontWeight: "bold",
+        pointLabelFontWeight: 'bold',
       },
     },
   } as any;

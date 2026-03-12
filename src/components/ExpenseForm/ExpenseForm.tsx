@@ -1,27 +1,27 @@
-import { useEffect, useRef, } from "react";
-import { PickerMember, SplitCategory, UserInfo } from "@/types";
-import MenuAnimationBackground from "@/components/Animations/MenuAnimationBackground";
-import CurrencyOptionsAnimation from "@/components/Animations/CurrencyOptionsAnimation";
-import InputMonetary from "@/components/InputMonetary/InputMonetary";
-import { useSignal } from "@preact/signals-react";
-import { ExpenseFormProps } from "@/interfaces";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { StyledExpenseForm } from "./ExpenseForm.styled";
-import { useCreateExpenseMutation } from "./hooks/useCreateExpenseMutation";
-import { LocationDisplay } from "./components/LocationDisplay/LocationDisplay";
-import DateDisplay from "./components/DateDisplay/DateDisplay";
-import { LabelMenu } from "./components/LabelMenu/LabelMenu";
-import LabelsDisplay from "./components/LabelsDisplay/LabelsDisplay";
-import FormInputWithTag from "./components/FormInputWithTag/FormInputWithTag";
-import DetailedSharedExpenseText from "./components/DetailedSharedExpenseText/DetailedSharedExpenseText";
-import { ShareExpenseButtons } from "./components/ShareExpenseButtons/ShareExpenseButtons";
-import { useAdjustedMembers } from "./hooks/useAdjustedMembers";
-import { useExpenseFormStore } from "./hooks/useExpenseFormStore";
-import { ExpenseFormHeader } from "./components/ExpenseFormHeader/ExpenseFormHeader";
-import { ExpenseFormFooter } from "./components/ExpenseFormFooter/ExpenseFormFooter";
-import { useHandlers } from "./hooks/useHandlers";
-import { useEditExpenseMutation } from "@/api/auth/CommandHooks/useEditExpenseMutation";
-import GeneralWarningMenuAnimation from "../Animations/GeneralWarningMenuAnimation";
+import { useEffect, useRef } from 'react';
+import { PickerMember, SplitCategory, UserInfo } from '@/types';
+import MenuAnimationBackground from '@/components/Animations/MenuAnimationBackground';
+import CurrencyOptionsAnimation from '@/components/Animations/CurrencyOptionsAnimation';
+import InputMonetary from '@/components/InputMonetary/InputMonetary';
+import { useSignal } from '@preact/signals-react';
+import { ExpenseFormProps } from '@/interfaces';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { StyledExpenseForm } from './ExpenseForm.styled';
+import { useCreateExpenseMutation } from './hooks/useCreateExpenseMutation';
+import { LocationDisplay } from './components/LocationDisplay/LocationDisplay';
+import DateDisplay from './components/DateDisplay/DateDisplay';
+import { LabelMenu } from './components/LabelMenu/LabelMenu';
+import LabelsDisplay from './components/LabelsDisplay/LabelsDisplay';
+import FormInputWithTag from './components/FormInputWithTag/FormInputWithTag';
+import DetailedSharedExpenseText from './components/DetailedSharedExpenseText/DetailedSharedExpenseText';
+import { ShareExpenseButtons } from './components/ShareExpenseButtons/ShareExpenseButtons';
+import { useAdjustedMembers } from './hooks/useAdjustedMembers';
+import { useExpenseFormStore } from './hooks/useExpenseFormStore';
+import { ExpenseFormHeader } from './components/ExpenseFormHeader/ExpenseFormHeader';
+import { ExpenseFormFooter } from './components/ExpenseFormFooter/ExpenseFormFooter';
+import { useHandlers } from './hooks/useHandlers';
+import { useEditExpenseMutation } from '@/api/auth/CommandHooks/useEditExpenseMutation';
+import GeneralWarningMenuAnimation from '../Animations/GeneralWarningMenuAnimation';
 
 export default function ExpenseForm({
   groupMembers,
@@ -40,11 +40,12 @@ export default function ExpenseForm({
   nonGroupMenu,
   fromHomeGroup,
   fromHome,
-  fromPersonal
+  fromPersonal,
 }: ExpenseFormProps) {
-
   const isInitialRender = useRef<boolean>(true);
-  const userExistsInCategory = useSignal<Record<SplitCategory, boolean | undefined>>({ Participants: false, Payers: false });
+  const userExistsInCategory = useSignal<
+    Record<SplitCategory, boolean | undefined>
+  >({ Participants: false, Payers: false });
   const navigate = useNavigate();
   const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
   const inputs = useExpenseFormStore();
@@ -63,7 +64,7 @@ export default function ExpenseForm({
   }, [inputs.initialize, isCreateExpense, expense?.id, currency, userInfo]);
 
   useEffect(() => {
-    if (inputs.isSubmitting) return
+    if (inputs.isSubmitting) return;
     inputs.updateMembers({
       groupMembers,
       nonGroupUsers,
@@ -90,26 +91,27 @@ export default function ExpenseForm({
   const isDateShowing = useSignal<boolean>(!isCreateExpense);
   const labelMenuIsOpen = useSignal<boolean>(false);
   const displayedAmount = useSignal<string>(
-    isCreateExpense || !expense ? "" : expense.amount
+    isCreateExpense || !expense ? '' : expense.amount
   );
 
-  const { participants, payers, adjustParticipants, adjustPayers } = useAdjustedMembers({
-    participantsByCategory: inputs.participantsByCategory,
-    payersByCategory: inputs.payersByCategory,
-    participantsCategory: inputs.participantsCategory,
-    payersCategory: inputs.payersCategory,
-    nonGroupUsers,
-    isnonGroupExpense,
-    userInfo,
-    userMemberId: inputs.userMemberId,
-  });
+  const { participants, payers, adjustParticipants, adjustPayers } =
+    useAdjustedMembers({
+      participantsByCategory: inputs.participantsByCategory,
+      payersByCategory: inputs.payersByCategory,
+      participantsCategory: inputs.participantsCategory,
+      payersCategory: inputs.payersCategory,
+      nonGroupUsers,
+      isnonGroupExpense,
+      userInfo,
+      userMemberId: inputs.userMemberId,
+    });
 
   const setParticipants = (newParticipants: PickerMember[]) => {
     inputs.setParticipantsByCategory((prev) => ({
       ...prev,
       [inputs.participantsCategory.value]: newParticipants,
     }));
-    inputs.validateForm({ showErrors: true })
+    inputs.validateForm({ showErrors: true });
   };
 
   const setPayers = (newPayers: PickerMember[]) => {
@@ -117,7 +119,7 @@ export default function ExpenseForm({
       ...prev,
       [inputs.payersCategory.value]: newPayers,
     }));
-    inputs.validateForm({ showErrors: true })
+    inputs.validateForm({ showErrors: true });
   };
 
   const { mutate: createExpenseMutation, isPending: isPendingCreateExpense } =
@@ -136,16 +138,25 @@ export default function ExpenseForm({
     );
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
-    useEditExpenseMutation(menu, inputs.setIsSubmitting, nonGroupUsers,
+    useEditExpenseMutation(
+      menu,
+      inputs.setIsSubmitting,
+      nonGroupUsers,
       fromHomeGroup,
       groupMembers,
       inputs.makePersonalClicked,
       isnonGroupExpense,
-      selectedExpense);
+      selectedExpense
+    );
 
   const onSubmit = () => {
-    if (isnonGroupExpense?.value && !userExistsInCategory.value.Participants && !userExistsInCategory.value.Payers && !isPersonal?.value) {
-      warningMenu.value = "generalWarning";
+    if (
+      isnonGroupExpense?.value &&
+      !userExistsInCategory.value.Participants &&
+      !userExistsInCategory.value.Payers &&
+      !isPersonal?.value
+    ) {
+      warningMenu.value = 'generalWarning';
       return;
     }
     inputs.submitExpense({
@@ -158,15 +169,33 @@ export default function ExpenseForm({
       expense,
       fromHomeGroup,
     });
-  }
+  };
 
   const amountNumber = !inputs.amountError ? Number(inputs.amount) : 0;
-  const { handleInputBlur, handleCurrencyOptionsClick, handleInputChangeCallback, handleDescriptionChange } =
-    useHandlers(participants, payers, inputs.setShowAmountError,
-      inputs.amount, inputs.setAmountError, inputs.setCurrencySymbol, currencyMenu,
-      displayedAmount, inputs.setAmount, inputs.setParticipantsError, inputs.setPayersError,
-      isInitialRender, inputs.validateForm, isCreateExpense, inputs.setDescription,
-      inputs.setDescriptionError, inputs.currencySymbol)
+  const {
+    handleInputBlur,
+    handleCurrencyOptionsClick,
+    handleInputChangeCallback,
+    handleDescriptionChange,
+  } = useHandlers(
+    participants,
+    payers,
+    inputs.setShowAmountError,
+    inputs.amount,
+    inputs.setAmountError,
+    inputs.setCurrencySymbol,
+    currencyMenu,
+    displayedAmount,
+    inputs.setAmount,
+    inputs.setParticipantsError,
+    inputs.setPayersError,
+    isInitialRender,
+    inputs.validateForm,
+    isCreateExpense,
+    inputs.setDescription,
+    inputs.setDescriptionError,
+    inputs.currencySymbol
+  );
 
   return (
     <StyledExpenseForm>
@@ -191,7 +220,9 @@ export default function ExpenseForm({
           $inputError={inputs.showAmountError && !!inputs.amountError}
         />
         <span className="errorMsg">
-          {inputs.showAmountError && inputs.amountError ? inputs.amountError : ""}
+          {inputs.showAmountError && inputs.amountError
+            ? inputs.amountError
+            : ''}
         </span>
       </div>
       <DetailedSharedExpenseText
@@ -228,16 +259,18 @@ export default function ExpenseForm({
         onChange={handleDescriptionChange}
         labelMenuIsOpen={labelMenuIsOpen}
       />
-      {fromPersonal?.value ? null : <ShareExpenseButtons
-        isPersonal={isPersonal}
-        amountNumber={amountNumber}
-        nonGroupUsers={nonGroupUsers}
-        adjustParticipants={adjustParticipants}
-        adjustPayers={adjustPayers}
-        fromHome={fromHome}
-        nonGroupMenu={nonGroupMenu}
-        setMakePersonalClicked={inputs.setMakePersonalClicked}
-      />}
+      {fromPersonal?.value ? null : (
+        <ShareExpenseButtons
+          isPersonal={isPersonal}
+          amountNumber={amountNumber}
+          nonGroupUsers={nonGroupUsers}
+          adjustParticipants={adjustParticipants}
+          adjustPayers={adjustPayers}
+          fromHome={fromHome}
+          nonGroupMenu={nonGroupMenu}
+          setMakePersonalClicked={inputs.setMakePersonalClicked}
+        />
+      )}
       {labelMenuIsOpen.value && (
         <LabelMenu
           labelMenuIsOpen={labelMenuIsOpen}
@@ -248,7 +281,11 @@ export default function ExpenseForm({
           isPersonal={isPersonal.value}
         />
       )}
-      <LocationDisplay location={inputs.location} isMapOpen={isMapOpen} setLocation={inputs.setLocation} />
+      <LocationDisplay
+        location={inputs.location}
+        isMapOpen={isMapOpen}
+        setLocation={inputs.setLocation}
+      />
       {isDateShowing.value && (
         <DateDisplay
           selectedDateTime={inputs.expenseTime}
@@ -290,7 +327,12 @@ export default function ExpenseForm({
         clickHandler={handleCurrencyOptionsClick}
         selectedCurrency={inputs.currencySymbol}
       />
-      <GeneralWarningMenuAnimation menu={warningMenu} message={"You need to be either a participant or a payer in order to submit a non-group expense."} />
+      <GeneralWarningMenuAnimation
+        menu={warningMenu}
+        message={
+          'You need to be either a participant or a payer in order to submit a non-group expense.'
+        }
+      />
     </StyledExpenseForm>
   );
 }

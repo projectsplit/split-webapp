@@ -4,25 +4,35 @@ import {
   useNavigate,
   useOutletContext,
   useParams,
-} from "react-router-dom";
-import { StyledGroup } from "./Group.styled";
-import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import { signal, Signal, useSignal } from "@preact/signals-react";
-import { type ExpenseParsedFilters, type ExpenseResponseItem, type Group, Mode, type UserInfo, type TransferParsedFilters } from '../../types'
-import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
-import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
-import NewExpenseAnimation from "../../components/Animations/NewExpenseAnimation";
-import GroupQuickActionsAnimation from "../../components/Animations/MenuWithOptionsToAddAnimation";
-import useGroup from "../../api/auth/QueryHooks/useGroup";
-import { useEffect } from "react";
-import NewTransferAnimation from "../../components/Animations/NewTransferAnimation";
-import GroupOptions from "../Groups/GroupOptions/GroupOptions";
-import ConfirmUnArchiveGroupAnimation from "../../components/Animations/ConfirmUnArchiveGroupAnimation";
-import Spinner from "../../components/Spinner/Spinner";
-import { AxiosError, InternalAxiosRequestConfig } from "axios";
-import GroupError from "./GroupError";
-import SearchTransactionsAnimation from "../../components/Animations/SearchTransactionsAnimation";
-import { localStorageStringParser, getFilterStorageKey } from "../../components/SearchTransactions/helpers/localStorageStringParser";
+} from 'react-router-dom';
+import { StyledGroup } from './Group.styled';
+import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
+import { signal, Signal, useSignal } from '@preact/signals-react';
+import {
+  type ExpenseParsedFilters,
+  type ExpenseResponseItem,
+  type Group,
+  Mode,
+  type UserInfo,
+  type TransferParsedFilters,
+} from '../../types';
+import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import NewExpenseAnimation from '../../components/Animations/NewExpenseAnimation';
+import GroupQuickActionsAnimation from '../../components/Animations/MenuWithOptionsToAddAnimation';
+import useGroup from '../../api/auth/QueryHooks/useGroup';
+import { useEffect } from 'react';
+import NewTransferAnimation from '../../components/Animations/NewTransferAnimation';
+import GroupOptions from '../Groups/GroupOptions/GroupOptions';
+import ConfirmUnArchiveGroupAnimation from '../../components/Animations/ConfirmUnArchiveGroupAnimation';
+import Spinner from '../../components/Spinner/Spinner';
+import { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import GroupError from './GroupError';
+import SearchTransactionsAnimation from '../../components/Animations/SearchTransactionsAnimation';
+import {
+  localStorageStringParser,
+  getFilterStorageKey,
+} from '../../components/SearchTransactions/helpers/localStorageStringParser';
 
 type errorObject = {
   message: string;
@@ -39,14 +49,15 @@ export default function Group() {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
 
   const { expenseFilter, transferFilter } = localStorageStringParser(
-    localStorage.getItem(getFilterStorageKey("expense", groupid)),
-    localStorage.getItem(getFilterStorageKey("transfer", groupid))
+    localStorage.getItem(getFilterStorageKey('expense', groupid)),
+    localStorage.getItem(getFilterStorageKey('transfer', groupid))
   );
 
   const expenseParsedFilters = useSignal<ExpenseParsedFilters>(expenseFilter);
-  const transferParsedFilters = useSignal<TransferParsedFilters>(transferFilter);
+  const transferParsedFilters =
+    useSignal<TransferParsedFilters>(transferFilter);
   const location = useLocation();
-  const path = location.pathname.split("/").pop() || "";
+  const path = location.pathname.split('/').pop() || '';
   const navigate = useNavigate();
   const mode: Mode = Mode.Group;
 
@@ -76,7 +87,7 @@ export default function Group() {
   }, [group, groupIsArchived.value]);
 
   useEffect(() => {
-    topMenuTitle.value = group?.name || "";
+    topMenuTitle.value = group?.name || '';
   }, [group, showBottomBar.value]);
 
   useEffect(() => {
@@ -97,10 +108,10 @@ export default function Group() {
     if (
       isError &&
       groupError.value &&
-      typeof groupError.value.status === "number" &&
+      typeof groupError.value.status === 'number' &&
       groupError.value.status === 404
     ) {
-      navigate("/shared");
+      navigate('/shared');
     }
   }, [isError, groupError.value, navigate]);
 
@@ -112,7 +123,7 @@ export default function Group() {
             <Spinner />
           </div>
           <div className="bottomMenu">
-            {" "}
+            {' '}
             {<BottomMainMenu onClick={() => (menu.value = null)} />}
           </div>
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}
@@ -124,9 +135,9 @@ export default function Group() {
           <CategorySelector
             activeCat={path}
             categories={{
-              cat1: "Expenses",
-              cat2: "Transfers",
-              cat3: "Debts",
+              cat1: 'Expenses',
+              cat2: 'Transfers',
+              cat3: 'Debts',
             }}
             navLinkUse={true}
           />
@@ -191,13 +202,13 @@ export default function Group() {
             />
           )}
           <div className="bottomMenu">
-            {" "}
+            {' '}
             <BottomMainMenu
               group={group}
               menu={menu}
               onClick={() => {
                 if (group && !group.isArchived) {
-                  menu.value = "quickActions";
+                  menu.value = 'quickActions';
                 }
               }}
             />

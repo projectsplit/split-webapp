@@ -1,9 +1,9 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 interface StyledMemberDetailedDescriptionProps {
   isOwed: boolean;
 }
 export const StyledMemberDetailedDescription = styled.div.withConfig({
-  shouldForwardProp: (prop) => !"isOwed".includes(prop),
+  shouldForwardProp: (prop) => !'isOwed'.includes(prop),
 })<StyledMemberDetailedDescriptionProps>`
   display: flex;
   flex-wrap: wrap;
@@ -11,7 +11,7 @@ export const StyledMemberDetailedDescription = styled.div.withConfig({
   flex-direction: row;
   font-size: 15px;
   flex-grow: 1;
-  line-height:1.4;
+  line-height: 1.4;
   margin-top: 5px;
   margin-bottom: 5px;
   .owingText {
@@ -25,5 +25,4 @@ export const StyledMemberDetailedDescription = styled.div.withConfig({
     color: ${(props) =>
       props.isOwed ? ({ theme }) => theme.green : ({ theme }) => theme.redish};
   }
-
 `;

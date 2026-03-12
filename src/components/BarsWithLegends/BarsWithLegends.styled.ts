@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledBarWithLegends = styled.div`
   display: flex;
@@ -20,7 +20,7 @@ export const StyledBarWithLegends = styled.div`
         font-size: 1rem;
 
         height: 0.5rem;
- 
+
         border-radius: 10px;
         margin-right: 10px;
       }
@@ -28,7 +28,7 @@ export const StyledBarWithLegends = styled.div`
         font-size: 1rem;
 
         height: 0.5rem;
-        
+
         border-radius: 10px;
         margin-right: 10px;
       }
@@ -60,7 +60,6 @@ export const StyledBarWithLegends = styled.div`
         overflow: hidden;
         text-overflow: ellipsis;
       }
-
     }
   }
 `;

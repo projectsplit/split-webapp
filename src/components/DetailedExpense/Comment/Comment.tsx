@@ -1,5 +1,5 @@
-import { StyledComment } from "./Comment.Styled";
-import IonIcon from "@reacticons/ionicons";
+import { StyledComment } from './Comment.Styled';
+import IonIcon from '@reacticons/ionicons';
 
 export default function Comment() {
   return (
@@ -7,7 +7,7 @@ export default function Comment() {
       <div className="nameAndClose">
         <strong className="name">You</strong>
         <IonIcon name="close-outline" className="close" />
-        </div>
+      </div>
       <div className="commentAndTime">
         <div className="comment">
           kala ta les alla ante kai gamisou paliopoutanaki

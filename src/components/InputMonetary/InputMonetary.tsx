@@ -1,12 +1,12 @@
-import React from "react";
-import { StyledInput, StyledInputMonetary } from "./InputMonetary.styled";
-import { getSymbolFromCurrency } from "../../helpers/currency-symbol-map";
-import { InputMonetaryProps } from "../../interfaces";
-import { Currency } from "../../types";
-import { currencyData } from "../../helpers/openExchangeRates";
-import { useSignal } from "@preact/signals-react";
+import React from 'react';
+import { StyledInput, StyledInputMonetary } from './InputMonetary.styled';
+import { getSymbolFromCurrency } from '../../helpers/currency-symbol-map';
+import { InputMonetaryProps } from '../../interfaces';
+import { Currency } from '../../types';
+import { currencyData } from '../../helpers/openExchangeRates';
+import { useSignal } from '@preact/signals-react';
 
-import { FaAngleDown } from "react-icons/fa";
+import { FaAngleDown } from 'react-icons/fa';
 
 export default React.forwardRef(function InputMonetary(
   {
@@ -33,28 +33,26 @@ export default React.forwardRef(function InputMonetary(
       <div className="currencySelectorWrapper">
         <div
           className="currencySelector"
-          onClick={() => (currencyMenu.value = "currencyOptions")}
+          onClick={() => (currencyMenu.value = 'currencyOptions')}
         >
           <div className={selectedCurrency?.flagClass} />
           <div>{selectedCurrency?.symbol}</div>
           <FaAngleDown className="angleDown" />
         </div>
       </div>
-     
-        <StyledInput
-          type="text"
-          inputMode="decimal"
-          placeholder={getSymbolFromCurrency(selectedCurrency?.symbol) + "0"}
-          spellCheck="false"
-          autoComplete="off"
-          onBlur={onBlur}
-          onFocus={onFocus}
-          onChange={onChange}
-          value={value}
-          autoFocus={autoFocus}
-        
-        />
-      
+
+      <StyledInput
+        type="text"
+        inputMode="decimal"
+        placeholder={getSymbolFromCurrency(selectedCurrency?.symbol) + '0'}
+        spellCheck="false"
+        autoComplete="off"
+        onBlur={onBlur}
+        onFocus={onFocus}
+        onChange={onChange}
+        value={value}
+        autoFocus={autoFocus}
+      />
     </StyledInputMonetary>
   );
 });

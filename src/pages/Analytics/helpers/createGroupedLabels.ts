@@ -6,17 +6,14 @@ export const createGroupedLabels = (dateNumbers: number[]) => {
       const end = Math.min(dn + 6, dateNumbers[dateNumbers.length - 1]);
       if (start !== end) {
         groupedLabels.push(
-          `${start.toString().padStart(2, "0")}-${end
+          `${start.toString().padStart(2, '0')}-${end
             .toString()
-            .padStart(2, "0")}`
+            .padStart(2, '0')}`
         );
       }
       if (start === end) {
-        groupedLabels.push(
-          `${start.toString().padStart(2, "0")}`
-        );
+        groupedLabels.push(`${start.toString().padStart(2, '0')}`);
       }
-
     }
   });
   return groupedLabels;

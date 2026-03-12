@@ -1,7 +1,6 @@
-import { SimpleOnTrackMessageProps } from "../../../interfaces";
-import { StyledSimpleOnTrackMessage } from "./SimpleOnTrackMessage.styled";
-import IonIcon from "@reacticons/ionicons";
-
+import { SimpleOnTrackMessageProps } from '../../../interfaces';
+import { StyledSimpleOnTrackMessage } from './SimpleOnTrackMessage.styled';
+import IonIcon from '@reacticons/ionicons';
 
 export default function SimpleOnTrackMessage({
   onClick,

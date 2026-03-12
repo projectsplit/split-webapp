@@ -1,5 +1,5 @@
-import { amountIsValid } from "../../../helpers/amountIsValid";
-import { CategoryMap } from "../formStore/formStoreTypes";
+import { amountIsValid } from '../../../helpers/amountIsValid';
+import { CategoryMap } from '../formStore/formStoreTypes';
 import {
   ExpenseRequest,
   FormExpense,
@@ -7,9 +7,9 @@ import {
   Label,
   PersonalExpenseRequest,
   PickerMember,
-  Group
-} from "../../../types";
-import { Signal } from "@preact/signals-react";
+  Group,
+} from '../../../types';
+import { Signal } from '@preact/signals-react';
 
 export function submitExpenseFromState(
   state: {
@@ -52,37 +52,40 @@ export function submitExpenseFromState(
 
   const participants =
     state.participantsByCategory[
-    state.participantsCategory
-      .value as keyof typeof state.participantsByCategory
+      state.participantsCategory
+        .value as keyof typeof state.participantsByCategory
     ];
 
   const payers =
     state.payersByCategory[
-    state.payersCategory.value as keyof typeof state.payersByCategory
+      state.payersCategory.value as keyof typeof state.payersByCategory
     ];
 
   // Deselect participants with zero amount in Shares mode
-  if (state.participantsCategory.value === "Shares") {
+  if (state.participantsCategory.value === 'Shares') {
     participants.forEach((p) => {
-      if (p.actualAmount === "0.00") {
+      if (p.actualAmount === '0.00') {
         p.selected = false;
       }
     });
   }
 
   // Deselect payers with zero amount in Shares mode
-  if (state.payersCategory.value === "Shares") {
+  if (state.payersCategory.value === 'Shares') {
     payers.forEach((p) => {
-      if (p.actualAmount === "0.00") {
+      if (p.actualAmount === '0.00') {
         p.selected = false;
       }
     });
   }
 
-  if (!amountIsValid(state.amount, state.setAmountError, state.setShowAmountError)) return;
+  if (
+    !amountIsValid(state.amount, state.setAmountError, state.setShowAmountError)
+  )
+    return;
 
   if (!state.location && state.description.length === 0) {
-    state.setDescriptionError("Select a description or a location");
+    state.setDescriptionError('Select a description or a location');
     return;
   }
 
@@ -98,7 +101,7 @@ export function submitExpenseFromState(
       labels: state.labels.map((x) => ({ text: x.text, color: x.color })),
     };
   } else if (isnonGroupExpense?.value) {
-    console.log("here1")
+    console.log('here1');
     expenseRequest = {
       amount: Number(state.amount),
       ...(isCreateExpense ? {} : { expenseId: expense?.id }),
@@ -121,10 +124,12 @@ export function submitExpenseFromState(
       labels: state.labels.map((x) => ({ text: x.text, color: x.color })),
     };
   } else {
-    console.log("here2")
+    console.log('here2');
     expenseRequest = {
       amount: Number(state.amount),
-      ...(isCreateExpense ? { groupId: groupId || fromHomeGroup?.value?.id } : { expenseId: expense?.id }),
+      ...(isCreateExpense
+        ? { groupId: groupId || fromHomeGroup?.value?.id }
+        : { expenseId: expense?.id }),
       currency: state.currencySymbol,
       payments: payers
         .filter((value) => value.selected)

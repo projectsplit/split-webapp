@@ -1,15 +1,15 @@
-import { css, keyframes, styled } from "styled-components";
+import { css, keyframes, styled } from 'styled-components';
 
 export const StyledMyButton = styled.button.withConfig({
   shouldForwardProp: (prop) =>
-    !["variant", "isLoading", "hasFailed"].includes(prop),
+    !['variant', 'isLoading', 'hasFailed'].includes(prop),
 })<StyledMyButtonProps>`
-  font-family: "Roboto";
+  font-family: 'Roboto';
   padding: 0.5em 1em;
   font-weight: 400;
   border: none;
   border-radius: 10px;
-  font-size: ${({fontSize})=>fontSize?`${fontSize}px`:"14px"};
+  font-size: ${({ fontSize }) => (fontSize ? `${fontSize}px` : '14px')};
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   position: relative;
@@ -69,18 +69,17 @@ const shake = keyframes`
 
 const buttonVariants = {
   primary: {
-    background: "#f0f0f0",
-    color: "#2d2d2d",
-    hover: "#a3a3a3",
-    active: "#a3a3a3",
+    background: '#f0f0f0',
+    color: '#2d2d2d',
+    hover: '#a3a3a3',
+    active: '#a3a3a3',
   },
   secondary: {
-    background: "#2d2d2d",
-    color: "#f0f0f0",
-    hover: "#1a1b1d",
-    active: "#1a1b1d",
+    background: '#2d2d2d',
+    color: '#f0f0f0',
+    hover: '#1a1b1d',
+    active: '#1a1b1d',
   },
-
 } as const;
 
 export type MyButtonVariant = keyof typeof buttonVariants;
@@ -90,5 +89,5 @@ export interface StyledMyButtonProps {
   disabled?: boolean;
   isLoading?: boolean;
   hasFailed?: boolean;
-  fontSize?:string
+  fontSize?: string;
 }

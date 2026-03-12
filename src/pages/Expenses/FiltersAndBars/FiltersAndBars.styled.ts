@@ -1,7 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledFiltersAndBars = styled.div`
-
   flex-shrink: 0;
 
   .pills {

@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { UpdateSelectedCurrencyRequest, UserInfo } from "../../../types";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { UpdateSelectedCurrencyRequest, UserInfo } from '../../../types';
 
 export const useSelectedCurrency = () => {
   const queryClient = useQueryClient();
@@ -9,9 +9,9 @@ export const useSelectedCurrency = () => {
   return useMutation<any, AxiosError, string>({
     mutationFn: (currency) => updateSelectedCurrency({ currency }),
     onMutate: (currency) => {
-      const currentUserInfo = queryClient.getQueryData<UserInfo>(["getMe"]);
+      const currentUserInfo = queryClient.getQueryData<UserInfo>(['getMe']);
       if (currentUserInfo) {
-        queryClient.setQueryData<UserInfo>(["getMe"], {
+        queryClient.setQueryData<UserInfo>(['getMe'], {
           ...currentUserInfo,
           currency: currency,
         });
@@ -19,19 +19,19 @@ export const useSelectedCurrency = () => {
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({
-        queryKey: ["getMe"],
+        queryKey: ['getMe'],
         exact: false,
       });
       queryClient.invalidateQueries({
-        queryKey: ["debts"],
+        queryKey: ['debts'],
         exact: false,
       });
       queryClient.invalidateQueries({
-        queryKey: ["nonGroupDebts"],
+        queryKey: ['nonGroupDebts'],
         exact: false,
       });
       queryClient.invalidateQueries({
-        queryKey: ["userTotals"],
+        queryKey: ['userTotals'],
         exact: false,
       });
     },
@@ -45,7 +45,7 @@ const updateSelectedCurrency = async (
   req: UpdateSelectedCurrencyRequest
 ): Promise<void> => {
   const response = await apiClient.put<void, AxiosResponse<void>>(
-    "/users/preferences/currency",
+    '/users/preferences/currency',
     req
   );
   return response.data;

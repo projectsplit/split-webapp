@@ -1,7 +1,7 @@
-import IonIcon from "@reacticons/ionicons";
-import { ParticipantsPayersErrorMenuProps } from "../../../interfaces";
-import Separator from "../../Separator/Separator";
-import { StyledRemoveGuestWarning } from "./ParticipantsPayersErrorMenu.styled";
+import IonIcon from '@reacticons/ionicons';
+import { ParticipantsPayersErrorMenuProps } from '../../../interfaces';
+import Separator from '../../Separator/Separator';
+import { StyledRemoveGuestWarning } from './ParticipantsPayersErrorMenu.styled';
 
 export default function ParticipantsPayersErrorMenu({
   menu,
@@ -21,11 +21,10 @@ export default function ParticipantsPayersErrorMenu({
           <Separator />
         </div>
       </div>
-        <div className="info">
-          {error}
-          <div />
-        </div>
-     
+      <div className="info">
+        {error}
+        <div />
+      </div>
     </StyledRemoveGuestWarning>
   );
 }

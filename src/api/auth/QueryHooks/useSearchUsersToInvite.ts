@@ -1,7 +1,7 @@
-import { AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { SearchUserToInviteResponse } from "../../../types";
+import { AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { SearchUserToInviteResponse } from '../../../types';
 
 export const useSearchUsersToInvite = (
   groupId: string,
@@ -9,7 +9,7 @@ export const useSearchUsersToInvite = (
   pageSize: number,
   guestId?: string
 ) => {
-  const queryKey = ["searchUsersToInvite", groupId, keyword, pageSize];
+  const queryKey = ['searchUsersToInvite', groupId, keyword, pageSize];
   const queryClient = useQueryClient();
 
   const query = useInfiniteQuery({
@@ -17,17 +17,17 @@ export const useSearchUsersToInvite = (
     queryFn: ({ pageParam: next }) =>
       searchUsersToinvite(groupId, keyword, pageSize, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
-    initialPageParam: "",
+    initialPageParam: '',
     // enabled:!!keyword && keyword.length > 1
   });
 
   const updateUserInvitationStatus = (userId: string, isInvited: boolean) => {
-    // Update cache for all query keys. 
+    // Update cache for all query keys.
     const queryKeys = queryClient
       .getQueryCache()
       .getAll()
       .map((query) => query.queryKey)
-      .filter((key) => key[0] === "searchUsersToInvite" && key[1] === groupId);
+      .filter((key) => key[0] === 'searchUsersToInvite' && key[1] === groupId);
 
     queryKeys.forEach((queryKey) => {
       queryClient.setQueryData(queryKey, (oldData: any) => {
@@ -35,7 +35,7 @@ export const useSearchUsersToInvite = (
 
         const updateUsers = (users: any[]) =>
           users.map((user) =>
-            guestId && guestId !== "" && isInvited
+            guestId && guestId !== '' && isInvited
               ? { ...user, isAlreadyInvited: user.userId === userId }
               : user.userId === userId
                 ? { ...user, isAlreadyInvited: isInvited }
@@ -66,8 +66,6 @@ const searchUsersToinvite = async (
   const response = await apiClient.get<
     void,
     AxiosResponse<SearchUserToInviteResponse>
-  >("/invitations/search-users", { params });
+  >('/invitations/search-users', { params });
   return response.data;
 };
-
-

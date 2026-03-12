@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
-import { StyledJoin } from "./Join.styled";
-import { generatePath, useNavigate, useParams } from "react-router-dom";
-import { useJoinWithCode } from "../../api/auth/CommandHooks/useJoinWithCode";
-import MyButton from "../../components/MyButton/MyButton";
-import { useGetJoinCode } from "../../api/auth/QueryHooks/useGetJoinCode";
-import routes from "../../routes";
-import Spinner from "../../components/Spinner/Spinner";
-import Separator from "../../components/Separator/Separator";
-import { useSignal } from "@preact/signals-react";
+import React, { useEffect } from 'react';
+import { StyledJoin } from './Join.styled';
+import { generatePath, useNavigate, useParams } from 'react-router-dom';
+import { useJoinWithCode } from '../../api/auth/CommandHooks/useJoinWithCode';
+import MyButton from '../../components/MyButton/MyButton';
+import { useGetJoinCode } from '../../api/auth/QueryHooks/useGetJoinCode';
+import routes from '../../routes';
+import Spinner from '../../components/Spinner/Spinner';
+import Separator from '../../components/Separator/Separator';
+import { useSignal } from '@preact/signals-react';
 
 const Join: React.FC = () => {
-  const errorMessage = useSignal<string>("");
+  const errorMessage = useSignal<string>('');
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
 
@@ -38,7 +38,10 @@ const Join: React.FC = () => {
       <StyledJoin>
         <div className="errors">
           <div className="text">
-            <div>Ah Snap! 😵 This invitation has either expired or has been revoked.</div>
+            <div>
+              Ah Snap! 😵 This invitation has either expired or has been
+              revoked.
+            </div>
           </div>
           <div className="buttons">
             <MyButton
@@ -110,8 +113,8 @@ const Join: React.FC = () => {
                 })
               }
             >
-              {" "}
-              Accept{" "}
+              {' '}
+              Accept{' '}
             </MyButton>
             <MyButton
               variant="secondary"

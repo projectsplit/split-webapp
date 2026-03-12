@@ -1,7 +1,7 @@
-import IonIcon from "@reacticons/ionicons";
-import { OnTrackMessageProps } from "../../../interfaces";
-import { StyledOnTrackMessage } from "./OnTrackMessage.styled";
-import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
+import IonIcon from '@reacticons/ionicons';
+import { OnTrackMessageProps } from '../../../interfaces';
+import { StyledOnTrackMessage } from './OnTrackMessage.styled';
+import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
 
 export default function OnTrackMessage({
   onClick,
@@ -9,7 +9,7 @@ export default function OnTrackMessage({
   style,
   currency,
   closeButton,
-  budgetType
+  budgetType,
 }: OnTrackMessageProps) {
   return (
     <StyledOnTrackMessage style={style}>
@@ -26,11 +26,11 @@ export default function OnTrackMessage({
               You are on track to meeting your spending goal.
             </div>
             <div className="secondParagraph">
-              Spending at this rate will save you{" "}
+              Spending at this rate will save you{' '}
               <strong className="amount">
                 {displayCurrencyAndAmount(amount, currency)}
-              </strong>{" "}
-              at the end of the {budgetType === 1 ? "month" : "week"}.
+              </strong>{' '}
+              at the end of the {budgetType === 1 ? 'month' : 'week'}.
             </div>
           </div>
         </div>

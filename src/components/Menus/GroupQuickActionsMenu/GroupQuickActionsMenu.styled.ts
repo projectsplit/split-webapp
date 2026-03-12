@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledBottomMenu } from "../Layouts/BottomMenu/BottomMenu.styled";
+import styled from 'styled-components';
+import { StyledBottomMenu } from '../Layouts/BottomMenu/BottomMenu.styled';
 
 export const StyledGroupQuickActionsMenu = styled(StyledBottomMenu)`
   .buttons {
@@ -37,7 +37,7 @@ export const StyledGroupQuickActionsMenu = styled(StyledBottomMenu)`
         font-size: 12px;
         font-weight: 800;
         position: absolute;
-       
+
         border-radius: 50%;
         width: 1.1rem;
         height: 1.1rem;

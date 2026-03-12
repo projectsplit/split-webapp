@@ -1,18 +1,16 @@
-
-import { CSSTransition } from "react-transition-group";
-import { SettingsMenuAnimationProps } from "../../interfaces";
-import { useRef } from "react";
-import SettingsMenu from "../Menus/SettingsMenu/SettingsMenu";
-
+import { CSSTransition } from 'react-transition-group';
+import { SettingsMenuAnimationProps } from '../../interfaces';
+import { useRef } from 'react';
+import SettingsMenu from '../Menus/SettingsMenu/SettingsMenu';
 
 export default function SettingsMenuAnimation({
   menu,
-  userInfo
+  userInfo,
 }: SettingsMenuAnimationProps) {
   const nodeRef = useRef(null);
   return (
     <CSSTransition
-      in={menu.value === "settings"}
+      in={menu.value === 'settings'}
       classNames="leftslide"
       timeout={100}
       unmountOnExit

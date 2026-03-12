@@ -1,4 +1,4 @@
-import { keyframes, styled } from "styled-components";
+import { keyframes, styled } from 'styled-components';
 const fadeIn = keyframes`
   0% {
     opacity: 0;
@@ -22,17 +22,20 @@ export const StyledLabelPicker = styled.div<{
   .main {
     &:focus-within {
       border-color: ${({ theme, $hasError, $deleteClicked }) =>
-    $hasError ? theme.errorColor :
-      $deleteClicked ? "" : theme.highlightColor};
+        $hasError
+          ? theme.errorColor
+          : $deleteClicked
+            ? ''
+            : theme.highlightColor};
     }
-      transition: border-color 0.15s;
+    transition: border-color 0.15s;
     background-color: ${({ theme }) => theme.layer2};
     display: flex;
     gap: 4px;
     align-items: center;
     border: 1px solid
       ${({ theme, $hasError }) =>
-    $hasError ? theme.errorColor : theme.lineColor};
+        $hasError ? theme.errorColor : theme.lineColor};
     border-radius: 8px;
     padding: 8px 16px;
     flex-wrap: wrap;
@@ -103,12 +106,13 @@ export const StyledLabelPicker = styled.div<{
       align-items: center;
       padding: 10px 14px;
       box-sizing: content-box;
-      .spinnerAndTrash{
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        align-self:center;
-        margin-right:${({ $deleteClicked }) => !$deleteClicked ? "0px" : "10px"};
+      .spinnerAndTrash {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        margin-right: ${({ $deleteClicked }) =>
+          !$deleteClicked ? '0px' : '10px'};
         width: 20px;
         height: 20px;
       }

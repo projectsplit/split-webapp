@@ -1,12 +1,14 @@
-import { getSymbolFromCurrency } from "./currency-symbol-map";
-import { getLocaleFromCurrency } from "./getLocaleFromCurrency";
-import { significantDigitsFromTicker } from "./openExchangeRates";
+import { getSymbolFromCurrency } from './currency-symbol-map';
+import { getLocaleFromCurrency } from './getLocaleFromCurrency';
+import { significantDigitsFromTicker } from './openExchangeRates';
 
 export const displayCurrencyAndAmount = (
   amount: string | undefined,
   currency: string
 ): string => {
-  const amount2decimal = Number.isFinite(parseFloat(amount ?? "0")) ? parseFloat(amount ?? "0") : 0;
+  const amount2decimal = Number.isFinite(parseFloat(amount ?? '0'))
+    ? parseFloat(amount ?? '0')
+    : 0;
   const symbol = getSymbolFromCurrency(currency) ?? currency;
 
   if (amount2decimal < 0) {

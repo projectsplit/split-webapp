@@ -1,9 +1,15 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { NonGroupExpenseRequest, Group, Guest, Member, User } from "../../../types";
-import { Signal } from "@preact/signals-react";
-import { NavigateFunction } from "react-router-dom";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import {
+  NonGroupExpenseRequest,
+  Group,
+  Guest,
+  Member,
+  User,
+} from '../../../types';
+import { Signal } from '@preact/signals-react';
+import { NavigateFunction } from 'react-router-dom';
 
 export const useCreateNonGroupExpense = (
   menu: Signal<string | null>,
@@ -12,7 +18,7 @@ export const useCreateNonGroupExpense = (
   nonGroupUsers: Signal<User[]>,
   fromHomeGroup: Signal<Group | null> | undefined,
   groupMembers: Signal<(Member | Guest)[]>,
-  makePersonalClicked: boolean,
+  makePersonalClicked: boolean
 ) => {
   const queryClient = useQueryClient();
 
@@ -23,31 +29,31 @@ export const useCreateNonGroupExpense = (
       navigate(`/shared/nongroup/expenses`);
 
       await queryClient.invalidateQueries({
-        queryKey: ["nonGroupDebts"],
+        queryKey: ['nonGroupDebts'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["nonGroupExpenses"],
+        queryKey: ['nonGroupExpenses'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["shared"],
+        queryKey: ['shared'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
+        queryKey: ['mostRecentGroup'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["home"],
+        queryKey: ['home'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["non-group-expense-users"],
+        queryKey: ['non-group-expense-users'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["cumulativeArray"],
+        queryKey: ['cumulativeArray'],
         exact: false,
       });
       const data = {
@@ -60,10 +66,13 @@ export const useCreateNonGroupExpense = (
         nonGroupUsers.value.length > 0 ||
         fromHomeGroup?.value
       ) {
-        localStorage.setItem("submittedFromHomePersistData", JSON.stringify(data));
+        localStorage.setItem(
+          'submittedFromHomePersistData',
+          JSON.stringify(data)
+        );
       }
       if (makePersonalClicked) {
-        localStorage.removeItem("submittedFromHomePersistData");
+        localStorage.removeItem('submittedFromHomePersistData');
       }
     },
     onSettled: () => {
@@ -72,10 +81,11 @@ export const useCreateNonGroupExpense = (
   });
 };
 
-const createNonGroupExpense = async (req: NonGroupExpenseRequest): Promise<void> => {
-  console.log(req)
+const createNonGroupExpense = async (
+  req: NonGroupExpenseRequest
+): Promise<void> => {
   await apiClient.post<void, AxiosResponse<void>>(
-    "/expenses/create-non-group",
+    '/expenses/create-non-group',
     req
   );
 };

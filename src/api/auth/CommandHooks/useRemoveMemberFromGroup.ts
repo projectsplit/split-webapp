@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { Signal } from "@preact/signals-react";
-import { Group } from "../../../types";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { Signal } from '@preact/signals-react';
+import { Group } from '../../../types';
 
 export const useRemoveMemberFromGroup = (
   groupId: string | undefined,
@@ -15,12 +15,12 @@ export const useRemoveMemberFromGroup = (
   return useMutation<any, AxiosError, string>({
     mutationFn: (memberId) => {
       if (!groupId) {
-        noGroupError.value = "No group found";
-        return Promise.reject(new Error("No group found"));
+        noGroupError.value = 'No group found';
+        return Promise.reject(new Error('No group found'));
       }
       if (!memberId) {
-        noMemberError.value = "No member found";
-        return Promise.reject(new Error("No member found"));
+        noMemberError.value = 'No member found';
+        return Promise.reject(new Error('No member found'));
       }
       return removeMember({ memberId }, groupId);
       // return new Promise((resolve) => {
@@ -30,7 +30,9 @@ export const useRemoveMemberFromGroup = (
       // });
     },
     onSuccess: async (_, memberId: string) => {
-      const previousGroup: Group | undefined = queryClient.getQueryData([groupId]);
+      const previousGroup: Group | undefined = queryClient.getQueryData([
+        groupId,
+      ]);
       if (previousGroup) {
         queryClient.setQueryData([groupId], {
           ...previousGroup,
@@ -38,19 +40,23 @@ export const useRemoveMemberFromGroup = (
         });
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      await queryClient.invalidateQueries({ queryKey: ["debts", groupId], exact: false });
-      await queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
+        queryKey: ['debts', groupId],
         exact: false,
       });
-      menu.value = null
+      await queryClient.invalidateQueries({
+        queryKey: ['shared'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['mostRecentGroup'],
+        exact: false,
+      });
+      menu.value = null;
     },
   });
-
 };
-
 
 const removeMember = async (
   req: { memberId: string },

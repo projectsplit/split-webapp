@@ -1,6 +1,6 @@
-import { FormExpense, Guest, Member, User, UserInfo } from "../../../types";
-import { createParticipantPickerArray } from "./createParticipantPickerArray";
-import { createPayerPickerArray } from "./createPayerPickerArray";
+import { FormExpense, Guest, Member, User, UserInfo } from '../../../types';
+import { createParticipantPickerArray } from './createParticipantPickerArray';
+import { createPayerPickerArray } from './createPayerPickerArray';
 
 export const generatePickerArrays = (
   groupMembers: (Member | Guest)[],
@@ -17,7 +17,7 @@ export const generatePickerArrays = (
       groupMembers,
       nonGroupUsers,
       expense,
-      "Amounts",
+      'Amounts',
       isCreateExpense,
       isnonGroupExpense
     ),
@@ -25,7 +25,7 @@ export const generatePickerArrays = (
       groupMembers,
       nonGroupUsers,
       expense,
-      "Shares",
+      'Shares',
       isCreateExpense,
       isnonGroupExpense
     ),
@@ -33,7 +33,7 @@ export const generatePickerArrays = (
       groupMembers,
       nonGroupUsers,
       expense,
-      "Percentages",
+      'Percentages',
       isCreateExpense,
       isnonGroupExpense
     ),
@@ -43,7 +43,7 @@ export const generatePickerArrays = (
       groupMembers,
       nonGroupUsers,
       expense,
-      "Amounts",
+      'Amounts',
       isCreateExpense,
       userInfo.userId,
       userMemberId,
@@ -54,7 +54,7 @@ export const generatePickerArrays = (
       groupMembers,
       nonGroupUsers,
       expense,
-      "Shares",
+      'Shares',
       isCreateExpense,
       userInfo.userId,
       userMemberId,
@@ -65,7 +65,7 @@ export const generatePickerArrays = (
       groupMembers,
       nonGroupUsers,
       expense,
-      "Percentages",
+      'Percentages',
       isCreateExpense,
       userInfo.userId,
       userMemberId,

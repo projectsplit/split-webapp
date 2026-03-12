@@ -1,9 +1,9 @@
-import { HiLockClosed, HiLockOpen } from "react-icons/hi";
-import { getSymbolFromCurrency } from "../../../../helpers/currency-symbol-map";
-import { memo } from "react";
-import AutoWidthInput from "../../../AutoWidthInput";
-import { Signal } from "@preact/signals-react";
-import { PickerMember } from "../../../../types";
+import { HiLockClosed, HiLockOpen } from 'react-icons/hi';
+import { getSymbolFromCurrency } from '../../../../helpers/currency-symbol-map';
+import { memo } from 'react';
+import AutoWidthInput from '../../../AutoWidthInput';
+import { Signal } from '@preact/signals-react';
+import { PickerMember } from '../../../../types';
 
 interface RightProps {
   screenQuantity: string;
@@ -33,17 +33,19 @@ const Right: React.FC<RightProps> = ({
   memberAmounts,
   inputRef,
 }) => {
-  
   const totalSharesValue = memberAmounts.reduce(
     (sum, member) => sum + Number(member.screenQuantity),
     0
   );
-  const formattedTotalShares = totalSharesValue === 0
-    ? ""
-    : Number(totalSharesValue).toFixed(2).replace(/\.?0+$/, "");
+  const formattedTotalShares =
+    totalSharesValue === 0
+      ? ''
+      : Number(totalSharesValue)
+          .toFixed(2)
+          .replace(/\.?0+$/, '');
 
   switch (category.value) {
-    case "Amounts":
+    case 'Amounts':
       return (
         <div className="right">
           <div className="inputField">
@@ -68,7 +70,7 @@ const Right: React.FC<RightProps> = ({
           </div>
         </div>
       );
-    case "Shares":
+    case 'Shares':
       return (
         <div className="right">
           <div className="inputField">
@@ -85,18 +87,24 @@ const Right: React.FC<RightProps> = ({
             <div className="shares">
               <div className="fraction">
                 <div className="nominatorDenominator">
-                  {screenQuantity === formattedTotalShares ? "" : <>
-                    {screenQuantity === "" || screenQuantity === "0" ? (
-                      <span className="numerator"></span>
-                    ) : screenQuantity === formattedTotalShares ? (
-                      <span className="numerator">1</span>
-                    ) : (
-                      <>
-                        <span className="numerator">{screenQuantity}</span>/
-                        <span className="denominator">{formattedTotalShares}</span>
-                      </>
-                    )}
-                  </>}
+                  {screenQuantity === formattedTotalShares ? (
+                    ''
+                  ) : (
+                    <>
+                      {screenQuantity === '' || screenQuantity === '0' ? (
+                        <span className="numerator"></span>
+                      ) : screenQuantity === formattedTotalShares ? (
+                        <span className="numerator">1</span>
+                      ) : (
+                        <>
+                          <span className="numerator">{screenQuantity}</span>/
+                          <span className="denominator">
+                            {formattedTotalShares}
+                          </span>
+                        </>
+                      )}
+                    </>
+                  )}
                 </div>
                 <span className="shares-label">shares</span>
               </div>
@@ -104,7 +112,7 @@ const Right: React.FC<RightProps> = ({
           </div>
         </div>
       );
-    case "Percentages":
+    case 'Percentages':
       return (
         <div className="right">
           <div className="inputField">

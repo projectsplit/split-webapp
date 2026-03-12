@@ -1,25 +1,22 @@
-import { StyledNonGroupExpenseUsersMenu } from "./NonGroupExpenseUsersMenu.styled";
-import { NonGroupUsersProps } from "../../../../interfaces";
-import { CategorySelector } from "../../../CategorySelector/CategorySelector";
-import { useSignal } from "@preact/signals-react";
-import { BiArrowBack } from "react-icons/bi";
-import MyButton from "../../../MyButton/MyButton";
-import Sentinel from "../../../Sentinel";
-import { useCallback, useMemo, useRef, useState } from "react";
-import AutoWidthInput from "../../../AutoWidthInput";
-import {
-  User,
-  UserInfo,
-} from "../../../../types";
-import Item from "../Item/Item";
-import React from "react";
-import { SelectedUsers } from "../SelectionLists/SelectedUsers";
-import { useSearchGroupsByName } from "../../../../api/auth/QueryHooks/useSearchGroupsByName";
-import { useOutletContext } from "react-router-dom";
-import useDebounce from "../../../../hooks/useDebounce";
-import { SelectedGroup } from "../SelectionLists/SelectedGroup";
-import { useSearchUsers } from "@/api/auth/QueryHooks/useSearchUsers";
-import { MdOutlineGroupOff } from "react-icons/md";
+import { StyledNonGroupExpenseUsersMenu } from './NonGroupExpenseUsersMenu.styled';
+import { NonGroupUsersProps } from '../../../../interfaces';
+import { CategorySelector } from '../../../CategorySelector/CategorySelector';
+import { useSignal } from '@preact/signals-react';
+import { BiArrowBack } from 'react-icons/bi';
+import MyButton from '../../../MyButton/MyButton';
+import Sentinel from '../../../Sentinel';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import AutoWidthInput from '../../../AutoWidthInput';
+import { User, UserInfo } from '../../../../types';
+import Item from '../Item/Item';
+import React from 'react';
+import { SelectedUsers } from '../SelectionLists/SelectedUsers';
+import { useSearchGroupsByName } from '../../../../api/auth/QueryHooks/useSearchGroupsByName';
+import { useOutletContext } from 'react-router-dom';
+import useDebounce from '../../../../hooks/useDebounce';
+import { SelectedGroup } from '../SelectionLists/SelectedGroup';
+import { useSearchUsers } from '@/api/auth/QueryHooks/useSearchUsers';
+import { MdOutlineGroupOff } from 'react-icons/md';
 
 export const NonGroupExpenseUsersMenu = ({
   menu,
@@ -28,14 +25,13 @@ export const NonGroupExpenseUsersMenu = ({
   groupMembers,
   fromHomeGroup,
   isNonGroupExpense,
-  fromNonGroup
+  fromNonGroup,
 }: NonGroupUsersProps) => {
-
-  const category = useSignal<string>("Users");
-  const [keyword, setKeyword] = useState("");
+  const category = useSignal<string>('Users');
+  const [keyword, setKeyword] = useState('');
   const pageSize = 10;
   const [debouncedKeyword] = useDebounce(
-    keyword.length > 1 ? keyword : "",
+    keyword.length > 1 ? keyword : '',
     300
   );
   const inputRef = useRef<HTMLInputElement>(null);
@@ -46,10 +42,11 @@ export const NonGroupExpenseUsersMenu = ({
     userInfo: UserInfo;
   }>();
 
-  const result = useSearchUsers( //TODO we need new endpoint to bring users (so we can do useSearchUsers)
+  const result = useSearchUsers(
+    //TODO we need new endpoint to bring users (so we can do useSearchUsers)
     debouncedKeyword,
     pageSize
-  )
+  );
 
   if (!result) return null;
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = result;
@@ -108,7 +105,7 @@ export const NonGroupExpenseUsersMenu = ({
     ) {
       nonGroupUsers.value = [...nonGroupUsers.value, newUser];
     }
-    setKeyword("");
+    setKeyword('');
   };
 
   const handleSuggestedUserClick = useCallback(
@@ -129,7 +126,7 @@ export const NonGroupExpenseUsersMenu = ({
         .find((x) => x.id === groupId);
 
       if (!existingGroup) return;
-      (fromHomeGroup.value = {
+      ((fromHomeGroup.value = {
         id: existingGroup.id,
         name: existingGroup.name,
         created: existingGroup.created,
@@ -144,7 +141,7 @@ export const NonGroupExpenseUsersMenu = ({
         (groupMembers.value = [
           ...existingGroup.members,
           ...existingGroup.guests,
-        ]);
+        ]));
     },
     [userGroups]
   );
@@ -175,9 +172,12 @@ export const NonGroupExpenseUsersMenu = ({
   }, [userGroups, fromHomeGroup.value]);
 
   const isEmpty = useMemo(() => {
-    return (nonGroupUsers.value?.length === 0 || nonGroupUsers.value?.length === 1) &&
+    return (
+      (nonGroupUsers.value?.length === 0 ||
+        nonGroupUsers.value?.length === 1) &&
       keyword.length === 0 &&
-      !fromHomeGroup.value;
+      !fromHomeGroup.value
+    );
   }, [nonGroupUsers.value, fromHomeGroup.value, keyword]);
 
   const isPersonalFn = () => {
@@ -206,17 +206,19 @@ export const NonGroupExpenseUsersMenu = ({
           <div className="title">Share expense with you and...</div>
           <div className="gap"></div>
         </div>
-        {!fromNonGroup && <div className="categories">
-          <CategorySelector
-            activeCat={"Amounts"}
-            categories={{
-              cat1: "Users",
-              cat2: "Groups",
-            }}
-            navLinkUse={false}
-            activeCatAsState={category}
-          />
-        </div>}
+        {!fromNonGroup && (
+          <div className="categories">
+            <CategorySelector
+              activeCat={'Amounts'}
+              categories={{
+                cat1: 'Users',
+                cat2: 'Groups',
+              }}
+              navLinkUse={false}
+              activeCatAsState={category}
+            />
+          </div>
+        )}
       </div>
       <div className="scrollable-content">
         <div className="input">
@@ -232,10 +234,12 @@ export const NonGroupExpenseUsersMenu = ({
               onRemove={handleSelectedUserCick}
               currentUserId={userInfo.userId}
             />
-            {!fromNonGroup && <SelectedGroup
-              group={fromHomeGroup.value}
-              onRemove={handleSelectedGroupCick}
-            />}
+            {!fromNonGroup && (
+              <SelectedGroup
+                group={fromHomeGroup.value}
+                onRemove={handleSelectedGroupCick}
+              />
+            )}
 
             <AutoWidthInput
               className="input"
@@ -252,8 +256,8 @@ export const NonGroupExpenseUsersMenu = ({
           </div>
         </div>
 
-        {category.value === "Users"
-          ? remainingSuggestedUsers.length > 0 && (
+        {category.value === 'Users' ? (
+          remainingSuggestedUsers.length > 0 && (
             <div className="dropdown" ref={dropdownRef}>
               {remainingSuggestedUsers.map((user) =>
                 user.userId !== userInfo.userId ? (
@@ -269,34 +273,40 @@ export const NonGroupExpenseUsersMenu = ({
               )}
             </div>
           )
-          : !fromNonGroup && remainingSuggestedGroups.length > 0 ? (
-            <div className="dropdown" ref={dropdownRef}>
-              {remainingSuggestedGroups.map((group) => (
-                <Item
-                  key={group.id}
-                  name={group.name}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSuggestedGroupClick(group.id);
-                    isNonGroupExpense.value = false
-                  }}
-                />
-              ))}
+        ) : !fromNonGroup && remainingSuggestedGroups.length > 0 ? (
+          <div className="dropdown" ref={dropdownRef}>
+            {remainingSuggestedGroups.map((group) => (
+              <Item
+                key={group.id}
+                name={group.name}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSuggestedGroupClick(group.id);
+                  isNonGroupExpense.value = false;
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="noData">
+            <div className="msg">
+              You are currently not a member of any group{' '}
             </div>
-          ) : <div className="noData">
-            <div className="msg">You are currently not a member of any group </div>
             <MdOutlineGroupOff className="icon" />
-          </div>}
+          </div>
+        )}
         <Sentinel
           fetchPage={fetchNextPage}
           hasMore={hasNextPage}
           isFetchingPage={isFetchingNextPage}
         />
-        {!fromNonGroup && <Sentinel
-          fetchPage={fetchNextGroupsPage}
-          hasMore={hasNextGroupsPage}
-          isFetchingPage={isFetchingNextGroupsPage}
-        />}
+        {!fromNonGroup && (
+          <Sentinel
+            fetchPage={fetchNextGroupsPage}
+            hasMore={hasNextGroupsPage}
+            isFetchingPage={isFetchingNextGroupsPage}
+          />
+        )}
       </div>
       <div className="doneButton">
         <MyButton

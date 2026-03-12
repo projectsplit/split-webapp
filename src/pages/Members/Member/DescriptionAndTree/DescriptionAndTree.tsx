@@ -1,9 +1,8 @@
-import Tree from "../../../../components/Tree/Tree";
-import { DescriptionAndTreeProps } from "../../../../interfaces";
-import { MemberDetailedDescription } from "../MemberDetailedDescription/MemberDetailedDescription";
-import { StyledDescriptionAndTree } from "./DescriptionAndTree.Styled";
-import { Mode } from "@/types";
-
+import Tree from '../../../../components/Tree/Tree';
+import { DescriptionAndTreeProps } from '../../../../interfaces';
+import { MemberDetailedDescription } from '../MemberDetailedDescription/MemberDetailedDescription';
+import { StyledDescriptionAndTree } from './DescriptionAndTree.Styled';
+import { Mode } from '@/types';
 
 export const DescriptionAndTree = ({
   memberTransactions,
@@ -16,10 +15,10 @@ export const DescriptionAndTree = ({
   treeItems,
   participants,
   userOrMemberId,
-  mode
+  mode,
 }: DescriptionAndTreeProps) => {
-
-  const conditionForTree = (showTree && mode === Mode.Group) || (showTree && isLogedUser);
+  const conditionForTree =
+    (showTree && mode === Mode.Group) || (showTree && isLogedUser);
   return (
     <StyledDescriptionAndTree>
       <MemberDetailedDescription
@@ -34,7 +33,6 @@ export const DescriptionAndTree = ({
         mode={mode}
       />
       {conditionForTree && <Tree items={treeItems} />}
-
     </StyledDescriptionAndTree>
   );
 };

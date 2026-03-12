@@ -1,15 +1,14 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { PersonalExpenseRequest } from "../../../types";
-import { Signal } from "@preact/signals-react";
-import { NavigateFunction } from "react-router-dom";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { PersonalExpenseRequest } from '../../../types';
+import { Signal } from '@preact/signals-react';
+import { NavigateFunction } from 'react-router-dom';
 
 export const useCreatePersonalExpense = (
   menu: Signal<string | null>,
   navigate: NavigateFunction,
-  setIsSubmitting: (value: boolean) => void,
-
+  setIsSubmitting: (value: boolean) => void
 ) => {
   const queryClient = useQueryClient();
 
@@ -19,11 +18,11 @@ export const useCreatePersonalExpense = (
       menu.value = null;
       navigate(`/personal`);
       await queryClient.invalidateQueries({
-        queryKey: ["personalExpenses"],
+        queryKey: ['personalExpenses'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["cumulativeArray"],
+        queryKey: ['cumulativeArray'],
         exact: false,
       });
     },
@@ -33,9 +32,11 @@ export const useCreatePersonalExpense = (
   });
 };
 
-const createPersonalExpense = async (req: PersonalExpenseRequest): Promise<void> => {
+const createPersonalExpense = async (
+  req: PersonalExpenseRequest
+): Promise<void> => {
   await apiClient.post<void, AxiosResponse<void>>(
-    "/expenses/create-personal",
+    '/expenses/create-personal',
     req
   );
 };

@@ -1,9 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { Group, UpdateSelectedCurrencyRequest } from "../../../types";
-import { Signal } from "@preact/signals-react";
-
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { Group, UpdateSelectedCurrencyRequest } from '../../../types';
+import { Signal } from '@preact/signals-react';
 
 export const useChangeGroupCurrency = (
   groupId: string | undefined,
@@ -15,8 +14,8 @@ export const useChangeGroupCurrency = (
   return useMutation<any, AxiosError, string>({
     mutationFn: (currency) => {
       if (!groupId) {
-        noGroupFoundError.value = "No group found";
-        return Promise.reject(new Error("No group found"));
+        noGroupFoundError.value = 'No group found';
+        return Promise.reject(new Error('No group found'));
       }
       return updateGroupCurrency({ currency }, groupId);
     },
@@ -31,7 +30,7 @@ export const useChangeGroupCurrency = (
     },
 
     onSuccess: () => {
-      refetchQueries.value = true
+      refetchQueries.value = true;
     },
     onError: (error) => {
       console.log(error);

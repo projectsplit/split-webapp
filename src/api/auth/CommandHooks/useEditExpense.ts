@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
 import {
   GroupExpenseRequest,
   ExpenseResponseItem,
@@ -8,8 +8,8 @@ import {
   Guest,
   Member,
   User,
-} from "../../../types";
-import { Signal } from "@preact/signals-react";
+} from '../../../types';
+import { Signal } from '@preact/signals-react';
 
 export const useEditExpense = (
   menu: Signal<string | null>,
@@ -28,20 +28,20 @@ export const useEditExpense = (
     mutationFn: (expense) => editExpense(expense),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["debts"],
+        queryKey: ['debts'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["groupExpenses"],
+        queryKey: ['groupExpenses'],
         exact: false,
       });
-      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["shared"],
+        queryKey: ['shared'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
+        queryKey: ['mostRecentGroup'],
         exact: false,
       });
       await queryClient.invalidateQueries({
@@ -49,7 +49,7 @@ export const useEditExpense = (
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["cumulativeArray"],
+        queryKey: ['cumulativeArray'],
         exact: false,
       });
       if (selectedExpense) {
@@ -66,10 +66,13 @@ export const useEditExpense = (
           nonGroupUsers.value.length > 0 ||
           fromHomeGroup?.value
         )
-          localStorage.setItem("submittedFromHomePersistData", JSON.stringify(data));
+          localStorage.setItem(
+            'submittedFromHomePersistData',
+            JSON.stringify(data)
+          );
       }
       if (makePersonalClicked) {
-        localStorage.removeItem("submittedFromHomePersistData");
+        localStorage.removeItem('submittedFromHomePersistData');
       }
       menu.value = null;
     },
@@ -80,5 +83,5 @@ export const useEditExpense = (
 };
 
 const editExpense = async (req: GroupExpenseRequest): Promise<void> => {
-  await apiClient.post<void, AxiosResponse<void>>("/expenses/edit", req);
+  await apiClient.post<void, AxiosResponse<void>>('/expenses/edit', req);
 };

@@ -1,7 +1,7 @@
-import currency from "currency.js";
-import { significantDigitsFromTicker } from "../../../helpers/openExchangeRates";
-import { PickerMember } from "../../../types";
-import { Signal } from "@preact/signals-react";
+import currency from 'currency.js';
+import { significantDigitsFromTicker } from '../../../helpers/openExchangeRates';
+import { PickerMember } from '../../../types';
+import { Signal } from '@preact/signals-react';
 
 export const errorSettingFn = (
   description: string,
@@ -11,19 +11,19 @@ export const errorSettingFn = (
   selectedCurrency: string,
   totalAmount: number
 ) => {
-  const isParticipants = description === "Participants";
-  const memberType = isParticipants ? "participant" : "payer";
+  const isParticipants = description === 'Participants';
+  const memberType = isParticipants ? 'participant' : 'payer';
   const selectedMembers = memberAmounts.filter((p) => p.selected);
   if (
     memberAmounts.length === memberAmounts.filter((p) => !p.selected).length
   ) {
     setError(`Select at least one ${memberType}`);
-    errorMenu.value = "amountsError";
+    errorMenu.value = 'amountsError';
     return;
   }
 
   const areNumbersValid = selectedMembers.every(
-    (x) => x.actualAmount !== "NaN" && Number(x.actualAmount) > 0
+    (x) => x.actualAmount !== 'NaN' && Number(x.actualAmount) > 0
   );
 
   const decimal = significantDigitsFromTicker(selectedCurrency);
@@ -41,14 +41,14 @@ export const errorSettingFn = (
         ) !== currency(totalAmount).value);
 
   setError(
-    !areNumbersValid&&description === "Participants"
-      ? "Participation amounts must be positive":
-      !areNumbersValid&&description === "Payers"
-      ? "Payment amounts must be positive":
-      isSumInvalid&&description === "Participants"
-      ? "Participation amounts must add up to total":
-      isSumInvalid&&description === "Payers"
-      ? "Payment amounts must add up to total"
-      : ""
+    !areNumbersValid && description === 'Participants'
+      ? 'Participation amounts must be positive'
+      : !areNumbersValid && description === 'Payers'
+        ? 'Payment amounts must be positive'
+        : isSumInvalid && description === 'Participants'
+          ? 'Participation amounts must add up to total'
+          : isSumInvalid && description === 'Payers'
+            ? 'Payment amounts must add up to total'
+            : ''
   );
 };

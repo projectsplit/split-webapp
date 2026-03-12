@@ -1,8 +1,8 @@
-import InputMonetary from "@/components/InputMonetary/InputMonetary";
-import { StyledInputAndErrorsWrapper } from "./InputAndErrorsWrapper.styled";
-import { handleInputChange } from "@/helpers/handleInputChange";
-import { Signal } from "@preact/signals-react";
-import { TransferState } from "../formStore/formStoreTypes";
+import InputMonetary from '@/components/InputMonetary/InputMonetary';
+import { StyledInputAndErrorsWrapper } from './InputAndErrorsWrapper.styled';
+import { handleInputChange } from '@/helpers/handleInputChange';
+import { Signal } from '@preact/signals-react';
+import { TransferState } from '../formStore/formStoreTypes';
 
 interface InputAndErrorsWrapperProps {
   currencyMenu: Signal<string | null>;
@@ -12,18 +12,29 @@ interface InputAndErrorsWrapperProps {
   handleInputBlur: () => void;
 }
 
-export const InputAndErrorsWrapper = ({ currencyMenu, displayedAmount, data, actions, handleInputBlur }: InputAndErrorsWrapperProps) => {
+export const InputAndErrorsWrapper = ({
+  currencyMenu,
+  displayedAmount,
+  data,
+  actions,
+  handleInputBlur,
+}: InputAndErrorsWrapperProps) => {
   return (
     <StyledInputAndErrorsWrapper>
       <InputMonetary
         currencyMenu={currencyMenu}
         value={displayedAmount.value}
         onChange={(e) => {
-          handleInputChange(e, data.currencySymbol, displayedAmount, actions.setAmount);
+          handleInputChange(
+            e,
+            data.currencySymbol,
+            displayedAmount,
+            actions.setAmount
+          );
           actions.setError('showAmountError', false);
           actions.setError('showSamePersonError', false);
-          actions.setError('isSameUserError', "");
-          actions.setError('recipientError', "");
+          actions.setError('isSameUserError', '');
+          actions.setError('recipientError', '');
         }}
         onBlur={handleInputBlur}
         currency={data.currencySymbol}
@@ -31,7 +42,9 @@ export const InputAndErrorsWrapper = ({ currencyMenu, displayedAmount, data, act
         $inputError={data.errors.showAmountError && !!data.errors.amountError}
       />
       <span className="errorMsg">
-        {data.errors.showAmountError && data.errors.amountError ? data.errors.amountError : ""}
+        {data.errors.showAmountError && data.errors.amountError
+          ? data.errors.amountError
+          : ''}
       </span>
     </StyledInputAndErrorsWrapper>
   );

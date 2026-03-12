@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledMapsInfoBox = styled.div`
   position: relative;
@@ -12,7 +12,7 @@ export const StyledMapsInfoBox = styled.div`
       flex-direction: row;
       align-items: center;
       gap: 10px;
-      .locationName{
+      .locationName {
         text-decoration: underline;
         cursor: pointer;
       }
@@ -27,7 +27,6 @@ export const StyledMapsInfoBox = styled.div`
       text-decoration: underline;
       cursor: pointer;
     }
-    
   }
 
   .locationIcon {

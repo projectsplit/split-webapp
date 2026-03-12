@@ -1,24 +1,28 @@
-import { StyledNoTransfersFound } from "./NoTransfersFound.styled"
-import { Signal } from "@preact/signals-react"
-import { Group, TransferParsedFilters, TruncatedMember } from "@/types"
-import { QueryClient } from "@tanstack/react-query"
-import { renderTransferFilterPills } from "@/helpers/renderTransferFilterPills"
-import { FaMagnifyingGlass } from "react-icons/fa6"
-import { BiTransfer } from "react-icons/bi"
+import { StyledNoTransfersFound } from './NoTransfersFound.styled';
+import { Signal } from '@preact/signals-react';
+import { Group, TransferParsedFilters, TruncatedMember } from '@/types';
+import { QueryClient } from '@tanstack/react-query';
+import { renderTransferFilterPills } from '@/helpers/renderTransferFilterPills';
+import { FaMagnifyingGlass } from 'react-icons/fa6';
+import { BiTransfer } from 'react-icons/bi';
 
 interface NoTransfersFoundInterface {
-  transferParsedFilters: Signal<TransferParsedFilters>
-  allParticipants: TruncatedMember[]
-  group: Group
-  queryClient: QueryClient
+  transferParsedFilters: Signal<TransferParsedFilters>;
+  allParticipants: TruncatedMember[];
+  group: Group;
+  queryClient: QueryClient;
 }
 
-export const NoTransfersFound = ({ transferParsedFilters, allParticipants, group, queryClient }: NoTransfersFoundInterface) => {
-
+export const NoTransfersFound = ({
+  transferParsedFilters,
+  allParticipants,
+  group,
+  queryClient,
+}: NoTransfersFoundInterface) => {
   const hasAnySearchParams =
     !!transferParsedFilters.value.before ||
     !!transferParsedFilters.value.after ||
-    (transferParsedFilters.value.freeText !== "" &&
+    (transferParsedFilters.value.freeText !== '' &&
       transferParsedFilters.value.freeText !== undefined) ||
     (transferParsedFilters.value.sendersIds !== undefined &&
       transferParsedFilters.value.sendersIds.length > 0) ||

@@ -1,9 +1,9 @@
-import { CSSTransition } from "react-transition-group";
-import CreateExpenseForm from "../CreateExpenseForm/CreateExpenseForm";
-import { NewExpenseAnimationProps } from "../../interfaces";
+import { CSSTransition } from 'react-transition-group';
+import CreateExpenseForm from '../CreateExpenseForm/CreateExpenseForm';
+import { NewExpenseAnimationProps } from '../../interfaces';
 // import { ExpenseResponseItem } from "../../../types";
 // import { useSignal } from "@preact/signals-react";
-import { useRef } from "react";
+import { useRef } from 'react';
 
 export default function NewExpenseAnimation({
   groupId,
@@ -17,12 +17,12 @@ export default function NewExpenseAnimation({
   nonGroupUsers,
   isnonGroupExpense,
   nonGroupMenu,
-  fromPersonal
+  fromPersonal,
 }: NewExpenseAnimationProps) {
   const nodeRef = useRef(null);
   return (
     <CSSTransition
-      in={menu.value === "newExpense"}
+      in={menu.value === 'newExpense'}
       timeout={0}
       unmountOnExit
       nodeRef={nodeRef}

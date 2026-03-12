@@ -1,5 +1,4 @@
-import styled from "styled-components";
-
+import styled from 'styled-components';
 
 export const StyledSearchCategoryButton = styled.div`
   border: none;
@@ -10,7 +9,7 @@ export const StyledSearchCategoryButton = styled.div`
   margin-top: 15px;
   margin-bottom: 15px;
 
-  .category{
+  .category {
     cursor: pointer;
   }
 
@@ -25,6 +24,4 @@ export const StyledSearchCategoryButton = styled.div`
     overflow-x: auto;
     padding-bottom: 4px;
   }
-
-  
 `;

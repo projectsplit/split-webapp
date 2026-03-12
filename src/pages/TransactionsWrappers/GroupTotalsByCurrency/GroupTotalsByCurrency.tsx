@@ -1,9 +1,8 @@
-import IonIcon from "@reacticons/ionicons";
-import { BarsAndAmounts } from "../../../components/BarsWithLegends/BarsAndAmounts/BarsAndAmounts";
-import { GroupTotalExpensesByCurrencyProps } from "../../../interfaces";
-import { StyledGroupTotalsByCurrency } from "./GroupTotalsByCurrency.styled";
-import { Mode } from "@/types";
-
+import IonIcon from '@reacticons/ionicons';
+import { BarsAndAmounts } from '../../../components/BarsWithLegends/BarsAndAmounts/BarsAndAmounts';
+import { GroupTotalExpensesByCurrencyProps } from '../../../interfaces';
+import { StyledGroupTotalsByCurrency } from './GroupTotalsByCurrency.styled';
+import { Mode } from '@/types';
 
 export const GroupTotalsByCurrency = ({
   menu,
@@ -13,7 +12,7 @@ export const GroupTotalsByCurrency = ({
   bar2Legend,
   groupTotalsByCurrency,
   userTotalsByCurrency,
-  mode
+  mode,
 }: GroupTotalExpensesByCurrencyProps) => {
   const allCurrencies = Array.from(
     new Set([
@@ -32,10 +31,15 @@ export const GroupTotalsByCurrency = ({
       </div>
 
       <div className="legends">
-        {mode !== Mode.Personal && <div className="grouping">
-          <div className="legendGroup" style={{ backgroundColor: bar1Color }} />
-          <div className="descr">{bar1Legend}</div>
-        </div>}
+        {mode !== Mode.Personal && (
+          <div className="grouping">
+            <div
+              className="legendGroup"
+              style={{ backgroundColor: bar1Color }}
+            />
+            <div className="descr">{bar1Legend}</div>
+          </div>
+        )}
         <div className="grouping">
           <div className="legendUser" style={{ backgroundColor: bar2Color }} />
           <div className="descr">{bar2Legend}</div>

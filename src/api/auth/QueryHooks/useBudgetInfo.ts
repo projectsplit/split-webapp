@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { BudgetInfoResponse } from "../../../types";
-import { apiClient } from "../../apiClients";
+import { useQuery } from '@tanstack/react-query';
+import { BudgetInfoResponse } from '../../../types';
+import { apiClient } from '../../apiClients';
 
 const useBudgetInfo = () => {
   return useQuery<BudgetInfoResponse>({
-    queryKey: ["budget"],
+    queryKey: ['budget'],
     queryFn: getBudgetInfo,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -13,13 +13,10 @@ const useBudgetInfo = () => {
   });
 };
 
-
 const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
-  const response = await apiClient.get<BudgetInfoResponse>(
-    `/budget/budgetinfo`
-  );
+  const response =
+    await apiClient.get<BudgetInfoResponse>(`/budget/budgetinfo`);
   return response.data;
 };
-
 
 export default useBudgetInfo;

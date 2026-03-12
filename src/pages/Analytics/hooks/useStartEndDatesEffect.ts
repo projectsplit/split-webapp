@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { buildStartAndEndDates } from "../helpers/buildStartAndEndDates";
-import { Frequency } from "../../../types";
-import { Signal } from "@preact/signals-react";
+import { useEffect } from 'react';
+import { buildStartAndEndDates } from '../helpers/buildStartAndEndDates';
+import { Frequency } from '../../../types';
+import { Signal } from '@preact/signals-react';
 
 export const useStartAndEndDatesEffect = (
   selectedCycle: Signal<Frequency>,
@@ -10,9 +10,8 @@ export const useStartAndEndDatesEffect = (
   allWeeksPerYear: Date[][],
   startDate: Signal<string>,
   endDate: Signal<string>,
-  timeZone:string
+  timeZone: string
 ) => {
-
   useEffect(() => {
     const startAndEndDates = buildStartAndEndDates(
       selectedCycle.value,

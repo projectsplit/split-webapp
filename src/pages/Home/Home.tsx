@@ -1,14 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
-import { StyledHomepage } from "./Home.Styled";
-import { BsBarChartFill } from "react-icons/bs";
-import { BsFillPiggyBankFill } from "react-icons/bs";
-import { BsFillPersonFill } from "react-icons/bs";
-import { TiGroup } from "react-icons/ti";
-import OptionButton from "./SelectionButton/SelectionButton";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { useTheme } from "styled-components";
-import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
+import { useEffect, useMemo, useState } from 'react';
+import { StyledHomepage } from './Home.Styled';
+import { BsBarChartFill } from 'react-icons/bs';
+import { BsFillPiggyBankFill } from 'react-icons/bs';
+import { BsFillPersonFill } from 'react-icons/bs';
+import { TiGroup } from 'react-icons/ti';
+import OptionButton from './SelectionButton/SelectionButton';
+import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { useTheme } from 'styled-components';
+import TreeAdjustedContainer from '../../components/TreeAdjustedContainer/TreeAdjustedContainer';
 import {
   Details,
   ExpenseResponseItem,
@@ -17,30 +17,30 @@ import {
   Member,
   User,
   UserInfo,
-} from "../../types";
-import useBudgetInfo from "../../api/auth/QueryHooks/useBudgetInfo";
+} from '../../types';
+import useBudgetInfo from '../../api/auth/QueryHooks/useBudgetInfo';
 
-import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
-import { useOutletContext } from "react-router-dom";
-import { signal, Signal, useSignal } from "@preact/signals-react";
-import SettingsMenuAnimation from "../../components/Animations/SettingsMenuAnimation";
-import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
-import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
-import Spinner from "../../components/Spinner/Spinner";
-import { AiFillThunderbolt } from "react-icons/ai";
-import HomeQuickActionsAnimation from "../../components/Animations/HomeQuickActionsAnimation";
-import useGroup from "../../api/auth/QueryHooks/useGroup";
-import CreateExpenseForm from "../../components/CreateExpenseForm/CreateExpenseForm";
-import TransferForm from "../../components/TransferForm/TransferForm";
-import NonGroupExpenseUsersAnimation from "../../components/Animations/NonGroupExpenseUsersAnimation";
-import NonGroupTransferAnimation from "../../components/Animations/NonGroupTransferAnimation";
-import { useGetMostRecentGroups } from "@/api/auth/QueryHooks/useGetMostRecentGroups";
-import { useGetGroupsAllBalances } from "@/api/auth/QueryHooks/useGetGroupsAllBalances";
-import { useFetchAndGroupNonGroupDebts } from "../Groups/hooks/useFetchAndGroupNonGroupDebts";
-import { computeNetPerCurrency } from "@/helpers/computeNetPerCurrency";
-import { useTotalUserBalance } from "./hooks/useTotalUserBalance";
-import MostRecentSection from "./MostRecentSection/MostRecentSection";
-import ScrollableMenuButtons from "./ScrollableMenuButtons/ScrollableMenuButtons";
+import { BudgetInfoMessage } from '../../components/BudgetMessages/BudgetInfoMessage';
+import { useOutletContext } from 'react-router-dom';
+import { signal, Signal, useSignal } from '@preact/signals-react';
+import SettingsMenuAnimation from '../../components/Animations/SettingsMenuAnimation';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import { TreeItemBuilderForHomeAndGroups } from '../../components/TreeItemBuilderForHomeAndGroups';
+import Spinner from '../../components/Spinner/Spinner';
+import { AiFillThunderbolt } from 'react-icons/ai';
+import HomeQuickActionsAnimation from '../../components/Animations/HomeQuickActionsAnimation';
+import useGroup from '../../api/auth/QueryHooks/useGroup';
+import CreateExpenseForm from '../../components/CreateExpenseForm/CreateExpenseForm';
+import TransferForm from '../../components/TransferForm/TransferForm';
+import NonGroupExpenseUsersAnimation from '../../components/Animations/NonGroupExpenseUsersAnimation';
+import NonGroupTransferAnimation from '../../components/Animations/NonGroupTransferAnimation';
+import { useGetMostRecentGroups } from '@/api/auth/QueryHooks/useGetMostRecentGroups';
+import { useGetGroupsAllBalances } from '@/api/auth/QueryHooks/useGetGroupsAllBalances';
+import { useFetchAndGroupNonGroupDebts } from '../Groups/hooks/useFetchAndGroupNonGroupDebts';
+import { computeNetPerCurrency } from '@/helpers/computeNetPerCurrency';
+import { useTotalUserBalance } from './hooks/useTotalUserBalance';
+import MostRecentSection from './MostRecentSection/MostRecentSection';
+import ScrollableMenuButtons from './ScrollableMenuButtons/ScrollableMenuButtons';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -71,12 +71,12 @@ export default function Home() {
     receiverId: string;
     receiverName: string;
   }>({
-    attribute: "",
+    attribute: '',
     menu: null,
-    senderId: "",
-    senderName: "",
-    receiverId: "",
-    receiverName: "",
+    senderId: '',
+    senderName: '',
+    receiverId: '',
+    receiverName: '',
   });
 
   const quickActionsMenu = useSignal<string | null>(null);
@@ -87,18 +87,17 @@ export default function Home() {
     isLoading,
     isFetching,
     groupsData,
-    nonGroupGroupedTransactions
-  } = useTotalUserBalance(userInfo?.userId || "");
+    nonGroupGroupedTransactions,
+  } = useTotalUserBalance(userInfo?.userId || '');
 
   const {
     data: mostRecentGroupData,
     isFetching: mostRecentGroupDataIsFetching,
-  } = useGetMostRecentGroups(recentContextId)
-
+  } = useGetMostRecentGroups(recentContextId);
 
   useEffect(() => {
-    topMenuTitle.value = "";
-    const saved = localStorage.getItem("submittedFromHomePersistData");
+    topMenuTitle.value = '';
+    const saved = localStorage.getItem('submittedFromHomePersistData');
     if (saved) {
       const {
         nonGroupUsers: u,
@@ -115,7 +114,7 @@ export default function Home() {
     }
   }, []);
 
-  const isGlowing = quickActionsMenu.value === "quickActions";
+  const isGlowing = quickActionsMenu.value === 'quickActions';
 
   return (
     <StyledHomepage>
@@ -143,12 +142,12 @@ export default function Home() {
             topMenuTitle={topMenuTitle}
           />
           <div
-            className={`actions ${isGlowing ? "glow" : ""}`}
+            className={`actions ${isGlowing ? 'glow' : ''}`}
             onClick={() =>
-            (quickActionsMenu.value =
-              quickActionsMenu.value === "quickActions"
-                ? null
-                : "quickActions")
+              (quickActionsMenu.value =
+                quickActionsMenu.value === 'quickActions'
+                  ? null
+                  : 'quickActions')
             }
           >
             <AiFillThunderbolt className="thunder" />
@@ -157,7 +156,7 @@ export default function Home() {
       )}
       <MenuAnimationBackground menu={quickActionsMenu} />
 
-      {quickActionsMenu.value === "newExpense" && (
+      {quickActionsMenu.value === 'newExpense' && (
         <CreateExpenseForm
           groupId={fromHomeGroup.value?.id}
           expense={null}
@@ -176,7 +175,7 @@ export default function Home() {
           fromHome={true}
         />
       )}
-      {quickActionsMenu.value === "newTransfer" && (
+      {quickActionsMenu.value === 'newTransfer' && (
         <TransferForm
           groupId={fromHomeGroup.value?.id}
           timeZoneId={userInfo.timeZone}

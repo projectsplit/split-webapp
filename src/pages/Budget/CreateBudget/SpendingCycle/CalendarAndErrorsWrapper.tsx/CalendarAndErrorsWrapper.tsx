@@ -1,19 +1,27 @@
-import { StyledCalendarAndErrorsWrapper } from "./CalendarAndErrorsWrapper.styled";
-import { CalendarAndErrorsWrapperProps } from "../../../../../interfaces";
-import { Frequency } from "@/types";
-import { getOrdinalSuffix } from "@/helpers/getOrdinalSuffix";
-import SpendingCycleSelector from "@/pages/Budget/SpendingCycleSelector/SpendingCycleSelector";
-import { getWeekday } from "@/helpers/getWeekDay";
+import { StyledCalendarAndErrorsWrapper } from './CalendarAndErrorsWrapper.styled';
+import { CalendarAndErrorsWrapperProps } from '../../../../../interfaces';
+import { Frequency } from '@/types';
+import { getOrdinalSuffix } from '@/helpers/getOrdinalSuffix';
+import SpendingCycleSelector from '@/pages/Budget/SpendingCycleSelector/SpendingCycleSelector';
+import { getWeekday } from '@/helpers/getWeekDay';
 
-export const CalendarAndErrorsWrapper = ({ openCalendar, budgettype, calendarDay, submitBudgetErrors, startDate, endDate, openCustomDateCalendar, pickingTarget }: CalendarAndErrorsWrapperProps) => {
-
+export const CalendarAndErrorsWrapper = ({
+  openCalendar,
+  budgettype,
+  calendarDay,
+  submitBudgetErrors,
+  startDate,
+  endDate,
+  openCustomDateCalendar,
+  pickingTarget,
+}: CalendarAndErrorsWrapperProps) => {
   const formatDate = (date: string) => {
-    if (!date) return "";
+    if (!date) return '';
     return new Date(date).toLocaleDateString();
   };
 
   const getDayNumber = (day: string): string | null => {
-    const index = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].indexOf(day);
+    const index = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].indexOf(day);
     if (index !== -1) return (index + 1).toString();
     return null;
   };
@@ -26,64 +34,79 @@ export const CalendarAndErrorsWrapper = ({ openCalendar, budgettype, calendarDay
         }}
         open={openCalendar.value}
         inputError={submitBudgetErrors.value.find(
-          (item) => item.field === "Day" || item.field === "BudgetType"
+          (item) => item.field === 'Day' || item.field === 'BudgetType'
         )}
       >
         {budgettype.value === Frequency.Custom ? (
           !startDate.value ? (
-            <div className= "prompt" onClick={(e) => {
-              e.stopPropagation();
-              pickingTarget.value = "start";
-              openCustomDateCalendar.value = true;
-            }}>
+            <div
+              className="prompt"
+              onClick={(e) => {
+                e.stopPropagation();
+                pickingTarget.value = 'start';
+                openCustomDateCalendar.value = true;
+              }}
+            >
               select start date
             </div>
           ) : !endDate.value ? (
             <div className="customPropmtPills">
-              <div className="pill" onClick={(e) => {
-                e.stopPropagation();
-                pickingTarget.value = "start";
-                openCustomDateCalendar.value = true;
-              }}>
+              <div
+                className="pill"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  pickingTarget.value = 'start';
+                  openCustomDateCalendar.value = true;
+                }}
+              >
                 <span className="date">{formatDate(startDate.value)}</span>
-              </div>
-              {" "} - {" "}
-              <div className= "prompt"  onClick={(e) => {
-                e.stopPropagation();
-                pickingTarget.value = "end";
-                openCustomDateCalendar.value = true;
-              }}>
+              </div>{' '}
+              -{' '}
+              <div
+                className="prompt"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  pickingTarget.value = 'end';
+                  openCustomDateCalendar.value = true;
+                }}
+              >
                 select end date
               </div>
             </div>
           ) : (
             <div className="customPropmtPills">
-              <div className="pill" onClick={(e) => {
-                e.stopPropagation();
-                pickingTarget.value = "start";
-                openCustomDateCalendar.value = true;
-              }}>
+              <div
+                className="pill"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  pickingTarget.value = 'start';
+                  openCustomDateCalendar.value = true;
+                }}
+              >
                 <span className="date">{formatDate(startDate.value)}</span>
-              </div>
-              {" "} - {" "}
-              <div className="pill" onClick={(e) => {
-                e.stopPropagation();
-                pickingTarget.value = "end";
-                openCustomDateCalendar.value = true;
-              }}>
+              </div>{' '}
+              -{' '}
+              <div
+                className="pill"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  pickingTarget.value = 'end';
+                  openCustomDateCalendar.value = true;
+                }}
+              >
                 <span className="date">{formatDate(endDate.value)}</span>
               </div>
             </div>
           )
-        ) : calendarDay.value === "" ? (
+        ) : calendarDay.value === '' ? (
           budgettype.value === Frequency.Monthly ? (
-            "Monthly"
+            'Monthly'
           ) : (
-            "Weekly"
+            'Weekly'
           )
         ) : budgettype.value === Frequency.Monthly ? (
           <div className="monthlyPropmt">
-            Monthly on the {calendarDay.value}{" "}
+            Monthly on the {calendarDay.value}{' '}
             <sup className="sup">{getOrdinalSuffix(calendarDay.value)}</sup>
           </div>
         ) : (
@@ -91,16 +114,16 @@ export const CalendarAndErrorsWrapper = ({ openCalendar, budgettype, calendarDay
         )}
       </SpendingCycleSelector>
       {submitBudgetErrors.value.find(
-        (item) => item.field === "Day" || item.field === "BudgetType"
+        (item) => item.field === 'Day' || item.field === 'BudgetType'
       ) && (
-          <span className="errorMsg">
-            {
-              submitBudgetErrors.value.find(
-                (item) => item.field === "Day" || item.field === "BudgetType"
-              ).errorMessage
-            }
-          </span>
-        )}
+        <span className="errorMsg">
+          {
+            submitBudgetErrors.value.find(
+              (item) => item.field === 'Day' || item.field === 'BudgetType'
+            ).errorMessage
+          }
+        </span>
+      )}
     </StyledCalendarAndErrorsWrapper>
   );
 };

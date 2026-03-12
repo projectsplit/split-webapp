@@ -1,5 +1,5 @@
-import { StyledText } from "./Text.styled";
-import { memo } from "react";
+import { StyledText } from './Text.styled';
+import { memo } from 'react';
 
 interface TextProps {
   description: string;
@@ -20,37 +20,37 @@ const Text = memo(
 
     return (
       <StyledText $error={error}>
-        {description === "Participants" ? (
+        {description === 'Participants' ? (
           selectedCount === 0 ? (
-            ""
+            ''
           ) : selectedCount === 1 ? (
             <>
               Billed to <div className="button">{firstSelectedName} </div> and
             </>
           ) : selectedCount === 2 && isEquallySplit ? (
             <>
-              Split <div className="button">equally </div> between{" "}
+              Split <div className="button">equally </div> between{' '}
               {selectedCount} and
             </>
           ) : selectedCount === 2 && !isEquallySplit ? (
             <>
-              Split <div className="button">unequally </div> between{" "}
+              Split <div className="button">unequally </div> between{' '}
               {selectedCount} and
             </>
           ) : selectedCount > 2 && isEquallySplit ? (
             <>
-              Split <div className="button">equally </div> among {selectedCount}{" "}
+              Split <div className="button">equally </div> among {selectedCount}{' '}
               and
             </>
           ) : (
             <>
-              Split <div className="button">unequally </div> among{" "}
+              Split <div className="button">unequally </div> among{' '}
               {selectedCount} and
             </>
           )
-        ) : description === "Payers" ? (
+        ) : description === 'Payers' ? (
           selectedCount === 0 ? (
-            ""
+            ''
           ) : selectedCount === 1 ? (
             <>
               paid by <div className="button">{firstSelectedName} </div>

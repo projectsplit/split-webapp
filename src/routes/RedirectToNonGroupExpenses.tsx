@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function RedirectToNonGroupExpenses() {
   const navigate = useNavigate();
@@ -9,5 +9,4 @@ export default function RedirectToNonGroupExpenses() {
   }, []);
 
   return null;
-
 }

@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { PeoplePillsDisplayProps } from "../../../../../interfaces";
-import { StyledPeoplePillsDisplay } from "./PeoplePillsDisplay.styled";
-import { useBeautifulMentions } from "lexical-beautiful-mentions";
-import { FetchedPeople } from "../../../../../types";
-import Pill from "../../../../Pill/Pill";
+import { useEffect, useState } from 'react';
+import { PeoplePillsDisplayProps } from '../../../../../interfaces';
+import { StyledPeoplePillsDisplay } from './PeoplePillsDisplay.styled';
+import { useBeautifulMentions } from 'lexical-beautiful-mentions';
+import { FetchedPeople } from '../../../../../types';
+import Pill from '../../../../Pill/Pill';
 
 export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
   category,
@@ -16,21 +16,20 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
   cancelled,
   removedFilter,
 }) => {
-
-  const [showFilteredPeople, setShowFilteredPeople] =
-    useState<FetchedPeople>([]);
+  const [showFilteredPeople, setShowFilteredPeople] = useState<FetchedPeople>(
+    []
+  );
   const { insertMention } = useBeautifulMentions();
 
   const updateFilteredPeople = () => {
-
     switch (category) {
-      case "payer":
+      case 'payer':
         return filteredPeople.value.payers;
-      case "participant":
+      case 'participant':
         return filteredPeople.value.participants;
-      case "sender":
+      case 'sender':
         return filteredPeople.value.senders;
-      case "receiver":
+      case 'receiver':
         return filteredPeople.value.receivers;
       default:
         return [];
@@ -53,16 +52,18 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
     setShowFilteredPeople(updatedFilteredPeople);
 
     switch (category) {
-      case "payer":
+      case 'payer':
         if (expenseFilterState) {
           expenseFilterState.value.payersIds =
-            expenseFilterState.value.payersIds.filter((payerId) => payerId !== id);
+            expenseFilterState.value.payersIds.filter(
+              (payerId) => payerId !== id
+            );
           filteredPeople.value.payers = filteredPeople.value.payers.filter(
             (person) => person.id !== id
           );
         }
         break;
-      case "participant":
+      case 'participant':
         if (expenseFilterState) {
           expenseFilterState.value.participantsIds =
             expenseFilterState.value.participantsIds.filter(
@@ -74,7 +75,7 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
             );
         }
         break;
-      case "sender":
+      case 'sender':
         if (transferFilterState) {
           transferFilterState.value.sendersIds =
             transferFilterState.value.sendersIds.filter(
@@ -85,16 +86,14 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
           );
         }
         break;
-      case "receiver":
+      case 'receiver':
         if (transferFilterState) {
           transferFilterState.value.receiversIds =
             transferFilterState.value.receiversIds.filter(
               (receiverId) => receiverId !== id
             );
           filteredPeople.value.receivers =
-            filteredPeople.value.receivers.filter(
-              (person) => person.id !== id
-            );
+            filteredPeople.value.receivers.filter((person) => person.id !== id);
         }
         break;
       default:
@@ -110,11 +109,11 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
       <div
         className="category"
         onClick={() => {
-          insertMention({ trigger: category + ":", value: "" });
+          insertMention({ trigger: category + ':', value: '' });
           //openMentionMenu({trigger:category + ":"})
           showOptions.value = false;
           submitButtonIsActive.value = true;
-          console.log("Here1");
+          console.log('Here1');
         }}
       >
         {category}:
@@ -132,7 +131,6 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
                 $textColor="#000000c8"
                 $border={false}
                 fontSize="16px"
-
               />
             </div>
           ))

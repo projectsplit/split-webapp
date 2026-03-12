@@ -1,7 +1,7 @@
-import { useRef } from "react";
-import { CSSTransition } from "react-transition-group";
-import { GeneralWarningMenuAnimationProps } from "../../interfaces";
-import GeneralWarningMenu from "../Menus/GeneralWarningMenu/GeneralWarningMenu";
+import { useRef } from 'react';
+import { CSSTransition } from 'react-transition-group';
+import { GeneralWarningMenuAnimationProps } from '../../interfaces';
+import GeneralWarningMenu from '../Menus/GeneralWarningMenu/GeneralWarningMenu';
 
 export default function GeneralWarningMenuAnimation({
   menu,
@@ -10,7 +10,7 @@ export default function GeneralWarningMenuAnimation({
   const nodeRef = useRef(null);
   return (
     <CSSTransition
-      in={menu.value === "generalWarning"}
+      in={menu.value === 'generalWarning'}
       timeout={100}
       classNames="infoBox"
       unmountOnExit

@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { CombinedMenuProps } from "../../../interfaces";
+import styled from 'styled-components';
+import { CombinedMenuProps } from '../../../interfaces';
 
 export const StyledMenu = styled.div<CombinedMenuProps>`
   overflow: hidden;
@@ -7,6 +7,6 @@ export const StyledMenu = styled.div<CombinedMenuProps>`
   scrollbar-width: none;
   position: relative;
   top: ${({ $contentEditableHeight }) => `${$contentEditableHeight - 80}px`};
-  z-index: 0; 
+  z-index: 0;
   border: none;
 `;

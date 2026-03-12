@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { TopMenuProps } from "../../../interfaces";
-import NotificationsBell from "../../NotificationsBell/NotificationsBell";
-import UserOptionsButton from "../../UserOptionsButton/UserOptionsButton";
-import { StyledTopMenu } from "./TopMenu.styled";
-import { useState } from "react";
-import IonIcon from "@reacticons/ionicons";
+import { useNavigate } from 'react-router-dom';
+import { TopMenuProps } from '../../../interfaces';
+import NotificationsBell from '../../NotificationsBell/NotificationsBell';
+import UserOptionsButton from '../../UserOptionsButton/UserOptionsButton';
+import { StyledTopMenu } from './TopMenu.styled';
+import { useState } from 'react';
+import IonIcon from '@reacticons/ionicons';
 
 export default function TopMenu({
   title,
@@ -13,7 +13,7 @@ export default function TopMenu({
   hasNewerNotifications,
   openGroupOptionsMenu,
   groupIsArchived,
-  confirmUnarchiveMenu
+  confirmUnarchiveMenu,
 }: TopMenuProps) {
   const navigate = useNavigate();
 
@@ -21,11 +21,15 @@ export default function TopMenu({
     useState<boolean>(true);
 
   const handleNavigate = (title: string) => {
-    if (title !== "" && title !== "Shared" && title !== "Your Expenses") {
-      navigate("/shared");
+    if (title !== '' && title !== 'Shared' && title !== 'Your Expenses') {
+      navigate('/shared');
     }
   };
-  const isInSharedAndNotInNonGroup = title !== "" && title !== "Shared" && title !== "Non Group Transactions" && title !== "Your Expenses";
+  const isInSharedAndNotInNonGroup =
+    title !== '' &&
+    title !== 'Shared' &&
+    title !== 'Non Group Transactions' &&
+    title !== 'Your Expenses';
 
   return (
     <StyledTopMenu title={title}>
@@ -33,7 +37,7 @@ export default function TopMenu({
         {username ? (
           <UserOptionsButton
             username={username}
-            onClick={() => (menu.value = "settings")}
+            onClick={() => (menu.value = 'settings')}
           />
         ) : null}
 
@@ -42,7 +46,12 @@ export default function TopMenu({
             <div
               className="title"
               onClick={() => handleNavigate(title)}
-              style={{ cursor: title !== "Shared" && title !== "Your Expenses" ? "pointer" : "" }}
+              style={{
+                cursor:
+                  title !== 'Shared' && title !== 'Your Expenses'
+                    ? 'pointer'
+                    : '',
+              }}
             >
               {title}
             </div>
@@ -55,7 +64,12 @@ export default function TopMenu({
           <div
             className="title"
             onClick={() => handleNavigate(title)}
-            style={{ cursor: title !== "Shared" && title !== "Your Expenses" ? "pointer" : "" }}
+            style={{
+              cursor:
+                title !== 'Shared' && title !== 'Your Expenses'
+                  ? 'pointer'
+                  : '',
+            }}
           >
             {title}
           </div>
@@ -63,14 +77,14 @@ export default function TopMenu({
       ) : null}
 
       <div className="bellAndCog">
-        {" "}
+        {' '}
         {isInSharedAndNotInNonGroup ? (
           groupIsArchived ? (
             <div
               className="cogContainer"
               onClick={() => (confirmUnarchiveMenu.value = 'unarchiveGroup')}
             >
-              {" "}
+              {' '}
               <IonIcon name="arrow-undo-outline" className="arrow" />
             </div>
           ) : (
@@ -78,7 +92,7 @@ export default function TopMenu({
               className="cogContainer"
               onClick={() => (openGroupOptionsMenu.value = true)}
             >
-              {" "}
+              {' '}
               <IonIcon name="settings-outline" className="cog" />
             </div>
           )
@@ -86,7 +100,7 @@ export default function TopMenu({
         <div
           className="bellIconAndNumberOfNotifications"
           onClick={() => {
-            menu.value = "notifications";
+            menu.value = 'notifications';
             setVisuallyShowNotification(false);
           }}
         >
@@ -95,7 +109,7 @@ export default function TopMenu({
           {hasNewerNotifications && visuallyShowNotification ? (
             <span className="notification" />
           ) : (
-            ""
+            ''
           )}
         </div>
       </div>

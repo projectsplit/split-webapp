@@ -1,11 +1,11 @@
-import { StyledRevokeAccess } from "./RevokeAccess.styled";
-import Sentinel from "../../../components/Sentinel";
-import { RevokeAccessProps } from "../../../interfaces";
-import RevokeAccessItem from "./RevokeAccessItem/RevokeAccessItem";
-import Spinner from "../../../components/Spinner/Spinner";
-import { UserInfo } from "../../../types";
-import { useOutletContext } from "react-router-dom";
-import { TbQrcodeOff } from "react-icons/tb";
+import { StyledRevokeAccess } from './RevokeAccess.styled';
+import Sentinel from '../../../components/Sentinel';
+import { RevokeAccessProps } from '../../../interfaces';
+import RevokeAccessItem from './RevokeAccessItem/RevokeAccessItem';
+import Spinner from '../../../components/Spinner/Spinner';
+import { UserInfo } from '../../../types';
+import { useOutletContext } from 'react-router-dom';
+import { TbQrcodeOff } from 'react-icons/tb';
 
 export default function RevokeAccess({
   groupId,
@@ -18,7 +18,6 @@ export default function RevokeAccess({
   invitationCode,
   mostRecentCodeHasBeenRevoked,
 }: RevokeAccessProps) {
-
   if (isFetching && !isFetchingNextPage) {
     return (
       <StyledRevokeAccess>
@@ -34,7 +33,7 @@ export default function RevokeAccess({
         <div className="textAndIcon">
           <div className="textEmoji">
             <span className="text">
-              No passcodes to revoke for "{groupName}"{" "}
+              No passcodes to revoke for "{groupName}"{' '}
             </span>
             <span className="emoji">🧐</span>
           </div>

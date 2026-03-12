@@ -1,6 +1,6 @@
-import { StyledSearchCategoryButton } from "../SearchCategoryButton.styled";
-import { SearchLabelButtonProps } from "../../../../interfaces";
-import LabelsPillsDisplay from "./LabelsPillsDisplay/LabelsPillsDisplay";
+import { StyledSearchCategoryButton } from '../SearchCategoryButton.styled';
+import { SearchLabelButtonProps } from '../../../../interfaces';
+import LabelsPillsDisplay from './LabelsPillsDisplay/LabelsPillsDisplay';
 
 export default function SearchLabelButton({
   category,

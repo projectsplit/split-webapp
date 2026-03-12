@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { UpdateSelectedTimeZoneRequest } from "../../../types";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { UpdateSelectedTimeZoneRequest } from '../../../types';
 
 export const useTimeZone = () => {
   const queryClient = useQueryClient();
@@ -10,7 +10,7 @@ export const useTimeZone = () => {
     mutationFn: (timeZone) => updateTimeZone({ timeZone }),
     onSuccess: async () => {
       queryClient.invalidateQueries({
-        queryKey: ["getMe"],
+        queryKey: ['getMe'],
         exact: false,
       });
     },
@@ -24,7 +24,7 @@ const updateTimeZone = async (
   req: UpdateSelectedTimeZoneRequest
 ): Promise<void> => {
   const response = await apiClient.put<void, AxiosResponse<void>>(
-    "/users/preferences/time-zone",
+    '/users/preferences/time-zone',
     req
   );
   return response.data;

@@ -1,9 +1,9 @@
-import { SelectedGroup } from "@/components/Menus/NonGroupUsersMenus/SelectionLists/SelectedGroup";
-import SendMenuWrapper from "../SendMenuWrapper/SendMenuWrapper";
-import { StyledGroupMenu } from "./GroupMenu.styled";
-import { ReadonlySignal, Signal } from "@preact/signals-react";
-import { Group, Guest, Member } from "@/types";
-import { TransferState } from "../formStore/formStoreTypes";
+import { SelectedGroup } from '@/components/Menus/NonGroupUsersMenus/SelectionLists/SelectedGroup';
+import SendMenuWrapper from '../SendMenuWrapper/SendMenuWrapper';
+import { StyledGroupMenu } from './GroupMenu.styled';
+import { ReadonlySignal, Signal } from '@preact/signals-react';
+import { Group, Guest, Member } from '@/types';
+import { TransferState } from '../formStore/formStoreTypes';
 
 interface GroupMenuProps {
   fromHomeGroup: Signal<Group | null> | undefined;
@@ -12,14 +12,25 @@ interface GroupMenuProps {
     isSenderError: boolean;
     isReceiverError: boolean;
     error: string;
-  }
+  };
   data: Pick<TransferState, 'senderId' | 'receiverId' | 'errors'>;
-  actions: Pick<TransferState, 'toggleSenderId' | 'toggleReceiverId' | 'setError'>;
-  userMemberId: string | undefined
-  sortedMembers: ReadonlySignal<(Member | Guest)[]>
+  actions: Pick<
+    TransferState,
+    'toggleSenderId' | 'toggleReceiverId' | 'setError'
+  >;
+  userMemberId: string | undefined;
+  sortedMembers: ReadonlySignal<(Member | Guest)[]>;
 }
 
-export const GroupMenu = ({ fromHomeGroup, isnonGroupTransfer, idError, data, actions, userMemberId, sortedMembers }: GroupMenuProps) => {
+export const GroupMenu = ({
+  fromHomeGroup,
+  isnonGroupTransfer,
+  idError,
+  data,
+  actions,
+  userMemberId,
+  sortedMembers,
+}: GroupMenuProps) => {
   return (
     <StyledGroupMenu>
       {fromHomeGroup && isnonGroupTransfer && (
@@ -55,5 +66,5 @@ export const GroupMenu = ({ fromHomeGroup, isnonGroupTransfer, idError, data, ac
         sortedMembers={sortedMembers}
       />
     </StyledGroupMenu>
-  )
-}
+  );
+};

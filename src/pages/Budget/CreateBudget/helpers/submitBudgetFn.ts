@@ -1,8 +1,9 @@
-import { CreateBudgetRequest, Frequency } from "@/types";
-import { Signal } from "@preact/signals-react";
-import { QueryClient, UseMutationResult } from "@tanstack/react-query";
+import { CreateBudgetRequest, Frequency } from '@/types';
+import { Signal } from '@preact/signals-react';
+import { QueryClient, UseMutationResult } from '@tanstack/react-query';
 
-export const submitBudgetFn = async (budgettype: Signal<Frequency>,
+export const submitBudgetFn = async (
+  budgettype: Signal<Frequency>,
   createBudget: UseMutationResult<any, any, CreateBudgetRequest, unknown>,
   amount: string,
   currencySymbol: string,
@@ -16,7 +17,7 @@ export const submitBudgetFn = async (budgettype: Signal<Frequency>,
   menu: Signal<string | null>,
   setAmount: (amount: string) => void,
   queryClient: QueryClient,
-  budgetInfoQueryKey: string[],
+  budgetInfoQueryKey: string[]
 ) => {
   if (budgettype.value === Frequency.Monthly) {
     createBudget.mutate({
@@ -49,15 +50,15 @@ export const submitBudgetFn = async (budgettype: Signal<Frequency>,
   openCalendar.value = false;
   queryClient.invalidateQueries({ queryKey: budgetInfoQueryKey, exact: false });
   hasSwitchedBudgetType.value = false;
-  displayedAmount.value = "";
+  displayedAmount.value = '';
   menu.value = null;
-  setAmount("");
-  startDate.value = "";
-  endDate.value = "";
+  setAmount('');
+  startDate.value = '';
+  endDate.value = '';
 };
 
 const getDayNumber = (day: string): string | null => {
-  const index = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].indexOf(day);
+  const index = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].indexOf(day);
   if (index !== -1) return (index + 1).toString();
   return null;
 };

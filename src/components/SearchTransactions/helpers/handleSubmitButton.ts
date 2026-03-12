@@ -1,17 +1,17 @@
-import { $getRoot, EditorState } from "lexical";
-import { isBeautifulMentionNode, isElementNode } from "./isElementNode";
-import { Signal } from "@preact/signals-react";
+import { $getRoot, EditorState } from 'lexical';
+import { isBeautifulMentionNode, isElementNode } from './isElementNode';
+import { Signal } from '@preact/signals-react';
 import {
   CreateExpenseFilterRequest,
   CreateTransferFilterRequest,
   DateConstraint,
   ExpenseParsedFilters,
   TransferParsedFilters,
-} from "../../../types";
-import { QueryClient } from "@tanstack/react-query";
-import { addExistingTriggerElement } from "./addExistingTriggerElement";
-import { finalProcessConstraints } from "./finalProcessConstraints";
-import { getFilterStorageKey } from "./localStorageStringParser";
+} from '../../../types';
+import { QueryClient } from '@tanstack/react-query';
+import { addExistingTriggerElement } from './addExistingTriggerElement';
+import { finalProcessConstraints } from './finalProcessConstraints';
+import { getFilterStorageKey } from './localStorageStringParser';
 
 export const handleSubmitButton = (
   editorState: EditorState | null,
@@ -22,7 +22,7 @@ export const handleSubmitButton = (
   queryClient: QueryClient,
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   transferParsedFilters: Signal<TransferParsedFilters>,
-  isPersonal?: boolean,
+  isPersonal?: boolean
 ) => {
   if (editorState === null) return;
 
@@ -35,9 +35,9 @@ export const handleSubmitButton = (
     /(\S*)(payer|receiver|sender|participant|before|after|category|during):\S+/g;
 
   const cleanedInput = (
-    searchTerm.replace(mentionRegex, "").trim() +
-    " " +
-    (expenseFilterState.value.freeText || "")
+    searchTerm.replace(mentionRegex, '').trim() +
+    ' ' +
+    (expenseFilterState.value.freeText || '')
   ).trim();
 
   const jsonObject = editorState.toJSON().root.children;
@@ -51,24 +51,24 @@ export const handleSubmitButton = (
       const actualId = c.id || c.data?.id || c.data?.memberId;
 
       if (
-        c.type === "beautifulMention" &&
-        ["before:", "during:", "after:"].includes(c.trigger) &&
-        c.data.category === "expenses"
+        c.type === 'beautifulMention' &&
+        ['before:', 'during:', 'after:'].includes(c.trigger) &&
+        c.data.category === 'expenses'
       ) {
         // Record the trigger in the order it appears
         expensesDateTriggerOrder.push({ trigger: c.trigger, value: c.value });
       }
       if (
-        c.type === "beautifulMention" &&
-        ["before:", "during:", "after:"].includes(c.trigger) &&
-        c.data.category === "transfers"
+        c.type === 'beautifulMention' &&
+        ['before:', 'during:', 'after:'].includes(c.trigger) &&
+        c.data.category === 'transfers'
       ) {
         // Record the trigger in the order it appears
         transfersDateTriggerOrder.push({ trigger: c.trigger, value: c.value });
       }
       // Deduplicate
       if (
-        c.trigger === "payer:" &&
+        c.trigger === 'payer:' &&
         actualId &&
         !expenseFilterState.value.payersIds.includes(actualId)
       ) {
@@ -76,7 +76,7 @@ export const handleSubmitButton = (
       }
 
       if (
-        c.trigger === "participant:" &&
+        c.trigger === 'participant:' &&
         actualId &&
         !expenseFilterState.value.participantsIds.includes(actualId)
       ) {
@@ -84,7 +84,7 @@ export const handleSubmitButton = (
       }
 
       if (
-        c.trigger === "sender:" &&
+        c.trigger === 'sender:' &&
         actualId &&
         !transferFilterState.value.sendersIds.includes(actualId)
       ) {
@@ -92,56 +92,56 @@ export const handleSubmitButton = (
       }
 
       if (
-        c.trigger === "receiver:" &&
+        c.trigger === 'receiver:' &&
         actualId &&
         !transferFilterState.value.receiversIds.includes(actualId)
       ) {
         transferFilterState.value.receiversIds.push(actualId);
       }
 
-      if (c.trigger === "before:") {
+      if (c.trigger === 'before:') {
         if (
           isBeautifulMentionNode(c) &&
-          c.data.category === "expenses" &&
+          c.data.category === 'expenses' &&
           !expenseFilterState.value.before.includes(c.value)
         ) {
           expenseFilterState.value.before.push(c.value);
         }
         if (
           isBeautifulMentionNode(c) &&
-          c.data.category === "transfers" &&
+          c.data.category === 'transfers' &&
           !transferFilterState.value.before.includes(c.value)
         ) {
           transferFilterState.value.before.push(c.value);
         }
       }
-      if (c.trigger === "during:") {
+      if (c.trigger === 'during:') {
         if (
           isBeautifulMentionNode(c) &&
-          c.data.category === "expenses" &&
+          c.data.category === 'expenses' &&
           !expenseFilterState.value.during.includes(c.value)
         ) {
           expenseFilterState.value.during.push(c.value);
         }
         if (
           isBeautifulMentionNode(c) &&
-          c.data.category === "transfers" &&
+          c.data.category === 'transfers' &&
           !transferFilterState.value.during.includes(c.value)
         ) {
           transferFilterState.value.during.push(c.value);
         }
       }
-      if (c.trigger === "after:") {
+      if (c.trigger === 'after:') {
         if (
           isBeautifulMentionNode(c) &&
-          c.data.category === "expenses" &&
+          c.data.category === 'expenses' &&
           !expenseFilterState.value.after.includes(c.value)
         ) {
           expenseFilterState.value.after.push(c.value);
         }
         if (
           isBeautifulMentionNode(c) &&
-          c.data.category === "transfers" &&
+          c.data.category === 'transfers' &&
           !transferFilterState.value.after.includes(c.value)
         ) {
           transferFilterState.value.after.push(c.value);
@@ -149,17 +149,17 @@ export const handleSubmitButton = (
       }
       // Deduplicate labels
       if (
-        c.trigger === "category:" &&
+        c.trigger === 'category:' &&
         actualId &&
         !expenseFilterState.value.labels.includes(actualId)
       ) {
         expenseFilterState.value.labels.push(actualId);
       }
 
-      if (category.value === "expenses") {
+      if (category.value === 'expenses') {
         expenseFilterState.value.freeText = cleanedInput;
       }
-      if (category.value === "transfers") {
+      if (category.value === 'transfers') {
         transferFilterState.value.freeText = cleanedInput;
       }
     });
@@ -177,10 +177,10 @@ export const handleSubmitButton = (
       payersIds: expenseFilterState.value.payersIds,
       freeText: expenseFilterState.value.freeText,
       before:
-        expenseDatesBackend?.find((e) => e.trigger === "before:")?.value ||
+        expenseDatesBackend?.find((e) => e.trigger === 'before:')?.value ||
         null,
       after:
-        expenseDatesBackend?.find((e) => e.trigger === "after:")?.value || null,
+        expenseDatesBackend?.find((e) => e.trigger === 'after:')?.value || null,
       labels: expenseFilterState.value.labels,
     };
 
@@ -190,19 +190,19 @@ export const handleSubmitButton = (
       sendersIds: transferFilterState.value.sendersIds,
       freeText: transferFilterState.value.freeText,
       before:
-        transferDatesBackend?.find((e) => e.trigger === "before:")?.value ||
+        transferDatesBackend?.find((e) => e.trigger === 'before:')?.value ||
         null,
       after:
-        transferDatesBackend?.find((e) => e.trigger === "after:")?.value ||
+        transferDatesBackend?.find((e) => e.trigger === 'after:')?.value ||
         null,
     };
 
     localStorage.setItem(
-      getFilterStorageKey("expense", expenseFilter.groupId, isPersonal),
+      getFilterStorageKey('expense', expenseFilter.groupId, isPersonal),
       JSON.stringify(expenseFilter)
     );
     localStorage.setItem(
-      getFilterStorageKey("transfer", transferFilter.groupId),
+      getFilterStorageKey('transfer', transferFilter.groupId),
       JSON.stringify(transferFilter)
     );
 
@@ -211,20 +211,20 @@ export const handleSubmitButton = (
 
     if (expenseFilterState.value.groupId) {
       queryClient.invalidateQueries({
-        queryKey: ["groupExpenses"],
+        queryKey: ['groupExpenses'],
         exact: false,
       });
       queryClient.invalidateQueries({
-        queryKey: ["groupTransfers"],
+        queryKey: ['groupTransfers'],
         exact: false,
       });
     } else {
       queryClient.invalidateQueries({
-        queryKey: ["nonGroupExpenses"],
+        queryKey: ['nonGroupExpenses'],
         exact: false,
       });
       queryClient.invalidateQueries({
-        queryKey: ["personalExpenses"],
+        queryKey: ['personalExpenses'],
         exact: false,
       });
     }

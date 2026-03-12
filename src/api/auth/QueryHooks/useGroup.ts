@@ -1,8 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
-import { Group } from "../../../types";
-import { apiClient } from "../../apiClients";
-import { AxiosError, AxiosResponse } from "axios";
-import { useNavigate } from "react-router-dom";
+import { useQuery } from '@tanstack/react-query';
+import { Group } from '../../../types';
+import { apiClient } from '../../apiClients';
+import { AxiosError, AxiosResponse } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const useGroup = (groupId: string | undefined) => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ const useGroup = (groupId: string | undefined) => {
     queryKey: [groupId],
     queryFn: async () => {
       if (!groupId) {
-        throw new Error("No group ID provided");
+        throw new Error('No group ID provided');
       }
       return await getGroup(groupId, navigate);
     },
@@ -29,7 +29,7 @@ const getGroup = async (
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 400) {
-      navigate("/shared");
+      navigate('/shared');
     }
     throw error;
   }

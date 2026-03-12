@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledExpense = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "userAmount",
-}) <{
+  shouldForwardProp: (prop) => prop !== 'userAmount',
+})<{
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   userAmount: number;
 }>`
@@ -20,7 +20,6 @@ export const StyledExpense = styled.div.withConfig({
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-
 
     .icons {
       display: flex;
@@ -52,7 +51,7 @@ export const StyledExpense = styled.div.withConfig({
       font-size: 14px;
       color: ${({ theme }) => theme.secondaryTextColor};
       font-weight: 800;
-      margin-left:5px;
+      margin-left: 5px;
     }
   }
 

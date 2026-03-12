@@ -1,5 +1,5 @@
-import { displayCurrencyAndAmount } from "../../../../helpers/displayCurrencyAndAmount";
-import { significantDigitsFromTicker } from "../../../../helpers/openExchangeRates";
+import { displayCurrencyAndAmount } from '../../../../helpers/displayCurrencyAndAmount';
+import { significantDigitsFromTicker } from '../../../../helpers/openExchangeRates';
 
 export const BuildRemainingAmountText = (
   totalSelectedAmount: number,
@@ -19,7 +19,7 @@ export const BuildRemainingAmountText = (
                 .toString(),
               selectedCurrency
             )}
-          </span>{" "}
+          </span>{' '}
           <span className="text">to allocate</span>
         </div>
       ) : difference < 0 ? (
@@ -31,7 +31,7 @@ export const BuildRemainingAmountText = (
                 .toString(),
               selectedCurrency
             )}
-          </span>{" "}
+          </span>{' '}
           <span className="text">over</span>
         </div>
       ) : null}

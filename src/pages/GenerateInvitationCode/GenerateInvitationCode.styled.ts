@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledGenerateInvitationCode = styled.div`
   .fixed-header-container {
     position: sticky;
     top: 0;
     z-index: 4;
-    background-color: ${({theme})=>theme.backgroundcolor};
+    background-color: ${({ theme }) => theme.backgroundcolor};
   }
 
   .header {
@@ -29,7 +29,7 @@ export const StyledGenerateInvitationCode = styled.div`
     }
 
     .closeButtonContainer:hover::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;

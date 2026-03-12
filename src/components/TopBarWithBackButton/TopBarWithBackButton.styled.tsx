@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const StyledTopBarWithBackButton = styled.div`
   display: flex;
@@ -20,7 +20,7 @@ export const StyledTopBarWithBackButton = styled.div`
   }
 
   .backButtonContainer:hover::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 50%;
     left: 50%;
@@ -34,7 +34,7 @@ export const StyledTopBarWithBackButton = styled.div`
   .descr {
     flex: 1;
     text-align: center;
-    margin-right:30px;
+    margin-right: 30px;
     font-weight: bold;
   }
 `;

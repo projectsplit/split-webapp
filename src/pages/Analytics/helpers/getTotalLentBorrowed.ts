@@ -1,5 +1,5 @@
-import { significantDigitsFromTicker } from "../../../helpers/openExchangeRates";
-import { SpendingChartsResponse } from "../../../types";
+import { significantDigitsFromTicker } from '../../../helpers/openExchangeRates';
+import { SpendingChartsResponse } from '../../../types';
 
 export const getTotalLentBorrowed = (
   backendData: SpendingChartsResponse | undefined,
@@ -11,11 +11,13 @@ export const getTotalLentBorrowed = (
 
   if (!backendData?.items) return { totalLent, totalBorrowed };
   if (
-    backendData.items[backendData.items.length - 1]?.accumulativeShareAmount === 0 &&
-    backendData.items[backendData.items.length - 1]?.accumulativePaymentAmount === 0
+    backendData.items[backendData.items.length - 1]?.accumulativeShareAmount ===
+      0 &&
+    backendData.items[backendData.items.length - 1]
+      ?.accumulativePaymentAmount === 0
   )
     return { totalLent: [], totalBorrowed: [] };
-    
+
   let prevLent = 0;
   let prevBorrowed = 0;
 

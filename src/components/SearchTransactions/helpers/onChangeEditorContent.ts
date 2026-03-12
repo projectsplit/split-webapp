@@ -1,10 +1,10 @@
-import { $getRoot, EditorState } from "lexical";
-import { isElementNode } from "./isElementNode";
-import { handleInputChange } from "./handleInputChange";
-import { Signal } from "@preact/signals-react";
-import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
-import { findLastTextNode } from "./findLastTextNode";
-import { EnhancedPeopleWithProps, FetchedLabel } from "../../../types";
+import { $getRoot, EditorState } from 'lexical';
+import { isElementNode } from './isElementNode';
+import { handleInputChange } from './handleInputChange';
+import { Signal } from '@preact/signals-react';
+import { BeautifulMentionsItemData } from 'lexical-beautiful-mentions';
+import { findLastTextNode } from './findLastTextNode';
+import { EnhancedPeopleWithProps, FetchedLabel } from '../../../types';
 
 export const onChangeEditorContent = (
   editorState: EditorState,
@@ -32,14 +32,14 @@ export const onChangeEditorContent = (
 ) => {
   setEditorState(editorState);
   const excludedTerms = [
-    "payer:",
-    "participant:",
-    "sender:",
-    "receiver:",
-    "category:",
+    'payer:',
+    'participant:',
+    'sender:',
+    'receiver:',
+    'category:',
   ];
 
-  const timeTerms = ["before:", "during:", "after:"];
+  const timeTerms = ['before:', 'during:', 'after:'];
 
   const searchTerm = editorState.read(() => {
     const root = $getRoot();
@@ -48,36 +48,34 @@ export const onChangeEditorContent = (
 
   // Extract the query following any mention trigger (e.g., "j" from "payer:j")
   const triggerMatch = searchTerm.match(
-    new RegExp(`(?:${excludedTerms.join("|")})([^\\s]*)`, "i")
+    new RegExp(`(?:${excludedTerms.join('|')})([^\\s]*)`, 'i')
   );
   searchKeyword.value = triggerMatch ? triggerMatch[1] : searchTerm;
 
   if (excludedTerms.includes(searchTerm)) {
     showOptions.value = false;
   }
-  if (searchTerm === "") {
+  if (searchTerm === '') {
     showOptions.value = true;
   }
 
-  const matchesTimeTerm = timeTerms.some((term) =>
-    new RegExp(`\\b${term}(\\s|$)`).test(searchTerm)//checks whether there is anything following the timeTerm
+  const matchesTimeTerm = timeTerms.some(
+    (term) => new RegExp(`\\b${term}(\\s|$)`).test(searchTerm) //checks whether there is anything following the timeTerm
   );
 
   // const mentionRegex = /(\S*)(payer|receiver|sender|participant|before|after):\S+/g;
   // const cleanedInput = searchTerm.replace(mentionRegex, "").trim();
 
-
   if (matchesTimeTerm) {
     calendarIsOpen.value = true;
     datePeriodClicked.value =
-      timeTerms.find((term) =>
-        new RegExp(`\\b${term}(\\s|$)`).test(searchTerm)
-      )?.replace(":", "") || "";
+      timeTerms
+        .find((term) => new RegExp(`\\b${term}(\\s|$)`).test(searchTerm))
+        ?.replace(':', '') || '';
   } else {
     calendarIsOpen.value = false;
-    datePeriodClicked.value = "";
+    datePeriodClicked.value = '';
   }
-
 
   const jsonObject = editorState.toJSON().root.children;
   if (isElementNode(jsonObject[0])) {
@@ -93,13 +91,13 @@ export const onChangeEditorContent = (
       );
     }
     const trimmedSearchTerm = searchTerm.trim();
-    if (trimmedSearchTerm !== "" && !excludedTerms.includes(trimmedSearchTerm))
+    if (trimmedSearchTerm !== '' && !excludedTerms.includes(trimmedSearchTerm))
       submitButtonIsActive.value = true;
-    else if (trimmedSearchTerm === "" && !removedFilter.value) {
+    else if (trimmedSearchTerm === '' && !removedFilter.value) {
       submitButtonIsActive.value = false;
     }
   }
 
   setEditorStateString(searchTerm);
-  setIsEmpty(searchTerm === "");
+  setIsEmpty(searchTerm === '');
 };

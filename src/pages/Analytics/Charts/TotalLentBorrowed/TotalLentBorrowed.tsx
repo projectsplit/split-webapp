@@ -1,4 +1,4 @@
-import { StyledTotalLentBorrowed } from "./TotalLentBorrowe.styled";
+import { StyledTotalLentBorrowed } from './TotalLentBorrowe.styled';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,21 +9,21 @@ import {
   Tooltip,
   Legend,
   Filler,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-import { noData } from "../plugins/noData";
-import Carousel from "../../Carousel/Carousel";
-import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
-import { TotalLentBorrowedProps } from "../../../../interfaces";
-import { getAllDaysInMonth } from "../../../../helpers/monthlyDataHelpers";
-import { enhanceNumberArray } from "../../../../helpers/enhanceNumberArray";
-import { getChartOptions } from "./options/getChartOptions";
-import { getData } from "./data/getData";
-import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
-import { buildLabels } from "../../helpers/buildLabels";
-import { months } from "../../../../constants";
-import { getTotalLentBorrowed } from "../../helpers/getTotalLentBorrowed";
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { noData } from '../plugins/noData';
+import Carousel from '../../Carousel/Carousel';
+import { getCarouselItemsBasedOnCycle } from '../../helpers/getCarouselItemsBasedOnCycle';
+import { TotalLentBorrowedProps } from '../../../../interfaces';
+import { getAllDaysInMonth } from '../../../../helpers/monthlyDataHelpers';
+import { enhanceNumberArray } from '../../../../helpers/enhanceNumberArray';
+import { getChartOptions } from './options/getChartOptions';
+import { getData } from './data/getData';
+import { useStartAndEndDatesEffect } from '../../hooks/useStartEndDatesEffect';
+import { buildLabels } from '../../helpers/buildLabels';
+import { months } from '../../../../constants';
+import { getTotalLentBorrowed } from '../../helpers/getTotalLentBorrowed';
 
 //TODO fast click to the left by choosing weekly. Legends are flashing
 ChartJS.register(
@@ -51,7 +51,7 @@ export function TotalLentBorrowed({
   startDate,
   backendData,
   isSuccess,
-  timeZone
+  timeZone,
 }: TotalLentBorrowedProps) {
   const fractalFactor = 4;
 
@@ -119,14 +119,14 @@ export function TotalLentBorrowed({
           enhancedDatesToNumbers[totalLentExt.length - 1] === 16) //condition to not show 15th and 16th consecutive data points
       ) {
         pointRadius.push(0);
-        pointBackgroundColorTotalLent.push("transparent");
+        pointBackgroundColorTotalLent.push('transparent');
       } else {
         pointRadius.push(2);
-        pointBackgroundColorTotalLent.push("#317E24");
+        pointBackgroundColorTotalLent.push('#317E24');
       }
     } else {
       pointRadius.push(0);
-      pointBackgroundColorTotalLent.push("transparent");
+      pointBackgroundColorTotalLent.push('transparent');
     }
     if (enhancedDatesToNumbers[indx] % 1 === 0) {
       hitRadius.push(10);
@@ -147,14 +147,14 @@ export function TotalLentBorrowed({
           enhancedDatesToNumbers[totalLentExt.length - 1] === 16) //condition to not show 15th and 16th consecutive data points
       ) {
         pointRadius.push(0);
-        pointBackgroundColorTotalLent.push("transparent");
+        pointBackgroundColorTotalLent.push('transparent');
       } else {
         pointRadius.push(2);
-        pointBackgroundColorTotalLentTotalBorrowed.push("#FF3D3D");
+        pointBackgroundColorTotalLentTotalBorrowed.push('#FF3D3D');
       }
     } else {
       pointRadius.push(0);
-      pointBackgroundColorTotalLentTotalBorrowed.push("transparent");
+      pointBackgroundColorTotalLentTotalBorrowed.push('transparent');
     }
     if (enhancedDatesToNumbers[indx] % 1 === 0) {
       hitRadius.push(10);

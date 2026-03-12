@@ -1,6 +1,5 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const useRedirectToAnalytics = () => {
   const navigate = useNavigate();
@@ -17,4 +16,3 @@ export default function RedirectToAnalytics() {
 
   return <></>;
 }
-

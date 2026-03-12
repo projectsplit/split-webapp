@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 interface StyledTransferFormProps {
   $inputError?: boolean;
   $noReceiverSelected?: boolean;
-   $isSamePersonError:boolean;
+  $isSamePersonError: boolean;
 }
 
 export const StyledTransferForm = styled.div<StyledTransferFormProps>`
@@ -37,10 +37,8 @@ export const StyledTransferForm = styled.div<StyledTransferFormProps>`
       color: ${({ theme }) => theme.highlightColor};
       flex-shrink: 0;
       font-size: 30px;
-      
+
       margin-left: 10px;
     }
   }
-
-
 `;

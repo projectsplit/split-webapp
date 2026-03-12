@@ -1,19 +1,19 @@
-import { StyledNonGroupTransferUsersMenu } from "./NonGroupTransferMenu.styled";
-import { NonGroupTransferMenuProps } from "../../../../interfaces";
-import { BiArrowBack } from "react-icons/bi";
-import MyButton from "../../../MyButton/MyButton";
-import AutoWidthInput from "../../../AutoWidthInput";
-import Sentinel from "../../../Sentinel";
-import { useCallback, useMemo, useRef, useState } from "react";
-import useDebounce from "../../../../hooks/useDebounce";
-import { useOutletContext } from "react-router-dom";
-import { UserInfo } from "../../../../types";
-import User from "../User/User";
-import { useSearchGroupsByName } from "../../../../api/auth/QueryHooks/useSearchGroupsByName";
-import Item from "../Item/Item";
-import { SelectedGroup } from "../SelectionLists/SelectedGroup";
-import Spinner from "../../../Spinner/Spinner";
-import { useSearchUsers } from "@/api/auth/QueryHooks/useSearchUsers";
+import { StyledNonGroupTransferUsersMenu } from './NonGroupTransferMenu.styled';
+import { NonGroupTransferMenuProps } from '../../../../interfaces';
+import { BiArrowBack } from 'react-icons/bi';
+import MyButton from '../../../MyButton/MyButton';
+import AutoWidthInput from '../../../AutoWidthInput';
+import Sentinel from '../../../Sentinel';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import useDebounce from '../../../../hooks/useDebounce';
+import { useOutletContext } from 'react-router-dom';
+import { UserInfo } from '../../../../types';
+import User from '../User/User';
+import { useSearchGroupsByName } from '../../../../api/auth/QueryHooks/useSearchGroupsByName';
+import Item from '../Item/Item';
+import { SelectedGroup } from '../SelectionLists/SelectedGroup';
+import Spinner from '../../../Spinner/Spinner';
+import { useSearchUsers } from '@/api/auth/QueryHooks/useSearchUsers';
 
 export default function NonGroupTransferMenu({
   nonGroupTransferMenu,
@@ -22,10 +22,10 @@ export default function NonGroupTransferMenu({
   isNonGroupTransfer,
 }: NonGroupTransferMenuProps) {
   const pageSize = 10;
-  const [keyword, setKeyword] = useState<string>("");
+  const [keyword, setKeyword] = useState<string>('');
   // const [selectedUser, setSelectedUser] = useState<string>('')
   const [debouncedKeyword, isDebouncing] = useDebounce(
-    keyword.length > 1 ? keyword : "",
+    keyword.length > 1 ? keyword : '',
     300
   );
 
@@ -45,18 +45,18 @@ export default function NonGroupTransferMenu({
   );
 
   const handleSuggestedUserClick = (userId: string, username: string) => {
-    const displayName = username === userInfo.username ? "You" : username;
+    const displayName = username === userInfo.username ? 'You' : username;
     const isSelf = userId === userInfo.userId;
 
     const menu = nonGroupTransferMenu.value;
-    const isSenderMode = menu.attribute === "sender";
+    const isSenderMode = menu.attribute === 'sender';
 
     if (isSelf) {
       if (isSenderMode) {
         nonGroupTransferMenu.value = {
           ...menu,
           receiverId: userInfo.userId,
-          receiverName: "You",
+          receiverName: 'You',
 
           senderId: menu.senderId,
           senderName: menu.senderName,
@@ -65,7 +65,7 @@ export default function NonGroupTransferMenu({
         nonGroupTransferMenu.value = {
           ...menu,
           senderId: userInfo.userId,
-          senderName: "You",
+          senderName: 'You',
 
           receiverId: menu.receiverId,
           receiverName: menu.receiverName,
@@ -80,7 +80,7 @@ export default function NonGroupTransferMenu({
         senderId: userId,
         senderName: displayName,
         receiverId: userInfo.userId,
-        receiverName: "You",
+        receiverName: 'You',
       };
     } else {
       nonGroupTransferMenu.value = {
@@ -88,7 +88,7 @@ export default function NonGroupTransferMenu({
         receiverId: userId,
         receiverName: displayName,
         senderId: userInfo.userId,
-        senderName: "You",
+        senderName: 'You',
       };
     }
   };
@@ -97,10 +97,7 @@ export default function NonGroupTransferMenu({
     inputRef.current?.focus();
   };
 
-  const result = useSearchUsers(
-    debouncedKeyword,
-    pageSize
-  );
+  const result = useSearchUsers(debouncedKeyword, pageSize);
 
   if (!result) return null;
 
@@ -132,7 +129,7 @@ export default function NonGroupTransferMenu({
 
       if (!existingGroup) return;
       isNonGroupTransfer.value = false;
-      (fromHomeGroup.value = {
+      ((fromHomeGroup.value = {
         id: existingGroup.id,
         name: existingGroup.name,
         created: existingGroup.created,
@@ -147,7 +144,7 @@ export default function NonGroupTransferMenu({
         (groupMembers.value = [
           ...existingGroup.members,
           ...existingGroup.guests,
-        ]);
+        ]));
     },
     [userGroups]
   );
@@ -174,11 +171,11 @@ export default function NonGroupTransferMenu({
             />
           </div>
           <div className="title">
-            {nonGroupTransferMenu.value.attribute === "sender"
-              ? "Select sender"
-              : nonGroupTransferMenu.value.attribute === "receiver"
-                ? "Select receiver"
-                : "Select Group"}
+            {nonGroupTransferMenu.value.attribute === 'sender'
+              ? 'Select sender'
+              : nonGroupTransferMenu.value.attribute === 'receiver'
+                ? 'Select receiver'
+                : 'Select Group'}
           </div>
           <div className="gap"></div>
         </div>
@@ -216,8 +213,8 @@ export default function NonGroupTransferMenu({
               <Spinner />
             </div>
           ) : users.length > 0 &&
-            (nonGroupTransferMenu.value.attribute === "sender" ||
-              nonGroupTransferMenu.value.attribute === "receiver") ? (
+            (nonGroupTransferMenu.value.attribute === 'sender' ||
+              nonGroupTransferMenu.value.attribute === 'receiver') ? (
             users.map((user) => (
               <User
                 key={user.userId}

@@ -1,24 +1,24 @@
-import { useState } from "react";
-import Input from "../../components/Input/Input";
-import WelcomeHeader from "../Auth/WelcomeHeader/WelcomeHeader";
-import { StyledCreateAccount } from "./CreateAccount.styled";
-import { useNavigate } from "react-router-dom";
-import MyButton from "../../components/MyButton/MyButton";
-import { useMutation } from "@tanstack/react-query";
-import { createPasswordCredentials } from "../../api/auth/api";
-import { PasswordSignUpRequest, PasswordSignUpResponse } from "../../types";
-import routes from "../../routes";
+import { useState } from 'react';
+import Input from '../../components/Input/Input';
+import WelcomeHeader from '../Auth/WelcomeHeader/WelcomeHeader';
+import { StyledCreateAccount } from './CreateAccount.styled';
+import { useNavigate } from 'react-router-dom';
+import MyButton from '../../components/MyButton/MyButton';
+import { useMutation } from '@tanstack/react-query';
+import { createPasswordCredentials } from '../../api/auth/api';
+import { PasswordSignUpRequest, PasswordSignUpResponse } from '../../types';
+import routes from '../../routes';
 
 export default function CreateAccount() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [networkError, setNetworkError] = useState<string>("");
-  const [requestError, setRequestError] = useState<string>("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [networkError, setNetworkError] = useState<string>('');
+  const [requestError, setRequestError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
   const navigate = useNavigate();
 
   const redirect =
-    new URLSearchParams(location.search).get("redirect") || routes.ROOT;
+    new URLSearchParams(location.search).get('redirect') || routes.ROOT;
 
   const { mutate: signUpWithCredentialsMutation, isPending } = useMutation<
     PasswordSignUpResponse,
@@ -30,39 +30,39 @@ export default function CreateAccount() {
 
   const handleSignUp = () => {
     if (password.length < 9) {
-      setPasswordError('Password should contain at least 10 characters')
-      return
+      setPasswordError('Password should contain at least 10 characters');
+      return;
     }
     if (!username || !password) return;
-    setNetworkError("");
-    setRequestError("")
-    setPasswordError("")
+    setNetworkError('');
+    setRequestError('');
+    setPasswordError('');
 
     signUpWithCredentialsMutation(
       { username, password },
       {
         onSuccess: (response) => {
-          localStorage.setItem("accessToken", response.accessToken);
+          localStorage.setItem('accessToken', response.accessToken);
           navigate(redirect);
         },
         onError: (error) => {
-          if (error.code === "ERR_NETWORK") {
-            setNetworkError(error.message + ": Check your internet connection");
+          if (error.code === 'ERR_NETWORK') {
+            setNetworkError(error.message + ': Check your internet connection');
           }
-          if ((error.code = "ERR_BAD_REQUEST")) {
+          if ((error.code = 'ERR_BAD_REQUEST')) {
             setRequestError(error.response.data);
           }
 
-          console.error("Sign-up failed", error.message);
+          console.error('Sign-up failed', error.message);
         },
       }
     );
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRequestError("")
-    setUsername(e.target.value)
-  }
+    setRequestError('');
+    setUsername(e.target.value);
+  };
 
   return (
     <StyledCreateAccount>
@@ -81,7 +81,7 @@ export default function CreateAccount() {
             {requestError ? (
               <div className="errormsg">{requestError}&nbsp;</div>
             ) : (
-              ""
+              ''
             )}
           </div>
           <div className="inputBox">
@@ -92,7 +92,11 @@ export default function CreateAccount() {
               placeholder="New Password"
               onChange={(e) => setPassword(e.target.value)}
             />
-            {passwordError ? <div className="errormsg">{passwordError}&nbsp;</div> : ''}
+            {passwordError ? (
+              <div className="errormsg">{passwordError}&nbsp;</div>
+            ) : (
+              ''
+            )}
           </div>
 
           <MyButton fontSize="18" onClick={handleSignUp} isLoading={isPending}>

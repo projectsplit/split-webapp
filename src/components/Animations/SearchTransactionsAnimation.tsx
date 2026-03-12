@@ -1,7 +1,7 @@
-import { CSSTransition } from "react-transition-group";
-import SearchTransactions from "../SearchTransactions/SearchTransactions";
-import { SearchTransactionAnimationProps } from "../../interfaces";
-import { useRef } from "react";
+import { CSSTransition } from 'react-transition-group';
+import SearchTransactions from '../SearchTransactions/SearchTransactions';
+import { SearchTransactionAnimationProps } from '../../interfaces';
+import { useRef } from 'react';
 
 export default function SearchTransactionsAnimation({
   menu,
@@ -10,13 +10,13 @@ export default function SearchTransactionsAnimation({
   timeZoneId,
   expenseParsedFilters,
   transferParsedFilters,
-  isPersonal
+  isPersonal,
   // nonGroupUsers
 }: SearchTransactionAnimationProps) {
   const nodeRef = useRef(null);
   return (
     <CSSTransition
-      in={menu.value === "search"}
+      in={menu.value === 'search'}
       timeout={0}
       unmountOnExit
       nodeRef={nodeRef}
@@ -30,7 +30,7 @@ export default function SearchTransactionsAnimation({
           expenseParsedFilters={expenseParsedFilters}
           transferParsedFilters={transferParsedFilters}
           isPersonal={isPersonal}
-        // nonGroupUsers={nonGroupUsers}
+          // nonGroupUsers={nonGroupUsers}
         />
       </div>
     </CSSTransition>

@@ -1,8 +1,8 @@
-import { amountIsValid } from "@/helpers/amountIsValid";
-import { handleInputChange } from "@/helpers/handleInputChange";
-import { PickerMember } from "@/types";
-import { Signal } from "@preact/signals-react";
-import { useCallback } from "react";
+import { amountIsValid } from '@/helpers/amountIsValid';
+import { handleInputChange } from '@/helpers/handleInputChange';
+import { PickerMember } from '@/types';
+import { Signal } from '@preact/signals-react';
+import { useCallback } from 'react';
 
 export const useHandlers = (
   participants: PickerMember[],
@@ -37,7 +37,7 @@ export const useHandlers = (
     (curr: string) => {
       setCurrencySymbol(curr);
       currencyMenu.value = null;
-      displayedAmount.value = "";
+      displayedAmount.value = '';
     },
     [currencyMenu]
   );
@@ -46,9 +46,9 @@ export const useHandlers = (
     (e: React.ChangeEvent<HTMLInputElement>) => {
       handleInputChange(e, currencySymbol, displayedAmount, setAmount);
       setShowAmountError(false);
-      setAmountError("");
-      setParticipantsError("");
-      setPayersError("");
+      setAmountError('');
+      setParticipantsError('');
+      setPayersError('');
       if (!isInitialRender.current) validateForm({ showErrors: true });
     },
     [currencySymbol, displayedAmount, setAmount]
@@ -58,7 +58,7 @@ export const useHandlers = (
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setDescription(e.target.value);
       if (!isCreateExpense) return;
-      setDescriptionError("");
+      setDescriptionError('');
     },
     []
   );

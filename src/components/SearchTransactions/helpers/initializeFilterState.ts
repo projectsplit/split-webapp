@@ -1,5 +1,5 @@
-import { Params } from "react-router-dom";
-import { Signal } from "@preact/signals-react";
+import { Params } from 'react-router-dom';
+import { Signal } from '@preact/signals-react';
 import {
   CreateExpenseFilterRequest,
   CreateTransferFilterRequest,
@@ -11,7 +11,7 @@ import {
   Group,
   TransferFilter,
   User,
-} from "../../../types";
+} from '../../../types';
 
 export const initializeFilterState = (
   expenseFiltersData: ExpenseFilter,
@@ -39,16 +39,15 @@ export const initializeFilterState = (
   const showExpenseDuring =
     expenseFiltersData.before === expenseFiltersData.after &&
     expenseFiltersData.before !== null &&
-    expenseFiltersData.before !== "";
+    expenseFiltersData.before !== '';
   const showTransferDuring =
     transferFiltersData.before === transferFiltersData.after &&
     transferFiltersData.before !== null &&
-    transferFiltersData.before !== "";
+    transferFiltersData.before !== '';
 
   expenseFilterState.value = {
-    groupId: params.groupid || "",
-    participantsIds:
-      expenseFiltersData.participantsIds?.map((id) => id) || [],
+    groupId: params.groupid || '',
+    participantsIds: expenseFiltersData.participantsIds?.map((id) => id) || [],
     payersIds: expenseFiltersData.payersIds?.map((id) => id) || [],
     freeText: expenseFiltersData.freeText,
     before: showExpenseDuring
@@ -56,7 +55,10 @@ export const initializeFilterState = (
       : expenseFiltersData.before
         ? [expenseFiltersData.before]
         : [],
-    during: showExpenseDuring && expenseFiltersData.after ? [expenseFiltersData.after] : [],
+    during:
+      showExpenseDuring && expenseFiltersData.after
+        ? [expenseFiltersData.after]
+        : [],
     after: showExpenseDuring
       ? []
       : expenseFiltersData.after
@@ -64,9 +66,9 @@ export const initializeFilterState = (
         : [],
     labels: expenseFiltersData.labels?.map((id) => id) || [],
   };
- 
+
   transferFilterState.value = {
-    groupId: params.groupid || "",
+    groupId: params.groupid || '',
     receiversIds: transferFiltersData.receiversIds?.map((id) => id) || [],
     sendersIds: transferFiltersData.sendersIds?.map((id) => id) || [],
     freeText: transferFiltersData.freeText,
@@ -75,7 +77,10 @@ export const initializeFilterState = (
       : transferFiltersData.before
         ? [transferFiltersData.before]
         : [],
-    during: showTransferDuring && transferFiltersData.after ? [transferFiltersData.after] : [],
+    during:
+      showTransferDuring && transferFiltersData.after
+        ? [transferFiltersData.after]
+        : [],
     after: showTransferDuring
       ? []
       : transferFiltersData.after
@@ -121,7 +126,7 @@ export const initializeFilterState = (
           id: label.id,
           value: label.text,
           color: label.color,
-          prop: "",
+          prop: '',
         };
       })
       .filter((label): label is FetchedLabel => label !== null) || [];

@@ -1,17 +1,17 @@
-import { StyledRemoveUserFromGroup } from "./RemoveUserFromGroup.styled";
-import { RemoveUserFromGroupMenuProps } from "../../../interfaces";
-import Separator from "../../Separator/Separator";
-import Input from "../../Input/Input";
-import { FaAngleLeft, FaUsersSlash } from "react-icons/fa";
-import { useSignal } from "@preact/signals-react";
-import MemberItem from "./MemberItem/MemberItem";
-import MenuAnimationBackground from "../../Animations/MenuAnimationBackground";
-import useGroup from "../../../api/auth/QueryHooks/useGroup";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { GroupMember } from "../../../types";
-import RemoveWarningAnimation from "../../Animations/RemoveWarningAnimation";
-import { useRemoveMemberFromGroup } from "../../../api/auth/CommandHooks/useRemoveMemberFromGroup";
+import { StyledRemoveUserFromGroup } from './RemoveUserFromGroup.styled';
+import { RemoveUserFromGroupMenuProps } from '../../../interfaces';
+import Separator from '../../Separator/Separator';
+import Input from '../../Input/Input';
+import { FaAngleLeft, FaUsersSlash } from 'react-icons/fa';
+import { useSignal } from '@preact/signals-react';
+import MemberItem from './MemberItem/MemberItem';
+import MenuAnimationBackground from '../../Animations/MenuAnimationBackground';
+import useGroup from '../../../api/auth/QueryHooks/useGroup';
+import { useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { GroupMember } from '../../../types';
+import RemoveWarningAnimation from '../../Animations/RemoveWarningAnimation';
+import { useRemoveMemberFromGroup } from '../../../api/auth/CommandHooks/useRemoveMemberFromGroup';
 
 export default function RemoveUserFromGroupMenu({
   openRemoveUserMenu,
@@ -20,12 +20,15 @@ export default function RemoveUserFromGroupMenu({
 }: RemoveUserFromGroupMenuProps) {
   const queryClient = useQueryClient();
 
-  const noGroupError = useSignal<string>("");
-  const noMemberError = useSignal<string>("");
+  const noGroupError = useSignal<string>('');
+  const noMemberError = useSignal<string>('');
   const cannotBeRemovedClickedWarning = useSignal<string | null>(null);
   const cannotRemoveMemberWarning = useSignal<string | null>(null);
-  const [searchItem, setSearchItem] = useState<string>("");
-  const [memberClicked, setMemberClicked] = useState<{ name: string; id: string }>({ name: "", id: "" })
+  const [searchItem, setSearchItem] = useState<string>('');
+  const [memberClicked, setMemberClicked] = useState<{
+    name: string;
+    id: string;
+  }>({ name: '', id: '' });
   const { data: group } = useGroup(groupId);
 
   const groupUsers =
@@ -43,14 +46,12 @@ export default function RemoveUserFromGroupMenu({
   };
 
   const handleCannotRemoveGuest = () => {
-    cannotBeRemovedClickedWarning.value = "cannotRemoveGuest";
+    cannotBeRemovedClickedWarning.value = 'cannotRemoveGuest';
   };
 
   const handleCannotRemoveMember = (member: GroupMember) => {
-    setMemberClicked({ name: member.name, id: member.id })
-    cannotRemoveMemberWarning.value = "userWarning";
-
-
+    setMemberClicked({ name: member.name, id: member.id });
+    cannotRemoveMemberWarning.value = 'userWarning';
   };
 
   const refetchGroupData = async () => {
@@ -60,7 +61,7 @@ export default function RemoveUserFromGroupMenu({
         exact: false,
       });
     } catch (error) {
-      console.error("Error refetching queries:", error);
+      console.error('Error refetching queries:', error);
     }
   };
 
@@ -78,7 +79,12 @@ export default function RemoveUserFromGroupMenu({
   }, [openRemoveUserMenu, groupId, queryClient]);
 
   const { mutate: removeUser, isPending: isPendingMember } =
-    useRemoveMemberFromGroup(groupId, noGroupError, noMemberError, cannotRemoveMemberWarning);
+    useRemoveMemberFromGroup(
+      groupId,
+      noGroupError,
+      noMemberError,
+      cannotRemoveMemberWarning
+    );
 
   return (
     <StyledRemoveUserFromGroup>
@@ -109,12 +115,12 @@ export default function RemoveUserFromGroupMenu({
               member={member}
               noGroupError={noGroupError}
               noMemberError={noMemberError}
-              isGuest={"canBeRemoved" in member} // effectively checks if it is a guest
+              isGuest={'canBeRemoved' in member} // effectively checks if it is a guest
               canBeRemoved={
-                "canBeRemoved" in member ? member.canBeRemoved : false
+                'canBeRemoved' in member ? member.canBeRemoved : false
               }
               onCannotRemoveClick={
-                "canBeRemoved" in member
+                'canBeRemoved' in member
                   ? handleCannotRemoveGuest
                   : () => handleCannotRemoveMember(member)
               }
@@ -137,15 +143,13 @@ export default function RemoveUserFromGroupMenu({
           "This guest cannot be removed because they are involved in expenses or transfers. Removing them will disrupt the group's financial history."
         }
         menuValue="cannotRemoveGuest"
-        header='Info'
+        header="Info"
       />
       <RemoveWarningAnimation
         menu={cannotRemoveMemberWarning}
-        message={
-          `Are you sure you want to remove ${memberClicked.name}? ${memberClicked.name} will be replaced by guest`
-        }
+        message={`Are you sure you want to remove ${memberClicked.name}? ${memberClicked.name} will be replaced by guest`}
         menuValue="userWarning"
-        header='Warning!'
+        header="Warning!"
         onConfirm={() => removeUser(memberClicked.id)}
         isLoading={isPendingMember}
       />

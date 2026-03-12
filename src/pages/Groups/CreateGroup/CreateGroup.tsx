@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { StyledCreateGroup } from "./CreateGroup.styled";
-import { IoClose } from "react-icons/io5";
-import { CreateGroupProps } from "../../../interfaces";
-import { Currency, UserInfo } from "../../../types";
-import { FaAngleDown } from "react-icons/fa";
-import MenuAnimationBackground from "../../../components/Animations/MenuAnimationBackground";
-import { useSignal } from "@preact/signals-react";
-import { currencyData } from "../../../helpers/openExchangeRates";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import CurrencyOptionsAnimation from "../../../components/Animations/CurrencyOptionsAnimation";
-import MyButton from "../../../components/MyButton/MyButton";
-import FormInput from "../../../components/FormInput/FormInput";
-import { useCreateGroup } from "@/api/auth/CommandHooks/useCreateGroup";
+import React, { useState } from 'react';
+import { StyledCreateGroup } from './CreateGroup.styled';
+import { IoClose } from 'react-icons/io5';
+import { CreateGroupProps } from '../../../interfaces';
+import { Currency, UserInfo } from '../../../types';
+import { FaAngleDown } from 'react-icons/fa';
+import MenuAnimationBackground from '../../../components/Animations/MenuAnimationBackground';
+import { useSignal } from '@preact/signals-react';
+import { currencyData } from '../../../helpers/openExchangeRates';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import CurrencyOptionsAnimation from '../../../components/Animations/CurrencyOptionsAnimation';
+import MyButton from '../../../components/MyButton/MyButton';
+import FormInput from '../../../components/FormInput/FormInput';
+import { useCreateGroup } from '@/api/auth/CommandHooks/useCreateGroup';
 //TODO invite people when creating group. When create group is hit then multiple invitations should be sent
 
 export default function CreateGroup({
@@ -19,7 +19,7 @@ export default function CreateGroup({
   currencyMenu,
   nodeRef,
 }: CreateGroupProps) {
-  const [groupName, setGroupName] = useState<string>("");
+  const [groupName, setGroupName] = useState<string>('');
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
@@ -40,7 +40,9 @@ export default function CreateGroup({
       {
         onSuccess: (data) => {
           menu.value = null;
-          navigate(`/shared/${data.groupId}/expenses`, { state: { groupName } });
+          navigate(`/shared/${data.groupId}/expenses`, {
+            state: { groupName },
+          });
         },
       }
     );
@@ -77,7 +79,7 @@ export default function CreateGroup({
         <div className="currencySelectorWrapper">
           <div
             className="currencySelector"
-            onClick={() => (currencyMenu.value = "currencyOptions")}
+            onClick={() => (currencyMenu.value = 'currencyOptions')}
           >
             <div className={selectedCurrency?.flagClass} />
             <div>{selectedCurrency?.symbol}</div>
@@ -87,7 +89,7 @@ export default function CreateGroup({
       </div>
       <div className="submitButton">
         <MyButton
-          disabled={groupName.trim() === "" ? true : false}
+          disabled={groupName.trim() === '' ? true : false}
           onClick={onClickHandler}
           isLoading={isPending}
           fontSize="16"

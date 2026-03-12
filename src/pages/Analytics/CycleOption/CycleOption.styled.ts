@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledCycleOption = styled.div`
   display: flex;
@@ -12,7 +12,6 @@ export const StyledCycleOption = styled.div`
     gap: 2px;
     transition: background-color 0.2s ease-in-out;
     &:hover {
-    
       border-radius: 10px;
       background-color: ${({ theme }) => theme.layer1};
     }

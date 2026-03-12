@@ -1,5 +1,5 @@
-import currency from "currency.js";
-import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
+import currency from 'currency.js';
+import { BeautifulMentionsItemData } from 'lexical-beautiful-mentions';
 
 export type RefreshTokenResponse = {
   accessToken: string;
@@ -62,8 +62,6 @@ export type TransferItem = {
   receiverName: string;
 };
 
-
-
 export type GroupedTransaction = {
   totalAmount: currency;
   currency: string;
@@ -108,7 +106,6 @@ export type FormPersonalExpense = FormExpense & {
   payments?: never;
   shares?: never;
 };
-
 
 export type GroupTransaction = {
   memberId: string;
@@ -155,20 +152,20 @@ export type GroupExpenseResponseItem = ExpenseResponseItem & {
   groupId: string;
   payments: GroupPayment[];
   shares: GroupShare[];
-  next: string | null
+  next: string | null;
 };
 
 export type NonGroupExpenseResponseItem = ExpenseResponseItem & {
   payments: Payment[];
   shares: Share[];
-  next: string | null
+  next: string | null;
 };
 
 export type PersonalExpenseResponseItem = ExpenseResponseItem & {
   groupId?: never;
   payments?: never;
   shares?: never;
-  next: string | null
+  next: string | null;
 };
 
 export type TransferResponseItem = {
@@ -384,9 +381,9 @@ export type ExpenseRequest =
   | PersonalExpenseRequest;
 
 export type ExpenseRequestWithType =
-  | (GroupExpenseRequest & { type?: "group" })
-  | (NonGroupExpenseRequest & { type?: "non-group" })
-  | (PersonalExpenseRequest & { type?: "personal" });
+  | (GroupExpenseRequest & { type?: 'group' })
+  | (NonGroupExpenseRequest & { type?: 'non-group' })
+  | (PersonalExpenseRequest & { type?: 'personal' });
 
 export type GeoLocation = {
   coordinates: Coordinates;
@@ -536,7 +533,6 @@ export type Debt = {
   currency: string;
 };
 
-
 export type DebtsResponse = {
   debts: Debt[];
   totalSpent: Record<string, Record<string, number>>;
@@ -565,7 +561,7 @@ export type DeleteExpenseRequest = {
 };
 export type DeleteUserLabelRequest = {
   labelId: string;
-}
+};
 export type DeleteTransferRequest = {
   transferId: string;
 };
@@ -706,7 +702,7 @@ export type SerializedLexicalNode = {
 };
 
 export type SerializedBeautifulMentionNode = SerializedLexicalNode & {
-  type: "beautifulMention";
+  type: 'beautifulMention';
   trigger: string;
   value: string;
   data: {
@@ -769,7 +765,7 @@ export type TransferParsedFilters = {
 };
 
 export type DateConstraint = {
-  trigger: "before:" | "after:" | "during:";
+  trigger: 'before:' | 'after:' | 'during:';
   value: string;
 };
 
@@ -822,7 +818,7 @@ export type SpendingChartsResponseItem = {
   to: Date;
 };
 
-export type Variant = "non" | "active" | "archived";
+export type Variant = 'non' | 'active' | 'archived';
 
 export enum TransactionType {
   Personal = 0,

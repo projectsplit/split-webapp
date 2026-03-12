@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledExpenses = styled.div`
   min-width: 100%;
@@ -19,9 +19,9 @@ export const StyledExpenses = styled.div`
     .expense-highlight {
       animation: highlight-fade 8s ease-out;
       border-radius: 10px;
-      }
+    }
   }
-  
+
   .same-date-container {
     display: flex;
     flex-direction: column;
@@ -46,11 +46,15 @@ export const StyledExpenses = styled.div`
     }
   }
   @keyframes highlight-fade {
-      0% {
-        box-shadow: 0 0 0 4px #8300e7, 0 0 10px #8300e7;
-      }
-      100% {
-        box-shadow: 0 0 0 0px transparent, 0 0 0px transparent;
-      }
+    0% {
+      box-shadow:
+        0 0 0 4px #8300e7,
+        0 0 10px #8300e7;
     }
+    100% {
+      box-shadow:
+        0 0 0 0px transparent,
+        0 0 0px transparent;
+    }
+  }
 `;

@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const StyledRemoveUserFromGroup = styled.div`
   position: fixed;
@@ -42,7 +42,7 @@ export const StyledRemoveUserFromGroup = styled.div`
     }
 
     .closeButtonContainer:hover::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;

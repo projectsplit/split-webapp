@@ -1,11 +1,11 @@
-import { Debt, Guest, Member, Mode, TruncatedMember } from "@/types";
-import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
+import { Debt, Guest, Member, Mode, TruncatedMember } from '@/types';
+import { mergeMembersAndGuests } from './mergeMembersAndGuests';
 
 export default function getAllDebtsParticipants(
   debts: Debt[],
   mode: Mode,
   members: Member[],
-  guests: Guest[],
+  guests: Guest[]
 ): TruncatedMember[] {
   if (mode === Mode.Group) {
     return mergeMembersAndGuests(members || [], guests || []);
@@ -15,10 +15,10 @@ export default function getAllDebtsParticipants(
 
   debts.forEach((u) => {
     if (u.creditor) {
-      nonGroupDebtorsUsersMap.set(u.creditor, u.creditorName || "");
+      nonGroupDebtorsUsersMap.set(u.creditor, u.creditorName || '');
     }
     if (u.debtor) {
-      nonGroupDebtorsUsersMap.set(u.debtor, u.debtorName || "");
+      nonGroupDebtorsUsersMap.set(u.debtor, u.debtorName || '');
     }
   });
 

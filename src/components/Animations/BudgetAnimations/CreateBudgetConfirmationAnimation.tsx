@@ -1,8 +1,7 @@
-import React from "react";
-import { CSSTransition } from "react-transition-group";
-import ConfirmationForBudgetSubmission from "../../../pages/Budget/ConfirmationForBudgetSubmission/ConfirmationForBudgetSubmission";
-import { CreateBudgetConfirmationAnimationProps } from "../../../interfaces";
-
+import React from 'react';
+import { CSSTransition } from 'react-transition-group';
+import ConfirmationForBudgetSubmission from '../../../pages/Budget/ConfirmationForBudgetSubmission/ConfirmationForBudgetSubmission';
+import { CreateBudgetConfirmationAnimationProps } from '../../../interfaces';
 
 export default function CreateBudgetConfirmationAnimation({
   menu,
@@ -10,7 +9,7 @@ export default function CreateBudgetConfirmationAnimation({
 }: CreateBudgetConfirmationAnimationProps) {
   return (
     <CSSTransition
-      in={menu.value === "createBudgetConfirmation"}
+      in={menu.value === 'createBudgetConfirmation'}
       timeout={100}
       classNames="bottomslide"
       unmountOnExit

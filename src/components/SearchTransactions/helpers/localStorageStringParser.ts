@@ -1,7 +1,12 @@
-import { ExpenseFilter, Mode, TransferFilter } from "../../../types";
+import { ExpenseFilter, Mode, TransferFilter } from '../../../types';
 
-export const getFilterStorageKey = (type: "expense" | "transfer", groupId?: string, isPersonal?:boolean) => {
-  const suffix = groupId && groupId !== "" ? groupId : isPersonal ? "personal" : "nonGroup";
+export const getFilterStorageKey = (
+  type: 'expense' | 'transfer',
+  groupId?: string,
+  isPersonal?: boolean
+) => {
+  const suffix =
+    groupId && groupId !== '' ? groupId : isPersonal ? 'personal' : 'nonGroup';
   return `${type}Filter_${suffix}`;
 };
 
@@ -10,10 +15,10 @@ export const localStorageStringParser = (
   transferFilterRaw: string | null
 ) => {
   const expenseFilterDefault = {
-    groupId: "",
+    groupId: '',
     participantsIds: [],
     payersIds: [],
-    freeText: "",
+    freeText: '',
     before: null,
     during: null,
     after: null,
@@ -21,10 +26,10 @@ export const localStorageStringParser = (
   };
 
   const transferFilterDefault = {
-    groupId: "",
+    groupId: '',
     receiversIds: [],
     sendersIds: [],
-    freeText: "",
+    freeText: '',
     before: null,
     during: null,
     after: null,
@@ -33,16 +38,26 @@ export const localStorageStringParser = (
   const sanitizeExpense = (f: any): ExpenseFilter => ({
     ...expenseFilterDefault, //this is the safe base
     ...f, //brings in user's values
-    participantsIds: Array.isArray(f.participantsIds) ? f.participantsIds.filter((id: any) => typeof id === "string") : [],
-    payersIds: Array.isArray(f.payersIds) ? f.payersIds.filter((id: any) => typeof id === "string") : [],
-    labels: Array.isArray(f.labels) ? f.labels.filter((id: any) => typeof id === "string") : [],
+    participantsIds: Array.isArray(f.participantsIds)
+      ? f.participantsIds.filter((id: any) => typeof id === 'string')
+      : [],
+    payersIds: Array.isArray(f.payersIds)
+      ? f.payersIds.filter((id: any) => typeof id === 'string')
+      : [],
+    labels: Array.isArray(f.labels)
+      ? f.labels.filter((id: any) => typeof id === 'string')
+      : [],
   });
 
   const sanitizeTransfer = (f: any): TransferFilter => ({
     ...transferFilterDefault,
     ...f,
-    receiversIds: Array.isArray(f.receiversIds) ? f.receiversIds.filter((id: any) => typeof id === "string") : [],
-    sendersIds: Array.isArray(f.sendersIds) ? f.sendersIds.filter((id: any) => typeof id === "string") : [],
+    receiversIds: Array.isArray(f.receiversIds)
+      ? f.receiversIds.filter((id: any) => typeof id === 'string')
+      : [],
+    sendersIds: Array.isArray(f.sendersIds)
+      ? f.sendersIds.filter((id: any) => typeof id === 'string')
+      : [],
   });
 
   const expenseFilter: ExpenseFilter = expenseFilterRaw

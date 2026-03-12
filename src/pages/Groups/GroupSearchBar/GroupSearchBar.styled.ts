@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledGroupSearchBar = styled.input`
   border-radius: 10px;
@@ -13,8 +13,6 @@ export const StyledGroupSearchBar = styled.input`
   width: 100%;
   box-sizing: border-box;
 
-
   &::placeholder {
-   
   }
 `;

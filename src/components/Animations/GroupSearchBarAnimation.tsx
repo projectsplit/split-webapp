@@ -1,6 +1,6 @@
-import { CSSTransition } from "react-transition-group";
-import { GroupSearchBarAnimationProps } from "../../interfaces";
-import GroupSearchBar from "../../pages/Groups/GroupSearchBar/GroupSearchBar";
+import { CSSTransition } from 'react-transition-group';
+import { GroupSearchBarAnimationProps } from '../../interfaces';
+import GroupSearchBar from '../../pages/Groups/GroupSearchBar/GroupSearchBar';
 
 export default function GroupSearchBarAnimation({
   showSearchBar,
@@ -17,11 +17,7 @@ export default function GroupSearchBarAnimation({
       nodeRef={searchBarRef}
     >
       <div ref={searchBarRef} className="searchWrapper">
-        <GroupSearchBar
-          autoFocus
-          keyword={keyword}
-          setKeyword={setKeyword}
-        />
+        <GroupSearchBar autoFocus keyword={keyword} setKeyword={setKeyword} />
       </div>
     </CSSTransition>
   );

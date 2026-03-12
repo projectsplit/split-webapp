@@ -1,6 +1,6 @@
-import { StyledSearchCategoryButton } from "../SearchCategoryButton.styled";
-import { SearchPeopleButtonProps } from "../../../../interfaces";
-import { PeoplePillsDisplay } from "./MembersPillsDisplay/PeoplePillsDisplay";
+import { StyledSearchCategoryButton } from '../SearchCategoryButton.styled';
+import { SearchPeopleButtonProps } from '../../../../interfaces';
+import { PeoplePillsDisplay } from './MembersPillsDisplay/PeoplePillsDisplay';
 
 export default function SearchPersonButton({
   category,
@@ -12,7 +12,6 @@ export default function SearchPersonButton({
   transferFilterState,
   cancelled,
   removedFilter,
-
 }: SearchPeopleButtonProps) {
   return (
     <StyledSearchCategoryButton>
@@ -26,7 +25,6 @@ export default function SearchPersonButton({
         transferFilterState={transferFilterState}
         cancelled={cancelled}
         removedFilter={removedFilter}
-
       />
     </StyledSearchCategoryButton>
   );

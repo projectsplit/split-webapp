@@ -1,6 +1,6 @@
-import React from "react";
-import { StyledInput } from "./Input.styled";
-import { InputProps } from "../../interfaces";
+import React from 'react';
+import { StyledInput } from './Input.styled';
+import { InputProps } from '../../interfaces';
 
 export default React.forwardRef(function Input(
   {
@@ -15,11 +15,10 @@ export default React.forwardRef(function Input(
     error,
     width,
     backgroundcolor,
-    inputMode
+    inputMode,
   }: InputProps,
   ref: React.Ref<HTMLInputElement>
 ) {
-  
   return (
     <StyledInput
       onChange={onChange}

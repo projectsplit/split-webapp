@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import Input from "../Input/Input";
+import styled from 'styled-components';
+import Input from '../Input/Input';
 
 interface StyledInputMonetary {
   $inputError?: boolean;

@@ -1,19 +1,17 @@
-import { StyledCurrentSearchField } from "./StyledCurrentSearchField";
-import Pill from "../../Pill/Pill";
-import { CurrentSearchFieldProps } from "../../../interfaces";
-
+import { StyledCurrentSearchField } from './StyledCurrentSearchField';
+import Pill from '../../Pill/Pill';
+import { CurrentSearchFieldProps } from '../../../interfaces';
 
 export default function CurrentSearchField({
   currentSearch,
   filterState,
   submitButtonIsActive,
   removedFilter,
-  showFreeTextPill
+  showFreeTextPill,
 }: CurrentSearchFieldProps) {
-  
   const removeFilter = () => {
-    showFreeTextPill.value= false
-    filterState.value.freeText = "";
+    showFreeTextPill.value = false;
+    filterState.value.freeText = '';
     submitButtonIsActive.value = true;
     removedFilter.value = true;
   };

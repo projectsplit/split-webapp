@@ -1,7 +1,7 @@
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { useMutation } from "@tanstack/react-query";
-import { Signal } from "@preact/signals-react";
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { useMutation } from '@tanstack/react-query';
+import { Signal } from '@preact/signals-react';
 
 export const useJoinWithCode = (errorMessage: Signal<string>) => {
   return useMutation<any, Error, { code: string; onSuccess: () => void }>({
@@ -18,7 +18,7 @@ export const useJoinWithCode = (errorMessage: Signal<string>) => {
 };
 
 const joinWithCode = async (req: JoinWithCodeRequest): Promise<void> => {
-  await apiClient.post<void, AxiosResponse<void>>("/join", req);
+  await apiClient.post<void, AxiosResponse<void>>('/join', req);
 };
 
 type JoinWithCodeRequest = {

@@ -1,9 +1,7 @@
-import styled from "styled-components";
-import { StyledRecommendationProps } from "../../../interfaces";
+import styled from 'styled-components';
+import { StyledRecommendationProps } from '../../../interfaces';
 
 export const StyledRecommendation = styled.div<StyledRecommendationProps>`
-
-
   .main {
     position: relative;
     display: flex;
@@ -53,7 +51,7 @@ export const StyledRecommendation = styled.div<StyledRecommendationProps>`
       cursor: pointer;
       display: block;
     }
-    
+
     ${(props) => `
     ${props.style}
   `}

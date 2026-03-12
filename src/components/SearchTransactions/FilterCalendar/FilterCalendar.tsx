@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from "react";
-import { FilterCalendarProps } from "../../../interfaces";
-import DateTimePicker from "../../DateTimePicker/DateTimePicker";
+import { useEffect, useRef, useState } from 'react';
+import { FilterCalendarProps } from '../../../interfaces';
+import DateTimePicker from '../../DateTimePicker/DateTimePicker';
 
 export default function FilterCalendar({
   calendarIsOpen,
   showOptions,
   datePeriodClicked,
   timeZoneId,
-  category
+  category,
 }: FilterCalendarProps) {
   const calendarRef = useRef<HTMLDivElement>(null);
   const [selectedDateTime, setSelectedDateTime] = useState<string>(
@@ -22,9 +22,9 @@ export default function FilterCalendar({
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", (e) => closeCalendar(e));
+    document.addEventListener('mousedown', (e) => closeCalendar(e));
     return () => {
-      document.removeEventListener("mousedown", (e) => closeCalendar(e));
+      document.removeEventListener('mousedown', (e) => closeCalendar(e));
     };
   }, []);
 

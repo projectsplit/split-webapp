@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledMiddleScreenMenu } from "../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import styled from 'styled-components';
+import { StyledMiddleScreenMenu } from '../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
 
 export const StyledGeneralWarningMenu = styled(StyledMiddleScreenMenu)`
   .headerSeparator {

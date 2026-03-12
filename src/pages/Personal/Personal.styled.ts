@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledPersonal = styled.div`
   overflow: hidden;
@@ -7,28 +7,28 @@ export const StyledPersonal = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
-    .noData {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-top: 100px;
+  .noData {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
 
-      .msg {
-        opacity: 0.5;
-        white-space: normal;
-        text-align: center;
-        max-width: 90%;
-        word-break: break-word;
-      }
-      .icon {
-        display: flex;
-        font-size: 100px;
-        opacity: 0.5;
-        margin-top: 20px;
-      }
+    .msg {
+      opacity: 0.5;
+      white-space: normal;
+      text-align: center;
+      max-width: 90%;
+      word-break: break-word;
     }
-  
+    .icon {
+      display: flex;
+      font-size: 100px;
+      opacity: 0.5;
+      margin-top: 20px;
+    }
+  }
+
   .bottomMenu {
     bottom: env(safe-area-inset-bottom, 0); /* Respect safe area */
   }

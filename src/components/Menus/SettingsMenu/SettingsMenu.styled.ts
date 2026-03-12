@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledSettingsMenu = styled.div`
   position: fixed;
@@ -41,7 +41,7 @@ export const StyledSettingsMenu = styled.div`
       }
 
       .closeButtonContainer:hover::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 50%;
         left: 50%;
@@ -64,7 +64,7 @@ export const StyledSettingsMenu = styled.div`
     flex: 1;
     padding: 0 0.875rem;
     margin-top: 1rem;
-    
+
     .option {
       margin-top: 1rem;
       font-weight: 600;
@@ -83,7 +83,7 @@ export const StyledSettingsMenu = styled.div`
         font-size: 1.5rem;
       }
     }
-    .toggleOption{
+    .toggleOption {
       margin-top: 1rem;
       font-weight: 600;
       display: flex;
@@ -96,7 +96,7 @@ export const StyledSettingsMenu = styled.div`
       justify-content: space-between;
       cursor: pointer;
       .description {
-        flex:1;
+        flex: 1;
         font-size: 1rem;
       }
       .icon {

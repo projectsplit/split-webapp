@@ -1,11 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledAuthPage = styled.div`
   margin: 0rem 2rem 0rem 2rem;
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.lightColor};
-
 
   .loginBox {
     padding: 1rem 0.8rem;
@@ -14,7 +13,7 @@ export const StyledAuthPage = styled.div`
     flex-direction: column;
     background-color: ${({ theme }) => theme.layer1};
     border-color: ${({ theme }) => theme.layer1};
-    border-style: "solid";
+    border-style: 'solid';
 
     .promptMsg {
       color: ${({ theme }) => theme.lightColor};
@@ -25,18 +24,18 @@ export const StyledAuthPage = styled.div`
     .controlsContainer {
       display: flex;
       flex-direction: column;
-    .createAccountSignIn{
-      display:flex;
-      flex-direction:column;
-      gap:20px;
-    }
+      .createAccountSignIn {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
       .errormsg {
         white-space: initial;
         color: ${({ theme }) => theme.redish};
         font-size: 12px;
       }
 
-       .inputBox {
+      .inputBox {
         display: flex;
         flex-direction: column;
         margin-bottom: 15px;
@@ -54,7 +53,7 @@ export const StyledAuthPage = styled.div`
 
         &:after,
         &:before {
-          content: "";
+          content: '';
           display: block;
           background-color: ${({ theme }) => theme.layer6};
           width: 100%;

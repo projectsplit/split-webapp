@@ -1,27 +1,32 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 import {
   EnhancedPeopleWithProps,
   FetchedPeople,
   Group,
   Mode,
   UserInfo,
-} from "../../../types";
-import { useGetAllNonGroupUsers } from "@/api/auth/QueryHooks/useGetAllNonGroupUsers";
+} from '../../../types';
+import { useGetAllNonGroupUsers } from '@/api/auth/QueryHooks/useGetAllNonGroupUsers';
 
 export const usePeople = (
   group: Group | null,
   userInfo: UserInfo | undefined,
   isPersonal?: boolean
 ) => {
-
-  const { allUsers } = useGetAllNonGroupUsers(group?.id ? Mode.Group : Mode.NonGroup);
+  const { allUsers } = useGetAllNonGroupUsers(
+    group?.id ? Mode.Group : Mode.NonGroup
+  );
 
   const { fetchedPeople, enhancedPeopleWithProps } = useMemo(() => {
-
     if (isPersonal) return { fetchedPeople: [], enhancedPeopleWithProps: [] };
     if (!userInfo) return { fetchedPeople: [], enhancedPeopleWithProps: [] };
 
-    const memberProps: string[] = ["participant", "payer", "sender", "receiver"];
+    const memberProps: string[] = [
+      'participant',
+      'payer',
+      'sender',
+      'receiver',
+    ];
     let allMembers: { id: string; name: string }[] = [];
     let isUserCheck: (m: { id: string }) => boolean = () => false;
 

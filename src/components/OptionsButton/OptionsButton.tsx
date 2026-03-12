@@ -1,6 +1,5 @@
-import { OptionsButtonProps } from "../../interfaces";
-import { StyledOptionsButton } from "./OptionsButton.styled";
-
+import { OptionsButtonProps } from '../../interfaces';
+import { StyledOptionsButton } from './OptionsButton.styled';
 
 export default function OptionsButton({
   onClick,

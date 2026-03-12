@@ -1,10 +1,16 @@
-import Spinner from "@/components/Spinner/Spinner";
-import { StyledFiltersAndBars } from "./FiltersAndBars.styled";
-import { renderExpenseFilterPills } from "@/helpers/renderExpenseFilterPills";
-import BarsWithLegends from "@/components/BarsWithLegends/BarsWithLegends";
-import { ExpenseParsedFilters, GetLabelsResponse, Group, Mode, TruncatedMember } from "@/types";
-import { Signal } from "@preact/signals-react";
-import { QueryClient } from "@tanstack/react-query";
+import Spinner from '@/components/Spinner/Spinner';
+import { StyledFiltersAndBars } from './FiltersAndBars.styled';
+import { renderExpenseFilterPills } from '@/helpers/renderExpenseFilterPills';
+import BarsWithLegends from '@/components/BarsWithLegends/BarsWithLegends';
+import {
+  ExpenseParsedFilters,
+  GetLabelsResponse,
+  Group,
+  Mode,
+  TruncatedMember,
+} from '@/types';
+import { Signal } from '@preact/signals-react';
+import { QueryClient } from '@tanstack/react-query';
 
 interface FiltersAndBarsProps {
   expenseParsedFilters: Signal<ExpenseParsedFilters>;
@@ -17,7 +23,7 @@ interface FiltersAndBarsProps {
   totalExpense: number;
   userExpense: number;
   currency: string;
-  fetchedUserAndGroupLabels: GetLabelsResponse | undefined
+  fetchedUserAndGroupLabels: GetLabelsResponse | undefined;
 }
 export const FiltersAndBars = ({
   expenseParsedFilters,
@@ -30,9 +36,8 @@ export const FiltersAndBars = ({
   totalExpense,
   userExpense,
   currency,
-  fetchedUserAndGroupLabels
+  fetchedUserAndGroupLabels,
 }: FiltersAndBarsProps) => {
-
   return (
     <StyledFiltersAndBars>
       {totalsAreFetching ? (
@@ -55,25 +60,23 @@ export const FiltersAndBars = ({
             mode={mode}
             bar1Legend={
               mode === Mode.Group
-                ? "Group Total"
+                ? 'Group Total'
                 : mode === Mode.NonGroup
-                  ? "Total"
-                  : ""
+                  ? 'Total'
+                  : ''
             }
-            bar2Legend={"Your Share"}
+            bar2Legend={'Your Share'}
             bar1Total={totalExpense || 0}
             bar2Total={userExpense || 0}
             currency={currency}
             bar2Color="#e151ee"
             bar1Color="#5183ee"
             onClick={() => {
-
-              menu.value = "epensesByCurrency";
-
+              menu.value = 'epensesByCurrency';
             }}
           />
         </div>
       )}
     </StyledFiltersAndBars>
-  )
-}
+  );
+};

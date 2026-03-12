@@ -1,5 +1,4 @@
-import styled from "styled-components";
-
+import styled from 'styled-components';
 
 export const StyledCurrentBudget = styled.div`
   display: flex;
@@ -39,7 +38,7 @@ export const StyledCurrentBudget = styled.div`
   }
 
   .backButtonContainer:hover::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 50%;
     left: 50%;

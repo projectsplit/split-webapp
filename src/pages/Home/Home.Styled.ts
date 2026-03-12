@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledHomepage = styled.div`
   display: flex;
@@ -9,7 +9,7 @@ export const StyledHomepage = styled.div`
   width: 100%;
   overflow: hidden;
   position: relative;
-  > div[style*="position: fixed"] {
+  > div[style*='position: fixed'] {
     z-index: 1; /* Ensure fixed children (background) are above */
   }
   .fixedTop {
@@ -35,7 +35,9 @@ export const StyledHomepage = styled.div`
     justify-content: center;
     z-index: 4;
     cursor: pointer;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    transition:
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
     box-shadow: 0 0 10px ${({ theme }) => theme.pinkish};
     will-change: box-shadow;
     overflow: hidden; /* clips glow to circular boundary */
@@ -54,32 +56,38 @@ export const StyledHomepage = styled.div`
 
   @keyframes glowRandom {
     0% {
-      box-shadow: 0 0 10px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        0 0 10px ${({ theme }) => theme.pinkish},
         2px -2px 15px ${({ theme }) => theme.pinkish},
         -3px 3px 20px ${({ theme }) => theme.pinkish};
     }
     20% {
-      box-shadow: -2px 1px 12px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        -2px 1px 12px ${({ theme }) => theme.pinkish},
         3px -3px 18px ${({ theme }) => theme.pinkish},
         1px 2px 25px ${({ theme }) => theme.pinkish};
     }
     40% {
-      box-shadow: 3px 2px 10px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        3px 2px 10px ${({ theme }) => theme.pinkish},
         -2px -3px 20px ${({ theme }) => theme.pinkish},
         0 0 15px ${({ theme }) => theme.pinkish};
     }
     60% {
-      box-shadow: -3px -1px 12px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        -3px -1px 12px ${({ theme }) => theme.pinkish},
         2px 3px 18px ${({ theme }) => theme.pinkish},
         0 0 20px ${({ theme }) => theme.pinkish};
     }
     80% {
-      box-shadow: 2px 3px 10px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        2px 3px 10px ${({ theme }) => theme.pinkish},
         -1px -2px 18px ${({ theme }) => theme.pinkish},
         1px 1px 25px ${({ theme }) => theme.pinkish};
     }
     100% {
-      box-shadow: 0 0 10px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        0 0 10px ${({ theme }) => theme.pinkish},
         2px -2px 15px ${({ theme }) => theme.pinkish},
         -3px 3px 20px ${({ theme }) => theme.pinkish};
     }

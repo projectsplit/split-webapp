@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { UpdateGroupNameRequest } from "../../../types";
-import { Signal } from "@preact/signals-react";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { UpdateGroupNameRequest } from '../../../types';
+import { Signal } from '@preact/signals-react';
 
 export const useUpdateGroupName = (
   groupId: string | undefined,
@@ -14,17 +14,23 @@ export const useUpdateGroupName = (
   return useMutation<any, AxiosError, string>({
     mutationFn: (name) => {
       if (!groupId) {
-        changeNameError.value = "No group found";
-        return Promise.reject(new Error("No group found"));
+        changeNameError.value = 'No group found';
+        return Promise.reject(new Error('No group found'));
       }
       return updateGroupName({ name }, groupId);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      await queryClient.invalidateQueries({ queryKey: [groupId], exact: false });
-      await queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
+        queryKey: [groupId],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['shared'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['mostRecentGroup'],
         exact: false,
       });
       menu.value = null;
@@ -41,7 +47,6 @@ const updateGroupName = async (
   req: UpdateGroupNameRequest,
   groupId: string
 ): Promise<void> => {
-
   const response = await apiClient.put<void, AxiosResponse<void>>(
     `/groups/${groupId}/name`,
     req

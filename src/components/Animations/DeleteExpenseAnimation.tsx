@@ -1,24 +1,29 @@
-import { CSSTransition } from "react-transition-group";
-import { useRef } from "react";
-import DeleteExpenseConfirmation from "../Menus/Confirmations/DeleteExpenseConfirmation";
-import { DeleteExpenseAnimationProps } from "../../interfaces";
+import { CSSTransition } from 'react-transition-group';
+import { useRef } from 'react';
+import DeleteExpenseConfirmation from '../Menus/Confirmations/DeleteExpenseConfirmation';
+import { DeleteExpenseAnimationProps } from '../../interfaces';
 
 export default function DeleteExpenseAnimation({
   menu,
   description,
   selectedExpense,
-  errorMessage
+  errorMessage,
 }: DeleteExpenseAnimationProps) {
   const nodeRef = useRef(null);
   return (
     <CSSTransition
-      in={menu.value === "deleteExpense"}
+      in={menu.value === 'deleteExpense'}
       timeout={100}
       classNames="infoBox"
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <DeleteExpenseConfirmation menu={menu} description={description} selectedExpense={selectedExpense} errorMessage={errorMessage} />
+      <DeleteExpenseConfirmation
+        menu={menu}
+        description={description}
+        selectedExpense={selectedExpense}
+        errorMessage={errorMessage}
+      />
     </CSSTransition>
   );
 }

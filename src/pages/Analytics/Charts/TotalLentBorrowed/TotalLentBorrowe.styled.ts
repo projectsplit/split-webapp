@@ -1,4 +1,4 @@
-import styled from "styled-components";
-import { StyledCumulativeSpending } from "../CumulativeSpending/CumulativeSpending.styled";
+import styled from 'styled-components';
+import { StyledCumulativeSpending } from '../CumulativeSpending/CumulativeSpending.styled';
 
-export const StyledTotalLentBorrowed = styled(StyledCumulativeSpending)``
+export const StyledTotalLentBorrowed = styled(StyledCumulativeSpending)``;

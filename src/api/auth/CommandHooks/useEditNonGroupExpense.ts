@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
 import {
   NonGroupExpenseRequest,
   ExpenseResponseItem,
@@ -8,8 +8,8 @@ import {
   Guest,
   Member,
   User,
-} from "../../../types";
-import { Signal } from "@preact/signals-react";
+} from '../../../types';
+import { Signal } from '@preact/signals-react';
 
 export const useEditNonGroupExpense = (
   menu: Signal<string | null>,
@@ -27,24 +27,24 @@ export const useEditNonGroupExpense = (
     mutationFn: (expense) => editExpense(expense),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["nonGroupDebts"],
+        queryKey: ['nonGroupDebts'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["nonGroupExpenses"],
+        queryKey: ['nonGroupExpenses'],
         exact: false,
       });
-      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["shared"],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
+        queryKey: ['shared'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["cumulativeArray"],
+        queryKey: ['mostRecentGroup'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['cumulativeArray'],
         exact: false,
       });
       if (selectedExpense) {
@@ -61,10 +61,13 @@ export const useEditNonGroupExpense = (
           nonGroupUsers.value.length > 0 ||
           fromHomeGroup?.value
         )
-          localStorage.setItem("submittedFromHomePersistData", JSON.stringify(data));
+          localStorage.setItem(
+            'submittedFromHomePersistData',
+            JSON.stringify(data)
+          );
       }
       if (makePersonalClicked) {
-        localStorage.removeItem("submittedFromHomePersistData");
+        localStorage.removeItem('submittedFromHomePersistData');
       }
       menu.value = null;
     },
@@ -75,5 +78,8 @@ export const useEditNonGroupExpense = (
 };
 
 const editExpense = async (req: NonGroupExpenseRequest): Promise<void> => {
-  await apiClient.post<void, AxiosResponse<void>>("/expenses/edit-non-group", req);
+  await apiClient.post<void, AxiosResponse<void>>(
+    '/expenses/edit-non-group',
+    req
+  );
 };

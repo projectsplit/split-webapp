@@ -1,7 +1,7 @@
-import { IoClose } from "react-icons/io5";
-import { StyledExpenseFormHeader } from "./ExpenseFormHeader.styled";
-import { Signal } from "@preact/signals-react";
-import { Group, Guest, Member, User } from "@/types";
+import { IoClose } from 'react-icons/io5';
+import { StyledExpenseFormHeader } from './ExpenseFormHeader.styled';
+import { Signal } from '@preact/signals-react';
+import { Group, Guest, Member, User } from '@/types';
 
 interface ExpenseFormHeaderProps {
   header: string;

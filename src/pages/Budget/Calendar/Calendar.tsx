@@ -1,13 +1,12 @@
-import { StyledCalendar } from "./Calendar.styled";
-import { Frequency } from "../../../types";
-import { CalendarProps } from "../../../interfaces";
+import { StyledCalendar } from './Calendar.styled';
+import { Frequency } from '../../../types';
+import { CalendarProps } from '../../../interfaces';
 
 export default function Calendar({
   children,
   budgettype,
   calendarDay,
 }: CalendarProps) {
-
   const handleElementClick = (day: string) => {
     calendarDay.value = day;
   };
@@ -21,9 +20,9 @@ export default function Calendar({
                 <div
                   key={day + dayIndex}
                   className={`calendar-day ${
-                    day === calendarDay.value && day !== "" ? "selected" : ""
+                    day === calendarDay.value && day !== '' ? 'selected' : ''
                   }`}
-                  style={{ cursor: day !== "" ? "pointer" : "default" }}
+                  style={{ cursor: day !== '' ? 'pointer' : 'default' }}
                   onClick={() => handleElementClick(day)}
                 >
                   {day}
@@ -35,9 +34,9 @@ export default function Calendar({
             <div
               key={day + dayIndex}
               className={`calendar-day ${
-                day === calendarDay.value && day !== "" ? "selected" : ""
+                day === calendarDay.value && day !== '' ? 'selected' : ''
               }`}
-              style={{ cursor: day !== "" ? "pointer" : "default" }}
+              style={{ cursor: day !== '' ? 'pointer' : 'default' }}
               onClick={() => handleElementClick(day)}
             >
               {day}

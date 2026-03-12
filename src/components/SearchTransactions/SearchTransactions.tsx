@@ -1,26 +1,21 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  StyledSearchTransactions,
-} from "./SearchTransactions.styled";
-import { IoClose } from "react-icons/io5";
-import { EditorState } from "lexical";
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { useQueryClient } from "@tanstack/react-query";
-import { EditorContent } from "./EditorContent/EditorContent";
-import { handleSubmitButton } from "./helpers/handleSubmitButton";
-import { handleCancelClick } from "./helpers/handleCancelClick";
-import { initialConfig } from "./utils/lexicalThemeConfiguration";
-import { EditorContentHandle, SearchTransactionsProps } from "../../interfaces";
-import {
-  FetchedLabel,
-} from "../../types";
-import MyButton from "../MyButton/MyButton";
-import { CategorySelector } from "../CategorySelector/CategorySelector";
-import {
-} from "./helpers/localStorageStringParser";
-import { usePeople } from "./hooks/usePeople";
-import { useSearchFilters } from "./hooks/useSearchFilters";
-import { useLabels } from "@/api/auth/QueryHooks/useGetLabels";
+import { useEffect, useRef, useState } from 'react';
+import { StyledSearchTransactions } from './SearchTransactions.styled';
+import { IoClose } from 'react-icons/io5';
+import { EditorState } from 'lexical';
+import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { useQueryClient } from '@tanstack/react-query';
+import { EditorContent } from './EditorContent/EditorContent';
+import { handleSubmitButton } from './helpers/handleSubmitButton';
+import { handleCancelClick } from './helpers/handleCancelClick';
+import { initialConfig } from './utils/lexicalThemeConfiguration';
+import { EditorContentHandle, SearchTransactionsProps } from '../../interfaces';
+import { FetchedLabel } from '../../types';
+import MyButton from '../MyButton/MyButton';
+import { CategorySelector } from '../CategorySelector/CategorySelector';
+import {} from './helpers/localStorageStringParser';
+import { usePeople } from './hooks/usePeople';
+import { useSearchFilters } from './hooks/useSearchFilters';
+import { useLabels } from '@/api/auth/QueryHooks/useGetLabels';
 
 export default function SearchTransactions({
   menu,
@@ -29,7 +24,7 @@ export default function SearchTransactions({
   timeZoneId,
   expenseParsedFilters,
   transferParsedFilters,
-  isPersonal
+  isPersonal,
   // nonGroupUsers
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
@@ -41,7 +36,11 @@ export default function SearchTransactions({
     isPersonal
   );
 
-  const { data: suggestedLabels } = useLabels(userInfo?.userId, isPersonal, group?.id);
+  const { data: suggestedLabels } = useLabels(
+    userInfo?.userId,
+    isPersonal,
+    group?.id
+  );
 
   const {
     category,
@@ -57,31 +56,32 @@ export default function SearchTransactions({
 
   const editorContentRef = useRef<EditorContentHandle | null>(null);
 
-
   useEffect(() => {
     const handleBackNavigation = () => {
       if (menu.value) {
         menu.value = null;
       }
     };
-    window.addEventListener("popstate", handleBackNavigation);
+    window.addEventListener('popstate', handleBackNavigation);
     return () => {
-      window.removeEventListener("popstate", handleBackNavigation);
+      window.removeEventListener('popstate', handleBackNavigation);
     };
   }, [menu]);
 
-  const fetchedLabels: FetchedLabel[] = group ? group?.labels.map((l) => ({
-    id: l.id,
-    value: l.text,
-    color: l.color,
-    prop: "category",
-  })) : suggestedLabels?.labels.map((l) => ({
-    id: l.id,
-    value: l.text,
-    color: l.color,
-    prop: "category",
-    isPersonal: isPersonal
-  })) || [];
+  const fetchedLabels: FetchedLabel[] = group
+    ? group?.labels.map((l) => ({
+        id: l.id,
+        value: l.text,
+        color: l.color,
+        prop: 'category',
+      }))
+    : suggestedLabels?.labels.map((l) => ({
+        id: l.id,
+        value: l.text,
+        color: l.color,
+        prop: 'category',
+        isPersonal: isPersonal,
+      })) || [];
 
   return (
     <StyledSearchTransactions>
@@ -90,23 +90,31 @@ export default function SearchTransactions({
           <div className="gap"></div>
           <div className="searchingIn">
             Searching In:&nbsp;
-            <span className="groupName">{isPersonal ? "Personal" : group?.name ? group?.name : "Non Group"}</span>
+            <span className="groupName">
+              {isPersonal
+                ? 'Personal'
+                : group?.name
+                  ? group?.name
+                  : 'Non Group'}
+            </span>
           </div>
           <div className="closeSign" onClick={() => (menu.value = null)}>
             <IoClose name="close-outline" className="close" />
           </div>
         </div>
-        {!isPersonal && <div className="catSelector">
-          <CategorySelector
-            activeCat={path}
-            categories={{
-              cat1: "Expenses",
-              cat2: "Transfers",
-            }}
-            navLinkUse={true}
-            activeCatAsState={category}
-          />
-        </div>}
+        {!isPersonal && (
+          <div className="catSelector">
+            <CategorySelector
+              activeCat={path}
+              categories={{
+                cat1: 'Expenses',
+                cat2: 'Transfers',
+              }}
+              navLinkUse={true}
+              activeCatAsState={category}
+            />
+          </div>
+        )}
         <div className="searchBarAndCategories">
           <div className="lexicalSearch">
             <LexicalComposer initialConfig={initialConfig}>
@@ -147,7 +155,7 @@ export default function SearchTransactions({
               )
             }
             disabled={!submitButtonIsActive.value}
-            variant={submitButtonIsActive.value ? "primary" : "secondary"}
+            variant={submitButtonIsActive.value ? 'primary' : 'secondary'}
           >
             Apply
           </MyButton>
@@ -164,5 +172,3 @@ export default function SearchTransactions({
     </StyledSearchTransactions>
   );
 }
-
-

@@ -4,17 +4,20 @@ import {
   NonGroupExpenseResponseItem,
   PersonalExpenseResponseItem,
   TransactionType,
-} from "../types";
+} from '../types';
 
-
-
-export function isGroupExpense(expense: ExpenseResponseItem): expense is GroupExpenseResponseItem {
+export function isGroupExpense(
+  expense: ExpenseResponseItem
+): expense is GroupExpenseResponseItem {
   return expense.transactionType === TransactionType.Group;
 }
-export function isNonGroupExpense(expense: ExpenseResponseItem): expense is NonGroupExpenseResponseItem {
+export function isNonGroupExpense(
+  expense: ExpenseResponseItem
+): expense is NonGroupExpenseResponseItem {
   return expense.transactionType === TransactionType.NonGroup;
 }
-export function isPersonalExpense(expense: ExpenseResponseItem): expense is PersonalExpenseResponseItem {
+export function isPersonalExpense(
+  expense: ExpenseResponseItem
+): expense is PersonalExpenseResponseItem {
   return expense.transactionType === TransactionType.Personal;
 }
-

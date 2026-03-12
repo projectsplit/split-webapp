@@ -1,10 +1,10 @@
-import { Signal } from "@preact/signals-react";
-import { PickerMember } from "../../../types";
-import { split } from "./split";
-import { distributeRemainderCents } from "./distributeRemainderCents";
-import { distributeRemainderCentsForShares } from "./distributeRemainderCentsForShares";
-import { significantDigitsFromTicker } from "../../../helpers/openExchangeRates";
-import { removeCommas } from "../../../helpers/removeCommas";
+import { Signal } from '@preact/signals-react';
+import { PickerMember } from '../../../types';
+import { split } from './split';
+import { distributeRemainderCents } from './distributeRemainderCents';
+import { distributeRemainderCentsForShares } from './distributeRemainderCentsForShares';
+import { significantDigitsFromTicker } from '../../../helpers/openExchangeRates';
+import { removeCommas } from '../../../helpers/removeCommas';
 
 export const recalculateAmounts = (
   formMembers: PickerMember[],
@@ -14,13 +14,12 @@ export const recalculateAmounts = (
   ticker: string,
   isCreateExpense: boolean
 ): PickerMember[] => {
-
   const getCleanActual = (sq: string) => {
     const clean = removeCommas(sq);
-    if (clean === "" || clean === ".") {
-      return "0";
-    } else if (clean.startsWith(".")) {
-      return "0" + clean;
+    if (clean === '' || clean === '.') {
+      return '0';
+    } else if (clean.startsWith('.')) {
+      return '0' + clean;
     }
     return clean;
   };
@@ -46,7 +45,7 @@ export const recalculateAmounts = (
   let actualPercentageSplit: number[] = [];
 
   switch (category.value) {
-    case "Amounts":
+    case 'Amounts':
       screenArray = split(
         totalAmount - lockedTotalAmount,
         unlockedSelectedMembers.length,
@@ -56,19 +55,19 @@ export const recalculateAmounts = (
       actualAmountsArray = [...screenArray];
       return synchronizedFormMembers.map((m) => {
         if (m.selected && !m.locked) {
-          const screenValue = screenArray.shift()?.toFixed(decimalDigits) || "";
+          const screenValue = screenArray.shift()?.toFixed(decimalDigits) || '';
           return {
             ...m,
             screenQuantity: formatCurrency(screenValue, ticker),
             //screenQuantity:screenValue,
-            actualAmount: screenValue
+            actualAmount: screenValue,
             // actualAmountsArray.shift()?.toFixed(decimalDigits) || "",
           };
         }
         return m;
       });
 
-    case "Percentages":
+    case 'Percentages':
       screenArray = split(
         100 - lockedTotalAmount,
         unlockedSelectedMembers.length,
@@ -96,8 +95,8 @@ export const recalculateAmounts = (
         if (m.selected && !m.locked) {
           return {
             ...m,
-            screenQuantity: screenArray[unlockedIndex]?.toFixed(2) || "",
-            actualAmount: adjustedUnlocked[unlockedIndex] || "",
+            screenQuantity: screenArray[unlockedIndex]?.toFixed(2) || '',
+            actualAmount: adjustedUnlocked[unlockedIndex] || '',
             unlockedIndex: unlockedIndex++,
           };
         }
@@ -111,12 +110,12 @@ export const recalculateAmounts = (
         // Reset unselected members
         return {
           ...m,
-          actualAmount: "",
-          screenQuantity: "",
+          actualAmount: '',
+          screenQuantity: '',
         };
       });
 
-    case "Shares":
+    case 'Shares':
       const totalShares = synchronizedFormMembers.reduce(
         (sum, member) =>
           sum +
@@ -126,7 +125,7 @@ export const recalculateAmounts = (
         0
       );
       if (totalShares === 0 && !isCreateExpense) {
-        return synchronizedFormMembers.map((m) => ({ ...m, actualAmount: "" }));
+        return synchronizedFormMembers.map((m) => ({ ...m, actualAmount: '' }));
       }
       if (totalShares === 0) {
         return synchronizedFormMembers;
@@ -144,14 +143,14 @@ export const recalculateAmounts = (
           );
           return {
             ...m,
-            actualAmount: adjustedMember ? adjustedMember.amount : "",
-            screenQuantity: m.screenQuantity || "",
+            actualAmount: adjustedMember ? adjustedMember.amount : '',
+            screenQuantity: m.screenQuantity || '',
           };
         }
         return {
           ...m,
-          actualAmount: "",
-          screenQuantity: "",
+          actualAmount: '',
+          screenQuantity: '',
         };
       });
 
@@ -161,16 +160,16 @@ export const recalculateAmounts = (
 };
 
 function formatCurrency(value: string, ticker: string): string {
-  let sign = "";
-  if (value.startsWith("-")) {
-    sign = "-";
+  let sign = '';
+  if (value.startsWith('-')) {
+    sign = '-';
     value = value.slice(1);
   }
 
-  let formattedValue = value.replace(/[^\d.]/g, "").replace(/^0+(?=\d)/, "");
+  let formattedValue = value.replace(/[^\d.]/g, '').replace(/^0+(?=\d)/, '');
 
   const decimalPoints = significantDigitsFromTicker(ticker?.toUpperCase());
-  const decimalIndex = formattedValue.indexOf(".");
+  const decimalIndex = formattedValue.indexOf('.');
   if (decimalIndex !== -1) {
     if (decimalPoints === 0) {
       formattedValue = formattedValue.slice(0, decimalIndex);
@@ -183,17 +182,17 @@ function formatCurrency(value: string, ticker: string): string {
   }
 
   if (decimalPoints >= 3) {
-    const parts = formattedValue.split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    formattedValue = parts.join(".");
+    const parts = formattedValue.split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    formattedValue = parts.join('.');
   } else {
-    formattedValue = formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    formattedValue = formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
-  if (formattedValue.startsWith("0.") && formattedValue.length > 2) {
+  if (formattedValue.startsWith('0.') && formattedValue.length > 2) {
     formattedValue = formattedValue.slice(1);
-  } else if (formattedValue === "0.") {
-    formattedValue = ".";
+  } else if (formattedValue === '0.') {
+    formattedValue = '.';
   }
 
   return sign + formattedValue;

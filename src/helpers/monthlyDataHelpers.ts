@@ -1,8 +1,8 @@
 export const getAllDaysInMonth = (month: number, year: number) =>
-    Array.from(
-      { length: new Date(year, month, 0).getDate() },
-      (_, i) => new Date(year, month - 1, i + 1)
-    );
+  Array.from(
+    { length: new Date(year, month, 0).getDate() },
+    (_, i) => new Date(year, month - 1, i + 1)
+  );
 
 export const getNameForCurrentMonth = (
   year: number,
@@ -10,23 +10,23 @@ export const getNameForCurrentMonth = (
   date?: number | undefined
 ) => {
   const currDate = new Date(year, monthIndex, date);
-  const dateOptions: Intl.DateTimeFormatOptions = { month: "long" };
-  return currDate.toLocaleDateString("en-US", dateOptions);
+  const dateOptions: Intl.DateTimeFormatOptions = { month: 'long' };
+  return currDate.toLocaleDateString('en-US', dateOptions);
 };
 
 export const monthMap: { [key: string]: string } = {
-  'Jan': 'January',
-  'Feb': 'February',
-  'Mar': 'March',
-  'Apr': 'April',
-  'May': 'May',
-  'Jun': 'June',
-  'Jul': 'July',
-  'Aug': 'August',
-  'Sep': 'September',
-  'Oct': 'October',
-  'Nov': 'November',
-  'Dec': 'December'
+  Jan: 'January',
+  Feb: 'February',
+  Mar: 'March',
+  Apr: 'April',
+  May: 'May',
+  Jun: 'June',
+  Jul: 'July',
+  Aug: 'August',
+  Sep: 'September',
+  Oct: 'October',
+  Nov: 'November',
+  Dec: 'December',
 };
 
 export function convertToFullMonthNames(arrayOfWeeks: string[][]): string[][] {

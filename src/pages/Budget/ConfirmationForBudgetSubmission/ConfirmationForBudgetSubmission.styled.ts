@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledBottomMenu } from "../../../components/Menus/Layouts/BottomMenu/BottomMenu.styled";
+import styled from 'styled-components';
+import { StyledBottomMenu } from '../../../components/Menus/Layouts/BottomMenu/BottomMenu.styled';
 
 export const StyledConfirmationForBudgetSubmission = styled(StyledBottomMenu)`
   .header {

@@ -1,18 +1,19 @@
-import { StyledGroups } from "../Groups.styled";
-import { useNavigate } from "react-router-dom";
-import TreeAdjustedContainer from "../../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
-import Spinner from "../../../../components/Spinner/Spinner";
-import { useMostRecentContext } from "../../../../api/auth/CommandHooks/useMostRecentContext";
-import { TreeItemBuilderForHomeAndGroups } from "../../../../components/TreeItemBuilderForHomeAndGroups";
-import Sentinel from "../../../../components/Sentinel";
-import { MdOutlineGroupOff } from "react-icons/md";
-import { useGetTotalsActiveGroups } from "@/api/auth/QueryHooks/useGetTotalsActiveGroups";
+import { StyledGroups } from '../Groups.styled';
+import { useNavigate } from 'react-router-dom';
+import TreeAdjustedContainer from '../../../../components/TreeAdjustedContainer/TreeAdjustedContainer';
+import Spinner from '../../../../components/Spinner/Spinner';
+import { useMostRecentContext } from '../../../../api/auth/CommandHooks/useMostRecentContext';
+import { TreeItemBuilderForHomeAndGroups } from '../../../../components/TreeItemBuilderForHomeAndGroups';
+import Sentinel from '../../../../components/Sentinel';
+import { MdOutlineGroupOff } from 'react-icons/md';
+import { useGetTotalsActiveGroups } from '@/api/auth/QueryHooks/useGetTotalsActiveGroups';
 
 export default function ActiveGroups() {
   const navigate = useNavigate();
   const pageSize = 10;
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useGetTotalsActiveGroups(pageSize)
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
+    useGetTotalsActiveGroups(pageSize);
 
   const groups = data?.pages.flatMap((p) => p.groups);
   const updateMostRecentGroupId = useMostRecentContext();
@@ -34,14 +35,14 @@ export default function ActiveGroups() {
               <MdOutlineGroupOff className="icon" />
             </div>
           ) : (
-            ""
+            ''
           )}
           {groups?.map((g: any) => (
-            <div key={g.id} >
+            <div key={g.id}>
               <TreeAdjustedContainer
                 onClick={() => onGroupClickHandler(g.id, g.name)}
                 hasOption={false}
-                optionname={"settings-outline"}
+                optionname={'settings-outline'}
                 iconfontsize={30}
                 right={0.8}
                 items={TreeItemBuilderForHomeAndGroups(g?.details)}

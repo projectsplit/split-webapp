@@ -1,10 +1,10 @@
-import { AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { useQuery } from "@tanstack/react-query";
+import { AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { useQuery } from '@tanstack/react-query';
 
 export const useGetUsernameStatus = (username: string | undefined) => {
   return useQuery<any, Error, GetUsernameStatusResponse>({
-    queryKey: ["usernameStatus", username],
+    queryKey: ['usernameStatus', username],
     queryFn: () => getUsernameStatus(username!),
     staleTime: 0,
     gcTime: 0,
@@ -12,8 +12,13 @@ export const useGetUsernameStatus = (username: string | undefined) => {
   });
 };
 
-const getUsernameStatus = async (username: string): Promise<GetUsernameStatusResponse> => {
-  const response = await apiClient.get<void, AxiosResponse<GetUsernameStatusResponse>>(`/users/username/${username}`);
+const getUsernameStatus = async (
+  username: string
+): Promise<GetUsernameStatusResponse> => {
+  const response = await apiClient.get<
+    void,
+    AxiosResponse<GetUsernameStatusResponse>
+  >(`/users/username/${username}`);
   return response.data;
 };
 

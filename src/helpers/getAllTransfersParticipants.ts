@@ -1,5 +1,11 @@
-import { Guest, Member, Mode, TransferResponseItem, TruncatedMember } from "@/types";
-import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
+import {
+  Guest,
+  Member,
+  Mode,
+  TransferResponseItem,
+  TruncatedMember,
+} from '@/types';
+import { mergeMembersAndGuests } from './mergeMembersAndGuests';
 
 export default function getAllTransfersParticipants(
   transfers: TransferResponseItem[] | undefined,
@@ -28,14 +34,13 @@ export default function getAllTransfersParticipants(
   }
 
   if (uniqueUserIds.size === 0) {
-
-    return nonGroupUsers.map(u => u.id)
+    return nonGroupUsers
+      .map((u) => u.id)
       .filter((id) => nonGroupUserMap.has(id))
       .map((id) => ({
         id,
         name: nonGroupUserMap.get(id)!,
       }));
-
   }
 
   return Array.from(uniqueUserIds)
@@ -44,5 +49,4 @@ export default function getAllTransfersParticipants(
       id,
       name: nonGroupUserMap.get(id)!,
     }));
-
 }

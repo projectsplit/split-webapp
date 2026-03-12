@@ -1,13 +1,17 @@
-import { Details, GroupedTransaction } from "@/types";
-import currency from "currency.js";
+import { Details, GroupedTransaction } from '@/types';
+import currency from 'currency.js';
 
 //type NetByCurrency = Record<string, number>;
 
-export const computeNetPerCurrency = (groupedTransactions: GroupedTransaction[], userId: string): Details => {
-  const userTransactions = groupedTransactions.filter(
-    (gt) => gt.id === userId
-  )
-  const byCurrency = new Map<string, { owedToYou: currency; youOwe: currency }>();
+export const computeNetPerCurrency = (
+  groupedTransactions: GroupedTransaction[],
+  userId: string
+): Details => {
+  const userTransactions = groupedTransactions.filter((gt) => gt.id === userId);
+  const byCurrency = new Map<
+    string,
+    { owedToYou: currency; youOwe: currency }
+  >();
 
   for (const tx of userTransactions) {
     if (!byCurrency.has(tx.currency)) {
@@ -33,4 +37,4 @@ export const computeNetPerCurrency = (groupedTransactions: GroupedTransaction[],
   }
 
   return result;
-}
+};

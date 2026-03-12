@@ -1,14 +1,14 @@
-import IonIcon from "@reacticons/ionicons";
-import { DetailedTransferProps } from "../../interfaces";
-import { StyledDetailedTransfer } from "./DetailedTransfer.styled";
-import MyButton from "../MyButton/MyButton";
-import { AiFillDelete } from "react-icons/ai";
-import { useSignal } from "@preact/signals-react";
-import { DateOnly, TimeOnly, YearOnly } from "../../helpers/timeHelpers";
-import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
-import { HeadingNode } from "@lexical/rich-text";
-import MenuAnimationBackground from "../Animations/MenuAnimationBackground";
-import DeleteTransferAnimation from "../Animations/DeleteTransferAnimation";
+import IonIcon from '@reacticons/ionicons';
+import { DetailedTransferProps } from '../../interfaces';
+import { StyledDetailedTransfer } from './DetailedTransfer.styled';
+import MyButton from '../MyButton/MyButton';
+import { AiFillDelete } from 'react-icons/ai';
+import { useSignal } from '@preact/signals-react';
+import { DateOnly, TimeOnly, YearOnly } from '../../helpers/timeHelpers';
+import { displayCurrencyAndAmount } from '../../helpers/displayCurrencyAndAmount';
+import { HeadingNode } from '@lexical/rich-text';
+import MenuAnimationBackground from '../Animations/MenuAnimationBackground';
+import DeleteTransferAnimation from '../Animations/DeleteTransferAnimation';
 
 export default function DetailedTransfer({
   selectedTransfer,
@@ -31,28 +31,33 @@ export default function DetailedTransfer({
   };
   const theme = {
     text: {
-      bold: "editor-bold",
+      bold: 'editor-bold',
     },
   };
   const initialConfig = {
-    namespace: "MyEditor",
+    namespace: 'MyEditor',
     theme,
     onError,
     nodes: [HeadingNode],
   };
 
   const outlineColor =
-    selectedTransfer.value?.senderId === userMemberId || selectedTransfer.value?.senderId === userId
-      ? "#0CA0A0"
-      : selectedTransfer.value?.receiverId === userMemberId || selectedTransfer.value?.receiverId === userId
-        ? "#D79244"
-        : "rgb(54,54,54)";
+    selectedTransfer.value?.senderId === userMemberId ||
+    selectedTransfer.value?.senderId === userId
+      ? '#0CA0A0'
+      : selectedTransfer.value?.receiverId === userMemberId ||
+          selectedTransfer.value?.receiverId === userId
+        ? '#D79244'
+        : 'rgb(54,54,54)';
 
   const sender = members.find((x) => x.id === selectedTransfer.value?.senderId);
-  const receiver = members.find((x) => x.id === selectedTransfer.value?.receiverId);
+  const receiver = members.find(
+    (x) => x.id === selectedTransfer.value?.receiverId
+  );
 
   const isUserSender = sender?.id === userMemberId || sender?.id === userId;
-  const isUserReceiver = receiver?.id === userMemberId || receiver?.id === userId;
+  const isUserReceiver =
+    receiver?.id === userMemberId || receiver?.id === userId;
 
   return (
     <StyledDetailedTransfer $outlineColor={outlineColor}>
@@ -72,24 +77,20 @@ export default function DetailedTransfer({
       <div className="transfer">
         <div className="sentFrom">
           <span>Sent from</span>&nbsp;
-          <span className="name">
-            {isUserSender ? "You" : sender?.name}
-          </span>
+          <span className="name">{isUserSender ? 'You' : sender?.name}</span>
         </div>
         <span className="to">to</span>
-        <div className="sentTo">
-          {isUserReceiver ? "You" : receiver?.name}
-        </div>
+        <div className="sentTo">{isUserReceiver ? 'You' : receiver?.name}</div>
         <div className="descr">
           {selectedTransfer.value?.description
             ? `“ ${selectedTransfer.value?.description} ”`
-            : ""}
+            : ''}
         </div>
       </div>
 
       {!groupIsArchived ? (
         <div className="deleteButton">
-          <MyButton onClick={() => (menu.value = "deleteTransfer")}>
+          <MyButton onClick={() => (menu.value = 'deleteTransfer')}>
             <div className="buttonChildren">
               <AiFillDelete className="icon" />
               <span>Delete</span>
@@ -99,27 +100,27 @@ export default function DetailedTransfer({
       ) : null}
 
       <div className="createdBy">
-        Created by {members.find((x) => x.id === creator)?.name}{" "}
-        {DateOnly(occurred, timeZoneId) === "Today" ||
-          DateOnly(occurred, timeZoneId) === "Yesterday"
+        Created by {members.find((x) => x.id === creator)?.name}{' '}
+        {DateOnly(occurred, timeZoneId) === 'Today' ||
+        DateOnly(occurred, timeZoneId) === 'Yesterday'
           ? DateOnly(created, timeZoneId)
-          : "on" +
-          " " +
-          DateOnly(occurred, timeZoneId) +
-          " " +
-          YearOnly(occurred, timeZoneId)}{" "}
+          : 'on' +
+            ' ' +
+            DateOnly(occurred, timeZoneId) +
+            ' ' +
+            YearOnly(occurred, timeZoneId)}{' '}
         at {TimeOnly(created, timeZoneId)}
       </div>
       <div className="date">
-        Occurred{" "}
-        {DateOnly(occurred, timeZoneId) === "Today" ||
-          DateOnly(occurred, timeZoneId) === "Yesterday"
+        Occurred{' '}
+        {DateOnly(occurred, timeZoneId) === 'Today' ||
+        DateOnly(occurred, timeZoneId) === 'Yesterday'
           ? DateOnly(occurred, timeZoneId)
-          : "on" +
-          " " +
-          DateOnly(occurred, timeZoneId) +
-          " " +
-          YearOnly(occurred, timeZoneId)}{" "}
+          : 'on' +
+            ' ' +
+            DateOnly(occurred, timeZoneId) +
+            ' ' +
+            YearOnly(occurred, timeZoneId)}{' '}
         at {TimeOnly(occurred, timeZoneId)}
       </div>
       <div className="commentSection">

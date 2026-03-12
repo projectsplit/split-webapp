@@ -1,7 +1,7 @@
-import { FaCheck } from "react-icons/fa";
-import { NameAndAmountsProps } from "../../../../interfaces";
-import { displayCurrencyAndAmount } from "../../../../helpers/displayCurrencyAndAmount";
-import { HiLockClosed } from "react-icons/hi";
+import { FaCheck } from 'react-icons/fa';
+import { NameAndAmountsProps } from '../../../../interfaces';
+import { displayCurrencyAndAmount } from '../../../../helpers/displayCurrencyAndAmount';
+import { HiLockClosed } from 'react-icons/hi';
 
 export const NameAndAmounts = ({
   category,
@@ -11,7 +11,7 @@ export const NameAndAmounts = ({
 }: NameAndAmountsProps) => {
   return (
     <>
-      {category.value === "Shares" || category.value === "Percentages" ? (
+      {category.value === 'Shares' || category.value === 'Percentages' ? (
         <div className="textAndCheck">
           <div className="tick-cube" onClick={onClick}>
             <FaCheck className="checkmark" />
@@ -20,7 +20,7 @@ export const NameAndAmounts = ({
             <div className="name"> {m.name}</div>
             <div className="amount">
               {displayCurrencyAndAmount(
-                m.actualAmount === "" ? "0" : m.actualAmount,
+                m.actualAmount === '' ? '0' : m.actualAmount,
                 currency
               )}
             </div>

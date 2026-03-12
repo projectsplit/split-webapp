@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledCumulativeSpending = styled.div`
   width: 100%;
@@ -17,7 +17,7 @@ export const StyledCumulativeSpending = styled.div`
     }
     .rightArrow,
     .leftArrow {
-      .arrow{
+      .arrow {
         font-size: 20px;
       }
       display: flex;
@@ -26,7 +26,6 @@ export const StyledCumulativeSpending = styled.div`
       align-items: center;
       .futurePeriod,
       .pastPeriod {
-  
         font-size: 15px;
       }
     }

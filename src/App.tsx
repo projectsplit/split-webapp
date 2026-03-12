@@ -3,29 +3,29 @@ import {
   Routes,
   Route,
   Navigate,
-} from "react-router-dom";
-import Auth from "./pages/Auth/AuthPage";
-import routes from "./routes";
-import GoogleCallback from "./pages/GoogleCallback";
-import Home from "./pages/Home/Home";
-import RedirectToExpenses from "./routes/RedirectToExpenses";
-import Group from "./pages/TransactionsWrappers/Group";
-import Expenses from "./pages/Expenses/Expenses";
-import Transfers from "./pages/Transfers/Transfers";
-import Members from "./pages/Members/Members";
-import Protected from "./pages/Protected/Protected";
-import Analytics from "./pages/Analytics/Analytics";
-import RedirectToAnalytics from "./routes/RedirectToAnalytics";
-import CurrentBudget from "./pages/Budget/CurrentBudget/CurrentBudget";
-import CreateBudget from "./pages/Budget/CreateBudget/CreateBudget";
-import Budget from "./pages/Budget/Budget";
-import RedirectToBudget from "./routes/RedirectToBudget";
-import CreateAccount from "./pages/CreateAccount/CreateAccount";
-import GenerateInvitationCode from "./pages/GenerateInvitationCode/GenerateInvitationCode";
-import Shared from "./pages/Groups/Shared";
-import RedirectToNonGroupExpenses from "./routes/RedirectToNonGroupExpenses";
-import NonGroup from "./pages/TransactionsWrappers/NonGroup";
-import { Personal } from "./pages/Personal/Personal";
+} from 'react-router-dom';
+import Auth from './pages/Auth/AuthPage';
+import routes from './routes';
+import GoogleCallback from './pages/GoogleCallback';
+import Home from './pages/Home/Home';
+import RedirectToExpenses from './routes/RedirectToExpenses';
+import Group from './pages/TransactionsWrappers/Group';
+import Expenses from './pages/Expenses/Expenses';
+import Transfers from './pages/Transfers/Transfers';
+import Members from './pages/Members/Members';
+import Protected from './pages/Protected/Protected';
+import Analytics from './pages/Analytics/Analytics';
+import RedirectToAnalytics from './routes/RedirectToAnalytics';
+import CurrentBudget from './pages/Budget/CurrentBudget/CurrentBudget';
+import CreateBudget from './pages/Budget/CreateBudget/CreateBudget';
+import Budget from './pages/Budget/Budget';
+import RedirectToBudget from './routes/RedirectToBudget';
+import CreateAccount from './pages/CreateAccount/CreateAccount';
+import GenerateInvitationCode from './pages/GenerateInvitationCode/GenerateInvitationCode';
+import Shared from './pages/Groups/Shared';
+import RedirectToNonGroupExpenses from './routes/RedirectToNonGroupExpenses';
+import NonGroup from './pages/TransactionsWrappers/NonGroup';
+import { Personal } from './pages/Personal/Personal';
 
 const App = () => {
   return (
@@ -38,7 +38,10 @@ const App = () => {
           <Route path={routes.ROOT} element={<Home />} />
           <Route path={routes.JOIN} element={<Home />} />
           <Route path="/shared" element={<Shared />} />
-          <Route path="/shared/generatecode/:groupid" element={<GenerateInvitationCode />} />
+          <Route
+            path="/shared/generatecode/:groupid"
+            element={<GenerateInvitationCode />}
+          />
 
           <Route path="/shared/:groupid" element={<Group />}>
             <Route index element={<RedirectToExpenses />} />
@@ -59,7 +62,6 @@ const App = () => {
           <Route path="/personal" element={<Personal />}>
             <Route index element={<Expenses />} />
           </Route>
-
 
           <Route path="/analytics/*" element={<RedirectToAnalytics />} />
           <Route path="/analytics" element={<Analytics />} />

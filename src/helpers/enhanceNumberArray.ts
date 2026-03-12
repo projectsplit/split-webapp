@@ -1,8 +1,12 @@
-export const enhanceNumberArray = (dataArray: number[], numberOfMidpoints: number) => {
+export const enhanceNumberArray = (
+  dataArray: number[],
+  numberOfMidpoints: number
+) => {
   const enhancedData = [];
 
   for (let i = 0; i < dataArray.length - 1; i++) {
-    const interval = (dataArray[i + 1] - dataArray[i]) / (numberOfMidpoints + 1);
+    const interval =
+      (dataArray[i + 1] - dataArray[i]) / (numberOfMidpoints + 1);
 
     enhancedData.push(dataArray[i]);
 

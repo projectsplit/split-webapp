@@ -6,30 +6,30 @@ import {
   useMemo,
   useRef,
   useState,
-} from "react";
-import { MemberPickerProps } from "../../interfaces";
-import { useSignal } from "@preact/signals-react";
-import { StyledMemberPicker } from "./MemberPicker.styled";
-import { significantDigitsFromTicker } from "../../helpers/openExchangeRates";
-import { CategorySelector } from "../CategorySelector/CategorySelector";
-import Right from "./helpers/components/Right";
-import Text from "./helpers/components/Text";
-import NameAndAmounts from "./helpers/components/NameAndAmounts";
-import { isEquallySplitFn } from "./helpers/isEquallySplitFn";
-import { recalculateAmounts } from "./helpers/recalculateAmounts";
-import { useRecalculateAmounts } from "./helpers/hooks/useRecalculateAmounts";
-import { removeCommas } from "../../helpers/removeCommas";
-import { currencyMask } from "../../helpers/currencyMask";
-import { BiArrowBack } from "react-icons/bi";
-import MyButton from "../MyButton/MyButton";
-import MenuAnimationBackground from "../Animations/MenuAnimationBackground";
-import ParticipantsPayersAnimation from "../Animations/ParticipantsPayersAnimation";
-import { handleDoneClick } from "./helpers/handleDoneClick";
-import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
-import { errorSettingFn } from "./helpers/errorSettingFn";
-import IonIcon from "@reacticons/ionicons";
-import { useTotalSelectedAmount } from "./helpers/hooks/useTotalSelectedAmount";
-import { BuildRemainingAmountText } from "./helpers/components/BuildRemainingAmountText";
+} from 'react';
+import { MemberPickerProps } from '../../interfaces';
+import { useSignal } from '@preact/signals-react';
+import { StyledMemberPicker } from './MemberPicker.styled';
+import { significantDigitsFromTicker } from '../../helpers/openExchangeRates';
+import { CategorySelector } from '../CategorySelector/CategorySelector';
+import Right from './helpers/components/Right';
+import Text from './helpers/components/Text';
+import NameAndAmounts from './helpers/components/NameAndAmounts';
+import { isEquallySplitFn } from './helpers/isEquallySplitFn';
+import { recalculateAmounts } from './helpers/recalculateAmounts';
+import { useRecalculateAmounts } from './helpers/hooks/useRecalculateAmounts';
+import { removeCommas } from '../../helpers/removeCommas';
+import { currencyMask } from '../../helpers/currencyMask';
+import { BiArrowBack } from 'react-icons/bi';
+import MyButton from '../MyButton/MyButton';
+import MenuAnimationBackground from '../Animations/MenuAnimationBackground';
+import ParticipantsPayersAnimation from '../Animations/ParticipantsPayersAnimation';
+import { handleDoneClick } from './helpers/handleDoneClick';
+import { displayCurrencyAndAmount } from '../../helpers/displayCurrencyAndAmount';
+import { errorSettingFn } from './helpers/errorSettingFn';
+import IonIcon from '@reacticons/ionicons';
+import { useTotalSelectedAmount } from './helpers/hooks/useTotalSelectedAmount';
+import { BuildRemainingAmountText } from './helpers/components/BuildRemainingAmountText';
 
 const MemberPickerPreMemo2 = ({
   memberAmounts,
@@ -48,14 +48,13 @@ const MemberPickerPreMemo2 = ({
   isLoading,
   isCreateExpense,
 }: MemberPickerProps) => {
-  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const renderCounter = useRef<number>(0);
   const isEquallySplit = useSignal<boolean>(true);
   const inputRefs = useRef<Map<string, HTMLInputElement>>(new Map());
-  const errorMenu = useSignal<string>("");
+  const errorMenu = useSignal<string>('');
   const [decimalDigits, setDecimalDigits] = useState<number>(2);
 
   renderCounter.current++;
@@ -75,9 +74,9 @@ const MemberPickerPreMemo2 = ({
   }, [selectedCurrency]);
 
   useEffect(() => {
-    document.addEventListener("mousedown", clickOutsideListener);
+    document.addEventListener('mousedown', clickOutsideListener);
     return () => {
-      document.removeEventListener("mousedown", clickOutsideListener);
+      document.removeEventListener('mousedown', clickOutsideListener);
     };
   }, []);
 
@@ -152,8 +151,8 @@ const MemberPickerPreMemo2 = ({
         return {
           ...m,
           selected: false,
-          actualAmount: "",
-          screenQuantity: "",
+          actualAmount: '',
+          screenQuantity: '',
           locked: false,
         };
       }
@@ -199,8 +198,8 @@ const MemberPickerPreMemo2 = ({
     id: string,
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
-    if (category.value !== "Amounts") {
-      let value = e.target.value.replace(/,/g, "."); // Replace comma with dot
+    if (category.value !== 'Amounts') {
+      let value = e.target.value.replace(/,/g, '.'); // Replace comma with dot
       const updatedMembers = memberAmounts.map((m) =>
         m.id === id ? { ...m, screenQuantity: value, locked: true } : m
       );
@@ -218,7 +217,7 @@ const MemberPickerPreMemo2 = ({
     }
 
     const oldMember = memberAmounts.find((m) => m.id === id);
-    const oldDisplayed = oldMember ? oldMember.screenQuantity : "";
+    const oldDisplayed = oldMember ? oldMember.screenQuantity : '';
     const oldDisplayedLength = oldDisplayed.length;
     const rawLength = e.target.value.length;
     const isAddition = rawLength > oldDisplayedLength;
@@ -229,13 +228,13 @@ const MemberPickerPreMemo2 = ({
     let actualAmount = clean;
 
     if (isNaN(Number(clean))) {
-      if (clean === "." || clean === "") {
-        if (isDeletion || clean === "") {
-          formattedValue = "";
-          actualAmount = "";
+      if (clean === '.' || clean === '') {
+        if (isDeletion || clean === '') {
+          formattedValue = '';
+          actualAmount = '';
         } else if (isAddition) {
-          formattedValue = ".";
-          actualAmount = "0.";
+          formattedValue = '.';
+          actualAmount = '0.';
         }
       }
     } else {
@@ -243,8 +242,8 @@ const MemberPickerPreMemo2 = ({
       if (numericValue > 999999999999.99) {
         formattedValue = oldDisplayed;
         actualAmount = removeCommas(oldDisplayed);
-      } else if (clean.startsWith(".")) {
-        actualAmount = "0" + clean;
+      } else if (clean.startsWith('.')) {
+        actualAmount = '0' + clean;
       }
     }
 
@@ -273,22 +272,22 @@ const MemberPickerPreMemo2 = ({
         const isZero = numericValue === 0 || isNaN(numericValue);
 
         switch (category.value) {
-          case "Amounts":
+          case 'Amounts':
             return {
               ...m,
-              screenQuantity: isZero ? "0.00" : cleanedValue,
+              screenQuantity: isZero ? '0.00' : cleanedValue,
               locked: isZero ? false : m.locked,
             };
-          case "Shares":
+          case 'Shares':
             return {
               ...m,
-              screenQuantity: isZero ? "" : cleanedValue,
+              screenQuantity: isZero ? '' : cleanedValue,
               locked: isZero ? false : m.locked,
             };
-          case "Percentages":
+          case 'Percentages':
             return {
               ...m,
-              screenQuantity: isZero ? "0.00" : cleanedValue,
+              screenQuantity: isZero ? '0.00' : cleanedValue,
               locked: isZero ? false : m.locked,
             };
           default:
@@ -363,7 +362,10 @@ const MemberPickerPreMemo2 = ({
   }, [memberAmounts]);
 
   const isEquallySplitValue = isEquallySplit.value;
-  const totalSelectedAmount = useTotalSelectedAmount(memberAmounts, selectedCurrency)
+  const totalSelectedAmount = useTotalSelectedAmount(
+    memberAmounts,
+    selectedCurrency
+  );
 
   return (
     <StyledMemberPicker
@@ -374,7 +376,7 @@ const MemberPickerPreMemo2 = ({
       $category={category.value}
       role="button"
       onKeyDown={(e) => {
-        if (e.key === "Enter") {
+        if (e.key === 'Enter') {
           handleMainClick();
         }
       }}
@@ -392,7 +394,7 @@ const MemberPickerPreMemo2 = ({
         <div className="menu" ref={dropdownRef}>
           <div className="header">
             <div className="closeButtonContainer">
-              {" "}
+              {' '}
               <BiArrowBack
                 className="backButton"
                 onClick={memoizedHandleDoneClick}
@@ -400,26 +402,26 @@ const MemberPickerPreMemo2 = ({
             </div>
 
             <div className="title">
-              {description === "Participants"
+              {description === 'Participants'
                 ? `Split ${displayCurrencyAndAmount(
-                  totalAmount.toString(),
-                  selectedCurrency
-                )} by`
+                    totalAmount.toString(),
+                    selectedCurrency
+                  )} by`
                 : `${displayCurrencyAndAmount(
-                  totalAmount.toString(),
-                  selectedCurrency
-                )} paid by`}
+                    totalAmount.toString(),
+                    selectedCurrency
+                  )} paid by`}
             </div>
             <div className="gap"></div>
           </div>
 
           <div className="categories">
             <CategorySelector
-              activeCat={"Amounts"}
+              activeCat={'Amounts'}
               categories={{
-                cat1: "Amounts",
-                cat2: "Shares",
-                cat3: "Percentages",
+                cat1: 'Amounts',
+                cat2: 'Shares',
+                cat3: 'Percentages',
               }}
               navLinkUse={false}
               activeCatAsState={category}
@@ -473,13 +475,13 @@ const MemberPickerPreMemo2 = ({
           <div className="spacer"></div>
           <div className="remainders">
             <div className="firstRow">
-              {" "}
+              {' '}
               <div className="amounts">
                 {displayCurrencyAndAmount(
                   totalSelectedAmount.toString(),
                   selectedCurrency
-                )}{" "}
-                <span className="text">out of</span>{" "}
+                )}{' '}
+                <span className="text">out of</span>{' '}
                 {displayCurrencyAndAmount(
                   totalAmount.toString(),
                   selectedCurrency

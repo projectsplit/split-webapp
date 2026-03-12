@@ -1,9 +1,15 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { GroupExpenseRequest, Group, Guest, Member, User } from "../../../types";
-import { Signal } from "@preact/signals-react";
-import { NavigateFunction } from "react-router-dom";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import {
+  GroupExpenseRequest,
+  Group,
+  Guest,
+  Member,
+  User,
+} from '../../../types';
+import { Signal } from '@preact/signals-react';
+import { NavigateFunction } from 'react-router-dom';
 
 export const useCreateGroupExpense = (
   menu: Signal<string | null>,
@@ -26,27 +32,27 @@ export const useCreateGroupExpense = (
         navigate(`/shared/${groupId}/expenses`);
       }
       await queryClient.invalidateQueries({
-        queryKey: ["debts"],
+        queryKey: ['debts'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["groupExpenses"],
+        queryKey: ['groupExpenses'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["home"],
+        queryKey: ['home'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["shared"],
+        queryKey: ['shared'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
+        queryKey: ['mostRecentGroup'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["cumulativeArray"],
+        queryKey: ['cumulativeArray'],
         exact: false,
       });
       await queryClient.invalidateQueries({
@@ -65,11 +71,14 @@ export const useCreateGroupExpense = (
           nonGroupUsers.value.length > 0 ||
           fromHomeGroup?.value
         )
-          localStorage.setItem("submittedFromHomePersistData", JSON.stringify(data));
+          localStorage.setItem(
+            'submittedFromHomePersistData',
+            JSON.stringify(data)
+          );
       }
 
       if (makePersonalClicked) {
-        localStorage.removeItem("submittedFromHomePersistData");
+        localStorage.removeItem('submittedFromHomePersistData');
       }
     },
     onSettled: () => {
@@ -79,6 +88,6 @@ export const useCreateGroupExpense = (
 };
 
 const createGroupExpense = async (req: GroupExpenseRequest): Promise<void> => {
-  console.log(req)
-  await apiClient.post<void, AxiosResponse<void>>("/expenses/create", req);
+  console.log(req);
+  await apiClient.post<void, AxiosResponse<void>>('/expenses/create', req);
 };

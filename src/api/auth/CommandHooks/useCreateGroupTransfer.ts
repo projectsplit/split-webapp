@@ -1,9 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { CreateTransferRequest, Group } from "../../../types";
-import { Signal } from "@preact/signals-react";
-import { NavigateFunction } from "react-router-dom";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { CreateTransferRequest, Group } from '../../../types';
+import { Signal } from '@preact/signals-react';
+import { NavigateFunction } from 'react-router-dom';
 
 export const useCreateGroupTransfer = (
   menu: Signal<string | null>,
@@ -18,20 +18,20 @@ export const useCreateGroupTransfer = (
     mutationFn: (transfer) => submitTransfer(transfer),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["debts"],
+        queryKey: ['debts'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["groupTransfers"],
+        queryKey: ['groupTransfers'],
         exact: false,
       });
-      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["shared"],
+        queryKey: ['shared'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
+        queryKey: ['mostRecentGroup'],
         exact: false,
       });
       await queryClient.invalidateQueries({
@@ -49,7 +49,7 @@ export const useCreateGroupTransfer = (
 
 const submitTransfer = async (req: CreateTransferRequest): Promise<void> => {
   const response = await apiClient.post<void, AxiosResponse<void>>(
-    "/transfers/create",
+    '/transfers/create',
     req
   );
   return response.data;

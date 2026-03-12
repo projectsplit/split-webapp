@@ -1,14 +1,14 @@
-import { DateConstraint } from "../../../types";
-import { deduplicateFromEndofArr } from "./deduplicateFromEndofArr";
-import { getDateIntersection } from "./getDateIntersection";
+import { DateConstraint } from '../../../types';
+import { deduplicateFromEndofArr } from './deduplicateFromEndofArr';
+import { getDateIntersection } from './getDateIntersection';
 
 export const finalProcessConstraints = (array: DateConstraint[]) => {
   const dedupedArray = deduplicateFromEndofArr(array);
   if (dedupedArray.length === 1) {
-    if (dedupedArray[0].trigger === "during:") {
+    if (dedupedArray[0].trigger === 'during:') {
       return [
-        { trigger: "before:", value: dedupedArray[0].value },
-        { trigger: "after:", value: dedupedArray[0].value },
+        { trigger: 'before:', value: dedupedArray[0].value },
+        { trigger: 'after:', value: dedupedArray[0].value },
       ];
     }
     return dedupedArray;

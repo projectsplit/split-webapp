@@ -1,9 +1,8 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const StyledFormInputWithTag = styled.div<{ $hasError?: boolean }>`
   display: flex;
   flex-direction: column;
-  
 
   .labelIconAndInputField {
     display: flex;
@@ -12,27 +11,26 @@ export const StyledFormInputWithTag = styled.div<{ $hasError?: boolean }>`
     &:focus-within {
       .labelSelectorWrapper,
       .input-container {
-        
         border-color: ${({ theme, $hasError }) =>
-    $hasError ? theme.errorColor : theme.highlightColor};
+          $hasError ? theme.errorColor : theme.highlightColor};
       }
     }
 
-.labelSelectorWrapper {
+    .labelSelectorWrapper {
       display: flex;
-      align-items: center;    
-      justify-content: center; 
-      padding: 0 12px;       
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
       background-color: ${({ theme }) => theme.layer2};
       border-top: 1px solid
         ${({ theme, $hasError }) =>
-    $hasError ? theme.errorColor : theme.lineColor};
+          $hasError ? theme.errorColor : theme.lineColor};
       border-bottom: 1px solid
         ${({ theme, $hasError }) =>
-    $hasError ? theme.errorColor : theme.lineColor};
+          $hasError ? theme.errorColor : theme.lineColor};
       border-right: 1px solid
         ${({ theme, $hasError }) =>
-    $hasError ? theme.errorColor : theme.lineColor};
+          $hasError ? theme.errorColor : theme.lineColor};
       border-top-right-radius: 8px;
       border-bottom-right-radius: 8px;
       transition: border-color 0.15s;
@@ -42,13 +40,13 @@ export const StyledFormInputWithTag = styled.div<{ $hasError?: boolean }>`
         flex-direction: row;
         align-items: center;
         gap: 0.5rem;
-        background-color: rgba(131, 130, 130, 0.2); 
-        border-radius: 15px; 
+        background-color: rgba(131, 130, 130, 0.2);
+        border-radius: 15px;
         padding: 6px 14px;
         cursor: pointer;
         font-size: 14px;
         white-space: nowrap;
-        height: fit-content; 
+        height: fit-content;
       }
     }
   }
@@ -73,17 +71,16 @@ export const StyledInput = styled.div<{ $hasError?: boolean }>`
   flex-grow: 1;
 
   .input-container {
-    
     background-color: ${({ theme }) => theme.layer2};
     border-top: 1px solid
       ${({ theme, $hasError }) =>
-    $hasError ? theme.errorColor : theme.lineColor};
+        $hasError ? theme.errorColor : theme.lineColor};
     border-bottom: 1px solid
       ${({ theme, $hasError }) =>
-    $hasError ? theme.errorColor : theme.lineColor};
+        $hasError ? theme.errorColor : theme.lineColor};
     border-left: 1px solid
       ${({ theme, $hasError }) =>
-    $hasError ? theme.errorColor : theme.lineColor};
+        $hasError ? theme.errorColor : theme.lineColor};
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
     padding: 0.5em 1em;
@@ -96,7 +93,6 @@ export const StyledInput = styled.div<{ $hasError?: boolean }>`
       font: inherit;
       width: 100%;
       outline: none;
-     
 
       &::placeholder {
         color: ${({ theme }) => theme.secondaryTextColor};

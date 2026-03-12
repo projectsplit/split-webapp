@@ -1,11 +1,17 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { Signal, useComputed } from "@preact/signals-react";
-import { NavigateFunction } from "react-router-dom";
-import { CreateTransferRequest, Member, Guest, User, UserInfo, Group } from "../../../types";
-import { amountIsValid } from "../../../helpers/amountIsValid";
-import { useCreateGroupTransfer } from "@/api/auth/CommandHooks/useCreateGroupTransfer";
-import { useCreateNonGroupTransfer } from "@/api/auth/CommandHooks/useCreateNonGroupTransfer";
-
+import { useCallback, useEffect, useMemo } from 'react';
+import { Signal, useComputed } from '@preact/signals-react';
+import { NavigateFunction } from 'react-router-dom';
+import {
+  CreateTransferRequest,
+  Member,
+  Guest,
+  User,
+  UserInfo,
+  Group,
+} from '../../../types';
+import { amountIsValid } from '../../../helpers/amountIsValid';
+import { useCreateGroupTransfer } from '@/api/auth/CommandHooks/useCreateGroupTransfer';
+import { useCreateNonGroupTransfer } from '@/api/auth/CommandHooks/useCreateNonGroupTransfer';
 
 interface UseTransferFormLogicProps {
   userInfo: UserInfo | undefined;
@@ -14,21 +20,25 @@ interface UseTransferFormLogicProps {
   menu: Signal<string | null>;
   nonGroupUsers: Signal<User[]>;
   isnonGroupTransfer: Signal<boolean> | undefined;
-  nonGroupMenu: Signal<{
-    attribute: string;
-    menu: string | null;
-    senderId: string;
-    senderName: string;
-    receiverId: string;
-    receiverName: string;
-  }> | undefined;
+  nonGroupMenu:
+    | Signal<{
+        attribute: string;
+        menu: string | null;
+        senderId: string;
+        senderName: string;
+        receiverId: string;
+        receiverName: string;
+      }>
+    | undefined;
   fromHomeGroup: Signal<Group | null> | undefined;
   navigate: NavigateFunction;
   isSubmitting: Signal<boolean>;
   displayedAmount: Signal<string>;
   currencyMenu: Signal<string | null>;
-  data: ReturnType<typeof import("./useTransferFormStore").useTransferData>;
-  actions: ReturnType<typeof import("./useTransferFormStore").useTransferActions>;
+  data: ReturnType<typeof import('./useTransferFormStore').useTransferData>;
+  actions: ReturnType<
+    typeof import('./useTransferFormStore').useTransferActions
+  >;
 }
 
 export const useTransferFormLogic = ({
@@ -47,29 +57,36 @@ export const useTransferFormLogic = ({
   data,
   actions,
 }: UseTransferFormLogicProps) => {
-
   const handleInputBlur = useCallback(() => {
     actions.setError('showAmountError', true);
     amountIsValid(data.amount, (err) => actions.setError('amountError', err));
   }, [data.amount, actions]);
 
   const userMembers = groupMembers?.value.filter(
-    (item): item is Member => "userId" in item
+    (item): item is Member => 'userId' in item
   );
 
-  const userMemberId = useMemo(() => userMembers?.find(
-    (m) => m.userId === userInfo?.userId
-  )?.id, [userMembers, userInfo?.userId]);
+  const userMemberId = useMemo(
+    () => userMembers?.find((m) => m.userId === userInfo?.userId)?.id,
+    [userMembers, userInfo?.userId]
+  );
 
   const { noReceiverSelected, isSamePerson } = useMemo(() => {
     return {
-      noReceiverSelected: nonGroupMenu?.value.receiverName === "",
+      noReceiverSelected: nonGroupMenu?.value.receiverName === '',
       isSamePerson:
         nonGroupMenu?.value.senderId === nonGroupMenu?.value.receiverId,
     };
-  }, [nonGroupMenu?.value.senderId, nonGroupMenu?.value.receiverId, nonGroupMenu?.value.receiverName]);
+  }, [
+    nonGroupMenu?.value.senderId,
+    nonGroupMenu?.value.receiverId,
+    nonGroupMenu?.value.receiverName,
+  ]);
 
-  const { mutate: createGroupTransferMutation, isPending: isGroupTransferPending } = useCreateGroupTransfer(
+  const {
+    mutate: createGroupTransferMutation,
+    isPending: isGroupTransferPending,
+  } = useCreateGroupTransfer(
     menu,
     groupId,
     navigate,
@@ -77,11 +94,10 @@ export const useTransferFormLogic = ({
     fromHomeGroup
   );
 
-  const { mutate: createNonGroupTransferMutation, isPending: isNonGroupTransferPending } = useCreateNonGroupTransfer(
-    menu,
-    navigate,
-    isSubmitting,
-  );
+  const {
+    mutate: createNonGroupTransferMutation,
+    isPending: isNonGroupTransferPending,
+  } = useCreateNonGroupTransfer(menu, navigate, isSubmitting);
 
   const createTransferMutation = isnonGroupTransfer?.value
     ? createNonGroupTransferMutation
@@ -95,8 +111,8 @@ export const useTransferFormLogic = ({
     (curr: string) => {
       actions.setCurrencySymbol(curr);
       currencyMenu.value = null;
-      actions.setAmount("");
-      displayedAmount.value = "";
+      actions.setAmount('');
+      displayedAmount.value = '';
     },
     [actions, currencyMenu, displayedAmount]
   );
@@ -106,14 +122,20 @@ export const useTransferFormLogic = ({
     actions.setError('showIdError', true);
 
     if (noReceiverSelected) {
-      actions.setError('recipientError', "Select a recipient");
+      actions.setError('recipientError', 'Select a recipient');
     }
     if (isSamePerson) {
-      actions.setError('isSameUserError', "Sender and receiver cannot be the same person");
+      actions.setError(
+        'isSameUserError',
+        'Sender and receiver cannot be the same person'
+      );
       actions.setError('showSamePersonError', true);
     }
 
-    if (!amountIsValid(data.amount, (err) => actions.setError('amountError', err))) return;
+    if (
+      !amountIsValid(data.amount, (err) => actions.setError('amountError', err))
+    )
+      return;
 
     if (!!data.errors.idErrorMessage) return;
 
@@ -165,37 +187,50 @@ export const useTransferFormLogic = ({
   }, [nonGroupMenu?.value.senderId, nonGroupMenu?.value.receiverId, actions]);
 
   useEffect(() => {
-    if (data.senderId === data.receiverId && data.senderId !== "") {
+    if (data.senderId === data.receiverId && data.senderId !== '') {
       actions.setError('isReceiverError', true);
       actions.setError('isSenderError', true);
-      actions.setError('idErrorMessage', "Sender and receiver cannot be the same person");
-    } else if (data.senderId === "" && data.receiverId !== "") {
+      actions.setError(
+        'idErrorMessage',
+        'Sender and receiver cannot be the same person'
+      );
+    } else if (data.senderId === '' && data.receiverId !== '') {
       actions.setError('isReceiverError', false);
       actions.setError('isSenderError', true);
-      actions.setError('idErrorMessage', "Select a sender")
-    }
-    else if (data.receiverId === "" && data.senderId !== "") {
+      actions.setError('idErrorMessage', 'Select a sender');
+    } else if (data.receiverId === '' && data.senderId !== '') {
       actions.setError('isReceiverError', true);
       actions.setError('isSenderError', false);
-      actions.setError('idErrorMessage', "Select a receiver")
-    } else if (data.receiverId === "" && data.senderId === "") {
+      actions.setError('idErrorMessage', 'Select a receiver');
+    } else if (data.receiverId === '' && data.senderId === '') {
       actions.setError('isReceiverError', true);
       actions.setError('isSenderError', true);
-      actions.setError('idErrorMessage', "Select a sender and a receiver")
+      actions.setError('idErrorMessage', 'Select a sender and a receiver');
     } else {
       actions.setError('isReceiverError', false);
       actions.setError('isSenderError', false);
-      actions.setError('idErrorMessage', "")
+      actions.setError('idErrorMessage', '');
     }
+  }, [
+    data.senderId,
+    data.receiverId,
+    isnonGroupTransfer?.value,
+    userInfo?.userId,
+    actions,
+  ]);
 
-
-  }, [data.senderId, data.receiverId, isnonGroupTransfer?.value, userInfo?.userId, actions]);
-
-  const idError = useMemo(() => ({
-    isSenderError: data.errors.isSenderError,
-    isReceiverError: data.errors.isReceiverError,
-    error: data.errors.idErrorMessage
-  }), [data.errors.isSenderError, data.errors.isReceiverError, data.errors.idErrorMessage]);
+  const idError = useMemo(
+    () => ({
+      isSenderError: data.errors.isSenderError,
+      isReceiverError: data.errors.isReceiverError,
+      error: data.errors.idErrorMessage,
+    }),
+    [
+      data.errors.isSenderError,
+      data.errors.isReceiverError,
+      data.errors.idErrorMessage,
+    ]
+  );
 
   return {
     handleInputBlur,

@@ -1,10 +1,14 @@
-import Spinner from '@/components/Spinner/Spinner'
-import TreeAdjustedContainer from '@/components/TreeAdjustedContainer/TreeAdjustedContainer'
-import { TreeItemBuilderForHomeAndGroups } from '@/components/TreeItemBuilderForHomeAndGroups'
-import { computeNetPerCurrency } from '@/helpers/computeNetPerCurrency'
-import { GroupedTransaction, MostRecentGroupDetailsResponse, UserInfo } from '@/types'
-import { NavigateFunction } from 'react-router-dom'
-import { StyledMostRecentSection } from './MostRecentSection.styled'
+import Spinner from '@/components/Spinner/Spinner';
+import TreeAdjustedContainer from '@/components/TreeAdjustedContainer/TreeAdjustedContainer';
+import { TreeItemBuilderForHomeAndGroups } from '@/components/TreeItemBuilderForHomeAndGroups';
+import { computeNetPerCurrency } from '@/helpers/computeNetPerCurrency';
+import {
+  GroupedTransaction,
+  MostRecentGroupDetailsResponse,
+  UserInfo,
+} from '@/types';
+import { NavigateFunction } from 'react-router-dom';
+import { StyledMostRecentSection } from './MostRecentSection.styled';
 
 export default function MostRecentSection({
   mostRecentGroupDataIsFetching,
@@ -12,16 +16,15 @@ export default function MostRecentSection({
   recentContextId,
   nonGroupGroupedTransactions,
   userInfo,
-  navigate
+  navigate,
 }: {
   mostRecentGroupDataIsFetching: boolean;
-  mostRecentGroupData: MostRecentGroupDetailsResponse |undefined;
+  mostRecentGroupData: MostRecentGroupDetailsResponse | undefined;
   recentContextId: string;
   nonGroupGroupedTransactions: GroupedTransaction[];
   userInfo: UserInfo;
   navigate: NavigateFunction;
 }) {
-
   if (mostRecentGroupDataIsFetching) {
     return <Spinner />;
   }
@@ -51,7 +54,10 @@ export default function MostRecentSection({
           hasOption={true}
           optionname="chevron-forward-outline"
           items={TreeItemBuilderForHomeAndGroups(
-            computeNetPerCurrency(nonGroupGroupedTransactions, userInfo.userId || '')
+            computeNetPerCurrency(
+              nonGroupGroupedTransactions,
+              userInfo.userId || ''
+            )
           )}
         >
           <div className="groupName">Non Group Transactions</div>

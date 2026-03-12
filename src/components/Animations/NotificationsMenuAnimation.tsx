@@ -1,7 +1,7 @@
-import { CSSTransition } from "react-transition-group";
-import NotificationsMenu from "../Menus/NotificationsMenu/NotificationsMenu";
-import { useRef } from "react";
-import { NotificationsMenuAnimationProps } from "../../interfaces";
+import { CSSTransition } from 'react-transition-group';
+import NotificationsMenu from '../Menus/NotificationsMenu/NotificationsMenu';
+import { useRef } from 'react';
+import { NotificationsMenuAnimationProps } from '../../interfaces';
 
 export default function NotificationsMenuAnimation({
   menu,
@@ -14,7 +14,7 @@ export default function NotificationsMenuAnimation({
   const nodeRef = useRef(null);
   return (
     <CSSTransition
-      in={menu.value === "notifications"}
+      in={menu.value === 'notifications'}
       timeout={100}
       classNames="infoBox"
       unmountOnExit

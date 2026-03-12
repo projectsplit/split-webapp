@@ -1,29 +1,41 @@
-import { TransferFormProps } from "../../interfaces";
-import { StyledTransferForm } from "./TransferForm.styled";
-import { useEffect } from "react";
-import { signal, useSignal } from "@preact/signals-react";
-import { DateTime } from "../DateTime";
-import MyButton from "../MyButton/MyButton";
-import MenuAnimationBackground from "../Animations/MenuAnimationBackground";
-import CurrencyOptionsAnimation from "../Animations/CurrencyOptionsAnimation";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { UserInfo } from "../../types";
-import FormInput from "../FormInput/FormInput";
-import DateDisplay from "../ExpenseForm/components/DateDisplay/DateDisplay";
-import { useTransferActions, useTransferData } from "./hooks/useTransferFormStore";
-import { Header } from "./Header/Header";
-import { InputAndErrorsWrapper } from "./InputAndErrorsWrapper/InputAndErrorsWrapper";
-import { NonGroupMenu } from "./NonGroupMenu/NonGroupMenu";
-import { GroupMenu } from "./GroupMenu/GroupMenu";
-import { useTransferFormLogic } from "./hooks/useTransferFormLogic";
+import { TransferFormProps } from '../../interfaces';
+import { StyledTransferForm } from './TransferForm.styled';
+import { useEffect } from 'react';
+import { signal, useSignal } from '@preact/signals-react';
+import { DateTime } from '../DateTime';
+import MyButton from '../MyButton/MyButton';
+import MenuAnimationBackground from '../Animations/MenuAnimationBackground';
+import CurrencyOptionsAnimation from '../Animations/CurrencyOptionsAnimation';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { UserInfo } from '../../types';
+import FormInput from '../FormInput/FormInput';
+import DateDisplay from '../ExpenseForm/components/DateDisplay/DateDisplay';
+import {
+  useTransferActions,
+  useTransferData,
+} from './hooks/useTransferFormStore';
+import { Header } from './Header/Header';
+import { InputAndErrorsWrapper } from './InputAndErrorsWrapper/InputAndErrorsWrapper';
+import { NonGroupMenu } from './NonGroupMenu/NonGroupMenu';
+import { GroupMenu } from './GroupMenu/GroupMenu';
+import { useTransferFormLogic } from './hooks/useTransferFormLogic';
 
-export default function TransferForm({ groupMembers, nonGroupUsers, currency, timeZoneId, menu, fromHomeGroup,
-  groupId, isnonGroupTransfer, nonGroupMenu, fromHome }: TransferFormProps) {
-
-  const { userInfo } = useOutletContext<{ userInfo: UserInfo; }>();
+export default function TransferForm({
+  groupMembers,
+  nonGroupUsers,
+  currency,
+  timeZoneId,
+  menu,
+  fromHomeGroup,
+  groupId,
+  isnonGroupTransfer,
+  nonGroupMenu,
+  fromHome,
+}: TransferFormProps) {
+  const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
   const isSubmitting = useSignal<boolean>(false);
   const navigate = useNavigate();
-  const displayedAmount = useSignal<string>("");
+  const displayedAmount = useSignal<string>('');
   const currencyMenu = useSignal<string | null>(null);
   const isDateShowing = useSignal<boolean>(false);
 
@@ -36,12 +48,31 @@ export default function TransferForm({ groupMembers, nonGroupUsers, currency, ti
     }
   }, [userInfo?.userId, currency, isnonGroupTransfer?.value, actions]);
 
-  const { handleInputBlur, handleCurrencyOptionsClick, submitTransfer, userMemberId,
-    noReceiverSelected, sortedMembers, idError, isPendingCreateTransfer } = useTransferFormLogic({
-      userInfo, groupId, groupMembers, menu, nonGroupUsers, isnonGroupTransfer,
-      nonGroupMenu, fromHomeGroup, navigate, isSubmitting, displayedAmount, currencyMenu, data, actions,
-    })
-
+  const {
+    handleInputBlur,
+    handleCurrencyOptionsClick,
+    submitTransfer,
+    userMemberId,
+    noReceiverSelected,
+    sortedMembers,
+    idError,
+    isPendingCreateTransfer,
+  } = useTransferFormLogic({
+    userInfo,
+    groupId,
+    groupMembers,
+    menu,
+    nonGroupUsers,
+    isnonGroupTransfer,
+    nonGroupMenu,
+    fromHomeGroup,
+    navigate,
+    isSubmitting,
+    displayedAmount,
+    currencyMenu,
+    data,
+    actions,
+  });
 
   return (
     <StyledTransferForm
@@ -49,7 +80,7 @@ export default function TransferForm({ groupMembers, nonGroupUsers, currency, ti
       $noReceiverSelected={noReceiverSelected}
       $isSamePersonError={data.errors.showSamePersonError}
     >
-      {" "}
+      {' '}
       <Header menu={menu} />
       <InputAndErrorsWrapper
         currencyMenu={currencyMenu}
@@ -58,7 +89,10 @@ export default function TransferForm({ groupMembers, nonGroupUsers, currency, ti
         actions={actions}
         handleInputBlur={handleInputBlur}
       />
-      {isnonGroupTransfer && isnonGroupTransfer.value && nonGroupMenu && fromHomeGroup?.value === null ? (
+      {isnonGroupTransfer &&
+      isnonGroupTransfer.value &&
+      nonGroupMenu &&
+      fromHomeGroup?.value === null ? (
         <NonGroupMenu
           $noReceiverSelected={noReceiverSelected}
           $isSamePersonError={data.errors.showSamePersonError}
@@ -111,7 +145,7 @@ export default function TransferForm({ groupMembers, nonGroupUsers, currency, ti
           setSelectedDateTime={actions.setTransferTime}
           timeZoneId={timeZoneId}
           isEdit={false}
-          category={signal("Transfers")}
+          category={signal('Transfers')}
           isDateShowing={isDateShowing}
           showPicker={data.showPicker}
           setShowPicker={actions.setShowPicker}

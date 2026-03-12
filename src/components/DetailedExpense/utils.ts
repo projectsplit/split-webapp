@@ -1,4 +1,4 @@
-import { Signal } from "@preact/signals-react";
+import { Signal } from '@preact/signals-react';
 import {
   ExpenseResponseItem,
   Mode,
@@ -10,7 +10,7 @@ import {
   Share,
   TruncatedMember,
   User,
-} from "../../types";
+} from '../../types';
 
 export const buildFormExpense = (
   selectedExpense: Signal<ExpenseResponseItem | undefined | null>,
@@ -70,4 +70,4 @@ export const toUser = (member: TruncatedMember): User => {
     userId: member.id,
     username: member.name,
   };
-}
+};

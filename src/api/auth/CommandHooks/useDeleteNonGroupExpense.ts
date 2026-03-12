@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { DeleteExpenseRequest, ExpenseResponseItem } from "../../../types";
-import { apiClient } from "../../apiClients";
-import { Signal } from "@preact/signals-react";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { DeleteExpenseRequest, ExpenseResponseItem } from '../../../types';
+import { apiClient } from '../../apiClients';
+import { Signal } from '@preact/signals-react';
 
 export const useDeleteNonGroupExpense = (
   menu: Signal<string | null>,
@@ -14,23 +14,29 @@ export const useDeleteNonGroupExpense = (
   return useMutation<any, AxiosError, string>({
     mutationFn: (expenseId) => deleteExpense({ expenseId }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["nonGroupDebts"], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["nonGroupExpenses"],
+        queryKey: ['nonGroupDebts'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["personalExpenses"],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      await queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
-      await queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
+        queryKey: ['nonGroupExpenses'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["cumulativeArray"],
+        queryKey: ['personalExpenses'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
+      await queryClient.invalidateQueries({
+        queryKey: ['shared'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['mostRecentGroup'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['cumulativeArray'],
         exact: false,
       });
       selectedExpense.value = null;
@@ -46,7 +52,7 @@ export const useDeleteNonGroupExpense = (
 
 const deleteExpense = async (req: DeleteExpenseRequest): Promise<void> => {
   const response = await apiClient.post<void, AxiosResponse<void>>(
-    "/expenses/delete-non-group",
+    '/expenses/delete-non-group',
     req
   );
   return response.data;

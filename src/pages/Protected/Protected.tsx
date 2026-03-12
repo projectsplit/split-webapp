@@ -1,32 +1,32 @@
-import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
-import { useSignal } from "@preact/signals-react";
-import { StyledProtected } from "./Protected.styled";
-import MenuAnimationBackground from "../../components/Animations/MenuAnimationBackground";
-import NotificationsMenuAnimation from "../../components/Animations/NotificationsMenuAnimation";
-import SettingsMenuAnimation from "../../components/Animations/SettingsMenuAnimation";
-import TopMenu from "../../components/Menus/TopMenu/TopMenu";
-import { JoinOverlay } from "../Join/JoinOverslay";
-import { useGetMe } from "@/api/auth/QueryHooks/useGetMe";
+import { Navigate, Outlet, useLocation, useParams } from 'react-router-dom';
+import { useSignal } from '@preact/signals-react';
+import { StyledProtected } from './Protected.styled';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import NotificationsMenuAnimation from '../../components/Animations/NotificationsMenuAnimation';
+import SettingsMenuAnimation from '../../components/Animations/SettingsMenuAnimation';
+import TopMenu from '../../components/Menus/TopMenu/TopMenu';
+import { JoinOverlay } from '../Join/JoinOverslay';
+import { useGetMe } from '@/api/auth/QueryHooks/useGetMe';
 
 const Protected: React.FC = () => {
   const location = useLocation();
   const { code } = useParams<{ code?: string }>();
-  const { data: userInfo } = useGetMe()
+  const { data: userInfo } = useGetMe();
 
   const groupIsArchived = useSignal<boolean>(false);
 
   const hasNewerNotifications = userInfo?.hasNewerNotifications;
 
-  const topMenuTitle = useSignal<string>("");
+  const topMenuTitle = useSignal<string>('');
   const menu = useSignal<string | null>(null);
   const openGroupOptionsMenu = useSignal<boolean>(false);
-  const activeGroupCatAsState = useSignal<string>("Active");
+  const activeGroupCatAsState = useSignal<string>('Active');
   const confirmUnarchiveMenu = useSignal<string | null>(null);
 
   const excludeTopMenu = shouldExcludeTopMenu([
-    "/analytics",
-    "/budget",
-    "/shared/generatecode",
+    '/analytics',
+    '/budget',
+    '/shared/generatecode',
   ]);
 
   return isUserAuthenticated() ? (
@@ -73,7 +73,7 @@ const Protected: React.FC = () => {
 export default Protected;
 
 const isUserAuthenticated = () => {
-  return !!localStorage.getItem("accessToken");
+  return !!localStorage.getItem('accessToken');
 };
 
 const shouldExcludeTopMenu = (excludeRoutes: string[]): boolean => {

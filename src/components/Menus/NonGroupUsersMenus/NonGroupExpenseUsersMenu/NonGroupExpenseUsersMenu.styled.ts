@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledNonGroupExpenseUsersMenu = styled.div`
   position: fixed;
@@ -41,7 +41,7 @@ export const StyledNonGroupExpenseUsersMenu = styled.div`
       }
 
       .closeButtonContainer:hover::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 50%;
         left: 50%;
@@ -138,25 +138,25 @@ export const StyledNonGroupExpenseUsersMenu = styled.div`
         }
       }
     }
-    .noData{
+    .noData {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       flex: 1;
       margin-top: 100px;
-			.msg{
+      .msg {
         color: ${({ theme }) => theme.textInactiveColor};
-				text-wrap: wrap;
-				text-align: center;
-			}
-      .icon{
+        text-wrap: wrap;
+        text-align: center;
+      }
+      .icon {
         display: flex;
         font-size: 100px;
         opacity: 0.5;
         margin-top: 20px;
       }
-		}
+    }
   }
   .doneButton {
     position: fixed;

@@ -1,30 +1,30 @@
-import { useState } from "react";
-import { StyledSettingsMenu } from "./SettingsMenu.styled";
-import { SettingsMenuProps } from "../../../interfaces";
-import { IoClose } from "react-icons/io5";
-import { StyledUserOptionsButton } from "../../UserOptionsButton/UserOptionsButton.styled";
-import { useNavigate } from "react-router-dom";
-import { Currency } from "../../../types";
-import Separator from "../../Separator/Separator";
-import { TbLogout2 } from "react-icons/tb";
-import packackageJson from "../../../../package.json";
-import { FaCoins } from "react-icons/fa";
-import MenuAnimationBackground from "../../Animations/MenuAnimationBackground";
-import CurrencyOptionsAnimation from "../../Animations/CurrencyOptionsAnimation";
-import { useSignal } from "@preact/signals-react";
-import { currencyData } from "../../../helpers/openExchangeRates";
-import ToggleSwitch from "../../ToggleSwitch/ToggleSwitch";
-import { logOut } from "../../../api/auth/api";
-import routes from "../../../routes";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSelectedCurrency } from "../../../api/auth/CommandHooks/useSelectedCurrency";
-import { RiTimeZoneLine } from "react-icons/ri";
-import TimeZoneOptionsAnimation from "../../Animations/TimeZoneOptionsAnimation";
-import { useTimeZone } from "../../../api/auth/CommandHooks/useTimeZone";
-import { getInitials } from "../../../helpers/getInitials";
-import { timeZones } from "../../../helpers/timeZones";
-import EditUsernameAnimation from "../../Animations/EditUsernameAnimation";
-import { FaUserPen } from "react-icons/fa6";
+import { useState } from 'react';
+import { StyledSettingsMenu } from './SettingsMenu.styled';
+import { SettingsMenuProps } from '../../../interfaces';
+import { IoClose } from 'react-icons/io5';
+import { StyledUserOptionsButton } from '../../UserOptionsButton/UserOptionsButton.styled';
+import { useNavigate } from 'react-router-dom';
+import { Currency } from '../../../types';
+import Separator from '../../Separator/Separator';
+import { TbLogout2 } from 'react-icons/tb';
+import packackageJson from '../../../../package.json';
+import { FaCoins } from 'react-icons/fa';
+import MenuAnimationBackground from '../../Animations/MenuAnimationBackground';
+import CurrencyOptionsAnimation from '../../Animations/CurrencyOptionsAnimation';
+import { useSignal } from '@preact/signals-react';
+import { currencyData } from '../../../helpers/openExchangeRates';
+import ToggleSwitch from '../../ToggleSwitch/ToggleSwitch';
+import { logOut } from '../../../api/auth/api';
+import routes from '../../../routes';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSelectedCurrency } from '../../../api/auth/CommandHooks/useSelectedCurrency';
+import { RiTimeZoneLine } from 'react-icons/ri';
+import TimeZoneOptionsAnimation from '../../Animations/TimeZoneOptionsAnimation';
+import { useTimeZone } from '../../../api/auth/CommandHooks/useTimeZone';
+import { getInitials } from '../../../helpers/getInitials';
+import { timeZones } from '../../../helpers/timeZones';
+import EditUsernameAnimation from '../../Animations/EditUsernameAnimation';
+import { FaUserPen } from 'react-icons/fa6';
 
 export default function SettingsMenu({
   menu,
@@ -60,14 +60,14 @@ export default function SettingsMenu({
   const logOutMutation = useMutation<any, Error, void>({
     mutationFn: logOut,
     onSuccess: () => {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("submittedFromHomePersistData");
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('submittedFromHomePersistData');
       queryClient.invalidateQueries();
       queryClient.removeQueries();
       navigate(routes.AUTH);
     },
     onError: (error) => {
-      console.error("Log out failed:", error.message);
+      console.error('Log out failed:', error.message);
     },
   });
 
@@ -91,7 +91,7 @@ export default function SettingsMenu({
 
   return (
     <StyledSettingsMenu ref={nodeRef}>
-      {" "}
+      {' '}
       <div className="headerWrapper">
         <div className="header">
           <StyledUserOptionsButton>
@@ -110,18 +110,14 @@ export default function SettingsMenu({
       <div className="optionsContainer">
         <div
           className="option"
-          onClick={() => (currencyMenu.value = "currencyOptions")}
+          onClick={() => (currencyMenu.value = 'currencyOptions')}
         >
-          <div
-            className={
-              selectedCurrency?.flagClass
-            }
-          />
+          <div className={selectedCurrency?.flagClass} />
           <div className="description">Preferred Currency</div>
         </div>
         <div
           className="option"
-          onClick={() => (timeZoneMenu.value = "timeZones")}
+          onClick={() => (timeZoneMenu.value = 'timeZones')}
         >
           <RiTimeZoneLine className="icon" />
           <div className="description">TimeZone ({selectedTimeZone})</div>
@@ -133,11 +129,13 @@ export default function SettingsMenu({
           <ToggleSwitch isOn={isOn} onToggle={handleToggle} />
         </div>
 
-        <div className="option" onClick={() => editUsernameMenu.value = 'editUsername'}>
+        <div
+          className="option"
+          onClick={() => (editUsernameMenu.value = 'editUsername')}
+        >
           <FaUserPen className="icon" />
           <div className="description">Change username</div>
         </div>
-
 
         <div className="option" onClick={handleLogout}>
           <TbLogout2 className="icon" />
@@ -161,7 +159,10 @@ export default function SettingsMenu({
         clickHandler={handldeCurrencyOptionsClick}
         selectedCurrency={userCurrency}
       />
-      <EditUsernameAnimation editUsernameMenu={editUsernameMenu} existingUsername={userInfo?.username} />
+      <EditUsernameAnimation
+        editUsernameMenu={editUsernameMenu}
+        existingUsername={userInfo?.username}
+      />
     </StyledSettingsMenu>
   );
 }

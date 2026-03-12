@@ -1,7 +1,14 @@
 import { signal, Signal, useSignal } from '@preact/signals-react';
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 import { Outlet, useLocation, useOutletContext } from 'react-router-dom';
-import { ExpenseParsedFilters, ExpenseResponseItem, Mode, TransferParsedFilters, User, UserInfo } from '../../types';
+import {
+  ExpenseParsedFilters,
+  ExpenseResponseItem,
+  Mode,
+  TransferParsedFilters,
+  User,
+  UserInfo,
+} from '../../types';
 import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
 import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';
@@ -12,7 +19,10 @@ import NewTransferAnimation from '../../components/Animations/NewTransferAnimati
 import { StyledGroup } from './Group.styled';
 import NonGroupExpenseUsersAnimation from '../../components/Animations/NonGroupExpenseUsersAnimation';
 import NonGroupTransferAnimation from '../../components/Animations/NonGroupTransferAnimation';
-import { localStorageStringParser, getFilterStorageKey } from '../../components/SearchTransactions/helpers/localStorageStringParser';
+import {
+  localStorageStringParser,
+  getFilterStorageKey,
+} from '../../components/SearchTransactions/helpers/localStorageStringParser';
 
 export default function NonGroup() {
   const menu = useSignal<string | null>(null);
@@ -27,29 +37,27 @@ export default function NonGroup() {
     receiverId: string;
     receiverName: string;
   }>({
-    attribute: "",
+    attribute: '',
     menu: null,
-    senderId: "",
-    senderName: "",
-    receiverId: "",
-    receiverName: "",
+    senderId: '',
+    senderName: '',
+    receiverId: '',
+    receiverName: '',
   });
 
   const { expenseFilter, transferFilter } = localStorageStringParser(
-    localStorage.getItem(getFilterStorageKey("expense", undefined)),
-    localStorage.getItem(getFilterStorageKey("transfer", undefined))
+    localStorage.getItem(getFilterStorageKey('expense', undefined)),
+    localStorage.getItem(getFilterStorageKey('transfer', undefined))
   );
 
   const expenseParsedFilters = useSignal<ExpenseParsedFilters>(expenseFilter);
-  const transferParsedFilters = useSignal<TransferParsedFilters>(transferFilter);
+  const transferParsedFilters =
+    useSignal<TransferParsedFilters>(transferFilter);
   const location = useLocation();
-  const path = location.pathname.split("/").pop() || "";
+  const path = location.pathname.split('/').pop() || '';
   const nonGroupUsers = useSignal<User[]>([]);
 
-  const {
-    userInfo,
-    topMenuTitle,
-  } = useOutletContext<{
+  const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
   }>();
@@ -63,22 +71,18 @@ export default function NonGroup() {
   }, [showBottomBar.value]);
 
   useEffect(() => {
-
-    const saved = localStorage.getItem("submittedFromHomePersistData");
+    const saved = localStorage.getItem('submittedFromHomePersistData');
     if (saved) {
-      const {
-        nonGroupUsers: u,
-      } = JSON.parse(saved);
+      const { nonGroupUsers: u } = JSON.parse(saved);
       nonGroupUsers.value = u ?? [];
-
     }
     nonGroupTransferMenu.value = {
-      attribute: "",
+      attribute: '',
       menu: null,
       senderId: userInfo?.userId,
-      senderName: "You",
-      receiverId: "",
-      receiverName: "",
+      senderName: 'You',
+      receiverId: '',
+      receiverName: '',
     };
   }, []);
 
@@ -88,9 +92,9 @@ export default function NonGroup() {
         <CategorySelector
           activeCat={path}
           categories={{
-            cat1: "Expenses",
-            cat2: "Transfers",
-            cat3: "Debts",
+            cat1: 'Expenses',
+            cat2: 'Transfers',
+            cat3: 'Debts',
           }}
           navLinkUse={true}
         />
@@ -100,8 +104,7 @@ export default function NonGroup() {
             showBottomBar,
             expenseParsedFilters,
             transferParsedFilters,
-            mode: mode
-
+            mode: mode,
           }}
         />
 
@@ -120,7 +123,6 @@ export default function NonGroup() {
           nonGroupUsers={nonGroupUsers}
           nonGroupMenu={nonGroupMenu}
         />
-
 
         <NewTransferAnimation
           timeZoneId={timeZoneId}
@@ -143,15 +145,15 @@ export default function NonGroup() {
           timeZoneId={timeZoneId}
           expenseParsedFilters={expenseParsedFilters}
           transferParsedFilters={transferParsedFilters}
-        // nonGroupUsers={nonGroupUsers}
+          // nonGroupUsers={nonGroupUsers}
         />
 
         <div className="bottomMenu">
-          {" "}
+          {' '}
           <BottomMainMenu
             menu={menu}
             onClick={() => {
-              menu.value = "quickActions";
+              menu.value = 'quickActions';
             }}
           />
         </div>
@@ -164,7 +166,6 @@ export default function NonGroup() {
         fromHomeGroup={signal(null)}
         isNonGroupExpense={signal(true)}
         fromNonGroup={true}
-
       />
       <NonGroupTransferAnimation
         nonGroupTransferMenu={nonGroupTransferMenu}

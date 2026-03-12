@@ -1,15 +1,21 @@
-import { Details, GroupedTransaction, GroupsAllBalancesResponse, MostRecentGroupDetailsResponse, UserInfo } from "@/types";
-import { StyledScrollableMenuButtons } from "./ScrollableMenuButtons.styled";
-import { NavigateFunction } from "react-router-dom";
-import MostRecentSection from "../MostRecentSection/MostRecentSection";
-import TreeAdjustedContainer from "@/components/TreeAdjustedContainer/TreeAdjustedContainer";
-import { TreeItemBuilderForHomeAndGroups } from "@/components/TreeItemBuilderForHomeAndGroups";
-import { TiGroup } from "react-icons/ti";
-import OptionButton from "../SelectionButton/SelectionButton";
-import { BsBarChartFill } from "react-icons/bs";
-import { BsFillPiggyBankFill } from "react-icons/bs";
-import { BsFillPersonFill } from "react-icons/bs";
-import { Signal } from "@preact/signals-react";
+import {
+  Details,
+  GroupedTransaction,
+  GroupsAllBalancesResponse,
+  MostRecentGroupDetailsResponse,
+  UserInfo,
+} from '@/types';
+import { StyledScrollableMenuButtons } from './ScrollableMenuButtons.styled';
+import { NavigateFunction } from 'react-router-dom';
+import MostRecentSection from '../MostRecentSection/MostRecentSection';
+import TreeAdjustedContainer from '@/components/TreeAdjustedContainer/TreeAdjustedContainer';
+import { TreeItemBuilderForHomeAndGroups } from '@/components/TreeItemBuilderForHomeAndGroups';
+import { TiGroup } from 'react-icons/ti';
+import OptionButton from '../SelectionButton/SelectionButton';
+import { BsBarChartFill } from 'react-icons/bs';
+import { BsFillPiggyBankFill } from 'react-icons/bs';
+import { BsFillPersonFill } from 'react-icons/bs';
+import { Signal } from '@preact/signals-react';
 
 export default function ScrollableMenuButtons({
   mostRecentGroupDataIsFetching,
@@ -32,9 +38,9 @@ export default function ScrollableMenuButtons({
   navigate: NavigateFunction;
   isLoading: boolean;
   isFetching: boolean;
-  groupsData: GroupsAllBalancesResponse | undefined,
-  totalBalances:Details
-  topMenuTitle: Signal<string>
+  groupsData: GroupsAllBalancesResponse | undefined;
+  totalBalances: Details;
+  topMenuTitle: Signal<string>;
 }) {
   return (
     <StyledScrollableMenuButtons>
@@ -55,10 +61,9 @@ export default function ScrollableMenuButtons({
         navigate={navigate}
       />
 
-      {!isLoading && !isFetching &&
-        groupsData?.groupCount === 0 ? (
+      {!isLoading && !isFetching && groupsData?.groupCount === 0 ? (
         <OptionButton
-          onClick={() => navigate("/shared")}
+          onClick={() => navigate('/shared')}
           name="Shared"
           description="Keep track of your shared finances"
           hasArrow={false}
@@ -69,7 +74,7 @@ export default function ScrollableMenuButtons({
         <TreeAdjustedContainer
           hasOption={false}
           optionname="chevron-forward-outline"
-          onClick={() => navigate("/shared")}
+          onClick={() => navigate('/shared')}
           items={TreeItemBuilderForHomeAndGroups(totalBalances)}
         >
           <div className="groups">
@@ -85,14 +90,17 @@ export default function ScrollableMenuButtons({
         name="Personal"
         description="Your personal expense tracker"
         hasArrow={false}
-        onClick={() => {topMenuTitle.value = "Your Expenses"; navigate("/personal")}}
+        onClick={() => {
+          topMenuTitle.value = 'Your Expenses';
+          navigate('/personal');
+        }}
       >
         <BsFillPersonFill className="personalIcon" />
       </OptionButton>
       <OptionButton
         name="Analytics"
         description="View your spending trends"
-        onClick={() => navigate("/analytics")}
+        onClick={() => navigate('/analytics')}
         hasArrow={false}
       >
         <BsBarChartFill className="analyticsIcon" />
@@ -100,11 +108,11 @@ export default function ScrollableMenuButtons({
       <OptionButton
         name="Budget"
         description="Set up a spending cap or goal"
-        onClick={() => navigate("/budget")}
+        onClick={() => navigate('/budget')}
         hasArrow={false}
       >
         <BsFillPiggyBankFill className="budgetIcon" />
       </OptionButton>
-    </StyledScrollableMenuButtons >
+    </StyledScrollableMenuButtons>
   );
 }

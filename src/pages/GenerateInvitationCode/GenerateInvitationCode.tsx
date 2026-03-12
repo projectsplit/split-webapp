@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { StyledGenerateInvitationCode } from "./GenerateInvitationCode.styled";
-import { useNavigate, useParams } from "react-router-dom";
-import { useGenerateInvitationCode } from "../../api/auth/CommandHooks/useGenerateInvitationCode";
-import { IoClose } from "react-icons/io5";
-import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import { useSignal } from "@preact/signals-react";
-import ShareGroup from "./ShareGroup/ShareGroup";
-import RevokeAccess from "./RevokeAccess/RevokeAcces";
-import useGroup from "../../api/auth/QueryHooks/useGroup";
-import { useGetGroupJoinCodes } from "../../api/auth/QueryHooks/useGetGroupJoinCodes";
-import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from 'react';
+import { StyledGenerateInvitationCode } from './GenerateInvitationCode.styled';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGenerateInvitationCode } from '../../api/auth/CommandHooks/useGenerateInvitationCode';
+import { IoClose } from 'react-icons/io5';
+import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
+import { useSignal } from '@preact/signals-react';
+import ShareGroup from './ShareGroup/ShareGroup';
+import RevokeAccess from './RevokeAccess/RevokeAcces';
+import useGroup from '../../api/auth/QueryHooks/useGroup';
+import { useGetGroupJoinCodes } from '../../api/auth/QueryHooks/useGetGroupJoinCodes';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function GenerateInvitationCode() {
   const pageSize = 10;
@@ -17,17 +17,17 @@ export default function GenerateInvitationCode() {
   const params = useParams();
   const navigate = useNavigate();
   const [invitationCode, setInvitationCode] = useState<string | null>(null);
-  const [groupName, setGroupName] = useState<string>("");
+  const [groupName, setGroupName] = useState<string>('');
   const qrRef = useRef<HTMLDivElement>(null);
-  const category = useSignal<string>("Share Group");
+  const category = useSignal<string>('Share Group');
   const mostRecentCodeHasBeenRevoked = useSignal<boolean>(true);
   const isFirstRender = useRef(true);
-  const landedFromGroup = new URLSearchParams(location.search).get("in");
+  const landedFromGroup = new URLSearchParams(location.search).get('in');
   const { mutate: mutateGenerate, isPending: isPendingGenerate } =
     useGenerateInvitationCode();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useGetGroupJoinCodes(params.groupid || "", pageSize);
+    useGetGroupJoinCodes(params.groupid || '', pageSize);
 
   const codesData = data?.pages.flatMap((x) => x.codes) || [];
 
@@ -53,7 +53,7 @@ export default function GenerateInvitationCode() {
       isFirstRender.current = false;
     } else if (mostRecentCodeHasBeenRevoked.value || isFirstRender.current) {
       mutateGenerate(
-        { groupId: params.groupid || "" },
+        { groupId: params.groupid || '' },
         {
           onSuccess: (code: string) => {
             setInvitationCode(code);
@@ -61,7 +61,7 @@ export default function GenerateInvitationCode() {
             isFirstRender.current = false;
 
             queryClient.invalidateQueries({
-              queryKey: ["getGroupJoinCodes", params.groupid || "", pageSize],
+              queryKey: ['getGroupJoinCodes', params.groupid || '', pageSize],
             });
           },
         }
@@ -76,10 +76,10 @@ export default function GenerateInvitationCode() {
           <div className="gap"></div>
           <div className="title">
             <CategorySelector
-              activeCat={"Invite User"}
+              activeCat={'Invite User'}
               categories={{
-                cat1: "Share Group",
-                cat2: "Revoke Access",
+                cat1: 'Share Group',
+                cat2: 'Revoke Access',
               }}
               navLinkUse={false}
               activeCatAsState={category}
@@ -89,10 +89,10 @@ export default function GenerateInvitationCode() {
           <div
             className="closeButtonContainer"
             onClick={() => {
-              if (landedFromGroup === "true") {
+              if (landedFromGroup === 'true') {
                 navigate(`/shared/${params.groupid}`, { replace: true });
               } else {
-                navigate("/shared", { replace: true });
+                navigate('/shared', { replace: true });
               }
             }}
           >
@@ -100,20 +100,20 @@ export default function GenerateInvitationCode() {
           </div>
         </div>
       </div>
-      {category.value === "Share Group" ? (
+      {category.value === 'Share Group' ? (
         <ShareGroup
           groupName={groupName}
           isPending={isPendingGenerate || isFetching}
           qrRef={qrRef}
           invitationCode={invitationCode}
           mutate={mutateGenerate}
-          groupId={params.groupid || ""}
+          groupId={params.groupid || ''}
           setInvitationCode={setInvitationCode}
           expires={codesData[0]?.expires}
         />
       ) : (
         <RevokeAccess
-          groupId={params.groupid || ""}
+          groupId={params.groupid || ''}
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
           isFetching={isFetching}

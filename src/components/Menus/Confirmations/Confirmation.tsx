@@ -1,15 +1,15 @@
-import { StyledConfirmation } from "./Confirmation.styled";
-import IonIcon from "@reacticons/ionicons";
-import Separator from "../../Separator/Separator";
-import MyButton from "../../MyButton/MyButton";
-import { ConfirmationProps } from "../../../interfaces";
+import { StyledConfirmation } from './Confirmation.styled';
+import IonIcon from '@reacticons/ionicons';
+import Separator from '../../Separator/Separator';
+import MyButton from '../../MyButton/MyButton';
+import { ConfirmationProps } from '../../../interfaces';
 
 export default function InfoContainer({
   children,
   isLoading,
   onClick,
   menu,
-  header
+  header,
 }: ConfirmationProps) {
   return (
     <StyledConfirmation>

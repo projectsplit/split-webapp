@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledMiddleScreenMenu } from "../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import styled from 'styled-components';
+import { StyledMiddleScreenMenu } from '../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
 
 export const StyledRenameGroupMenu = styled(StyledMiddleScreenMenu)`
   .errorMessage {
@@ -9,9 +9,9 @@ export const StyledRenameGroupMenu = styled(StyledMiddleScreenMenu)`
     gap: 10px;
     text-align: start;
     font-size: 14px;
-    .error{
-      display:flex;
-      justify-content:center;
+    .error {
+      display: flex;
+      justify-content: center;
     }
     .closeButton {
       font-size: 30px;

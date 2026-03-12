@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import { useSignal } from "@preact/signals-react";
+import { useEffect, useMemo } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import { useSignal } from '@preact/signals-react';
 import {
   CreateExpenseFilterRequest,
   CreateTransferFilterRequest,
@@ -9,12 +9,12 @@ import {
   GetLabelsResponse,
   Group,
   User,
-} from "../../../types";
+} from '../../../types';
 import {
   getFilterStorageKey,
   localStorageStringParser,
-} from "../helpers/localStorageStringParser";
-import { initializeFilterState } from "../helpers/initializeFilterState";
+} from '../helpers/localStorageStringParser';
+import { initializeFilterState } from '../helpers/initializeFilterState';
 
 export const useSearchFilters = (
   group: Group | null,
@@ -24,18 +24,18 @@ export const useSearchFilters = (
 ) => {
   const location = useLocation();
   const params = useParams();
-  const path = location.pathname.split("/").pop() || "";
-  const category = useSignal<string>("expenses");
+  const path = location.pathname.split('/').pop() || '';
+  const category = useSignal<string>('expenses');
 
   const submitButtonIsActive = useSignal<boolean>(false);
   const cancelled = useSignal<boolean>(false);
-  const searchKeyword = useSignal<string>("");
+  const searchKeyword = useSignal<string>('');
 
   const expenseFilterState = useSignal<CreateExpenseFilterRequest>({
-    groupId: group?.id || "",
+    groupId: group?.id || '',
     participantsIds: [],
     payersIds: [],
-    freeText: "",
+    freeText: '',
     before: [],
     during: [],
     after: [],
@@ -43,10 +43,10 @@ export const useSearchFilters = (
   });
 
   const transferFilterState = useSignal<CreateTransferFilterRequest>({
-    groupId: group?.id || "",
+    groupId: group?.id || '',
     receiversIds: [],
     sendersIds: [],
-    freeText: "",
+    freeText: '',
     before: [],
     during: [],
     after: [],
@@ -63,9 +63,9 @@ export const useSearchFilters = (
 
   useEffect(() => {
     if (isPersonal) {
-      category.value = "expenses";
-    } else if (path === "debts") {
-      category.value = "expenses";
+      category.value = 'expenses';
+    } else if (path === 'debts') {
+      category.value = 'expenses';
     } else {
       category.value = path;
     }
@@ -73,8 +73,10 @@ export const useSearchFilters = (
 
   const { expenseFilter, transferFilter } = useMemo(() => {
     return localStorageStringParser(
-      localStorage.getItem(getFilterStorageKey("expense", group?.id, isPersonal)),
-      localStorage.getItem(getFilterStorageKey("transfer", group?.id))
+      localStorage.getItem(
+        getFilterStorageKey('expense', group?.id, isPersonal)
+      ),
+      localStorage.getItem(getFilterStorageKey('transfer', group?.id))
     );
   }, [group?.id]);
 
@@ -102,7 +104,7 @@ export const useSearchFilters = (
     filteredPeople,
     filteredLabels,
     group,
-    params
+    params,
   ]);
 
   return {

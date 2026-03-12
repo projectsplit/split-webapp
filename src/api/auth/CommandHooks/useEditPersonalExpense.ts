@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
 import {
   NonGroupExpenseRequest,
   ExpenseResponseItem,
@@ -9,8 +9,8 @@ import {
   Member,
   User,
   BaseExpenseRequest,
-} from "../../../types";
-import { Signal } from "@preact/signals-react";
+} from '../../../types';
+import { Signal } from '@preact/signals-react';
 
 export const useEditPersonalExpense = (
   menu: Signal<string | null>,
@@ -27,13 +27,12 @@ export const useEditPersonalExpense = (
   return useMutation<any, AxiosError, BaseExpenseRequest>({
     mutationFn: (expense) => editExpense(expense),
     onSuccess: async () => {
-
       await queryClient.invalidateQueries({
-        queryKey: ["personalExpenses"],
+        queryKey: ['personalExpenses'],
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["cumulativeArray"],
+        queryKey: ['cumulativeArray'],
         exact: false,
       });
       if (selectedExpense) {
@@ -50,10 +49,13 @@ export const useEditPersonalExpense = (
           nonGroupUsers.value.length > 0 ||
           fromHomeGroup?.value
         )
-          localStorage.setItem("submittedFromHomePersistData", JSON.stringify(data));
+          localStorage.setItem(
+            'submittedFromHomePersistData',
+            JSON.stringify(data)
+          );
       }
       if (makePersonalClicked) {
-        localStorage.removeItem("submittedFromHomePersistData");
+        localStorage.removeItem('submittedFromHomePersistData');
       }
       menu.value = null;
     },
@@ -64,5 +66,8 @@ export const useEditPersonalExpense = (
 };
 
 const editExpense = async (req: BaseExpenseRequest): Promise<void> => {
-  await apiClient.post<void, AxiosResponse<void>>("/expenses/edit-personal", req);
+  await apiClient.post<void, AxiosResponse<void>>(
+    '/expenses/edit-personal',
+    req
+  );
 };

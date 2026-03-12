@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { DeleteTransferRequest, TransferResponseItem } from "../../../types";
-import { Signal } from "@preact/signals-react";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { DeleteTransferRequest, TransferResponseItem } from '../../../types';
+import { Signal } from '@preact/signals-react';
 
 export const useDeleteTransfer = (
   menu: Signal<string | null>,
@@ -14,15 +14,21 @@ export const useDeleteTransfer = (
   return useMutation<any, AxiosError, string>({
     mutationFn: (transferId) => deleteTransfer({ transferId }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["debts"], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["groupTransfers"],
+        queryKey: ['debts'],
         exact: false,
       });
-      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      await queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
+        queryKey: ['groupTransfers'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
+      await queryClient.invalidateQueries({
+        queryKey: ['shared'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['mostRecentGroup'],
         exact: false,
       });
       selectedTransfer.value = null;
@@ -38,7 +44,7 @@ export const useDeleteTransfer = (
 
 const deleteTransfer = async (req: DeleteTransferRequest): Promise<void> => {
   const response = await apiClient.post<void, AxiosResponse<void>>(
-    "/transfers/delete",
+    '/transfers/delete',
     req
   );
   return response.data;

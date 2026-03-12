@@ -1,37 +1,35 @@
-import { BeautifulMentionsItem } from "lexical-beautiful-mentions";
-import { FetchedPerson } from "../../../types";
-
+import { BeautifulMentionsItem } from 'lexical-beautiful-mentions';
+import { FetchedPerson } from '../../../types';
 
 export function updateMembersMentions(
   fetchedPeople: FetchedPerson[] | undefined,
   mentionItems: Record<string, BeautifulMentionsItem[]>
 ) {
-
   if (!fetchedPeople) {
     return;
   }
 
   fetchedPeople.forEach((person) => {
-    mentionItems["payer:"].push({
+    mentionItems['payer:'].push({
       value: person.value,
       id: person.id,
-      $isUser:person.isUser,
+      $isUser: person.isUser,
     });
 
-    mentionItems["participant:"].push({
+    mentionItems['participant:'].push({
       value: person.value,
       id: person.id,
-      $isUser:person.isUser,
+      $isUser: person.isUser,
     });
-    mentionItems["sender:"].push({
+    mentionItems['sender:'].push({
       value: person.value,
       id: person.id,
-      $isUser:person.isUser,
+      $isUser: person.isUser,
     });
-    mentionItems["receiver:"].push({
+    mentionItems['receiver:'].push({
       value: person.value,
       id: person.id,
-      $isUser:person.isUser,
+      $isUser: person.isUser,
     });
   });
 }

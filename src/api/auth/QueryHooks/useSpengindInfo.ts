@@ -1,11 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { Frequency, SpendingInfoResponse } from "../../../types";
-import { apiClient } from "../../apiClients";
-
+import { useQuery } from '@tanstack/react-query';
+import { Frequency, SpendingInfoResponse } from '../../../types';
+import { apiClient } from '../../apiClients';
 
 export const useSpendingInfo = (budgetType: Frequency, currency: string) => {
   return useQuery<SpendingInfoResponse>({
-    queryKey: ["spending", budgetType, currency],
+    queryKey: ['spending', budgetType, currency],
     queryFn: () => getSpendingInfo(budgetType, currency),
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -13,7 +12,6 @@ export const useSpendingInfo = (budgetType: Frequency, currency: string) => {
     enabled: true,
   });
 };
-
 
 const getSpendingInfo = async (
   budgetType: Frequency,

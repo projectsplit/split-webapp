@@ -1,12 +1,8 @@
-import { Signal } from "@preact/signals-react";
-import {
-  ExpenseParsedFilters,
-  Group,
-  Mode,
-} from "../../../types";
-import useGetGroupExpenses from "../../../api/auth/QueryHooks/useGetGroupExpenses";
-import { useGetNonGroupExpenses } from "../../../api/auth/QueryHooks/useGetNonGroupExpenses";
-import { useGetPersonalExpenses } from "../../../api/auth/QueryHooks/useGetPersonalExpenses";
+import { Signal } from '@preact/signals-react';
+import { ExpenseParsedFilters, Group, Mode } from '../../../types';
+import useGetGroupExpenses from '../../../api/auth/QueryHooks/useGetGroupExpenses';
+import { useGetNonGroupExpenses } from '../../../api/auth/QueryHooks/useGetNonGroupExpenses';
+import { useGetPersonalExpenses } from '../../../api/auth/QueryHooks/useGetPersonalExpenses';
 
 export const useExpenseList = (
   mode: Mode,
@@ -16,7 +12,6 @@ export const useExpenseList = (
   timeZoneId: string,
   jumpToken?: string
 ) => {
-
   const isGroup = mode === Mode.Group;
   const isNonGroup = mode === Mode.NonGroup;
   const isPersonal = mode === Mode.Personal;

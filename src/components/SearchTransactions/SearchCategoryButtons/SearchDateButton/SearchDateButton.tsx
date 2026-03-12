@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { StyledSearchCategoryButton } from "../SearchCategoryButton.styled";
-import { useBeautifulMentions } from "lexical-beautiful-mentions";
-import Pill from "../../../Pill/Pill";
-import { SearchDateButtonProps } from "../../../../interfaces";
+import { useEffect, useState } from 'react';
+import { StyledSearchCategoryButton } from '../SearchCategoryButton.styled';
+import { useBeautifulMentions } from 'lexical-beautiful-mentions';
+import Pill from '../../../Pill/Pill';
+import { SearchDateButtonProps } from '../../../../interfaces';
 
 export default function SearchDateButton({
   category,
@@ -18,7 +18,7 @@ export default function SearchDateButton({
   const { insertMention } = useBeautifulMentions();
   const [showDate, setShowDate] = useState<string[]>([]);
 
- const updateShowDate = () => {
+  const updateShowDate = () => {
     switch (category) {
       case 'before':
         setShowDate(filterState.value.before || []);
@@ -37,29 +37,27 @@ export default function SearchDateButton({
 
   useEffect(() => {
     updateShowDate();
-     if (cancelled.value === true) {
-    cancelled.value = false;
-  }
+    if (cancelled.value === true) {
+      cancelled.value = false;
+    }
   }, [filterState.value, category, cancelled.value]);
-
-
 
   const removeFilter = (dateToBeRemoved: string) => {
     removedFilter.value = true;
     setShowDate([]);
     switch (category) {
-      case "before":
+      case 'before':
         filterState.value.before = filterState.value.before.filter(
           (date) => date !== dateToBeRemoved
         );
 
         break;
-      case "during":
+      case 'during':
         filterState.value.during = filterState.value.during.filter(
           (date) => date !== dateToBeRemoved
         );
         break;
-      case "after":
+      case 'after':
         filterState.value.after = filterState.value.after.filter(
           (date) => date !== dateToBeRemoved
         );
@@ -73,7 +71,7 @@ export default function SearchDateButton({
       <div
         className="category"
         onClick={() => {
-          insertMention({ trigger: category + ":", value: "" });
+          insertMention({ trigger: category + ':', value: '' });
           showOptions.value = false;
           calendarIsOpen.value = true;
           datePeriodClicked.value = category;
@@ -93,7 +91,7 @@ export default function SearchDateButton({
                 onClose={() => removeFilter(date)}
                 $textColor="#000000c8"
                 $border={false}
-                 fontSize="16px"
+                fontSize="16px"
               />
             </div>
           ))

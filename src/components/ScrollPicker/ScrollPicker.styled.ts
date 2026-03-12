@@ -1,7 +1,6 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const StyledScrollPicker = styled.div`
-
   touch-action: none;
   display: flex;
   flex-direction: column;
@@ -21,10 +20,10 @@ const StyledScrollPicker = styled.div`
     color: #77777b;
 
     &.selected {
-      color: ${({theme})=>theme.whiteText};
+      color: ${({ theme }) => theme.whiteText};
       background-color: ${({ theme }) => theme.highlightColor};
     }
   }
-`
+`;
 
-export default StyledScrollPicker
+export default StyledScrollPicker;

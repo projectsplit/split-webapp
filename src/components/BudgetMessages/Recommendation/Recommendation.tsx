@@ -1,7 +1,7 @@
-import { StyledRecommendation } from "./Recommendation.styled";
-import IonIcon from "@reacticons/ionicons";
-import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import { RecommendationMessageProps } from "../../../interfaces";
+import { StyledRecommendation } from './Recommendation.styled';
+import IonIcon from '@reacticons/ionicons';
+import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
+import { RecommendationMessageProps } from '../../../interfaces';
 
 export default function Recommendation({
   onClick,
@@ -29,21 +29,21 @@ export default function Recommendation({
           </div>
           <div className="paragraphs">
             <div className="firstParagraph">
-              Reduce your spending by{" "}
+              Reduce your spending by{' '}
               <strong className="amount">
                 {displayCurrencyAndAmount(reduceAmount, currency)}
-              </strong>{" "}
+              </strong>{' '}
               per day to not exceed your monthly cap.
             </div>
             <div className="secondParagraph">
-              At this rate you will reach your cap in{" "}
-              <strong>{displayedDays(days)}</strong>{" "}
-              {displayedDays(days) === "1" ? "day" : "days"} and you will be off
-              budget by{" "}
+              At this rate you will reach your cap in{' '}
+              <strong>{displayedDays(days)}</strong>{' '}
+              {displayedDays(days) === '1' ? 'day' : 'days'} and you will be off
+              budget by{' '}
               <strong className="amount">
                 {displayCurrencyAndAmount(offBudgetAmount, currency)}
-              </strong>{" "}
-              at the end of the {budgetType === 1 ? "month" : "week"}.
+              </strong>{' '}
+              at the end of the {budgetType === 1 ? 'month' : 'week'}.
             </div>
           </div>
         </div>

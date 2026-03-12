@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledExpenseFormHeader = styled.div`
   display: flex;
@@ -20,7 +20,7 @@ export const StyledExpenseFormHeader = styled.div`
   }
 
   .closeButtonContainer:hover::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 50%;
     left: 50%;

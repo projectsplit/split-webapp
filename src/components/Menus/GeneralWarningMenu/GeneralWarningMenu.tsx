@@ -1,21 +1,20 @@
-import IonIcon from "@reacticons/ionicons";
-import { GeneralWarningMenuProps } from "../../../interfaces";
-import Separator from "../../Separator/Separator";
-import MyButton from "../../MyButton/MyButton";
-import { StyledGeneralWarningMenu } from "./GeneralWarningMenu.styled";
-
+import IonIcon from '@reacticons/ionicons';
+import { GeneralWarningMenuProps } from '../../../interfaces';
+import Separator from '../../Separator/Separator';
+import MyButton from '../../MyButton/MyButton';
+import { StyledGeneralWarningMenu } from './GeneralWarningMenu.styled';
 
 export default function GeneralWarningMenu({
   menu,
   message,
-  title
+  title,
 }: GeneralWarningMenuProps) {
   return (
     <StyledGeneralWarningMenu>
       <div className="headerSeparator">
         <div className="header">
           <IonIcon name="warning-outline" className="infoLogo" />
-          <span>{title ? title : "Warning"}</span>
+          <span>{title ? title : 'Warning'}</span>
           <div className="closeButton" onClick={() => (menu.value = null)}>
             <IonIcon name="close-outline" className="close" />
           </div>
@@ -24,9 +23,7 @@ export default function GeneralWarningMenu({
           <Separator />
         </div>
       </div>
-      <div className="info">
-        {message}
-      </div>
+      <div className="info">{message}</div>
       <div className="confirmButton">
         <MyButton onClick={() => (menu.value = null)} fontSize="16">
           Confirm

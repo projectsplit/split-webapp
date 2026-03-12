@@ -1,7 +1,7 @@
-import { useEffect, useLayoutEffect } from "react";
-import { recalculateAmounts } from "../recalculateAmounts";
-import { Guest, Member, PickerMember, User } from "../../../../types";
-import { Signal } from "@preact/signals-react";
+import { useEffect, useLayoutEffect } from 'react';
+import { recalculateAmounts } from '../recalculateAmounts';
+import { Guest, Member, PickerMember, User } from '../../../../types';
+import { Signal } from '@preact/signals-react';
 
 export const useRecalculateAmounts = (
   memberAmounts: PickerMember[],
@@ -33,7 +33,7 @@ export const useRecalculateAmounts = (
 
     if (totalAmount > 0) {
       if (
-        description === "Participants" &&
+        description === 'Participants' &&
         !memberAmounts.some((m) => m.selected)
       ) {
         const newFormMembers = memberAmounts.map((m) => ({
@@ -53,13 +53,17 @@ export const useRecalculateAmounts = (
           )
         );
       }
-      if (description === "Payers" && !memberAmounts.some((m) => m.selected)) {
+      if (description === 'Payers' && !memberAmounts.some((m) => m.selected)) {
         const newFormMembers = memberAmounts.map((m) => ({
           ...m,
           selected:
-            isnonGroupExpense && isnonGroupExpense.value && nonGroupUsers.value.length > 0
+            isnonGroupExpense &&
+            isnonGroupExpense.value &&
+            nonGroupUsers.value.length > 0
               ? m.id === userId
-              : isnonGroupExpense && isnonGroupExpense.value && groupMembers.value.length > 0
+              : isnonGroupExpense &&
+                  isnonGroupExpense.value &&
+                  groupMembers.value.length > 0
                 ? m.id === userMemberId
                 : m.id === userMemberId,
           order: renderCounter.current,
@@ -82,13 +86,13 @@ export const useRecalculateAmounts = (
       const newFormMembers = memberAmounts.map((m) => ({
         ...m,
         selected: false,
-        actualAmount: "",
-        screenQuantity: "",
+        actualAmount: '',
+        screenQuantity: '',
         locked: false,
       }));
       setMemberAmounts(newFormMembers);
     }
-    return () => { };
+    return () => {};
   }, [
     totalAmount,
     category.value,

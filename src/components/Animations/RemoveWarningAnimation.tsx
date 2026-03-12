@@ -1,8 +1,8 @@
-import { useRef } from "react";
-import { CSSTransition } from "react-transition-group";
-import { RemoveWarningAnimationProps } from "../../interfaces";
+import { useRef } from 'react';
+import { CSSTransition } from 'react-transition-group';
+import { RemoveWarningAnimationProps } from '../../interfaces';
 
-import RemoveWarning from "../Menus/RemoveWarning/RemoveWarning";
+import RemoveWarning from '../Menus/RemoveWarning/RemoveWarning';
 
 export default function RemoveWarningAnimation({
   menu,
@@ -10,7 +10,7 @@ export default function RemoveWarningAnimation({
   menuValue,
   header,
   onConfirm,
-  isLoading
+  isLoading,
 }: RemoveWarningAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -21,7 +21,13 @@ export default function RemoveWarningAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <RemoveWarning menu={menu} message={message} header={header} onConfirm={onConfirm} isLoading={isLoading} />
+      <RemoveWarning
+        menu={menu}
+        message={message}
+        header={header}
+        onConfirm={onConfirm}
+        isLoading={isLoading}
+      />
     </CSSTransition>
   );
 }

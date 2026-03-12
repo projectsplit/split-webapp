@@ -1,9 +1,9 @@
-import { AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { GetUserInvitationsResponse, Invitation } from "../../../types";
-import { NavigateFunction } from "react-router-dom";
-import { Signal } from "@preact/signals-react";
+import { AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { GetUserInvitationsResponse, Invitation } from '../../../types';
+import { NavigateFunction } from 'react-router-dom';
+import { Signal } from '@preact/signals-react';
 
 export const useAcceptInvitation = (
   navigate: NavigateFunction,
@@ -25,15 +25,15 @@ export const useAcceptInvitation = (
   >({
     mutationFn: (invitationId) => acceptInvitation({ invitationId }),
     onMutate: async (invitationId) => {
-      await queryClient.cancelQueries({ queryKey: ["userInvitations"] });
+      await queryClient.cancelQueries({ queryKey: ['userInvitations'] });
 
       const previousInvitations = queryClient.getQueryData<{
         pages: GetUserInvitationsResponse[];
         pageParams: any[];
-      }>(["userInvitations", 10]);
+      }>(['userInvitations', 10]);
 
       queryClient.setQueryData(
-        ["userInvitations", 10],
+        ['userInvitations', 10],
         (
           old:
             | { pages: GetUserInvitationsResponse[]; pageParams: any[] }
@@ -61,22 +61,22 @@ export const useAcceptInvitation = (
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["userInvitations"],
+        queryKey: ['userInvitations'],
         exact: false,
       });
-      queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
+      queryClient.invalidateQueries({ queryKey: ['shared'], exact: false });
       navigate(`/shared/${invitation.groupId}/expenses`);
-      menu.value = null
+      menu.value = null;
     },
     onError: (error, invitationId, context) => {
       // Rollback to the previous state if the mutation fails
       queryClient.setQueryData(
-        ["userInvitations", 10],
+        ['userInvitations', 10],
         context?.previousInvitations
       );
       queryClient.invalidateQueries({
-        queryKey: ["userInvitations"],
+        queryKey: ['userInvitations'],
         exact: false,
       });
       console.error(error);
@@ -84,7 +84,7 @@ export const useAcceptInvitation = (
     onSettled: () => {
       // Optionally refetch to ensure the data is fully up-to-date (runs in background)
       queryClient.refetchQueries({
-        queryKey: ["userInvitations"],
+        queryKey: ['userInvitations'],
         exact: false,
       });
     },
@@ -94,7 +94,7 @@ export const useAcceptInvitation = (
 const acceptInvitation = async (
   req: AcceptInvitationRequest
 ): Promise<void> => {
-  await apiClient.post<void, AxiosResponse<void>>("/invitations/accept", req);
+  await apiClient.post<void, AxiosResponse<void>>('/invitations/accept', req);
 };
 
 type AcceptInvitationRequest = {

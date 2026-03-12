@@ -1,18 +1,20 @@
-import { PickerMember } from "../../../types";
+import { PickerMember } from '../../../types';
 
 export function distributeRemainderCentsForShares(
   decimalDigits: number,
   totalAmount: number,
   synchronizedFormMembers: PickerMember[]
 ) {
- 
   const multiplier = Math.pow(10, decimalDigits);
   const totalCents = Math.round(totalAmount * multiplier);
 
   // Calculate total shares and initial amounts in cents with member IDs
   const totalShares = synchronizedFormMembers.reduce(
     (sum, member) =>
-      sum + (member.screenQuantity && member.selected ? Number(member.screenQuantity) : 0),
+      sum +
+      (member.screenQuantity && member.selected
+        ? Number(member.screenQuantity)
+        : 0),
     0
   );
   if (totalShares === 0) {
@@ -26,7 +28,9 @@ export function distributeRemainderCentsForShares(
       if (m.selected) {
         return {
           id: m.id,
-          amount: Math.round(Number(m.screenQuantity) * totalEqualShares * multiplier),
+          amount: Math.round(
+            Number(m.screenQuantity) * totalEqualShares * multiplier
+          ),
         };
       }
       return null;
@@ -34,7 +38,10 @@ export function distributeRemainderCentsForShares(
     .filter((item): item is { id: string; amount: number } => item !== null);
 
   // Calculate remainder
-  const totalSplitCents = splitAmountsInCents.reduce((sum, item) => sum + item.amount, 0);
+  const totalSplitCents = splitAmountsInCents.reduce(
+    (sum, item) => sum + item.amount,
+    0
+  );
   const remainderCents = totalCents - totalSplitCents;
 
   // Adjust amounts to account for remainder

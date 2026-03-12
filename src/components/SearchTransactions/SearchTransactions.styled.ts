@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
   box-sizing: border-box;
@@ -11,7 +11,6 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
   padding: 0;
   display: flex;
   flex-direction: column;
-   
 
   .catSelector {
   }
@@ -54,7 +53,7 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      color: ${({theme})=>theme.whiteText};
+      color: ${({ theme }) => theme.whiteText};
     }
   }
 

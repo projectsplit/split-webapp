@@ -1,13 +1,13 @@
-import React from "react";
-import { StyledProgressBar } from "./ProgressBar.styled";
-import { TbTargetArrow } from "react-icons/tb";
-import { ProgressBarProps } from "../../../interfaces";
-import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import { BudgetInfoResponse } from "../../../types";
-import { useTheme } from "styled-components";
-import { getIsoDateInfo } from "../../../helpers/getIsoDateInfo";
+import React from 'react';
+import { StyledProgressBar } from './ProgressBar.styled';
+import { TbTargetArrow } from 'react-icons/tb';
+import { ProgressBarProps } from '../../../interfaces';
+import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
+import { BudgetInfoResponse } from '../../../types';
+import { useTheme } from 'styled-components';
+import { getIsoDateInfo } from '../../../helpers/getIsoDateInfo';
 
-export default function ProgressBar({ data}: ProgressBarProps) {
+export default function ProgressBar({ data }: ProgressBarProps) {
   const theme = useTheme();
   let percentage: number = 0;
 
@@ -24,8 +24,8 @@ export default function ProgressBar({ data}: ProgressBarProps) {
       data !== undefined &&
       data.remainingDays !== undefined &&
       data.goal !== undefined &&
-      data.averageSpentPerDay !== undefined&&
-      data.totalAmountSpent!== undefined
+      data.averageSpentPerDay !== undefined &&
+      data.totalAmountSpent !== undefined
     ) {
       const totalAmountSpent = parseFloat(data.totalAmountSpent);
       const remainingDays = parseFloat(data.remainingDays);
@@ -37,7 +37,7 @@ export default function ProgressBar({ data}: ProgressBarProps) {
         return theme?.green;
       } else return theme?.redish;
     } else {
-      return "black";
+      return 'black';
     }
   };
 
@@ -74,13 +74,12 @@ export default function ProgressBar({ data}: ProgressBarProps) {
       <div className="budgetInfo">
         <div className="thisPeriod">
           <div className="budgetTitle">
-            {startDateDecomposed.dateNumber} {startDateDecomposed.month} -{" "}
+            {startDateDecomposed.dateNumber} {startDateDecomposed.month} -{' '}
             {endDateDecomposed.dateNumber} {endDateDecomposed.month}
           </div>
           <div className="progressBar">
-           
             <TbTargetArrow className="targetIcon" />
-           
+
             <div className="wrapper">
               <div className="barWrapper">
                 <div className="bar" />
@@ -91,11 +90,11 @@ export default function ProgressBar({ data}: ProgressBarProps) {
                     {displayCurrencyAndAmount(
                       data.totalAmountSpent,
                       data.currency
-                    )}{" "}
+                    )}{' '}
                     / {displayCurrencyAndAmount(data.goal, data.currency)}
                   </strong>
                 ) : (
-                  ""
+                  ''
                 )}
               </div>
             </div>
@@ -103,11 +102,11 @@ export default function ProgressBar({ data}: ProgressBarProps) {
           </div>
           <div className="miscInfo">
             <div className="remainingDays">
-              Remaining time:{" "}
+              Remaining time:{' '}
               <strong>
-                {convertedDaysHoursMinutes.days}d{" "}
-                {convertedDaysHoursMinutes.hours}h{" "}
-                {convertedDaysHoursMinutes.minutes}m{" "}
+                {convertedDaysHoursMinutes.days}d{' '}
+                {convertedDaysHoursMinutes.hours}h{' '}
+                {convertedDaysHoursMinutes.minutes}m{' '}
               </strong>
             </div>
             <div className="averageSpending">
@@ -118,7 +117,7 @@ export default function ProgressBar({ data}: ProgressBarProps) {
                       data.averageSpentPerDay,
                       data.currency
                     )
-                  : ""}
+                  : ''}
               </strong>
             </div>
           </div>

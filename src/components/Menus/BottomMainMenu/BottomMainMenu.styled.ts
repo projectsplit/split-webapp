@@ -1,8 +1,7 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledBottomMainMenu = styled.div<{ $groupIsArchived?: boolean }>`
   padding: 0.625rem;
-
 
   .bottomMainBar {
     display: flex;

@@ -1,5 +1,5 @@
-import currency from "currency.js";
-import { TotalSpent } from "../types";
+import currency from 'currency.js';
+import { TotalSpent } from '../types';
 
 export function getAllCurrencyTotals(
   totalSpent: TotalSpent
@@ -9,9 +9,7 @@ export function getAllCurrencyTotals(
   Object.values(totalSpent).forEach((userCurrencies) => {
     Object.entries(userCurrencies).forEach(([currencyCode, amount]) => {
       //const precision = currencyCode === "JPY" ? 0 : 2;
-      totals[currencyCode] = (
-        totals[currencyCode] ?? currency(0)
-      ).add(amount);
+      totals[currencyCode] = (totals[currencyCode] ?? currency(0)).add(amount);
     });
   });
 
@@ -24,12 +22,12 @@ export function getAllCurrencyTotals(
 }
 
 export function getCurrencyValues(
-    totalSpent: TotalSpent,
-    id: string | undefined
-  ): Record<string, number> {
-    if (!id || !totalSpent[id]) {
-      return {} ;
-    }
-  
-    return totalSpent[id];
+  totalSpent: TotalSpent,
+  id: string | undefined
+): Record<string, number> {
+  if (!id || !totalSpent[id]) {
+    return {};
   }
+
+  return totalSpent[id];
+}

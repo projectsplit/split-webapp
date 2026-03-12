@@ -1,25 +1,37 @@
-import { renderExpenseFilterPills } from "@/helpers/renderExpenseFilterPills";
-import { StyledNoExpensesFound } from "./NoExpensesFound.styled"
-import { FaMagnifyingGlass } from "react-icons/fa6";
-import { CiReceipt } from "react-icons/ci";
-import { ExpenseParsedFilters, GetLabelsResponse, Group, Mode, TruncatedMember } from "@/types";
-import { Signal } from "@preact/signals-react";
-import { QueryClient } from "@tanstack/react-query";
+import { renderExpenseFilterPills } from '@/helpers/renderExpenseFilterPills';
+import { StyledNoExpensesFound } from './NoExpensesFound.styled';
+import { FaMagnifyingGlass } from 'react-icons/fa6';
+import { CiReceipt } from 'react-icons/ci';
+import {
+  ExpenseParsedFilters,
+  GetLabelsResponse,
+  Group,
+  Mode,
+  TruncatedMember,
+} from '@/types';
+import { Signal } from '@preact/signals-react';
+import { QueryClient } from '@tanstack/react-query';
 
 interface NoExpensesFoundInterface {
-  expenseParsedFilters: Signal<ExpenseParsedFilters>
-  allParticipants: TruncatedMember[]
-  group: Group | null
-  queryClient: QueryClient
-  mode: Mode
-  fetchedUserAndGroupLabels: GetLabelsResponse | undefined
+  expenseParsedFilters: Signal<ExpenseParsedFilters>;
+  allParticipants: TruncatedMember[];
+  group: Group | null;
+  queryClient: QueryClient;
+  mode: Mode;
+  fetchedUserAndGroupLabels: GetLabelsResponse | undefined;
 }
-export const NoExpensesFound = ({ expenseParsedFilters, allParticipants, group, queryClient, mode, fetchedUserAndGroupLabels }: NoExpensesFoundInterface) => {
-
+export const NoExpensesFound = ({
+  expenseParsedFilters,
+  allParticipants,
+  group,
+  queryClient,
+  mode,
+  fetchedUserAndGroupLabels,
+}: NoExpensesFoundInterface) => {
   const hasAnySearchParams =
     !!expenseParsedFilters.value.before ||
     !!expenseParsedFilters.value.after ||
-    (expenseParsedFilters.value.freeText !== "" &&
+    (expenseParsedFilters.value.freeText !== '' &&
       expenseParsedFilters.value.freeText !== undefined) ||
     (expenseParsedFilters.value.labels !== undefined &&
       expenseParsedFilters.value.labels.length > 0) ||
@@ -27,7 +39,6 @@ export const NoExpensesFound = ({ expenseParsedFilters, allParticipants, group, 
       expenseParsedFilters.value.participantsIds.length > 0) ||
     (expenseParsedFilters.value.payersIds !== undefined &&
       expenseParsedFilters.value.payersIds.length > 0);
-
 
   return (
     <StyledNoExpensesFound>
@@ -59,5 +70,5 @@ export const NoExpensesFound = ({ expenseParsedFilters, allParticipants, group, 
         </div>
       )}
     </StyledNoExpensesFound>
-  )
-}
+  );
+};

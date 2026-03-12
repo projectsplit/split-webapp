@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledCurrentSearchField = styled.div`
   border: none;
@@ -14,8 +14,8 @@ export const StyledCurrentSearchField = styled.div`
     color: ${({ theme }) => theme.grey};
   }
 
-  .category{
-    font-size:18px;
+  .category {
+    font-size: 18px;
     color: white;
   }
   .pills {

@@ -1,22 +1,22 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from '@tanstack/react-query';
 import {
   GetGroupTransfersResponse,
   Group,
   TransferParsedFilters,
-} from "../../../types";
-import { apiClient } from "../../apiClients";
-import { AxiosResponse } from "axios";
-import { Signal } from "@preact/signals-react";
-import { appendGroupFilterToParams } from "../helpers/appendGroupFilterToParams";
+} from '../../../types';
+import { apiClient } from '../../apiClients';
+import { AxiosResponse } from 'axios';
+import { Signal } from '@preact/signals-react';
+import { appendGroupFilterToParams } from '../helpers/appendGroupFilterToParams';
 
 const useGetGroupTransfers = (
   group: Group,
   transferParsedFilters: Signal<TransferParsedFilters>,
   pageSize: number,
-  timeZoneId: string,
+  timeZoneId: string
 ) => {
   const queryKey = [
-    "groupTransfers",
+    'groupTransfers',
     group?.id,
     pageSize,
     transferParsedFilters.value,
@@ -33,7 +33,7 @@ const useGetGroupTransfers = (
         next
       ),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
-    initialPageParam: "",
+    initialPageParam: '',
     enabled: !!group,
   });
 
@@ -46,23 +46,21 @@ const getGroupTransfers = async (
   parsedFilters: TransferParsedFilters = {},
   next?: string
 ): Promise<GetGroupTransfersResponse> => {
-
-
   const { sendersIds = [], receiversIds = [], ...base } = parsedFilters;
 
   const params = appendGroupFilterToParams(groupId, base, {
     pageSize,
     next,
     arrayMappings: [
-      { key: "senderIds", values: sendersIds },
-      { key: "receiverIds", values: receiversIds },
+      { key: 'senderIds', values: sendersIds },
+      { key: 'receiverIds', values: receiversIds },
     ],
   });
 
   const response = await apiClient.get<
     void,
     AxiosResponse<GetGroupTransfersResponse>
-  >("/transfers", { params });
+  >('/transfers', { params });
   return response.data;
 };
 

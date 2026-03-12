@@ -1,31 +1,41 @@
-import { Signal } from "@preact/signals-react";
-import Pill from "../components/Pill/Pill";
-import { ExpenseParsedFilters, GetLabelsResponse, Group, Mode, TruncatedMember } from "../types";
-import { QueryClient } from "@tanstack/react-query";
-import labelColors from "../labelColors";
-import { getFilterStorageKey } from "../components/SearchTransactions/helpers/localStorageStringParser";
-import { MdGroup } from "react-icons/md";
-
+import { Signal } from '@preact/signals-react';
+import Pill from '../components/Pill/Pill';
+import {
+  ExpenseParsedFilters,
+  GetLabelsResponse,
+  Group,
+  Mode,
+  TruncatedMember,
+} from '../types';
+import { QueryClient } from '@tanstack/react-query';
+import labelColors from '../labelColors';
+import { getFilterStorageKey } from '../components/SearchTransactions/helpers/localStorageStringParser';
+import { MdGroup } from 'react-icons/md';
 
 const updateFiltersAndSave = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   updatedFilters: any,
   queryClient: QueryClient,
   mode: Mode,
-  groupId?: string,
-
+  groupId?: string
 ) => {
   expenseParsedFilters.value = {
     ...expenseParsedFilters.value,
     ...updatedFilters,
   };
   localStorage.setItem(
-    getFilterStorageKey("expense", groupId, mode === Mode.Personal),
+    getFilterStorageKey('expense', groupId, mode === Mode.Personal),
     JSON.stringify(expenseParsedFilters.value)
   );
-  queryClient.invalidateQueries({ queryKey: ["groupExpenses"], exact: false });
-  queryClient.invalidateQueries({ queryKey: ["nonGroupExpenses"], exact: false });
-  queryClient.invalidateQueries({ queryKey: ["personalExpenses"], exact: false });
+  queryClient.invalidateQueries({ queryKey: ['groupExpenses'], exact: false });
+  queryClient.invalidateQueries({
+    queryKey: ['nonGroupExpenses'],
+    exact: false,
+  });
+  queryClient.invalidateQueries({
+    queryKey: ['personalExpenses'],
+    exact: false,
+  });
 };
 
 export const renderExpenseFilterPills = (
@@ -36,13 +46,12 @@ export const renderExpenseFilterPills = (
   mode: Mode,
   fetchedUserAndGroupLabels: GetLabelsResponse | undefined
 ) => {
-
   const { freeText, before, after, participantsIds, payersIds, labels } =
     expenseParsedFilters.value;
 
   const pills = [];
 
-  if (freeText && freeText != "") {
+  if (freeText && freeText != '') {
     pills.push(
       <Pill
         key="freeTextExpense"
@@ -56,13 +65,12 @@ export const renderExpenseFilterPills = (
         onClose={() =>
           updateFiltersAndSave(
             expenseParsedFilters,
-            { freeText: "" },
+            { freeText: '' },
             queryClient,
             mode,
-            group?.id,
+            group?.id
           )
         }
-
       />
     );
   }
@@ -84,7 +92,7 @@ export const renderExpenseFilterPills = (
             { before: null, after: null },
             queryClient,
             mode,
-            group?.id,
+            group?.id
           )
         }
       />
@@ -108,13 +116,12 @@ export const renderExpenseFilterPills = (
             { before: null },
             queryClient,
             mode,
-            group?.id,
+            group?.id
           )
         }
       />
     );
   }
-
 
   if (after && before !== after) {
     pills.push(
@@ -133,7 +140,7 @@ export const renderExpenseFilterPills = (
             { after: null },
             queryClient,
             mode,
-            group?.id,
+            group?.id
           )
         }
       />
@@ -165,12 +172,10 @@ export const renderExpenseFilterPills = (
               group?.id
             )
           }
-
         />
       );
     });
   }
-
 
   if (payersIds && payersIds?.length > 0) {
     payersIds?.forEach((id, index) => {
@@ -202,7 +207,6 @@ export const renderExpenseFilterPills = (
     });
   }
 
-
   if (labels && labels?.length > 0) {
     labels?.forEach((id, index) => {
       const label = fetchedUserAndGroupLabels?.labels?.find((l) => l.id === id);
@@ -213,7 +217,7 @@ export const renderExpenseFilterPills = (
         <Pill
           key={`label-${index}`}
           title={`${labelTitle}`}
-          color={labelColors[labelColor || "#e0e0e0"]}
+          color={labelColors[labelColor || '#e0e0e0']}
           closeButton={true}
           fontSize="14px"
           $textColor="black"
@@ -227,11 +231,13 @@ export const renderExpenseFilterPills = (
               },
               queryClient,
               mode,
-              group?.id,
+              group?.id
             )
           }
         >
-          {mode === Mode.Personal && !id.includes("_") && <MdGroup style={{ marginRight: "4px" }} />}
+          {mode === Mode.Personal && !id.includes('_') && (
+            <MdGroup style={{ marginRight: '4px' }} />
+          )}
         </Pill>
       );
     });

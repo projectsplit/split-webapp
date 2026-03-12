@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledGroupOptions = styled.div`
   position: fixed;
@@ -47,7 +47,7 @@ export const StyledGroupOptions = styled.div`
       }
 
       .closeButtonContainer:hover::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 50%;
         left: 50%;

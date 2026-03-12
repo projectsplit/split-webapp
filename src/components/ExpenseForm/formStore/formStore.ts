@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { ExpenseState, SplitMethod } from "./formStoreTypes";
+import { create } from 'zustand';
+import { ExpenseState, SplitMethod } from './formStoreTypes';
 import {
   ExpenseRequest,
   FormExpense,
@@ -8,32 +8,32 @@ import {
   Member,
   User,
   UserInfo,
-} from "../../../types";
+} from '../../../types';
 
-import { signal, Signal } from "@preact/signals-react";
+import { signal, Signal } from '@preact/signals-react';
 import {
   generatePickerArrays,
   validateExpenseState,
   submitExpenseFromState,
-} from "../expenseFormUtils";
-import { recalculateAmounts } from "@/components/MemberPicker/helpers/recalculateAmounts";
-import { significantDigitsFromTicker } from "@/helpers/openExchangeRates";
+} from '../expenseFormUtils';
+import { recalculateAmounts } from '@/components/MemberPicker/helpers/recalculateAmounts';
+import { significantDigitsFromTicker } from '@/helpers/openExchangeRates';
 
 export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   // Default / initial values
-  amount: "",
-  description: "",
-  currencySymbol: "USD", // or your app default
+  amount: '',
+  description: '',
+  currencySymbol: 'USD', // or your app default
   expenseTime: new Date().toISOString(),
   labels: [],
   location: undefined,
-  userMemberId: "",
+  userMemberId: '',
 
-  amountError: "",
+  amountError: '',
   showAmountError: false,
-  participantsError: "",
-  payersError: "",
-  descriptionError: "",
+  participantsError: '',
+  payersError: '',
+  descriptionError: '',
 
   isSubmitting: false,
 
@@ -52,8 +52,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   makePersonalClicked: false,
   showPicker: false,
 
-  participantsCategory: signal<SplitMethod>("Amounts"),
-  payersCategory: signal<SplitMethod>("Amounts"),
+  participantsCategory: signal<SplitMethod>('Amounts'),
+  payersCategory: signal<SplitMethod>('Amounts'),
 
   // ── Simple setters ──────────────────────────────────────────────
   setAmount: (value: string) => set({ amount: value }),
@@ -61,16 +61,17 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   setCurrencySymbol: (value: string) => {
     set({
       currencySymbol: value,
-      amount: "",
+      amount: '',
     });
   },
   setExpenseTime: (value: string | ((prev: string) => string)) =>
     set((state) => ({
       expenseTime:
-        typeof value === "function" ? value(state.expenseTime) : value,
+        typeof value === 'function' ? value(state.expenseTime) : value,
     })),
 
-  setMakePersonalClicked: (value: boolean) => set({ makePersonalClicked: value }),
+  setMakePersonalClicked: (value: boolean) =>
+    set({ makePersonalClicked: value }),
   setShowPicker: (value: boolean) => set({ showPicker: value }),
   setLabels: (labels) => set({ labels }),
   setLocation: (location) => set({ location }),
@@ -82,14 +83,14 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   setParticipantsError: (msgOrUpdater: string | ((prev: string) => string)) =>
     set((state) => ({
       participantsError:
-        typeof msgOrUpdater === "function"
+        typeof msgOrUpdater === 'function'
           ? msgOrUpdater(state.participantsError)
           : msgOrUpdater,
     })),
   setPayersError: (msgOrUpdater: string | ((prev: string) => string)) =>
     set((state) => ({
       payersError:
-        typeof msgOrUpdater === "function"
+        typeof msgOrUpdater === 'function'
           ? msgOrUpdater(state.payersError)
           : msgOrUpdater,
     })),
@@ -100,11 +101,11 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     set((state) => {
       const prevByCategory = state.participantsByCategory;
       const newByCategory =
-        typeof updater === "function" ? updater(prevByCategory) : updater;
+        typeof updater === 'function' ? updater(prevByCategory) : updater;
 
       // === PART 1: Detect if Shares changed ===
-      const prevShares = prevByCategory["Shares"] ?? [];
-      const newShares = newByCategory["Shares"] ?? [];
+      const prevShares = prevByCategory['Shares'] ?? [];
+      const newShares = newByCategory['Shares'] ?? [];
       const sharesChanged = newShares !== prevShares;
 
       let finalByCategory = newByCategory;
@@ -122,8 +123,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
           if (wasJustSelected) {
             return {
               ...member,
-              actualAmount: "",
-              screenQuantity: "",
+              actualAmount: '',
+              screenQuantity: '',
               locked: false,
             };
           }
@@ -139,7 +140,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       // === PART 3: Clear error if Shares changed ===
       return {
         participantsByCategory: finalByCategory,
-        ...(sharesChanged ? { participantsError: "" } : {}),
+        ...(sharesChanged ? { participantsError: '' } : {}),
       };
     }),
 
@@ -147,10 +148,10 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     set((state) => {
       const prevByCategory = state.payersByCategory;
       const newByCategory =
-        typeof updater === "function" ? updater(prevByCategory) : updater;
+        typeof updater === 'function' ? updater(prevByCategory) : updater;
 
-      const prevShares = prevByCategory["Shares"] ?? [];
-      const newShares = newByCategory["Shares"] ?? [];
+      const prevShares = prevByCategory['Shares'] ?? [];
+      const newShares = newByCategory['Shares'] ?? [];
       const sharesChanged = newShares !== prevShares;
 
       let finalByCategory = newByCategory;
@@ -167,8 +168,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
           if (wasJustSelected) {
             return {
               ...member,
-              actualAmount: "",
-              screenQuantity: "",
+              actualAmount: '',
+              screenQuantity: '',
               locked: false,
             };
           }
@@ -183,7 +184,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
 
       return {
         payersByCategory: finalByCategory,
-        ...(sharesChanged ? { payersError: "" } : {}),
+        ...(sharesChanged ? { payersError: '' } : {}),
       };
     }),
 
@@ -225,7 +226,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     } = config;
     const userMembers = groupMembers
       ?.peek()
-      .filter((item): item is Member => "userId" in item);
+      .filter((item): item is Member => 'userId' in item);
 
     const userMemberId = userMembers?.find(
       (m) => m.userId === userInfo?.userId
@@ -234,10 +235,10 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     const initialCurrency =
       isCreateExpense || !expense ? currency : expense.currency;
 
-    const initialAmount = isCreateExpense || !expense ? "" : expense.amount;
+    const initialAmount = isCreateExpense || !expense ? '' : expense.amount;
 
     const initialDescription =
-      isCreateExpense || !expense ? "" : expense.description;
+      isCreateExpense || !expense ? '' : expense.description;
 
     const initialLabels = isCreateExpense || !expense ? [] : expense.labels;
 
@@ -269,7 +270,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     const finalParticipants = { ...participantsByCategory };
     const finalPayers = { ...payersByCategory };
 
-    for (const cat of ["Amounts", "Shares", "Percentages"] as const) {
+    for (const cat of ['Amounts', 'Shares', 'Percentages'] as const) {
       finalParticipants[cat] = recalculateAmounts(
         participantsByCategory[cat],
         amountNum,
@@ -298,11 +299,11 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       participantsByCategory: finalParticipants,
       payersByCategory: finalPayers,
 
-      amountError: "",
+      amountError: '',
       showAmountError: false,
-      participantsError: "",
-      payersError: "",
-      descriptionError: "",
+      participantsError: '',
+      payersError: '',
+      descriptionError: '',
       isSubmitting: false,
       userMemberId: userMemberId,
     });
@@ -320,7 +321,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
 
     const userMembers = groupMembers
       ?.peek()
-      .filter((item): item is Member => "userId" in item);
+      .filter((item): item is Member => 'userId' in item);
 
     let derivedUserMemberId = userMemberId;
     if (!derivedUserMemberId && userMembers) {
@@ -354,7 +355,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     const finalParticipants = { ...participantsByCategory };
     const finalPayers = { ...payersByCategory };
 
-    for (const cat of ["Amounts", "Shares", "Percentages"] as const) {
+    for (const cat of ['Amounts', 'Shares', 'Percentages'] as const) {
       finalParticipants[cat] = recalculateAmounts(
         participantsByCategory[cat],
         amountNum,
@@ -381,14 +382,14 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   },
   resetForm: () => {
     set({
-      amount: "",
-      description: "",
+      amount: '',
+      description: '',
       labels: [],
       location: undefined,
-      amountError: "",
-      participantsError: "",
-      payersError: "",
-      descriptionError: "",
+      amountError: '',
+      participantsError: '',
+      payersError: '',
+      descriptionError: '',
       showAmountError: false,
     });
   },
@@ -475,7 +476,9 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       },
       {
         ...inputs,
-        fromPersonal: inputs.fromPersonal ? inputs.fromPersonal.peek() : undefined
+        fromPersonal: inputs.fromPersonal
+          ? inputs.fromPersonal.peek()
+          : undefined,
       }
     );
   },

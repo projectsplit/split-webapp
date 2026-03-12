@@ -1,12 +1,14 @@
-import styled from "styled-components";
-import { StyledMiddleScreenMenu } from "../Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
-import { Mode } from "@/types";
+import styled from 'styled-components';
+import { StyledMiddleScreenMenu } from '../Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
+import { Mode } from '@/types';
 
 interface StyledDetailedExpenseProps {
   mode: Mode;
 }
 
-export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetailedExpenseProps>`
+export const StyledDetailedExpense = styled(
+  StyledMiddleScreenMenu
+)<StyledDetailedExpenseProps>`
   display: flex;
   flex-direction: column;
   height: 99vh;
@@ -40,7 +42,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetai
   .descriptionAndCloseButton {
     display: flex;
     flex-direction: row;
-    
+
     align-items: center;
     justify-content: space-between;
     position: relative;
@@ -83,9 +85,9 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetai
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin-top: ${({ mode }) => (mode === Mode.Personal ? "50px" : "15px")};
-    margin-bottom: ${({ mode }) => (mode === Mode.Personal ? "30px" : "15px")};
-    font-size: ${({ mode }) => mode === Mode.Personal ? "60px" : "18px"};
+    margin-top: ${({ mode }) => (mode === Mode.Personal ? '50px' : '15px')};
+    margin-bottom: ${({ mode }) => (mode === Mode.Personal ? '30px' : '15px')};
+    font-size: ${({ mode }) => (mode === Mode.Personal ? '60px' : '18px')};
     font-weight: 400;
     color: ${({ theme }) => theme.whiteText};
     min-height: 21px;
@@ -200,22 +202,22 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetai
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-     .navigatePrompt {
+    .navigatePrompt {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .info {
+        font-size: 14px;
+      }
+      .navigateButton {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: center;
         align-items: center;
-        .info {
-          font-size: 14px; 
-        }
-        .navigateButton {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-          margin: 50px;
-        }
+        margin: 50px;
       }
+    }
 
     .buttons {
       display: flex;
@@ -232,7 +234,6 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu) <StyledDetai
         }
         flex: 1; /* Optional: Make buttons take equal space */
       }
-     
     }
   }
 `;

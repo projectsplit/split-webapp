@@ -1,14 +1,14 @@
-import IonIcon from "@reacticons/ionicons";
-import { NotificationsMenuProps } from "../../../interfaces";
-import { StyledNotificationsMenu } from "./NotificationsMenu.styled";
-import { IoIosNotificationsOff } from "react-icons/io";
-import Sentinel from "../../Sentinel";
-import Invitation from "../../Invitation/Invitation";
-import Separator from "../../Separator/Separator";
-import { useEffect } from "react";
-import { useLastViewedNotification } from "../../../api/auth/CommandHooks/useLastViewedNotification";
-import { useGetUserInvitations } from "../../../api/auth/QueryHooks/useGetUserInvitations";
-import Spinner from "../../Spinner/Spinner";
+import IonIcon from '@reacticons/ionicons';
+import { NotificationsMenuProps } from '../../../interfaces';
+import { StyledNotificationsMenu } from './NotificationsMenu.styled';
+import { IoIosNotificationsOff } from 'react-icons/io';
+import Sentinel from '../../Sentinel';
+import Invitation from '../../Invitation/Invitation';
+import Separator from '../../Separator/Separator';
+import { useEffect } from 'react';
+import { useLastViewedNotification } from '../../../api/auth/CommandHooks/useLastViewedNotification';
+import { useGetUserInvitations } from '../../../api/auth/QueryHooks/useGetUserInvitations';
+import Spinner from '../../Spinner/Spinner';
 
 export default function NotificationsMenu({
   menu,
@@ -24,11 +24,14 @@ export default function NotificationsMenu({
   const { mutate: updateNotification } = useLastViewedNotification();
 
   useEffect(() => {
-    if (isSuccess && data.pages.length === 1 && data?.pages[0].invitations.length > 0) {
-      const latestTimeStamp = data?.pages[0].invitations[0].created
+    if (
+      isSuccess &&
+      data.pages.length === 1 &&
+      data?.pages[0].invitations.length > 0
+    ) {
+      const latestTimeStamp = data?.pages[0].invitations[0].created;
       updateNotification(latestTimeStamp);
     }
-
   }, [isSuccess, data]);
 
   return (
@@ -69,8 +72,7 @@ export default function NotificationsMenu({
                     groupName: x.groupName,
                     receiverId: x.receiverId,
                     senderId: x.senderId,
-                    guestName: x.guestName
-
+                    guestName: x.guestName,
                   }}
                   menu={menu}
                   timeZoneId={timeZoneId}

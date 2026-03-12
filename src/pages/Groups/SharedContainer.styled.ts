@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledSharedContainer = styled.div<{ $groupState: string }>`
   overflow: hidden;
@@ -16,17 +16,17 @@ export const StyledSharedContainer = styled.div<{ $groupState: string }>`
     min-height: 0;
 
     .groups {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		overflow-y: auto;      
-		overflow-x: hidden;
-		.noData{
-			.msg{
-				text-wrap: wrap;
-				text-align: center;
-			}
-		}
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      .noData {
+        .msg {
+          text-wrap: wrap;
+          text-align: center;
+        }
+      }
       .searchWrapper {
         overflow: hidden;
         margin-top: 8px;
@@ -37,5 +37,4 @@ export const StyledSharedContainer = styled.div<{ $groupState: string }>`
   .bottom-bar {
     margin-top: auto;
   }
-    
 `;

@@ -1,11 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
-import { GetTotalLentTotalBorrowedResponse } from "../../../types";
-import { apiClient } from "../../apiClients";
+import { useQuery } from '@tanstack/react-query';
+import { GetTotalLentTotalBorrowedResponse } from '../../../types';
+import { apiClient } from '../../apiClients';
 
-
-export const useTotalLentBorrowedArrays = (startDate: string, endDate: string, currency:string) => {
+export const useTotalLentBorrowedArrays = (
+  startDate: string,
+  endDate: string,
+  currency: string
+) => {
   return useQuery<GetTotalLentTotalBorrowedResponse>({
-    queryKey: ["totalLentBorrowed", startDate, endDate, currency],
+    queryKey: ['totalLentBorrowed', startDate, endDate, currency],
     queryFn: () => getTotalLentBorrowedArrays(startDate, endDate, currency),
     refetchOnWindowFocus: false,
     refetchOnMount: true,

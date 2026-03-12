@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { DeleteTransferRequest, TransferResponseItem } from "../../../types";
-import { Signal } from "@preact/signals-react";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { DeleteTransferRequest, TransferResponseItem } from '../../../types';
+import { Signal } from '@preact/signals-react';
 
 export const useDeleteNonGroupTransfer = (
   menu: Signal<string | null>,
@@ -14,15 +14,21 @@ export const useDeleteNonGroupTransfer = (
   return useMutation<any, AxiosError, string>({
     mutationFn: (transferId) => deleteTransfer({ transferId }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["nonGroupDebts"], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["nonGroupTransfers"],
+        queryKey: ['nonGroupDebts'],
         exact: false,
       });
-      await queryClient.invalidateQueries({ queryKey: ["home"], exact: false });
-      await queryClient.invalidateQueries({ queryKey: ["shared"], exact: false });
       await queryClient.invalidateQueries({
-        queryKey: ["mostRecentGroup"],
+        queryKey: ['nonGroupTransfers'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
+      await queryClient.invalidateQueries({
+        queryKey: ['shared'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['mostRecentGroup'],
         exact: false,
       });
       selectedTransfer.value = null;
@@ -38,7 +44,7 @@ export const useDeleteNonGroupTransfer = (
 
 const deleteTransfer = async (req: DeleteTransferRequest): Promise<void> => {
   const response = await apiClient.post<void, AxiosResponse<void>>(
-    "/transfers/delete-non-group",
+    '/transfers/delete-non-group',
     req
   );
   return response.data;

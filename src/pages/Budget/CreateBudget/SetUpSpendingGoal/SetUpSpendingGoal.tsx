@@ -1,8 +1,8 @@
-import React from "react";
-import { StyledSetUpSpendingGoal } from "./SetUpSpendingGoal.styled";
+import React from 'react';
+import { StyledSetUpSpendingGoal } from './SetUpSpendingGoal.styled';
 
-import { SetUpSpendingGoalProps } from "../../../../interfaces";
-import InputMonetary from "../../../../components/InputMonetary/InputMonetary";
+import { SetUpSpendingGoalProps } from '../../../../interfaces';
+import InputMonetary from '../../../../components/InputMonetary/InputMonetary';
 
 export default function SetUpSpendingGoal({
   menu,
@@ -11,7 +11,6 @@ export default function SetUpSpendingGoal({
   submitBudgetErrors,
   onChange,
 }: SetUpSpendingGoalProps) {
-
   return (
     <StyledSetUpSpendingGoal>
       <div className="prompt">Set up your spending cap or goal</div>
@@ -22,16 +21,16 @@ export default function SetUpSpendingGoal({
           onChange={onChange}
           currency={currency}
           $inputError={submitBudgetErrors.value.find(
-            (item) => item.field === "Amount" || item.field === "Currency"
+            (item) => item.field === 'Amount' || item.field === 'Currency'
           )}
         />
         {submitBudgetErrors.value.find(
-          (item) => item.field === "Amount" || item.field === "Currency"
+          (item) => item.field === 'Amount' || item.field === 'Currency'
         ) && (
           <span className="errorMsg">
             {
               submitBudgetErrors.value.find(
-                (item) => item.field === "Amount" || item.field === "Currency"
+                (item) => item.field === 'Amount' || item.field === 'Currency'
               ).errorMessage
             }
           </span>

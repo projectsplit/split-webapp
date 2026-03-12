@@ -1,8 +1,8 @@
-import React from "react";
-import { Group } from "../../../../types";
-import { TiGroup } from "react-icons/ti";
-import { IoClose } from "react-icons/io5";
-import styled from "styled-components";
+import React from 'react';
+import { Group } from '../../../../types';
+import { TiGroup } from 'react-icons/ti';
+import { IoClose } from 'react-icons/io5';
+import styled from 'styled-components';
 
 export const SelectedGroup = React.memo(
   ({ group, onRemove }: { group: Group | null; onRemove: () => void }) => {
@@ -12,7 +12,7 @@ export const SelectedGroup = React.memo(
       <StyledSelectedGroup
         key={group.id}
         className="selected-label"
-        style={{ backgroundColor: "#696e80", color: "white" }}
+        style={{ backgroundColor: '#696e80', color: 'white' }}
         onClick={onRemove}
       >
         <div className="info">

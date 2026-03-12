@@ -1,7 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledMembersInfoBox = styled.div`
- 
   .topStripe {
     display: flex;
     flex-direction: row;

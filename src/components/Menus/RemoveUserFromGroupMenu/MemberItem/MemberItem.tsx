@@ -1,7 +1,7 @@
-import MyButton from "../../../MyButton/MyButton";
-import { useRemoveMemberFromGroup } from "../../../../api/auth/CommandHooks/useRemoveMemberFromGroup";
-import { useRemoveGuestFromGroup } from "../../../../api/auth/CommandHooks/useRemoveGuestFromGroup";
-import { MemberItemProps } from "../../../../interfaces";
+import MyButton from '../../../MyButton/MyButton';
+import { useRemoveMemberFromGroup } from '../../../../api/auth/CommandHooks/useRemoveMemberFromGroup';
+import { useRemoveGuestFromGroup } from '../../../../api/auth/CommandHooks/useRemoveGuestFromGroup';
+import { MemberItemProps } from '../../../../interfaces';
 
 export default function MemberItem({
   member,
@@ -12,9 +12,6 @@ export default function MemberItem({
   canBeRemoved,
   onCannotRemoveClick,
 }: MemberItemProps) {
-
-
-
   const { mutate: removeGuest, isPending: isPendingGuest } =
     useRemoveGuestFromGroup(groupId, noGroupError, noMemberError);
 

@@ -1,18 +1,18 @@
-import { AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { GetJoinCodesResponse } from "../../../types";
+import { AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { GetJoinCodesResponse } from '../../../types';
 
 export const useGetGroupJoinCodes = (groupId: string, pageSize: number) => {
-  const queryKey = ["getGroupJoinCodes", groupId, pageSize];
+  const queryKey = ['getGroupJoinCodes', groupId, pageSize];
 
   const query = useInfiniteQuery({
     queryKey,
     queryFn: ({ pageParam: next }) =>
       getGroupJoinCodes(groupId, pageSize, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
-    initialPageParam: "",
-    refetchOnMount: "always",
+    initialPageParam: '',
+    refetchOnMount: 'always',
   });
 
   return { ...query };
@@ -30,5 +30,3 @@ const getGroupJoinCodes = async (
   >(`/join/group/${groupId}`, { params });
   return response.data;
 };
-
-

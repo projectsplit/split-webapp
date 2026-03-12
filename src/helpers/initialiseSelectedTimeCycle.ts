@@ -1,18 +1,16 @@
-import { Frequency } from "../types";
-import { generateYearsArray } from "./generateYearsArray";
-
+import { Frequency } from '../types';
+import { generateYearsArray } from './generateYearsArray';
 
 export const initialiseSelectedTimeCycle = (
   cycle: Frequency,
   currentWeekIndex: number,
-  selectedYear:number
+  selectedYear: number
 ) => {
-
   switch (cycle) {
     case Frequency.Monthly:
-      return new Date().getMonth(); 
+      return new Date().getMonth();
     case Frequency.Weekly:
-      return currentWeekIndex; 
+      return currentWeekIndex;
     case Frequency.Annually:
       return generateYearsArray().indexOf(selectedYear);
     default:

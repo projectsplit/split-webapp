@@ -1,18 +1,18 @@
-import Spinner from "@/components/Spinner/Spinner";
-import { StyledFiltersAndBars } from "./FiltersAndBars.styled"
-import { renderTransferFilterPills } from "@/helpers/renderTransferFilterPills";
-import BarsWithLegends from "@/components/BarsWithLegends/BarsWithLegends";
-import { Signal } from "@preact/signals-react";
-import { TransferParsedFilters, Group, TruncatedMember } from "@/types";
-import { QueryClient } from "@tanstack/react-query";
+import Spinner from '@/components/Spinner/Spinner';
+import { StyledFiltersAndBars } from './FiltersAndBars.styled';
+import { renderTransferFilterPills } from '@/helpers/renderTransferFilterPills';
+import BarsWithLegends from '@/components/BarsWithLegends/BarsWithLegends';
+import { Signal } from '@preact/signals-react';
+import { TransferParsedFilters, Group, TruncatedMember } from '@/types';
+import { QueryClient } from '@tanstack/react-query';
 
 interface FiltersAndBarsInterface {
-  transferParsedFilters: Signal<TransferParsedFilters>
-  allParticipants: TruncatedMember[]
-  group: Group
-  queryClient: QueryClient
-  menu: Signal<string | null>
-  currency: string,
+  transferParsedFilters: Signal<TransferParsedFilters>;
+  allParticipants: TruncatedMember[];
+  group: Group;
+  queryClient: QueryClient;
+  menu: Signal<string | null>;
+  currency: string;
   totalsAreFetching: boolean;
   userConvertedTotalReceived: number | undefined;
   userConvertedTotalSent: number | undefined;
@@ -29,8 +29,6 @@ export const FiltersAndBars = ({
   userConvertedTotalReceived,
   userConvertedTotalSent,
 }: FiltersAndBarsInterface) => {
-
-
   return (
     <StyledFiltersAndBars>
       {totalsAreFetching ? (
@@ -40,7 +38,7 @@ export const FiltersAndBars = ({
       ) : (
         <div className="filtersAndBars">
           <div className="pills">
-            {" "}
+            {' '}
             {renderTransferFilterPills(
               transferParsedFilters,
               allParticipants,
@@ -57,13 +55,11 @@ export const FiltersAndBars = ({
             bar1Color="#0CA0A0"
             bar2Color="#D79244"
             onClick={() => {
-
-              menu.value = "epensesByCurrency";
-
+              menu.value = 'epensesByCurrency';
             }}
           />
         </div>
       )}
     </StyledFiltersAndBars>
-  )
-}
+  );
+};

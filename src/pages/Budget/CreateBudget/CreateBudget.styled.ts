@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledCreateBudget = styled.div`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.lightColor};
   box-sizing: border-box;
- width: 100%;
+  width: 100%;
   height: 100%;
   left: 0;
   right: 0;
@@ -27,7 +27,7 @@ export const StyledCreateBudget = styled.div`
   }
 
   .backButtonContainer:hover::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 50%;
     left: 50%;
@@ -83,7 +83,6 @@ export const StyledCreateBudget = styled.div`
     color: ${({ theme }) => theme.layer6};
     animation: fadeIn 0.5s;
     font-size: 14px;
-    
   }
 
   .categoryButtons {

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledCreateGroup = styled.div`
   position: fixed;
@@ -30,21 +30,19 @@ export const StyledCreateGroup = styled.div`
         flex-direction: row;
         gap: 0.5rem;
         background-color: ${({ theme }) => theme.layer2};
-        border: 1px solid
-      ${({ theme}) =>theme.lineColor};
+        border: 1px solid ${({ theme }) => theme.lineColor};
         border-radius: 10px;
         padding: 0.5rem;
         font-size: 1.125rem;
-        width:140px;
+        width: 140px;
         align-items: center;
         justify-content: space-between;
         cursor: pointer;
-       
+
         .angleDown {
           font-size: 1.5rem;
         }
       }
-
     }
   }
   .input {
@@ -83,7 +81,7 @@ export const StyledCreateGroup = styled.div`
     }
 
     .closeButtonContainer:hover::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;

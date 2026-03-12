@@ -1,5 +1,5 @@
-import { ButtonHTMLAttributes, MouseEventHandler, ReactNode } from "react";
-import { styled } from "styled-components";
+import { ButtonHTMLAttributes, MouseEventHandler, ReactNode } from 'react';
+import { styled } from 'styled-components';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -7,21 +7,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
 }
 
-const Button: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (props) => {
-
-  const {
-    onClick,
-    disabled,
-    children,
-    ...rest
-  } = props;
+const Button: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
+  props
+) => {
+  const { onClick, disabled, children, ...rest } = props;
 
   return (
     <StyledButton onClick={onClick} disabled={disabled} {...rest}>
       {children}
     </StyledButton>
   );
-}
+};
 
 export default Button;
 
@@ -38,12 +34,12 @@ const StyledButton = styled.button`
   cursor: pointer;
   transition: border-color 0.25s;
   cursor: pointer;
-    
+
   &:hover {
     /* border-color: #646cff; */
     /* border-color: ${({ theme }) => theme.highlightColor}; */
   }
-  
+
   &:focus,
   &:focus-visible {
     outline: none;

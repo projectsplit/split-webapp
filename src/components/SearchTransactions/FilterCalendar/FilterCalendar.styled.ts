@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledFilterCalendar = styled.div`
   display: flex;
@@ -38,16 +38,15 @@ export const StyledFilterCalendar = styled.div`
     }
 
     &:hover:before {
-      content: ""; 
+      content: '';
       position: absolute;
-      top: 50%; 
-      left: 50%; 
-      transform: translate(-50%, -50%); 
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       width: 30px;
       height: 30px;
 
-    
-      z-index: -1; 
+      z-index: -1;
     }
 
     &.selected {
@@ -55,14 +54,14 @@ export const StyledFilterCalendar = styled.div`
     }
 
     &.selected::after {
-      content: "";
+      content: '';
       position: absolute;
-      bottom: 0; 
-      left: 25%; 
-      right: 25%; 
+      bottom: 0;
+      left: 25%;
+      right: 25%;
       height: 2px;
       background-color: ${({ theme }) => theme.whiteText};
-      border-radius: 0; 
+      border-radius: 0;
     }
   }
 `;

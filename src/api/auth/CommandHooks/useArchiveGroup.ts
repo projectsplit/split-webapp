@@ -1,30 +1,35 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import { apiClient } from "../../apiClients";
-import { ArchiveGroupRequest } from "../../../types";
-import { Signal } from "@preact/signals-react";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { apiClient } from '../../apiClients';
+import { ArchiveGroupRequest } from '../../../types';
+import { Signal } from '@preact/signals-react';
 export const useArchiveGroup = (
   groupId: string | undefined,
   noGroupFoundError: Signal<string>,
-  menu: Signal<string | null>,
-
+  menu: Signal<string | null>
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, boolean>({
     mutationFn: (isArchived) => {
       if (!groupId) {
-        noGroupFoundError.value = "No group found";
-        return Promise.reject(new Error("No group found"));
+        noGroupFoundError.value = 'No group found';
+        return Promise.reject(new Error('No group found'));
       }
       return archiveGroup({ isArchived }, groupId);
     },
     onSuccess: async () => {
       //await queryClient.invalidateQueries({ queryKey:["groups"], exact:false});
-      await queryClient.invalidateQueries({ queryKey: ["shared", "active"] });
-      await queryClient.invalidateQueries({ queryKey: ["shared", "archived"] });
-      await queryClient.invalidateQueries({ queryKey: ["mostRecentGroup"], exact: false });
-      await queryClient.invalidateQueries({ queryKey: [groupId], exact: false });
+      await queryClient.invalidateQueries({ queryKey: ['shared', 'active'] });
+      await queryClient.invalidateQueries({ queryKey: ['shared', 'archived'] });
+      await queryClient.invalidateQueries({
+        queryKey: ['mostRecentGroup'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [groupId],
+        exact: false,
+      });
       menu.value = null;
     },
   });

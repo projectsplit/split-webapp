@@ -1,11 +1,15 @@
-import React from "react";
-import { StyledMembersInfoBox } from "./MembersInfoBox.Styled";
-import InfoBox from "../InfoBox/InfoBox";
-import { MembersInfoBoxProps } from "../../../interfaces";
-import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import Currency from "currency.js";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { GroupTransaction, NonGroupTransaction, TransactionType } from "../../../types";
+import React from 'react';
+import { StyledMembersInfoBox } from './MembersInfoBox.Styled';
+import InfoBox from '../InfoBox/InfoBox';
+import { MembersInfoBoxProps } from '../../../interfaces';
+import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
+import Currency from 'currency.js';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import {
+  GroupTransaction,
+  NonGroupTransaction,
+  TransactionType,
+} from '../../../types';
 
 export default function MembersInfoBox({
   transactions,
@@ -14,12 +18,12 @@ export default function MembersInfoBox({
   participants,
   userMemberId,
   userId,
-  expenseType
+  expenseType,
 }: MembersInfoBoxProps) {
   const [hide, setHide] = React.useState<boolean>(false);
 
   const getId = (t: GroupTransaction | NonGroupTransaction) => {
-    if ("memberId" in t) {
+    if ('memberId' in t) {
       return t.memberId;
     }
     return t.userId;
@@ -39,7 +43,6 @@ export default function MembersInfoBox({
       if (bId === userId) return 1;
       return 0;
     }
-
   });
 
   const totalAmount = transactions?.reduce(
@@ -54,24 +57,40 @@ export default function MembersInfoBox({
           {areShares ? (
             <div className="info">
               {sortedTransactions?.length === 1 ? (
-                <span>billed to {sortedTransactions?.length} {expenseType === TransactionType.Group ? "member" : "user"}</span>
+                <span>
+                  billed to {sortedTransactions?.length}{' '}
+                  {expenseType === TransactionType.Group ? 'member' : 'user'}
+                </span>
               ) : sortedTransactions?.length === 2 ? (
-                <span>Split between {sortedTransactions?.length} {expenseType === TransactionType.Group ? "members" : "users"}</span>
+                <span>
+                  Split between {sortedTransactions?.length}{' '}
+                  {expenseType === TransactionType.Group ? 'members' : 'users'}
+                </span>
               ) : (
-                <span> Split among {sortedTransactions?.length} {expenseType === TransactionType.Group ? "members" : "users"}</span>
+                <span>
+                  {' '}
+                  Split among {sortedTransactions?.length}{' '}
+                  {expenseType === TransactionType.Group ? 'members' : 'users'}
+                </span>
               )}
             </div>
           ) : (
             <div className="info">
               {sortedTransactions?.length === 1 ? (
-                <span>Paid by {sortedTransactions?.length} {expenseType === TransactionType.Group ? "member" : "user"}</span>
+                <span>
+                  Paid by {sortedTransactions?.length}{' '}
+                  {expenseType === TransactionType.Group ? 'member' : 'user'}
+                </span>
               ) : (
-                <span>Paid by {sortedTransactions?.length} {expenseType === TransactionType.Group ? "members" : "users"}</span>
+                <span>
+                  Paid by {sortedTransactions?.length}{' '}
+                  {expenseType === TransactionType.Group ? 'members' : 'users'}
+                </span>
               )}
             </div>
           )}
           <div className="hideDetalailsButton">
-            {hide ? <IoIosArrowDown /> : <IoIosArrowUp />}{" "}
+            {hide ? <IoIosArrowDown /> : <IoIosArrowUp />}{' '}
           </div>
         </div>
 
@@ -82,14 +101,14 @@ export default function MembersInfoBox({
               return (
                 <div className="member" key={i}>
                   <span className="memberName">
-                    {(id === userMemberId || id === userId) ? (
+                    {id === userMemberId || id === userId ? (
                       <span className="you">You</span>
                     ) : (
                       participants.find((x) => x.id === id)?.name
                     )}
                   </span>
                   <span className="amount">
-                    {(id === userMemberId || id === userId) ? (
+                    {id === userMemberId || id === userId ? (
                       <span className="yourAmount">
                         {displayCurrencyAndAmount(
                           t.amount.toString(),
@@ -101,20 +120,20 @@ export default function MembersInfoBox({
                     )}
                   </span>
                   <span className="percentage">
-                    {" "}
-                    {(id === userMemberId || id === userId) ? (
+                    {' '}
+                    {id === userMemberId || id === userId ? (
                       <span className="yourPercentage">
                         {totalAmount && totalAmount.value !== 0
                           ? ((t.amount / totalAmount.value) * 100).toFixed(1)
-                          : "0.0"}
+                          : '0.0'}
                         %
                       </span>
                     ) : (
                       <span>
                         {totalAmount && totalAmount.value !== 0
                           ? ((t.amount / totalAmount.value) * 100).toFixed(1)
-                          : "0.0"}
-                        %{" "}
+                          : '0.0'}
+                        %{' '}
                       </span>
                     )}
                   </span>

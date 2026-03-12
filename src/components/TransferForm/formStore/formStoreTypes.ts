@@ -1,5 +1,4 @@
 export interface TransferState {
-
   amount: string;
   description: string;
   currencySymbol: string;
@@ -31,8 +30,15 @@ export interface TransferState {
   toggleReceiverId: (id: string) => void;
   setShowPicker: (show: boolean) => void;
 
-  setError: (key: keyof TransferState['errors'], value: string | boolean) => void;
+  setError: (
+    key: keyof TransferState['errors'],
+    value: string | boolean
+  ) => void;
   resetForm: () => void;
 
-  initForm: (currency: string, userId: string | undefined, isNonGroup: boolean) => void;
+  initForm: (
+    currency: string,
+    userId: string | undefined,
+    isNonGroup: boolean
+  ) => void;
 }
