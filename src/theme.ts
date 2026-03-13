@@ -25,6 +25,7 @@ export const theme = {
   yellowish: '##fcc504',
   yellow: '#FFEE34',
   green: '#55AF4D',
+  checkmarkGreen: '#00d084',
   deepPurple: '#8300e7',
   deepPurple2: '#ac5ee7',
   layer1: '#30323a',
@@ -41,6 +42,7 @@ export const theme = {
   buttonColor: '#3d477a',
   lightBorder: '#30323a',
   orange: '#DFA769',
+  selector: '#524667',
 
   nonInactive: '#2c3445',
   nonActive: '#0866ff',

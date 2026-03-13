@@ -35,6 +35,7 @@ export default function CreateBudget() {
   const submitBudgetErrors = useSignal<any[]>([]);
   const menu = useSignal<string | null>(null);
   const scopeMenu = useSignal<string | null>(null);
+  const scopeState = useSignal<{ personal: boolean; group: boolean; nonGroup: boolean }>({ personal: true, group: true, nonGroup: true });
   const { userInfo, timeZoneId } = useOutletContext<{
     userInfo: UserInfo;
     timeZoneId: string;
@@ -180,7 +181,7 @@ export default function CreateBudget() {
 
       <MenuAnimationBackground menu={menu} />
       {scopeMenu.value === 'scopeSelector' && (
-        <ScopeSelectionMenu menu={scopeMenu} />
+        <ScopeSelectionMenu menu={scopeMenu} scopeState={scopeState} />
       )}
       <CreateBudgetConfirmationAnimation
         menu={menu}

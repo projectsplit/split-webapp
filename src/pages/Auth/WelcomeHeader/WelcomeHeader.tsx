@@ -5,7 +5,7 @@ export default function WelcomeHeader() {
   return (
     <StyledWelcomeHeader>
       <div className="appName">
-        <Logo src={logo} alt="Company Logo" />
+        <Logo src={logo} alt="B" />
         <strong className="uqs">uqs</strong>
       </div>
     </StyledWelcomeHeader>

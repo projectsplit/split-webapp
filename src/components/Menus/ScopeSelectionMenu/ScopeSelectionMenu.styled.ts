@@ -66,12 +66,49 @@ export const StyledScopeSelectionMenu = styled.div`
     flex-direction: row;
     justify-content: space-around;
     gap: 1.5rem;
-    padding: 1.5rem; 
+    padding: 1.5rem;
 
-    .buttonWrapper {
+    .wrapperAndPill {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .pill {
+        border-color: ${({ theme }) => theme.greyOutline};
+        background-color: ${({ theme }) => theme.greyOutline};
+        border-width: 2px;
+        border-style: solid;
+        border-radius: 12px;
+        padding: 0.3rem;
+        font-size: 13px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        margin-top: 15px;
+        cursor: pointer;
+        &:hover {
+          box-shadow: 0 0 3px rgba(212, 212, 212, 0.3);
+        }
+      }
+      .pill.open {
+        box-shadow: 0 0 3px rgba(212, 212, 212, 0.3);
+      }
+    }
+
+    .buttonWrapper,
+    .groupsButtonWrapper {
       position: relative;
       height: 100px;
       width: 100px;
+
+      .checkIcon {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        font-size: 22px;
+        color: ${({ theme }) => theme.checkmarkGreen};;
+        background-color: ${({ theme }) => theme.layer2};
+        border-radius: 50%;
+        z-index: 2;
+      }
 
       .button {
         position: absolute;
@@ -114,8 +151,8 @@ export const StyledScopeSelectionMenu = styled.div`
           text-align: center;
           color: ${({ theme }) => theme.whiteText};
           display: flex;
-          justify-content: center; 
-          align-items: center; 
+          justify-content: center;
+          align-items: center;
           width: 100%;
         }
       }

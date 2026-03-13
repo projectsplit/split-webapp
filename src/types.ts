@@ -831,3 +831,9 @@ export enum Mode {
   Group = 1,
   NonGroup = 2,
 }
+
+export enum ScopeState {
+  Personal = 0,
+  Group = 1,
+  NonGroup = 2,
+}
