@@ -49,7 +49,7 @@ export const NavigateToExpenseConfirmation = ({
       header={'Confirmation'}
     >
       <div>
-        {`You will be navigated to the ${selectedExpense.value?.transactionType === TransactionType.Group ? 'group' : 'non groups'} expense page. Proceed?`}
+        {`You will be navigated to the ${selectedExpense.value?.transactionType === TransactionType.Group ? 'group' : 'non group'} expenses page. Proceed?`}
       </div>
     </Confirmation>
   );
