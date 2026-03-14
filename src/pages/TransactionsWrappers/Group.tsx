@@ -80,11 +80,13 @@ export default function Group() {
   const { data: group, isFetching, isError, error } = useGroup(groupid);
 
   useEffect(() => {
-    groupIsArchived.value = group?.isArchived || false;
+    if (!isFetching) {
+      groupIsArchived.value = group?.isArchived || false;
+    }
     return () => {
       groupIsArchived.value = false;
     };
-  }, [group, groupIsArchived.value]);
+  }, [group, isFetching, groupIsArchived.value]);
 
   useEffect(() => {
     topMenuTitle.value = group?.name || '';

@@ -23,13 +23,23 @@ export default function ConfirmArchiveGroup({
     menu
   );
 
+  // const handleConfirm = () => {
+  //   archiveGroup(true, {
+  //     onSuccess: () => {
+  //       if (navigateToGroups) {
+  //         openGroupOptionsMenu.value = false;
+  //         navigate('/shared');
+  //         activeGroupCatAsState.value = 'Archived';
+  //       }
+  //     },
+  //   });
+  // };
   const handleConfirm = () => {
     archiveGroup(true);
     if (navigateToGroups && isPending === false) {
       openGroupOptionsMenu.value = false;
       activeGroupCatAsState.value = 'Archived';
-
-      navigate('/shared');
+      // navigate('/shared');
     }
   };
 

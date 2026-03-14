@@ -9,7 +9,12 @@ export const useGetGroupsTotalAmounts = (
   activeGroupCatAsState: Signal<string>
 ) => {
   return useInfiniteQuery({
-    queryKey: ['shared', activeGroupCatAsState.value.toLowerCase(), keyword],
+    queryKey: [
+      'shared',
+      activeGroupCatAsState.value.toLowerCase(),
+      keyword,
+      pageSize,
+    ],
     queryFn: ({ pageParam: next }) =>
       getGroupsTotalAmounts(
         pageSize,
@@ -19,7 +24,7 @@ export const useGetGroupsTotalAmounts = (
       ),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: '',
-    staleTime: 0,
+    staleTime: Infinity,
     enabled: activeGroupCatAsState.value !== 'NonGroup',
   });
 };
@@ -30,6 +35,7 @@ const getGroupsTotalAmounts = async (
   next: string,
   isArchived: boolean
 ): Promise<GroupsTotalAmountsResponse> => {
+  console.log('RAN');
   const params = { pageSize, next, isArchived, keyword };
   const response = await apiClient.get<GroupsTotalAmountsResponse>(
     '/groups/details',

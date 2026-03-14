@@ -9,14 +9,12 @@ export function useGroupsList(
 ) {
   const isGroupsMode = activeGroupCatAsState.value !== 'NonGroup';
 
-  const query = useGetGroupsTotalAmounts(
-    pageSize,
-    debouncedKeyword,
-    activeGroupCatAsState
-  );
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    query;
+    useGetGroupsTotalAmounts(
+      pageSize,
+      debouncedKeyword,
+      activeGroupCatAsState
+    );
 
   const groups = data?.pages.flatMap((p) => p.groups) ?? [];
 
