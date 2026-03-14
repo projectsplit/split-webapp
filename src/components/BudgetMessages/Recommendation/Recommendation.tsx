@@ -11,7 +11,7 @@ export default function Recommendation({
   style,
   currency,
   closeButton,
-  budgetType,
+  budgetFrequency,
 }: RecommendationMessageProps) {
   const displayedDays = (days: string) => {
     const days2number = parseFloat(days);
@@ -43,7 +43,7 @@ export default function Recommendation({
               <strong className="amount">
                 {displayCurrencyAndAmount(offBudgetAmount, currency)}
               </strong>{' '}
-              at the end of the {budgetType === 1 ? 'month' : 'week'}.
+              at the end of the {budgetFrequency === 1 ? 'month' : 'week'}.
             </div>
           </div>
         </div>

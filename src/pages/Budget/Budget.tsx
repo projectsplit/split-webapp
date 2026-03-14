@@ -14,7 +14,7 @@ export default function Budget() {
       averageSpentPerDay: '10',
       goal: '1300',
       currency: 'USD',
-      budgetType: 1,
+      budgetFrequency: 1,
       startDate: '0001-01-01T00:00:00',
       endDate: '0001-01-01T00:00:00',
     }),

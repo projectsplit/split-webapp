@@ -415,7 +415,7 @@ export type BudgetInfoResponse = {
   totalAmountSpent?: string;
   goal?: string;
   currency?: string;
-  budgetType?: Frequency;
+  budgetFrequency?: Frequency;
   startDate?: any;
   endDate?: any;
 };
@@ -777,8 +777,10 @@ export type GetTotalLentTotalBorrowedResponse = {
 export type CreateBudgetRequest = {
   amount: string;
   currency: string;
-  budgetType: Frequency;
-  day: string | null;
+  frequency: Frequency;
+  scope: BudgetScope;
+  targetGroupIds: string[];
+  commencementDay: string | null;
   startDate?: string;
   endDate?: string;
 };
@@ -832,8 +834,8 @@ export enum Mode {
   NonGroup = 2,
 }
 
-export enum ScopeState {
-  Personal = 0,
-  Group = 1,
+export enum BudgetScope {
+  Personal = 1,
   NonGroup = 2,
+  Group = 4,
 }

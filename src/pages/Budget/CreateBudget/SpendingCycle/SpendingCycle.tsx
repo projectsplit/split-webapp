@@ -13,7 +13,7 @@ import CustomDateCalendar from '../../CustomDateCalendar/CustomDateCalendar';
 export default function SpendingCycle({
   submitBudgetErrors,
   calendarDay,
-  budgettype,
+  budgetFrequency,
   menu,
   isStale,
   openCalendar,
@@ -33,11 +33,11 @@ export default function SpendingCycle({
       : [29, 30, 31, '', '', '', '']
   );
 
-  const calendarTypeHandler = (budgetType: Frequency) =>
+  const calendarTypeHandler = (frequency: Frequency) =>
     calendarTypeHandlerFn(
-      budgetType,
+      frequency,
       calendarDay,
-      budgettype,
+      budgetFrequency,
       startDate,
       endDate,
       openCustomDateCalendar,
@@ -49,7 +49,7 @@ export default function SpendingCycle({
 
   React.useEffect(() => {
     if (
-      budgettype.value === Frequency.Custom &&
+      budgetFrequency.value === Frequency.Custom &&
       startDate.value !== '' &&
       endDate.value === '' &&
       !openCustomDateCalendar.value
@@ -62,7 +62,7 @@ export default function SpendingCycle({
   return (
     <StyledSpendingCycle>
       <div className="spendingCycleHeader">
-        <div className="prompt">Select your spending cycle</div>
+        <div className="prompt">Spending cycle</div>
         <IonIcon
           onClick={() => (menu.value = 'infoBox')}
           name="information-circle-outline"
@@ -71,7 +71,7 @@ export default function SpendingCycle({
       </div>
       <CalendarAndErrorsWrapper
         openCalendar={openCalendar}
-        budgettype={budgettype}
+        budgetFrequency={budgetFrequency}
         calendarDay={calendarDay}
         submitBudgetErrors={submitBudgetErrors}
         startDate={startDate}
@@ -86,7 +86,7 @@ export default function SpendingCycle({
               onClick={() => {
                 calendarTypeHandler(Frequency.Monthly);
               }}
-              isactive={budgettype.value === Frequency.Monthly}
+              isactive={budgetFrequency.value === Frequency.Monthly}
             >
               Monthly
             </CalendarOptionsButton>
@@ -94,7 +94,7 @@ export default function SpendingCycle({
               onClick={() => {
                 calendarTypeHandler(Frequency.Weekly);
               }}
-              isactive={budgettype.value === Frequency.Weekly}
+              isactive={budgetFrequency.value === Frequency.Weekly}
             >
               Weekly
             </CalendarOptionsButton>
@@ -102,7 +102,7 @@ export default function SpendingCycle({
               onClick={() => {
                 calendarTypeHandler(Frequency.Custom);
               }}
-              isactive={budgettype.value === Frequency.Custom}
+              isactive={budgetFrequency.value === Frequency.Custom}
             >
               Custom
             </CalendarOptionsButton>
@@ -110,17 +110,19 @@ export default function SpendingCycle({
         )}
       </div>
 
-      {openCalendar.value && budgettype.value !== Frequency.Custom && (
+      {openCalendar.value && budgetFrequency.value !== Frequency.Custom && (
         <Calendar
           // setCalendarDay={setCalendarDay}
-          budgettype={budgettype}
+          budgetFrequency={budgetFrequency}
           calendarDay={calendarDay}
         >
-          {budgettype.value === Frequency.Monthly ? monthDaysArray : daysArray}
+          {budgetFrequency.value === Frequency.Monthly
+            ? monthDaysArray
+            : daysArray}
         </Calendar>
       )}
       {openCustomDateCalendar.value &&
-        budgettype.value === Frequency.Custom && (
+        budgetFrequency.value === Frequency.Custom && (
           <CustomDateCalendar
             calendarIsOpen={openCustomDateCalendar}
             datePeriodClicked={calendarDay}

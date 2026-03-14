@@ -9,7 +9,7 @@ export default function ReceivedMoreThanSpentMessage({
   style,
   currency,
   closeButton,
-  budgetType,
+  budgetFrequency,
 }: ReceivedMoreThanSpentMessageProps) {
   const negativeAmountToPositive = (parseFloat(amount) * -1).toString();
 
@@ -26,7 +26,7 @@ export default function ReceivedMoreThanSpentMessage({
           <div className="paragraphs">
             <div className="firstParagraph">
               You have received more funds than you have spent this{' '}
-              {budgetType === 1 ? 'month' : 'week'}.
+              {budgetFrequency === 1 ? 'month' : 'week'}.
             </div>
             <div className="secondParagraph">
               The total amount received in excess of your expenses is{' '}

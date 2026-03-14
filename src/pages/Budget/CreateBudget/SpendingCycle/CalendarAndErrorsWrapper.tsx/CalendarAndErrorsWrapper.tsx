@@ -7,7 +7,7 @@ import { getWeekday } from '@/helpers/getWeekDay';
 
 export const CalendarAndErrorsWrapper = ({
   openCalendar,
-  budgettype,
+  budgetFrequency,
   calendarDay,
   submitBudgetErrors,
   startDate,
@@ -33,11 +33,14 @@ export const CalendarAndErrorsWrapper = ({
           openCalendar.value = !openCalendar.value;
         }}
         open={openCalendar.value}
-        inputError={submitBudgetErrors.value.find(
-          (item) => item.field === 'Day' || item.field === 'BudgetType'
-        )}
+        inputError={
+          Array.isArray(submitBudgetErrors.value) &&
+          submitBudgetErrors.value.find(
+            (item) => item.field === 'Day' || item.field === 'budgetFrequency'
+          )
+        }
       >
-        {budgettype.value === Frequency.Custom ? (
+        {budgetFrequency.value === Frequency.Custom ? (
           !startDate.value ? (
             <div
               className="prompt"
@@ -99,12 +102,12 @@ export const CalendarAndErrorsWrapper = ({
             </div>
           )
         ) : calendarDay.value === '' ? (
-          budgettype.value === Frequency.Monthly ? (
+          budgetFrequency.value === Frequency.Monthly ? (
             'Monthly'
           ) : (
             'Weekly'
           )
-        ) : budgettype.value === Frequency.Monthly ? (
+        ) : budgetFrequency.value === Frequency.Monthly ? (
           <div className="monthlyPropmt">
             Monthly on the {calendarDay.value}{' '}
             <sup className="sup">{getOrdinalSuffix(calendarDay.value)}</sup>
@@ -113,17 +116,19 @@ export const CalendarAndErrorsWrapper = ({
           <>Weekly on {getWeekday(getDayNumber(calendarDay.value))}</>
         )}
       </SpendingCycleSelector>
-      {submitBudgetErrors.value.find(
-        (item) => item.field === 'Day' || item.field === 'BudgetType'
-      ) && (
-        <span className="errorMsg">
-          {
-            submitBudgetErrors.value.find(
-              (item) => item.field === 'Day' || item.field === 'BudgetType'
-            ).errorMessage
-          }
-        </span>
-      )}
+      {Array.isArray(submitBudgetErrors.value) &&
+        submitBudgetErrors.value.find(
+          (item) => item.field === 'Day' || item.field === 'budgetFrequency'
+        ) && (
+          <span className="errorMsg">
+            {
+              submitBudgetErrors.value.find(
+                (item) =>
+                  item.field === 'Day' || item.field === 'budgetFrequency'
+              ).errorMessage
+            }
+          </span>
+        )}
     </StyledCalendarAndErrorsWrapper>
   );
 };

@@ -123,7 +123,7 @@ export const NonGroupExpenseUsersMenu = ({
       nonGroupUsers.value = []; //TODO need to only allow current user in
       const existingGroup = userGroups?.pages
         .flatMap((x) => x.groups)
-        .find((x) => x.id === groupId);
+        .find((x) => x.id === groupId && !x.isArchived);
 
       if (!existingGroup) return;
       ((fromHomeGroup.value = {
@@ -167,7 +167,7 @@ export const NonGroupExpenseUsersMenu = ({
     return (
       userGroups?.pages
         .flatMap((x) => x.groups)
-        .filter((x) => fromHomeGroup.value?.id !== x.id) ?? []
+        .filter((x) => fromHomeGroup.value?.id !== x.id && !x.isArchived) ?? []
     );
   }, [userGroups, fromHomeGroup.value]);
 

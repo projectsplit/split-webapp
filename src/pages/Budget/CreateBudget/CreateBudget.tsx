@@ -30,12 +30,18 @@ export default function CreateBudget() {
   const endDate = useSignal<string>('');
   const pickingTarget = useSignal<'start' | 'end' | null>(null);
   const calendarDay = useSignal<string>('');
-  const budgettype = useSignal<Frequency>(Frequency.Monthly);
+  const budgetFrequency = useSignal<Frequency>(Frequency.Monthly);
   const hasSwitchedBudgetType = useSignal<boolean>(false);
   const submitBudgetErrors = useSignal<any[]>([]);
   const menu = useSignal<string | null>(null);
   const scopeMenu = useSignal<string | null>(null);
-  const scopeState = useSignal<{ personal: boolean; group: boolean; nonGroup: boolean }>({ personal: true, group: true, nonGroup: true });
+  const scopeState = useSignal<{
+    personal: boolean;
+    group: boolean;
+    nonGroup: boolean;
+  }>({ personal: true, group: true, nonGroup: true });
+  const targetGroupIds = useSignal<string[]>([]);
+  const allGroupsSelected = useSignal<boolean>(true);
   const { userInfo, timeZoneId } = useOutletContext<{
     userInfo: UserInfo;
     timeZoneId: string;
@@ -45,7 +51,11 @@ export default function CreateBudget() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const budgetInfoQueryKey = ['budget'];
-  const spendingInfoQueryKey = ['spending', budgettype.value, currencySymbol];
+  const spendingInfoQueryKey = [
+    'spending',
+    budgetFrequency.value,
+    currencySymbol,
+  ];
 
   const createBudget = useCreateBudget(navigate, submitBudgetErrors);
 
@@ -56,7 +66,7 @@ export default function CreateBudget() {
   }, [userInfo]);
 
   // const { data, isFetching, isStale } = useSpendingInfo(
-  //   budgettype.value,
+  //   budgetFrequency.value,
   //   currencySymbol
   // );
 
@@ -77,7 +87,7 @@ export default function CreateBudget() {
 
   const submitBudget = () =>
     submitBudgetFn(
-      budgettype,
+      budgetFrequency,
       createBudget,
       amount,
       currencySymbol,
@@ -91,7 +101,10 @@ export default function CreateBudget() {
       menu,
       setAmount,
       queryClient,
-      budgetInfoQueryKey
+      budgetInfoQueryKey,
+      scopeState,
+      allGroupsSelected,
+      targetGroupIds
     );
 
   const querydata = queryClient.getQueryData(
@@ -110,10 +123,10 @@ export default function CreateBudget() {
     //setCurrency(currency);
     setCurrencySymbol(curr);
     queryClient.invalidateQueries({
-      queryKey: ['spending', budgettype, curr],
+      queryKey: ['spending', budgetFrequency, curr],
       exact: false,
     });
-    queryClient.getQueryData(['spending', budgettype, curr]);
+    queryClient.getQueryData(['spending', budgetFrequency, curr]);
     menu.value = null;
   };
 
@@ -135,7 +148,7 @@ export default function CreateBudget() {
       <SpendingCycle
         submitBudgetErrors={submitBudgetErrors}
         calendarDay={calendarDay}
-        budgettype={budgettype}
+        budgetFrequency={budgetFrequency}
         menu={menu}
         isStale={isStale}
         openCalendar={openCalendar}
@@ -146,7 +159,12 @@ export default function CreateBudget() {
         endDate={endDate}
         pickingTarget={pickingTarget}
       />
-      <ScopeSelector onClick={() => (scopeMenu.value = 'scopeSelector')} />
+      <ScopeSelector
+        onClick={() => (scopeMenu.value = 'scopeSelector')}
+        scopeState={scopeState}
+        targetGroupIds={targetGroupIds}
+        allGroupsSelected={allGroupsSelected}
+      />
       {isFetching ? (
         <></>
       ) : (
@@ -158,7 +176,7 @@ export default function CreateBudget() {
                 data?.totalAmountSpent,
                 querydata?.currency
               )}{' '}
-              this {budgettype.value === 1 ? 'month' : 'week'}
+              this {budgetFrequency.value === 1 ? 'month' : 'week'}
             </div>
           </div>
         )
@@ -168,11 +186,7 @@ export default function CreateBudget() {
         <MyButton
           fontSize="16"
           onClick={() => {
-            if (querydata.budgetSubmitted) {
-              menu.value = 'createBudgetConfirmation';
-            } else {
-              submitBudget();
-            }
+            submitBudget();
           }}
         >
           Submit Budget
@@ -181,7 +195,12 @@ export default function CreateBudget() {
 
       <MenuAnimationBackground menu={menu} />
       {scopeMenu.value === 'scopeSelector' && (
-        <ScopeSelectionMenu menu={scopeMenu} scopeState={scopeState} />
+        <ScopeSelectionMenu
+          menu={scopeMenu}
+          scopeState={scopeState}
+          targetGroupIds={targetGroupIds}
+          allGroupsSelected={allGroupsSelected}
+        />
       )}
       <CreateBudgetConfirmationAnimation
         menu={menu}

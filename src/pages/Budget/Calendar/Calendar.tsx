@@ -4,7 +4,7 @@ import { CalendarProps } from '../../../interfaces';
 
 export default function Calendar({
   children,
-  budgettype,
+  budgetFrequency,
   calendarDay,
 }: CalendarProps) {
   const handleElementClick = (day: string) => {
@@ -12,8 +12,8 @@ export default function Calendar({
   };
 
   return (
-    <StyledCalendar as="div" budgettype={budgettype}>
-      {budgettype.value == Frequency.Monthly
+    <StyledCalendar as="div" budgetFrequency={budgetFrequency}>
+      {budgetFrequency.value == Frequency.Monthly
         ? children.map((row: any, rowIndex: any) => (
             <div key={rowIndex} className="calendar-row">
               {row.map((day: string, dayIndex: number) => (

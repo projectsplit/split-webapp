@@ -3,9 +3,9 @@ import { Signal } from '@preact/signals-react';
 import { QueryClient } from '@tanstack/react-query';
 
 export const calendarTypeHandlerFn = (
-  budgetType: Frequency,
+  frequency: Frequency,
   calendarDay: Signal<string>,
-  budgettype: Signal<Frequency>,
+  budgetFrequency: Signal<Frequency>,
   startDate: Signal<string>,
   endDate: Signal<string>,
   openCustomDateCalendar: Signal<boolean>,
@@ -14,14 +14,14 @@ export const calendarTypeHandlerFn = (
   queryClient: QueryClient,
   isStale: boolean
 ) => {
-  if (calendarDay.value !== '' && budgetType === budgettype.value) {
-    budgettype.value = budgetType;
+  if (calendarDay.value !== '' && frequency === budgetFrequency.value) {
+    budgetFrequency.value = frequency;
   } else {
-    budgettype.value = budgetType;
+    budgetFrequency.value = frequency;
     calendarDay.value = '';
   }
 
-  if (budgetType === Frequency.Custom) {
+  if (frequency === Frequency.Custom) {
     if (startDate.value === '' && endDate.value === '') {
       openCustomDateCalendar.value = true;
       pickingTarget.value = 'start';

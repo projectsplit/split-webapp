@@ -4,6 +4,8 @@ import { StyledBudgetScopeGroupsMenu } from './BudgetScopeGroupsMenu.styled';
 import { Signal } from '@preact/signals-react';
 import { TiGroup } from 'react-icons/ti';
 import { Group } from '@/types';
+import { FaCheckCircle } from 'react-icons/fa';
+import { IoIosArchive } from 'react-icons/io';
 
 interface BudgetScopeGroupsMenuProps {
   targetGroupIds: Signal<string[]>;
@@ -12,7 +14,6 @@ interface BudgetScopeGroupsMenuProps {
   flattenedGroups: Group[] | undefined;
   allGroupsSelected: Signal<boolean>;
   hasNextGroupsPage: boolean;
-  
 }
 
 export const BudgetScopeGroupsMenu = ({
@@ -35,8 +36,6 @@ export const BudgetScopeGroupsMenu = ({
       allGroupsSelected.value = false;
     }
   }, [keyword]);
-  console.log(targetGroupIds.value);
-  console.log(flattenedGroups);
 
   const handleSuggestedGroupClick = useCallback(
     (groupId: string) => {
@@ -55,7 +54,7 @@ export const BudgetScopeGroupsMenu = ({
   );
 
   return (
-    <StyledBudgetScopeGroupsMenu height="49vh">
+    <StyledBudgetScopeGroupsMenu maxHeight="49vh">
       <div className="headerAndSearchbar">
         <input
           className="searchBar"
@@ -88,7 +87,19 @@ export const BudgetScopeGroupsMenu = ({
             onClick={() => handleSuggestedGroupClick(group.id)}
           >
             <TiGroup className="groupIcon" />
-            <div className="groupName">{group.name}</div>
+            <div className="groupNameAndArchivedStatus">
+              <span>{group.name} </span>
+              {group.isArchived && (
+                <div className="archivedText">
+                  {' '}
+                  <IoIosArchive className="archived" />
+                </div>
+              )}
+            </div>
+            {(targetGroupIds.value.includes(group.id) ||
+              allGroupsSelected.value) && (
+              <FaCheckCircle className="checkIcon" />
+            )}
           </div>
         ))}{' '}
       </div>

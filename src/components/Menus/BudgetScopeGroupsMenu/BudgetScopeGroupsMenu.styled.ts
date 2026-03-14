@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
-export const StyledBudgetScopeGroupsMenu = styled.div<{ height: string }>`
+export const StyledBudgetScopeGroupsMenu = styled.div<{ maxHeight?: string }>`
   overflow: auto;
   padding: 0;
   margin-left: 10px;
   margin-right: 10px;
   background-color: ${({ theme }) => theme.greyOutline};
   border-radius: 12px 12px 12px 12px;
-  height: ${(props) => props.height};
+  max-height: ${(props) => props.maxHeight || '49vh'};
 
   .headerAndSearchbar {
     display: flex;
@@ -44,9 +44,9 @@ export const StyledBudgetScopeGroupsMenu = styled.div<{ height: string }>`
     border-color: grey;
   }
   .selectAll.selected {
-    background-color: white;
+    background-color: ${({ theme }) => theme.checkmarkGreen};
     color: black;
-    border-color: white;
+    border-color: black;
   }
   .groupSection {
     display: flex;
@@ -62,11 +62,27 @@ export const StyledBudgetScopeGroupsMenu = styled.div<{ height: string }>`
       margin-left: 10px;
       margin-right: 10px;
       align-items: center;
+      padding-bottom: 10px;
+      .groupNameAndArchivedStatus {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        .archived {
+          margin-top: 3px;
+          margin-left:4px;
+          display: flex;
+          color: ${({ theme }) => theme.archivedActive};
+        }
+      }
     }
     .groups.selected {
-      background-color: white;
-      color: black;
-      border-color: white;
+      background-color: transparent;
+    }
+    .checkIcon {
+      margin-left: auto;
+      color: ${({ theme }) => theme.checkmarkGreen};
+      font-size: 20px;
     }
   }
   .noResults {

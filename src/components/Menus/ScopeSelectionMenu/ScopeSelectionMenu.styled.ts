@@ -12,7 +12,7 @@ export const StyledScopeSelectionMenu = styled.div`
   overflow: auto;
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.layer2};
-  /* z-index: 1; */
+  z-index: 1;
   display: flex;
   flex-direction: column;
   .fixed-header-container {
@@ -104,7 +104,7 @@ export const StyledScopeSelectionMenu = styled.div`
         top: -8px;
         right: -8px;
         font-size: 22px;
-        color: ${({ theme }) => theme.checkmarkGreen};;
+        color: ${({ theme }) => theme.checkmarkGreen};
         background-color: ${({ theme }) => theme.layer2};
         border-radius: 50%;
         z-index: 2;
@@ -156,6 +156,13 @@ export const StyledScopeSelectionMenu = styled.div`
           width: 100%;
         }
       }
+      .button.active {
+        box-shadow: 0 0 6px ${({ theme }) => theme.checkmarkGreen};
+      }
     }
+  }
+  .footer{
+    display:flex ;
+    flex:1;
   }
 `;

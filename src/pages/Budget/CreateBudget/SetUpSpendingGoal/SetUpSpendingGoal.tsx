@@ -13,28 +13,32 @@ export default function SetUpSpendingGoal({
 }: SetUpSpendingGoalProps) {
   return (
     <StyledSetUpSpendingGoal>
-      <div className="prompt">Set up your spending cap or goal</div>
+      <div className="prompt">Spending goal</div>
       <div className="inputAndErrorsWrapper">
         <InputMonetary
           currencyMenu={menu}
           value={displayedAmount.value}
           onChange={onChange}
           currency={currency}
-          $inputError={submitBudgetErrors.value.find(
-            (item) => item.field === 'Amount' || item.field === 'Currency'
-          )}
+          $inputError={
+            Array.isArray(submitBudgetErrors.value) &&
+            submitBudgetErrors.value.find(
+              (item) => item.field === 'Amount' || item.field === 'Currency'
+            )
+          }
         />
-        {submitBudgetErrors.value.find(
-          (item) => item.field === 'Amount' || item.field === 'Currency'
-        ) && (
-          <span className="errorMsg">
-            {
-              submitBudgetErrors.value.find(
-                (item) => item.field === 'Amount' || item.field === 'Currency'
-              ).errorMessage
-            }
-          </span>
-        )}
+        {Array.isArray(submitBudgetErrors.value) &&
+          submitBudgetErrors.value.find(
+            (item) => item.field === 'Amount' || item.field === 'Currency'
+          ) && (
+            <span className="errorMsg">
+              {
+                submitBudgetErrors.value.find(
+                  (item) => item.field === 'Amount' || item.field === 'Currency'
+                ).errorMessage
+              }
+            </span>
+          )}
       </div>
     </StyledSetUpSpendingGoal>
   );

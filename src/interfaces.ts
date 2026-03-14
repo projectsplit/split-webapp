@@ -261,7 +261,7 @@ export interface RecommendationMessageProps {
   offBudgetAmount: string;
   style?: CSSProperties;
   closeButton: boolean;
-  budgetType?: Frequency;
+  budgetFrequency?: Frequency;
 }
 export interface BottomMainMenuProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -279,7 +279,7 @@ export interface OverspentMessageProps {
   overspentBy: string;
   style?: CSSProperties;
   closeButton: boolean;
-  budgetType?: Frequency;
+  budgetFrequency?: Frequency;
 }
 
 export interface OnTrackMessageProps {
@@ -288,7 +288,7 @@ export interface OnTrackMessageProps {
   amount: string;
   style?: CSSProperties;
   closeButton: boolean;
-  budgetType?: Frequency;
+  budgetFrequency?: Frequency;
 }
 
 export interface SimpleOnTrackMessageProps {
@@ -1264,7 +1264,7 @@ export interface ManageBudgetAnimationProps {
 
 export interface CalendarProps {
   children: any;
-  budgettype: Signal<Frequency>;
+  budgetFrequency: Signal<Frequency>;
   calendarDay: Signal<string>;
 }
 
@@ -1289,7 +1289,7 @@ export interface SpendingCycleProps {
   menu: Signal<React.SetStateAction<string | null>>;
   submitBudgetErrors: Signal<any[]>;
   calendarDay: Signal<string>;
-  budgettype: Signal<Frequency>;
+  budgetFrequency: Signal<Frequency>;
   isStale: boolean;
   openCalendar: Signal<boolean>;
   hasSwitchedBudgetType: Signal<boolean>;
@@ -1410,7 +1410,7 @@ export interface DetailedSharedExpenseTextProps {
 
 export interface CalendarAndErrorsWrapperProps {
   openCalendar: Signal<boolean>;
-  budgettype: Signal<Frequency>;
+  budgetFrequency: Signal<Frequency>;
   calendarDay: Signal<string>;
   submitBudgetErrors: Signal<any[]>;
   startDate: Signal<string>;

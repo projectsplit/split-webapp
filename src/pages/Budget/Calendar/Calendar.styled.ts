@@ -3,13 +3,13 @@ import { Frequency } from '../../../types';
 import { Signal } from '@preact/signals-react';
 
 interface StyledCalendarProps {
-  budgettype: Signal<Frequency>;
+  budgetFrequency: Signal<Frequency>;
 }
 
 export const StyledCalendar = styled.div<StyledCalendarProps>`
   display: flex;
   flex-direction: ${(props) =>
-    props.budgettype.value === Frequency.Monthly ? 'column' : 'row'};
+    props.budgetFrequency.value === Frequency.Monthly ? 'column' : 'row'};
   padding: 1rem 0.8rem;
   border-radius: 6px;
   gap: 10px;

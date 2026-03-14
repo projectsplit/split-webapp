@@ -14,7 +14,8 @@ export const useCreateBudget = (
     mutationKey: ['budget', 'create'],
     mutationFn: createBudget,
     onError: (error) => {
-      submitBudgetErrors.value = error.response.data;
+      const errorData = error.response?.data;
+      submitBudgetErrors.value = Array.isArray(errorData) ? errorData : [];
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['budget'], exact: false });
@@ -24,8 +25,9 @@ export const useCreateBudget = (
 };
 
 const createBudget = async (request: CreateBudgetRequest) => {
+  console.log(request)
   const response = await apiClient.post<CreateBudgetRequest>(
-    `/budget/create`,
+    `/budgets/create`,
     request
   );
   return response.data;

@@ -28,7 +28,7 @@ export const BudgetInfoMessage = (
     data.remainingDays !== undefined &&
     data.goal !== undefined &&
     data.averageSpentPerDay !== undefined &&
-    data.budgetType !== undefined
+    data.budgetFrequency !== undefined
   ) {
     const remainingDays = parseFloat(data.remainingDays);
     const averageSpentPerDay = parseFloat(data.averageSpentPerDay);
@@ -58,7 +58,7 @@ export const BudgetInfoMessage = (
           amount={totalAmountSpent.toString()}
           currency={data.currency}
           closeButton={closeButton}
-          budgetType={data.budgetType}
+          budgetFrequency={data.budgetFrequency}
           style={{
             backgroundColor: theme?.layer2,
             borderColor: theme?.layer2,
@@ -80,7 +80,7 @@ export const BudgetInfoMessage = (
           overspentBy={overspentBy}
           currency={data.currency}
           closeButton={closeButton}
-          budgetType={data.budgetType}
+          budgetFrequency={data.budgetFrequency}
           style={{
             backgroundColor: theme?.layer2,
             borderColor: theme?.layer2,
@@ -113,7 +113,7 @@ export const BudgetInfoMessage = (
             reduceAmount={reduceByRecommendation}
             currency={data.currency}
             closeButton={closeButton}
-            budgetType={data.budgetType}
+            budgetFrequency={data.budgetFrequency}
             style={{
               backgroundColor: theme?.layer2,
               borderColor: theme?.layer2,
@@ -132,7 +132,7 @@ export const BudgetInfoMessage = (
             amount={onTargetAmount}
             currency={data.currency}
             closeButton={closeButton}
-            budgetType={data.budgetType}
+            budgetFrequency={data.budgetFrequency}
             style={{
               backgroundColor: theme?.layer2,
               borderColor: theme?.layer2,

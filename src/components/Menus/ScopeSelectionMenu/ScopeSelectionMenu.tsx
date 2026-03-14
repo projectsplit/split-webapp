@@ -13,6 +13,8 @@ import { FaCheckCircle } from 'react-icons/fa';
 export const ScopeSelectionMenu = ({
   menu,
   scopeState,
+  targetGroupIds,
+  allGroupsSelected
 }: ScopeSelectionMenuProps) => {
   const [openGroups, setOpenGroups] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>('');
@@ -20,30 +22,28 @@ export const ScopeSelectionMenu = ({
     keyword.length > 1 ? keyword : '',
     300
   );
-  const targetGroupIds = useSignal<string[]>([]);
-  const allGroupsSelected = useSignal<boolean>(true);
 
   const groupButtonRef = useRef<HTMLDivElement>(null);
   const scopeRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
   const pageSize = 10;
 
   const {
     data: userGroups,
-    fetchNextPage: fetchNextGroupsPage,
     hasNextPage: hasNextGroupsPage,
-    isFetchingNextPage: isFetchingNextGroupsPage,
   } = useSearchGroupsByName(debouncedKeyword, pageSize);
 
   const flattenedGroups = userGroups?.pages.flatMap((x) => x.groups);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        scopeRef.current &&
-        scopeRef.current.contains(event.target as Node) &&
-        groupButtonRef.current &&
-        !groupButtonRef.current.contains(event.target as Node)
-      ) {
+      const clickedFooter = footerRef.current?.contains(event.target as Node);
+      const clickedScope = scopeRef.current?.contains(event.target as Node);
+      const clickedGroupBtn = groupButtonRef.current?.contains(
+        event.target as Node
+      );
+
+      if (clickedFooter || (clickedScope && !clickedGroupBtn)) {
         setOpenGroups(false);
       }
     };
@@ -70,7 +70,7 @@ export const ScopeSelectionMenu = ({
       <div className="scopeOptions" ref={scopeRef}>
         <div className="buttonWrapper">
           <div
-            className="button"
+            className={`button ${scopeState.value.nonGroup ? 'active' : ''}`}
             onClick={() => {
               scopeState.value = {
                 ...scopeState.value,
@@ -90,7 +90,7 @@ export const ScopeSelectionMenu = ({
         <div className="wrapperAndPill">
           <div className="groupsButtonWrapper ">
             <div
-              className="button"
+              className={`button ${scopeState.value.group ? 'active' : ''}`}
               onClick={() => {
                 scopeState.value = {
                   ...scopeState.value,
@@ -100,7 +100,7 @@ export const ScopeSelectionMenu = ({
             >
               <TiGroup className="groupIcon active" />
               <div className="text-container">
-                <span className="descr">All</span>
+                <span className="descr">{allGroupsSelected.value?"All":targetGroupIds.value.length}</span>
                 <span className="descr">Groups</span>
               </div>
             </div>
@@ -117,7 +117,7 @@ export const ScopeSelectionMenu = ({
 
         <div className="buttonWrapper">
           <div
-            className="button"
+            className={`button ${scopeState.value.personal ? 'active' : ''}`}
             onClick={() => {
               scopeState.value = {
                 ...scopeState.value,
@@ -143,6 +143,7 @@ export const ScopeSelectionMenu = ({
           hasNextGroupsPage={hasNextGroupsPage}
         />
       )}
+      <div className="footer" ref={footerRef} />
     </StyledScopeSelectionMenu>
   );
 };
@@ -150,4 +151,6 @@ export const ScopeSelectionMenu = ({
 interface ScopeSelectionMenuProps {
   menu: Signal<string | null>;
   scopeState: Signal<{ personal: boolean; group: boolean; nonGroup: boolean }>;
+  targetGroupIds: Signal<string[]>;
+  allGroupsSelected: Signal<boolean>;
 }
