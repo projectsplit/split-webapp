@@ -24,7 +24,7 @@ export default function ManageBudgetMenu({ menu }: ManageBudgetMenuProps) {
         onClick={() => (menu.value = 'deleteBudgetConfirmation')}
       >
         <AiFillDelete className="icon" />
-        <div className="text">Remove Budget</div>
+        <div className="text">Delete Budget</div>
       </MyButton>
     </StyledManageBudgetMenu>
   );

@@ -26,6 +26,7 @@ export const useArchiveGroup = (
         queryKey: ['mostRecentGroup'],
         exact: false,
       });
+      await queryClient.invalidateQueries({queryKey:['searchGroupsByName'],exact:false})
       await queryClient.invalidateQueries({
         queryKey: [groupId],
         exact: false,

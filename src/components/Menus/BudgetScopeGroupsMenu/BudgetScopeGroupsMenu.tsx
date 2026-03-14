@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from 'react';
 import { StyledBudgetScopeGroupsMenu } from './BudgetScopeGroupsMenu.styled';
-
 import { Signal } from '@preact/signals-react';
 import { TiGroup } from 'react-icons/ti';
 import { Group } from '@/types';

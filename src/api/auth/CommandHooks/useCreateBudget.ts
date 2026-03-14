@@ -25,7 +25,6 @@ export const useCreateBudget = (
 };
 
 const createBudget = async (request: CreateBudgetRequest) => {
-  console.log(request)
   const response = await apiClient.post<CreateBudgetRequest>(
     `/budgets/create`,
     request
