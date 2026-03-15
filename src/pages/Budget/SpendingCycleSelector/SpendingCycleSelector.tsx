@@ -1,16 +1,15 @@
+import { forwardRef } from 'react';
 import { StyledSpendingCycleSelector } from './SpendingCycleSelector.styled';
 import { SpendingCycleSelectorProps } from '../../../interfaces';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
-export default function SpendingCycleSelector({
-  onClick,
-  error,
-  children,
-  open,
-  inputError,
-}: SpendingCycleSelectorProps) {
+const SpendingCycleSelector = forwardRef<
+  HTMLButtonElement,
+  SpendingCycleSelectorProps
+>(({ onClick, error, children, open, inputError }, ref) => {
   return (
     <StyledSpendingCycleSelector
+      ref={ref}
       error={error}
       onClick={onClick}
       open={open}
@@ -26,4 +25,6 @@ export default function SpendingCycleSelector({
       {children}
     </StyledSpendingCycleSelector>
   );
-}
+});
+
+export default SpendingCycleSelector;

@@ -14,6 +14,7 @@ export const CalendarAndErrorsWrapper = ({
   endDate,
   openCustomDateCalendar,
   pickingTarget,
+  selectorRef,
 }: CalendarAndErrorsWrapperProps) => {
   const formatDate = (date: string) => {
     if (!date) return '';
@@ -25,20 +26,20 @@ export const CalendarAndErrorsWrapper = ({
     if (index !== -1) return (index + 1).toString();
     return null;
   };
-
+  const error =
+    Array.isArray(submitBudgetErrors.value) &&
+    submitBudgetErrors.value.find(
+      (item) => item.field === 'Day' || item.field === 'budgetFrequency'
+    );
   return (
-    <StyledCalendarAndErrorsWrapper>
+    <StyledCalendarAndErrorsWrapper $inputError={error}>
       <SpendingCycleSelector
+        ref={selectorRef}
         onClick={() => {
           openCalendar.value = !openCalendar.value;
         }}
         open={openCalendar.value}
-        inputError={
-          Array.isArray(submitBudgetErrors.value) &&
-          submitBudgetErrors.value.find(
-            (item) => item.field === 'Day' || item.field === 'budgetFrequency'
-          )
-        }
+        inputError={error}
       >
         {budgetFrequency.value === Frequency.Custom ? (
           !startDate.value ? (

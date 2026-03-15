@@ -100,7 +100,6 @@ export default function TransferForm({
           actions={actions}
           fromHome={fromHome}
           nonGroupMenu={nonGroupMenu}
-          noReceiverSelected={noReceiverSelected}
         />
       ) : (
         <GroupMenu

@@ -12,7 +12,6 @@ export interface TransferState {
     idErrorMessage: string;
     isSenderError: boolean;
     isReceiverError: boolean;
-    recipientError: string;
     isSameUserError: string;
     showAmountError: boolean;
     showIdError: boolean;

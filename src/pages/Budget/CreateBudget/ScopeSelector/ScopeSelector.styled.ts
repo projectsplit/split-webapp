@@ -15,15 +15,20 @@ export const StyledScopeSelector = styled.div<{ $inputError: boolean }>`
     }
   }
   .scopeSelector {
+    border: 1px solid
+      ${({ theme, $inputError }) =>
+        $inputError ? theme.errorColor : theme.lineColor};
+    border-radius: 8px;
+
     display: flex;
     flex-direction: column;
     position: relative;
     width: 100%;
     justify-content: space-evenly;
-    border-style: ${({ $inputError }) => ($inputError ? 'solid' : 'none')};
+    /* border-style: ${({ $inputError }) => ($inputError ? 'solid' : 'none')};
     border-width: ${({ $inputError }) => ($inputError ? '1px' : '0')};
     border-color: ${({ theme, $inputError }) =>
-      $inputError ? theme.pink : 'transparent'};
+      $inputError ? theme.pink : 'transparent'}; */
 
     border-radius: 4px;
     padding: 0.8rem;

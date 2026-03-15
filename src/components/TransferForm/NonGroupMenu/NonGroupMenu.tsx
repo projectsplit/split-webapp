@@ -17,7 +17,6 @@ interface NonGroupMenuProps {
     senderName: string;
     receiverName: string;
   }>;
-  noReceiverSelected: boolean;
 }
 
 export const NonGroupMenu = ({
@@ -27,7 +26,6 @@ export const NonGroupMenu = ({
   actions,
   fromHome,
   nonGroupMenu,
-  noReceiverSelected,
 }: NonGroupMenuProps) => {
   return (
     <StyledNonGroupMenu
@@ -75,11 +73,6 @@ export const NonGroupMenu = ({
         </div>
       </div>
       <span className="errorMsg">
-        {data.errors.showAmountError &&
-        data.errors.recipientError &&
-        noReceiverSelected
-          ? data.errors.recipientError
-          : ''}
         {data.errors.showAmountError && data.errors.isSameUserError
           ? data.errors.isSameUserError
           : ''}

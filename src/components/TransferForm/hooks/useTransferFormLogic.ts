@@ -59,7 +59,11 @@ export const useTransferFormLogic = ({
 }: UseTransferFormLogicProps) => {
   const handleInputBlur = useCallback(() => {
     actions.setError('showAmountError', true);
-    amountIsValid(data.amount, (err) => actions.setError('amountError', err));
+    amountIsValid(
+      data.amount,
+      (err) => actions.setError('amountError', err),
+      (val) => actions.setError('showAmountError', val)
+    );
   }, [data.amount, actions]);
 
   const userMembers = groupMembers?.value.filter(
@@ -121,9 +125,6 @@ export const useTransferFormLogic = ({
     actions.setError('showAmountError', true);
     actions.setError('showIdError', true);
 
-    if (noReceiverSelected) {
-      actions.setError('recipientError', 'Select a recipient');
-    }
     if (isSamePerson) {
       actions.setError(
         'isSameUserError',
@@ -133,7 +134,11 @@ export const useTransferFormLogic = ({
     }
 
     if (
-      !amountIsValid(data.amount, (err) => actions.setError('amountError', err))
+      !amountIsValid(
+        data.amount,
+        (err) => actions.setError('amountError', err),
+        (val) => actions.setError('showAmountError', val)
+      )
     )
       return;
 

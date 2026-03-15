@@ -26,6 +26,8 @@ export default function SpendingCycle({
 }: SpendingCycleProps) {
   const queryClient = useQueryClient();
   const daysArray = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+  const customButtonRef = useRef<HTMLDivElement>(null);
+  const selectorRef = useRef<HTMLButtonElement>(null);
 
   const monthDaysArray = Array.from({ length: 5 }, (_, weekIndex) =>
     weekIndex < 4
@@ -78,6 +80,7 @@ export default function SpendingCycle({
         endDate={endDate}
         openCustomDateCalendar={openCustomDateCalendar}
         pickingTarget={pickingTarget}
+        selectorRef={selectorRef}
       />
       <div className="categoryButtons">
         {openCalendar.value && (
@@ -99,6 +102,7 @@ export default function SpendingCycle({
               Weekly
             </CalendarOptionsButton>
             <CalendarOptionsButton
+              ref={customButtonRef}
               onClick={() => {
                 calendarTypeHandler(Frequency.Custom);
               }}
@@ -130,6 +134,7 @@ export default function SpendingCycle({
             startDate={startDate}
             endDate={endDate}
             pickingTarget={pickingTarget}
+            excludeRefs={[customButtonRef, selectorRef]}
           />
         )}
     </StyledSpendingCycle>

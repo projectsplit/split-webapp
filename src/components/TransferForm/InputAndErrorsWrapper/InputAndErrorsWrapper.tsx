@@ -34,7 +34,6 @@ export const InputAndErrorsWrapper = ({
           actions.setError('showAmountError', false);
           actions.setError('showSamePersonError', false);
           actions.setError('isSameUserError', '');
-          actions.setError('recipientError', '');
         }}
         onBlur={handleInputBlur}
         currency={data.currencySymbol}

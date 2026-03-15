@@ -10,6 +10,7 @@ export default function CustomDateCalendar({
   startDate,
   endDate,
   pickingTarget,
+  excludeRefs,
 }: CustomDateCalendarProps) {
   const calendarRef = useRef<HTMLDivElement>(null);
   const lastClickRef = useRef<HTMLElement | null>(null);
@@ -24,6 +25,15 @@ export default function CustomDateCalendar({
   const closeCalendar = (event: MouseEvent) => {
     if (!calendarRef.current) return;
     if (calendarRef.current.contains(event.target as Node)) return;
+
+    if (excludeRefs) {
+      for (const ref of excludeRefs) {
+        if (ref.current && ref.current.contains(event.target as Node)) {
+          return;
+        }
+      }
+    }
+
     calendarIsOpen.value = false;
     pickingTarget.value = null;
   };

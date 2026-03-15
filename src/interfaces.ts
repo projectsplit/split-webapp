@@ -1038,6 +1038,7 @@ export interface CustomDateCalendarProps {
   startDate: Signal<string>;
   endDate: Signal<string>;
   pickingTarget: Signal<'start' | 'end' | null>;
+  excludeRefs?: React.RefObject<HTMLElement | null>[];
 }
 export interface SearchMenuProps {
   $contentEditableHeight: number;
@@ -1417,4 +1418,5 @@ export interface CalendarAndErrorsWrapperProps {
   endDate: Signal<string>;
   openCustomDateCalendar: Signal<boolean>;
   pickingTarget: Signal<'start' | 'end' | null>;
+  selectorRef?: React.RefObject<HTMLButtonElement>;
 }

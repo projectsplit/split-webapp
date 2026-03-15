@@ -29,7 +29,7 @@ export const useHandlers = (
       payers.some((p) => p.selected)
     ) {
       setShowAmountError(true);
-      amountIsValid(amount, setAmountError);
+      amountIsValid(amount, setAmountError, setShowAmountError);
     }
   }, [participants, payers, amount, setAmountError]);
 

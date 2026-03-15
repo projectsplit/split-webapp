@@ -5,12 +5,14 @@ export const StyledSpendingCycle = styled.div`
   flex-direction: column;
   gap: 10px;
   font-size: 16px;
+  
   .errorMsg {
     font-size: 12px;
     color: ${({ theme }) => theme.pink};
   }
   .calendarAndErrorsWrapper,
   .inputAndErrorsWrapper {
+    
     display: flex;
     flex-direction: column;
   }
