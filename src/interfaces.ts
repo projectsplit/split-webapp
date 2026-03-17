@@ -1282,8 +1282,8 @@ export interface SetUpSpendingGoalProps {
   menu: Signal<string | null>;
   displayedAmount: Signal<string>;
   currency: string;
-  submitBudgetErrors: Signal<any[]>;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  $inputError: boolean;
 }
 
 export interface SpendingCycleProps {
@@ -1299,6 +1299,7 @@ export interface SpendingCycleProps {
   startDate: Signal<string>;
   endDate: Signal<string>;
   pickingTarget: Signal<'start' | 'end' | null>;
+  $inputError: boolean;
 }
 
 export interface InfoBoxAnimationProps {
@@ -1418,5 +1419,15 @@ export interface CalendarAndErrorsWrapperProps {
   endDate: Signal<string>;
   openCustomDateCalendar: Signal<boolean>;
   pickingTarget: Signal<'start' | 'end' | null>;
+  $inputError: boolean;
   selectorRef?: React.RefObject<HTMLButtonElement>;
+
+}
+
+export interface CreateBudgetErrors {
+  amountError: string;
+  descriptionError: string;
+  spendingCycleError: string;
+  scopeError: string;
+  commencementDayError: string;
 }

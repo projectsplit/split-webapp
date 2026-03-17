@@ -1,12 +1,18 @@
 import styled from 'styled-components';
 
-export const StyledCalendarAndErrorsWrapper = styled.div<{$inputError:boolean}>`
+export const StyledCalendarAndErrorsWrapper = styled.div<{
+  $inputError: boolean;
+}>`
   display: flex;
   flex-direction: column;
   border: 1px solid
     ${({ theme, $inputError }) =>
       $inputError ? theme.errorColor : theme.lineColor};
   border-radius: 8px;
+  overflow: hidden;
+  background-color: ${({ theme }) => theme.layer2};
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
   .customPropmtPills {
     display: flex;
     flex-wrap: wrap;

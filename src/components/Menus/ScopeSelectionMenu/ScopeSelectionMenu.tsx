@@ -14,7 +14,7 @@ export const ScopeSelectionMenu = ({
   menu,
   scopeState,
   targetGroupIds,
-  allGroupsSelected
+  allGroupsSelected,
 }: ScopeSelectionMenuProps) => {
   const [openGroups, setOpenGroups] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>('');
@@ -28,10 +28,8 @@ export const ScopeSelectionMenu = ({
   const footerRef = useRef<HTMLDivElement>(null);
   const pageSize = 10;
 
-  const {
-    data: userGroups,
-    hasNextPage: hasNextGroupsPage,
-  } = useSearchGroupsByName(debouncedKeyword, pageSize);
+  const { data: userGroups, hasNextPage: hasNextGroupsPage } =
+    useSearchGroupsByName(debouncedKeyword, pageSize);
 
   const flattenedGroups = userGroups?.pages.flatMap((x) => x.groups);
 
@@ -72,9 +70,14 @@ export const ScopeSelectionMenu = ({
           <div
             className={`button ${scopeState.value.nonGroup ? 'active' : ''}`}
             onClick={() => {
+              const newNonGroup = !scopeState.value.nonGroup;
               scopeState.value = {
                 ...scopeState.value,
-                nonGroup: !scopeState.value.nonGroup,
+                nonGroup: newNonGroup,
+                none:
+                  !newNonGroup &&
+                  !scopeState.value.group &&
+                  !scopeState.value.personal,
               };
             }}
           >
@@ -92,15 +95,24 @@ export const ScopeSelectionMenu = ({
             <div
               className={`button ${scopeState.value.group ? 'active' : ''}`}
               onClick={() => {
+                const newGroup = !scopeState.value.group;
                 scopeState.value = {
                   ...scopeState.value,
-                  group: !scopeState.value.group,
+                  group: newGroup,
+                  none:
+                    !newGroup &&
+                    !scopeState.value.personal &&
+                    !scopeState.value.nonGroup,
                 };
               }}
             >
               <TiGroup className="groupIcon active" />
               <div className="text-container">
-                <span className="descr">{allGroupsSelected.value?"All":targetGroupIds.value.length}</span>
+                <span className="descr">
+                  {allGroupsSelected.value
+                    ? 'All'
+                    : targetGroupIds.value.length}
+                </span>
                 <span className="descr">Groups</span>
               </div>
             </div>
@@ -119,9 +131,14 @@ export const ScopeSelectionMenu = ({
           <div
             className={`button ${scopeState.value.personal ? 'active' : ''}`}
             onClick={() => {
+              const newPersonal = !scopeState.value.personal;
               scopeState.value = {
                 ...scopeState.value,
-                personal: !scopeState.value.personal,
+                personal: newPersonal,
+                none:
+                  !newPersonal &&
+                  !scopeState.value.group &&
+                  !scopeState.value.nonGroup,
               };
             }}
           >
@@ -150,7 +167,12 @@ export const ScopeSelectionMenu = ({
 
 interface ScopeSelectionMenuProps {
   menu: Signal<string | null>;
-  scopeState: Signal<{ personal: boolean; group: boolean; nonGroup: boolean }>;
+  scopeState: Signal<{
+    none: boolean;
+    personal: boolean;
+    group: boolean;
+    nonGroup: boolean;
+  }>;
   targetGroupIds: Signal<string[]>;
   allGroupsSelected: Signal<boolean>;
 }

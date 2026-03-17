@@ -8,8 +8,8 @@ export default function SetUpSpendingGoal({
   menu,
   displayedAmount,
   currency,
-  submitBudgetErrors,
   onChange,
+  $inputError,
 }: SetUpSpendingGoalProps) {
   return (
     <StyledSetUpSpendingGoal>
@@ -20,25 +20,8 @@ export default function SetUpSpendingGoal({
           value={displayedAmount.value}
           onChange={onChange}
           currency={currency}
-          $inputError={
-            Array.isArray(submitBudgetErrors.value) &&
-            submitBudgetErrors.value.find(
-              (item) => item.field === 'Amount' || item.field === 'Currency'
-            )
-          }
+          $inputError={$inputError}
         />
-        {Array.isArray(submitBudgetErrors.value) &&
-          submitBudgetErrors.value.find(
-            (item) => item.field === 'Amount' || item.field === 'Currency'
-          ) && (
-            <span className="errorMsg">
-              {
-                submitBudgetErrors.value.find(
-                  (item) => item.field === 'Amount' || item.field === 'Currency'
-                ).errorMessage
-              }
-            </span>
-          )}
       </div>
     </StyledSetUpSpendingGoal>
   );

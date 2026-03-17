@@ -9,13 +9,14 @@ export const ScopeSelector = ({
   scopeState,
   targetGroupIds,
   allGroupsSelected,
+  $inputError,
 }: ScoleSelectorProps) => {
   const scopeDetails = useMemo(() => {
     return scopeBuilder(scopeState, allGroupsSelected, targetGroupIds);
   }, [scopeState.value, allGroupsSelected.value, targetGroupIds.value]);
 
   return (
-    <StyledScopeSelector $inputError={false}>
+    <StyledScopeSelector $inputError={$inputError}>
       <div className="spendingCycleHeader">
         <div className="prompt">Scope</div>
         <IonIcon
@@ -36,4 +37,5 @@ interface ScoleSelectorProps {
   scopeState: Signal<{ personal: boolean; group: boolean; nonGroup: boolean }>;
   targetGroupIds: Signal<string[]>;
   allGroupsSelected: Signal<boolean>;
+  $inputError: boolean;
 }

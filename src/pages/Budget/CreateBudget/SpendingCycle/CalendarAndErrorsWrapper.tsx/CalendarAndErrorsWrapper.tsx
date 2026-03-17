@@ -15,6 +15,7 @@ export const CalendarAndErrorsWrapper = ({
   openCustomDateCalendar,
   pickingTarget,
   selectorRef,
+  $inputError,
 }: CalendarAndErrorsWrapperProps) => {
   const formatDate = (date: string) => {
     if (!date) return '';
@@ -32,7 +33,7 @@ export const CalendarAndErrorsWrapper = ({
       (item) => item.field === 'Day' || item.field === 'budgetFrequency'
     );
   return (
-    <StyledCalendarAndErrorsWrapper $inputError={error}>
+    <StyledCalendarAndErrorsWrapper $inputError={$inputError}>
       <SpendingCycleSelector
         ref={selectorRef}
         onClick={() => {

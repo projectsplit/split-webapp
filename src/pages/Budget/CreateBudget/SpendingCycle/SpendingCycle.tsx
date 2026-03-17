@@ -23,6 +23,7 @@ export default function SpendingCycle({
   startDate,
   endDate,
   pickingTarget,
+  $inputError,
 }: SpendingCycleProps) {
   const queryClient = useQueryClient();
   const daysArray = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
@@ -62,7 +63,7 @@ export default function SpendingCycle({
   }, [startDate.value]);
 
   return (
-    <StyledSpendingCycle>
+    <StyledSpendingCycle >
       <div className="spendingCycleHeader">
         <div className="prompt">Spending cycle</div>
         <IonIcon
@@ -81,6 +82,7 @@ export default function SpendingCycle({
         openCustomDateCalendar={openCustomDateCalendar}
         pickingTarget={pickingTarget}
         selectorRef={selectorRef}
+        $inputError={$inputError}
       />
       <div className="categoryButtons">
         {openCalendar.value && (

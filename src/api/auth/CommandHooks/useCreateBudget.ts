@@ -6,7 +6,7 @@ import { CreateBudgetRequest } from '../../../types';
 
 export const useCreateBudget = (
   navigate: NavigateFunction,
-  submitBudgetErrors: Signal<any[]>
+  setError: Signal<any[]>
 ) => {
   const queryClient = useQueryClient();
 
@@ -15,8 +15,7 @@ export const useCreateBudget = (
     mutationFn: createBudget,
     onError: (error) => {
       const errorData = error.response?.data;
-      console.log(error)
-      submitBudgetErrors.value = [...submitBudgetErrors.value, errorData];
+      // submitBudgetErrors.value = [...submitBudgetErrors.value, errorData];
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['budget'], exact: false });
@@ -26,7 +25,7 @@ export const useCreateBudget = (
 };
 
 const createBudget = async (request: CreateBudgetRequest) => {
-  console.log(request)
+  console.log(request);
   const response = await apiClient.post<CreateBudgetRequest>(
     `/budgets/create`,
     request

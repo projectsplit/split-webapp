@@ -18,7 +18,6 @@ export const StyledScopeSelector = styled.div<{ $inputError: boolean }>`
     border: 1px solid
       ${({ theme, $inputError }) =>
         $inputError ? theme.errorColor : theme.lineColor};
-    border-radius: 8px;
 
     display: flex;
     flex-direction: column;
@@ -30,13 +29,13 @@ export const StyledScopeSelector = styled.div<{ $inputError: boolean }>`
     border-color: ${({ theme, $inputError }) =>
       $inputError ? theme.pink : 'transparent'}; */
 
-    border-radius: 4px;
+    border-radius: 8px;
     padding: 0.8rem;
     outline: none;
     color: ${({ theme }) => theme.whiteText};
     background-color: ${({ theme }) => theme.layer2};
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
     text-align: left;
   }

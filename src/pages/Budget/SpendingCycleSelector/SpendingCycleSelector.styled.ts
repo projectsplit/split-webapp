@@ -6,17 +6,17 @@ export const StyledSpendingCycleSelector = styled.button<SpendingCycleSelectorPr
   flex-direction: column;
   position: relative;
   justify-content: space-evenly;
-  border-style: ${({ inputError }) => (inputError ? 'solid' : 'none')};
-  border-width: ${({ inputError }) => (inputError ? '1px' : '0')};
+  /* border: 1px solid;
   border-color: ${({ theme, inputError }) =>
-    inputError ? theme.pink : 'transparent'};
+    inputError ? theme.pink : 'transparent'}; */
 
-  border-radius: 4px;
+  border: none;
+  border-radius: 0;
   padding: 0.8rem;
   outline: none;
   color: ${({ theme }) => theme.whiteText};
-  background-color: ${({ theme }) => theme.layer2};
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  background-color: transparent;
+  /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); */
   font-size: 18px;
   cursor: pointer;
   text-align: left;

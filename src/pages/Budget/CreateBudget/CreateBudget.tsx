@@ -17,51 +17,40 @@ import MenuAnimationBackground from '../../../components/Animations/MenuAnimatio
 import InfoBoxAnimation from '../../../components/Animations/InfoBoxAnimation';
 import CreateBudgetConfirmationAnimation from '../../../components/Animations/BudgetAnimations/CreateBudgetConfirmationAnimation';
 import { handleInputChange } from '../../../helpers/handleInputChange';
-import { submitBudgetFn } from './helpers/submitBudgetFn';
 import { ScopeSelector } from './ScopeSelector/ScopeSelector';
 import { ScopeSelectionMenu } from '@/components/Menus/ScopeSelectionMenu/ScopeSelectionMenu';
+import {
+  useCreateBudgetActions,
+  useCreateBudgetData,
+} from './hooks/useCreateBudgetActions';
+import FormInput from '@/components/FormInput/FormInput';
 
 export default function CreateBudget() {
-  const [amount, setAmount] = useState<string>('');
-  const displayedAmount = useSignal<string>('');
-  const openCalendar = useSignal<boolean>(false);
-  const openCustomDateCalendar = useSignal<boolean>(false);
-  const startDate = useSignal<string>('');
-  const endDate = useSignal<string>('');
-  const pickingTarget = useSignal<'start' | 'end' | null>(null);
-  const calendarDay = useSignal<string>('');
-  const budgetFrequency = useSignal<Frequency>(Frequency.Monthly);
-  const hasSwitchedBudgetType = useSignal<boolean>(false);
-  const submitBudgetErrors = useSignal<any[]>([]);
+  const data = useCreateBudgetData();
+  const actions = useCreateBudgetActions();
+  console.log(data.errors);
   const menu = useSignal<string | null>(null);
   const scopeMenu = useSignal<string | null>(null);
-  const scopeState = useSignal<{
-    personal: boolean;
-    group: boolean;
-    nonGroup: boolean;
-  }>({ personal: true, group: true, nonGroup: true });
-  const targetGroupIds = useSignal<string[]>([]);
-  const allGroupsSelected = useSignal<boolean>(true);
+
   const { userInfo, timeZoneId } = useOutletContext<{
     userInfo: UserInfo;
     timeZoneId: string;
   }>();
 
-  const [currencySymbol, setCurrencySymbol] = useState<string>('');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const budgetInfoQueryKey = ['budget'];
   const spendingInfoQueryKey = [
     'spending',
-    budgetFrequency.value,
-    currencySymbol,
+    data.budgetFrequency.value,
+    data.currencySymbol,
   ];
 
-  const createBudget = useCreateBudget(navigate, submitBudgetErrors);
+  const createBudget = useCreateBudget(navigate, data.serverErrors);
 
   useEffect(() => {
     if (userInfo?.currency) {
-      setCurrencySymbol(userInfo.currency);
+      actions.setCurrencySymbol(userInfo.currency);
     }
   }, [userInfo]);
 
@@ -70,7 +59,7 @@ export default function CreateBudget() {
   //   currencySymbol
   // );
 
-  const data = {
+  const info = {
     budgetSubmitted: false,
     totalAmountSpent: '0',
     currency: 'USD',
@@ -80,39 +69,33 @@ export default function CreateBudget() {
 
   const handleInputChangeCallback = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      handleInputChange(e, currencySymbol, displayedAmount, setAmount);
+      handleInputChange(
+        e,
+        data.currencySymbol,
+        data.displayedAmount,
+        actions.setAmount
+      );
+      actions.setError('amountError', '');
+      actions.setError('showAmountError', false);
     },
-    [currencySymbol, displayedAmount, setAmount]
+    [data.currencySymbol, data.displayedAmount, actions.setAmount]
   );
 
-  const submitBudget = () =>
-    submitBudgetFn(
-      budgetFrequency,
-      createBudget,
-      amount,
-      currencySymbol,
-      calendarDay,
-      startDate,
-      endDate,
-      submitBudgetErrors,
-      openCalendar,
-      hasSwitchedBudgetType,
-      displayedAmount,
-      menu,
-      setAmount,
+  const submitBudget = async () => {
+    await actions.submitBudget({
+      createBudgetMutation: createBudget,
       queryClient,
       budgetInfoQueryKey,
-      scopeState,
-      allGroupsSelected,
-      targetGroupIds
-    );
+      menu,
+    });
+  };
 
   const querydata = queryClient.getQueryData(
     spendingInfoQueryKey
   ) as SpendingInfoResponse;
 
   const handleBackButtonClick = () => {
-    if (data && data.budgetSubmitted) {
+    if (info && info.budgetSubmitted) {
       navigate(`/budget/current`);
     } else {
       navigate(`/`);
@@ -121,12 +104,12 @@ export default function CreateBudget() {
 
   const handldeCurrencyOptionsClick = (curr: string) => {
     //setCurrency(currency);
-    setCurrencySymbol(curr);
+    actions.setCurrencySymbol(curr);
     queryClient.invalidateQueries({
-      queryKey: ['spending', budgetFrequency, curr],
+      queryKey: ['spending', data.budgetFrequency, curr],
       exact: false,
     });
-    queryClient.getQueryData(['spending', budgetFrequency, curr]);
+    queryClient.getQueryData(['spending', data.budgetFrequency, curr]);
     menu.value = null;
   };
 
@@ -136,35 +119,85 @@ export default function CreateBudget() {
         header="Budget"
         onClick={() => handleBackButtonClick()}
       />
-
-      <SetUpSpendingGoal
-        menu={menu}
-        displayedAmount={displayedAmount}
-        currency={currencySymbol}
-        submitBudgetErrors={submitBudgetErrors}
-        onChange={handleInputChangeCallback}
-      />
-
-      <SpendingCycle
-        submitBudgetErrors={submitBudgetErrors}
-        calendarDay={calendarDay}
-        budgetFrequency={budgetFrequency}
-        menu={menu}
-        isStale={isStale}
-        openCalendar={openCalendar}
-        openCustomDateCalendar={openCustomDateCalendar}
-        hasSwitchedBudgetType={hasSwitchedBudgetType}
-        timeZoneId={timeZoneId}
-        startDate={startDate}
-        endDate={endDate}
-        pickingTarget={pickingTarget}
-      />
-      <ScopeSelector
-        onClick={() => (scopeMenu.value = 'scopeSelector')}
-        scopeState={scopeState}
-        targetGroupIds={targetGroupIds}
-        allGroupsSelected={allGroupsSelected}
-      />
+      <div className="errorsWrapper">
+        <SetUpSpendingGoal
+          menu={menu}
+          displayedAmount={data.displayedAmount}
+          currency={data.currencySymbol}
+          onChange={handleInputChangeCallback}
+          $inputError={data.errors.showAmountError && !!data.errors.amountError}
+        />
+        <span className="errorMsg">
+          {data.errors.showAmountError && data.errors.amountError
+            ? data.errors.amountError
+            : ''}
+        </span>
+      </div>
+      <div className="errorsWrapper">
+        <FormInput
+          description=""
+          placeholder="Description"
+          value={data.description}
+          onChange={(e) => {
+            actions.setDescription(e.target.value);
+            actions.setError('descriptionError', '');
+            actions.setError('showDescriptionError', false);
+          }}
+          error={
+            data.errors.showDescriptionError ? data.errors.descriptionError : ''
+          }
+        />
+        {/* FormInput already handles error messages inside its .meta section */}
+      </div>
+      <div className="errorsWrapper">
+        <SpendingCycle
+          submitBudgetErrors={data.serverErrors}
+          calendarDay={data.calendarDay}
+          budgetFrequency={data.budgetFrequency}
+          menu={menu}
+          isStale={isStale}
+          openCalendar={data.openCalendar}
+          openCustomDateCalendar={data.openCustomDateCalendar}
+          hasSwitchedBudgetType={data.hasSwitchedBudgetType}
+          timeZoneId={timeZoneId}
+          startDate={data.startDate}
+          endDate={data.endDate}
+          pickingTarget={data.pickingTarget}
+          $inputError={
+            (data.errors.showSpendingCycleError &&
+              !!data.errors.spendingCycleError) ||
+            (data.errors.showCommencementDayError &&
+              !!data.errors.commencementDayError)
+          }
+        />
+        <span className="errorMsg">
+          {data.errors.showSpendingCycleError && data.errors.spendingCycleError
+            ? data.errors.spendingCycleError
+            : ''}
+          {data.errors.showCommencementDayError &&
+          data.errors.commencementDayError
+            ? data.errors.commencementDayError
+            : ''}
+        </span>
+      </div>
+      <div className="errorsWrapper">
+        <ScopeSelector
+          onClick={() => {
+            scopeMenu.value = 'scopeSelector';
+            actions.setError('scopeError', '');
+            actions.setError('showScopeError', false);
+          }}
+          scopeState={data.scopeState}
+          targetGroupIds={data.targetGroupIds}
+          allGroupsSelected={data.allGroupsSelected}
+          $inputError={data.errors.showScopeError && !!data.errors.scopeError}
+        />
+        <span className="errorMsg">
+          {data.errors.showScopeError && data.errors.scopeError
+            ? data.errors.scopeError
+            : ''}
+        </span>
+      </div>
       {isFetching ? (
         <></>
       ) : (
@@ -173,10 +206,10 @@ export default function CreateBudget() {
             <div>
               You have spent{' '}
               {displayCurrencyAndAmount(
-                data?.totalAmountSpent,
+                info?.totalAmountSpent,
                 querydata?.currency
               )}{' '}
-              this {budgetFrequency.value === 1 ? 'month' : 'week'}
+              this {data.budgetFrequency.value === 1 ? 'month' : 'week'}
             </div>
           </div>
         )
@@ -197,20 +230,22 @@ export default function CreateBudget() {
       {scopeMenu.value === 'scopeSelector' && (
         <ScopeSelectionMenu
           menu={scopeMenu}
-          scopeState={scopeState}
-          targetGroupIds={targetGroupIds}
-          allGroupsSelected={allGroupsSelected}
+          scopeState={data.scopeState}
+          targetGroupIds={data.targetGroupIds}
+          allGroupsSelected={data.allGroupsSelected}
         />
       )}
       <CreateBudgetConfirmationAnimation
         menu={menu}
-        submitBudget={submitBudget}
+        submitBudget={async () => {
+          await submitBudget();
+        }}
       />
       <InfoBoxAnimation menu={menu} />
       <CurrencyOptionsAnimation
         currencyMenu={menu}
         clickHandler={handldeCurrencyOptionsClick}
-        selectedCurrency={currencySymbol}
+        selectedCurrency={data.currencySymbol}
       />
     </StyledCreateBudget>
   );

@@ -14,6 +14,18 @@ export const StyledCreateBudget = styled.div`
   gap: 20px;
   position: relative;
 
+  .errorsWrapper {
+    display: flex;
+    flex-direction: column;
+    .errorMsg {
+      font-size: 12px;
+      color: ${({ theme }) => theme.errorColor};
+      display: flex;
+      justify-content: start;
+      padding: 0px 4px;
+    }
+  }
+
   .backButtonContainer {
     position: relative;
     cursor: pointer;
@@ -58,7 +70,10 @@ export const StyledCreateBudget = styled.div`
     gap: 10px;
     .errorMsg {
       font-size: 12px;
-      color: ${({ theme }) => theme.pink};
+      color: ${({ theme }) => theme.errorColor};
+      display: flex;
+      justify-content: start;
+      padding: 0px 4px;
     }
     .calendarAndErrorsWrapper,
     .inputAndErrorsWrapper {
