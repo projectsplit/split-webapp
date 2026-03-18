@@ -77,3 +77,4 @@ export interface CreateBudgetState {
 
   initForm: (currency: string) => void;
 }
+

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const StyledSpendingCycle = styled.div`
+export const StyledSpendingCycle = styled.div<{$calendarIsOpen:boolean}>`
   display: flex;
   flex-direction: column;
   font-size: 16px;
@@ -32,6 +32,6 @@ export const StyledSpendingCycle = styled.div`
     }
   }
   .categoryButtons{
-    margin:10px ;
+    margin-top:${({$calendarIsOpen})=> $calendarIsOpen ? '10px' : '0px'} ;
   }
 `;

@@ -1316,7 +1316,6 @@ export interface SetUpSpendingGoalProps {
 
 export interface SpendingCycleProps {
   menu: Signal<React.SetStateAction<string | null>>;
-  submitBudgetErrors: Signal<any[]>;
   calendarDay: Signal<string>;
   budgetFrequency: Signal<Frequency>;
   isStale: boolean;
@@ -1456,7 +1455,6 @@ export interface CalendarAndErrorsWrapperProps {
   openCalendar: Signal<boolean>;
   budgetFrequency: Signal<Frequency>;
   calendarDay: Signal<string>;
-  submitBudgetErrors: Signal<any[]>;
   startDate: Signal<string>;
   endDate: Signal<string>;
   openCustomDateCalendar: Signal<boolean>;

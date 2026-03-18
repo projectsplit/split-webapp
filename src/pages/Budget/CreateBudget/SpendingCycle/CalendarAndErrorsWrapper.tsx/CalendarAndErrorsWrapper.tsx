@@ -9,7 +9,6 @@ export const CalendarAndErrorsWrapper = ({
   openCalendar,
   budgetFrequency,
   calendarDay,
-  submitBudgetErrors,
   startDate,
   endDate,
   openCustomDateCalendar,
@@ -27,11 +26,7 @@ export const CalendarAndErrorsWrapper = ({
     if (index !== -1) return (index + 1).toString();
     return null;
   };
-  const error =
-    Array.isArray(submitBudgetErrors.value) &&
-    submitBudgetErrors.value.find(
-      (item) => item.field === 'Day' || item.field === 'budgetFrequency'
-    );
+
   return (
     <StyledCalendarAndErrorsWrapper $inputError={$inputError}>
       <SpendingCycleSelector
@@ -40,7 +35,7 @@ export const CalendarAndErrorsWrapper = ({
           openCalendar.value = !openCalendar.value;
         }}
         open={openCalendar.value}
-        inputError={error}
+
       >
         {budgetFrequency.value === Frequency.Custom ? (
           !startDate.value ? (
@@ -118,19 +113,6 @@ export const CalendarAndErrorsWrapper = ({
           <>Weekly on {getWeekday(getDayNumber(calendarDay.value))}</>
         )}
       </SpendingCycleSelector>
-      {Array.isArray(submitBudgetErrors.value) &&
-        submitBudgetErrors.value.find(
-          (item) => item.field === 'Day' || item.field === 'budgetFrequency'
-        ) && (
-          <span className="errorMsg">
-            {
-              submitBudgetErrors.value.find(
-                (item) =>
-                  item.field === 'Day' || item.field === 'budgetFrequency'
-              ).errorMessage
-            }
-          </span>
-        )}
     </StyledCalendarAndErrorsWrapper>
   );
 };

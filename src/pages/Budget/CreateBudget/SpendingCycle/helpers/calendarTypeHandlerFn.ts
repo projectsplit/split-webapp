@@ -26,6 +26,14 @@ export const calendarTypeHandlerFn = (
       openCustomDateCalendar.value = true;
       pickingTarget.value = 'start';
     }
+    if (
+      startDate.value !== '' &&
+      endDate.value === '' &&
+      openCustomDateCalendar.value === false
+    ) {
+      openCustomDateCalendar.value = true;
+      pickingTarget.value = 'end';
+    }
   } else {
     openCustomDateCalendar.value = false;
     startDate.value = '';

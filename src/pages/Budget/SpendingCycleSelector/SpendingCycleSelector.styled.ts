@@ -6,9 +6,7 @@ export const StyledSpendingCycleSelector = styled.button<SpendingCycleSelectorPr
   flex-direction: column;
   position: relative;
   justify-content: space-evenly;
-  /* border: 1px solid;
-  border-color: ${({ theme, inputError }) =>
-    inputError ? theme.pink : 'transparent'}; */
+
 
   border: none;
   border-radius: 0;

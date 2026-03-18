@@ -11,7 +11,6 @@ import { calendarTypeHandlerFn } from './helpers/calendarTypeHandlerFn';
 import CustomDateCalendar from '../../CustomDateCalendar/CustomDateCalendar';
 
 export default function SpendingCycle({
-  submitBudgetErrors,
   calendarDay,
   budgetFrequency,
   menu,
@@ -65,7 +64,7 @@ export default function SpendingCycle({
   }, [startDate.value]);
 
   return (
-    <StyledSpendingCycle>
+    <StyledSpendingCycle $calendarIsOpen={openCalendar.value}>
       <div className="spendingCycleHeader">
         <div className="prompt">Spending cycle</div>
         <IonIcon
@@ -78,7 +77,6 @@ export default function SpendingCycle({
         openCalendar={openCalendar}
         budgetFrequency={budgetFrequency}
         calendarDay={calendarDay}
-        submitBudgetErrors={submitBudgetErrors}
         startDate={startDate}
         endDate={endDate}
         openCustomDateCalendar={openCustomDateCalendar}
