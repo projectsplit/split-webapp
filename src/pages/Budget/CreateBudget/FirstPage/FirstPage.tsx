@@ -2,8 +2,10 @@ import { displayCurrencyAndAmount } from '@/helpers/displayCurrencyAndAmount';
 import SetUpSpendingGoal from '../SetUpSpendingGoal/SetUpSpendingGoal';
 import SpendingCycle from '../SpendingCycle/SpendingCycle';
 import { useQueryClient } from '@tanstack/react-query';
-import { Frequency, SpendingInfoResponse } from '@/types';
-import { Signal } from '@preact/signals-react';
+import { Currency, Frequency, SpendingInfoResponse } from '@/types';
+import { Signal, useSignal } from '@preact/signals-react';
+import { Shimmer } from '@/components/Animations/Shimmer/Shimmer';
+import { currencyData } from '@/helpers/openExchangeRates';
 
 export const FirstPage = ({
   menu,
@@ -36,54 +38,70 @@ export const FirstPage = ({
     spendingInfoQueryKey
   ) as SpendingInfoResponse;
 
+  const allCurrencies = useSignal<Currency[]>(currencyData);
+
+  const selectedCurrency = allCurrencies.value.find(
+    (c) => c.symbol === data.currencySymbol
+  );
+
   return (
     <>
-      <div className="errorsWrapper">
-        <SetUpSpendingGoal
-          menu={menu}
-          displayedAmount={data.displayedAmount}
-          currency={data.currencySymbol}
-          onChange={handleInputChangeCallback}
-          $inputError={data.errors.showAmountError && !!data.errors.amountError}
-        />
-        <span className="errorMsg">
-          {data.errors.showAmountError && data.errors.amountError
-            ? data.errors.amountError
-            : ''}
-        </span>
-      </div>
-
-      <div className="errorsWrapper">
-        <SpendingCycle
-          calendarDay={data.calendarDay}
-          budgetFrequency={data.budgetFrequency}
-          menu={menu}
-          isStale={isStale}
-          openCalendar={data.openCalendar}
-          openCustomDateCalendar={data.openCustomDateCalendar}
-          hasSwitchedBudgetType={data.hasSwitchedBudgetType}
-          timeZoneId={timeZoneId}
-          startDate={data.startDate}
-          endDate={data.endDate}
-          pickingTarget={data.pickingTarget}
-          setError={actions.setError}
-          $inputError={
-            (data.errors.showSpendingCycleError &&
-              !!data.errors.spendingCycleError) ||
-            (data.errors.showCommencementDayError &&
-              !!data.errors.commencementDayError)
-          }
-        />
-        <span className="errorMsg">
-          {data.errors.showSpendingCycleError && data.errors.spendingCycleError
-            ? data.errors.spendingCycleError
-            : ''}
-          {data.errors.showCommencementDayError &&
-          data.errors.commencementDayError
-            ? data.errors.commencementDayError
-            : ''}
-        </span>
-      </div>
+      {!selectedCurrency ? (
+        <Shimmer borderRadius="10px" height="50px" width="100%" />
+      ) : (
+        <div className="errorsWrapper">
+          <SetUpSpendingGoal
+            menu={menu}
+            displayedAmount={data.displayedAmount}
+            selectedCurrency={selectedCurrency}
+            onChange={handleInputChangeCallback}
+            $inputError={
+              data.errors.showAmountError && !!data.errors.amountError
+            }
+          />
+          <span className="errorMsg">
+            {data.errors.showAmountError && data.errors.amountError
+              ? data.errors.amountError
+              : ''}
+          </span>
+        </div>
+      )}
+      {!selectedCurrency ? (
+        <Shimmer borderRadius="10px" height="50px" width="100%" />
+      ) : (
+        <div className="errorsWrapper">
+          <SpendingCycle
+            calendarDay={data.calendarDay}
+            budgetFrequency={data.budgetFrequency}
+            menu={menu}
+            isStale={isStale}
+            openCalendar={data.openCalendar}
+            openCustomDateCalendar={data.openCustomDateCalendar}
+            hasSwitchedBudgetType={data.hasSwitchedBudgetType}
+            timeZoneId={timeZoneId}
+            startDate={data.startDate}
+            endDate={data.endDate}
+            pickingTarget={data.pickingTarget}
+            setError={actions.setError}
+            $inputError={
+              (data.errors.showSpendingCycleError &&
+                !!data.errors.spendingCycleError) ||
+              (data.errors.showCommencementDayError &&
+                !!data.errors.commencementDayError)
+            }
+          />
+          <span className="errorMsg">
+            {data.errors.showSpendingCycleError &&
+            data.errors.spendingCycleError
+              ? data.errors.spendingCycleError
+              : ''}
+            {data.errors.showCommencementDayError &&
+            data.errors.commencementDayError
+              ? data.errors.commencementDayError
+              : ''}
+          </span>
+        </div>
+      )}
 
       {isFetching ? (
         <></>

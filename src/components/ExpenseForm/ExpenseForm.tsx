@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { PickerMember, SplitCategory, UserInfo } from '@/types';
+import { Currency, PickerMember, SplitCategory, UserInfo } from '@/types';
 import MenuAnimationBackground from '@/components/Animations/MenuAnimationBackground';
 import CurrencyOptionsAnimation from '@/components/Animations/CurrencyOptionsAnimation';
 import InputMonetary from '@/components/InputMonetary/InputMonetary';
@@ -22,6 +22,7 @@ import { ExpenseFormFooter } from './components/ExpenseFormFooter/ExpenseFormFoo
 import { useHandlers } from './hooks/useHandlers';
 import { useEditExpenseMutation } from '@/api/auth/CommandHooks/useEditExpenseMutation';
 import GeneralWarningMenuAnimation from '../Animations/GeneralWarningMenuAnimation';
+import { currencyData } from '@/helpers/openExchangeRates';
 
 export default function ExpenseForm({
   groupMembers,
@@ -197,6 +198,11 @@ export default function ExpenseForm({
     inputs.currencySymbol
   );
 
+  const allCurrencies = useSignal<Currency[]>(currencyData);
+  const selectedCurrency = allCurrencies.value.find(
+    (c) => c.symbol === currency
+  );
+
   return (
     <StyledExpenseForm>
       <ExpenseFormHeader
@@ -215,7 +221,7 @@ export default function ExpenseForm({
           value={displayedAmount.value}
           onChange={handleInputChangeCallback}
           onBlur={handleInputBlur}
-          currency={inputs.currencySymbol}
+          selectedCurrency={selectedCurrency}
           autoFocus={true}
           $inputError={inputs.showAmountError && !!inputs.amountError}
         />

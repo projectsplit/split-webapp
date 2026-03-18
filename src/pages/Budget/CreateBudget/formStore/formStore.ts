@@ -152,6 +152,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
     // Logic from submitBudgetFn
     const {
       amount,
+      description,
       budgetFrequency,
       currencySymbol,
       scopeState,
@@ -173,6 +174,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
 
     const baseRequest = {
       amount,
+      description,
       frequency: budgetFrequency.value,
       currency: currencySymbol,
       scope: flags,

@@ -1,8 +1,10 @@
 import InputMonetary from '@/components/InputMonetary/InputMonetary';
 import { StyledInputAndErrorsWrapper } from './InputAndErrorsWrapper.styled';
 import { handleInputChange } from '@/helpers/handleInputChange';
-import { Signal } from '@preact/signals-react';
+import { Signal, useSignal } from '@preact/signals-react';
 import { TransferState } from '../formStore/formStoreTypes';
+import { Currency } from '@/types';
+import { currencyData } from '@/helpers/openExchangeRates';
 
 interface InputAndErrorsWrapperProps {
   currencyMenu: Signal<string | null>;
@@ -19,6 +21,12 @@ export const InputAndErrorsWrapper = ({
   actions,
   handleInputBlur,
 }: InputAndErrorsWrapperProps) => {
+
+  const allCurrencies = useSignal<Currency[]>(currencyData);
+  const selectedCurrency = allCurrencies.value.find(
+    (c) => c.symbol === data.currencySymbol
+  );
+  
   return (
     <StyledInputAndErrorsWrapper>
       <InputMonetary
@@ -36,7 +44,7 @@ export const InputAndErrorsWrapper = ({
           actions.setError('isSameUserError', '');
         }}
         onBlur={handleInputBlur}
-        currency={data.currencySymbol}
+        selectedCurrency={selectedCurrency}
         autoFocus={true}
         $inputError={data.errors.showAmountError && !!data.errors.amountError}
       />

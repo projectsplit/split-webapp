@@ -7,7 +7,7 @@ import InputMonetary from '../../../../components/InputMonetary/InputMonetary';
 export default function SetUpSpendingGoal({
   menu,
   displayedAmount,
-  currency,
+  selectedCurrency,
   onChange,
   $inputError,
 }: SetUpSpendingGoalProps) {
@@ -19,7 +19,7 @@ export default function SetUpSpendingGoal({
           currencyMenu={menu}
           value={displayedAmount.value}
           onChange={onChange}
-          currency={currency}
+          selectedCurrency={selectedCurrency}
           $inputError={$inputError}
         />
       </div>

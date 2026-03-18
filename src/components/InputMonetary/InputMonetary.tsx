@@ -2,10 +2,6 @@ import React from 'react';
 import { StyledInput, StyledInputMonetary } from './InputMonetary.styled';
 import { getSymbolFromCurrency } from '../../helpers/currency-symbol-map';
 import { InputMonetaryProps } from '../../interfaces';
-import { Currency } from '../../types';
-import { currencyData } from '../../helpers/openExchangeRates';
-import { useSignal } from '@preact/signals-react';
-
 import { FaAngleDown } from 'react-icons/fa';
 
 export default React.forwardRef(function InputMonetary(
@@ -17,16 +13,12 @@ export default React.forwardRef(function InputMonetary(
     $inputError,
     // setMenu,
     currencyMenu,
-    currency,
+    selectedCurrency,
     autoFocus,
   }: InputMonetaryProps,
   ref: React.Ref<HTMLInputElement>
 ) {
-  const allCurrencies = useSignal<Currency[]>(currencyData);
 
-  const selectedCurrency = allCurrencies.value.find(
-    (c) => c.symbol === currency
-  );
 
   return (
     <StyledInputMonetary $inputError={$inputError}>

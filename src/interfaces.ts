@@ -37,6 +37,7 @@ import {
   SplitCategory,
   Mode,
   TransactionType,
+  Currency,
 } from './types';
 import { ReadonlySignal, Signal } from '@preact/signals-react';
 import { EditorState } from 'lexical';
@@ -853,7 +854,7 @@ export interface InputMonetaryProps extends React.InputHTMLAttributes<HTMLInputE
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   $inputError?: boolean;
   currencyMenu: Signal<React.SetStateAction<string | null>>;
-  currency: string;
+  selectedCurrency: Currency | undefined;
 }
 
 export interface ConfirmationProps {
@@ -1312,7 +1313,7 @@ export interface ConfirmationForBudgetSubmissionProps {
 export interface SetUpSpendingGoalProps {
   menu: Signal<string | null>;
   displayedAmount: Signal<string>;
-  currency: string;
+  selectedCurrency: Currency | undefined;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   $inputError: boolean;
 }
