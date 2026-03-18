@@ -3,7 +3,7 @@ import { InfoBoxAnimationProps } from '../../interfaces';
 import SpendingCycleInfo from '../../pages/Budget/SpendingCycleInfo/SpendingCycleInfo';
 import { useRef } from 'react';
 
-export default function InfoBoxAnimation({ menu }: InfoBoxAnimationProps) {
+export default function InfoBoxAnimation({ menu,children }: InfoBoxAnimationProps) {
   const nodeRef = useRef(null);
   return (
     <CSSTransition
@@ -13,7 +13,7 @@ export default function InfoBoxAnimation({ menu }: InfoBoxAnimationProps) {
       classNames="infoBox"
       unmountOnExit
     >
-      <SpendingCycleInfo menu={menu} />
+     {children}
     </CSSTransition>
   );
 }

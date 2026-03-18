@@ -14,10 +14,14 @@ import InfoBoxAnimation from '../../../components/Animations/InfoBoxAnimation';
 import CreateBudgetConfirmationAnimation from '../../../components/Animations/BudgetAnimations/CreateBudgetConfirmationAnimation';
 import { handleInputChange } from '../../../helpers/handleInputChange';
 import { ScopeSelectionMenu } from '@/components/Menus/ScopeSelectionMenu/ScopeSelectionMenu';
-import { useCreateBudgetActions,useCreateBudgetData} from './hooks/useCreateBudgetActions';
+import {
+  useCreateBudgetActions,
+  useCreateBudgetData,
+} from './hooks/useCreateBudgetActions';
 import { SecondPage } from './SecondPage/SecondPage';
 import { BackAndForthAnimation } from '@/components/Animations/BackAndForthAnimation/BackAndForthAnimation';
 import { FirstPage } from './FirstPage/FirstPage';
+import SpendingCycleInfo from '../SpendingCycleInfo/SpendingCycleInfo';
 
 export default function CreateBudget() {
   const data = useCreateBudgetData();
@@ -106,7 +110,7 @@ export default function CreateBudget() {
           if (data.currentStep === 2) {
             handleBack();
           } else {
-             navigate(`/`);
+            navigate(`/`);
           }
         }}
       />
@@ -151,7 +155,9 @@ export default function CreateBudget() {
           await submitBudget();
         }}
       />
-      <InfoBoxAnimation menu={menu} />
+      <InfoBoxAnimation menu={menu}>
+        <SpendingCycleInfo menu={menu} />
+      </InfoBoxAnimation>
       <CurrencyOptionsAnimation
         currencyMenu={menu}
         clickHandler={handldeCurrencyOptionsClick}

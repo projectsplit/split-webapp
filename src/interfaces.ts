@@ -1349,6 +1349,7 @@ export interface SpendingCycleProps {
 
 export interface InfoBoxAnimationProps {
   menu: Signal<string | null>;
+  children: any;
 }
 
 export interface CreateBudgetConfirmationAnimationProps {
