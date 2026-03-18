@@ -47,7 +47,9 @@ export const FirstPage = ({
   return (
     <>
       {!selectedCurrency ? (
-        <Shimmer borderRadius="10px" height="50px" width="100%" />
+        <div style={{ margin: '15px' }}>
+          <Shimmer borderRadius="10px" height="50px" width="100%" />
+        </div>
       ) : (
         <div className="errorsWrapper">
           <SetUpSpendingGoal
@@ -67,7 +69,9 @@ export const FirstPage = ({
         </div>
       )}
       {!selectedCurrency ? (
-        <Shimmer borderRadius="10px" height="50px" width="100%" />
+        <div style={{ margin: '15px' }}>
+          <Shimmer borderRadius="10px" height="50px" width="100%" />
+        </div>
       ) : (
         <div className="errorsWrapper">
           <SpendingCycle
