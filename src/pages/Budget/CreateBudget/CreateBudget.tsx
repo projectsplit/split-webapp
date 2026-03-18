@@ -110,6 +110,7 @@ export default function CreateBudget() {
           if (data.currentStep === 2) {
             handleBack();
           } else {
+            actions.resetForm();
             navigate(`/`);
           }
         }}
