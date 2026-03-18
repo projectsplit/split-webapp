@@ -6,22 +6,6 @@ export const SecondPage = ({ data, actions, scopeMenu }: SecondPageProps) => {
   return (
     <>
       <div className="errorsWrapper">
-        <FormInput
-          description=""
-          placeholder="Description"
-          value={data.description}
-          onChange={(e) => {
-            actions.setDescription(e.target.value);
-            actions.setError('descriptionError', '');
-            actions.setError('showDescriptionError', false);
-          }}
-          error={
-            data.errors.showDescriptionError ? data.errors.descriptionError : ''
-          }
-        />
-      </div>
-
-      <div className="errorsWrapper">
         <ScopeSelector
           onClick={() => {
             scopeMenu.value = 'scopeSelector';
@@ -38,6 +22,21 @@ export const SecondPage = ({ data, actions, scopeMenu }: SecondPageProps) => {
             ? data.errors.scopeError
             : ''}
         </span>
+      </div>
+      <div className="errorsWrapper">
+        <FormInput
+          description=""
+          placeholder="Description"
+          value={data.description}
+          onChange={(e) => {
+            actions.setDescription(e.target.value);
+            actions.setError('descriptionError', '');
+            actions.setError('showDescriptionError', false);
+          }}
+          error={
+            data.errors.showDescriptionError ? data.errors.descriptionError : ''
+          }
+        />
       </div>
     </>
   );

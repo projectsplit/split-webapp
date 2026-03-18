@@ -67,7 +67,6 @@ export default function CreateBudget() {
   };
 
   const handldeCurrencyOptionsClick = (curr: string) => {
-    //setCurrency(currency);
     actions.setCurrencySymbol(curr);
     queryClient.invalidateQueries({
       queryKey: ['spending', data.budgetFrequency, curr],

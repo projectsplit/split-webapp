@@ -1300,6 +1300,9 @@ export interface CalendarProps {
 export interface CalendarOptionsButtonProps {
   isactive: boolean;
 }
+export interface StyledCalendarOptionsButtonProps {
+  $isactive: boolean;
+}
 
 export interface ConfirmationForBudgetSubmissionProps {
   submitBudget: () => Promise<void>;

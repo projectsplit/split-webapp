@@ -13,7 +13,7 @@ const CalendarOptionsButton = forwardRef<
     <StyledCalendarOptionsButton
       ref={ref}
       onClick={onClick}
-      isactive={isactive}
+      $isactive={isactive}
     >
       {children}
     </StyledCalendarOptionsButton>

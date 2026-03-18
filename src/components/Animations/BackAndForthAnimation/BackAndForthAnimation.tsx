@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { StyledBackAndForthAnimation } from './BackAndForthAnimation.styled';
 
@@ -8,6 +8,17 @@ interface BackAndForthAnimationProps {
   currentStep: number;
   animDirection: 'none' | 'forward' | 'back';
 }
+const AnimationStep = ({ children, ...props }: any) => {
+  const nodeRef = useRef(null);
+  return (
+    <CSSTransition {...props} nodeRef={nodeRef}>
+      <div ref={nodeRef} className="step-container">
+        {children}
+      </div>
+    </CSSTransition>
+  );
+};
+
 export const BackAndForthAnimation = ({
   firstChild,
   secondChild,
@@ -32,24 +43,13 @@ export const BackAndForthAnimation = ({
           })
         }
       >
-        <CSSTransition
+        <AnimationStep
           key={currentStep}
           timeout={animDirection === 'none' ? 0 : 300}
-          classNames={
-            animDirection === 'forward'
-              ? 'fade'
-              : animDirection === 'back'
-                ? 'fade-back'
-                : 'none'
-          }
-          enter={animDirection !== 'none'}
-          exit={animDirection !== 'none'}
           unmountOnExit
         >
-          <div className="step-container">
-            {currentStep === 1 ? <>{firstChild}</> : <>{secondChild}</>}
-          </div>
-        </CSSTransition>
+          {currentStep === 1 ? <>{firstChild}</> : <>{secondChild}</>}
+        </AnimationStep>
       </TransitionGroup>
     </StyledBackAndForthAnimation>
   );

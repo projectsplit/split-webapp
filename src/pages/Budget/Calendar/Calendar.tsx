@@ -17,7 +17,7 @@ export default function Calendar({
   };
 
   return (
-    <StyledCalendar as="div" budgetFrequency={budgetFrequency}>
+    <StyledCalendar as="div" $budgetFrequency={budgetFrequency}>
       {budgetFrequency.value == Frequency.Monthly
         ? children.map((row: any, rowIndex: any) => (
             <div key={rowIndex} className="calendar-row">

@@ -776,6 +776,7 @@ export type GetTotalLentTotalBorrowedResponse = {
 
 export type CreateBudgetRequest = {
   amount: string;
+  description:string;
   currency: string;
   frequency: Frequency;
   scope: BudgetScope;
