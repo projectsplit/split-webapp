@@ -35,7 +35,7 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
         return [];
     }
   };
-  // console.log(filteredMembers.value,showFilteredMembers)
+
   useEffect(() => {
     setShowFilteredPeople(updateFilteredPeople());
     if (cancelled.value === true) {
