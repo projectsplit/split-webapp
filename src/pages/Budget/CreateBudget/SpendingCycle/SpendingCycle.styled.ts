@@ -32,6 +32,6 @@ export const StyledSpendingCycle = styled.div<{$calendarIsOpen:boolean}>`
     }
   }
   .categoryButtons{
-    margin-top:${({$calendarIsOpen})=> $calendarIsOpen ? '10px' : '0px'} ;
+    margin:${({$calendarIsOpen})=> $calendarIsOpen ? '10px' : '0px'} ;
   }
 `;

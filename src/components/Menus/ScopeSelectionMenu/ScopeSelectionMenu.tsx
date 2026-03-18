@@ -109,7 +109,7 @@ export const ScopeSelectionMenu = ({
             <div className="text-container">
               <span className="descr">Non</span>
               <span className="descr">Groups</span>
-            </div>
+            </div>categoryButtons
           </div>
           {scopeState.value.nonGroup && <FaCheckCircle className="checkIcon" />}
         </div>
