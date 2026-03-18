@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
-export const StyledBudgetScopeGroupsMenu = styled.div<{ maxHeight?: string }>`
+export const StyledBudgetScopeGroupsMenu = styled.div<{ $maxHeight?: string }>`
   overflow: auto;
   padding: 0;
   margin-left: 10px;
   margin-right: 10px;
   background-color: ${({ theme }) => theme.greyOutline};
   border-radius: 12px 12px 12px 12px;
-  max-height: ${(props) => props.maxHeight || '49vh'};
+  max-height: ${(props) => props.$maxHeight || '49vh'};
 
   .headerAndSearchbar {
     display: flex;

@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyledScopeSelectionMenu } from './ScopeSelectionMenu.styled';
-import { Signal, useSignal } from '@preact/signals-react';
+import { Signal } from '@preact/signals-react';
 import { BiArrowBack } from 'react-icons/bi';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { MdGroupOff } from 'react-icons/md';
@@ -50,6 +50,30 @@ export const ScopeSelectionMenu = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (targetGroupIds.value.length === 0) {
+      scopeState.value = {
+        ...scopeState.value,
+        group: false,
+        none: true,
+      };
+    }
+    if (targetGroupIds.value.length > 0) {
+      scopeState.value = {
+        ...scopeState.value,
+        group: true,
+        none: false,
+      };
+    }
+    if (allGroupsSelected.value) {
+      scopeState.value = {
+        ...scopeState.value,
+        group: true,
+        none: false,
+      };
+    }
+  }, [targetGroupIds.value.length, allGroupsSelected.value]);
 
   return (
     <StyledScopeSelectionMenu>
@@ -104,6 +128,9 @@ export const ScopeSelectionMenu = ({
                     !scopeState.value.personal &&
                     !scopeState.value.nonGroup,
                 };
+                targetGroupIds.value.length === 0
+                  ? (allGroupsSelected.value = true)
+                  : null;
               }}
             >
               <TiGroup className="groupIcon active" />

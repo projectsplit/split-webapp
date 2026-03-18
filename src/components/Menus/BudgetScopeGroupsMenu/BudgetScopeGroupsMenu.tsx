@@ -53,7 +53,7 @@ export const BudgetScopeGroupsMenu = ({
   );
 
   return (
-    <StyledBudgetScopeGroupsMenu maxHeight="49vh">
+    <StyledBudgetScopeGroupsMenu $maxHeight="49vh">
       <div className="headerAndSearchbar">
         <input
           className="searchBar"
