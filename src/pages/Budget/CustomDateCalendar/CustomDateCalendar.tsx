@@ -10,6 +10,7 @@ export default function CustomDateCalendar({
   startDate,
   endDate,
   pickingTarget,
+  setError,
   excludeRefs,
 }: CustomDateCalendarProps) {
   const calendarRef = useRef<HTMLDivElement>(null);
@@ -75,7 +76,10 @@ export default function CustomDateCalendar({
     } else {
       endDate.value = finalValue;
     }
-
+    setError('spendingCycleError', '');
+    setError('showSpendingCycleError', false);
+    setError('commencementDayError', '');
+    setError('showCommencementDayError', false);
     calendarIsOpen.value = false;
     pickingTarget.value = null;
   };

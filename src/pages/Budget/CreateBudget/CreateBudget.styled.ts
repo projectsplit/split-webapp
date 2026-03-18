@@ -13,6 +13,7 @@ export const StyledCreateBudget = styled.div`
   padding: 14px;
   gap: 20px;
   position: relative;
+  overflow-x: hidden;
 
   .errorsWrapper {
     display: flex;
@@ -118,6 +119,64 @@ export const StyledCreateBudget = styled.div`
     .sup {
       margin-top: -3px;
     }
+  }
+
+  .step-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  /* --- Carousel Transitions --- */
+  .transition-group {
+    display: grid;
+    grid-template-columns: 100%;
+    width: 100%;
+    position: relative;
+    min-height: 400px;
+    overflow: hidden;
+  }
+
+  .step-container {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Forward (Next): A exits left, B enters from right */
+  .fade-enter {
+    transform: translateX(100%);
+  }
+  .fade-enter-active {
+    transform: translateX(0%);
+    transition: transform 300ms ease-out;
+  }
+  .fade-exit {
+    transform: translateX(0%);
+  }
+  .fade-exit-active {
+    transform: translateX(-100%);
+    transition: transform 300ms ease-out;
+  }
+
+  /* Backward (Back): B exits right, A enters from left */
+  .fade-back-enter {
+    transform: translateX(-100%);
+  }
+  .fade-back-enter-active {
+    transform: translateX(0%);
+    transition: transform 300ms ease-out;
+  }
+  .fade-back-exit {
+    transform: translateX(0%);
+  }
+  .fade-back-exit-active {
+    transform: translateX(100%);
+    transition: transform 300ms ease-out;
   }
 
   @keyframes fadeIn {

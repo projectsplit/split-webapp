@@ -13,6 +13,7 @@ export const useCreateBudgetActions = () => {
       submitBudget: state.submitBudget,
       resetForm: state.resetForm,
       initForm: state.initForm,
+      setStep: state.setStep,
     }))
   );
 };
@@ -37,6 +38,7 @@ export const useCreateBudgetData = () => {
       allGroupsSelected: state.allGroupsSelected,
       serverErrors: state.serverErrors,
       errors: state.errors,
+      currentStep: state.currentStep,
     }))
   );
 };

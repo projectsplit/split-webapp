@@ -24,11 +24,13 @@ import {
   useCreateBudgetData,
 } from './hooks/useCreateBudgetActions';
 import FormInput from '@/components/FormInput/FormInput';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
+const ANIMATION_DURATION = 300;
 
 export default function CreateBudget() {
   const data = useCreateBudgetData();
   const actions = useCreateBudgetActions();
-  console.log(data.errors);
   const menu = useSignal<string | null>(null);
   const scopeMenu = useSignal<string | null>(null);
 
@@ -39,14 +41,16 @@ export default function CreateBudget() {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const budgetInfoQueryKey = ['budget'];
   const spendingInfoQueryKey = [
     'spending',
     data.budgetFrequency.value,
     data.currencySymbol,
   ];
 
-  const createBudget = useCreateBudget(navigate, data.serverErrors);
+  const { mutateAsync: createBudget, isPending } = useCreateBudget(
+    navigate,
+    data.serverErrors
+  );
 
   useEffect(() => {
     if (userInfo?.currency) {
@@ -82,11 +86,11 @@ export default function CreateBudget() {
   );
 
   const submitBudget = async () => {
+    setAnimDirection('none');
     await actions.submitBudget({
       createBudgetMutation: createBudget,
-      queryClient,
-      budgetInfoQueryKey,
       menu,
+      step: data.currentStep,
     });
   };
 
@@ -113,116 +117,198 @@ export default function CreateBudget() {
     menu.value = null;
   };
 
+  const [animDirection, setAnimDirection] = useState<
+    'forward' | 'back' | 'none'
+  >('forward');
+
+  const handleNext = () => {
+    const { errors } = actions.validateForm(data.currentStep);
+    // Only care about Step 1 errors: amount and spending cycle
+    const hasStep1Errors =
+      !!errors.amountError ||
+      !!errors.spendingCycleError ||
+      !!errors.commencementDayError;
+
+    if (!hasStep1Errors) {
+      setAnimDirection('forward');
+
+      actions.setStep(2);
+    }
+  };
+
+  const handleBack = () => {
+    setAnimDirection('back');
+    actions.setStep(1);
+  };
+
   return (
     <StyledCreateBudget>
       <TopBarWithBackButton
-        header="Budget"
-        onClick={() => handleBackButtonClick()}
+        header="Create Budget"
+        onClick={() => {
+          if (data.currentStep === 2) {
+            handleBack();
+          } else {
+            handleBackButtonClick();
+          }
+        }}
       />
-      <div className="errorsWrapper">
-        <SetUpSpendingGoal
-          menu={menu}
-          displayedAmount={data.displayedAmount}
-          currency={data.currencySymbol}
-          onChange={handleInputChangeCallback}
-          $inputError={data.errors.showAmountError && !!data.errors.amountError}
-        />
-        <span className="errorMsg">
-          {data.errors.showAmountError && data.errors.amountError
-            ? data.errors.amountError
-            : ''}
-        </span>
-      </div>
-      <div className="errorsWrapper">
-        <FormInput
-          description=""
-          placeholder="Description"
-          value={data.description}
-          onChange={(e) => {
-            actions.setDescription(e.target.value);
-            actions.setError('descriptionError', '');
-            actions.setError('showDescriptionError', false);
-          }}
-          error={
-            data.errors.showDescriptionError ? data.errors.descriptionError : ''
+
+      <TransitionGroup
+        component="div"
+        className="transition-group"
+        childFactory={(child) =>
+          React.cloneElement(child, {
+            classNames:
+              animDirection === 'forward'
+                ? 'fade'
+                : animDirection === 'back'
+                  ? 'fade-back'
+                  : 'none',
+            enter: animDirection !== 'none',
+            exit: animDirection !== 'none',
+          })
+        }
+      >
+        <CSSTransition
+          key={data.currentStep}
+          timeout={animDirection === 'none' ? 0 : ANIMATION_DURATION}
+          classNames={
+            animDirection === 'forward'
+              ? 'fade'
+              : animDirection === 'back'
+                ? 'fade-back'
+                : 'none'
           }
-        />
-        {/* FormInput already handles error messages inside its .meta section */}
-      </div>
-      <div className="errorsWrapper">
-        <SpendingCycle
-          submitBudgetErrors={data.serverErrors}
-          calendarDay={data.calendarDay}
-          budgetFrequency={data.budgetFrequency}
-          menu={menu}
-          isStale={isStale}
-          openCalendar={data.openCalendar}
-          openCustomDateCalendar={data.openCustomDateCalendar}
-          hasSwitchedBudgetType={data.hasSwitchedBudgetType}
-          timeZoneId={timeZoneId}
-          startDate={data.startDate}
-          endDate={data.endDate}
-          pickingTarget={data.pickingTarget}
-          $inputError={
-            (data.errors.showSpendingCycleError &&
-              !!data.errors.spendingCycleError) ||
-            (data.errors.showCommencementDayError &&
-              !!data.errors.commencementDayError)
-          }
-        />
-        <span className="errorMsg">
-          {data.errors.showSpendingCycleError && data.errors.spendingCycleError
-            ? data.errors.spendingCycleError
-            : ''}
-          {data.errors.showCommencementDayError &&
-          data.errors.commencementDayError
-            ? data.errors.commencementDayError
-            : ''}
-        </span>
-      </div>
-      <div className="errorsWrapper">
-        <ScopeSelector
-          onClick={() => {
-            scopeMenu.value = 'scopeSelector';
-            actions.setError('scopeError', '');
-            actions.setError('showScopeError', false);
-          }}
-          scopeState={data.scopeState}
-          targetGroupIds={data.targetGroupIds}
-          allGroupsSelected={data.allGroupsSelected}
-          $inputError={data.errors.showScopeError && !!data.errors.scopeError}
-        />
-        <span className="errorMsg">
-          {data.errors.showScopeError && data.errors.scopeError
-            ? data.errors.scopeError
-            : ''}
-        </span>
-      </div>
-      {isFetching ? (
-        <></>
-      ) : (
-        querydata && (
-          <div className="spentInfo">
-            <div>
-              You have spent{' '}
-              {displayCurrencyAndAmount(
-                info?.totalAmountSpent,
-                querydata?.currency
-              )}{' '}
-              this {data.budgetFrequency.value === 1 ? 'month' : 'week'}
-            </div>
+          enter={animDirection !== 'none'}
+          exit={animDirection !== 'none'}
+          unmountOnExit
+        >
+          <div className="step-container">
+            {data.currentStep === 1 ? (
+              <>
+                <div className="errorsWrapper">
+                  <SetUpSpendingGoal
+                    menu={menu}
+                    displayedAmount={data.displayedAmount}
+                    currency={data.currencySymbol}
+                    onChange={handleInputChangeCallback}
+                    $inputError={
+                      data.errors.showAmountError && !!data.errors.amountError
+                    }
+                  />
+                  <span className="errorMsg">
+                    {data.errors.showAmountError && data.errors.amountError
+                      ? data.errors.amountError
+                      : ''}
+                  </span>
+                </div>
+
+                <div className="errorsWrapper">
+                  <SpendingCycle
+                    submitBudgetErrors={data.serverErrors}
+                    calendarDay={data.calendarDay}
+                    budgetFrequency={data.budgetFrequency}
+                    menu={menu}
+                    isStale={isStale}
+                    openCalendar={data.openCalendar}
+                    openCustomDateCalendar={data.openCustomDateCalendar}
+                    hasSwitchedBudgetType={data.hasSwitchedBudgetType}
+                    timeZoneId={timeZoneId}
+                    startDate={data.startDate}
+                    endDate={data.endDate}
+                    pickingTarget={data.pickingTarget}
+                    setError={actions.setError}
+                    $inputError={
+                      (data.errors.showSpendingCycleError &&
+                        !!data.errors.spendingCycleError) ||
+                      (data.errors.showCommencementDayError &&
+                        !!data.errors.commencementDayError)
+                    }
+                  />
+                  <span className="errorMsg">
+                    {data.errors.showSpendingCycleError &&
+                    data.errors.spendingCycleError
+                      ? data.errors.spendingCycleError
+                      : ''}
+                    {data.errors.showCommencementDayError &&
+                    data.errors.commencementDayError
+                      ? data.errors.commencementDayError
+                      : ''}
+                  </span>
+                </div>
+
+                {isFetching ? (
+                  <></>
+                ) : (
+                  querydata && (
+                    <div className="spentInfo">
+                      <div>
+                        You have spent{' '}
+                        {displayCurrencyAndAmount(
+                          info?.totalAmountSpent,
+                          querydata?.currency
+                        )}{' '}
+                        this{' '}
+                        {data.budgetFrequency.value === 1 ? 'month' : 'week'}
+                      </div>
+                    </div>
+                  )
+                )}
+              </>
+            ) : (
+              <>
+                <div className="errorsWrapper">
+                  <FormInput
+                    description=""
+                    placeholder="Description"
+                    value={data.description}
+                    onChange={(e) => {
+                      actions.setDescription(e.target.value);
+                      actions.setError('descriptionError', '');
+                      actions.setError('showDescriptionError', false);
+                    }}
+                    error={
+                      data.errors.showDescriptionError
+                        ? data.errors.descriptionError
+                        : ''
+                    }
+                  />
+                </div>
+
+                <div className="errorsWrapper">
+                  <ScopeSelector
+                    onClick={() => {
+                      scopeMenu.value = 'scopeSelector';
+                      actions.setError('scopeError', '');
+                      actions.setError('showScopeError', false);
+                    }}
+                    scopeState={data.scopeState}
+                    targetGroupIds={data.targetGroupIds}
+                    allGroupsSelected={data.allGroupsSelected}
+                    $inputError={
+                      data.errors.showScopeError && !!data.errors.scopeError
+                    }
+                  />
+                  <span className="errorMsg">
+                    {data.errors.showScopeError && data.errors.scopeError
+                      ? data.errors.scopeError
+                      : ''}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
-        )
-      )}
+        </CSSTransition>
+      </TransitionGroup>
 
       <div className="submitButton">
         <MyButton
           fontSize="16"
-          onClick={() => {
-            submitBudget();
-          }}
+          onClick={data.currentStep === 1 ? handleNext : submitBudget}
+          isLoading={isPending}
         >
-          Submit Budget
+          {data.currentStep === 1 ? 'Next' : 'Submit Budget'}
         </MyButton>
       </div>
 

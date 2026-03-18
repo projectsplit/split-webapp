@@ -90,4 +90,5 @@ export interface StyledMyButtonProps {
   isLoading?: boolean;
   hasFailed?: boolean;
   fontSize?: string;
+  style?: React.CSSProperties;
 }

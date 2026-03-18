@@ -23,6 +23,7 @@ export default function SpendingCycle({
   startDate,
   endDate,
   pickingTarget,
+  setError,
   $inputError,
 }: SpendingCycleProps) {
   const queryClient = useQueryClient();
@@ -36,7 +37,7 @@ export default function SpendingCycle({
       : [29, 30, 31, '', '', '', '']
   );
 
-  const calendarTypeHandler = (frequency: Frequency) =>
+  const calendarTypeHandler = (frequency: Frequency) => {
     calendarTypeHandlerFn(
       frequency,
       calendarDay,
@@ -49,6 +50,7 @@ export default function SpendingCycle({
       queryClient,
       isStale
     );
+  };
 
   React.useEffect(() => {
     if (
@@ -63,7 +65,7 @@ export default function SpendingCycle({
   }, [startDate.value]);
 
   return (
-    <StyledSpendingCycle >
+    <StyledSpendingCycle>
       <div className="spendingCycleHeader">
         <div className="prompt">Spending cycle</div>
         <IonIcon
@@ -121,6 +123,7 @@ export default function SpendingCycle({
           // setCalendarDay={setCalendarDay}
           budgetFrequency={budgetFrequency}
           calendarDay={calendarDay}
+          setError={setError}
         >
           {budgetFrequency.value === Frequency.Monthly
             ? monthDaysArray
@@ -136,6 +139,7 @@ export default function SpendingCycle({
             startDate={startDate}
             endDate={endDate}
             pickingTarget={pickingTarget}
+            setError={setError}
             excludeRefs={[customButtonRef, selectorRef]}
           />
         )}

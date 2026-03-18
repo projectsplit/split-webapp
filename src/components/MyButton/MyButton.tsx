@@ -32,6 +32,7 @@ const MyButton = ({
   hasFailed,
   onClick,
   fontSize,
+  style,
 }: MyButtonProps) => {
   return (
     <StyledMyButton
@@ -41,6 +42,7 @@ const MyButton = ({
       hasFailed={hasFailed}
       onClick={onClick}
       fontSize={fontSize}
+      style={style}
     >
       {isLoading && <Spinner variant={variant} />}
       <span style={{ opacity: isLoading ? 0 : 1 }}>{children}</span>
@@ -59,4 +61,5 @@ interface MyButtonProps {
   children: React.ReactNode;
   primaryBackgroundColor?: string;
   fontSize?: string;
+  style?: React.CSSProperties;
 }

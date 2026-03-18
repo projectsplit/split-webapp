@@ -6,8 +6,13 @@ export default function Calendar({
   children,
   budgetFrequency,
   calendarDay,
+  setError,
 }: CalendarProps) {
   const handleElementClick = (day: string) => {
+    setError('spendingCycleError', '');
+    setError('showSpendingCycleError', false);
+    setError('commencementDayError', '');
+    setError('showCommencementDayError', false);
     calendarDay.value = day;
   };
 

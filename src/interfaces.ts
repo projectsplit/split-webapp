@@ -1038,7 +1038,21 @@ export interface CustomDateCalendarProps {
   startDate: Signal<string>;
   endDate: Signal<string>;
   pickingTarget: Signal<'start' | 'end' | null>;
-  excludeRefs?: React.RefObject<HTMLElement | null>[];
+  setError: (
+    key:
+      | 'amountError'
+      | 'descriptionError'
+      | 'spendingCycleError'
+      | 'scopeError'
+      | 'showAmountError'
+      | 'showDescriptionError'
+      | 'showSpendingCycleError'
+      | 'showScopeError'
+      | 'commencementDayError'
+      | 'showCommencementDayError',
+    value: string | boolean
+  ) => void;
+  excludeRefs?: React.RefObject<HTMLElement>[];
 }
 export interface SearchMenuProps {
   $contentEditableHeight: number;
@@ -1267,6 +1281,20 @@ export interface CalendarProps {
   children: any;
   budgetFrequency: Signal<Frequency>;
   calendarDay: Signal<string>;
+  setError: (
+    key:
+      | 'amountError'
+      | 'descriptionError'
+      | 'spendingCycleError'
+      | 'scopeError'
+      | 'showAmountError'
+      | 'showDescriptionError'
+      | 'showSpendingCycleError'
+      | 'showScopeError'
+      | 'commencementDayError'
+      | 'showCommencementDayError',
+    value: string | boolean
+  ) => void;
 }
 
 export interface CalendarOptionsButtonProps {
@@ -1299,6 +1327,20 @@ export interface SpendingCycleProps {
   startDate: Signal<string>;
   endDate: Signal<string>;
   pickingTarget: Signal<'start' | 'end' | null>;
+  setError: (
+    key:
+      | 'amountError'
+      | 'descriptionError'
+      | 'spendingCycleError'
+      | 'scopeError'
+      | 'showAmountError'
+      | 'showDescriptionError'
+      | 'showSpendingCycleError'
+      | 'showScopeError'
+      | 'commencementDayError'
+      | 'showCommencementDayError',
+    value: string | boolean
+  ) => void;
   $inputError: boolean;
 }
 
@@ -1421,7 +1463,6 @@ export interface CalendarAndErrorsWrapperProps {
   pickingTarget: Signal<'start' | 'end' | null>;
   $inputError: boolean;
   selectorRef?: React.RefObject<HTMLButtonElement>;
-
 }
 
 export interface CreateBudgetErrors {

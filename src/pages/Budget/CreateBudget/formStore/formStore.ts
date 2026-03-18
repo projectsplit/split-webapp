@@ -47,6 +47,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
   scopeState: _scopeState,
   targetGroupIds: _targetGroupIds,
   allGroupsSelected: _allGroupsSelected,
+  currentStep: 1,
 
   errors: {
     amountError: '',
@@ -65,6 +66,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
   setAmount: (amount: string) => set({ amount }),
   setDescription: (description: string) => set({ description }),
   setCurrencySymbol: (symbol: string) => set({ currencySymbol: symbol }),
+  setStep: (step: number) => set({ currentStep: step }),
 
   setError: (key: keyof CreateBudgetState['errors'], value: string | boolean) =>
     set((state) => ({
@@ -74,7 +76,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
       },
     })),
 
-  validateForm: (options = { showErrors: true }) => {
+  validateForm: (step: number, options = { showErrors: true }) => {
     const {
       amount,
       description,
@@ -96,6 +98,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
       amount,
       description,
       scopeState,
+      step,
       budgetFrequency,
       targetGroupIds,
       startDate,
@@ -140,13 +143,8 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
     };
   },
 
-  submitBudget: async ({
-    createBudgetMutation,
-    queryClient,
-    budgetInfoQueryKey,
-    menu,
-  }) => {
-    const { isValid, errors } = get().validateForm();
+  submitBudget: async ({ createBudgetMutation, menu, step }) => {
+    const { isValid, errors } = get().validateForm(step);
     if (!isValid) return { isValid, errors };
 
     get().serverErrors.value = [];
@@ -182,7 +180,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
     };
 
     if (budgetFrequency.value === Frequency.Monthly) {
-      createBudgetMutation.mutate({
+      await createBudgetMutation({
         ...baseRequest,
         commencementDay: calendarDay.value.toString(),
       });
@@ -191,12 +189,12 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
         const index = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].indexOf(day);
         return index !== -1 ? (index + 1).toString() : null;
       };
-      createBudgetMutation.mutate({
+      await createBudgetMutation({
         ...baseRequest,
         commencementDay: getDayNumber(calendarDay.value),
       });
     } else if (budgetFrequency.value === Frequency.Custom) {
-      createBudgetMutation.mutate({
+      await createBudgetMutation({
         ...baseRequest,
         commencementDay: null,
         startDate: startDate.value,
@@ -205,10 +203,6 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
     }
 
     openCalendar.value = false;
-    queryClient.invalidateQueries({
-      queryKey: budgetInfoQueryKey,
-      exact: false,
-    });
     hasSwitchedBudgetType.value = false;
     displayedAmount.value = '';
     menu.value = null;
@@ -257,6 +251,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
       amount: '',
       description: '',
       currencySymbol: '',
+      currentStep: 1,
       errors: {
         amountError: '',
         descriptionError: '',

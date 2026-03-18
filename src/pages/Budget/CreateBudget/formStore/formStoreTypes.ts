@@ -37,18 +37,23 @@ export interface CreateBudgetState {
   };
 
   serverErrors: Signal<any[]>;
+  currentStep: number;
 
   // Actions
   setAmount: (amount: string) => void;
   setDescription: (description: string) => void;
   setCurrencySymbol: (symbol: string) => void;
+  setStep: (step: number) => void;
 
   setError: (
     key: keyof CreateBudgetState['errors'],
     value: string | boolean
   ) => void;
 
-  validateForm: (options?: { showErrors: boolean }) => {
+  validateForm: (
+    step: number,
+    options?: { showErrors: boolean }
+  ) => {
     isValid: boolean;
     errors: {
       amountError: string;
@@ -61,9 +66,8 @@ export interface CreateBudgetState {
 
   submitBudget: (inputs: {
     createBudgetMutation: any;
-    queryClient: any;
-    budgetInfoQueryKey: string[];
     menu: Signal<string | null>;
+    step: number;
   }) => Promise<{
     isValid: boolean;
     errors?: any;
