@@ -50,7 +50,7 @@ export default function SpendingCycle({
       isStale
     );
   };
-  console.log(openCalendar.value);
+
   React.useEffect(() => {
     if (
       budgetFrequency.value === Frequency.Custom &&

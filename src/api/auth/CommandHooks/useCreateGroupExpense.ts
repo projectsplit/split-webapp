@@ -88,6 +88,5 @@ export const useCreateGroupExpense = (
 };
 
 const createGroupExpense = async (req: GroupExpenseRequest): Promise<void> => {
-  console.log(req);
   await apiClient.post<void, AxiosResponse<void>>('/expenses/create', req);
 };

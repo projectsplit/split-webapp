@@ -113,7 +113,6 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
           //openMentionMenu({trigger:category + ":"})
           showOptions.value = false;
           submitButtonIsActive.value = true;
-          console.log('Here1');
         }}
       >
         {category}:

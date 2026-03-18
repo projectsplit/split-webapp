@@ -35,7 +35,6 @@ const getGroupsTotalAmounts = async (
   next: string,
   isArchived: boolean
 ): Promise<GroupsTotalAmountsResponse> => {
-  console.log('RAN');
   const params = { pageSize, next, isArchived, keyword };
   const response = await apiClient.get<GroupsTotalAmountsResponse>(
     '/groups/details',

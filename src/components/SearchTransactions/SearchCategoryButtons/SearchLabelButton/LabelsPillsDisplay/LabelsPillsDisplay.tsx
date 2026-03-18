@@ -52,7 +52,6 @@ export default function LabelsPillsDisplay({
           insertMention({ trigger: category + ':', value: '' });
           showOptions.value = false;
           submitButtonIsActive.value = true;
-          console.log('Here1');
         }}
       >
         {category}:

@@ -101,7 +101,6 @@ export function submitExpenseFromState(
       labels: state.labels.map((x) => ({ text: x.text, color: x.color })),
     };
   } else if (isnonGroupExpense?.value) {
-    console.log('here1');
     expenseRequest = {
       amount: Number(state.amount),
       ...(isCreateExpense ? {} : { expenseId: expense?.id }),
@@ -124,7 +123,6 @@ export function submitExpenseFromState(
       labels: state.labels.map((x) => ({ text: x.text, color: x.color })),
     };
   } else {
-    console.log('here2');
     expenseRequest = {
       amount: Number(state.amount),
       ...(isCreateExpense
