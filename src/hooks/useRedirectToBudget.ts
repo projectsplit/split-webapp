@@ -12,9 +12,9 @@ export const useRedirectToBudget = (
   useEffect(() => {
     if (isLoading || !hasUserInfo) return;
     if (data && data?.budgetSubmitted) {
-      navigate(`/budget/current`, { replace: true });
+      navigate(`/budget/current`, { replace: true }); //TODO will be replaced with manage
     } else {
-      navigate(`/budget/create`, { replace: true });
+      navigate(`/budget/actions`, { replace: true });
     }
   }, [isLoading, data, hasUserInfo]);
 

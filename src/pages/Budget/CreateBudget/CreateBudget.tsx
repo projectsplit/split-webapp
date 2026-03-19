@@ -111,7 +111,7 @@ export default function CreateBudget() {
             handleBack();
           } else {
             actions.resetForm();
-            navigate(`/`);
+            navigate(`/budget/actions`);
           }
         }}
       />
