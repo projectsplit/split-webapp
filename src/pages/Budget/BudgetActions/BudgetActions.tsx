@@ -5,10 +5,12 @@ import { IoAddCircle } from 'react-icons/io5';
 import { RiEdit2Fill } from 'react-icons/ri';
 import { FaCalculator, FaChartPie } from 'react-icons/fa';
 import TopBarWithBackButton from '@/components/TopBarWithBackButton/TopBarWithBackButton';
-import Separator from '@/components/Separator/Separator';
+
 
 export const BudgetActions = () => {
   const navigate = useNavigate();
+
+
   return (
     <StyledBudgetActions>
       <TopBarWithBackButton
@@ -17,7 +19,7 @@ export const BudgetActions = () => {
           navigate(`/`);
         }}
       />
- 
+
       <div className="buttons">
         <OptionButton
           onClick={() => navigate('/budget/create')}

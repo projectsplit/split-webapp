@@ -31,7 +31,7 @@ export default function CurrentBudget() {
   // const { isFetching, data } = useBudgetInfo();
 
   const data: BudgetInfoResponse = {
-    budgetSubmitted: false,
+
     totalAmountSpent: '123',
     remainingDays: '5',
     averageSpentPerDay: '10',
@@ -43,13 +43,13 @@ export default function CurrentBudget() {
   };
   const isFetching = false;
 
-  useEffect(() => {
-    //prevents user from landing on this component after budget is deleted using <- of browser
-    if (!isFetching && !data?.budgetSubmitted) {
-      //navigate("/budget/create");
-      navigate('/');
-    }
-  }, []);
+  // useEffect(() => {
+  //   //prevents user from landing on this component after budget is deleted using <- of browser
+  //   if (!isFetching && !data?.budgetSubmitted) {
+  //     //navigate("/budget/create");
+  //     navigate('/');
+  //   }
+  // }, []);
 
   // const deleteBudget = useMutation<any, any, any>({
   //   mutationKey: ["budget", "delete"],
@@ -90,12 +90,12 @@ export default function CurrentBudget() {
 
           {querydata && (
             <div className="spentInfo">
-              {querydata.budgetSubmitted && (
+              {/* {querydata.budgetSubmitted && (
                 <>
                   <ProgressBar data={querydata} />
                   {BudgetInfoMessage(theme, false, querydata)}
                 </>
-              )}
+              )} */}
             </div>
           )}
 

@@ -1,6 +1,7 @@
 export const getIsoDateInfo = (
-  dateString: string
+  dateString: string | undefined
 ): { dayOfWeek: string; month: string; dateNumber: string } => {
+  if (!dateString) return { dayOfWeek: '', month: '', dateNumber: '' };
   const date = new Date(dateString);
 
   const dayOfWeek = date.getDay();

@@ -27,6 +27,7 @@ import RedirectToNonGroupExpenses from './routes/RedirectToNonGroupExpenses';
 import NonGroup from './pages/TransactionsWrappers/NonGroup';
 import { Personal } from './pages/Personal/Personal';
 import { BudgetActions } from './pages/Budget/BudgetActions/BudgetActions';
+import { ManageBudgets } from './pages/Budget/ManageBudgets/ManageBudgets';
 
 const App = () => {
   return (
@@ -69,10 +70,10 @@ const App = () => {
 
           <Route path="/budget" element={<Budget />}>
             <Route index element={<RedirectToBudget />} />
-            <Route path="current" element={<CurrentBudget />} />
+            {/* <Route path="current" element={<CurrentBudget />} /> */}
             <Route path="create" element={<CreateBudget />} />
             <Route path="actions" element={<BudgetActions />} />
-
+            <Route path="manage" element={<ManageBudgets />} />
             <Route path="*" element={<RedirectToBudget />} />
           </Route>
 

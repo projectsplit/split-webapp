@@ -409,15 +409,14 @@ export enum Frequency {
 }
 
 export type BudgetInfoResponse = {
-  budgetSubmitted: boolean;
-  averageSpentPerDay?: string;
-  remainingDays?: string;
-  totalAmountSpent?: string;
-  goal?: string;
-  currency?: string;
-  budgetFrequency?: Frequency;
-  startDate?: any;
-  endDate?: any;
+  totalAmountSpent:string;
+  remainingDays:string;
+  averageSpentPerDay:string;
+  goal:string;
+  currency:string;
+  budgetFrequency:Frequency;
+  startDate:string;
+  endDate:string;
 };
 
 export type UserPendingTransaction = {

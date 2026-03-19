@@ -15,7 +15,7 @@ const useBudgetInfo = () => {
 
 const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
   const response =
-    await apiClient.get<BudgetInfoResponse>(`/budget/budgetinfo`);
+    await apiClient.get<BudgetInfoResponse>(`/budgets/get-active`);
   return response.data;
 };
 

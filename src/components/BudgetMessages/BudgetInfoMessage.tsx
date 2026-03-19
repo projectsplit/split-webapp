@@ -9,14 +9,14 @@ import { DefaultTheme } from 'styled-components';
 export const BudgetInfoMessage = (
   theme: DefaultTheme | undefined,
   closeButton: boolean,
-  data: BudgetInfoResponse,
+  data: BudgetInfoResponse  | undefined,
   onclick?: (event: React.MouseEvent<HTMLDivElement>) => void
 ): JSX.Element => {
-  if (data.totalAmountSpent === undefined || data.currency === undefined) {
+  if (data === undefined) {
     return (
       <div>
         <p>
-          Some required budget data is missing. Cannot calculate projections.
+          Budget data is missing.
         </p>
       </div>
     );
