@@ -41,11 +41,25 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
       margin-top: -3px;
     }
   }
+  .toggleAndInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
   .miscInfo {
     display: flex;
     flex-direction: column;
     gap: 5px;
     margin-top: 25px;
+    .description,
+    .averageSpending,
+    .remainingDays {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
   .monetaryProgress {
     display: flex;

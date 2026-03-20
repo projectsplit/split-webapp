@@ -43,7 +43,7 @@ export default function Recommendation({
               <strong className="amount">
                 {displayCurrencyAndAmount(offBudgetAmount, currency)}
               </strong>{' '}
-              at the end of the {budgetFrequency === 1 ? 'month' : 'week'}.
+              at the end of the {budgetFrequency === 0 ? 'week' : budgetFrequency === 1 ? 'month' : 'period'}.
             </div>
           </div>
         </div>

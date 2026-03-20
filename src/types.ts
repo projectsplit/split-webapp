@@ -409,14 +409,30 @@ export enum Frequency {
 }
 
 export type BudgetInfoResponse = {
-  totalAmountSpent:string;
-  remainingDays:string;
-  averageSpentPerDay:string;
-  goal:string;
-  currency:string;
-  budgetFrequency:Frequency;
-  startDate:string;
-  endDate:string;
+  id:string;
+  totalAmountSpent: string;
+  description: string;
+  remainingDays: string;
+  averageSpentPerDay: string;
+  goal: string;
+  currency: string;
+  frequency: Frequency;
+  startDate: string;
+  endDate: string;
+};
+
+export type InactiveBudgetsInfoResponseItem = {
+    id:string;
+    amount: string;
+    description: string;
+    currency: string;
+    frequency: Frequency;
+    endDate: string;
+    startDate: string;
+}
+
+export type InactiveBudgetsInfoResponse = {
+  budgets:InactiveBudgetsInfoResponseItem[]
 };
 
 export type UserPendingTransaction = {
@@ -775,7 +791,7 @@ export type GetTotalLentTotalBorrowedResponse = {
 
 export type CreateBudgetRequest = {
   amount: string;
-  description:string;
+  description: string;
   currency: string;
   frequency: Frequency;
   scope: BudgetScope;

@@ -6,19 +6,58 @@ export const StyledManageBudgets = styled.div`
   color: ${({ theme }) => theme.lightColor};
   box-sizing: border-box;
   width: 100%;
-  height: 100%;
-  left: 0;
-  right: 0;
+  height: 100dvh;
   margin: 0;
-  padding: 14px;
-  gap: 20px;
-  position: relative;
-  overflow-x: hidden;
+  padding: 14px 0; /* Vertical padding only */
+  gap: 15px;
+  overflow: hidden;
+
+  /* Header elements with horizontal padding */
+  & > *:not(.scrollContainer) {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .messageContainer {
+    flex-shrink: 0;
+  }
+
+  .scrollContainer {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 14px; /* Internal content padding */
+
+    .activeInfo {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .inactiveInfo {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    /* Scrollbar styles for the scrolling section */
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+  }
+
   .submitButton {
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     margin-top: auto;
-    margin-bottom: 0.875rem;
-    padding: 0 0.875rem;
+    padding: 10px 14px 14px 14px;
   }
 `;

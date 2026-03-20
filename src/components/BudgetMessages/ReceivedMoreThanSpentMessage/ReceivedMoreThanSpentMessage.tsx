@@ -26,7 +26,7 @@ export default function ReceivedMoreThanSpentMessage({
           <div className="paragraphs">
             <div className="firstParagraph">
               You have received more funds than you have spent this{' '}
-              {budgetFrequency === 1 ? 'month' : 'week'}.
+              {budgetFrequency === 0 ? 'week' : budgetFrequency === 1 ? 'month' : 'period'}.
             </div>
             <div className="secondParagraph">
               The total amount received in excess of your expenses is{' '}

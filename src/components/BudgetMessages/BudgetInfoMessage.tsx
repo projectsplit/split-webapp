@@ -9,15 +9,13 @@ import { DefaultTheme } from 'styled-components';
 export const BudgetInfoMessage = (
   theme: DefaultTheme | undefined,
   closeButton: boolean,
-  data: BudgetInfoResponse  | undefined,
+  data: BudgetInfoResponse | undefined,
   onclick?: (event: React.MouseEvent<HTMLDivElement>) => void
 ): JSX.Element => {
   if (data === undefined) {
     return (
       <div>
-        <p>
-          Budget data is missing.
-        </p>
+        <p>Budget data is missing.</p>
       </div>
     );
   }
@@ -28,13 +26,14 @@ export const BudgetInfoMessage = (
     data.remainingDays !== undefined &&
     data.goal !== undefined &&
     data.averageSpentPerDay !== undefined &&
-    data.budgetFrequency !== undefined
+    data.frequency !== undefined
   ) {
     const remainingDays = parseFloat(data.remainingDays);
     const averageSpentPerDay = parseFloat(data.averageSpentPerDay);
     const goal = parseFloat(data.goal);
     const spendingProjection =
       totalAmountSpent + remainingDays * averageSpentPerDay;
+
     if (totalAmountSpent === 0)
       return (
         <SimpleOnTrackMessage
@@ -58,7 +57,7 @@ export const BudgetInfoMessage = (
           amount={totalAmountSpent.toString()}
           currency={data.currency}
           closeButton={closeButton}
-          budgetFrequency={data.budgetFrequency}
+          budgetFrequency={data.frequency}
           style={{
             backgroundColor: theme?.layer2,
             borderColor: theme?.layer2,
@@ -80,7 +79,7 @@ export const BudgetInfoMessage = (
           overspentBy={overspentBy}
           currency={data.currency}
           closeButton={closeButton}
-          budgetFrequency={data.budgetFrequency}
+          budgetFrequency={data.frequency}
           style={{
             backgroundColor: theme?.layer2,
             borderColor: theme?.layer2,
@@ -113,7 +112,7 @@ export const BudgetInfoMessage = (
             reduceAmount={reduceByRecommendation}
             currency={data.currency}
             closeButton={closeButton}
-            budgetFrequency={data.budgetFrequency}
+            budgetFrequency={data.frequency}
             style={{
               backgroundColor: theme?.layer2,
               borderColor: theme?.layer2,
@@ -132,7 +131,7 @@ export const BudgetInfoMessage = (
             amount={onTargetAmount}
             currency={data.currency}
             closeButton={closeButton}
-            budgetFrequency={data.budgetFrequency}
+            budgetFrequency={data.frequency}
             style={{
               backgroundColor: theme?.layer2,
               borderColor: theme?.layer2,

@@ -5,15 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import { BudgetInfoMessage } from '@/components/BudgetMessages/BudgetInfoMessage';
 import { useTheme } from 'styled-components';
-
 import useBudgetInfo from '@/api/auth/QueryHooks/useBudgetInfo';
+import useGetInactiveBudgetInfo from '@/api/auth/QueryHooks/useGetInactiveBudgetInfo';
+import { InactiveBudget } from '../InactiveBudget/InactiveBudget';
 
 export const ManageBudgets = () => {
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const { data: querydata, isFetching } = useBudgetInfo();
-console.log(querydata)
+  const { data: activeBudgetData, isFetching } = useBudgetInfo();
+  const { data: inactiveBudgetsData, isFetching: inactiveBudgetsIsFetching } =
+    useGetInactiveBudgetInfo();
+
   return (
     <StyledManageBudgets>
       <TopBarWithBackButton
@@ -22,12 +25,27 @@ console.log(querydata)
           navigate(`/budget/actions`);
         }}
       />
-      <div className="spentInfo">
-        <ProgressBar data={querydata} />
-        {BudgetInfoMessage(theme, false, querydata)}
+      {activeBudgetData && (
+        <div className="messageContainer">
+          {BudgetInfoMessage(theme, false, activeBudgetData)}
+        </div>
+      )}
+      <div className="scrollContainer">
+        {activeBudgetData && (
+          <div className="activeInfo">
+            <ProgressBar data={activeBudgetData} />
+          </div>
+        )}
+        {inactiveBudgetsData && (
+          <div className="inactiveInfo">
+            {inactiveBudgetsData?.budgets.map((budget) => (
+              <InactiveBudget key={budget.id} budget={budget} />
+            ))}
+          </div>
+        )}
       </div>
       <div className="submitButton">
-        <MyButton fontSize="16" onClick={() => {}} isLoading={false}>
+        <MyButton fontSize="16" onClick={() => navigate("/")} isLoading={false}>
           Done
         </MyButton>
       </div>

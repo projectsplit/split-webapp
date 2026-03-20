@@ -30,7 +30,7 @@ export default function OnTrackMessage({
               <strong className="amount">
                 {displayCurrencyAndAmount(amount, currency)}
               </strong>{' '}
-              at the end of the {budgetFrequency === 1 ? 'month' : 'week'}.
+              at the end of the {budgetFrequency === 0 ? 'week' : budgetFrequency === 1 ? 'month' : 'period'}.
             </div>
           </div>
         </div>
