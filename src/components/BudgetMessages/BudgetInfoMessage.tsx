@@ -5,6 +5,7 @@ import Recommendation from './Recommendation/Recommendation';
 import SimpleOnTrackMessage from './SimpleOnTrackMessage/SimpleOnTrackMessage';
 import { BudgetInfoResponse } from '../../types';
 import { DefaultTheme } from 'styled-components';
+import { NoBudgetSubmittedMessage } from './NoBudgetSubmittedMessage/NoBudgetSubmittedMessage';
 
 export const BudgetInfoMessage = (
   theme: DefaultTheme | undefined,
@@ -13,11 +14,7 @@ export const BudgetInfoMessage = (
   onclick?: (event: React.MouseEvent<HTMLDivElement>) => void
 ): JSX.Element => {
   if (data === undefined) {
-    return (
-      <div>
-        <p>Budget data is missing.</p>
-      </div>
-    );
+    return <NoBudgetSubmittedMessage />;
   }
   const totalAmountSpent = parseFloat(data.totalAmountSpent);
 

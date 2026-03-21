@@ -11,14 +11,14 @@ export const useCreateBudget = (
   const queryClient = useQueryClient();
 
   return useMutation<any, any, CreateBudgetRequest>({
-    mutationKey: ['budget', 'create'],
+    mutationKey: ['budgets', 'create'],
     mutationFn: createBudget,
     onError: (error) => {
       const errorData = error.response?.data;
       serverErrors.value = errorData;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['budget'], exact: false });
+      queryClient.invalidateQueries({ queryKey: ['budgets'] });
       navigate('/budget/current', { replace: true });
     },
   });

@@ -24,23 +24,23 @@ export default function CurrentBudget() {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const queryKey = ['budget'];
+  const queryKey = ['budgets', 'active'];
   const theme = useTheme();
   const nodeRef = React.useRef(null);
 
   // const { isFetching, data } = useBudgetInfo();
 
-  const data: BudgetInfoResponse = {
+  // const data: BudgetInfoResponse = {
 
-    totalAmountSpent: '123',
-    remainingDays: '5',
-    averageSpentPerDay: '10',
-    goal: '1300',
-    currency: 'USD',
-    budgetFrequency: 1,
-    startDate: '0001-01-01T00:00:00',
-    endDate: '0001-01-01T00:00:00',
-  };
+  //   totalAmountSpent: '123',
+  //   remainingDays: '5',
+  //   averageSpentPerDay: '10',
+  //   goal: '1300',
+  //   currency: 'USD',
+  //   budgetFrequency: 1,
+  //   startDate: '0001-01-01T00:00:00',
+  //   endDate: '0001-01-01T00:00:00',
+  // };
   const isFetching = false;
 
   // useEffect(() => {

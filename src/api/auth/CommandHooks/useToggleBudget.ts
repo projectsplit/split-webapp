@@ -5,18 +5,15 @@ export const useToggleBudget = () => {
   const queryClient = useQueryClient();
 
   return useMutation<any, any, { budgetId: string | undefined }>({
-    mutationKey: ['budget'],
+    mutationKey: ['budgets', 'toggle'],
     mutationFn: toggleBudget,
     onError: (error) => {
       const errorData = error.response?.data;
       console.log(errorData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['budget'], exact: false });
-      queryClient.invalidateQueries({
-        queryKey: ['inactiveBudgets'],
-        exact: false,
-      });
+      queryClient.removeQueries({ queryKey: ['budgets', 'active'], exact: true });
+      queryClient.invalidateQueries({ queryKey: ['budgets'] });
     },
   });
 };

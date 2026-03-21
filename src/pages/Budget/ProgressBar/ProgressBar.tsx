@@ -9,7 +9,7 @@ import { progressBarColor } from './utils/progressBarColor';
 import { convertDaysToDaysHoursAndMinutes } from './utils/convertDaysToDaysHoursAndMinutes';
 import { useToggleBudget } from '@/api/auth/CommandHooks/useToggleBudget';
 
-export default function ProgressBar({ data }: ProgressBarProps) {
+export default function ProgressBar({ data, isOn, setIsOn }: ProgressBarProps) {
   const theme = useTheme();
   let percentage: number = 0;
 
@@ -92,7 +92,14 @@ export default function ProgressBar({ data }: ProgressBarProps) {
                 </strong>
               </div>
             </div>
-            <ToggleSwitch isOn={true} onToggle={() => toggleBudget({budgetId: data?.id})} />
+            <ToggleSwitch isOn={isOn} onToggle={() => {
+              setIsOn(false);
+              setTimeout(() => {
+                toggleBudget({budgetId: data?.id}, {
+                  onError: () => setIsOn(true),
+                });
+              }, 400);
+            }} />
           </div>
         </div>
       </div>

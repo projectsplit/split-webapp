@@ -4,7 +4,7 @@ import { apiClient } from '../../apiClients';
 
 const useGetInactiveBudgetInfo = () => {
   return useQuery<InactiveBudgetsInfoResponse>({
-    queryKey: ['inactiveBudgets'],
+    queryKey: ['budgets', 'inactive'],
     queryFn: getBudgetInfo,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

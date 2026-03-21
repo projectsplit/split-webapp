@@ -1263,6 +1263,8 @@ export interface SpendingCycleInfoProps {
 
 export interface ProgressBarProps {
   data: BudgetInfoResponse | undefined;
+  isOn: boolean;
+  setIsOn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface ManageBudgetMenuProps {
   menu: Signal<string | null>;

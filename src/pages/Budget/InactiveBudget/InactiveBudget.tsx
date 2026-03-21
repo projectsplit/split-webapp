@@ -5,13 +5,16 @@ import { convertDaysToDaysHoursAndMinutes } from '@/pages/Budget/ProgressBar/uti
 import { useToggleBudget } from '@/api/auth/CommandHooks/useToggleBudget';
 import { InactiveBudgetsInfoResponseItem } from '@/types';
 import { getIsoDateInfo } from '@/helpers/getIsoDateInfo';
+import { useState } from 'react';
 
 interface InactiveBudgetProps {
   budget: InactiveBudgetsInfoResponseItem;
+  onActivate: () => void;
 }
 
-export const InactiveBudget = ({ budget }: InactiveBudgetProps) => {
+export const InactiveBudget = ({ budget, onActivate }: InactiveBudgetProps) => {
   const { mutate: toggleBudget } = useToggleBudget();
+  const [isOn, setIsOn] = useState(false);
 
   const startDateDecomposed = getIsoDateInfo(budget?.startDate);
   const endDateDecomposed = getIsoDateInfo(budget?.endDate);
@@ -53,8 +56,16 @@ export const InactiveBudget = ({ budget }: InactiveBudgetProps) => {
           </div>
         </div>
         <ToggleSwitch
-          isOn={false}
-          onToggle={() => toggleBudget({ budgetId: budget?.id })}
+          isOn={isOn}
+          onToggle={() => {
+            setIsOn(true);
+            onActivate();
+            setTimeout(() => {
+              toggleBudget({ budgetId: budget?.id }, {
+                onError: () => setIsOn(false),
+              });
+            }, 400);
+          }}
         />
       </div>
     </StyledInactiveBudget>
