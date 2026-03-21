@@ -1,4 +1,5 @@
 import {
+  BudgetInfoResponse,
   Details,
   GroupedTransaction,
   GroupsAllBalancesResponse,
@@ -16,6 +17,11 @@ import { BsBarChartFill } from 'react-icons/bs';
 import { BsFillPiggyBankFill } from 'react-icons/bs';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { Signal } from '@preact/signals-react';
+import { useState } from 'react';
+import { useTheme } from 'styled-components';
+import useBudgetInfo from '@/api/auth/QueryHooks/useBudgetInfo';
+import { BudgetInfoMessage } from '@/components/BudgetMessages/BudgetInfoMessage';
+import { BudgetCarousel } from './BudgetCarousel/BudgetCarousel';
 
 export default function ScrollableMenuButtons({
   mostRecentGroupDataIsFetching,
@@ -29,6 +35,7 @@ export default function ScrollableMenuButtons({
   groupsData,
   totalBalances,
   topMenuTitle,
+  activeBudgetData,
 }: {
   mostRecentGroupDataIsFetching: boolean;
   mostRecentGroupData: MostRecentGroupDetailsResponse | undefined;
@@ -41,17 +48,13 @@ export default function ScrollableMenuButtons({
   groupsData: GroupsAllBalancesResponse | undefined;
   totalBalances: Details;
   topMenuTitle: Signal<string>;
+  activeBudgetData: BudgetInfoResponse | undefined
 }) {
+
+
   return (
     <StyledScrollableMenuButtons>
-      {/* {showAdvice && budgetData?.budgetSubmitted && (
-                <>
-                  {BudgetInfoMessage(theme, true, budgetData, () =>
-                    setShowAdvice(false)
-                  )}
-                </>
-              )} */}
-
+      <BudgetCarousel activeBudgetData={activeBudgetData}/>
       <MostRecentSection
         mostRecentGroupDataIsFetching={mostRecentGroupDataIsFetching}
         mostRecentGroupData={mostRecentGroupData}

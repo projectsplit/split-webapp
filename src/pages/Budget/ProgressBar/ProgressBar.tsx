@@ -1,5 +1,4 @@
 import { StyledProgressBar } from './ProgressBar.styled';
-import { TbTargetArrow } from 'react-icons/tb';
 import { ProgressBarProps } from '../../../interfaces';
 import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
 import { useTheme } from 'styled-components';
@@ -8,19 +7,10 @@ import ToggleSwitch from '@/components/ToggleSwitch/ToggleSwitch';
 import { progressBarColor } from './utils/progressBarColor';
 import { convertDaysToDaysHoursAndMinutes } from './utils/convertDaysToDaysHoursAndMinutes';
 import { useToggleBudget } from '@/api/auth/CommandHooks/useToggleBudget';
+import { Bar } from './Bar/Bar';
 
 export default function ProgressBar({ data, isOn, setIsOn }: ProgressBarProps) {
   const theme = useTheme();
-  let percentage: number = 0;
-
-  if (data?.totalAmountSpent !== undefined && data?.goal !== undefined) {
-    const totalAmountSpent = parseFloat(data.totalAmountSpent);
-    const goal = parseFloat(data.goal);
-    if (!isNaN(totalAmountSpent) && !isNaN(goal)) {
-      percentage = parseFloat(((totalAmountSpent / goal) * 100).toFixed(1));
-    }
-  }
-
   const convertedDaysHoursMinutes = convertDaysToDaysHoursAndMinutes(
     data?.endDate
   );
@@ -31,7 +21,7 @@ export default function ProgressBar({ data, isOn, setIsOn }: ProgressBarProps) {
   const {mutate: toggleBudget} = useToggleBudget();
 
   return (
-    <StyledProgressBar percentage={percentage} color={progressBarColor(data,theme)}>
+    <StyledProgressBar>
       {/* <div className="closeButton" onClick={()=>setMenu("deleteBudgetConfirmation")}>
         <IonIcon name="close-outline" className="close" />
       </div> */}
@@ -41,29 +31,7 @@ export default function ProgressBar({ data, isOn, setIsOn }: ProgressBarProps) {
             {startDateDecomposed.dateNumber} {startDateDecomposed.month} -{' '}
             {endDateDecomposed.dateNumber} {endDateDecomposed.month}
           </div>
-          <div className="progressBar">
-            <TbTargetArrow className="targetIcon" />
-
-            <div className="wrapper">
-              <div className="barWrapper">
-                <div className="bar" />
-              </div>
-              <div className="monetaryProgress">
-                {data?.currency !== undefined ? (
-                  <strong>
-                    {displayCurrencyAndAmount(
-                      data.totalAmountSpent,
-                      data.currency
-                    )}{' '}
-                    / {displayCurrencyAndAmount(data.goal, data.currency)}
-                  </strong>
-                ) : (
-                  ''
-                )}
-              </div>
-            </div>
-            <div className="amount">{percentage < 0 ? 0 : percentage}%</div>
-          </div>
+          <Bar color={progressBarColor(data,theme)} data={data} />
           <div className="toggleAndInfo">
             <div className="miscInfo">
               <div className="description">

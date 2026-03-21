@@ -6,7 +6,6 @@ export const StyledBackAndForthAnimation = styled.div`
     grid-template-columns: 100%;
     width: 100%;
     position: relative;
-    min-height: 400px;
     overflow: hidden;
   }
 

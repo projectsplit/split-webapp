@@ -48,8 +48,6 @@ export default function Home() {
   const isPersonal = useSignal<boolean>(true);
   const isNonGroupExpense = useSignal<boolean>(false);
   const isNonGroupTransfer = useSignal<boolean>(true);
-  const [showAdvice, setShowAdvice] = useState(true);
-  const theme = useTheme();
 
   const nonGroupUsers = useSignal<User[]>([]);
   const fromHomeGroup = useSignal<Group | null>(null);
@@ -94,6 +92,9 @@ export default function Home() {
     data: mostRecentGroupData,
     isFetching: mostRecentGroupDataIsFetching,
   } = useGetMostRecentGroups(recentContextId);
+
+  const { data: activeBudgetData, isFetching: activeBudgetsIsFetching } =
+    useBudgetInfo();
 
   useEffect(() => {
     topMenuTitle.value = '';
@@ -140,6 +141,7 @@ export default function Home() {
             groupsData={groupsData}
             totalBalances={totalBalances}
             topMenuTitle={topMenuTitle}
+            activeBudgetData={activeBudgetData}
           />
           <div
             className={`actions ${isGlowing ? 'glow' : ''}`}
