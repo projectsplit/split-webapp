@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-
-
 export const StyledProgressBar = styled.div`
   display: flex;
   flex-direction: column;
@@ -31,13 +29,6 @@ export const StyledProgressBar = styled.div`
     }
   }
 
-  .budgetTitle {
-    display: flex;
-    justify-content: center;
-    .sup {
-      margin-top: -3px;
-    }
-  }
   .toggleAndInfo {
     display: flex;
     flex-direction: row;
@@ -58,11 +49,4 @@ export const StyledProgressBar = styled.div`
       white-space: nowrap;
     }
   }
-  .monetaryProgress {
-    display: flex;
-    justify-content: center;
-    margin-top: 5px;
-    font-size: 14px;
-  }
-
 `;

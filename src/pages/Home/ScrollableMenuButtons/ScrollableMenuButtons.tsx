@@ -18,7 +18,6 @@ import { BsFillPiggyBankFill } from 'react-icons/bs';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { Signal } from '@preact/signals-react';
 import { useState } from 'react';
-import { useTheme } from 'styled-components';
 import useBudgetInfo from '@/api/auth/QueryHooks/useBudgetInfo';
 import { BudgetInfoMessage } from '@/components/BudgetMessages/BudgetInfoMessage';
 import { BudgetCarousel } from './BudgetCarousel/BudgetCarousel';

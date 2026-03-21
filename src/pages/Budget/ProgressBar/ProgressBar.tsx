@@ -15,10 +15,7 @@ export default function ProgressBar({ data, isOn, setIsOn }: ProgressBarProps) {
     data?.endDate
   );
 
-  const startDateDecomposed = getIsoDateInfo(data?.startDate);
-  const endDateDecomposed = getIsoDateInfo(data?.endDate);
-
-  const {mutate: toggleBudget} = useToggleBudget();
+  const { mutate: toggleBudget } = useToggleBudget();
 
   return (
     <StyledProgressBar>
@@ -27,11 +24,7 @@ export default function ProgressBar({ data, isOn, setIsOn }: ProgressBarProps) {
       </div> */}
       <div className="budgetInfo">
         <div className="thisPeriod">
-          <div className="budgetTitle">
-            {startDateDecomposed.dateNumber} {startDateDecomposed.month} -{' '}
-            {endDateDecomposed.dateNumber} {endDateDecomposed.month}
-          </div>
-          <Bar color={progressBarColor(data,theme)} data={data} />
+          <Bar color={progressBarColor(data, theme)} data={data} />
           <div className="toggleAndInfo">
             <div className="miscInfo">
               <div className="description">
@@ -60,14 +53,20 @@ export default function ProgressBar({ data, isOn, setIsOn }: ProgressBarProps) {
                 </strong>
               </div>
             </div>
-            <ToggleSwitch isOn={isOn} onToggle={() => {
-              setIsOn(false);
-              setTimeout(() => {
-                toggleBudget({budgetId: data?.id}, {
-                  onError: () => setIsOn(true),
-                });
-              }, 400);
-            }} />
+            <ToggleSwitch
+              isOn={isOn}
+              onToggle={() => {
+                setIsOn(false);
+                setTimeout(() => {
+                  toggleBudget(
+                    { budgetId: data?.id },
+                    {
+                      onError: () => setIsOn(true),
+                    }
+                  );
+                }, 400);
+              }}
+            />
           </div>
         </div>
       </div>

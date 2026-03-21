@@ -1,5 +1,5 @@
 import { useTheme } from 'styled-components';
-import { StyledBudgetCarousel } from './BudgetCarousel.styled';
+import { CarouselItemWrapper, StyledBudgetCarousel } from './BudgetCarousel.styled';
 import { BudgetInfoResponse } from '@/types';
 import { BackAndForthAnimation } from '@/components/Animations/BackAndForthAnimation/BackAndForthAnimation';
 import { BudgetInfoMessage } from '@/components/BudgetMessages/BudgetInfoMessage';
@@ -22,19 +22,30 @@ export const BudgetCarousel = ({ activeBudgetData }: BudgetCarouselProps) => {
     const interval = setInterval(() => {
       setCurrentStep(currentStep === 1 ? 2 : 1);
       handleAnimDirection();
-    }, 5000);
+    }, 12000);
     return () => clearInterval(interval);
   }, [currentStep]);
 
   return (
     <StyledBudgetCarousel>
       <BackAndForthAnimation
-        firstChild={BudgetInfoMessage(theme, true, activeBudgetData)}
+        firstChild={
+          <CarouselItemWrapper>
+            {BudgetInfoMessage(theme, true, activeBudgetData, undefined, {
+              backgroundColor: 'transparent',
+              boxShadow: 'none',
+              border: 'none',
+              padding: 0,
+            })}
+          </CarouselItemWrapper>
+        }
         secondChild={
-          <Bar
-            color={progressBarColor(activeBudgetData, theme)}
-            data={activeBudgetData}
-          />
+          <CarouselItemWrapper>
+            <Bar
+              color={progressBarColor(activeBudgetData, theme)}
+              data={activeBudgetData}
+            />
+          </CarouselItemWrapper>
         }
         currentStep={currentStep}
         animDirection={animDirection}

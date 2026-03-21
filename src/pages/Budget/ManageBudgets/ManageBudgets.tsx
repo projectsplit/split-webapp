@@ -6,13 +6,11 @@ import ProgressBar from '../ProgressBar/ProgressBar';
 import { BudgetInfoMessage } from '@/components/BudgetMessages/BudgetInfoMessage';
 import { useTheme } from 'styled-components';
 import useBudgetInfo from '@/api/auth/QueryHooks/useBudgetInfo';
-
 import { InactiveBudget } from '../InactiveBudget/InactiveBudget';
 import { useState } from 'react';
 import { Shimmer } from '@/components/Animations/Shimmer/Shimmer';
 import useGetInactiveBudgetInfo from '@/api/auth/QueryHooks/useGetInactiveBudgetInfo';
 import Spinner from '@/components/Spinner/Spinner';
-
 
 export const ManageBudgets = () => {
   const navigate = useNavigate();

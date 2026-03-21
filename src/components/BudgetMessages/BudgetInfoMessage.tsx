@@ -11,7 +11,8 @@ export const BudgetInfoMessage = (
   theme: DefaultTheme | undefined,
   closeButton: boolean,
   data: BudgetInfoResponse | undefined,
-  onclick?: (event: React.MouseEvent<HTMLDivElement>) => void
+  onclick?: (event: React.MouseEvent<HTMLDivElement>) => void,
+  style?: React.CSSProperties
 ): JSX.Element => {
   if (data === undefined) {
     return <NoBudgetSubmittedMessage />;
@@ -37,14 +38,16 @@ export const BudgetInfoMessage = (
         <SimpleOnTrackMessage
           onClick={onclick}
           closeButton={closeButton}
-          style={{
-            backgroundColor: theme?.layer2,
-            borderColor: theme?.layer2,
-            borderStyle: 'solid',
-            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-            borderRadius: '6px',
-            padding: '0.8rem',
-          }}
+          style={
+            style || {
+              backgroundColor: theme?.layer2,
+              borderColor: theme?.layer2,
+              borderStyle: 'solid',
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              borderRadius: '6px',
+              padding: '0.8rem',
+            }
+          }
         />
       );
 
@@ -56,14 +59,16 @@ export const BudgetInfoMessage = (
           currency={data.currency}
           closeButton={closeButton}
           budgetFrequency={data.frequency}
-          style={{
-            backgroundColor: theme?.layer2,
-            borderColor: theme?.layer2,
-            borderStyle: 'solid',
-            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-            borderRadius: '6px',
-            padding: '0.8rem',
-          }}
+          style={
+            style || {
+              backgroundColor: theme?.layer2,
+              borderColor: theme?.layer2,
+              borderStyle: 'solid',
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              borderRadius: '6px',
+              padding: '0.8rem',
+            }
+          }
         />
       );
     if (totalAmountSpent >= goal) {
@@ -78,14 +83,16 @@ export const BudgetInfoMessage = (
           currency={data.currency}
           closeButton={closeButton}
           budgetFrequency={data.frequency}
-          style={{
-            backgroundColor: theme?.layer2,
-            borderColor: theme?.layer2,
-            borderStyle: 'solid',
-            // boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-            borderRadius: '6px',
-            padding: '0.8rem',
-          }}
+          style={
+            style || {
+              backgroundColor: theme?.layer2,
+              borderColor: theme?.layer2,
+              borderStyle: 'solid',
+              // boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+              borderRadius: '6px',
+              padding: '0.8rem',
+            }
+          }
         />
       );
     } else {
@@ -111,14 +118,16 @@ export const BudgetInfoMessage = (
             currency={data.currency}
             closeButton={closeButton}
             budgetFrequency={data.frequency}
-            style={{
-              backgroundColor: theme?.layer2,
-              borderColor: theme?.layer2,
-              borderStyle: 'solid',
-              //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-              borderRadius: '6px',
-              padding: '0.8rem',
-            }}
+            style={
+              style || {
+                backgroundColor: theme?.layer2,
+                borderColor: theme?.layer2,
+                borderStyle: 'solid',
+                //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                borderRadius: '6px',
+                padding: '0.8rem',
+              }
+            }
           />
         );
       } else {
@@ -130,14 +139,16 @@ export const BudgetInfoMessage = (
             currency={data.currency}
             closeButton={closeButton}
             budgetFrequency={data.frequency}
-            style={{
-              backgroundColor: theme?.layer2,
-              borderColor: theme?.layer2,
-              borderStyle: 'solid',
-              //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-              borderRadius: '6px',
-              padding: '0.8rem',
-            }}
+            style={
+              style || {
+                backgroundColor: theme?.layer2,
+                borderColor: theme?.layer2,
+                borderStyle: 'solid',
+                //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                borderRadius: '6px',
+                padding: '0.8rem',
+              }
+            }
           />
         );
       }
