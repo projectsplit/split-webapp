@@ -43,6 +43,13 @@ export const StyledManageBudgets = styled.div`
       margin-top: 10px;
     }
 
+    .spinnerContainer {
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     /* Scrollbar styles for the scrolling section */
     &::-webkit-scrollbar {
       width: 4px;
