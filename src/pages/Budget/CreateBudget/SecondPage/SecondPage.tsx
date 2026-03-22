@@ -5,7 +5,6 @@ import { Signal } from '@preact/signals-react';
 
 export const SecondPage = ({ data, actions, scopeMenu }: SecondPageProps) => {
 
-
   return (
     <>
       <div className="errorsWrapper">
@@ -41,7 +40,6 @@ export const SecondPage = ({ data, actions, scopeMenu }: SecondPageProps) => {
           }
         />
       </div>
-
     </>
   );
 };

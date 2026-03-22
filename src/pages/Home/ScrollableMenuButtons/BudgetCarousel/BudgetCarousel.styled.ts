@@ -14,6 +14,7 @@ export const CarouselItemWrapper = styled.div`
   justify-content: center;
   box-sizing: border-box;
   width: 100%;
+  cursor:pointer;
    .closeButton {
       position: absolute;
       top: 0rem;

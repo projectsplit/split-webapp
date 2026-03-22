@@ -15,7 +15,7 @@ import IonIcon from '@reacticons/ionicons';
 import { UseMutateAsyncFunction } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
-export const BudgetCarousel = ({ activeBudgetData, setShowBudgetInfo }: BudgetCarouselProps) => {
+export const BudgetCarousel = ({ activeBudgetData, setShowBudgetInfo, setShowButton, onClick }: BudgetCarouselProps) => {
   const theme = useTheme();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [animDirection, setAnimDirection] = useState<
@@ -72,11 +72,11 @@ export const BudgetCarousel = ({ activeBudgetData, setShowBudgetInfo }: BudgetCa
   };
 
   return (
-    <StyledBudgetCarousel onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+    <StyledBudgetCarousel onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} >
       <BackAndForthAnimation
         firstChild={
-          <CarouselItemWrapper>
-            <div className="closeButton" onClick={() => setShowBudgetInfo(false)}>
+          <CarouselItemWrapper onClick={onClick}>
+            <div className="closeButton" onClick={() => {setShowBudgetInfo(false);setShowButton(true)}}>
               <IonIcon name="close-outline" className="close" />
             </div>
             {BudgetInfoMessage(theme, false, activeBudgetData, undefined, {
@@ -89,7 +89,7 @@ export const BudgetCarousel = ({ activeBudgetData, setShowBudgetInfo }: BudgetCa
         }
         secondChild={
           <CarouselItemWrapper>
-            <div className="closeButton" onClick={() => setShowBudgetInfo(false)}>
+            <div className="closeButton" onClick={() => {setShowBudgetInfo(false);setShowButton(true)}}>
               <IonIcon name="close-outline" className="close" />
             </div>
             <Bar
@@ -111,5 +111,7 @@ export const BudgetCarousel = ({ activeBudgetData, setShowBudgetInfo }: BudgetCa
 
 interface BudgetCarouselProps {
   activeBudgetData: BudgetInfoResponse | undefined;
-  setShowBudgetInfo: UseMutateAsyncFunction<any, AxiosError<unknown, any>, boolean, unknown>
+  setShowBudgetInfo: UseMutateAsyncFunction<any, AxiosError<unknown, any>, boolean, unknown>;
+  setShowButton: React.Dispatch<React.SetStateAction<boolean>>;
+  onClick:React.MouseEventHandler<HTMLDivElement>;
 }

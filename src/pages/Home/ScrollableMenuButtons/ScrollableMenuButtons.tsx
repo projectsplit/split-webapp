@@ -7,7 +7,7 @@ import {
   UserInfo,
 } from '@/types';
 import { StyledScrollableMenuButtons } from './ScrollableMenuButtons.styled';
-import { NavigateFunction } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import MostRecentSection from '../MostRecentSection/MostRecentSection';
 import TreeAdjustedContainer from '@/components/TreeAdjustedContainer/TreeAdjustedContainer';
 import { TreeItemBuilderForHomeAndGroups } from '@/components/TreeItemBuilderForHomeAndGroups';
@@ -19,6 +19,7 @@ import { BsFillPersonFill } from 'react-icons/bs';
 import { Signal, useSignal } from '@preact/signals-react';
 import { BudgetCarousel } from './BudgetCarousel/BudgetCarousel';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
+import { useState } from 'react';
 
 export default function ScrollableMenuButtons({
   mostRecentGroupDataIsFetching,
@@ -49,8 +50,8 @@ export default function ScrollableMenuButtons({
   activeBudgetData: BudgetInfoResponse | undefined;
   showBudgetInfo: boolean;
 }) {
- 
   const { mutateAsync: setShowBudgetInfo } = useSetShowBudgetInfo();
+  const [showButton, setShowButton] = useState(false);
 
   return (
     <StyledScrollableMenuButtons>
@@ -58,14 +59,16 @@ export default function ScrollableMenuButtons({
         <BudgetCarousel
           activeBudgetData={activeBudgetData}
           setShowBudgetInfo={setShowBudgetInfo}
+          setShowButton={setShowButton}
+          onClick={() => navigate('/budget/manage', { state: { fromHome: true } })}
         />
       )}
-      {activeBudgetData && !showBudgetInfo && (
+      {activeBudgetData && !showBudgetInfo && showButton && (
         <div className="undoButton">
           <span
             className="text"
             onClick={() => {
-              setShowBudgetInfo(true)
+              setShowBudgetInfo(true);
             }}
           >
             undo

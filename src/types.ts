@@ -801,6 +801,7 @@ export type CreateBudgetRequest = {
   scope: BudgetScope;
   targetGroupIds: string[];
   commencementDay: string | null;
+  activate?:boolean;
   startDate?: string;
   endDate?: string;
 };

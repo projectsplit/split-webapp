@@ -1,7 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { UserInfo } from '../../../types';
+import {
+  BudgetInfoResponse,
+  InactiveBudgetsInfoResponse,
+  UserInfo,
+} from '../../../types';
 import '../../../styles/freakflags/freakflags.css';
 import { StyledCreateBudget } from './CreateBudget.styled';
 import { useSignal } from '@preact/signals-react';
@@ -22,11 +26,15 @@ import { SecondPage } from './SecondPage/SecondPage';
 import { BackAndForthAnimation } from '@/components/Animations/BackAndForthAnimation/BackAndForthAnimation';
 import { FirstPage } from './FirstPage/FirstPage';
 import SpendingCycleInfo from '../SpendingCycleInfo/SpendingCycleInfo';
+import MakeBudgetActiveMenuAnimation from '@/components/Animations/MakeBudgetActiveMenuAnimation';
+import useBudgetInfo from '@/api/auth/QueryHooks/useBudgetInfo';
+import useGetInactiveBudgetInfo from '@/api/auth/QueryHooks/useGetInactiveBudgetInfo';
 
 export default function CreateBudget() {
   const data = useCreateBudgetData();
   const actions = useCreateBudgetActions();
   const menu = useSignal<string | null>(null);
+  const makeBudgetActiveMenu = useSignal<string | null>(null);
   const scopeMenu = useSignal<string | null>(null);
 
   const { userInfo, timeZoneId } = useOutletContext<{
@@ -36,6 +44,9 @@ export default function CreateBudget() {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { data: activeBudgetData } = useBudgetInfo();
+  const { data: inactiveBudgetsData } = useGetInactiveBudgetInfo();
+
   const { mutateAsync: createBudget, isPending } = useCreateBudget(
     navigate,
     data.serverErrors
@@ -62,6 +73,13 @@ export default function CreateBudget() {
   );
 
   const submitBudget = async () => {
+    if (
+      !!activeBudgetData ||
+      (!!inactiveBudgetsData && inactiveBudgetsData?.budgets.length > 0)
+    ) {
+      makeBudgetActiveMenu.value = 'makeBudgetActive';
+      return;
+    }
     setAnimDirection('none');
     await actions.submitBudget({
       createBudgetMutation: createBudget,
@@ -69,6 +87,7 @@ export default function CreateBudget() {
       step: data.currentStep,
     });
   };
+
 
   const handldeCurrencyOptionsClick = (curr: string) => {
     actions.setCurrencySymbol(curr);
@@ -142,6 +161,7 @@ export default function CreateBudget() {
       </div>
 
       <MenuAnimationBackground menu={menu} />
+      <MenuAnimationBackground menu={makeBudgetActiveMenu} />
       {scopeMenu.value === 'scopeSelector' && (
         <ScopeSelectionMenu
           menu={scopeMenu}
@@ -159,6 +179,13 @@ export default function CreateBudget() {
       <InfoBoxAnimation menu={menu}>
         <SpendingCycleInfo menu={menu} />
       </InfoBoxAnimation>
+      <MakeBudgetActiveMenuAnimation
+        menu={makeBudgetActiveMenu}
+        hasActiveBudgetData={!!activeBudgetData}
+        hasInactiveBudgetData={
+          !!inactiveBudgetsData && inactiveBudgetsData.budgets.length > 0
+        }
+      />
       <CurrencyOptionsAnimation
         currencyMenu={menu}
         clickHandler={handldeCurrencyOptionsClick}

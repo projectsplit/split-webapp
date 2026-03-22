@@ -1,7 +1,7 @@
 import MyButton from '@/components/MyButton/MyButton';
 import { StyledManageBudgets } from './ManageBudgets.styled';
 import TopBarWithBackButton from '@/components/TopBarWithBackButton/TopBarWithBackButton';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import { BudgetInfoMessage } from '@/components/BudgetMessages/BudgetInfoMessage';
 import { useTheme } from 'styled-components';
@@ -15,6 +15,7 @@ import Spinner from '@/components/Spinner/Spinner';
 export const ManageBudgets = () => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const location = useLocation();
 
   const { data: activeBudgetData, isFetching: activeBudgetsIsFetching } =
     useBudgetInfo();
@@ -38,7 +39,11 @@ export const ManageBudgets = () => {
       <TopBarWithBackButton
         header="Manage Budgets"
         onClick={() => {
-          navigate(`/budget/actions`);
+          if (location.state?.fromHome) {
+            navigate('/');
+          } else {
+            navigate(`/budget/actions`);
+          }
         }}
       />
 

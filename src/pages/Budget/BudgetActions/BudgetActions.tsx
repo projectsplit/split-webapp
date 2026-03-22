@@ -6,10 +6,8 @@ import { RiEdit2Fill } from 'react-icons/ri';
 import { FaCalculator, FaChartPie } from 'react-icons/fa';
 import TopBarWithBackButton from '@/components/TopBarWithBackButton/TopBarWithBackButton';
 
-
 export const BudgetActions = () => {
   const navigate = useNavigate();
-
 
   return (
     <StyledBudgetActions>

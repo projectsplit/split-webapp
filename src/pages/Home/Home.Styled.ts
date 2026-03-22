@@ -13,7 +13,8 @@ export const StyledHomepage = styled.div`
     z-index: 1; /* Ensure fixed children (background) are above */
   }
   .fixedTop {
-    padding: 14px;
+   padding-left: 14px;
+    padding-right: 14px;
   }
 
   .welcomeStripe {
