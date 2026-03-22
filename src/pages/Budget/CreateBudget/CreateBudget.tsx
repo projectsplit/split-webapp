@@ -185,6 +185,14 @@ export default function CreateBudget() {
         hasInactiveBudgetData={
           !!inactiveBudgetsData && inactiveBudgetsData.budgets.length > 0
         }
+        onConfirm={(activate: boolean) => {
+          actions.submitBudget({
+            createBudgetMutation: createBudget,
+            menu: makeBudgetActiveMenu,
+            step: data.currentStep,
+            activate,
+          });
+        }}
       />
       <CurrencyOptionsAnimation
         currencyMenu={menu}

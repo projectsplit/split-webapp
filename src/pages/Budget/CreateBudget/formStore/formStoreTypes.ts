@@ -68,6 +68,7 @@ export interface CreateBudgetState {
     createBudgetMutation: any;
     menu: Signal<string | null>;
     step: number;
+    activate?: boolean;
   }) => Promise<{
     isValid: boolean;
     errors?: any;

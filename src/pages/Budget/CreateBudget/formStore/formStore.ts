@@ -143,7 +143,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
     };
   },
 
-  submitBudget: async ({ createBudgetMutation, menu, step }) => {
+  submitBudget: async ({ createBudgetMutation, menu, step, activate }) => {
     const { isValid, errors } = get().validateForm(step);
     if (!isValid) return { isValid, errors };
 
@@ -179,6 +179,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
       currency: currencySymbol,
       scope: flags,
       targetGroupIds: targetGroupIds.value,
+      activate,
     };
 
     if (budgetFrequency.value === Frequency.Monthly) {

@@ -7,6 +7,7 @@ export default function MakeBudgetActiveMenuAnimation({
   menu,
   hasActiveBudgetData,
   hasInactiveBudgetData,
+  onConfirm,
 }: MakeBudgetActiveMenuAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -22,6 +23,7 @@ export default function MakeBudgetActiveMenuAnimation({
         title="Budget Status"
         hasActiveBudgetData={hasActiveBudgetData}
         hasInactiveBudgetData={hasInactiveBudgetData}
+        onConfirm={onConfirm}
       />
     </CSSTransition>
   );

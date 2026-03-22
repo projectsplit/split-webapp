@@ -76,7 +76,7 @@ export const BudgetCarousel = ({ activeBudgetData, setShowBudgetInfo, setShowBut
       <BackAndForthAnimation
         firstChild={
           <CarouselItemWrapper onClick={onClick}>
-            <div className="closeButton" onClick={() => {setShowBudgetInfo(false);setShowButton(true)}}>
+            <div className="closeButton" onClick={(e: React.MouseEvent) => {e.stopPropagation();setShowBudgetInfo(false);setShowButton(true)}}>
               <IonIcon name="close-outline" className="close" />
             </div>
             {BudgetInfoMessage(theme, false, activeBudgetData, undefined, {
@@ -88,8 +88,8 @@ export const BudgetCarousel = ({ activeBudgetData, setShowBudgetInfo, setShowBut
           </CarouselItemWrapper>
         }
         secondChild={
-          <CarouselItemWrapper>
-            <div className="closeButton" onClick={() => {setShowBudgetInfo(false);setShowButton(true)}}>
+          <CarouselItemWrapper onClick={onClick}>
+            <div className="closeButton" onClick={(e: React.MouseEvent) => {e.stopPropagation();setShowBudgetInfo(false);setShowButton(true)}}>
               <IonIcon name="close-outline" className="close" />
             </div>
             <Bar

@@ -915,8 +915,9 @@ export interface GeneralWarningMenuAnimationProps extends MenuProps {
   message: string | undefined;
 }
 export interface MakeBudgetActiveMenuAnimationProps extends MenuProps {
-  hasActiveBudgetData:boolean;
-  hasInactiveBudgetData:boolean;
+  hasActiveBudgetData: boolean;
+  hasInactiveBudgetData: boolean;
+  onConfirm: (activate: boolean) => void;
 }
 export interface RenameGroupMenuProps extends MenuProps {
   groupId: string | undefined;

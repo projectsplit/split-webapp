@@ -10,6 +10,7 @@ export default function MakeBudgetActiveMenu({
   title,
   hasActiveBudgetData,
   hasInactiveBudgetData,
+  onConfirm,
 }: MakeBudgetActiveMenuProps) {
   return (
     <StyledMakeBudgetActiveMenu>
@@ -38,12 +39,24 @@ export default function MakeBudgetActiveMenu({
       </div>
       <div className="buttons">
         <div className="confirmButton">
-          <MyButton onClick={() => (menu.value = null)} fontSize="16">
+          <MyButton
+            onClick={() => {
+              onConfirm(true);
+              menu.value = null;
+            }}
+            fontSize="16"
+          >
             Active
           </MyButton>
         </div>
         <div className="confirmButton">
-          <MyButton onClick={() => (menu.value = null)} fontSize="16">
+          <MyButton
+            onClick={() => {
+              onConfirm(false);
+              menu.value = null;
+            }}
+            fontSize="16"
+          >
             Inactive
           </MyButton>
         </div>
@@ -57,4 +70,5 @@ interface MakeBudgetActiveMenuProps {
   menu: Signal<string | null>;
   hasActiveBudgetData: boolean;
   hasInactiveBudgetData: boolean;
+  onConfirm: (activate: boolean) => void;
 }
