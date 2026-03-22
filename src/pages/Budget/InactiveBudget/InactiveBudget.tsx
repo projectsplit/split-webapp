@@ -6,6 +6,7 @@ import { useToggleBudget } from '@/api/auth/CommandHooks/useToggleBudget';
 import { InactiveBudgetsInfoResponseItem } from '@/types';
 import { getIsoDateInfo } from '@/helpers/getIsoDateInfo';
 import { useState } from 'react';
+import { getActiveScopes } from '@/helpers/getActiveScopes';
 
 interface InactiveBudgetProps {
   budget: InactiveBudgetsInfoResponseItem;
@@ -52,6 +53,14 @@ export const InactiveBudget = ({ budget, onActivate }: InactiveBudgetProps) => {
               {budget?.currency !== undefined
                 ? displayCurrencyAndAmount(budget?.amount, budget?.currency)
                 : ''}
+            </strong>
+          </div>
+          <div className="scope">
+            Scope:&nbsp;
+            <strong>
+              {getActiveScopes(budget?.scope, budget?.targetGroupIds).join(
+                ', '
+              )}
             </strong>
           </div>
         </div>

@@ -6,7 +6,8 @@ import { CreateBudgetRequest } from '../../../types';
 
 export const useCreateBudget = (
   navigate: NavigateFunction,
-  serverErrors: Signal<any[]>
+  serverErrors: Signal<any[]>,
+  menu: Signal<string | null>,
 ) => {
   const queryClient = useQueryClient();
 
@@ -19,6 +20,8 @@ export const useCreateBudget = (
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['budgets'] });
+
+      menu.value = null;
       navigate('/budget/manage', { replace: true });
     },
   });

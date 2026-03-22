@@ -49,7 +49,9 @@ export default function CreateBudget() {
 
   const { mutateAsync: createBudget, isPending } = useCreateBudget(
     navigate,
-    data.serverErrors
+    data.serverErrors,
+    menu,
+
   );
 
   useEffect(() => {

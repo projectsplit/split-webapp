@@ -39,7 +39,7 @@ export type UserInfo = {
   recentContextId: string;
   hasNewerNotifications: boolean;
   currency: string;
-  showBudgetInfo: boolean
+  showBudgetInfo: boolean;
 };
 
 export type ExpenseItem = {
@@ -410,7 +410,7 @@ export enum Frequency {
 }
 
 export type BudgetInfoResponse = {
-  id:string;
+  id: string;
   totalAmountSpent: string;
   description: string;
   remainingDays: string;
@@ -418,22 +418,26 @@ export type BudgetInfoResponse = {
   goal: string;
   currency: string;
   frequency: Frequency;
+  scope: BudgetScope;
+  targetGroupIds?: string[];
   startDate: string;
   endDate: string;
 };
 
 export type InactiveBudgetsInfoResponseItem = {
-    id:string;
-    amount: string;
-    description: string;
-    currency: string;
-    frequency: Frequency;
-    endDate: string;
-    startDate: string;
-}
+  id: string;
+  amount: string;
+  description: string;
+  currency: string;
+  frequency: Frequency;
+  scope: BudgetScope;
+  targetGroupIds?: string[];
+  endDate: string;
+  startDate: string;
+};
 
 export type InactiveBudgetsInfoResponse = {
-  budgets:InactiveBudgetsInfoResponseItem[]
+  budgets: InactiveBudgetsInfoResponseItem[];
 };
 
 export type UserPendingTransaction = {
@@ -801,7 +805,7 @@ export type CreateBudgetRequest = {
   scope: BudgetScope;
   targetGroupIds: string[];
   commencementDay: string | null;
-  activate?:boolean;
+  activate?: boolean;
   startDate?: string;
   endDate?: string;
 };

@@ -54,6 +54,10 @@ export const validateBudgetForm = (
         } else if (startDateObj > endDateObj) {
           spendingCycleError = 'Start date must be before end date';
         }
+
+        if (new Date(end) < new Date(Date.now())) {
+          spendingCycleError = 'End date must be in the future.';
+        }
       }
 
       const dayValue = commencementDay?.value?.trim();

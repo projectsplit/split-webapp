@@ -2,19 +2,19 @@ import { StyledProgressBar } from './ProgressBar.styled';
 import { ProgressBarProps } from '../../../interfaces';
 import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
 import { useTheme } from 'styled-components';
-import { getIsoDateInfo } from '../../../helpers/getIsoDateInfo';
 import ToggleSwitch from '@/components/ToggleSwitch/ToggleSwitch';
 import { progressBarColor } from './utils/progressBarColor';
 import { convertDaysToDaysHoursAndMinutes } from './utils/convertDaysToDaysHoursAndMinutes';
 import { useToggleBudget } from '@/api/auth/CommandHooks/useToggleBudget';
 import { Bar } from './Bar/Bar';
+import { getActiveScopes } from '@/helpers/getActiveScopes';
 
 export default function ProgressBar({ data, isOn, setIsOn }: ProgressBarProps) {
   const theme = useTheme();
   const convertedDaysHoursMinutes = convertDaysToDaysHoursAndMinutes(
     data?.endDate
   );
-
+console.log(data)
   const { mutate: toggleBudget } = useToggleBudget();
 
   return (
@@ -29,9 +29,9 @@ export default function ProgressBar({ data, isOn, setIsOn }: ProgressBarProps) {
             <div className="miscInfo">
               <div className="description">
                 Description:&nbsp;
-                <strong>
-                  {data?.description !== undefined ? data.description : ''}
-                </strong>
+            
+                  "{data?.description !== undefined ? data.description : ''}"
+             
               </div>
               <div className="remainingDays">
                 Remaining time:{' '}
@@ -50,6 +50,14 @@ export default function ProgressBar({ data, isOn, setIsOn }: ProgressBarProps) {
                         data.currency
                       )
                     : ''}
+                </strong>
+              </div>
+              <div className="description">
+                Scope:&nbsp;
+                <strong>
+                  {getActiveScopes(data?.scope, data?.targetGroupIds).join(
+                    ', '
+                  )}
                 </strong>
               </div>
             </div>
