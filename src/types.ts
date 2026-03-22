@@ -39,6 +39,7 @@ export type UserInfo = {
   recentContextId: string;
   hasNewerNotifications: boolean;
   currency: string;
+  showBudgetInfo: boolean
 };
 
 export type ExpenseItem = {
@@ -583,6 +584,9 @@ export type DeleteTransferRequest = {
 
 export type UpdateNotificationRequest = {
   timestamp: string | undefined;
+};
+export type SetShowBudgetInfoRequest = {
+  showBudgetInfo: boolean;
 };
 
 export type UpdateMostRecentContextRequest = {

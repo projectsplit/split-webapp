@@ -19,7 +19,7 @@ export const useCreateBudget = (
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['budgets'] });
-      navigate('/budget/current', { replace: true });
+      navigate('/budget/manage', { replace: true });
     },
   });
 };

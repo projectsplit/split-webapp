@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyledSettingsMenu } from './SettingsMenu.styled';
 import { SettingsMenuProps } from '../../../interfaces';
-import { IoClose } from 'react-icons/io5';
+import { IoClose, IoInformationCircleOutline } from 'react-icons/io5';
 import { StyledUserOptionsButton } from '../../UserOptionsButton/UserOptionsButton.styled';
 import { useNavigate } from 'react-router-dom';
 import { Currency } from '../../../types';
@@ -25,6 +25,7 @@ import { getInitials } from '../../../helpers/getInitials';
 import { timeZones } from '../../../helpers/timeZones';
 import EditUsernameAnimation from '../../Animations/EditUsernameAnimation';
 import { FaUserPen } from 'react-icons/fa6';
+import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
 
 export default function SettingsMenu({
   menu,
@@ -76,6 +77,8 @@ export default function SettingsMenu({
     navigate(routes.AUTH);
   };
 
+  const {mutateAsync:setShowBudgetInfo} = useSetShowBudgetInfo();
+
   const allCurrencies = useSignal<Currency[]>(currencyData);
 
   const selectedCurrency = allCurrencies.value.find(
@@ -83,10 +86,8 @@ export default function SettingsMenu({
   );
   const selectedTimeZone = allTimeZones.find((t: string) => t === timeZone);
 
-  const [isOn, setIsOn] = useState(false);
-
   const handleToggle = () => {
-    setIsOn((prev) => !prev);
+    setShowBudgetInfo(!userInfo?.showBudgetInfo);
   };
 
   return (
@@ -123,10 +124,16 @@ export default function SettingsMenu({
           <div className="description">TimeZone ({selectedTimeZone})</div>
         </div>
 
-        <div className="toggleOption">
+        {/* <div className="toggleOption">
           <FaCoins />
           <div className="description">Single currency display</div>
           <ToggleSwitch isOn={isOn} onToggle={handleToggle} />
+        </div> */}
+
+        <div className="toggleOption">
+          <IoInformationCircleOutline className="icon" />
+          <div className="description">Show budget info</div>
+          <ToggleSwitch isOn={userInfo?.showBudgetInfo} onToggle={handleToggle} />
         </div>
 
         <div

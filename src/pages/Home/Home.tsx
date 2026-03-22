@@ -52,7 +52,7 @@ export default function Home() {
   const nonGroupUsers = useSignal<User[]>([]);
   const fromHomeGroup = useSignal<Group | null>(null);
   const groupMembers = useSignal<(Guest | Member)[]>([]);
-  const { userInfo, topMenuTitle } = useOutletContext<{
+  const { userInfo, topMenuTitle, } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
   }>();
@@ -142,6 +142,7 @@ export default function Home() {
             totalBalances={totalBalances}
             topMenuTitle={topMenuTitle}
             activeBudgetData={activeBudgetData}
+            showBudgetInfo={userInfo.showBudgetInfo}
           />
           <div
             className={`actions ${isGlowing ? 'glow' : ''}`}

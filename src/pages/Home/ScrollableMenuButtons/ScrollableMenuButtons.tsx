@@ -16,11 +16,9 @@ import OptionButton from '../SelectionButton/SelectionButton';
 import { BsBarChartFill } from 'react-icons/bs';
 import { BsFillPiggyBankFill } from 'react-icons/bs';
 import { BsFillPersonFill } from 'react-icons/bs';
-import { Signal } from '@preact/signals-react';
-import { useState } from 'react';
-import useBudgetInfo from '@/api/auth/QueryHooks/useBudgetInfo';
-import { BudgetInfoMessage } from '@/components/BudgetMessages/BudgetInfoMessage';
+import { Signal, useSignal } from '@preact/signals-react';
 import { BudgetCarousel } from './BudgetCarousel/BudgetCarousel';
+import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
 
 export default function ScrollableMenuButtons({
   mostRecentGroupDataIsFetching,
@@ -35,6 +33,7 @@ export default function ScrollableMenuButtons({
   totalBalances,
   topMenuTitle,
   activeBudgetData,
+  showBudgetInfo,
 }: {
   mostRecentGroupDataIsFetching: boolean;
   mostRecentGroupData: MostRecentGroupDetailsResponse | undefined;
@@ -47,13 +46,32 @@ export default function ScrollableMenuButtons({
   groupsData: GroupsAllBalancesResponse | undefined;
   totalBalances: Details;
   topMenuTitle: Signal<string>;
-  activeBudgetData: BudgetInfoResponse | undefined
+  activeBudgetData: BudgetInfoResponse | undefined;
+  showBudgetInfo: boolean;
 }) {
-
+ 
+  const { mutateAsync: setShowBudgetInfo } = useSetShowBudgetInfo();
 
   return (
     <StyledScrollableMenuButtons>
-      <BudgetCarousel activeBudgetData={activeBudgetData}/>
+      {showBudgetInfo && activeBudgetData && (
+        <BudgetCarousel
+          activeBudgetData={activeBudgetData}
+          setShowBudgetInfo={setShowBudgetInfo}
+        />
+      )}
+      {activeBudgetData && !showBudgetInfo && (
+        <div className="undoButton">
+          <span
+            className="text"
+            onClick={() => {
+              setShowBudgetInfo(true)
+            }}
+          >
+            undo
+          </span>
+        </div>
+      )}
       <MostRecentSection
         mostRecentGroupDataIsFetching={mostRecentGroupDataIsFetching}
         mostRecentGroupData={mostRecentGroupData}

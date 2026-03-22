@@ -457,7 +457,7 @@ export interface TopMenuProps {
 }
 
 export interface ToggleSwitchProps {
-  isOn: boolean;
+  isOn: boolean|undefined;
   onToggle: () => void;
 }
 

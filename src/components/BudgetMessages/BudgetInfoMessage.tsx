@@ -17,8 +17,7 @@ export const BudgetInfoMessage = (
   if (data === undefined) {
     return <NoBudgetSubmittedMessage />;
   }
-  const totalAmountSpent =parseFloat(data.totalAmountSpent);
- 
+  const totalAmountSpent = parseFloat(data.totalAmountSpent);
 
   // Check if remainingDays, goal, and averageSpentPerDay are provided
   if (
@@ -32,7 +31,7 @@ export const BudgetInfoMessage = (
     const goal = parseFloat(data.goal);
     const spendingProjection =
       totalAmountSpent + remainingDays * averageSpentPerDay;
-      console.log(spendingProjection - goal)
+
     if (totalAmountSpent === 0)
       return (
         <SimpleOnTrackMessage

@@ -9,6 +9,16 @@ export const StyledScrollableMenuButtons = styled.div`
   min-height: 0;
   gap: 15px;
   z-index: 1;
+  .undoButton {
+    display: flex;
+    justify-content: right;
+    color: ${({ theme }) => theme.deepPurple};
+    font-size: 15px;
+    text-decoration: underline;
+    .text {
+      cursor: pointer;
+    }
+  }
   .groupsInfo {
     .settled {
       display: flex;
