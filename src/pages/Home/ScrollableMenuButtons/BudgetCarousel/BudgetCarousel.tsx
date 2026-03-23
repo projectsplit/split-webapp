@@ -79,7 +79,7 @@ export const BudgetCarousel = ({ activeBudgetData, setShowBudgetInfo, setShowBut
             <div className="closeButton" onClick={(e: React.MouseEvent) => {e.stopPropagation();setShowBudgetInfo(false);setShowButton(true)}}>
               <IonIcon name="close-outline" className="close" />
             </div>
-            {BudgetInfoMessage(theme, false, activeBudgetData, undefined, {
+            {BudgetInfoMessage(theme, false, activeBudgetData, undefined,undefined, {
               backgroundColor: 'transparent',
               boxShadow: 'none',
               border: 'none',

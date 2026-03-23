@@ -810,6 +810,10 @@ export type CreateBudgetRequest = {
   endDate?: string;
 };
 
+export type UpdateBudgetRequest = CreateBudgetRequest & {
+  budgetId: string;
+};
+
 export type SpendingInfoResponse = {
   budgetSubmitted: boolean;
   totalAmountSpent: string;

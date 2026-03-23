@@ -1,17 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect} from 'react';
 import { StyledHomepage } from './Home.Styled';
-import { BsBarChartFill } from 'react-icons/bs';
-import { BsFillPiggyBankFill } from 'react-icons/bs';
-import { BsFillPersonFill } from 'react-icons/bs';
-import { TiGroup } from 'react-icons/ti';
-import OptionButton from './SelectionButton/SelectionButton';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { useTheme } from 'styled-components';
-import TreeAdjustedContainer from '../../components/TreeAdjustedContainer/TreeAdjustedContainer';
 import {
-  Details,
-  ExpenseResponseItem,
   Group,
   Guest,
   Member,
@@ -19,32 +9,23 @@ import {
   UserInfo,
 } from '../../types';
 import useBudgetInfo from '../../api/auth/QueryHooks/useBudgetInfo';
-
-import { BudgetInfoMessage } from '../../components/BudgetMessages/BudgetInfoMessage';
 import { useOutletContext } from 'react-router-dom';
-import { signal, Signal, useSignal } from '@preact/signals-react';
-import SettingsMenuAnimation from '../../components/Animations/SettingsMenuAnimation';
+import {  Signal, useSignal } from '@preact/signals-react';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
-import { TreeItemBuilderForHomeAndGroups } from '../../components/TreeItemBuilderForHomeAndGroups';
 import Spinner from '../../components/Spinner/Spinner';
 import { AiFillThunderbolt } from 'react-icons/ai';
 import HomeQuickActionsAnimation from '../../components/Animations/HomeQuickActionsAnimation';
-import useGroup from '../../api/auth/QueryHooks/useGroup';
 import CreateExpenseForm from '../../components/CreateExpenseForm/CreateExpenseForm';
 import TransferForm from '../../components/TransferForm/TransferForm';
 import NonGroupExpenseUsersAnimation from '../../components/Animations/NonGroupExpenseUsersAnimation';
 import NonGroupTransferAnimation from '../../components/Animations/NonGroupTransferAnimation';
 import { useGetMostRecentGroups } from '@/api/auth/QueryHooks/useGetMostRecentGroups';
-import { useGetGroupsAllBalances } from '@/api/auth/QueryHooks/useGetGroupsAllBalances';
-import { useFetchAndGroupNonGroupDebts } from '../Groups/hooks/useFetchAndGroupNonGroupDebts';
-import { computeNetPerCurrency } from '@/helpers/computeNetPerCurrency';
 import { useTotalUserBalance } from './hooks/useTotalUserBalance';
-import MostRecentSection from './MostRecentSection/MostRecentSection';
 import ScrollableMenuButtons from './ScrollableMenuButtons/ScrollableMenuButtons';
 
 export default function Home() {
   const navigate = useNavigate();
-  const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
+
   const isPersonal = useSignal<boolean>(true);
   const isNonGroupExpense = useSignal<boolean>(false);
   const isNonGroupTransfer = useSignal<boolean>(true);
@@ -57,9 +38,6 @@ export default function Home() {
     topMenuTitle: Signal<string>;
   }>();
 
-  const timeZoneId = userInfo?.timeZone;
-  const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
-  const menu = useSignal<string | null>(null);
   const nonGroupExpenseMenu = useSignal<string | null>(null);
   const nonGroupTransferMenu = useSignal<{
     attribute: string;
@@ -93,8 +71,7 @@ export default function Home() {
     isFetching: mostRecentGroupDataIsFetching,
   } = useGetMostRecentGroups(recentContextId);
 
-  const { data: activeBudgetData, isFetching: activeBudgetsIsFetching } =
-    useBudgetInfo();
+  const { data: activeBudgetData} = useBudgetInfo();
 
   useEffect(() => {
     topMenuTitle.value = '';

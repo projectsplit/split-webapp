@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   UserInfo,
@@ -11,6 +11,7 @@ import MyButton from '../../../components/MyButton/MyButton';
 import TopBarWithBackButton from '../../../components/TopBarWithBackButton/TopBarWithBackButton';
 import CurrencyOptionsAnimation from '../../../components/Animations/CurrencyOptionsAnimation';
 import { useCreateBudget } from '../../../api/auth/CommandHooks/useCreateBudget';
+import { useUpdateBudget } from '../../../api/auth/CommandHooks/useUpdateBudget';
 import MenuAnimationBackground from '../../../components/Animations/MenuAnimationBackground';
 import InfoBoxAnimation from '../../../components/Animations/InfoBoxAnimation';
 import CreateBudgetConfirmationAnimation from '../../../components/Animations/BudgetAnimations/CreateBudgetConfirmationAnimation';
@@ -45,18 +46,30 @@ export default function CreateBudget() {
   const { data: activeBudgetData } = useBudgetInfo();
   const { data: inactiveBudgetsData } = useGetInactiveBudgetInfo();
 
-  const { mutateAsync: createBudget, isPending } = useCreateBudget(
+  const { mutateAsync: createBudget, isPending: isCreatePending } = useCreateBudget(
     navigate,
     data.serverErrors,
     menu,
-
   );
 
+  const { mutateAsync: updateBudget, isPending: isUpdatePending } = useUpdateBudget(
+    navigate,
+    data.serverErrors,
+    menu,
+  );
+
+  const isPending = isCreatePending || isUpdatePending;
+  const location = useLocation();
+
   useEffect(() => {
-    if (userInfo?.currency) {
+    if (location.state?.editBudget && !data.isEditMode) {
+      actions.populateForm(location.state.editBudget, userInfo?.currency || '');
+    } else if (!location.state?.editBudget && data.isEditMode) {
+      actions.initForm(userInfo?.currency || '');
+    } else if (!location.state?.editBudget && userInfo?.currency && !data.currencySymbol) {
       actions.setCurrencySymbol(userInfo.currency);
     }
-  }, [userInfo]);
+  }, [location.state, userInfo, data.isEditMode, data.currencySymbol]);
 
   const handleInputChangeCallback = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,8 +87,9 @@ export default function CreateBudget() {
 
   const submitBudget = async () => {
     if (
-      !!activeBudgetData ||
-      (!!inactiveBudgetsData && inactiveBudgetsData?.budgets.length > 0)
+      !data.isEditMode &&
+      (!!activeBudgetData ||
+        (!!inactiveBudgetsData && inactiveBudgetsData?.budgets.length > 0))
     ) {
       makeBudgetActiveMenu.value = 'makeBudgetActive';
       return;
@@ -83,6 +97,7 @@ export default function CreateBudget() {
     setAnimDirection('none');
     await actions.submitBudget({
       createBudgetMutation: createBudget,
+      updateBudgetMutation: updateBudget,
       menu,
       step: data.currentStep,
     });
@@ -124,7 +139,7 @@ export default function CreateBudget() {
   return (
     <StyledCreateBudget>
       <TopBarWithBackButton
-        header="Create Budget"
+        header={data.isEditMode ? "Edit Budget" : "Create Budget"}
         onClick={() => {
           if (data.currentStep === 2) {
             handleBack();
@@ -156,7 +171,7 @@ export default function CreateBudget() {
           onClick={data.currentStep === 1 ? handleNext : submitBudget}
           isLoading={isPending}
         >
-          {data.currentStep === 1 ? 'Next' : 'Submit Budget'}
+          {data.currentStep === 1 ? 'Next' : data.isEditMode ? 'Update Budget' : 'Submit Budget'}
         </MyButton>
       </div>
 
@@ -188,6 +203,7 @@ export default function CreateBudget() {
         onConfirm={(activate: boolean) => {
           actions.submitBudget({
             createBudgetMutation: createBudget,
+            updateBudgetMutation: updateBudget,
             menu: makeBudgetActiveMenu,
             step: data.currentStep,
             activate,

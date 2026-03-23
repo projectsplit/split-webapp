@@ -5,7 +5,7 @@ import { ManageBudgetMenuProps } from '../../../interfaces';
 import { useNavigate } from 'react-router-dom';
 import MyButton from '../../../components/MyButton/MyButton';
 
-export default function ManageBudgetMenu({ menu }: ManageBudgetMenuProps) {
+export default function ManageBudgetMenu({ menu, selectedBudget }: ManageBudgetMenuProps) {
   const navigate = useNavigate();
   return (
     <StyledManageBudgetMenu>
@@ -14,7 +14,13 @@ export default function ManageBudgetMenu({ menu }: ManageBudgetMenuProps) {
         <strong>Manage Budget</strong>
       </div>
 
-      <MyButton onClick={() => navigate('/budget/create')} fontSize="16">
+      <MyButton 
+        onClick={() => {
+          navigate('/budget/create', { state: { editBudget: selectedBudget } });
+          menu.value = null;
+        }} 
+        fontSize="16"
+      >
         <div className="iconAndTextContainer">
           <AiFillEdit className="icon" />
           <div className="text">Edit Budget</div>

@@ -14,6 +14,7 @@ export const useCreateBudgetActions = () => {
       resetForm: state.resetForm,
       initForm: state.initForm,
       setStep: state.setStep,
+      populateForm: state.populateForm,
     }))
   );
 };
@@ -39,6 +40,8 @@ export const useCreateBudgetData = () => {
       serverErrors: state.serverErrors,
       errors: state.errors,
       currentStep: state.currentStep,
+      isEditMode: state.isEditMode,
+      budgetId: state.budgetId,
     }))
   );
 };

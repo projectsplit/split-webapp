@@ -38,10 +38,7 @@ const noSubmissions=
       (!inactiveBudgetsData ||
         (inactiveBudgetsData && inactiveBudgetsData.budgets.length == 0))
 
-  const [selectedBudget, setSelectedBudget] = useState<{
-    id: string;
-    descr: string;
-  }>({ id: '', descr: '' });
+  const [selectedBudget, setSelectedBudget] = useState<any>(null);
 
   const [activeToggleIsOn, setActiveToggleIsOn] = useState(true);
   const [lastActiveId, setLastActiveId] = useState(activeBudgetData?.id);
@@ -89,10 +86,7 @@ const noSubmissions=
               <div
                 className="activeInfo"
                 onClick={() => {
-                  setSelectedBudget({
-                    id: activeBudgetData.id,
-                    descr: activeBudgetData.description,
-                  });
+                  setSelectedBudget(activeBudgetData);
                 }}
               >
                 <ProgressBar
@@ -111,10 +105,7 @@ const noSubmissions=
                     className="inactiveInfo"
                     key={budget.id}
                     onClick={() => {
-                      setSelectedBudget({
-                        id: budget.id,
-                        descr: budget.description,
-                      });
+                      setSelectedBudget(budget);
                     }}
                   >
                     <InactiveBudget
@@ -151,11 +142,14 @@ const noSubmissions=
       </div>
 
       <MenuAnimationBackground menu={menu} />
-      <ManageBudgetAnimation menu={menu} />
+      <ManageBudgetAnimation menu={menu} selectedBudget={selectedBudget} />
       <DeleteBudgetConfirmationAnimation
         menu={menu}
         deleteBudget={deleteBudget}
-        selectedBudget={selectedBudget}
+        selectedBudget={{
+          id: selectedBudget?.id || '',
+          descr: selectedBudget?.description || '',
+        }}
         isLoading={isPending}
       />
     </StyledManageBudgets>

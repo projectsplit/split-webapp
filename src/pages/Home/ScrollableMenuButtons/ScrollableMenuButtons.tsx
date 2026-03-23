@@ -129,8 +129,8 @@ export default function ScrollableMenuButtons({
         <BsBarChartFill className="analyticsIcon" />
       </OptionButton>
       <OptionButton
-        name="Budget"
-        description="Set up a spending cap or goal"
+        name="Budgeting"
+        description="Set up budgets, spending caps and savings goals"
         onClick={() => navigate('/budget')}
         hasArrow={false}
       >

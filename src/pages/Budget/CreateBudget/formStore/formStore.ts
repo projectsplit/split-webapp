@@ -49,6 +49,9 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
   allGroupsSelected: _allGroupsSelected,
   currentStep: 1,
 
+  isEditMode: false,
+  budgetId: '',
+
   errors: {
     amountError: '',
     descriptionError: '',
@@ -143,7 +146,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
     };
   },
 
-  submitBudget: async ({ createBudgetMutation, menu, step, activate }) => {
+  submitBudget: async ({ createBudgetMutation, updateBudgetMutation, menu, step, activate }) => {
     const { isValid, errors } = get().validateForm(step);
     if (!isValid) return { isValid, errors };
 
@@ -172,7 +175,7 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
       targetGroupIds
     );
 
-    const baseRequest = {
+    const baseRequest: any = {
       amount,
       description,
       frequency: budgetFrequency.value,
@@ -182,27 +185,38 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
       activate,
     };
 
+    if (get().isEditMode) {
+      baseRequest.budgetId = get().budgetId;
+    }
+
     if (budgetFrequency.value === Frequency.Monthly) {
-      await createBudgetMutation({
-        ...baseRequest,
-        commencementDay: calendarDay.value.toString(),
-      });
+      if (calendarDay.value) {
+        baseRequest.commencementDay = calendarDay.value.toString();
+      } else {
+        baseRequest.startDate = startDate.value;
+        baseRequest.endDate = endDate.value;
+      }
     } else if (budgetFrequency.value === Frequency.Weekly) {
       const getDayNumber = (day: string): string | null => {
         const index = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].indexOf(day);
         return index !== -1 ? (index + 1).toString() : null;
       };
-      await createBudgetMutation({
-        ...baseRequest,
-        commencementDay: getDayNumber(calendarDay.value),
-      });
+      if (calendarDay.value) {
+        baseRequest.commencementDay = getDayNumber(calendarDay.value);
+      } else {
+         baseRequest.startDate = startDate.value;
+         baseRequest.endDate = endDate.value;
+      }
     } else if (budgetFrequency.value === Frequency.Custom) {
-      await createBudgetMutation({
-        ...baseRequest,
-        commencementDay: null,
-        startDate: startDate.value,
-        endDate: endDate.value,
-      });
+      baseRequest.commencementDay = null;
+      baseRequest.startDate = startDate.value;
+      baseRequest.endDate = endDate.value;
+    }
+
+    if (get().isEditMode && updateBudgetMutation) {
+      await updateBudgetMutation(baseRequest);
+    } else if (createBudgetMutation) {
+      await createBudgetMutation(baseRequest);
     }
 
     openCalendar.value = false;
@@ -255,6 +269,8 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
       description: '',
       currencySymbol: '',
       currentStep: 1,
+      isEditMode: false,
+      budgetId: '',
       errors: {
         amountError: '',
         descriptionError: '',
@@ -273,9 +289,76 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
     get().resetForm();
     set({ currencySymbol: currency });
   },
+  populateForm: (budget: any, currencySymbol: string) => {
+    const {
+      displayedAmount,
+      openCalendar,
+      openCustomDateCalendar,
+      startDate,
+      endDate,
+      pickingTarget,
+      calendarDay,
+      budgetFrequency,
+      hasSwitchedBudgetType,
+      scopeState,
+      targetGroupIds,
+      allGroupsSelected,
+      serverErrors,
+    } = get();
+    const initialAmount = budget.amount !== undefined ? budget.amount : budget.goal;
+    displayedAmount.value = initialAmount ? initialAmount.toString() : '';
+    openCalendar.value = false;
+    openCustomDateCalendar.value = false;
+    startDate.value = budget.startDate || '';
+    endDate.value = budget.endDate || '';
+    pickingTarget.value = null;
+
+    if (budget.frequency === Frequency.Monthly && budget.startDate) {
+        const date = new Date(budget.startDate);
+        calendarDay.value = date.getDate().toString();
+    } else if (budget.frequency === Frequency.Weekly && budget.startDate) {
+        const date = new Date(budget.startDate);
+        const dayNames = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+        calendarDay.value = dayNames[date.getDay()];
+    } else {
+        calendarDay.value = '';
+    }
+
+    budgetFrequency.value = budget.frequency;
+    hasSwitchedBudgetType.value = true;
+    
+    const mask = budget.scope;
+    scopeState.value = {
+      none: false,
+      personal: (mask & 1) === 1,
+      nonGroup: (mask & 2) === 2,
+      group: (mask & 4) === 4,
+    };
+    targetGroupIds.value = budget.targetGroupIds || [];
+    allGroupsSelected.value = !budget.targetGroupIds || budget.targetGroupIds.length === 0;
+    serverErrors.value = [];
+
+    set({
+      amount: initialAmount ? initialAmount.toString() : '',
+      description: budget.description || '',
+      currencySymbol: budget.currency || currencySymbol,
+      currentStep: 1,
+      isEditMode: true,
+      budgetId: budget.id,
+      errors: {
+        amountError: '',
+        descriptionError: '',
+        spendingCycleError: '',
+        scopeError: '',
+        commencementDayError: '',
+        showAmountError: false,
+        showDescriptionError: false,
+        showSpendingCycleError: false,
+        showScopeError: false,
+        showCommencementDayError: false,
+      },
+    });
+  },
 }));
 
-// Re-export with `use` prefix for hook consumers.
-// The raw store is named without `use` to prevent @preact/signals-react-transform
-// from injecting React hooks into the Zustand create() callback.
 export const useCreateBudgetStore = createBudgetStore;

@@ -25,7 +25,6 @@ export const useGetGroupsTotalAmounts = (
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: '',
     staleTime: Infinity,
-    enabled: activeGroupCatAsState.value !== 'NonGroup',
   });
 };
 

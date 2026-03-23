@@ -5,6 +5,7 @@ import { useRef } from 'react';
 
 export default function ManageBudgetAnimation({
   menu,
+  selectedBudget,
 }: ManageBudgetAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -15,7 +16,7 @@ export default function ManageBudgetAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <ManageBudgetMenu menu={menu} />
+      <ManageBudgetMenu menu={menu} selectedBudget={selectedBudget} />
     </CSSTransition>
   );
 }

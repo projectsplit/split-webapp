@@ -39,6 +39,9 @@ export interface CreateBudgetState {
   serverErrors: Signal<any[]>;
   currentStep: number;
 
+  isEditMode: boolean;
+  budgetId: string;
+
   // Actions
   setAmount: (amount: string) => void;
   setDescription: (description: string) => void;
@@ -65,7 +68,8 @@ export interface CreateBudgetState {
   };
 
   submitBudget: (inputs: {
-    createBudgetMutation: any;
+    createBudgetMutation?: any;
+    updateBudgetMutation?: any;
     menu: Signal<string | null>;
     step: number;
     activate?: boolean;
@@ -77,5 +81,7 @@ export interface CreateBudgetState {
   resetForm: () => void;
 
   initForm: (currency: string) => void;
+
+  populateForm: (budget: any, currencySymbol: string) => void;
 }
 

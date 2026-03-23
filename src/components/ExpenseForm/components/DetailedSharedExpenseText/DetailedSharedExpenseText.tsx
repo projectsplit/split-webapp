@@ -2,8 +2,6 @@ import { StyledDetailedSharedExpenseText } from './DetailedSharedExpenseText.sty
 import MemberPicker2 from '@/components/MemberPicker/MemberPicker2';
 import { TiGroup } from 'react-icons/ti';
 import { FaRegEdit } from 'react-icons/fa';
-import { useSignal } from '@preact/signals-react';
-import { SplitCategory } from '@/types';
 
 import { DetailedSharedExpenseTextProps } from '@/interfaces';
 

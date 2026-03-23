@@ -1275,6 +1275,7 @@ export interface ProgressBarProps {
 }
 export interface ManageBudgetMenuProps {
   menu: Signal<string | null>;
+  selectedBudget: any;
 }
 
 export interface DeleteBudgetConfirmationAnimationProps {
@@ -1290,6 +1291,7 @@ export interface DeleteBudgetConfirmationAnimationProps {
 export interface ConfirmationForBudgetDeletionProps extends DeleteBudgetConfirmationAnimationProps { }
 export interface ManageBudgetAnimationProps {
   menu: Signal<string | null>;
+  selectedBudget: any;
 }
 
 export interface CalendarProps {
