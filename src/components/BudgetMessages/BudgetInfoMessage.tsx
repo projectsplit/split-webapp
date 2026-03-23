@@ -3,7 +3,7 @@ import OverspentMessage from './OverspentMessage/OverspentMessage';
 import ReceivedMoreThanSpentMessage from './ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage';
 import Recommendation from './Recommendation/Recommendation';
 import SimpleOnTrackMessage from './SimpleOnTrackMessage/SimpleOnTrackMessage';
-import { BudgetInfoResponse } from '../../types';
+import { BudgetInfoResponse} from '../../types';
 import { DefaultTheme } from 'styled-components';
 import { NoBudgetSubmittedMessage } from './NoBudgetSubmittedMessage/NoBudgetSubmittedMessage';
 
@@ -11,24 +11,26 @@ export const BudgetInfoMessage = (
   theme: DefaultTheme | undefined,
   closeButton: boolean,
   data: BudgetInfoResponse | undefined,
+  noSubmissions?: boolean,
   onclick?: (event: React.MouseEvent<HTMLDivElement>) => void,
-  style?: React.CSSProperties
+  style?: React.CSSProperties,
+  
 ): JSX.Element => {
   if (data === undefined) {
-    return <NoBudgetSubmittedMessage />;
+    return <NoBudgetSubmittedMessage noSubmissions={noSubmissions} />;
   }
-  const totalAmountSpent = parseFloat(data.totalAmountSpent);
+  const totalAmountSpent = parseFloat(data?.totalAmountSpent);
 
   // Check if remainingDays, goal, and averageSpentPerDay are provided
   if (
-    data.remainingDays !== undefined &&
-    data.goal !== undefined &&
-    data.averageSpentPerDay !== undefined &&
-    data.frequency !== undefined
+    data?.remainingDays !== undefined &&
+    data?.goal !== undefined &&
+    data?.averageSpentPerDay !== undefined &&
+    data?.frequency !== undefined
   ) {
-    const remainingDays = parseFloat(data.remainingDays);
-    const averageSpentPerDay = parseFloat(data.averageSpentPerDay);
-    const goal = parseFloat(data.goal);
+    const remainingDays = parseFloat(data?.remainingDays);
+    const averageSpentPerDay = parseFloat(data?.averageSpentPerDay);
+    const goal = parseFloat(data?.goal);
     const spendingProjection =
       totalAmountSpent + remainingDays * averageSpentPerDay;
 

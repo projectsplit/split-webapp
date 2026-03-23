@@ -1,7 +1,7 @@
 import IonIcon from '@reacticons/ionicons';
 import { StyledNoBudgetSubmittedMessage } from './NoBudgetSubmittedMessage.styled';
 
-export const NoBudgetSubmittedMessage = () => {
+export const NoBudgetSubmittedMessage = ({noSubmissions}: {noSubmissions?: boolean}) => {
   return (
     <StyledNoBudgetSubmittedMessage>
       <div className="main">
@@ -13,7 +13,7 @@ export const NoBudgetSubmittedMessage = () => {
             />
           </div>
           <div className="paragraph">
-            <div className="firstParagraph">No active budget.</div>
+            <div className="firstParagraph">{noSubmissions ? 'No budgets have been submitted.' : 'No active budget.'}</div>
           </div>
         </div>
       </div>

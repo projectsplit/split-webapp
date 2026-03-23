@@ -12,9 +12,9 @@ export const useDeleteBudget = (
   return useMutation<any, AxiosError, string>({
     mutationFn: (budgetId) => deleteBudget({ budgetId }),
     onSuccess: async () => {
+      await queryClient.removeQueries({ queryKey: ['budgets', 'active'], exact: true });
       await queryClient.invalidateQueries({
         queryKey: ['budgets'],
-        exact: false,
       });
 
       menu.value = null;

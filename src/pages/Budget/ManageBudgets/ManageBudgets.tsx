@@ -28,13 +28,20 @@ export const ManageBudgets = () => {
   const { data: inactiveBudgetsData, isFetching: inactiveBudgetsIsFetching } =
     useGetInactiveBudgetInfo();
   const errorMessage = useSignal<string>('');
-  const {mutate: deleteBudget, isPending} = useDeleteBudget(menu, errorMessage);
-  
+  const { mutate: deleteBudget, isPending } = useDeleteBudget(
+    menu,
+    errorMessage
+  );
+
+const noSubmissions=
+    !activeBudgetData &&
+      (!inactiveBudgetsData ||
+        (inactiveBudgetsData && inactiveBudgetsData.budgets.length == 0))
+
   const [selectedBudget, setSelectedBudget] = useState<{
     id: string;
     descr: string;
   }>({ id: '', descr: '' });
-
 
   const [activeToggleIsOn, setActiveToggleIsOn] = useState(true);
   const [lastActiveId, setLastActiveId] = useState(activeBudgetData?.id);
@@ -66,7 +73,7 @@ export const ManageBudgets = () => {
           <Shimmer height="70px" />
         ) : (
           <div style={{ transition: 'opacity 0.8s ease' }}>
-            {BudgetInfoMessage(theme, false, activeBudgetData)}
+            {BudgetInfoMessage(theme, false, activeBudgetData, noSubmissions)}
           </div>
         )}
       </div>
@@ -124,9 +131,23 @@ export const ManageBudgets = () => {
       </div>
 
       <div className="submitButton">
-        <MyButton fontSize="16" onClick={() => navigate('/')} isLoading={false}>
-          Done
-        </MyButton>
+        {noSubmissions ? (
+          <MyButton
+            fontSize="16"
+            onClick={() => navigate('/budget/create')}
+            isLoading={false}
+          >
+            Create
+          </MyButton>
+        ) : (
+          <MyButton
+            fontSize="16"
+            onClick={() => navigate('/')}
+            isLoading={false}
+          >
+            Done
+          </MyButton>
+        )}
       </div>
 
       <MenuAnimationBackground menu={menu} />
