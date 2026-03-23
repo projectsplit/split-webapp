@@ -52,6 +52,7 @@ import {
   UseMutateFunction,
 } from '@tanstack/react-query';
 import { SplitMethod } from './components/ExpenseForm/formStore/formStoreTypes';
+import { AxiosError } from 'axios';
 
 export interface ExpenseProps {
   timeZoneId: string;
@@ -1270,6 +1271,7 @@ export interface ProgressBarProps {
   data: BudgetInfoResponse | undefined;
   isOn: boolean;
   setIsOn: React.Dispatch<React.SetStateAction<boolean>>;
+  menu: Signal<string | null>;
 }
 export interface ManageBudgetMenuProps {
   menu: Signal<string | null>;
@@ -1277,10 +1279,15 @@ export interface ManageBudgetMenuProps {
 
 export interface DeleteBudgetConfirmationAnimationProps {
   menu: Signal<string | null>;
-  removeBudget: () => Promise<void>;
+ deleteBudget: UseMutateFunction<any, AxiosError<unknown, any>, string, unknown>
+  selectedBudget: {
+    id: string;
+    descr: string;
+  };
+  isLoading: boolean;
 }
 
-export interface ConfirmationForBudgetDeletionProps extends DeleteBudgetConfirmationAnimationProps {}
+export interface ConfirmationForBudgetDeletionProps extends DeleteBudgetConfirmationAnimationProps { }
 export interface ManageBudgetAnimationProps {
   menu: Signal<string | null>;
 }

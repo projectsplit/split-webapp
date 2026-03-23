@@ -11,6 +11,23 @@ export const StyledInactiveBudget = styled.div`
   border-radius: 6px;
   padding: 0.8rem;
   font-size: 15px;
+  .cogContainer {
+    display: flex;
+    justify-content: end;
+    font-size: 25px;
+    color: #6f6f6f;
+    height: 17px;
+    margin-top: -5px;
+    margin-right: -8px;
+
+    .cog {
+      cursor: pointer;
+      display: block;
+      &:hover {
+        color: ${({ theme }) => theme.whiteText};
+      }
+    }
+  }
   .budgetTitle {
     display: flex;
     flex-direction: row;
@@ -27,9 +44,11 @@ export const StyledInactiveBudget = styled.div`
       flex-direction: column;
       gap: 5px;
       margin-top: 25px;
+      min-width: 0;
       .dates,
       .averageSpending,
-      .remainingDays {
+      .remainingDays,
+      .scope {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

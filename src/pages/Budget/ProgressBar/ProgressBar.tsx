@@ -8,13 +8,14 @@ import { convertDaysToDaysHoursAndMinutes } from './utils/convertDaysToDaysHours
 import { useToggleBudget } from '@/api/auth/CommandHooks/useToggleBudget';
 import { Bar } from './Bar/Bar';
 import { getActiveScopes } from '@/helpers/getActiveScopes';
+import IonIcon from '@reacticons/ionicons';
 
-export default function ProgressBar({ data, isOn, setIsOn }: ProgressBarProps) {
+export default function ProgressBar({ data, isOn, setIsOn, menu }: ProgressBarProps) {
   const theme = useTheme();
   const convertedDaysHoursMinutes = convertDaysToDaysHoursAndMinutes(
     data?.endDate
   );
-console.log(data)
+
   const { mutate: toggleBudget } = useToggleBudget();
 
   return (
@@ -22,16 +23,18 @@ console.log(data)
       {/* <div className="closeButton" onClick={()=>setMenu("deleteBudgetConfirmation")}>
         <IonIcon name="close-outline" className="close" />
       </div> */}
+      <div className="cogContainer" onClick={() => {menu.value = 'manageBudgetMenu'}}>
+        {' '}
+        <IonIcon name="settings-outline" className="cog" />
+      </div>
       <div className="budgetInfo">
         <div className="thisPeriod">
           <Bar color={progressBarColor(data, theme)} data={data} />
           <div className="toggleAndInfo">
             <div className="miscInfo">
               <div className="description">
-                Description:&nbsp;
-            
-                  "{data?.description !== undefined ? data.description : ''}"
-             
+                Description:&nbsp; "
+                {data?.description !== undefined ? data.description : ''}"
               </div>
               <div className="remainingDays">
                 Remaining time:{' '}
@@ -52,7 +55,7 @@ console.log(data)
                     : ''}
                 </strong>
               </div>
-              <div className="description">
+              <div className="scope">
                 Scope:&nbsp;
                 <strong>
                   {getActiveScopes(data?.scope, data?.targetGroupIds).join(

@@ -5,4 +5,9 @@ export const StyledManageBudgetMenu = styled(StyledBottomMenu)`
   .header {
     text-align: left;
   }
+  .iconAndTextContainer{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 `;

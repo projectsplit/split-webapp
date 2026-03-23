@@ -7,13 +7,16 @@ import { InactiveBudgetsInfoResponseItem } from '@/types';
 import { getIsoDateInfo } from '@/helpers/getIsoDateInfo';
 import { useState } from 'react';
 import { getActiveScopes } from '@/helpers/getActiveScopes';
+import IonIcon from '@reacticons/ionicons';
+import { Signal } from '@preact/signals-react';
 
 interface InactiveBudgetProps {
   budget: InactiveBudgetsInfoResponseItem;
   onActivate: () => void;
+  menu: Signal<string | null>;
 }
 
-export const InactiveBudget = ({ budget, onActivate }: InactiveBudgetProps) => {
+export const InactiveBudget = ({ budget, onActivate, menu }: InactiveBudgetProps) => {
   const { mutate: toggleBudget } = useToggleBudget();
   const [isOn, setIsOn] = useState(false);
 
@@ -25,6 +28,10 @@ export const InactiveBudget = ({ budget, onActivate }: InactiveBudgetProps) => {
 
   return (
     <StyledInactiveBudget>
+     <div className="cogContainer" onClick={() => {menu.value = 'manageBudgetMenu'}}>
+        {' '}
+        <IonIcon name="settings-outline" className="cog" />
+      </div>
       <div className="budgetTitle">
         {' '}
         &quot;{budget?.description !== undefined ? budget.description : ''}

@@ -4,7 +4,9 @@ import { DeleteBudgetConfirmationAnimationProps } from '../../../interfaces';
 
 export default function DeleteBudgetConfirmationAnimation({
   menu,
-  removeBudget,
+  deleteBudget,
+  selectedBudget,
+  isLoading
 }: DeleteBudgetConfirmationAnimationProps) {
   return (
     <CSSTransition
@@ -13,7 +15,7 @@ export default function DeleteBudgetConfirmationAnimation({
       classNames="bottomslide"
       unmountOnExit
     >
-      <ConfirmationForBudgetDeletion menu={menu} removeBudget={removeBudget} />
+      <ConfirmationForBudgetDeletion isLoading={isLoading} menu={menu} deleteBudget={deleteBudget} selectedBudget={selectedBudget} />
     </CSSTransition>
   );
 }

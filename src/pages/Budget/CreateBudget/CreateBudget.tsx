@@ -2,8 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  BudgetInfoResponse,
-  InactiveBudgetsInfoResponse,
   UserInfo,
 } from '../../../types';
 import '../../../styles/freakflags/freakflags.css';

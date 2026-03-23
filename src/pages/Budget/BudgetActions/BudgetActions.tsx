@@ -24,11 +24,11 @@ export const BudgetActions = () => {
           name="Create New Budget"
           description=""
           hasArrow={false}
-        >
-          <div className="buttonWrapper">
+        ><></>
+          {/* <div className="buttonWrapper">
             <FaChartPie className="budgetIcon" />
             <IoAddCircle className="checkIcon" />
-          </div>
+          </div> */}
         </OptionButton>
 
         <OptionButton
@@ -37,10 +37,10 @@ export const BudgetActions = () => {
           description=""
           hasArrow={false}
         >
-          <div className="buttonWrapper">
+          {/* <div className="buttonWrapper">
             <FaCalculator className="budgetIcon" />
             <RiEdit2Fill className="checkIcon" />
-          </div>
+          </div> */}<></>
         </OptionButton>
       </div>
     </StyledBudgetActions>
