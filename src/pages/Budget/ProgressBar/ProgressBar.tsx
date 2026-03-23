@@ -9,6 +9,7 @@ import { useToggleBudget } from '@/api/auth/CommandHooks/useToggleBudget';
 import { Bar } from './Bar/Bar';
 import { getActiveScopes } from '@/helpers/getActiveScopes';
 import IonIcon from '@reacticons/ionicons';
+import { dateIsInFuture } from '@/helpers/dateIsInFuture';
 
 export default function ProgressBar({ data, isOn, setIsOn, menu }: ProgressBarProps) {
   const theme = useTheme();
@@ -16,7 +17,7 @@ export default function ProgressBar({ data, isOn, setIsOn, menu }: ProgressBarPr
     data?.endDate
   );
 
-  const { mutate: toggleBudget } = useToggleBudget();
+ const { mutate: toggleBudget } = useToggleBudget();
 
   return (
     <StyledProgressBar>
@@ -36,14 +37,18 @@ export default function ProgressBar({ data, isOn, setIsOn, menu }: ProgressBarPr
                 Description:&nbsp; "
                 {data?.description !== undefined ? data.description : ''}"
               </div>
+              {dateIsInFuture(data?.startDate)?
               <div className="remainingDays">
+              Not Started Yet
+              </div>
+              :<div className="remainingDays">
                 Remaining time:{' '}
                 <strong>
                   {convertedDaysHoursMinutes.days}d{' '}
                   {convertedDaysHoursMinutes.hours}h{' '}
                   {convertedDaysHoursMinutes.minutes}m{' '}
                 </strong>
-              </div>
+              </div>}
               <div className="averageSpending">
                 Avg spent per day:&nbsp;
                 <strong>

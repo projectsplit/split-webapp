@@ -810,7 +810,7 @@ export type CreateBudgetRequest = {
   endDate?: string;
 };
 
-export type UpdateBudgetRequest = CreateBudgetRequest & {
+export type EditBudgetRequest = CreateBudgetRequest & {
   budgetId: string;
 };
 

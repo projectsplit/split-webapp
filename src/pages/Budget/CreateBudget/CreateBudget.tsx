@@ -11,7 +11,7 @@ import MyButton from '../../../components/MyButton/MyButton';
 import TopBarWithBackButton from '../../../components/TopBarWithBackButton/TopBarWithBackButton';
 import CurrencyOptionsAnimation from '../../../components/Animations/CurrencyOptionsAnimation';
 import { useCreateBudget } from '../../../api/auth/CommandHooks/useCreateBudget';
-import { useUpdateBudget } from '../../../api/auth/CommandHooks/useUpdateBudget';
+
 import MenuAnimationBackground from '../../../components/Animations/MenuAnimationBackground';
 import InfoBoxAnimation from '../../../components/Animations/InfoBoxAnimation';
 import CreateBudgetConfirmationAnimation from '../../../components/Animations/BudgetAnimations/CreateBudgetConfirmationAnimation';
@@ -28,6 +28,7 @@ import SpendingCycleInfo from '../SpendingCycleInfo/SpendingCycleInfo';
 import MakeBudgetActiveMenuAnimation from '@/components/Animations/MakeBudgetActiveMenuAnimation';
 import useBudgetInfo from '@/api/auth/QueryHooks/useBudgetInfo';
 import useGetInactiveBudgetInfo from '@/api/auth/QueryHooks/useGetInactiveBudgetInfo';
+import { useEditBudget } from '@/api/auth/CommandHooks/useEditBudget';
 
 export default function CreateBudget() {
   const data = useCreateBudgetData();
@@ -52,7 +53,7 @@ export default function CreateBudget() {
     menu,
   );
 
-  const { mutateAsync: updateBudget, isPending: isUpdatePending } = useUpdateBudget(
+  const { mutateAsync: updateBudget, isPending: isUpdatePending } = useEditBudget(
     navigate,
     data.serverErrors,
     menu,

@@ -9,7 +9,7 @@ export function useGroupsList(
 ) {
   const isGroupsMode = activeGroupCatAsState.value !== 'NonGroup';
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching, isLoading } =
     useGetGroupsTotalAmounts(
       pageSize,
       debouncedKeyword,
@@ -34,5 +34,6 @@ export function useGroupsList(
     hasNextPage,
     isFetchingNextPage,
     isFetching: isFetching && isGroupsMode,
+    isLoading: isLoading && isGroupsMode,
   };
 }

@@ -2,7 +2,6 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Signal, useSignal } from '@preact/signals-react';
 import CreateGroupAnimation from '../../components/Animations/CreateGroupAnimation';
 import { useEffect, useRef, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useMostRecentContext } from '../../api/auth/CommandHooks/useMostRecentContext';
 import { StyledGroups } from './GroupTypes/Groups.styled';
 import TreeAdjustedContainer from '../../components/TreeAdjustedContainer/TreeAdjustedContainer';
@@ -25,7 +24,6 @@ import { useGroupsList } from './hooks/useGroupList';
 import { useFetchAndGroupNonGroupDebts } from './hooks/useFetchAndGroupNonGroupDebts';
 
 export default function Shared() {
-  const queryClient = useQueryClient();
   const menu = useSignal<string | null>(null);
   const currencyMenu = useSignal<string | null>(null);
   const groupIdClicked = useSignal<string>('');
@@ -60,7 +58,7 @@ export default function Shared() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isFetching: isFetchingGroups,
+    isLoading: isLoadingGroups,
   } = useGroupsList(pageSize, debouncedKeyword, activeGroupCatAsState);
 
   const { groupedTransactions, isFetchingDebts } =
@@ -86,9 +84,6 @@ export default function Shared() {
 
   useEffect(() => {
     topMenuTitle.value = 'Shared';
-    queryClient.invalidateQueries({
-      queryKey: ['shared', activeGroupCatAsState.value.toLowerCase()],
-    });
   }, [activeGroupCatAsState.value]);
 
   const updateMostRecentContextId = useMostRecentContext();
@@ -135,7 +130,7 @@ export default function Shared() {
             keyword={keyword}
             setKeyword={setKeyword}
           />
-          {(isFetchingGroups && !isFetchingNextPage) || isFetchingDebts ? (
+          {isLoadingGroups || (isFetchingDebts && activeGroupCatAsState.value === 'NonGroup') ? (
             <Spinner />
           ) : (
             <div className="groups">
