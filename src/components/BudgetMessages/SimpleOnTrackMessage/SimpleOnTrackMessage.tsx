@@ -1,3 +1,4 @@
+import { dateIsInFuture } from '@/helpers/dateIsInFuture';
 import { SimpleOnTrackMessageProps } from '../../../interfaces';
 import { StyledSimpleOnTrackMessage } from './SimpleOnTrackMessage.styled';
 import IonIcon from '@reacticons/ionicons';
@@ -6,6 +7,7 @@ export default function SimpleOnTrackMessage({
   onClick,
   style,
   closeButton,
+  startDate
 }: SimpleOnTrackMessageProps) {
   return (
     <StyledSimpleOnTrackMessage style={style}>
@@ -19,7 +21,7 @@ export default function SimpleOnTrackMessage({
           </div>
           <div className="paragraph">
             <div className="firstParagraph">
-              You are on track to meeting your spending goal.
+             {dateIsInFuture(startDate)?"Your budget is not yet in effect.":"You are on track to meeting your spending goal."}
             </div>
           </div>
         </div>

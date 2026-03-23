@@ -37,6 +37,7 @@ export const BudgetInfoMessage = (
     if (totalAmountSpent === 0)
       return (
         <SimpleOnTrackMessage
+          startDate = {data?.startDate}
           onClick={onclick}
           closeButton={closeButton}
           style={

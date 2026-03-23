@@ -297,6 +297,7 @@ export interface SimpleOnTrackMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   style?: CSSProperties;
   closeButton: boolean;
+  startDate?: string;
 }
 export interface ReceivedMoreThanSpentMessageProps extends OnTrackMessageProps {}
 
