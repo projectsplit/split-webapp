@@ -12,6 +12,7 @@ import CurrencyOptionsAnimation from '../../../components/Animations/CurrencyOpt
 import MyButton from '../../../components/MyButton/MyButton';
 import FormInput from '../../../components/FormInput/FormInput';
 import { useCreateGroup } from '@/api/auth/CommandHooks/useCreateGroup';
+import InviteUsersToNewGroupAnimation from '@/components/Animations/InviteUsersToNewGroupAnimation';
 //TODO invite people when creating group. When create group is hit then multiple invitations should be sent
 
 export default function CreateGroup({
@@ -19,6 +20,7 @@ export default function CreateGroup({
   currencyMenu,
   nodeRef,
 }: CreateGroupProps) {
+  const inviteUsersMenu = useSignal<string | null>(null); //CHANGE HERE
   const [groupName, setGroupName] = useState<string>('');
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
@@ -28,6 +30,10 @@ export default function CreateGroup({
   const userCurrency = userInfo?.currency;
   const [currencySymbol, setCurrencySymbol] = useState<string>(userCurrency);
   const allCurrencies = useSignal<Currency[]>(currencyData);
+  const newGroup = useSignal<{groupName:string;groupId:string}>({
+    groupName:"",
+    groupId:""
+  })
 
   const selectedCurrency = allCurrencies.value.find(
     (c) => c.symbol === currencySymbol
@@ -39,10 +45,12 @@ export default function CreateGroup({
       { name: groupName, currency: currencySymbol },
       {
         onSuccess: (data) => {
-          menu.value = null;
-          navigate(`/shared/${data.groupId}/expenses`, {
-            state: { groupName },
-          });
+          //menu.value = null;
+          // navigate(`/shared/${data.groupId}/expenses`, {
+          //   state: { groupName, isNewGroup: true },
+          // });
+          newGroup.value={groupName,groupId:data.groupId};
+          inviteUsersMenu.value = 'inviteUsersToNewGroup';
         },
       }
     );
@@ -99,11 +107,13 @@ export default function CreateGroup({
       </div>
 
       <MenuAnimationBackground menu={currencyMenu} />
+      <MenuAnimationBackground menu={inviteUsersMenu} />
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
         selectedCurrency={currencySymbol}
       />
+      <InviteUsersToNewGroupAnimation menu={inviteUsersMenu} newGroup={newGroup} />
     </StyledCreateGroup>
   );
 }

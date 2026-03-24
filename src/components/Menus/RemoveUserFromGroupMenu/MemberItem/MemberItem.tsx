@@ -11,6 +11,7 @@ export default function MemberItem({
   isGuest,
   canBeRemoved,
   onCannotRemoveClick,
+  newMembers,
 }: MemberItemProps) {
   const { mutate: removeGuest, isPending: isPendingGuest } =
     useRemoveGuestFromGroup(groupId, noGroupError, noMemberError);
@@ -21,6 +22,9 @@ export default function MemberItem({
       return;
     }
     isGuest ? removeGuest(member.id) : null;
+    if (newMembers) {
+      newMembers.value = newMembers.value.filter((m) => m.name !== member.name);
+    }
   };
 
   return (

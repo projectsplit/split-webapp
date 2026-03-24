@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyledSearchUsersToInvite } from './SearchUsersToInvite.styled';
 import { useSearchUsersToInvite } from '../../api/auth/QueryHooks/useSearchUsersToInvite';
 import Input from '../../components/Input/Input';
@@ -21,9 +21,12 @@ import useDebounce from '../../hooks/useDebounce';
 const SearchUsersToInvite = ({
   menu,
   guestToBeReplaced,
+  newGroupId,
+  newMembers,
+  accessedNewUsersInvitationsMenu,
 }: SearchUsersToInviteProps) => {
   const params = useParams();
-  const groupId = params.groupid!;
+  const groupId = params.groupid! || newGroupId || '';
   const pageSize = 10;
   const queryClient = useQueryClient();
   const [keyword, setKeyword] = useState('');
@@ -37,6 +40,10 @@ const SearchUsersToInvite = ({
     keyword.length > 1 ? keyword : '',
     300
   );
+
+  useEffect(() => {
+    if (accessedNewUsersInvitationsMenu) accessedNewUsersInvitationsMenu.value = true;
+  }, []);
 
   const {
     data,
@@ -123,11 +130,22 @@ const SearchUsersToInvite = ({
                 groupId={groupId}
                 guestId={guestToBeReplaced?.guestId}
                 guestName={guestToBeReplaced?.guestName}
-                onInviteSuccess={() => {
-                  updateUserInvitationStatus(
-                    user.userId,
-                    !user.isAlreadyInvited
-                  );
+                onInviteSuccess={(wasInvited) => {
+                  updateUserInvitationStatus(user.userId, wasInvited);
+                  if (wasInvited) {
+                    if (newMembers) {
+                      newMembers.value = [
+                        ...newMembers.value,
+                        { name: user.username, isUser: true },
+                      ];
+                    }
+                  } else {
+                    if (newMembers) {
+                      newMembers.value = newMembers.value.filter(
+                        (m) => m.name !== user.username
+                      );
+                    }
+                  }
                 }}
                 userInvitationSent={userInvitationSent}
               />
@@ -154,7 +172,21 @@ const SearchUsersToInvite = ({
               <MyButton
                 isLoading={isPendingCreateGuest}
                 disabled={!guestName}
-                onClick={() => createGuestExpenseMutation()}
+                onClick={() =>
+                  createGuestExpenseMutation(undefined, {
+                    onSuccess: () => {
+                      if (newMembers) {
+                        newMembers.value = [
+                          ...newMembers.value,
+                          {
+                            name: guestName,
+                            isUser: false,
+                          },
+                        ];
+                      }
+                    },
+                  })
+                }
               >
                 Create
               </MyButton>
@@ -173,6 +205,7 @@ const SearchUsersToInvite = ({
                   'canBeRemoved' in member ? member.canBeRemoved : true
                 }
                 onCannotRemoveClick={handleCannotRemoveClick}
+                newMembers={newMembers}
               />
             ))}
           </div>

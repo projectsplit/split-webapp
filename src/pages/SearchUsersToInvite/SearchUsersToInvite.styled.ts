@@ -70,6 +70,7 @@ export const StyledSearchUsersToInvite = styled.div`
     flex: 1;
     padding-top: 1rem;
     padding-bottom: 180px;
+
     .members {
       display: flex;
       flex-direction: column;
@@ -96,12 +97,11 @@ export const StyledSearchUsersToInvite = styled.div`
 
   .input {
     display: flex;
-    width: 100%;
+    flex-direction: row;
     padding-left: 10px;
     padding-right: 10px;
 
     .search-input {
-      width: 100%;
       flex: 1;
       padding-top: 7px;
       padding-bottom: 7px;

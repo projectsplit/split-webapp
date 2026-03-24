@@ -779,10 +779,16 @@ export interface PillProps {
 }
 export interface AddNewUserAnimationProps extends MenuProps {
   guestToBeReplaced?: { guestId: string; guestName: string };
+  newGroupId?: string;
+  newMembers?: Signal<{name:string;isUser:boolean}[]>;
+  accessedNewUsersInvitationsMenu?:Signal<boolean>;
 }
 
 export interface SearchUsersToInviteProps extends MenuProps {
   guestToBeReplaced?: { guestId: string; guestName: string };
+  newGroupId?: string;
+  newMembers?: Signal<{name:string;isUser:boolean}[]>;
+  accessedNewUsersInvitationsMenu?:Signal<boolean>;
 }
 export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
 
@@ -826,6 +832,7 @@ export interface MemberItemProps {
   isGuest: boolean;
   canBeRemoved: boolean;
   onCannotRemoveClick: () => void;
+  newMembers?: Signal<{name:string;isUser:boolean}[]>;
 }
 
 export interface MiddleScreenMenuProps {

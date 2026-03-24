@@ -9,7 +9,7 @@ export const SearchResultItem: React.FC<{
   isAlreadyInvited: boolean;
   isGroupMember: boolean;
   groupId: string;
-  onInviteSuccess: () => void;
+  onInviteSuccess: (wasInvited: boolean) => void;
   guestId?: string;
   userInvitationSent: Signal<boolean>;
   guestName?: string;
@@ -54,14 +54,14 @@ export const SearchResultItem: React.FC<{
       revoke({
         groupId,
         receiverId: userId,
-        onSuccess: onInviteSuccess,
+        onSuccess: () => onInviteSuccess(!isAlreadyInvited),
       });
     } else {
       send({
         groupId,
         guestId: guestId && guestId != '' ? guestId : null,
         receiverId: userId,
-        onSuccess: onInviteSuccess,
+        onSuccess: () => onInviteSuccess(!isAlreadyInvited),
         guestName: guestName && guestName != '' ? guestName : null,
       });
     }

@@ -6,6 +6,9 @@ import { useRef } from 'react';
 export default function AddNewUserAnimation({
   menu,
   guestToBeReplaced,
+  newGroupId,
+  newMembers,
+  accessedNewUsersInvitationsMenu,
 }: AddNewUserAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -15,7 +18,13 @@ export default function AddNewUserAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <SearchUsersToInvite menu={menu} guestToBeReplaced={guestToBeReplaced} />
+      <SearchUsersToInvite
+        menu={menu}
+        guestToBeReplaced={guestToBeReplaced}
+        newGroupId={newGroupId}
+        newMembers={newMembers}
+        accessedNewUsersInvitationsMenu={accessedNewUsersInvitationsMenu}
+      />
     </CSSTransition>
   );
 }
