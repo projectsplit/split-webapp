@@ -82,6 +82,26 @@ export default function Members() {
     <StyledMembers>
       {isFetching ? (
         <Spinner />
+      ) : mode === Mode.NonGroup ? (
+        <MemberFC
+          group={group}
+          key={allParticipants[0].id}
+          pendingTransactions={debts ?? []}
+          groupedTransactions={groupedTransactions}
+          id={allParticipants[0].id}
+          name={allParticipants[0].name}
+          isLogedUser={
+            allParticipants[0].id === userMemberId ||
+            allParticipants[0].id === userInfo.userId
+          }
+          isGuest={guests?.some((g) => g.id === allParticipants[0].id) ?? false}
+          menu={menu}
+          idSelectedToSettleUp={idSelectedToSettleUp}
+          participants={allParticipants || []}
+          totalSpent={totalSpent}
+          guestToBeReplaced={guestToBeReplaced}
+          userOrMemberId={userMemberId ?? userInfo.userId}
+        />
       ) : (
         sortedParticipants?.map((p) => (
           <MemberFC
@@ -102,7 +122,6 @@ export default function Members() {
           />
         ))
       )}
-
       <MenuAnimationBackground menu={menu} />
       <SettleUpAnimation
         menu={menu}

@@ -406,6 +406,7 @@ export type Coordinates = {
 export enum Frequency {
   Weekly,
   Monthly,
+  Annually,
   Custom,
 }
 

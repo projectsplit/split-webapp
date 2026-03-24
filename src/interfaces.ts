@@ -459,7 +459,7 @@ export interface TopMenuProps {
 }
 
 export interface ToggleSwitchProps {
-  isOn: boolean|undefined;
+  isOn: boolean | undefined;
   onToggle: () => void;
 }
 
@@ -780,15 +780,15 @@ export interface PillProps {
 export interface AddNewUserAnimationProps extends MenuProps {
   guestToBeReplaced?: { guestId: string; guestName: string };
   newGroupId?: string;
-  newMembers?: Signal<{name:string;isUser:boolean}[]>;
-  accessedNewUsersInvitationsMenu?:Signal<boolean>;
+  newMembers?: Signal<{ name: string; isUser: boolean }[]>;
+  accessedNewUsersInvitationsMenu?: Signal<boolean>;
 }
 
 export interface SearchUsersToInviteProps extends MenuProps {
   guestToBeReplaced?: { guestId: string; guestName: string };
   newGroupId?: string;
-  newMembers?: Signal<{name:string;isUser:boolean}[]>;
-  accessedNewUsersInvitationsMenu?:Signal<boolean>;
+  newMembers?: Signal<{ name: string; isUser: boolean }[]>;
+  accessedNewUsersInvitationsMenu?: Signal<boolean>;
 }
 export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
 
@@ -832,7 +832,7 @@ export interface MemberItemProps {
   isGuest: boolean;
   canBeRemoved: boolean;
   onCannotRemoveClick: () => void;
-  newMembers?: Signal<{name:string;isUser:boolean}[]>;
+  newMembers?: Signal<{ name: string; isUser: boolean }[]>;
 }
 
 export interface MiddleScreenMenuProps {
@@ -1288,7 +1288,12 @@ export interface ManageBudgetMenuProps {
 
 export interface DeleteBudgetConfirmationAnimationProps {
   menu: Signal<string | null>;
- deleteBudget: UseMutateFunction<any, AxiosError<unknown, any>, string, unknown>
+  deleteBudget: UseMutateFunction<
+    any,
+    AxiosError<unknown, any>,
+    string,
+    unknown
+  >;
   selectedBudget: {
     id: string;
     descr: string;
@@ -1296,7 +1301,7 @@ export interface DeleteBudgetConfirmationAnimationProps {
   isLoading: boolean;
 }
 
-export interface ConfirmationForBudgetDeletionProps extends DeleteBudgetConfirmationAnimationProps { }
+export interface ConfirmationForBudgetDeletionProps extends DeleteBudgetConfirmationAnimationProps {}
 export interface ManageBudgetAnimationProps {
   menu: Signal<string | null>;
   selectedBudget: any;

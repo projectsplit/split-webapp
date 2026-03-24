@@ -10,21 +10,32 @@ import { Bar } from './Bar/Bar';
 import { getActiveScopes } from '@/helpers/getActiveScopes';
 import IonIcon from '@reacticons/ionicons';
 import { dateIsInFuture } from '@/helpers/dateIsInFuture';
+import { dateIsInPast } from '@/helpers/dateIsInPast';
 
-export default function ProgressBar({ data, isOn, setIsOn, menu }: ProgressBarProps) {
+export default function ProgressBar({
+  data,
+  isOn,
+  setIsOn,
+  menu,
+}: ProgressBarProps) {
   const theme = useTheme();
   const convertedDaysHoursMinutes = convertDaysToDaysHoursAndMinutes(
     data?.endDate
   );
 
- const { mutate: toggleBudget } = useToggleBudget();
+  const { mutate: toggleBudget } = useToggleBudget();
 
   return (
     <StyledProgressBar>
       {/* <div className="closeButton" onClick={()=>setMenu("deleteBudgetConfirmation")}>
         <IonIcon name="close-outline" className="close" />
       </div> */}
-      <div className="cogContainer" onClick={() => {menu.value = 'manageBudgetMenu'}}>
+      <div
+        className="cogContainer"
+        onClick={() => {
+          menu.value = 'manageBudgetMenu';
+        }}
+      >
         {' '}
         <IonIcon name="settings-outline" className="cog" />
       </div>
@@ -37,18 +48,20 @@ export default function ProgressBar({ data, isOn, setIsOn, menu }: ProgressBarPr
                 Description:&nbsp; "
                 {data?.description !== undefined ? data.description : ''}"
               </div>
-              {dateIsInFuture(data?.startDate)?
-              <div className="remainingDays">
-              Not Started Yet
-              </div>
-              :<div className="remainingDays">
-                Remaining time:{' '}
-                <strong>
-                  {convertedDaysHoursMinutes.days}d{' '}
-                  {convertedDaysHoursMinutes.hours}h{' '}
-                  {convertedDaysHoursMinutes.minutes}m{' '}
-                </strong>
-              </div>}
+              {dateIsInFuture(data?.startDate) ? (
+                <div className="remainingDays">Not Started Yet</div>
+              ) : dateIsInPast(data?.endDate) ? (
+                <div className="remainingDays" style={{ color: '#FC6F6F' }}>Expired</div>
+              ) : (
+                <div className="remainingDays">
+                  Remaining time:{' '}
+                  <strong>
+                    {convertedDaysHoursMinutes.days}d{' '}
+                    {convertedDaysHoursMinutes.hours}h{' '}
+                    {convertedDaysHoursMinutes.minutes}m{' '}
+                  </strong>
+                </div>
+              )}
               <div className="averageSpending">
                 Avg spent per day:&nbsp;
                 <strong>

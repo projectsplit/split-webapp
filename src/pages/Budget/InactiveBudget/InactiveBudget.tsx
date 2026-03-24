@@ -9,6 +9,8 @@ import { useState } from 'react';
 import { getActiveScopes } from '@/helpers/getActiveScopes';
 import IonIcon from '@reacticons/ionicons';
 import { Signal } from '@preact/signals-react';
+import { dateIsInFuture } from '@/helpers/dateIsInFuture';
+import { dateIsInPast } from '@/helpers/dateIsInPast';
 
 interface InactiveBudgetProps {
   budget: InactiveBudgetsInfoResponseItem;
@@ -16,7 +18,11 @@ interface InactiveBudgetProps {
   menu: Signal<string | null>;
 }
 
-export const InactiveBudget = ({ budget, onActivate, menu }: InactiveBudgetProps) => {
+export const InactiveBudget = ({
+  budget,
+  onActivate,
+  menu,
+}: InactiveBudgetProps) => {
   const { mutate: toggleBudget } = useToggleBudget();
   const [isOn, setIsOn] = useState(false);
 
@@ -28,7 +34,12 @@ export const InactiveBudget = ({ budget, onActivate, menu }: InactiveBudgetProps
 
   return (
     <StyledInactiveBudget>
-     <div className="cogContainer" onClick={() => {menu.value = 'manageBudgetMenu'}}>
+      <div
+        className="cogContainer"
+        onClick={() => {
+          menu.value = 'manageBudgetMenu';
+        }}
+      >
         {' '}
         <IonIcon name="settings-outline" className="cog" />
       </div>
@@ -46,14 +57,22 @@ export const InactiveBudget = ({ budget, onActivate, menu }: InactiveBudgetProps
               {endDateDecomposed.dateNumber} {endDateDecomposed.month}
             </strong>
           </div>
-          <div className="remainingDays">
-            Remaining time:{' '}
-            <strong>
-              {convertedDaysHoursMinutes.days}d{' '}
-              {convertedDaysHoursMinutes.hours}h{' '}
-              {convertedDaysHoursMinutes.minutes}m{' '}
-            </strong>
-          </div>
+          {dateIsInFuture(budget?.startDate) ? (
+            <div className="remainingDays">Not Started Yet</div>
+          ) : dateIsInPast(budget?.endDate) ? (
+            <div className="remainingDays" style={{ color: '#FC6F6F' }}>
+              Expired
+            </div>
+          ) : (
+            <div className="remainingDays">
+              Remaining time:{' '}
+              <strong>
+                {convertedDaysHoursMinutes.days}d{' '}
+                {convertedDaysHoursMinutes.hours}h{' '}
+                {convertedDaysHoursMinutes.minutes}m{' '}
+              </strong>
+            </div>
+          )}
           <div className="averageSpending">
             Goal:&nbsp;
             <strong>
@@ -77,9 +96,12 @@ export const InactiveBudget = ({ budget, onActivate, menu }: InactiveBudgetProps
             setIsOn(true);
             onActivate();
             setTimeout(() => {
-              toggleBudget({ budgetId: budget?.id }, {
-                onError: () => setIsOn(false),
-              });
+              toggleBudget(
+                { budgetId: budget?.id },
+                {
+                  onError: () => setIsOn(false),
+                }
+              );
             }, 400);
           }}
         />

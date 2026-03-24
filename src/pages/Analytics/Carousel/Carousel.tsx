@@ -17,7 +17,7 @@ export default function Carousel({
     selectedTimeCycleIndex.value =
       (selectedTimeCycleIndex.value + 1) % carouselItems.length;
 
-    if (selectedCycle.value === Frequency.Custom)
+    if (selectedCycle.value === Frequency.Annually)
       selectedYear.value = parseInt(
         carouselItems[selectedTimeCycleIndex.value] as string,
         10
@@ -30,7 +30,7 @@ export default function Carousel({
       (selectedTimeCycleIndex.value - 1 + carouselItems.length) %
       carouselItems.length;
 
-    if (selectedCycle.value === Frequency.Custom)
+    if (selectedCycle.value === Frequency.Annually)
       selectedYear.value = parseInt(
         carouselItems[selectedTimeCycleIndex.value] as string,
         10
@@ -47,7 +47,7 @@ export default function Carousel({
       case Frequency.Weekly:
         if (item.length === 1) return item[0];
         return item[0] + '- ' + item[item.length - 1];
-      case Frequency.Custom:
+      case Frequency.Annually:
         return item;
       default:
         return 0;
@@ -71,7 +71,7 @@ export default function Carousel({
               key={index}
               className="carousel-item"
               onClick={() =>
-                selectedCycle.value === Frequency.Custom
+                selectedCycle.value === Frequency.Annually
                   ? (menu.value = 'year')
                   : (menu.value = 'timePeriod')
               }
