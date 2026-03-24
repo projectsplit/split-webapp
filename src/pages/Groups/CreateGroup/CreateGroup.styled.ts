@@ -17,12 +17,11 @@ export const StyledCreateGroup = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    .input {
+    .formInputWrapper {
       margin-top: 0.6rem;
-      display: flex;
-      flex-direction: column;
       padding: 0 0.875rem;
     }
+
     .currencySelectorWrapper {
       padding: 0 0.875rem;
       .currencySelector {

@@ -72,7 +72,7 @@ export default function CreateGroup({
         </div>
       </div>
       <div className="inputAndCurrWrapper">
-        <div className="inputField">
+        <div className="formInputWrapper">
           <FormInput
             placeholder="Group Name"
             value={groupName}

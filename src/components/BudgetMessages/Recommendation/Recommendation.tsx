@@ -33,7 +33,7 @@ export default function Recommendation({
               <strong className="amount">
                 {displayCurrencyAndAmount(reduceAmount, currency)}
               </strong>{' '}
-              per day to not exceed your monthly cap.
+              per day to not exceed your {budgetFrequency === 0 ? 'weekly' : budgetFrequency === 1 ? 'monthly' : ''} cap.
             </div>
             <div className="secondParagraph">
               At this rate you will reach your cap in{' '}
