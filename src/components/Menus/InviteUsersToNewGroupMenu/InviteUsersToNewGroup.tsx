@@ -106,13 +106,13 @@ export const InviteUsersToNewGroup = ({
             ? 'Manage Members'
             : 'Add Members'}
         </MyButton>
-      </BottomContainer>
-      <AddNewUserAnimation
-        menu={newUserMenu}
-        newGroupId={newGroup.value.groupId}
-        newMembers={newMembers}
-        accessedNewUsersInvitationsMenu={accessedNewUsersInvitationsMenu}
-      />
+        </BottomContainer>
+        <AddNewUserAnimation
+          menu={newUserMenu}
+          newGroupId={newGroup.value.groupId}
+          newMembers={newMembers}
+          accessedNewUsersInvitationsMenu={accessedNewUsersInvitationsMenu}
+        />
     </StyledInviteUsersToNewGroup>
   );
 };

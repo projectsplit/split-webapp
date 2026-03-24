@@ -76,7 +76,7 @@ export const ScrollableContent = styled.div`
     }
 
     .statusDot.guest {
-      background-color: #5183ee;
+      background-color: ${({ theme }) => theme.ciel};
     }
     .statusDot.creator {
       background-color: green;

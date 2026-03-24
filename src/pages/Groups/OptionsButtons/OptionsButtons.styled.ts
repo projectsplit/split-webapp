@@ -38,12 +38,12 @@ export const StyledOptionsButtons = styled.div<{ $groupState: string }>`
         display: flex;
         justify-self: center;
         color: ${({ theme, $groupState }) =>
-          $groupState === 'NonGroup' ? theme.nonActive : theme.nonInactive};
+          $groupState === 'NonGroup' ? theme.ciel : theme.nonInactive};
         font-size: 30px;
         transition: color 0.2s ease-in-out;
       }
       &:hover .groupIcon.non {
-        color: ${({ theme }) => theme.nonActive};
+        color: ${({ theme }) => theme.ciel};
       }
 
       .groupIcon.archived {

@@ -45,12 +45,6 @@ export const StyledCreateGroup = styled.div`
       }
     }
   }
-  .inputField {
-    margin-top: 0.625rem;
-    display: flex;
-    flex-direction: column;
-    padding: 0 0.875rem;
-  }
 
   .submitButton {
     display: flex;
