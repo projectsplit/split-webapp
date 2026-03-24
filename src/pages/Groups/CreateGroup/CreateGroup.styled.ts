@@ -45,7 +45,7 @@ export const StyledCreateGroup = styled.div`
       }
     }
   }
-  .input {
+  .inputField {
     margin-top: 0.625rem;
     display: flex;
     flex-direction: column;

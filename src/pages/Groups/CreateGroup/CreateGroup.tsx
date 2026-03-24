@@ -7,13 +7,13 @@ import { FaAngleDown } from 'react-icons/fa';
 import MenuAnimationBackground from '../../../components/Animations/MenuAnimationBackground';
 import { useSignal } from '@preact/signals-react';
 import { currencyData } from '../../../helpers/openExchangeRates';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import CurrencyOptionsAnimation from '../../../components/Animations/CurrencyOptionsAnimation';
 import MyButton from '../../../components/MyButton/MyButton';
 import FormInput from '../../../components/FormInput/FormInput';
 import { useCreateGroup } from '@/api/auth/CommandHooks/useCreateGroup';
 import InviteUsersToNewGroupAnimation from '@/components/Animations/InviteUsersToNewGroupAnimation';
-//TODO invite people when creating group. When create group is hit then multiple invitations should be sent
+import { useMostRecentContext } from '@/api/auth/CommandHooks/useMostRecentContext';
 
 export default function CreateGroup({
   menu,
@@ -25,31 +25,28 @@ export default function CreateGroup({
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
-  const navigate = useNavigate();
 
   const userCurrency = userInfo?.currency;
   const [currencySymbol, setCurrencySymbol] = useState<string>(userCurrency);
   const allCurrencies = useSignal<Currency[]>(currencyData);
-  const newGroup = useSignal<{groupName:string;groupId:string}>({
-    groupName:"",
-    groupId:""
-  })
+  const newGroup = useSignal<{ groupName: string; groupId: string }>({
+    groupName: '',
+    groupId: '',
+  });
 
   const selectedCurrency = allCurrencies.value.find(
     (c) => c.symbol === currencySymbol
   );
   const { mutate: createGroup, isPending } = useCreateGroup();
+  const updateMostRecentContextId = useMostRecentContext();
 
   const onClickHandler = () => {
     createGroup(
       { name: groupName, currency: currencySymbol },
       {
         onSuccess: (data) => {
-          //menu.value = null;
-          // navigate(`/shared/${data.groupId}/expenses`, {
-          //   state: { groupName, isNewGroup: true },
-          // });
-          newGroup.value={groupName,groupId:data.groupId};
+          updateMostRecentContextId.mutate(data.groupId);
+          newGroup.value = { groupName, groupId: data.groupId };
           inviteUsersMenu.value = 'inviteUsersToNewGroup';
         },
       }
@@ -75,7 +72,7 @@ export default function CreateGroup({
         </div>
       </div>
       <div className="inputAndCurrWrapper">
-        <div className="input">
+        <div className="inputField">
           <FormInput
             placeholder="Group Name"
             value={groupName}
@@ -113,7 +110,10 @@ export default function CreateGroup({
         clickHandler={handldeCurrencyOptionsClick}
         selectedCurrency={currencySymbol}
       />
-      <InviteUsersToNewGroupAnimation menu={inviteUsersMenu} newGroup={newGroup} />
+      <InviteUsersToNewGroupAnimation
+        menu={inviteUsersMenu}
+        newGroup={newGroup}
+      />
     </StyledCreateGroup>
   );
 }

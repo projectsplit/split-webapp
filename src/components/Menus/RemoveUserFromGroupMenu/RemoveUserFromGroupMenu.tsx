@@ -99,7 +99,7 @@ export default function RemoveUserFromGroupMenu({
         <Separator />
       </div>
       <div className="scrollable-content">
-        <div className="input">
+        <div className="inputField">
           <Input
             className="search-input"
             placeholder="Search"

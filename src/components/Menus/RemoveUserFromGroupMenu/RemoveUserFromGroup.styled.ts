@@ -108,7 +108,7 @@ export const StyledRemoveUserFromGroup = styled.div`
       }
     }
   }
-  .input {
+  .inputField {
     display: flex;
     width: 100%;
     padding-left: 10px;

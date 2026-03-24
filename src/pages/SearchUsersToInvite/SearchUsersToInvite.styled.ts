@@ -95,7 +95,7 @@ export const StyledSearchUsersToInvite = styled.div`
     }
   }
 
-  .input {
+  .inputField {
     display: flex;
     flex-direction: row;
     padding-left: 10px;

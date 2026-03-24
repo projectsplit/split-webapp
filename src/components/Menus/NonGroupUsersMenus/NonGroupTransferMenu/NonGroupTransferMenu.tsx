@@ -181,7 +181,7 @@ export default function NonGroupTransferMenu({
         </div>
       </div>
       <div className="scrollable-content">
-        <div className="input">
+        <div className="inputField">
           <div
             className="main"
             onFocus={() => handleFocus()}

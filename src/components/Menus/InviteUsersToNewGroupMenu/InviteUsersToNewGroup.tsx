@@ -14,6 +14,7 @@ import MyButton from '@/components/MyButton/MyButton';
 import AddNewUserAnimation from '@/components/Animations/AddNewUserAnimation';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { UserInfo } from '@/types';
+import { usePreventNavigation } from './hooks/usePreventNavigation';
 
 interface InviteUsersToNewGroupProps {
   menu: Signal<string | null>;
@@ -29,7 +30,11 @@ export const InviteUsersToNewGroup = ({
   const navigate = useNavigate();
   const newMembers = useSignal<{ name: string; isUser: boolean }[]>([]);
   const accessedNewUsersInvitationsMenu = useSignal<boolean>(false);
+
   const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
+
+  usePreventNavigation();
+
   return (
     <StyledInviteUsersToNewGroup>
       <HeaderContainer>

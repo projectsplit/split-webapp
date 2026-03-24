@@ -83,7 +83,7 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
         margin-top: 19px;
       }
     }
-    .input {
+    .inputField {
       display: flex;
       width: 100%;
       padding-right: 12px;

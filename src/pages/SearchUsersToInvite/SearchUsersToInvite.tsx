@@ -109,7 +109,7 @@ const SearchUsersToInvite = ({
       </div>
       {category.value === 'Invite User' ? (
         <div className="scrollable-content">
-          <div className="input">
+          <div className="inputField">
             <Input
               className="search-input"
               placeholder="Search"
@@ -159,7 +159,7 @@ const SearchUsersToInvite = ({
         </div>
       ) : (
         <div className="scrollable-content">
-          <div className="input">
+          <div className="inputField">
             <Input
               className="search-input"
               placeholder="guest's name"
