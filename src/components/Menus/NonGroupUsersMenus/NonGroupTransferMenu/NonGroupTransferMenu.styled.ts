@@ -85,9 +85,10 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
     }
     .inputField {
       display: flex;
-      width: 100%;
-      padding-right: 12px;
-      padding-left: 12px;
+      flex-direction: row;
+      padding-left: 10px;
+      padding-right: 10px;
+
       .search-input {
         width: 100%;
         flex: 1;
