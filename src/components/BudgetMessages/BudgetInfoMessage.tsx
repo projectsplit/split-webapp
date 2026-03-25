@@ -3,7 +3,7 @@ import OverspentMessage from './OverspentMessage/OverspentMessage';
 import ReceivedMoreThanSpentMessage from './ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage';
 import Recommendation from './Recommendation/Recommendation';
 import SimpleOnTrackMessage from './SimpleOnTrackMessage/SimpleOnTrackMessage';
-import { BudgetInfoResponse} from '../../types';
+import { BudgetInfoResponse } from '../../types';
 import { DefaultTheme } from 'styled-components';
 import { NoBudgetSubmittedMessage } from './NoBudgetSubmittedMessage/NoBudgetSubmittedMessage';
 
@@ -13,8 +13,7 @@ export const BudgetInfoMessage = (
   data: BudgetInfoResponse | undefined,
   noSubmissions?: boolean,
   onclick?: (event: React.MouseEvent<HTMLDivElement>) => void,
-  style?: React.CSSProperties,
-  
+  style?: React.CSSProperties
 ): JSX.Element => {
   if (data === undefined) {
     return <NoBudgetSubmittedMessage noSubmissions={noSubmissions} />;
@@ -37,7 +36,7 @@ export const BudgetInfoMessage = (
     if (totalAmountSpent === 0)
       return (
         <SimpleOnTrackMessage
-          startDate = {data?.startDate}
+          startDate={data?.startDate}
           onClick={onclick}
           closeButton={closeButton}
           style={
@@ -47,7 +46,7 @@ export const BudgetInfoMessage = (
               borderStyle: 'solid',
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
               borderRadius: '6px',
-              padding: '0.8rem',
+              padding: '0.4rem',
             }
           }
         />
@@ -68,7 +67,7 @@ export const BudgetInfoMessage = (
               borderStyle: 'solid',
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
               borderRadius: '6px',
-              padding: '0.8rem',
+              padding: '0.4rem',
             }
           }
         />
@@ -92,7 +91,7 @@ export const BudgetInfoMessage = (
               borderStyle: 'solid',
               // boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
               borderRadius: '6px',
-              padding: '0.8rem',
+              padding: '0.4rem',
             }
           }
         />
@@ -127,7 +126,7 @@ export const BudgetInfoMessage = (
                 borderStyle: 'solid',
                 //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
                 borderRadius: '6px',
-                padding: '0.8rem',
+                padding: '0.4rem',
               }
             }
           />
@@ -148,7 +147,7 @@ export const BudgetInfoMessage = (
                 borderStyle: 'solid',
                 //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
                 borderRadius: '6px',
-                padding: '0.8rem',
+                padding: '0.4rem',
               }
             }
           />

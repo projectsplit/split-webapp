@@ -15,7 +15,12 @@ import IonIcon from '@reacticons/ionicons';
 import { UseMutateAsyncFunction } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
-export const BudgetCarousel = ({ activeBudgetData, setShowBudgetInfo, setShowButton, onClick }: BudgetCarouselProps) => {
+export const BudgetCarousel = ({
+  activeBudgetData,
+  setShowBudgetInfo,
+  setShowButton,
+  onClick,
+}: BudgetCarouselProps) => {
   const theme = useTheme();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [animDirection, setAnimDirection] = useState<
@@ -72,24 +77,45 @@ export const BudgetCarousel = ({ activeBudgetData, setShowBudgetInfo, setShowBut
   };
 
   return (
-    <StyledBudgetCarousel onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} >
+    <StyledBudgetCarousel onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <BackAndForthAnimation
         firstChild={
           <CarouselItemWrapper onClick={onClick}>
-            <div className="closeButton" onClick={(e: React.MouseEvent) => {e.stopPropagation();setShowBudgetInfo(false);setShowButton(true)}}>
+            <div
+              className="closeButton"
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+                setShowBudgetInfo(false);
+                setShowButton(true);
+              }}
+            >
               <IonIcon name="close-outline" className="close" />
             </div>
-            {BudgetInfoMessage(theme, false, activeBudgetData, undefined,undefined, {
-              backgroundColor: 'transparent',
-              boxShadow: 'none',
-              border: 'none',
-              padding: 0,
-            })}
+            {BudgetInfoMessage(
+              theme,
+              false,
+              activeBudgetData,
+              undefined,
+              undefined,
+              {
+                backgroundColor: 'transparent',
+                boxShadow: 'none',
+                border: 'none',
+                padding: 0,
+              }
+            )}
           </CarouselItemWrapper>
         }
         secondChild={
           <CarouselItemWrapper onClick={onClick}>
-            <div className="closeButton" onClick={(e: React.MouseEvent) => {e.stopPropagation();setShowBudgetInfo(false);setShowButton(true)}}>
+            <div
+              className="closeButton"
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+                setShowBudgetInfo(false);
+                setShowButton(true);
+              }}
+            >
               <IonIcon name="close-outline" className="close" />
             </div>
             <Bar
@@ -111,7 +137,12 @@ export const BudgetCarousel = ({ activeBudgetData, setShowBudgetInfo, setShowBut
 
 interface BudgetCarouselProps {
   activeBudgetData: BudgetInfoResponse | undefined;
-  setShowBudgetInfo: UseMutateAsyncFunction<any, AxiosError<unknown, any>, boolean, unknown>;
+  setShowBudgetInfo: UseMutateAsyncFunction<
+    any,
+    AxiosError<unknown, any>,
+    boolean,
+    unknown
+  >;
   setShowButton: React.Dispatch<React.SetStateAction<boolean>>;
-  onClick:React.MouseEventHandler<HTMLDivElement>;
+  onClick: React.MouseEventHandler<HTMLDivElement>;
 }

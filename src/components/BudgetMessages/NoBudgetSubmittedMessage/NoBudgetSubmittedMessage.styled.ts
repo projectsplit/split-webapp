@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 export const StyledNoBudgetSubmittedMessage = styled.div`
   background-color: ${({ theme }) => theme.layer2};
   border-radius: 6px;
-  padding: 0.8rem;
+  padding: 0.4rem;
   .main {
     position: relative;
     display: flex;
@@ -18,11 +18,10 @@ export const StyledNoBudgetSubmittedMessage = styled.div`
         margin-right: 10px;
       }
       .paragraph {
-        font-size: 15px;
+        font-size: 14px;
         display: flex;
         flex-direction: column;
         gap: 10px;
-        font-size: 15px;
 
         justify-content: center;
       }

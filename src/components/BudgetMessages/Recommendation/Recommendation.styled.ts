@@ -21,11 +21,11 @@ export const StyledRecommendation = styled.div<StyledRecommendationProps>`
         margin-right: 10px;
       }
       .paragraphs {
-        font-size: 15px;
+        font-size: 14px;
         display: flex;
         flex-direction: column;
         gap: 10px;
-        font-size: 15px;
+
         .amount {
           color: ${({ theme }) => theme.redish};
         }
