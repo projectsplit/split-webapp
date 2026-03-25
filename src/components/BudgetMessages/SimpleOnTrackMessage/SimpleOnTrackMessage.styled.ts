@@ -15,6 +15,9 @@ export const StyledSimpleOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
       flex-direction: row;
       /* align-items: center; */
       .sign {
+        display: flex;
+        justify-self: center;
+        align-self: center;
         margin-right: 10px;
       }
       .paragraph {

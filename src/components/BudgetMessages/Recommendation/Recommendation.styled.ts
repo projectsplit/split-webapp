@@ -18,6 +18,9 @@ export const StyledRecommendation = styled.div<StyledRecommendationProps>`
       flex-direction: row;
 
       .sign {
+        display:flex ;
+        justify-self:center;
+        align-self:center;
         margin-right: 10px;
       }
       .paragraphs {
