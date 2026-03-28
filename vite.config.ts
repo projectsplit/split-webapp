@@ -30,8 +30,8 @@ export default defineConfig({
         name: 'Buqs',
         short_name: 'Buqs',
         description: 'Buqs Web App',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        theme_color: '#000000',
+        background_color: '#000000',
         display: 'standalone',
         icons: [
           {
