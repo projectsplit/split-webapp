@@ -48,6 +48,9 @@ export default defineConfig({
       },
       workbox: {
         maximumFileSizeToCacheInBytes: 3000000 // 3MB
+      },
+      devOptions: {
+        enabled: true
       }
     }),
     // checker({ typescript: true }),
