@@ -200,7 +200,7 @@ export default function ExpenseForm({
 
   const allCurrencies = useSignal<Currency[]>(currencyData);
   const selectedCurrency = allCurrencies.value.find(
-    (c) => c.symbol === currency
+    (c) => c.symbol === inputs.currencySymbol
   );
 
   return (
