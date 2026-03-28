@@ -21,28 +21,28 @@ export default function Calendar({
       {budgetFrequency.value == Frequency.Monthly
         ? children.map((row: any, rowIndex: any) => (
             <div key={rowIndex} className="calendar-row">
-              {row.map((day: string, dayIndex: number) => (
+              {row.map((day: any, dayIndex: number) => (
                 <div
-                  key={day + dayIndex}
+                  key={String(day) + dayIndex}
                   className={`calendar-day ${
-                    day === calendarDay.value && day !== '' ? 'selected' : ''
+                    String(day) === calendarDay.value && day !== '' ? 'selected' : ''
                   }`}
                   style={{ cursor: day !== '' ? 'pointer' : 'default' }}
-                  onClick={() => handleElementClick(day)}
+                  onClick={() => handleElementClick(String(day))}
                 >
                   {day}
                 </div>
               ))}
             </div>
           ))
-        : children.map((day: string, dayIndex: number) => (
+        : children.map((day: any, dayIndex: number) => (
             <div
-              key={day + dayIndex}
+              key={String(day) + dayIndex}
               className={`calendar-day ${
-                day === calendarDay.value && day !== '' ? 'selected' : ''
+                String(day) === calendarDay.value && day !== '' ? 'selected' : ''
               }`}
               style={{ cursor: day !== '' ? 'pointer' : 'default' }}
-              onClick={() => handleElementClick(day)}
+              onClick={() => handleElementClick(String(day))}
             >
               {day}
             </div>

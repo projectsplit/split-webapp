@@ -63,14 +63,14 @@ export default function CreateBudget() {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state?.editBudget && !data.isEditMode) {
+    if (location.state?.editBudget && (!data.isEditMode || location.state.editBudget.id !== data.budgetId)) {
       actions.populateForm(location.state.editBudget, userInfo?.currency || '');
     } else if (!location.state?.editBudget && data.isEditMode) {
       actions.initForm(userInfo?.currency || '');
     } else if (!location.state?.editBudget && userInfo?.currency && !data.currencySymbol) {
       actions.setCurrencySymbol(userInfo.currency);
     }
-  }, [location.state, userInfo, data.isEditMode, data.currencySymbol]);
+  }, [location.state, userInfo, data.isEditMode, data.currencySymbol, data.budgetId]);
 
   const handleInputChangeCallback = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,7 +146,11 @@ export default function CreateBudget() {
             handleBack();
           } else {
             actions.resetForm();
-            navigate(`/budget/actions`);
+            if (data.isEditMode) {
+              navigate('/budget/manage');
+            } else {
+              navigate('/budget/actions');
+            }
           }
         }}
       />

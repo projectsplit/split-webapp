@@ -26,6 +26,7 @@ export const InactiveBudget = ({
   const { mutate: toggleBudget } = useToggleBudget();
   const [isOn, setIsOn] = useState(false);
 
+  console.log(budget)
   const startDateDecomposed = getIsoDateInfo(budget?.startDate);
   const endDateDecomposed = getIsoDateInfo(budget?.endDate);
   const convertedDaysHoursMinutes = convertDaysToDaysHoursAndMinutes(
