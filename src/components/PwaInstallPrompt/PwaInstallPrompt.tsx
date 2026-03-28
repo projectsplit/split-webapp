@@ -19,7 +19,7 @@ export const PwaInstallPrompt: React.FC = () => {
   if (!isInstallable || isAppInstalled) {
     return null;
   }
-console.log("here")
+
   return (
     <Overlay>
       <PromptContainer>
