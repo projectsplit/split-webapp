@@ -5,9 +5,14 @@ import App from './App';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme';
 import GlobalStyles from './styles/global';
-import { StrictMode, useEffect, useState } from 'react';
+import {  useEffect, useState } from 'react';
 import SplashScreen from './pages/SplashScreen/SplashScreen';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+import { registerSW } from 'virtual:pwa-register';
+
+if ('serviceWorker' in navigator) {
+  registerSW({ immediate: true });
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
