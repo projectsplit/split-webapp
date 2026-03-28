@@ -9,6 +9,7 @@ export const StyledTopMenu = styled.div<{ title: string }>`
   padding-right: 14px;
   padding-bottom: 25px;
   padding-top: 20px;
+  padding-top: calc(20px + env(safe-area-inset-top));
   .useOptionsContainer {
     display: flex;
     flex-direction: row;

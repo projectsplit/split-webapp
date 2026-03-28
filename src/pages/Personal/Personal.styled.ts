@@ -4,7 +4,7 @@ export const StyledPersonal = styled.div`
   overflow: hidden;
   box-sizing: border-box;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   .noData {
@@ -30,7 +30,6 @@ export const StyledPersonal = styled.div`
   }
 
   .bottomMenu {
-    bottom: env(safe-area-inset-bottom, 0); /* Respect safe area */
   }
 
   .spinner {
