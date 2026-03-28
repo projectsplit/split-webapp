@@ -25,7 +25,7 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon-any-192x192.png', 'icon-any-512x512.png', 'icon-maskable-192x192.png', 'icon-maskable-512x512.png'],
+      includeAssets: ['icon-192x192.png', 'icon-512x512.png'],
       manifest: {
         name: 'Buqs',
         short_name: 'Buqs',
@@ -35,28 +35,14 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
-            src: 'icon-any-192x192.png',
+            src: 'icon-192x192.png',
             sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any'
+            type: 'image/png'
           },
           {
-            src: 'icon-any-512x512.png',
+            src: 'icon-512x512.png',
             sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any'
-          },
-          {
-            src: 'icon-maskable-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'maskable'
-          },
-          {
-            src: 'icon-maskable-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable'
+            type: 'image/png'
           }
         ]
       },
