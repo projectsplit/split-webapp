@@ -28,10 +28,12 @@ import NonGroup from './pages/TransactionsWrappers/NonGroup';
 import { Personal } from './pages/Personal/Personal';
 import { BudgetActions } from './pages/Budget/BudgetActions/BudgetActions';
 import { ManageBudgets } from './pages/Budget/ManageBudgets/ManageBudgets';
+import { PwaInstallPrompt } from './components/PwaInstallPrompt/PwaInstallPrompt';
 
 const App = () => {
   return (
-    <Router>
+    <>
+      <Router>
       <Routes>
         <Route path={routes.AUTH} element={<Auth />} />
         <Route path={routes.CREATE} element={<CreateAccount />} />
@@ -82,6 +84,8 @@ const App = () => {
         <Route path="*" element={<h1>Lost ?</h1>} />
       </Routes>
     </Router>
+    <PwaInstallPrompt />
+    </>
   );
 };
 
