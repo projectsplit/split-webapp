@@ -101,6 +101,7 @@ export default function CreateBudget() {
       updateBudgetMutation: updateBudget,
       menu,
       step: data.currentStep,
+      activate: !data.isEditMode ? true : undefined,
     });
   };
 
