@@ -58,10 +58,12 @@ export const useCreateExpenseMutation = (
   const {
     mutate: createPersonalExpenseMutation,
     isPending: isPendingCreatePersonalExpense,
-  } = useCreatePersonalExpense(menu, navigate, setIsSubmitting);
+  } = useCreatePersonalExpense(menu, navigate, setIsSubmitting, makePersonalClicked);
 
   const mutate = (req: ExpenseRequest) => {
-    if (isnonGroupExpense?.value && !isPersonal?.value) {
+    if (isPersonal?.value) {
+      createPersonalExpenseMutation(req as PersonalExpenseRequest);
+    } else if (isnonGroupExpense?.value) {
       createNonGroupExpenseMutation(req as NonGroupExpenseRequest);
     } else if (groupId) {
       createGroupExpenseMutation(req as GroupExpenseRequest);
@@ -70,8 +72,9 @@ export const useCreateExpenseMutation = (
     }
   };
 
-  const isPending =
-    isnonGroupExpense?.value && !isPersonal?.value
+  const isPending = isPersonal?.value
+    ? isPendingCreatePersonalExpense
+    : isnonGroupExpense?.value
       ? isPendingCreateNonGroupExpense
       : groupId
         ? isPendingCreateGroupExpense

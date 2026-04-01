@@ -56,6 +56,10 @@ export const useCreateGroupExpense = (
         exact: false,
       });
       await queryClient.invalidateQueries({
+        queryKey: ['personalExpenses'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
         queryKey: [groupId],
         exact: false,
       });
