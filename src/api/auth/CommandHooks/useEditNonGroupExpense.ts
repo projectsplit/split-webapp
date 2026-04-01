@@ -47,6 +47,10 @@ export const useEditNonGroupExpense = (
         queryKey: ['cumulativeArray'],
         exact: false,
       });
+      await queryClient.invalidateQueries({
+        queryKey: ['personalExpenses'],
+        exact: false,
+      });
       if (selectedExpense) {
         selectedExpense.value = null;
       }
