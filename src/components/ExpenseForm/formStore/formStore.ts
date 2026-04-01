@@ -476,9 +476,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       },
       {
         ...inputs,
-        fromPersonal: inputs.fromPersonal
-          ? inputs.fromPersonal.peek()
-          : undefined,
+        fromPersonal:
+          inputs.fromPersonal?.peek() || inputs.isPersonal?.peek() || undefined,
       }
     );
   },

@@ -8,7 +8,8 @@ import { NavigateFunction } from 'react-router-dom';
 export const useCreatePersonalExpense = (
   menu: Signal<string | null>,
   navigate: NavigateFunction,
-  setIsSubmitting: (value: boolean) => void
+  setIsSubmitting: (value: boolean) => void,
+  makePersonalClicked?: boolean
 ) => {
   const queryClient = useQueryClient();
 
@@ -16,6 +17,9 @@ export const useCreatePersonalExpense = (
     mutationFn: (expense) => createPersonalExpense(expense),
     onSuccess: async () => {
       menu.value = null;
+      if (makePersonalClicked) {
+        localStorage.removeItem('submittedFromHomePersistData');
+      }
       navigate(`/personal`);
       await queryClient.invalidateQueries({
         queryKey: ['personalExpenses'],

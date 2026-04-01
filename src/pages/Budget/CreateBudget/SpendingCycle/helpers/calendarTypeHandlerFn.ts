@@ -41,7 +41,7 @@ export const calendarTypeHandlerFn = (
   }
 
   if (!hasSwitchedBudgetType.value || isStale) {
-    queryClient.invalidateQueries({ queryKey: ['budget'], exact: false });
+    queryClient.invalidateQueries({ queryKey: ['budgets'], exact: false });
   }
   if (!hasSwitchedBudgetType.value) {
     //setHasSwitchedBudgetType(true);

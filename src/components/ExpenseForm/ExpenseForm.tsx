@@ -166,6 +166,7 @@ export default function ExpenseForm({
       editExpenseMutation: editExpenseMutation as any,
       isnonGroupExpense,
       fromPersonal,
+      isPersonal,
       isCreateExpense,
       expense,
       fromHomeGroup,

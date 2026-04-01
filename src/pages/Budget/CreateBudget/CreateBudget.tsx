@@ -61,6 +61,9 @@ export default function CreateBudget() {
 
   const isPending = isCreatePending || isUpdatePending;
   const location = useLocation();
+  
+  console.log(location.state?.editBudget)
+  console.log(data)
 
   useEffect(() => {
     if (location.state?.editBudget && (!data.isEditMode || location.state.editBudget.id !== data.budgetId)) {
