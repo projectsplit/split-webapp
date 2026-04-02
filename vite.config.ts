@@ -27,6 +27,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon-192x192.png', 'icon-512x512.png'],
       manifest: {
+        id: '/',
+        start_url: '/',
         name: 'Buqs',
         short_name: 'Buqs',
         description: 'Buqs Web App',
@@ -37,12 +39,14 @@ export default defineConfig({
           {
             src: 'icon-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any'
           },
           {
             src: 'icon-512x512.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any'
           }
         ]
       },
