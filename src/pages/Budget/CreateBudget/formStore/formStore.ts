@@ -339,8 +339,9 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
       nonGroup: (mask & 2) === 2,
       group: (mask & 4) === 4,
     };
-    targetGroupIds.value = budget.targetGroupIds || [];
-    allGroupsSelected.value = !budget.targetGroupIds || budget.targetGroupIds.length === 0;
+    const hasGroupScope = (mask & 4) === 4;
+    targetGroupIds.value = hasGroupScope ? (budget.targetGroupIds || []) : [];
+    allGroupsSelected.value = hasGroupScope && (!budget.targetGroupIds || budget.targetGroupIds.length === 0);
     serverErrors.value = [];
 
     set({
