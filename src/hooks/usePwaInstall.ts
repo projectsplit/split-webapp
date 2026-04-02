@@ -11,8 +11,16 @@ export interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+// Capture the event at module level so it persists across component mounts/unmounts
+let deferredPromptEvent: BeforeInstallPromptEvent | null = null;
+
+window.addEventListener('beforeinstallprompt', (e: Event) => {
+  e.preventDefault();
+  deferredPromptEvent = e as BeforeInstallPromptEvent;
+});
+
 export function usePwaInstall() {
-  const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(deferredPromptEvent);
   const [isAppInstalled, setIsAppInstalled] = useState(false);
 
   useEffect(() => {
@@ -21,15 +29,19 @@ export function usePwaInstall() {
       setIsAppInstalled(true);
     }
 
+    // If the event already fired before this component mounted, pick it up
+    if (deferredPromptEvent && !installPromptEvent) {
+      setInstallPromptEvent(deferredPromptEvent);
+    }
+
     const handleBeforeInstallPrompt = (e: Event) => {
-      // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
-      // Stash the event so it can be triggered later.
+      deferredPromptEvent = e as BeforeInstallPromptEvent;
       setInstallPromptEvent(e as BeforeInstallPromptEvent);
     };
 
     const handleAppInstalled = () => {
-      // Clear the deferredPrompt so it can be garbage collected
+      deferredPromptEvent = null;
       setInstallPromptEvent(null);
       setIsAppInstalled(true);
       console.log('PWA was installed');
@@ -48,16 +60,15 @@ export function usePwaInstall() {
     if (!installPromptEvent) {
       return;
     }
-    // Show the install prompt
     await installPromptEvent.prompt();
-    // Wait for the user to respond to the prompt
     const { outcome } = await installPromptEvent.userChoice;
     console.log(`User response to the install prompt: ${outcome}`);
-    // We've used the prompt, and can't use it again, throw it away
+    deferredPromptEvent = null;
     setInstallPromptEvent(null);
   };
 
   const clearPrompt = () => {
+    deferredPromptEvent = null;
     setInstallPromptEvent(null);
   }
 
