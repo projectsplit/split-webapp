@@ -128,9 +128,12 @@ export const ScopeSelectionMenu = ({
                     !scopeState.value.personal &&
                     !scopeState.value.nonGroup,
                 };
-                targetGroupIds.value.length === 0
-                  ? (allGroupsSelected.value = true)
-                  : null;
+                if (!newGroup) {
+                  targetGroupIds.value = [];
+                  allGroupsSelected.value = false;
+                } else if (targetGroupIds.value.length === 0) {
+                  allGroupsSelected.value = true;
+                }
               }}
             >
               <TiGroup className="groupIcon active" />
