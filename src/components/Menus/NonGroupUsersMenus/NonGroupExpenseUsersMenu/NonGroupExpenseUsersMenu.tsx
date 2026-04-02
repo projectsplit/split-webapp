@@ -163,13 +163,17 @@ export const NonGroupExpenseUsersMenu = ({
     );
   }, [data, nonGroupUsers.value]);
 
-  const remainingSuggestedGroups = useMemo(() => {
+  const allActiveGroups = useMemo(() => {
     return (
       userGroups?.pages
         .flatMap((x) => x.groups)
-        .filter((x) => fromHomeGroup.value?.id !== x.id && !x.isArchived) ?? []
+        .filter((x) => !x.isArchived) ?? []
     );
-  }, [userGroups, fromHomeGroup.value]);
+  }, [userGroups]);
+
+  const remainingSuggestedGroups = useMemo(() => {
+    return allActiveGroups.filter((x) => fromHomeGroup.value?.id !== x.id);
+  }, [allActiveGroups, fromHomeGroup.value]);
 
   const isEmpty = useMemo(() => {
     return (
@@ -287,14 +291,16 @@ export const NonGroupExpenseUsersMenu = ({
               />
             ))}
           </div>
-        ) : (
+        ) : category.value === 'Groups' && !fromNonGroup ? (
           <div className="noData">
             <div className="msg">
-              You are currently not a member of any group{' '}
+              {allActiveGroups.length === 0
+                ? 'You are currently not a member of any group'
+                : 'No other groups to select from'}
             </div>
             <MdOutlineGroupOff className="icon" />
           </div>
-        )}
+        ) : null}
         <Sentinel
           fetchPage={fetchNextPage}
           hasMore={hasNextPage}
