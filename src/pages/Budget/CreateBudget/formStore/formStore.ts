@@ -309,8 +309,13 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
     displayedAmount.value = initialAmount ? initialAmount.toString() : '';
     openCalendar.value = false;
     openCustomDateCalendar.value = false;
-    startDate.value = budget.startDate || '';
-    endDate.value = budget.endDate || '';
+    if (budget.frequency === Frequency.Custom) {
+      startDate.value = budget.startDate || '';
+      endDate.value = budget.endDate || '';
+    } else {
+      startDate.value = '';
+      endDate.value = '';
+    }
     pickingTarget.value = null;
 
     if (budget.frequency === Frequency.Monthly && budget.startDate) {

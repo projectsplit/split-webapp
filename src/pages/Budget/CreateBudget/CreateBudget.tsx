@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -61,16 +61,23 @@ export default function CreateBudget() {
 
   const isPending = isCreatePending || isUpdatePending;
   const location = useLocation();
+  const populatedKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (location.state?.editBudget && (!data.isEditMode || location.state.editBudget.id !== data.budgetId)) {
-      actions.populateForm(location.state.editBudget, userInfo?.currency || '');
-    } else if (!location.state?.editBudget && data.isEditMode) {
-      actions.initForm(userInfo?.currency || '');
-    } else if (!location.state?.editBudget && userInfo?.currency && !data.currencySymbol) {
-      actions.setCurrencySymbol(userInfo.currency);
+    if (location.state?.editBudget) {
+      if (populatedKeyRef.current !== location.key) {
+        populatedKeyRef.current = location.key;
+        actions.populateForm(location.state.editBudget, userInfo?.currency || '');
+      }
+    } else {
+      populatedKeyRef.current = null;
+      if (data.isEditMode) {
+        actions.initForm(userInfo?.currency || '');
+      } else if (userInfo?.currency && !data.currencySymbol) {
+        actions.setCurrencySymbol(userInfo.currency);
+      }
     }
-  }, [location.state, userInfo, data.isEditMode, data.currencySymbol, data.budgetId]);
+  }, [location.state, location.key, userInfo, data.isEditMode, data.currencySymbol]);
 
   const handleInputChangeCallback = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
