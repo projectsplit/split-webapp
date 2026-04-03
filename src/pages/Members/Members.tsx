@@ -89,7 +89,7 @@ export default function Members() {
           pendingTransactions={debts ?? []}
           groupedTransactions={groupedTransactions}
           id={allParticipants.length > 0 ? allParticipants[0].id : userInfo.userId}
-          name={allParticipants.length > 0 ? allParticipants[0].name : userInfo.name}
+          name={allParticipants.length > 0 ? allParticipants[0].name : userInfo.username}
           isLogedUser={
             allParticipants.length > 0
               ? allParticipants[0].id === userMemberId ||
@@ -99,7 +99,7 @@ export default function Members() {
           isGuest={allParticipants.length > 0 ? (guests?.some((g) => g.id === allParticipants[0].id) ?? false) : false}
           menu={menu}
           idSelectedToSettleUp={idSelectedToSettleUp}
-          participants={allParticipants.length > 0 ? allParticipants : [{ id: userInfo.userId, name: userInfo.name }]}
+          participants={allParticipants.length > 0 ? allParticipants : [{ id: userInfo.userId, name: userInfo.username }]}
           totalSpent={totalSpent}
           guestToBeReplaced={guestToBeReplaced}
           userOrMemberId={userMemberId ?? userInfo.userId}
