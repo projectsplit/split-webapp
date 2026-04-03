@@ -3,12 +3,15 @@ import { DateTime } from 'luxon';
 import { TransferProps } from '../../interfaces';
 import { StyledTransfer } from './Transfer.styled';
 import { displayCurrencyAndAmount } from '../../helpers/displayCurrencyAndAmount';
+import { useLongPress } from '../../hooks/useLongPress';
 
 const Transfer: React.FC<TransferProps> = ({
   transfer,
   timeZoneId,
   onClick,
+  onLongPress,
 }) => {
+  const longPressHandlers = useLongPress(onLongPress ?? (() => {}));
   const outlineColor =
     transfer.senderName === 'You'
       ? '#0CA0A0'
@@ -17,7 +20,7 @@ const Transfer: React.FC<TransferProps> = ({
         : 'rgb(54,54,54)';
 
   return (
-    <StyledTransfer $outlineColor={outlineColor} onClick={onClick}>
+    <StyledTransfer $outlineColor={outlineColor} onClick={onClick} {...longPressHandlers}>
       <div className="main">
         <div className="mainMsg">
           {transfer.senderName === 'You' ? (

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import Transfer from '../../components/Transfer/Transfer';
+import LongPressMenu from '../../components/LongPressMenu/LongPressMenu';
+import DeleteTransferAnimation from '../../components/Animations/DeleteTransferAnimation';
 import {
   Group,
   Mode,
@@ -45,6 +47,8 @@ const Transfers: React.FC = () => {
     (x) => x.userId === userInfo?.userId
   )?.id;
   const selectedTransfer = useSignal<TransferResponseItem | null>(null);
+  const longPressTransfer = useSignal<TransferResponseItem | null>(null);
+  const longPressMenu = useSignal<string | null>(null);
   const members = group?.members;
   const guests = group?.guests;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
@@ -130,6 +134,10 @@ const Transfers: React.FC = () => {
                   {transfers.map((t) => (
                     <Transfer
                       onClick={() => (selectedTransfer.value = t)}
+                      onLongPress={() => {
+                        longPressTransfer.value = t;
+                        longPressMenu.value = 'options';
+                      }}
                       key={t.id}
                       transfer={{
                         amount: t.amount,
@@ -181,6 +189,19 @@ const Transfers: React.FC = () => {
           userId={userInfo?.userId || ''}
         />
       )}
+      {longPressMenu.value === 'options' &&
+        longPressTransfer.value &&
+        !groupIsArchived && (
+          <LongPressMenu
+            onDelete={() => (longPressMenu.value = 'deleteTransfer')}
+            onClose={() => (longPressMenu.value = null)}
+          />
+        )}
+      <DeleteTransferAnimation
+        menu={longPressMenu}
+        selectedTransfer={longPressTransfer}
+        errorMessage={errorMessage}
+      />
       <MenuAnimationBackground menu={menu} />
       <ErrorMenuAnimation
         menu={menu}

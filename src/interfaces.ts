@@ -57,6 +57,7 @@ import { AxiosError } from 'axios';
 export interface ExpenseProps {
   timeZoneId: string;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onLongPress?: () => void;
   amount: number;
   currency: string;
   occurred: string;
@@ -132,6 +133,7 @@ export interface TransferProps {
   transfer: TransferItem;
   timeZoneId: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onLongPress?: () => void;
 }
 
 export interface DateTimePickerProps {

@@ -7,10 +7,11 @@ import {
   Group,
   UserInfo,
   Mode,
+  TransactionType,
 } from '../../types';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { StyledExpenses } from './Expenses.styled';
-import { Signal, useSignal } from '@preact/signals-react';
+import { signal, Signal, useSignal } from '@preact/signals-react';
 import DetailedExpense from '../../components/DetailedExpense/DetailedExpense';
 import { DateOnly } from '../../helpers/timeHelpers';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
@@ -32,11 +33,17 @@ import { useExpenseTotals } from './hooks/useExpenseTotals';
 import { useCenterToExpense } from './hooks/useCenterToExpense';
 import { hasActiveExpenseFilters } from '../../helpers/hasActiveExpenseFilters';
 import { useGetUserAndGroupsLabels } from '@/api/auth/QueryHooks/useGetUserAndGroupsLabels';
+import LongPressMenu from '../../components/LongPressMenu/LongPressMenu';
+import DeleteExpenseAnimation from '../../components/Animations/DeleteExpenseAnimation';
+import EditExpenseAnimation from '../../components/Animations/EditExpenseAnimation';
+import { buildFormExpense, toUser } from '../../components/DetailedExpense/utils';
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
   const errorMessage = useSignal<string>('');
   const menu = useSignal<string | null>(errorMessage.value ? 'error' : null);
+  const longPressExpense = useSignal<ExpenseResponseItem | null>(null);
+  const longPressMenu = useSignal<string | null>(null);
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   const jumpToken = searchParams.get('jumpTo') || '';
@@ -215,6 +222,10 @@ const Expenses = () => {
                         location={e.location}
                         timeZoneId={timeZoneId}
                         onClick={() => (selectedExpense.value = e)}
+                        onLongPress={() => {
+                          longPressExpense.value = e;
+                          longPressMenu.value = 'options';
+                        }}
                         userAmount={getUserAmount(e)}
                         labels={e.labels}
                         mode={mode}
@@ -255,6 +266,41 @@ const Expenses = () => {
           mode={mode}
         />
       )}
+      {longPressMenu.value === 'options' &&
+        longPressExpense.value &&
+        ((group && !group.isArchived) ||
+          (mode === Mode.NonGroup && !group) ||
+          longPressExpense.value.transactionType ===
+            TransactionType.Personal) && (
+          <LongPressMenu
+            onEdit={() => (longPressMenu.value = 'editExpense')}
+            onDelete={() => (longPressMenu.value = 'deleteExpense')}
+            onClose={() => (longPressMenu.value = null)}
+          />
+        )}
+      <DeleteExpenseAnimation
+        menu={longPressMenu}
+        description={longPressExpense.value?.description ?? ''}
+        selectedExpense={longPressExpense}
+        errorMessage={errorMessage}
+      />
+      <EditExpenseAnimation
+        expense={buildFormExpense(longPressExpense, mode, group) ?? null}
+        groupId={group?.id}
+        timeZoneId={timeZoneId}
+        menu={longPressMenu}
+        selectedExpense={longPressExpense}
+        timeZoneCoordinates={userInfo.timeZoneCoordinates}
+        currency={userInfo.currency}
+        groupMembers={
+          group ? signal([...group.members, ...group.guests]) : signal([])
+        }
+        nonGroupUsers={signal(allParticipants.map((p) => toUser(p)))}
+        isPersonal={mode === Mode.Personal ? signal(true) : signal(false)}
+        isnonGroupExpense={
+          mode === Mode.NonGroup ? signal(true) : signal(false)
+        }
+      />
       <MenuAnimationBackground menu={menu} />
       <ErrorMenuAnimation
         menu={menu}

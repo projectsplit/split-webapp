@@ -6,10 +6,12 @@ import { TimeOnly } from '../../helpers/timeHelpers';
 import Pill from '../Pill/Pill';
 import labelColors from '../../labelColors';
 import { Mode } from '@/types';
+import { useLongPress } from '../../hooks/useLongPress';
 
 const Expense = ({
   timeZoneId,
   onClick,
+  onLongPress,
   amount,
   currency,
   description,
@@ -19,9 +21,10 @@ const Expense = ({
   labels,
   mode,
 }: ExpenseProps) => {
+  const longPressHandlers = useLongPress(onLongPress ?? (() => {}));
   // console.log(labels)
   return (
-    <StyledExpense onClick={onClick} userAmount={userAmount}>
+    <StyledExpense onClick={onClick} userAmount={userAmount} {...longPressHandlers}>
       <div className="topRow">
         <div className="icons">
           {location ? <MdLocationOn className="locationIcon" /> : null}
