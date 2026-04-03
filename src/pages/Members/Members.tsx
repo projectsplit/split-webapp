@@ -83,27 +83,27 @@ export default function Members() {
       {isFetching ? (
         <Spinner />
       ) : mode === Mode.NonGroup ? (
-        allParticipants.length > 0 ? (
-          <MemberFC
-            group={group}
-            key={allParticipants[0].id}
-            pendingTransactions={debts ?? []}
-            groupedTransactions={groupedTransactions}
-            id={allParticipants[0].id}
-            name={allParticipants[0].name}
-            isLogedUser={
-              allParticipants[0].id === userMemberId ||
-              allParticipants[0].id === userInfo.userId
-            }
-            isGuest={guests?.some((g) => g.id === allParticipants[0].id) ?? false}
-            menu={menu}
-            idSelectedToSettleUp={idSelectedToSettleUp}
-            participants={allParticipants || []}
-            totalSpent={totalSpent}
-            guestToBeReplaced={guestToBeReplaced}
-            userOrMemberId={userMemberId ?? userInfo.userId}
-          />
-        ) : null
+        <MemberFC
+          group={group}
+          key={allParticipants.length > 0 ? allParticipants[0].id : userInfo.userId}
+          pendingTransactions={debts ?? []}
+          groupedTransactions={groupedTransactions}
+          id={allParticipants.length > 0 ? allParticipants[0].id : userInfo.userId}
+          name={allParticipants.length > 0 ? allParticipants[0].name : userInfo.name}
+          isLogedUser={
+            allParticipants.length > 0
+              ? allParticipants[0].id === userMemberId ||
+                allParticipants[0].id === userInfo.userId
+              : true
+          }
+          isGuest={allParticipants.length > 0 ? (guests?.some((g) => g.id === allParticipants[0].id) ?? false) : false}
+          menu={menu}
+          idSelectedToSettleUp={idSelectedToSettleUp}
+          participants={allParticipants.length > 0 ? allParticipants : [{ id: userInfo.userId, name: userInfo.name }]}
+          totalSpent={totalSpent}
+          guestToBeReplaced={guestToBeReplaced}
+          userOrMemberId={userMemberId ?? userInfo.userId}
+        />
       ) : (
         sortedParticipants?.map((p) => (
           <MemberFC
