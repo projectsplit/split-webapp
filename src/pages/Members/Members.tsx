@@ -83,25 +83,27 @@ export default function Members() {
       {isFetching ? (
         <Spinner />
       ) : mode === Mode.NonGroup ? (
-        <MemberFC
-          group={group}
-          key={allParticipants[0].id}
-          pendingTransactions={debts ?? []}
-          groupedTransactions={groupedTransactions}
-          id={allParticipants[0].id}
-          name={allParticipants[0].name}
-          isLogedUser={
-            allParticipants[0].id === userMemberId ||
-            allParticipants[0].id === userInfo.userId
-          }
-          isGuest={guests?.some((g) => g.id === allParticipants[0].id) ?? false}
-          menu={menu}
-          idSelectedToSettleUp={idSelectedToSettleUp}
-          participants={allParticipants || []}
-          totalSpent={totalSpent}
-          guestToBeReplaced={guestToBeReplaced}
-          userOrMemberId={userMemberId ?? userInfo.userId}
-        />
+        allParticipants.length > 0 ? (
+          <MemberFC
+            group={group}
+            key={allParticipants[0].id}
+            pendingTransactions={debts ?? []}
+            groupedTransactions={groupedTransactions}
+            id={allParticipants[0].id}
+            name={allParticipants[0].name}
+            isLogedUser={
+              allParticipants[0].id === userMemberId ||
+              allParticipants[0].id === userInfo.userId
+            }
+            isGuest={guests?.some((g) => g.id === allParticipants[0].id) ?? false}
+            menu={menu}
+            idSelectedToSettleUp={idSelectedToSettleUp}
+            participants={allParticipants || []}
+            totalSpent={totalSpent}
+            guestToBeReplaced={guestToBeReplaced}
+            userOrMemberId={userMemberId ?? userInfo.userId}
+          />
+        ) : null
       ) : (
         sortedParticipants?.map((p) => (
           <MemberFC
