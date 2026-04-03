@@ -77,7 +77,7 @@ export default function Group() {
 
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
-  const { data: group, isFetching, isError, error } = useGroup(groupid);
+  const { data: group, isLoading, isFetching, isError, error } = useGroup(groupid);
 
   useEffect(() => {
     if (!isFetching) {
@@ -119,7 +119,7 @@ export default function Group() {
 
   return (
     <StyledGroup>
-      {isFetching ? (
+      {isLoading ? (
         <div className="group">
           <div className="spinner">
             <Spinner />
