@@ -124,11 +124,6 @@ export default function Group() {
           <div className="spinner">
             <Spinner />
           </div>
-          <div className="bottomMenu">
-            {' '}
-            {<BottomMainMenu onClick={() => (menu.value = null)} />}
-          </div>
-          {openGroupOptionsMenu.value && <GroupOptions group={group} />}
         </div>
       ) : isError ? (
         <GroupError groupError={groupError} />

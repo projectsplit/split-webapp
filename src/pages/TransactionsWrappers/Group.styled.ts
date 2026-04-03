@@ -40,6 +40,7 @@ export const StyledGroup = styled.div`
     }
   }
   .bottomMenu {
+    margin-top: auto;
   }
 
   .spinner {
