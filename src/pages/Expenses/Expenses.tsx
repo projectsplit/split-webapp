@@ -278,6 +278,7 @@ const Expenses = () => {
             onClose={() => (longPressMenu.value = null)}
           />
         )}
+      <MenuAnimationBackground menu={longPressMenu} />
       <DeleteExpenseAnimation
         menu={longPressMenu}
         description={longPressExpense.value?.description ?? ''}

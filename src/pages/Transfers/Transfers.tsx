@@ -197,6 +197,7 @@ const Transfers: React.FC = () => {
             onClose={() => (longPressMenu.value = null)}
           />
         )}
+      <MenuAnimationBackground menu={longPressMenu} />
       <DeleteTransferAnimation
         menu={longPressMenu}
         selectedTransfer={longPressTransfer}
