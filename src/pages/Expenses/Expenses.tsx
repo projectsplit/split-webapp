@@ -278,14 +278,14 @@ const Expenses = () => {
             onClose={() => (longPressMenu.value = null)}
           />
         )}
-      {longPressMenu.value && longPressMenu.value !== 'options' && (
+      {longPressMenu.value === 'deleteExpense' && (
         <div
           style={{
             position: 'fixed',
             inset: 0,
             background: 'rgba(0, 0, 0, 0.45)',
             backdropFilter: 'blur(2px)',
-            zIndex: 9998,
+            zIndex: 998,
           }}
           onClick={() => (longPressMenu.value = null)}
         />
