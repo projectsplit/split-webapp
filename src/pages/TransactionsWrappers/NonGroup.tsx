@@ -10,6 +10,7 @@ import {
   UserInfo,
 } from '../../types';
 import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
+import { useCategorySwipe } from '../../components/CategorySelector/useCategorySwipe';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
 import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';
 import SearchTransactionsAnimation from '../../components/Animations/SearchTransactionsAnimation';
@@ -66,6 +67,17 @@ export default function NonGroup() {
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
   const mode: Mode = Mode.NonGroup;
 
+  const categoryCategories = {
+    cat1: 'Expenses',
+    cat2: 'Transfers',
+    cat3: 'Debts',
+  };
+  const swipeHandlers = useCategorySwipe({
+    categories: categoryCategories,
+    activeCat: path,
+    navLinkUse: true,
+  });
+
   useEffect(() => {
     topMenuTitle.value = 'Non Group Transactions';
   }, [showBottomBar.value]);
@@ -88,14 +100,10 @@ export default function NonGroup() {
 
   return (
     <StyledGroup>
-      <div className="group">
+      <div className="group" {...swipeHandlers}>
         <CategorySelector
           activeCat={path}
-          categories={{
-            cat1: 'Expenses',
-            cat2: 'Transfers',
-            cat3: 'Debts',
-          }}
+          categories={categoryCategories}
           navLinkUse={true}
         />
         <Outlet

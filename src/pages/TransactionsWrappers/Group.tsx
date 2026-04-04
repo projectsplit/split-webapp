@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import { StyledGroup } from './Group.styled';
 import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
+import { useCategorySwipe } from '../../components/CategorySelector/useCategorySwipe';
 import { signal, Signal, useSignal } from '@preact/signals-react';
 import {
   type ExpenseParsedFilters,
@@ -79,6 +80,17 @@ export default function Group() {
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
   const { data: group, isLoading, isFetching, isError, error } = useGroup(groupid);
 
+  const categoryCategories = {
+    cat1: 'Expenses',
+    cat2: 'Transfers',
+    cat3: 'Debts',
+  };
+  const swipeHandlers = useCategorySwipe({
+    categories: categoryCategories,
+    activeCat: path,
+    navLinkUse: true,
+  });
+
   useEffect(() => {
     if (!isFetching) {
       groupIsArchived.value = group?.isArchived || false;
@@ -128,14 +140,10 @@ export default function Group() {
       ) : isError ? (
         <GroupError groupError={groupError} />
       ) : (
-        <div className="group">
+        <div className="group" {...swipeHandlers}>
           <CategorySelector
             activeCat={path}
-            categories={{
-              cat1: 'Expenses',
-              cat2: 'Transfers',
-              cat3: 'Debts',
-            }}
+            categories={categoryCategories}
             navLinkUse={true}
           />
           <Outlet
