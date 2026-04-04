@@ -52,6 +52,10 @@ export default function ExpenseForm({
   const inputs = useExpenseFormStore();
 
   useEffect(() => {
+    if (isCreateExpense) {
+      inputs.participantsCategory.value = 'Amounts';
+      inputs.payersCategory.value = 'Amounts';
+    }
     inputs.initialize({
       isCreateExpense,
       expense,
