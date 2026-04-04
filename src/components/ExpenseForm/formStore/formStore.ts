@@ -224,6 +224,13 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       isnonGroupExpense,
       userInfo,
     } = config;
+
+    if (isCreateExpense) {
+      const { participantsCategory, payersCategory } = get();
+      participantsCategory.value = 'Amounts';
+      payersCategory.value = 'Amounts';
+    }
+
     const userMembers = groupMembers
       ?.peek()
       .filter((item): item is Member => 'userId' in item);
