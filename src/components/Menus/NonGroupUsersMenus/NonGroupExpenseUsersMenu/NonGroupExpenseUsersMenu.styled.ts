@@ -7,14 +7,14 @@ export const StyledNonGroupExpenseUsersMenu = styled.div`
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.layer2};
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   left: 0;
   right: 0;
   margin: 0;
   z-index: 10;
   display: flex;
   flex-direction: column;
-  bottom: 0;
+  top: 0;
 
   .fixedHeader {
     position: sticky;

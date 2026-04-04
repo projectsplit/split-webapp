@@ -3,9 +3,9 @@ import styled from 'styled-components';
 export const StyledBudgetActions = styled.div`
   position: fixed;
   font-size: 1.125rem;
-  bottom: 0;
+  top: 0;
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   overflow-y: auto;
   box-sizing: border-box;
   /* background-color: ${({ theme }) => theme.layer2}; */

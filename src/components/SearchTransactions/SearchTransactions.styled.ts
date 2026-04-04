@@ -2,11 +2,11 @@ import styled from 'styled-components';
 
 export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
   box-sizing: border-box;
-  bottom: 0;
+  top: 0;
   position: fixed;
   background-color: ${({ theme }) => theme.layer2};
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   z-index: 3;
   padding: 0;
   display: flex;

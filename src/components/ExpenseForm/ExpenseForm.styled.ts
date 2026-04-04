@@ -5,16 +5,16 @@ export const StyledExpenseForm = styled.div`
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.backgroundcolor};
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   left: 0;
   right: 0;
+  top: 0;
   margin: 0;
   z-index: 10;
   display: flex;
   flex-direction: column;
   padding: 12px 16px;
   gap: 20px;
-  bottom: 0;
   overflow-y: auto;
 
   .inputAndErrorsWrapper {

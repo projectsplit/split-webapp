@@ -5,7 +5,7 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.layer2};
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   left: 0;
   right: 0;
   margin: 0;
@@ -13,7 +13,7 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  bottom: 0;
+  top: 0;
   overflow-y: auto;
 
   .fixedHeader {

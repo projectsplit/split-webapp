@@ -52,7 +52,7 @@ export const StyledMemberPicker = styled.div<{
     color: ${({ theme }) => theme.textActiveColor};
     background-color: ${({ theme }) => theme.backgroundcolor};
     width: 100%;
-    height: 100%;
+    height: 100dvh;
     left: 0;
     right: 0;
     margin: 0;
@@ -61,7 +61,7 @@ export const StyledMemberPicker = styled.div<{
     flex-direction: column;
     padding: 12px 16px;
     gap: 20px;
-    bottom: 0;
+    top: 0;
     overflow-y: auto;
     .header {
       display: flex;

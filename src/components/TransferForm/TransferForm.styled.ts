@@ -10,14 +10,14 @@ export const StyledTransferForm = styled.div<StyledTransferFormProps>`
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.backgroundcolor};
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   z-index: 1;
   display: flex;
   flex-direction: column;
   padding: 12px 16px;
   gap: 20px;
   z-index: 10;
-  bottom: 0;
+  top: 0;
   overflow-y: auto;
   .spacer {
     flex-grow: 1;

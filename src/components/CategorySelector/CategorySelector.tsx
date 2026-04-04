@@ -1,4 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CategoryButton } from '../CategoryButton/CategoryButton';
 import Separator from '../Separator/Separator';
 import { CategorySelectorProps } from '../../interfaces';
@@ -28,6 +29,50 @@ export const CategorySelector = ({
   const [activeCategory, setActiveCategory] = useState(
     getInitialActiveCategory
   );
+
+  const navigate = useNavigate();
+
+  const selectCategory = (key: string) => {
+    setActiveCategory(key);
+    if (navLinkUse) {
+      const to = categories[key as keyof typeof categories]?.toLocaleLowerCase();
+      if (to) navigate(to, { replace: true });
+    } else if (activeCatAsState) {
+      activeCatAsState.value = categories[key as keyof typeof categories]!;
+    }
+  };
+
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+    touchStartY.current = e.targetTouches[0].clientY;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const distanceX = touchStartX.current - touchEndX;
+    const distanceY = touchStartY.current - touchEndY;
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+
+    if (Math.abs(distanceX) < Math.abs(distanceY)) return;
+    if (Math.abs(distanceX) < 50) return;
+
+    const currentIndex = categoryKeys.indexOf(activeCategory);
+    if (currentIndex === -1) return;
+
+    if (distanceX > 0 && currentIndex < categoryKeys.length - 1) {
+      
+      selectCategory(categoryKeys[currentIndex + 1]);
+    } else if (distanceX < 0 && currentIndex > 0) {
+      selectCategory(categoryKeys[currentIndex - 1]);
+    }
+  };
 
   useEffect(() => {
     const updatedCategory = getInitialActiveCategory();
@@ -97,7 +142,10 @@ export const CategorySelector = ({
   };
 
   return (
-    <StyledCategorySelector>
+    <StyledCategorySelector
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       <div className="categories">
         {Object.entries(categories).map(([key, label]) => (
           <CategoryButton

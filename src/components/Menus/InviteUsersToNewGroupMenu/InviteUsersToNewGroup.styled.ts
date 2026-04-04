@@ -3,9 +3,9 @@ import { styled } from 'styled-components';
 export const StyledInviteUsersToNewGroup = styled.div`
   position: fixed;
   font-size: 14px;
-  bottom: 0;
+  top: 0;
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   overflow: hidden;
   box-sizing: border-box;
   background-color: #0f0f0f;
