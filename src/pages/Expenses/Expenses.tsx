@@ -278,7 +278,18 @@ const Expenses = () => {
             onClose={() => (longPressMenu.value = null)}
           />
         )}
-      <MenuAnimationBackground menu={longPressMenu} />
+      {longPressMenu.value && longPressMenu.value !== 'options' && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.45)',
+            backdropFilter: 'blur(2px)',
+            zIndex: 9998,
+          }}
+          onClick={() => (longPressMenu.value = null)}
+        />
+      )}
       <DeleteExpenseAnimation
         menu={longPressMenu}
         description={longPressExpense.value?.description ?? ''}
