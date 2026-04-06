@@ -1,5 +1,5 @@
-import Spinner from '@/components/Spinner/Spinner';
 import { StyledFiltersAndBars } from './FiltersAndBars.styled';
+import { FiltersAndBarsSkeleton } from '@/components/FiltersAndBarsSkeleton/FiltersAndBarsSkeleton';
 import { renderExpenseFilterPills } from '@/helpers/renderExpenseFilterPills';
 import BarsWithLegends from '@/components/BarsWithLegends/BarsWithLegends';
 import {
@@ -41,9 +41,7 @@ export const FiltersAndBars = ({
   return (
     <StyledFiltersAndBars>
       {totalsAreFetching ? (
-        <div className="spinnerTotals">
-          <Spinner />
-        </div>
+        <FiltersAndBarsSkeleton mode={mode} />
       ) : (
         <div className="filtersAndBars">
           <div className="pills" onTouchStart={(e) => e.stopPropagation()}>

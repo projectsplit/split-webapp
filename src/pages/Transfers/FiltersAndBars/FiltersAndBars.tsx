@@ -1,9 +1,9 @@
-import Spinner from '@/components/Spinner/Spinner';
 import { StyledFiltersAndBars } from './FiltersAndBars.styled';
+import { FiltersAndBarsSkeleton } from '@/components/FiltersAndBarsSkeleton/FiltersAndBarsSkeleton';
 import { renderTransferFilterPills } from '@/helpers/renderTransferFilterPills';
 import BarsWithLegends from '@/components/BarsWithLegends/BarsWithLegends';
 import { Signal } from '@preact/signals-react';
-import { TransferParsedFilters, Group, TruncatedMember } from '@/types';
+import { TransferParsedFilters, Group, Mode, TruncatedMember } from '@/types';
 import { QueryClient } from '@tanstack/react-query';
 
 interface FiltersAndBarsInterface {
@@ -32,9 +32,7 @@ export const FiltersAndBars = ({
   return (
     <StyledFiltersAndBars>
       {totalsAreFetching ? (
-        <div className="spinnerTotals">
-          <Spinner />
-        </div>
+        <FiltersAndBarsSkeleton mode={Mode.Group} />
       ) : (
         <div className="filtersAndBars">
           <div className="pills" onTouchStart={(e) => e.stopPropagation()}>
