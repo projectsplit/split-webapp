@@ -30,12 +30,10 @@ const LabelPicker = ({
     menu
   );
 
-  const { data: suggestedLabelsResponse } = useGetGroupLabels(groupId);
-  const { data: suggestedUserLabelsResponse } = useLabels(
-    userId,
-    false,
-    groupId
-  );
+  const { data: suggestedLabelsResponse, isPending: isGroupLabelsPending } =
+    useGetGroupLabels(groupId);
+  const { data: suggestedUserLabelsResponse, isPending: isUserLabelsPending } =
+    useLabels(userId, false, groupId);
 
   const groupLabels = suggestedLabelsResponse?.labels ?? [];
   const userLabels = suggestedUserLabelsResponse?.labels ?? [];
@@ -132,6 +130,8 @@ const LabelPicker = ({
     setText(trimmedText);
   };
 
+  const isLabelsLoading = !!groupId ? isGroupLabelsPending : isUserLabelsPending;
+
   const remainingSuggestedLabels = !!groupId
     ? groupLabels.filter((x) => !labels.map((x) => x.text).includes(x.text))
     : userLabels.filter((x) => !labels.map((x) => x.text).includes(x.text));
@@ -182,7 +182,11 @@ const LabelPicker = ({
       </div>
       {
         <div className="dropdown" ref={dropdownRef}>
-          {remainingSuggestedLabels.map((x) => (
+          {isLabelsLoading ? (
+            <div className="loading-container">
+              <Spinner variant="secondary" />
+            </div>
+          ) : remainingSuggestedLabels.map((x) => (
             <div
               onClick={() => handleSuggestedLabelClick(x)}
               key={x.id}

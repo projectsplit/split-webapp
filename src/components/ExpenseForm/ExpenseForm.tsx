@@ -23,6 +23,8 @@ import { useHandlers } from './hooks/useHandlers';
 import { useEditExpenseMutation } from '@/api/auth/CommandHooks/useEditExpenseMutation';
 import GeneralWarningMenuAnimation from '../Animations/GeneralWarningMenuAnimation';
 import { currencyData } from '@/helpers/openExchangeRates';
+import { useGetGroupLabels } from '@/api/auth/QueryHooks/useGetGroupLabels';
+import { useLabels } from '@/api/auth/QueryHooks/useGetLabels';
 
 export default function ExpenseForm({
   groupMembers,
@@ -89,6 +91,10 @@ export default function ExpenseForm({
     userInfo,
     inputs.userMemberId,
   ]);
+
+  // Prefetch labels so they're cached when the label menu opens
+  useGetGroupLabels(groupId);
+  useLabels(userInfo?.userId, isPersonal?.value, groupId);
 
   const currencyMenu = useSignal<string | null>(null);
   const warningMenu = useSignal<string | null>(null);

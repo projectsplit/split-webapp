@@ -18,6 +18,8 @@ export const StyledLabelPicker = styled.div<{
   flex-direction: column;
   position: relative;
   cursor: text;
+  flex: 1;
+  min-height: 0;
 
   .main {
     &:focus-within {
@@ -85,17 +87,20 @@ export const StyledLabelPicker = styled.div<{
   .dropdown {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     /* position: absolute; */
     z-index: 3;
     width: 100%;
     /* box-sizing: border-box; */
-
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
     top: calc(100% + 10px);
 
-    @media (max-width: 768px) {
-      max-height: 200px;
+
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      padding: 16px;
     }
 
     .suggested-label-container {
