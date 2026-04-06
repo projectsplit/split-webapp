@@ -99,7 +99,7 @@ export default function Home() {
       {isFetching || !userInfo?.username ? (
         <HomeSkeleton />
       ) : (
-        <>
+        <div className="fadeIn">
           <div className="fixedTop">
             <div className="welcomeStripe">
               Welcome, <strong>{userInfo?.username}</strong>
@@ -131,7 +131,7 @@ export default function Home() {
           >
             <AiFillThunderbolt className="thunder" />
           </div>
-        </>
+        </div>
       )}
       <MenuAnimationBackground menu={quickActionsMenu} />
 
