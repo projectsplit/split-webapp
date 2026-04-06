@@ -12,7 +12,7 @@ import useBudgetInfo from '../../api/auth/QueryHooks/useBudgetInfo';
 import { useOutletContext } from 'react-router-dom';
 import {  Signal, useSignal } from '@preact/signals-react';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
-import Spinner from '../../components/Spinner/Spinner';
+import { HomeSkeleton } from '../../components/HomeSkeleton/HomeSkeleton';
 import { AiFillThunderbolt } from 'react-icons/ai';
 import HomeQuickActionsAnimation from '../../components/Animations/HomeQuickActionsAnimation';
 import CreateExpenseForm from '../../components/CreateExpenseForm/CreateExpenseForm';
@@ -97,8 +97,7 @@ export default function Home() {
   return (
     <StyledHomepage>
       {isFetching || !userInfo?.username ? (
-        // && budgetIsFetching ?
-        <Spinner />
+        <HomeSkeleton />
       ) : (
         <>
           <div className="fixedTop">
