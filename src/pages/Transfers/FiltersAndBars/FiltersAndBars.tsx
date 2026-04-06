@@ -37,7 +37,7 @@ export const FiltersAndBars = ({
         </div>
       ) : (
         <div className="filtersAndBars">
-          <div className="pills">
+          <div className="pills" onTouchStart={(e) => e.stopPropagation()}>
             {' '}
             {renderTransferFilterPills(
               transferParsedFilters,
