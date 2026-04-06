@@ -57,13 +57,13 @@ export default function Members() {
     isFetching ? (showBottomBar.value = false) : (showBottomBar.value = true);
   }, [isFetching]);
 
-  if (!userInfo && !group) {
+  if (!userInfo) {
     return (
       <div className="spinner">
         <Spinner />
       </div>
     );
-  } //TODO Maybe replace with a message after it fails for a while?
+  }
 
   const sortedParticipants =
     mode === Mode.Group
