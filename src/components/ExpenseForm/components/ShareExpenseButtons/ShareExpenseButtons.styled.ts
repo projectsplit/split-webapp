@@ -15,6 +15,16 @@ export const StyledShareExpenseButtons = styled.div`
       border-radius: 5px;
       padding: 4px 6px;
       cursor: pointer;
+      .textAndIcon{
+        display:flex;
+        flex-direction: row;
+
+        align-items: center;
+        .icon{
+          margin-left: 5px;
+          font-size: 20px;
+        }
+      }
     }
   }
 `;

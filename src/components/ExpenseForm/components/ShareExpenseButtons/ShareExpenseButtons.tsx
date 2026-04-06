@@ -1,6 +1,7 @@
 import { Signal } from '@preact/signals-react';
 import { StyledShareExpenseButtons } from './ShareExpenseButtons.styled';
 import { PickerMember, User } from '@/types';
+import { MdCallSplit } from 'react-icons/md';
 
 export const ShareExpenseButtons = ({
   isPersonal,
@@ -33,7 +34,10 @@ export const ShareExpenseButtons = ({
             className="button"
             onClick={() => (nonGroupMenu.value = 'nonGroupExpenseUsers')}
           >
-            Share Expense{' '}
+            <div className="textAndIcon">
+              <div className="text">Split Expense</div>
+              <MdCallSplit className='icon'/>
+            </div>{' '}
           </div>
         </div>
       ) : null}

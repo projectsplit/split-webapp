@@ -293,9 +293,9 @@ export default function ExpenseForm({
           labelMenuIsOpen={labelMenuIsOpen}
           labels={inputs.labels}
           setLabels={inputs.setLabels}
-          groupId={groupId}
+          groupId={isPersonal?.value ? undefined : groupId}
           userId={userInfo?.userId}
-          isPersonal={isPersonal.value}
+          isPersonal={isPersonal?.value ?? false}
         />
       )}
       <LocationDisplay

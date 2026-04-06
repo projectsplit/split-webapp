@@ -207,7 +207,7 @@ export const NonGroupExpenseUsersMenu = ({
               }}
             />
           </div>
-          <div className="title">Share expense with you and...</div>
+          <div className="title">Split expense with you and...</div>
           <div className="gap"></div>
         </div>
         {!fromNonGroup && (
