@@ -1,4 +1,4 @@
-import Spinner from '@/components/Spinner/Spinner';
+import { Shimmer } from '@/components/Animations/Shimmer/Shimmer';
 import TreeAdjustedContainer from '@/components/TreeAdjustedContainer/TreeAdjustedContainer';
 import { TreeItemBuilderForHomeAndGroups } from '@/components/TreeItemBuilderForHomeAndGroups';
 import { computeNetPerCurrency } from '@/helpers/computeNetPerCurrency';
@@ -26,7 +26,12 @@ export default function MostRecentSection({
   navigate: NavigateFunction;
 }) {
   if (mostRecentGroupDataIsFetching) {
-    return <Spinner />;
+    return (
+      <StyledMostRecentSection>
+        <Shimmer width="70px" height="12px" borderRadius="4px" />
+        <Shimmer width="100%" height="60px" borderRadius="10px" />
+      </StyledMostRecentSection>
+    );
   }
 
   if (mostRecentGroupData) {
