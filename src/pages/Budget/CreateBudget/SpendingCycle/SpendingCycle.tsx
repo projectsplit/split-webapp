@@ -8,7 +8,7 @@ import { SpendingCycleProps } from '../../../../interfaces';
 import { useQueryClient } from '@tanstack/react-query';
 import { CalendarAndErrorsWrapper } from './CalendarAndErrorsWrapper.tsx/CalendarAndErrorsWrapper';
 import { calendarTypeHandlerFn } from './helpers/calendarTypeHandlerFn';
-import CustomDateCalendar from '../../CustomDateCalendar/CustomDateCalendar';
+import BottomDatePicker from '../../BottomDatePicker/BottomDatePicker';
 
 export default function SpendingCycle({
   calendarDay,
@@ -130,15 +130,14 @@ export default function SpendingCycle({
       )}
       {openCustomDateCalendar.value &&
         budgetFrequency.value === Frequency.Custom && (
-          <CustomDateCalendar
-            calendarIsOpen={openCustomDateCalendar}
-            datePeriodClicked={calendarDay}
-            timeZoneId={timeZoneId}
+          <BottomDatePicker
+            isOpen={openCustomDateCalendar}
+            pickingTarget={pickingTarget}
             startDate={startDate}
             endDate={endDate}
-            pickingTarget={pickingTarget}
+            timeZoneId={timeZoneId}
+            datePeriodClicked={calendarDay}
             setError={setError}
-            excludeRefs={[customButtonRef, selectorRef]}
           />
         )}
     </StyledSpendingCycle>
