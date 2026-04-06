@@ -302,8 +302,8 @@ const Expenses = () => {
         timeZoneId={timeZoneId}
         menu={longPressMenu}
         selectedExpense={longPressExpense}
-        timeZoneCoordinates={userInfo.timeZoneCoordinates}
-        currency={userInfo.currency}
+        timeZoneCoordinates={userInfo?.timeZoneCoordinates}
+        currency={userInfo?.currency}
         groupMembers={
           group ? signal([...group.members, ...group.guests]) : signal([])
         }
