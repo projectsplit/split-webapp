@@ -45,10 +45,8 @@ export const errorSettingFn = (
       ? 'Participation amounts must be positive'
       : !areNumbersValid && description === 'Payers'
         ? 'Payment amounts must be positive'
-        : isSumInvalid && description === 'Participants'
-          ? 'Participation amounts must add up to total'
-          : isSumInvalid && description === 'Payers'
-            ? 'Payment amounts must add up to total'
-            : ''
+        : isSumInvalid
+          ? 'Review amounts due to edit'
+          : ''
   );
 };

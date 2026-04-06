@@ -125,7 +125,9 @@ export default function DetailedSharedExpenseText({
             {participantsError && (
               <div className="errorMsg">{participantsError}</div>
             )}
-            {payersError && <div className="errorMsg">{payersError}</div>}
+            {payersError && payersError !== participantsError && (
+              <div className="errorMsg">{payersError}</div>
+            )}
           </div>
         </StyledDetailedSharedExpenseText>
       ) : null}

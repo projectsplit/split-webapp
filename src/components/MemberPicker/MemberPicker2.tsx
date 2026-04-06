@@ -111,11 +111,24 @@ const MemberPickerPreMemo2 = ({
 
   useLayoutEffect(() => {
     if (isLoading) return;
-    isEquallySplit.value = isEquallySplitFn(
-      memberAmounts,
-      totalAmount,
-      decimalDigits
+    const selected = memberAmounts.filter((m) => m.selected);
+    const sum = selected.reduce(
+      (acc, m) => acc + Number(m.actualAmount || 0),
+      0
     );
+    const sumsMatch =
+      selected.length > 0 &&
+      Number(sum.toFixed(decimalDigits)) ===
+        Number(Number(totalAmount).toFixed(decimalDigits));
+    // Only update split label when amounts actually add up to the total.
+    // During editing, stale amounts would wrongly flip "equally" to "unequally".
+    if (sumsMatch) {
+      isEquallySplit.value = isEquallySplitFn(
+        memberAmounts,
+        totalAmount,
+        decimalDigits
+      );
+    }
   }, [memberAmounts, totalAmount]);
 
   const selectMember = (selectedId: string): void => {
