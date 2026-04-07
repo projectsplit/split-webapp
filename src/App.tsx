@@ -16,7 +16,6 @@ import Members from './pages/Members/Members';
 import Protected from './pages/Protected/Protected';
 import Analytics from './pages/Analytics/Analytics';
 import RedirectToAnalytics from './routes/RedirectToAnalytics';
-import CurrentBudget from './pages/Budget/CurrentBudget/CurrentBudget';
 import CreateBudget from './pages/Budget/CreateBudget/CreateBudget';
 import Budget from './pages/Budget/Budget';
 import RedirectToBudget from './routes/RedirectToBudget';
@@ -72,7 +71,6 @@ const App = () => {
 
           <Route path="/budget" element={<Budget />}>
             <Route index element={<RedirectToBudget />} />
-            {/* <Route path="current" element={<CurrentBudget />} /> */}
             <Route path="create" element={<CreateBudget />} />
             <Route path="actions" element={<BudgetActions />} />
             <Route path="manage" element={<ManageBudgets />} />

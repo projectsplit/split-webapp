@@ -1282,6 +1282,7 @@ export interface ProgressBarProps {
   isOn: boolean;
   setIsOn: React.Dispatch<React.SetStateAction<boolean>>;
   menu: Signal<string | null>;
+  timeZoneId: string;
 }
 export interface ManageBudgetMenuProps {
   menu: Signal<string | null>;

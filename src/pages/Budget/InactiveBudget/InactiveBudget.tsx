@@ -16,12 +16,14 @@ interface InactiveBudgetProps {
   budget: InactiveBudgetsInfoResponseItem;
   onActivate: () => void;
   menu: Signal<string | null>;
+  timeZoneId: string;
 }
 
 export const InactiveBudget = ({
   budget,
   onActivate,
   menu,
+  timeZoneId,
 }: InactiveBudgetProps) => {
   const { mutate: toggleBudget } = useToggleBudget();
   const [isOn, setIsOn] = useState(false);
@@ -30,7 +32,8 @@ export const InactiveBudget = ({
   const startDateDecomposed = getIsoDateInfo(budget?.startDate);
   const endDateDecomposed = getIsoDateInfo(budget?.endDate);
   const convertedDaysHoursMinutes = convertDaysToDaysHoursAndMinutes(
-    budget?.endDate
+    budget?.endDate,
+    timeZoneId
   );
 
   return (

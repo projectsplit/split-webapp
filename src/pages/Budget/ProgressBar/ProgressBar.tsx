@@ -17,10 +17,12 @@ export default function ProgressBar({
   isOn,
   setIsOn,
   menu,
+  timeZoneId,
 }: ProgressBarProps) {
   const theme = useTheme();
   const convertedDaysHoursMinutes = convertDaysToDaysHoursAndMinutes(
-    data?.endDate
+    data?.endDate,
+    timeZoneId
   );
 
   const { mutate: toggleBudget } = useToggleBudget();

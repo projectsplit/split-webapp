@@ -1,7 +1,7 @@
 import MyButton from '@/components/MyButton/MyButton';
 import { StyledManageBudgets } from './ManageBudgets.styled';
 import TopBarWithBackButton from '@/components/TopBarWithBackButton/TopBarWithBackButton';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import { BudgetInfoMessage } from '@/components/BudgetMessages/BudgetInfoMessage';
 import { useTheme } from 'styled-components';
@@ -16,12 +16,15 @@ import { useSignal } from '@preact/signals-react';
 import MenuAnimationBackground from '@/components/Animations/MenuAnimationBackground';
 import DeleteBudgetConfirmationAnimation from '@/components/Animations/BudgetAnimations/DeleteBudgetConfirmationAnimation';
 import { useDeleteBudget } from '@/api/auth/CommandHooks/useDeleteBudget';
+import { UserInfo } from '@/types';
 
 export const ManageBudgets = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const location = useLocation();
   const menu = useSignal<string | null>(null);
+  const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
+  const timeZoneId = userInfo?.timeZone;
 
   const { data: activeBudgetData, isFetching: activeBudgetsIsFetching } =
     useBudgetInfo();
@@ -94,6 +97,7 @@ const noSubmissions=
                   isOn={activeToggleIsOn}
                   setIsOn={setActiveToggleIsOn}
                   menu={menu}
+                  timeZoneId={timeZoneId}
                 />
               </div>
             )}
@@ -112,6 +116,7 @@ const noSubmissions=
                       budget={budget}
                       onActivate={() => setActiveToggleIsOn(false)}
                       menu={menu}
+                      timeZoneId={timeZoneId}
                     />
                   </div>
                 ))}
