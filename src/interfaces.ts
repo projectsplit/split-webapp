@@ -300,6 +300,7 @@ export interface SimpleOnTrackMessageProps {
   style?: CSSProperties;
   closeButton: boolean;
   startDate?: string;
+  endDate?: string;
 }
 export interface ReceivedMoreThanSpentMessageProps extends OnTrackMessageProps {}
 
