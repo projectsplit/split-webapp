@@ -94,21 +94,23 @@ export const InactiveBudget = ({
             </strong>
           </div>
         </div>
-        <ToggleSwitch
-          isOn={isOn}
-          onToggle={() => {
-            setIsOn(true);
-            onActivate();
-            setTimeout(() => {
-              toggleBudget(
-                { budgetId: budget?.id },
-                {
-                  onError: () => setIsOn(false),
-                }
-              );
-            }, 400);
-          }}
-        />
+        {!dateIsInPast(budget?.endDate) && (
+          <ToggleSwitch
+            isOn={isOn}
+            onToggle={() => {
+              setIsOn(true);
+              onActivate();
+              setTimeout(() => {
+                toggleBudget(
+                  { budgetId: budget?.id },
+                  {
+                    onError: () => setIsOn(false),
+                  }
+                );
+              }, 400);
+            }}
+          />
+        )}
       </div>
     </StyledInactiveBudget>
   );
