@@ -166,7 +166,7 @@ export default function DetailedExpense({
           </div>
         ) : (
           <div>
-            {(group && !group.isArchived)&&<div className="navigatePrompt">
+            {mode === Mode.Personal && <div className="navigatePrompt">
               <span className="info">{`This is your share from a ${expenseType === TransactionType.Group ? 'group' : 'non group'} expense`}</span>
               <div className="navigateButton">
                 <MyButton
