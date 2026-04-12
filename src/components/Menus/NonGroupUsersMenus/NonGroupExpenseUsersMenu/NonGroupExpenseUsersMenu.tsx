@@ -295,7 +295,7 @@ export const NonGroupExpenseUsersMenu = ({
           <div className="noData">
             <div className="msg">
               {allActiveGroups.length === 0
-                ? 'You are currently not a member of any group'
+                ? 'You are currently not a member of any active group'
                 : 'No other groups to select from'}
             </div>
             <MdOutlineGroupOff className="icon" />
