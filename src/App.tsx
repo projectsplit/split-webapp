@@ -7,7 +7,7 @@ import {
 import Auth from './pages/Auth/AuthPage';
 import routes from './routes';
 import GoogleCallback from './pages/GoogleCallback';
-import Home from './pages/Home/Home';
+import Home2 from './pages/Home2/Home2';
 import RedirectToExpenses from './routes/RedirectToExpenses';
 import Group from './pages/TransactionsWrappers/Group';
 import Expenses from './pages/Expenses/Expenses';
@@ -38,8 +38,8 @@ const App = () => {
         <Route path={routes.CREATE} element={<CreateAccount />} />
         <Route path={routes.GOOGLE_REDIRECT} element={<GoogleCallback />} />
         <Route element={<Protected />}>
-          <Route path={routes.ROOT} element={<Home />} />
-          <Route path={routes.JOIN} element={<Home />} />
+          <Route path={routes.ROOT} element={<Home2 />} />
+          <Route path={routes.JOIN} element={<Home2 />} />
           <Route path="/shared" element={<Shared />} />
           <Route
             path="/shared/generatecode/:groupid"
