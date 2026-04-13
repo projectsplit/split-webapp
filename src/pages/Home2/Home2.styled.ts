@@ -28,6 +28,7 @@ export const StyledHome2 = styled.div`
 export const ScrollableContent = styled.main`
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 0.75rem 1.5rem 8rem;
   display: flex;
   flex-direction: column;

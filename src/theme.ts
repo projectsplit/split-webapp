@@ -6,6 +6,7 @@ export const theme = {
   errorColor: '#ba5d5d',
   primaryTextColor: '#ffffff',
   secondaryTextColor: '#696e80',
+  subtleText: '#cfc2d6',
   activeTabButtonTextColor: '#ffffff',
   inactiveTabButtonTextColor: '#696e80',
   tabButtonTextHoverColor: '#2f3139',

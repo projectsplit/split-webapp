@@ -19,11 +19,10 @@ export const StyledOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
         margin-right: 10px;
       }
       .paragraphs {
-        font-size: 15px;
         display: flex;
         flex-direction: column;
         gap: 10px;
-        font-size: 15px;
+
         .amount {
           color: ${({ theme }) => theme.green};
         }

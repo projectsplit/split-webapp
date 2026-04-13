@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const TeaserWrapper = styled.section`
   position: relative;
   cursor: pointer;
-  overflow: hidden;
   border-radius: 1.5rem;
   border: 1px solid rgba(221, 183, 255, 0.3);
   padding: 1.25rem 1.25rem 1.5rem;

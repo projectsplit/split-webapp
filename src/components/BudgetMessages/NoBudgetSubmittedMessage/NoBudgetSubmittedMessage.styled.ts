@@ -21,7 +21,7 @@ export const StyledNoBudgetSubmittedMessage = styled.div`
         margin-right: 10px;
       }
       .paragraph {
-        font-size: 14px;
+     
         display: flex;
         flex-direction: column;
         gap: 10px;

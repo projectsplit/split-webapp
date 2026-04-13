@@ -13,8 +13,9 @@ import TransferForm from '@/components/TransferForm/TransferForm';
 import NonGroupExpenseUsersAnimation from '@/components/Animations/NonGroupExpenseUsersAnimation';
 import NonGroupTransferAnimation from '@/components/Animations/NonGroupTransferAnimation';
 import { PrometheusTeaser } from './PrometheusTeaser';
-import { BalanceGrid } from './BalanceGrid';
+import { BudgetSlider } from './BudgetSlider';
 import { RecentSection } from './RecentSection';
+import { SharedCard } from './SharedCard';
 import { PrometheusCard } from './PrometheusCard';
 import { ActionGrid } from './ActionGrid';
 import {
@@ -61,11 +62,18 @@ export default function Home2() {
   const quickActionsMenu = useSignal<string | null>(null);
   const recentContextId = userInfo?.recentContextId;
 
-  const { totalBalances, isLoading, isFetching, nonGroupGroupedTransactions } =
-    useTotalUserBalance(userInfo?.userId || '');
+  const {
+    totalBalances,
+    isLoading,
+    isFetching,
+    groupsData,
+    nonGroupGroupedTransactions,
+  } = useTotalUserBalance(userInfo?.userId || '');
 
-  const { data: mostRecentGroupData, isFetching: mostRecentGroupDataIsFetching } =
-    useGetMostRecentGroups(recentContextId);
+  const {
+    data: mostRecentGroupData,
+    isFetching: mostRecentGroupDataIsFetching,
+  } = useGetMostRecentGroups(recentContextId);
 
   const { data: activeBudgetData } = useBudgetInfo();
 
@@ -116,14 +124,14 @@ export default function Home2() {
             />
           )}
 
-          <BalanceGrid
-            totalBalances={totalBalances}
-            activeBudgetData={activeBudgetData}
-            onSharedClick={() => navigate('/shared')}
-            onBudgetClick={() =>
-              navigate('/budget/manage', { state: { fromHome: true } })
-            }
-          />
+          {userInfo.showBudgetInfo && activeBudgetData && (
+            <BudgetSlider
+              activeBudgetData={activeBudgetData}
+              onCapClick={() =>
+                navigate('/budget/manage', { state: { fromHome: true } })
+              }
+            />
+          )}
 
           <RecentSection
             mostRecentGroupDataIsFetching={mostRecentGroupDataIsFetching}
@@ -132,6 +140,14 @@ export default function Home2() {
             nonGroupGroupedTransactions={nonGroupGroupedTransactions}
             userInfo={userInfo}
             navigate={navigate}
+          />
+
+          <SharedCard
+            totalBalances={totalBalances}
+            groupsData={groupsData}
+            isLoading={isLoading}
+            isFetching={isFetching}
+            onClick={() => navigate('/shared')}
           />
 
           <PrometheusCard />

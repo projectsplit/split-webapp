@@ -2,14 +2,13 @@ import styled from 'styled-components';
 
 export const CardWrapper = styled.div`
   position: relative;
-  overflow: hidden;
   border-radius: 1rem;
   border: 1px solid rgba(221, 183, 255, 0.2);
-  background-color: #1f1f1f;
-  padding: 1.25rem;
+  background-color: #1b1b1b;
+  padding: 1rem;
   cursor: pointer;
   transition: border-color 0.3s ease;
-  box-shadow: 0 0 25px -5px rgba(221, 183, 255, 0.2);
+  box-shadow: 0 0 25px -5px rgba(221, 183, 255, 0.15);
 
   &:hover {
     border-color: rgba(221, 183, 255, 0.4);
@@ -18,18 +17,20 @@ export const CardWrapper = styled.div`
 
 export const SparkleIcon = styled.div`
   position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.75rem;
+  top: 1rem;
+  right: 1rem;
   color: rgba(221, 183, 255, 0.3);
   transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   ${CardWrapper}:hover & {
     color: #ddb7ff;
   }
 
   svg {
-    font-size: 1.125rem;
+    font-size: 1rem;
   }
 `;
 
@@ -40,8 +41,8 @@ export const CardContent = styled.div`
 `;
 
 export const IconCircle = styled.div`
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
   background: linear-gradient(135deg, #ddb7ff 0%, #b76dff 100%);
   display: flex;
@@ -51,7 +52,7 @@ export const IconCircle = styled.div`
   flex-shrink: 0;
 
   svg {
-    font-size: 1.125rem;
+    font-size: 1rem;
     color: #490080;
   }
 `;
@@ -72,6 +73,6 @@ export const TextBlock = styled.div`
     color: rgba(207, 194, 214, 0.6);
     font-weight: 500;
     line-height: 1.4;
-    margin: 0.25rem 0 0;
+    margin: 0.125rem 0 0;
   }
 `;

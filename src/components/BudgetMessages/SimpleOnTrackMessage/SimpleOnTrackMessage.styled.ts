@@ -21,11 +21,11 @@ export const StyledSimpleOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
         margin-right: 10px;
       }
       .paragraph {
-        font-size: 15px;
+     
         display: flex;
         flex-direction: column;
         gap: 10px;
-        font-size: 15px;
+        
 
         justify-content: center;
       }
