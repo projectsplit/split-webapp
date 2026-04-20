@@ -29,6 +29,7 @@ import { BudgetActions } from './pages/Budget/BudgetActions/BudgetActions';
 import { ManageBudgets } from './pages/Budget/ManageBudgets/ManageBudgets';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt/PwaInstallPrompt';
 import { PrometheusWelcome } from './pages/Prometheus/Welcome/Welcome';
+import { PrometheusSetup } from './pages/Prometheus/Setup/Setup';
 
 const App = () => {
   return (
@@ -81,6 +82,10 @@ const App = () => {
           <Route
             path={routes.PROMETHEUS_WELCOME}
             element={<PrometheusWelcome />}
+          />
+          <Route
+            path={routes.PROMETHEUS_SETUP}
+            element={<PrometheusSetup />}
           />
 
           <Route path="*" element={<Navigate to="/" replace />} />

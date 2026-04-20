@@ -108,7 +108,9 @@ export default function Home2() {
 
   const handlePrometheusCardClick = () => {
     const seen = localStorage.getItem(PROMETHEUS_WELCOME_SEEN_KEY);
+          console.log(seen)
     if (!seen) {
+      console.log("entered")
       // localStorage.setItem(PROMETHEUS_WELCOME_SEEN_KEY, 'true');
       navigate('/prometheus/welcome');
     }

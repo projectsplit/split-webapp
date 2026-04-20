@@ -1,4 +1,3 @@
-import { HeroImage } from './HeroImage';
 import { InitializeButton } from './InitializeButton';
 import { InitSection } from './Initialization.styled';
 

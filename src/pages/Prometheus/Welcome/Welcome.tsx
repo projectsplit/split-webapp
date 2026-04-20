@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from './components/Header/Header';
 import { InsightsCarousel } from './components/InsightsCarousel/InsightsCarousel';
 import { Initialization } from './components/Initialization/Initialization';
-import { AmbientEffects } from './components/AmbientEffects/AmbientEffects';
 import { PageRoot, Main } from './Welcome.styled';
 
 export const PROMETHEUS_WELCOME_SEEN_KEY = 'prometheusWelcomeSeen';
@@ -12,7 +11,7 @@ export const PrometheusWelcome = () => {
 
   const handleInitialize = () => {
     localStorage.setItem(PROMETHEUS_WELCOME_SEEN_KEY, 'true');
-    navigate('/');
+    navigate('/prometheus/setup');
   };
 
   return (
