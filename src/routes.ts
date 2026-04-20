@@ -7,6 +7,7 @@ const routes = {
   USER_INVITATIONS: '/invitations',
   JOIN: '/j/:code',
   GROUP: '/shared/:groupid',
+  PROMETHEUS_WELCOME: '/prometheus/welcome',
 };
 
 export default routes;

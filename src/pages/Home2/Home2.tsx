@@ -26,6 +26,7 @@ import {
 } from './Home2.styled';
 
 const TEASER_DISMISSED_KEY = 'prometheusTeaserDismissed';
+const PROMETHEUS_WELCOME_SEEN_KEY = 'prometheusWelcomeSeen';
 
 export default function Home2() {
   const navigate = useNavigate();
@@ -101,8 +102,16 @@ export default function Home2() {
   }, []);
 
   const handleDismissTeaser = () => {
-    localStorage.setItem(TEASER_DISMISSED_KEY, 'true');
+    // localStorage.setItem(TEASER_DISMISSED_KEY, 'true');
     setTeaserVisible(false);
+  };
+
+  const handlePrometheusCardClick = () => {
+    const seen = localStorage.getItem(PROMETHEUS_WELCOME_SEEN_KEY);
+    if (!seen) {
+      // localStorage.setItem(PROMETHEUS_WELCOME_SEEN_KEY, 'true');
+      navigate('/prometheus/welcome');
+    }
   };
 
   const isGlowing = quickActionsMenu.value === 'quickActions';
@@ -150,7 +159,7 @@ export default function Home2() {
             onClick={() => navigate('/shared')}
           />
 
-          <PrometheusCard />
+          <PrometheusCard onClick={handlePrometheusCardClick} />
 
           <ActionGrid
             onPersonalClick={() => {

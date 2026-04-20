@@ -27,6 +27,7 @@ const Protected: React.FC = () => {
     '/analytics',
     '/budget',
     '/shared/generatecode',
+    '/prometheus',
   ]);
 
   return isUserAuthenticated() ? (
