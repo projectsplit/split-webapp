@@ -14,9 +14,11 @@ import {
   LeftColumn,
   RightColumn,
 } from './Setup.styled';
+import { usePrometheusMode } from '../usePrometheusMode';
 
 export const PrometheusSetup = () => {
   const navigate = useNavigate();
+  usePrometheusMode();
 
   const handleBack = () => navigate(-1);
   const handleSave = () => {

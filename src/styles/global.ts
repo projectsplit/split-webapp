@@ -23,7 +23,9 @@ const GlobalStyles = createGlobalStyle`
 
   /* Force perfect centering on desktop */
   @media (min-width: 769px) {
-    html, body, #root {
+    html:not(.prometheus-mode), 
+    body:not(.prometheus-mode), 
+    body:not(.prometheus-mode) #root {
       padding-left: 0 !important;
       padding-right: 0 !important;
       margin-left: 10 !important;
@@ -35,7 +37,7 @@ const GlobalStyles = createGlobalStyle`
       background-color: #000000;
     }
 
-    #root {
+    body:not(.prometheus-mode) #root {
       max-width: 768px;
       width: 100%;
       margin: 0 auto;
