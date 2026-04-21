@@ -12,7 +12,22 @@ import {
 export interface AssetSelectConfig {
   options: string[];
   icon: IconType;
+  optionsFor?: (dependentValue: string) => string[];
 }
+
+const buildDurations = (maxYears: number): string[] =>
+  Array.from({ length: maxYears }, (_, i) => `Duration: ${i + 1}Y`);
+
+const YIELD_US_TREASURY = 'Yield: US Treasury';
+const YIELD_UK_GILT = 'Yield: UK Gilt';
+const YIELD_EU_SOVEREIGN = 'Yield: EU (GER) sovereign';
+
+const durationOptionsForYield = (yieldValue: string): string[] => {
+  if (yieldValue === YIELD_UK_GILT) return buildDurations(25);
+  if (yieldValue === YIELD_EU_SOVEREIGN) return buildDurations(20);
+  
+  return buildDurations(30);
+};
 
 export interface AssetConfig {
   id: string;
@@ -31,8 +46,8 @@ export const ASSET_CONFIGS: AssetConfig[] = [
     title: 'Equities Portfolio',
     subtitle: 'Publicly Traded Securities',
     icon: MdShowChart,
-    defaultEnabled: true,
-    defaultAmount: '452000',
+    defaultEnabled: false,
+    defaultAmount: '',
     primarySelect: {
       icon: MdExpandMore,
       options: [
@@ -78,11 +93,12 @@ export const ASSET_CONFIGS: AssetConfig[] = [
     defaultAmount: '',
     primarySelect: {
       icon: MdExpandMore,
-      options: ['Duration: 1-3Y', 'Duration: 5-10Y', 'Duration: 10Y+'],
+      options: buildDurations(20),
+      optionsFor: durationOptionsForYield,
     },
     secondarySelect: {
       icon: MdTrendingUp,
-      options: ['Yield: US Treasury', 'Yield: Corporate', 'Yield: High Yield'],
+      options: [YIELD_US_TREASURY, YIELD_UK_GILT, YIELD_EU_SOVEREIGN],
     },
   },
   {

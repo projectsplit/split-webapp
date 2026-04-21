@@ -1,32 +1,24 @@
 import { MdArrowBack } from 'react-icons/md';
-import {
-  Bar,
-  LeftCluster,
-  IconButton,
-  Title,
-  RightCluster,
-  Version,
-  SaveButton,
-} from './TopBar.styled';
+import { Bar, LeftCluster, IconButton, RightCluster } from './TopBar.styled';
+import { Pulse, Tagline, TaglineText } from '../Hero/Hero.styled';
 
 interface TopBarProps {
   onBack: () => void;
-  onSave: () => void;
 }
 
-export const TopBar = ({ onBack, onSave }: TopBarProps) => {
+export const TopBar = ({ onBack }: TopBarProps) => {
   return (
     <Bar>
       <LeftCluster>
         <IconButton aria-label="Go back" onClick={onBack}>
           <MdArrowBack />
         </IconButton>
-        <Title>Risk Architecture</Title>
+        <Tagline>
+          <Pulse />
+          <TaglineText>System Configuration</TaglineText>
+        </Tagline>
       </LeftCluster>
-      <RightCluster>
-        <Version>ORACLE v2.4</Version>
-        <SaveButton onClick={onSave}>SAVE</SaveButton>
-      </RightCluster>
+      <RightCluster></RightCluster>
     </Bar>
   );
 };

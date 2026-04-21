@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 
 export const CardWrapper = styled.div`
-  background: linear-gradient(
-    to right,
-    #1b1b1b 0%,
-    rgba(221, 183, 255, 0.05) 100%
-  );
+  background: #1b1b1b;
   padding: 1.5rem;
   border-radius: 0.5rem;
   border: 1px solid rgba(77, 67, 84, 0.1);
+  transition: border-color 0.5s ease;
+
+  &:hover {
+    border-color: rgba(221, 183, 255, 0.2);
+  }
 `;
 
 export const CardHeader = styled.div`
@@ -56,12 +57,4 @@ export const Subtitle = styled.p`
   margin: 0;
 `;
 
-export const FlowBadge = styled.div`
-  font-family: 'Roboto Mono', monospace;
-  color: #ddb7ff;
-  background: rgba(221, 183, 255, 0.1);
-  border: 1px solid rgba(221, 183, 255, 0.2);
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.25rem;
-  font-size: 0.625rem;
-`;
+

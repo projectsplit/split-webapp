@@ -12,7 +12,7 @@ export const PrometheusWelcome = () => {
   usePrometheusMode();
 
   const handleInitialize = () => {
-    localStorage.setItem(PROMETHEUS_WELCOME_SEEN_KEY, 'true');
+    // localStorage.setItem(PROMETHEUS_WELCOME_SEEN_KEY, 'true');
     navigate('/prometheus/setup');
   };
 

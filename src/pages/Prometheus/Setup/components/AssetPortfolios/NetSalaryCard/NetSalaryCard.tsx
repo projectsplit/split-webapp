@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MdPayments } from 'react-icons/md';
 import { MoneyInput } from '../../../shared/MoneyInput/MoneyInput';
+import { ToggleSwitch } from '../../../shared/ToggleSwitch/ToggleSwitch';
 import {
   CardWrapper,
   CardHeader,
@@ -8,11 +9,11 @@ import {
   IconBox,
   Title,
   Subtitle,
-  FlowBadge,
 } from './NetSalaryCard.styled';
 
 export const NetSalaryCard = () => {
   const [amount, setAmount] = useState('12500');
+  const [enabled, setEnabled] = useState(true);
 
   return (
     <CardWrapper>
@@ -22,19 +23,23 @@ export const NetSalaryCard = () => {
             <MdPayments />
           </IconBox>
           <div>
-            <Title>Net Monthly Salary</Title>
-            <Subtitle>Post-Tax Cash Flow</Subtitle>
+            <Title>Annual Salary</Title>
+            <Subtitle>Post-Tax</Subtitle>
           </div>
         </HeaderLeft>
-        <FlowBadge>FLOW_ACTIVE</FlowBadge>
+        <ToggleSwitch
+          checked={enabled}
+          onChange={setEnabled}
+          ariaLabel="Toggle Annual Salary"
+        />
       </CardHeader>
 
       <MoneyInput
         value={amount}
         onChange={setAmount}
         placeholder="Monthly Net"
-        size="lg"
-        currencyLabel="Monthly Net Flow"
+        size="md"
+  
       />
     </CardWrapper>
   );
