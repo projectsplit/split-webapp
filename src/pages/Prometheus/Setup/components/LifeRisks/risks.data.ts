@@ -1,5 +1,5 @@
 import type { IconType } from 'react-icons';
-import { MdWorkOff, MdHomeRepairService } from 'react-icons/md';
+import { MdWorkOff } from 'react-icons/md';
 
 export type RiskVariant = 'primary' | 'secondary';
 
@@ -26,28 +26,18 @@ export const RISK_CONFIGS: RiskConfig[] = [
     amountLabel: 'Redundancy Package (Amount)',
     defaultAmount: '25,000',
     frequencyOptions: [
-      '1 every 5 years (p=0.2)',
-      '1 every 10 years (p=0.1)',
-      '1 every 2 years (p=0.5)',
+      '1 every 2 years ',
+      '1 every 3 years ',
+      '1 every 4 years',
+      '1 every 5 years',
+      '1 every 6 years',
+      '1 every 7 years',
+      '1 every 8 years',
+      '1 every 9 years',
+      '1 every 10 years',
     ],
     defaultOptimisticDuration: '2 months',
     defaultPessimisticDuration: '12 months',
     filledIcon: true,
-  },
-  {
-    id: 'home-damage',
-    title: 'Critical Home Damage',
-    icon: MdHomeRepairService,
-    variant: 'secondary',
-    preset: 'PRE-SET_04',
-    amountLabel: 'Repair Deductible / Out-of-pocket',
-    defaultAmount: '15,000',
-    frequencyOptions: [
-      '1 every 20 years (p=0.05)',
-      '1 every 15 years (p=0.06)',
-      '1 every 50 years (p=0.02)',
-    ],
-    defaultOptimisticDuration: '1 month',
-    defaultPessimisticDuration: '4 months',
   },
 ];

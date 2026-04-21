@@ -25,8 +25,9 @@ export const Prefix = styled.span<{ $size: Size; $muted?: boolean }>`
 `;
 
 export const AmountInput = styled.input<{ $size: Size }>`
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
+  width: 100%;
   background: transparent;
   border: none;
   outline: none;

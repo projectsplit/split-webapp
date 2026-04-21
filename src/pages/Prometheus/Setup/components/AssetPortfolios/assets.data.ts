@@ -1,4 +1,5 @@
 import type { IconType } from 'react-icons';
+import type { Financials, RiskToggles } from '@/pages/Prometheus/interfaces';
 import {
   MdShowChart,
   MdDomain,
@@ -36,6 +37,8 @@ export interface AssetConfig {
   icon: IconType;
   defaultEnabled: boolean;
   defaultAmount: string;
+  amountKey: keyof Financials;
+  toggleKey?: keyof RiskToggles;
   primarySelect: AssetSelectConfig;
   secondarySelect: AssetSelectConfig;
 }
@@ -48,6 +51,8 @@ export const ASSET_CONFIGS: AssetConfig[] = [
     icon: MdShowChart,
     defaultEnabled: false,
     defaultAmount: '',
+    amountKey: 'equity_value',
+    toggleKey: 'equities',
     primarySelect: {
       icon: MdExpandMore,
       options: [
@@ -75,6 +80,8 @@ export const ASSET_CONFIGS: AssetConfig[] = [
     icon: MdDomain,
     defaultEnabled: false,
     defaultAmount: '',
+    amountKey: 'property_value',
+    toggleKey: 'property',
     primarySelect: {
       icon: MdExpandMore,
       options: ['Type: Residential', 'Type: Commercial', 'Type: Land'],
@@ -85,12 +92,14 @@ export const ASSET_CONFIGS: AssetConfig[] = [
     },
   },
   {
-    id: 'fixed-income',
+    id: 'yields',
     title: 'Fixed Income',
     subtitle: 'Bonds & Fixed Assets',
     icon: MdPayments,
     defaultEnabled: false,
     defaultAmount: '',
+    amountKey: 'bond_value',
+    toggleKey: 'yields',
     primarySelect: {
       icon: MdExpandMore,
       options: buildDurations(20),
@@ -108,6 +117,8 @@ export const ASSET_CONFIGS: AssetConfig[] = [
     icon: MdAccountBalance,
     defaultEnabled: true,
     defaultAmount: '',
+    amountKey: 'savings',
+    toggleKey:'savings',
     primarySelect: {
       icon: MdExpandMore,
       options: [

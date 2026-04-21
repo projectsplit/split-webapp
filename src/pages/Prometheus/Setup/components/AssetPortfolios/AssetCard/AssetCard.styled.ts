@@ -6,6 +6,9 @@ export const CardWrapper = styled.div`
   border-radius: 0.5rem;
   border: 1px solid rgba(77, 67, 84, 0.1);
   transition: border-color 0.5s ease;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 
   &:hover {
     border-color: rgba(221, 183, 255, 0.2);
@@ -67,14 +70,16 @@ export const CardBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-width: 0;
 `;
 
 export const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+  min-width: 0;
 
   @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 `;
