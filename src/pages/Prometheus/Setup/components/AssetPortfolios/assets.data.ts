@@ -107,7 +107,7 @@ export const ASSET_CONFIGS: AssetConfig[] = [
     subtitle: 'Liquid Capital Reserves',
     icon: MdAccountBalance,
     defaultEnabled: true,
-    defaultAmount: '84000',
+    defaultAmount: '',
     primarySelect: {
       icon: MdExpandMore,
       options: [

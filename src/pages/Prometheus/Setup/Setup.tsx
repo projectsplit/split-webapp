@@ -41,7 +41,7 @@ export const PrometheusSetup = () => {
         </ColumnGrid>
         <PrimaryAction onClick={handleComplete} />
       </Main>
-      <BottomNav active="risk" />
+     
     </PageRoot>
   );
 };

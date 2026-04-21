@@ -57,4 +57,18 @@ export const Subtitle = styled.p`
   margin: 0;
 `;
 
+export const CardBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
 
+export const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`;

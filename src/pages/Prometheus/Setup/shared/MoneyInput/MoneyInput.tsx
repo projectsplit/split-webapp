@@ -1,3 +1,4 @@
+import { currencyMask } from '../../../../../helpers/currencyMask';
 import { TechnicalInput } from '../TechnicalInput/TechnicalInput';
 import { Prefix, AmountInput, Suffix } from './MoneyInput.styled';
 
@@ -22,9 +23,16 @@ export const MoneyInput = ({
   currencySymbol = '$',
   accent,
   mutedPrefix,
-  inputType = 'number',
+  inputType = 'text',
 }: MoneyInputProps) => {
   const pad = size === 'lg' ? 'lg' : size === 'sm' ? 'sm' : 'md';
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // ticker should be uppercase for currencyMask
+    const ticker = (currencyLabel || 'USD').toUpperCase();
+    const maskedEvent = currencyMask(e, ticker, value, false);
+    onChange(maskedEvent.target.value);
+  };
 
   return (
     <TechnicalInput accent={accent} pad={pad}>
@@ -34,9 +42,12 @@ export const MoneyInput = ({
       <AmountInput
         $size={size}
         type={inputType}
+        inputMode="decimal"
         placeholder={placeholder}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleAmountChange}
+        spellCheck="false"
+        autoComplete="off"
       />
       {currencyLabel && <Suffix $size={size}>{currencyLabel}</Suffix>}
     </TechnicalInput>

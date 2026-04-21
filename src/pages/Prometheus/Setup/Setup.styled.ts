@@ -18,7 +18,7 @@ export const PageRoot = styled.div`
 export const Main = styled.main`
   max-width: 72rem;
   margin: 0 auto;
-  padding: 3rem 1.5rem 12rem;
+  padding: 3rem 1.5rem 0rem;
 `;
 
 export const ColumnGrid = styled.div`
