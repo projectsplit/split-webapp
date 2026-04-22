@@ -5,6 +5,8 @@ import { FinancialState } from '@/pages/Prometheus/interfaces';
 import { MoneyInput } from '../../../shared/MoneyInput/MoneyInput';
 import { SelectField } from '../../../shared/SelectField/SelectField';
 import { ToggleSwitch } from '../../../shared/ToggleSwitch/ToggleSwitch';
+import { QuantityInput } from '../../../shared/QuantityInput/QuantityInput';
+import { LabeledField } from '../../../shared/LabeledField/LabeledField';
 import {
   CardWrapper,
   CardHeader,
@@ -23,9 +25,20 @@ interface NetSalaryCardProps {
 export const NetSalaryCard = ({ setup }: NetSalaryCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const enabled = setup.value.risk_toggles.salary;
-  const amountNum = setup.value.financials.net_salary;
-  const amount = amountNum ? String(amountNum) : '';
-  const [currency, setCurrency] = useState('Currency: USD');
+  
+  const [amount, setAmount] = useState(
+    setup.value.financials.net_salary
+      ? setup.value.financials.net_salary.toLocaleString('en-US')
+      : ''
+  );
+
+  useEffect(() => {
+    const signalValue = setup.value.financials.net_salary;
+    const currentLocalClean = Number(amount.replace(/,/g, ''));
+    if (signalValue !== currentLocalClean) {
+      setAmount(signalValue ? signalValue.toLocaleString('en-US') : '');
+    }
+  }, [setup.value.financials.net_salary]);
 
   const setEnabled = (next: boolean) => {
     setup.value = {
@@ -34,10 +47,12 @@ export const NetSalaryCard = ({ setup }: NetSalaryCardProps) => {
     };
   };
 
-  const setAmount = (next: string) => {
+  const handleAmountChange = (next: string) => {
+    setAmount(next);
     const parsed = Number(next.replace(/,/g, ''));
     const value = Number.isFinite(parsed) ? parsed : 0;
     const shouldEnable = value !== 0 && !enabled;
+
     setup.value = {
       ...setup.value,
       financials: { ...setup.value.financials, net_salary: value },
@@ -46,6 +61,33 @@ export const NetSalaryCard = ({ setup }: NetSalaryCardProps) => {
             risk_toggles: { ...setup.value.risk_toggles, salary: true },
           }
         : {}),
+    };
+  };
+
+  const [currency, setCurrency] = useState('Currency: USD');
+
+  const [savingsRateInput, setSavingsRateInput] = useState(() => {
+    const stored = setup.value.financials.savings_rate;
+    return stored ? String(stored * 100) : '';
+  });
+
+  useEffect(() => {
+    const stored = setup.value.financials.savings_rate;
+    const localNum = Number(savingsRateInput);
+    if (Number.isFinite(localNum) && Math.abs(localNum / 100 - stored) < 1e-9) {
+      return;
+    }
+    setSavingsRateInput(stored ? String(stored * 100) : '');
+  }, [setup.value.financials.savings_rate]);
+
+  const handleSavingsRateChange = (next: string) => {
+    setSavingsRateInput(next);
+    const parsed = Number(next);
+    if (!Number.isFinite(parsed)) return;
+    const clamped = Math.min(100, Math.max(0, parsed));
+    setup.value = {
+      ...setup.value,
+      financials: { ...setup.value.financials, savings_rate: clamped / 100 },
     };
   };
 
@@ -98,7 +140,7 @@ export const NetSalaryCard = ({ setup }: NetSalaryCardProps) => {
       <CardBody>
         <MoneyInput
           value={amount}
-          onChange={setAmount}
+          onChange={handleAmountChange}
           placeholder="0.00"
           size="md"
           currencySymbol={currencyInfo.symbol}
@@ -111,6 +153,16 @@ export const NetSalaryCard = ({ setup }: NetSalaryCardProps) => {
             options={['Currency: USD', 'Currency: EUR', 'Currency: GBP']}
             icon={MdPayments}
           />
+          <LabeledField label="Monthly Investment Rate">
+            <QuantityInput
+              suffix="%"
+              value={savingsRateInput}
+              onChange={handleSavingsRateChange}
+              size="sm"
+              placeholder="0"
+              allowDecimal
+            />
+          </LabeledField>
         </Grid>
       </CardBody>
     </CardWrapper>

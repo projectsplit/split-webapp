@@ -4,7 +4,6 @@ import { Hero } from './components/Hero/Hero';
 import { AssetPortfolios } from './components/AssetPortfolios/AssetPortfolios';
 import { LifeRisks } from './components/LifeRisks/LifeRisks';
 import { PrimaryAction } from './components/PrimaryAction/PrimaryAction';
-import { BottomNav } from './components/BottomNav/BottomNav';
 import { AmbientBackground } from './components/AmbientBackground/AmbientBackground';
 import {
   PageRoot,
@@ -21,7 +20,7 @@ export const PrometheusSetup = () => {
   const setup = useSignal<FinancialState>(initialState);
   const navigate = useNavigate();
   usePrometheusMode();
-
+  
   const handleBack = () => navigate("/");
   const handleComplete = () => {
     // TODO: submit setup and route to engine output screen
@@ -65,7 +64,7 @@ const initialState: FinancialState = {
     inflation: true,
     property: false,
     savings:false,
-    salary: true,
+    salary: false,
     career_loss: false,
     career_opt_loss: 0,
     career_pess_loss: 0,

@@ -6,13 +6,14 @@ import { RiskCard } from './RiskCard/RiskCard';
 import { CustomRiskCard } from './CustomRiskCard/CustomRiskCard';
 import { AddRiskButton } from './AddRiskButton/AddRiskButton';
 import { Section, Stack } from './LifeRisks.styled';
+import { ExpenseRisk } from './ExpenseRisk/ExpenseRisk';
 
 interface LifeRisksProps {
   setup: Signal<FinancialState>;
 }
 
 export const LifeRisks = ({ setup }: LifeRisksProps) => {
-  const salaryOn = setup.value.risk_toggles.salary;
+  const hasSalary = setup.value.financials.net_salary > 0;
 
   const handleAddRisk = () => {
     setup.value = {
@@ -53,16 +54,17 @@ export const LifeRisks = ({ setup }: LifeRisksProps) => {
   return (
     <Section>
       <SectionHeader
-        title="Life Risks"
+        title="Life Liabilities"
         marker="Section 02 // Hazards"
         tone="error"
       />
       <Stack>
         {RISK_CONFIGS.filter(
-          (config) => config.id !== 'job-loss' || salaryOn
+          (config) => config.id !== 'job-loss' || hasSalary
         ).map((config) => (
-          <RiskCard key={config.id} config={config} />
+          <RiskCard key={config.id} config={config} setup={setup} />
         ))}
+        <ExpenseRisk />
         {setup.value.custom_risks.map((risk, index) => (
           <CustomRiskCard
             key={index}

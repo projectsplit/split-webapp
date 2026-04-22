@@ -11,9 +11,9 @@ export interface RiskConfig {
   preset?: string;
   amountLabel: string;
   defaultAmount: string;
-  frequencyOptions: string[];
-  defaultOptimisticDuration: string;
-  defaultPessimisticDuration: string;
+  defaultFrequencyYears: number;
+  defaultOptimisticMonths: number;
+  defaultPessimisticMonths: number;
   filledIcon?: boolean;
 }
 
@@ -24,20 +24,10 @@ export const RISK_CONFIGS: RiskConfig[] = [
     icon: MdWorkOff,
     variant: 'primary',
     amountLabel: 'Redundancy Package (Amount)',
-    defaultAmount: '25,000',
-    frequencyOptions: [
-      '1 every 2 years ',
-      '1 every 3 years ',
-      '1 every 4 years',
-      '1 every 5 years',
-      '1 every 6 years',
-      '1 every 7 years',
-      '1 every 8 years',
-      '1 every 9 years',
-      '1 every 10 years',
-    ],
-    defaultOptimisticDuration: '2 months',
-    defaultPessimisticDuration: '12 months',
+    defaultAmount: '0',
+    defaultFrequencyYears: 5,
+    defaultOptimisticMonths: 2,
+    defaultPessimisticMonths: 12,
     filledIcon: true,
   },
 ];

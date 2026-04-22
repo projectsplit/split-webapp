@@ -27,10 +27,23 @@ export const AssetCard = ({ config, setup }: AssetCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const enabled = config.toggleKey
-    ? setup.value.risk_toggles[config.toggleKey] as boolean
+    ? (setup.value.risk_toggles[config.toggleKey] as boolean)
     : config.defaultEnabled;
-  const amountNum = setup.value.financials[config.amountKey];
-  const amount = amountNum ? String(amountNum) : '';
+
+  const [amount, setAmount] = useState(
+    setup.value.financials[config.amountKey]
+      ? setup.value.financials[config.amountKey].toLocaleString('en-US')
+      : ''
+  );
+
+  // Sync local amount string if the signal is updated from elsewhere
+  useEffect(() => {
+    const signalValue = setup.value.financials[config.amountKey];
+    const currentLocalClean = Number(amount.replace(/,/g, ''));
+    if (signalValue !== currentLocalClean) {
+      setAmount(signalValue ? signalValue.toLocaleString('en-US') : '');
+    }
+  }, [setup.value.financials[config.amountKey]]);
 
   const setEnabled = (next: boolean) => {
     if (!config.toggleKey) return;
@@ -43,10 +56,12 @@ export const AssetCard = ({ config, setup }: AssetCardProps) => {
     };
   };
 
-  const setAmount = (next: string) => {
+  const handleAmountChange = (next: string) => {
+    setAmount(next);
     const parsed = Number(next.replace(/,/g, ''));
     const value = Number.isFinite(parsed) ? parsed : 0;
     const shouldEnable = value !== 0 && config.toggleKey && !enabled;
+
     setup.value = {
       ...setup.value,
       financials: {
@@ -147,7 +162,7 @@ export const AssetCard = ({ config, setup }: AssetCardProps) => {
       <CardBody>
         <MoneyInput
           value={amount}
-          onChange={setAmount}
+          onChange={handleAmountChange}
           currencySymbol={currencyInfo.symbol}
           currencyLabel={currencyInfo.label}
         />

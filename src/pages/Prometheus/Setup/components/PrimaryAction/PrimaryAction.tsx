@@ -9,7 +9,7 @@ export const PrimaryAction = ({ onClick }: PrimaryActionProps) => {
   return (
     <Wrapper>
       <Button onClick={onClick}>
-        <span>Complete Engine Set Up</span>
+        <span>Complete Risk Set Up</span>
         <MdBolt />
       </Button>
     </Wrapper>

@@ -1,8 +1,10 @@
+import { useEffect, useRef, useState } from 'react';
 import { MdClose, MdOutlineBolt, MdHomeRepairService } from 'react-icons/md';
 import type { CustomRisk } from '@/pages/Prometheus/interfaces';
 import { LabeledField } from '../../../shared/LabeledField/LabeledField';
 import { MoneyInput } from '../../../shared/MoneyInput/MoneyInput';
 import { SelectField } from '../../../shared/SelectField/SelectField';
+import { QuantityInput } from '../../../shared/QuantityInput/QuantityInput';
 import {
   Outer,
   Glow,
@@ -22,27 +24,6 @@ interface CustomRiskCardProps {
   onRemove: () => void;
 }
 
-const FREQUENCY_OPTIONS = [
-  '1 every 2 years',
-  '1 every 3 years',
-  '1 every 5 years',
-  '1 every 10 years',
-  '1 every 20 years',
-];
-
-const frequencyToYears = (option: string): number => {
-  const match = option.match(/(\d+)/);
-  return match ? Number(match[1]) : 5;
-};
-
-const yearsToFrequency = (years: number): string => {
-  const match = FREQUENCY_OPTIONS.find(
-    (opt) => frequencyToYears(opt) === years
-  );
-  return match ?? FREQUENCY_OPTIONS[2];
-};
-
-const toMoneyString = (n: number): string => (n ? String(n) : '');
 const parseMoney = (value: string): number => {
   const parsed = Number(value.replace(/,/g, ''));
   return Number.isFinite(parsed) ? parsed : 0;
@@ -54,6 +35,44 @@ export const CustomRiskCard = ({
   onRemove,
 }: CustomRiskCardProps) => {
   const accent = 'error-soft';
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const [optAmount, setOptAmount] = useState(
+    risk.opt_loss ? risk.opt_loss.toLocaleString('en-US') : ''
+  );
+  const [pessAmount, setPessAmount] = useState(
+    risk.pess_loss ? risk.pess_loss.toLocaleString('en-US') : ''
+  );
+
+  useEffect(() => {
+    if (risk.name === 'New Risk') {
+      inputRef.current?.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    const signalOpt = risk.opt_loss;
+    const currentLocalOpt = Number(optAmount.replace(/,/g, ''));
+    if (signalOpt !== currentLocalOpt) {
+      setOptAmount(signalOpt ? signalOpt.toLocaleString('en-US') : '');
+    }
+
+    const signalPess = risk.pess_loss;
+    const currentLocalPess = Number(pessAmount.replace(/,/g, ''));
+    if (signalPess !== currentLocalPess) {
+      setPessAmount(signalPess ? signalPess.toLocaleString('en-US') : '');
+    }
+  }, [risk.opt_loss, risk.pess_loss]);
+
+  const handleOptChange = (next: string) => {
+    setOptAmount(next);
+    onChange({ opt_loss: parseMoney(next) });
+  };
+
+  const handlePessChange = (next: string) => {
+    setPessAmount(next);
+    onChange({ pess_loss: parseMoney(next) });
+  };
 
   return (
     <Outer>
@@ -69,6 +88,7 @@ export const CustomRiskCard = ({
               )}
             </IconDisk>
             <TitleInput
+              ref={inputRef}
               value={risk.name}
               placeholder="Risk Name"
               onChange={(e) => onChange({ name: e.target.value })}
@@ -86,13 +106,14 @@ export const CustomRiskCard = ({
         </CardHeader>
 
         <Body>
-          <LabeledField label="Occurrence Frequency (Binomial)">
-            <SelectField
-              value={yearsToFrequency(risk.once_every_x_years)}
+          <LabeledField label="Occurrence Frequency">
+            <QuantityInput
+              prefix="1 every"
+              suffix="years"
+              value={risk.once_every_x_years}
               onChange={(next) =>
-                onChange({ once_every_x_years: frequencyToYears(next) })
+                onChange({ once_every_x_years: Number(next) || 0 })
               }
-              options={FREQUENCY_OPTIONS}
               accent={accent}
             />
           </LabeledField>
@@ -100,8 +121,8 @@ export const CustomRiskCard = ({
           <DurationRow>
             <LabeledField label="Optimistic Loss">
               <MoneyInput
-                value={toMoneyString(risk.opt_loss)}
-                onChange={(next) => onChange({ opt_loss: parseMoney(next) })}
+                value={optAmount}
+                onChange={handleOptChange}
                 inputType="text"
                 size="sm"
                 currencyLabel=""
@@ -111,8 +132,8 @@ export const CustomRiskCard = ({
             </LabeledField>
             <LabeledField label="Pessimistic Loss">
               <MoneyInput
-                value={toMoneyString(risk.pess_loss)}
-                onChange={(next) => onChange({ pess_loss: parseMoney(next) })}
+                value={pessAmount}
+                onChange={handlePessChange}
                 inputType="text"
                 size="sm"
                 currencyLabel=""

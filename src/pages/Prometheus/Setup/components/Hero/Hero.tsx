@@ -12,8 +12,8 @@ export const Hero = () => {
         Architecture <span className="accent">Setup</span>
       </Title>
       <Lead>
-        Define your financial exposure and lifecycle stressors. Our Monte Carlo
-        engine will use these parameters to simulate 1,000,000 wealth trajectories.
+        Define your financial exposure and lifecycle stressors. The engine
+         will use these parameters to simulate 1,000,000 wealth trajectories.
       </Lead>
     </HeroSection>
   );
