@@ -32,7 +32,7 @@ export interface CustomRisk {
   attributable: number;
 }
 
-interface Correlations {
+export interface Correlations {
   pairs: {
     [key: string]: {
       [target: string]: number;

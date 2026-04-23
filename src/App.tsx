@@ -30,6 +30,8 @@ import { ManageBudgets } from './pages/Budget/ManageBudgets/ManageBudgets';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt/PwaInstallPrompt';
 import { PrometheusWelcome } from './pages/Prometheus/Welcome/Welcome';
 import { PrometheusSetup } from './pages/Prometheus/Setup/Setup';
+import { PrometheusCorrelation } from './pages/Prometheus/Correlation/Correlation';
+import { PrometheusProvider } from './pages/Prometheus/PrometheusProvider';
 
 const App = () => {
   return (
@@ -79,14 +81,20 @@ const App = () => {
             <Route path="*" element={<RedirectToBudget />} />
           </Route>
 
-          <Route
-            path={routes.PROMETHEUS_WELCOME}
-            element={<PrometheusWelcome />}
-          />
-          <Route
-            path={routes.PROMETHEUS_SETUP}
-            element={<PrometheusSetup />}
-          />
+          <Route element={<PrometheusProvider />}>
+            <Route
+              path={routes.PROMETHEUS_WELCOME}
+              element={<PrometheusWelcome />}
+            />
+            <Route
+              path={routes.PROMETHEUS_SETUP}
+              element={<PrometheusSetup />}
+            />
+            <Route
+              path={routes.PROMETHEUS_CORRELATION}
+              element={<PrometheusCorrelation />}
+            />
+          </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

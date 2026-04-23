@@ -9,6 +9,7 @@ const routes = {
   GROUP: '/shared/:groupid',
   PROMETHEUS_WELCOME: '/prometheus/welcome',
   PROMETHEUS_SETUP: '/prometheus/setup',
+  PROMETHEUS_CORRELATION: '/prometheus/correlation',
 };
 
 export default routes;

@@ -9,23 +9,27 @@ export default defineConfig({
   server: {
     port: 5175,
     host: true,
-  // server: {
-  //   https: {
-  //     key: fs.readFileSync(path.resolve(__dirname, 'localhost+1-key.pem')),
-  //     cert: fs.readFileSync(path.resolve(__dirname, 'localhost+1.pem')),
-  //   },
-  //   host: 'localhost',
-  //   port: 5173,
-  // },
-  },  
+    // server: {
+    //   https: {
+    //     key: fs.readFileSync(path.resolve(__dirname, 'localhost+1-key.pem')),
+    //     cert: fs.readFileSync(path.resolve(__dirname, 'localhost+1.pem')),
+    //   },
+    //   host: 'localhost',
+    //   port: 5173,
+    // },
+  },
   plugins: [
     react({
       // Add the Babel transform here
       babel: {
         plugins: [
-          ["module:@preact/signals-react-transform"]
-        ]
-      }
+          ['module:@preact/signals-react-transform'],
+          [
+            'babel-plugin-styled-components',
+            { displayNames: true, fileName: true },
+          ],
+        ],
+      },
     }),
     VitePWA({
       registerType: 'autoUpdate',
@@ -44,22 +48,22 @@ export default defineConfig({
             src: 'icon-192x192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any'
+            purpose: 'any',
           },
           {
             src: 'icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any'
-          }
-        ]
+            purpose: 'any',
+          },
+        ],
       },
       workbox: {
-        maximumFileSizeToCacheInBytes: 3000000 // 3MB
+        maximumFileSizeToCacheInBytes: 3000000, // 3MB
       },
       devOptions: {
-        enabled: true
-      }
+        enabled: true,
+      },
     }),
     // checker({ typescript: true }),
   ],
