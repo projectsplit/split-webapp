@@ -39,6 +39,9 @@ export const useActiveRisks = (
       );
     }
 
+    // Expenses are always present (calibrated from spending history)
+    items.push({ id: 'Expenses', label: 'Expenses', group: 'liability' });
+
     if (risk_toggles.career_loss && risk_toggles.career_pess_loss > 0) {
       items.push({ id: 'Career Loss', label: 'Job Loss', group: 'liability' });
     }

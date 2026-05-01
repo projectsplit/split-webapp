@@ -19,6 +19,7 @@ export interface RiskToggles {
   career_opt_loss: number;
   career_pess_loss: number;
   career_recoverable: number;
+  severance_invest_rate: number;
 }
 
 export interface CustomRisk {
@@ -41,6 +42,7 @@ export interface Correlations {
 }
 
 export interface FinancialState {
+  economy:string;
   financials: Financials;
   risk_toggles: RiskToggles;
   custom_risks: CustomRisk[];

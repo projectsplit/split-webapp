@@ -7,9 +7,10 @@ import { Signal } from '@preact/signals-react';
 import { FinancialState } from '@/pages/Prometheus/interfaces';
 
 interface AssetPortfloliosProps {
-  setup: Signal<FinancialState>
+  setup: Signal<FinancialState>;
 }
-export const AssetPortfolios = ({setup}:AssetPortfloliosProps) => {
+
+export const AssetPortfolios = ({ setup }: AssetPortfloliosProps) => {
   return (
     <Section>
       <SectionHeader
@@ -19,7 +20,7 @@ export const AssetPortfolios = ({setup}:AssetPortfloliosProps) => {
       />
       <CardStack>
         {ASSET_CONFIGS.map((config) => (
-          <AssetCard key={config.id} config={config} setup={setup}/>
+          <AssetCard key={config.id} config={config} setup={setup} />
         ))}
         <NetSalaryCard setup={setup} />
       </CardStack>

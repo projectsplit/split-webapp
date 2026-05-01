@@ -5,7 +5,6 @@ import type { RiskConfig } from '../risks.data';
 import { LabeledField } from '../../../shared/LabeledField/LabeledField';
 import { MoneyInput } from '../../../shared/MoneyInput/MoneyInput';
 import { SelectField } from '../../../shared/SelectField/SelectField';
-import { TechnicalInput } from '../../../shared/TechnicalInput/TechnicalInput';
 import { QuantityInput } from '../../../shared/QuantityInput/QuantityInput';
 import {
   Outer,
@@ -41,11 +40,30 @@ export const RiskCard = ({ config, setup }: RiskCardProps) => {
   const [pessimistic, setPessimistic] = useState<string | number>(
     config.defaultPessimisticMonths
   );
+  const [sevInvestRate, setSevInvestRate] = useState(() => {
+    const stored = setup?.value.risk_toggles.severance_invest_rate ?? 0;
+    return stored ? String(stored * 100) : '';
+  });
 
   const isJobLoss = config.id === 'job-loss';
 
   const netSalary = setup?.value.financials.net_salary ?? 0;
   const salaryOn = setup?.value.risk_toggles.salary ?? false;
+
+  const handleSevInvestRateChange = (next: string) => {
+    setSevInvestRate(next);
+    if (!setup) return;
+    const parsed = Number(next);
+    if (!Number.isFinite(parsed)) return;
+    const clamped = Math.min(100, Math.max(0, parsed));
+    setup.value = {
+      ...setup.value,
+      risk_toggles: {
+        ...setup.value.risk_toggles,
+        severance_invest_rate: clamped / 100,
+      },
+    };
+  };
 
   useEffect(() => {
     if (!isJobLoss || !setup) return;
@@ -164,6 +182,19 @@ export const RiskCard = ({ config, setup }: RiskCardProps) => {
               )}
             </LabeledField>
           </DurationRow>
+
+          {isJobLoss && (
+            <LabeledField label="Severance Investment Rate">
+              <QuantityInput
+                suffix="%"
+                value={sevInvestRate}
+                onChange={handleSevInvestRateChange}
+                size="sm"
+                placeholder="0"
+                allowDecimal
+              />
+            </LabeledField>
+          )}
         </Body>
       </Card>
     </Outer>

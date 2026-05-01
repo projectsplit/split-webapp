@@ -5,11 +5,9 @@ export const Intro = () => {
     <Wrapper>
       <Heading>Correlation Modeling</Heading>
       <Lead>
-        The <Accent>Iman Conover</Accent> correlation matrix provides a
+        The <Accent>Correlation Matrix</Accent> provides a
         high-precision framework for understanding inter-asset dependencies.
-        These are <Soft>prepopulated estimates</Soft> based on your current
-        portfolio drift. Adjust values to simulate extreme market stress
-        scenarios.
+        These are <Soft>prepopulated estimates</Soft> based on our statistical analysis and economic rationale. Adjust values accordingly if your views of the market and the economy are different.
       </Lead>
     </Wrapper>
   );

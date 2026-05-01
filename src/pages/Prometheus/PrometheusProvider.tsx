@@ -24,6 +24,7 @@ export const PrometheusProvider = () => {
 };
 
 const initialState: FinancialState = {
+  economy: 'US',
   financials: {
     savings: 0,
     net_salary: 0,
@@ -44,6 +45,7 @@ const initialState: FinancialState = {
     career_opt_loss: 0,
     career_pess_loss: 0,
     career_recoverable: 0,
+    severance_invest_rate: 0,
   },
   custom_risks: [
     {

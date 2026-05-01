@@ -5,6 +5,7 @@ import { AssetPortfolios } from './components/AssetPortfolios/AssetPortfolios';
 import { LifeRisks } from './components/LifeRisks/LifeRisks';
 import { PrimaryAction } from './components/PrimaryAction/PrimaryAction';
 import { AmbientBackground } from './components/AmbientBackground/AmbientBackground';
+import { EconomySelector } from './components/EconomySelector/EconomySelector';
 import {
   PageRoot,
   Main,
@@ -24,12 +25,14 @@ export const PrometheusSetup = () => {
   const handleBack = () => navigate('/');
   const handleComplete = () => navigate(routes.PROMETHEUS_CORRELATION);
 
+
   return (
     <PageRoot>
       <AmbientBackground />
       <TopBar onBack={handleBack} />
       <Main>
         <Hero />
+        <EconomySelector setup={setup} />
         <ColumnGrid>
           <LeftColumn>
             <AssetPortfolios setup={setup} />
