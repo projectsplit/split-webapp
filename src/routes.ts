@@ -10,6 +10,7 @@ const routes = {
   PROMETHEUS_WELCOME: '/prometheus/welcome',
   PROMETHEUS_SETUP: '/prometheus/setup',
   PROMETHEUS_CORRELATION: '/prometheus/correlation',
+  PROMETHEUS_SIMULATIONS: '/prometheus/simulations',
 };
 
 export default routes;

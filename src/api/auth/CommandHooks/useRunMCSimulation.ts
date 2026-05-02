@@ -35,9 +35,10 @@ export const useRunMCSimulation = (
     onSuccess: (data) => {
       console.log(data)
       queryClient.invalidateQueries({ queryKey: ['simulation'] });
-
-
-      // navigate('/prometheus/simulations', { replace: true });
+      navigate('/prometheus/simulations', {
+        replace: true,
+        state: { simulationResponse: data },
+      });
     },
   });
 };

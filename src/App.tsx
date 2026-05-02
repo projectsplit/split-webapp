@@ -32,6 +32,7 @@ import { PrometheusWelcome } from './pages/Prometheus/Welcome/Welcome';
 import { PrometheusSetup } from './pages/Prometheus/Setup/Setup';
 import { PrometheusCorrelation } from './pages/Prometheus/Correlation/Correlation';
 import { PrometheusProvider } from './pages/Prometheus/PrometheusProvider';
+import { PrometheusSimulation } from './pages/Prometheus/Simulation/Simulation';
 
 const App = () => {
   return (
@@ -93,6 +94,10 @@ const App = () => {
             <Route
               path={routes.PROMETHEUS_CORRELATION}
               element={<PrometheusCorrelation />}
+            />
+            <Route
+              path={routes.PROMETHEUS_SIMULATIONS}
+              element={<PrometheusSimulation />}
             />
           </Route>
 
