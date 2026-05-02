@@ -83,7 +83,7 @@ const buildTooltipLines = (s: SimulationScenario): string[] => {
     `Income:          ${formatSimCurrency(s.income)}`,
     `Expenses:        ${formatSimCurrency(s.expenses)}`,
     `Bond P&L:        ${formatSimCurrency(s.bond_pnl)}`,
-    `Δ Yield:         ${formatBps(s.delta_y_bps)}`,
+    `Δ Interest Rates:         ${formatBps(s.delta_y_bps)}`,
     `Δ Inflation:     ${s.delta_infl_1yr >= 0 ? '+' : ''}${s.delta_infl_1yr.toFixed(2)}pp`,
   ];
 
