@@ -97,7 +97,7 @@ export const buildBestEstimate = (
 ): string => {
   const parts: string[] = [
     `The median outcome over the next year.`,
-    `${cap(describeEquity(s.equity_return))}, bringing the combined equities and bonds portfolio to ${formatSimCurrency(s.portfolio_end+s.bond_portfolio_end)}.`,
+    `${cap(describeEquity(s.equity_return))}, bringing the equities and bonds portfolio to ${formatSimCurrency(s.portfolio_end+s.bond_portfolio_end)}.`,
   ];
 
   const bond = describeBonds(s.bond_pnl, s.delta_y_bps);
@@ -223,14 +223,16 @@ export const buildNightmare = (
   );
 
   const risks = getCustomRiskHits(s);
-  if (risks.length > 0) {
+  if (risks.length === 1) {
+    parts.push(`${cap(risks[0])} adds to the pain.`);
+  } else if (risks.length > 1) {
     parts.push(
       `Multiple risk events strike simultaneously: ${risks.join(', ')}.`,
     );
   }
 
   parts.push(
-    `The combined effect: ${describeWealthChange(startingWealth, s.wealth)}, with the combined equities and bonds portfolio at ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
+    `The net effect: ${describeWealthChange(startingWealth, s.wealth)}, with the equities and bonds portfolio at ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
   );
 
   return parts.join(' ');
@@ -267,7 +269,7 @@ export const buildExceptionalYear = (
   }
 
   parts.push(
-    `Overall, ${describeWealthChange(startingWealth, s.wealth)}, with the combined equities and bonds portfolio at ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
+    `Overall, ${describeWealthChange(startingWealth, s.wealth)}, with the equities and bonds portfolio at ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
   );
 
   return parts.join(' ');
@@ -384,7 +386,7 @@ export const buildAboveAverage = (
   ];
 
   parts.push(
-    `${cap(describeEquity(s.equity_return))}, bringing the combined equities and bonds portfolio to ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
+    `${cap(describeEquity(s.equity_return))}, bringing the equities and bonds portfolio to ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
   );
 
   const bond = describeBonds(s.bond_pnl, s.delta_y_bps);
@@ -473,7 +475,7 @@ export const buildSevereYear = (
   }
 
   parts.push(
-    `The result: ${describeWealthChange(startingWealth, s.wealth)}, with the combined equities and bonds portfolio at ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
+    `The result: ${describeWealthChange(startingWealth, s.wealth)}, with the equities and bonds portfolio at ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
   );
 
   return parts.join(' ');

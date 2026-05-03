@@ -18,10 +18,17 @@ type SimulationRequest = {
   correlations?: Correlations;
 };
 
+type SimulationCache = {
+  input: SimulationRequest;
+  response: any;
+};
+
+export const SIMULATION_CACHE_KEY = ['simulation-cache'] as const;
+
 export const useRunMCSimulation = (
   navigate: NavigateFunction,
   serverErrors: Signal<any[]>,
- 
+
 ) => {
   const queryClient = useQueryClient();
 
@@ -33,7 +40,10 @@ export const useRunMCSimulation = (
       serverErrors.value = errorData;
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['simulation'] });
+      queryClient.setQueryData<SimulationCache>(
+        SIMULATION_CACHE_KEY,
+        { input: variables, response: data },
+      );
       navigate('/prometheus/simulations', {
         replace: true,
         state: { simulationResponse: data, simulationInput: variables },
