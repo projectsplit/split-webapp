@@ -2,7 +2,7 @@ import { SimulationScenario } from '../interfaces';
 import { formatSimCurrency, formatPercent, formatBps } from './formatCurrency';
 
 const KNOWN_FIELDS = new Set([
-  'percentile', 'wealth', 'equity_return', 'portfolio_end',
+  'percentile', 'wealth', 'equity_return', 'portfolio_end','bond_portfolio_end',
   'income', 'expenses', 'bond_pnl', 'delta_y_bps',
   'delta_infl_1yr', 'property_return', 'property_end',
 ]);
@@ -88,7 +88,7 @@ export const buildBestEstimate = (
 ): string => {
   const parts: string[] = [
     `The median outcome over the next year.`,
-    `${cap(describeEquity(s.equity_return))}, bringing the portfolio to ${formatSimCurrency(s.portfolio_end)}.`,
+    `${cap(describeEquity(s.equity_return))}, bringing the combined equities and bonds portfolio to ${formatSimCurrency(s.portfolio_end+s.bond_portfolio_end)}.`,
   ];
 
   const bond = describeBonds(s.bond_pnl, s.delta_y_bps);
@@ -221,7 +221,7 @@ export const buildNightmare = (
   }
 
   parts.push(
-    `The combined effect: ${describeWealthChange(startingWealth, s.wealth)}, with the portfolio at ${formatSimCurrency(s.portfolio_end)}.`,
+    `The combined effect: ${describeWealthChange(startingWealth, s.wealth)}, with the combined equities and bonds portfolio at ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
   );
 
   return parts.join(' ');

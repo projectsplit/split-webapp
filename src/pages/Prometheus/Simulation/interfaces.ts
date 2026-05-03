@@ -3,6 +3,7 @@ export interface SimulationScenario {
   wealth: number;
   equity_return: number;
   portfolio_end: number;
+  bond_portfolio_end:number
   income: number;
   expenses: number;
   bond_pnl: number;

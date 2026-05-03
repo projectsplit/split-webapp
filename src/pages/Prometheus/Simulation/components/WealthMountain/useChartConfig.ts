@@ -65,6 +65,7 @@ const KNOWN_FIELDS = new Set([
   'wealth',
   'equity_return',
   'portfolio_end',
+  'bond_portfolio_end',
   'income',
   'expenses',
   'bond_pnl',
@@ -79,7 +80,8 @@ const buildTooltipLines = (s: SimulationScenario): string[] => {
     '',
     `Wealth:          ${formatSimCurrency(s.wealth)}`,
     `Equity Return:   ${formatPercent(s.equity_return)}`,
-    `Portfolio End:   ${formatSimCurrency(s.portfolio_end)}`,
+    `Equity Portfolio:${formatSimCurrency(s.portfolio_end)}`,
+    `Bonds Portfolio: ${formatSimCurrency(s.bond_portfolio_end)}`,
     `Income:          ${formatSimCurrency(s.income)}`,
     `Expenses:        ${formatSimCurrency(s.expenses)}`,
     `Bond P&L:        ${formatSimCurrency(s.bond_pnl)}`,
@@ -94,11 +96,17 @@ const buildTooltipLines = (s: SimulationScenario): string[] => {
     lines.push(`Property End:    ${formatSimCurrency(s.property_end)}`);
   }
 
-  for (const [key, val] of Object.entries(s)) {
-    if (KNOWN_FIELDS.has(key) || val === null || val === 0) continue;
-    if (typeof val === 'number') {
-      const label = key.replace(/_/g, ' ');
-      lines.push(`${label}: ${formatSimCurrency(val)}`);
+  // Dynamic life risk fields (any key not in KNOWN_FIELDS)
+  const riskEntries = Object.entries(s).filter(
+    ([key, val]) => !KNOWN_FIELDS.has(key) && typeof val === 'number'
+  );
+
+  if (riskEntries.length > 0) {
+    lines.push('', '── Life Risks ──');
+    for (const [key, val] of riskEntries) {
+      const cost = Math.abs(val as number);
+      const label = key.padEnd(17);
+      lines.push(`${label}${formatSimCurrency(cost)}`);
     }
   }
 
@@ -184,15 +192,15 @@ export const useChartConfig = (
           backgroundColor: 'rgba(20, 20, 20, 0.96)',
           borderColor: 'rgba(221, 183, 255, 0.25)',
           borderWidth: 1,
-          titleFont: { family: 'Roboto Mono', size: 11, weight: 'bold' },
-          bodyFont: { family: 'Roboto Mono', size: 10 },
+          titleFont: { family: 'Roboto Mono', size: 13, weight: 'bold' },
+          bodyFont: { family: 'Roboto Mono', size: 12 },
           titleColor: '#ddb7ff',
           bodyColor: '#d4d4d8',
-          padding: 14,
-          cornerRadius: 6,
+          padding: 18,
+          cornerRadius: 8,
           displayColors: true,
-          boxWidth: 8,
-          boxHeight: 8,
+          boxWidth: 10,
+          boxHeight: 10,
           filter: (item: TooltipItem<'line'>) => {
             const month = item.parsed.x;
             if (month === 0) return item.datasetIndex === 0;
