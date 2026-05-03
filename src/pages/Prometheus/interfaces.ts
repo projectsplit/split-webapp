@@ -19,6 +19,7 @@ export interface RiskToggles {
   career_opt_loss: number;
   career_pess_loss: number;
   career_recoverable: number;
+  career_once_every: number;
   severance_invest_rate: number;
 }
 

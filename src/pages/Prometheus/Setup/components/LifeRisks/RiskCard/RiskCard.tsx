@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Signal } from '@preact/signals-react';
 import { FinancialState } from '@/pages/Prometheus/interfaces';
 import type { RiskConfig } from '../risks.data';
@@ -50,6 +50,26 @@ export const RiskCard = ({ config, setup }: RiskCardProps) => {
   const netSalary = setup?.value.financials.net_salary ?? 0;
   const salaryOn = setup?.value.risk_toggles.salary ?? false;
 
+  const synced = useRef(false);
+  useEffect(() => {
+    if (!isJobLoss || !setup || synced.current) return;
+    const toggles = setup.value.risk_toggles;
+    const salary = setup.value.financials.net_salary;
+    if (!salary || (!toggles.career_opt_loss && !toggles.career_pess_loss && !toggles.severance_invest_rate)) return;
+
+    synced.current = true;
+
+    const redundancy = toggles.career_recoverable * salary;
+    const optMonths = Math.round((toggles.career_opt_loss / salary) * 12);
+    const pessMonths = Math.round((toggles.career_pess_loss / salary) * 12);
+
+    setAmount(redundancy ? redundancy.toLocaleString('en-US') : config.defaultAmount);
+    setFrequency(toggles.career_once_every || config.defaultFrequencyYears);
+    setOptimistic(optMonths || config.defaultOptimisticMonths);
+    setPessimistic(pessMonths || config.defaultPessimisticMonths);
+    setSevInvestRate(toggles.severance_invest_rate ? String(toggles.severance_invest_rate * 100) : '');
+  }, [isJobLoss, setup, netSalary]);
+
   const handleSevInvestRateChange = (next: string) => {
     setSevInvestRate(next);
     if (!setup) return;
@@ -75,9 +95,12 @@ export const RiskCard = ({ config, setup }: RiskCardProps) => {
     const active = salaryOn && netSalary > 0;
     const monthlySalary = netSalary > 0 ? netSalary / 12 : 0;
 
+    const freqYears = Number(frequency) || 0;
+
     const next = {
       career_loss: active,
       career_recoverable: active && netSalary > 0 ? redundancy / netSalary : 0,
+      career_once_every: freqYears,
       career_opt_loss: active ? monthlySalary * optMonths : 0,
       career_pess_loss: active ? monthlySalary * pessMonths : 0,
     };
@@ -86,6 +109,7 @@ export const RiskCard = ({ config, setup }: RiskCardProps) => {
     if (
       current.career_loss === next.career_loss &&
       current.career_recoverable === next.career_recoverable &&
+      current.career_once_every === next.career_once_every &&
       current.career_opt_loss === next.career_opt_loss &&
       current.career_pess_loss === next.career_pess_loss
     ) {
@@ -100,6 +124,7 @@ export const RiskCard = ({ config, setup }: RiskCardProps) => {
     isJobLoss,
     setup,
     amount,
+    frequency,
     optimistic,
     pessimistic,
     netSalary,

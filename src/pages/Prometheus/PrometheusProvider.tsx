@@ -1,7 +1,8 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Signal, useSignal } from '@preact/signals-react';
 import { FinancialState } from './interfaces';
+import { useGetMostRecentRiskSetup } from '@/api/auth/QueryHooks/useGetMostRecentRiskSetup';
 
 const PrometheusContext = createContext<Signal<FinancialState> | null>(null);
 
@@ -15,6 +16,22 @@ export const usePrometheusSetup = (): Signal<FinancialState> => {
 
 export const PrometheusProvider = () => {
   const setup = useSignal<FinancialState>(initialState);
+  const hydrated = useRef(false);
+  const { data } = useGetMostRecentRiskSetup();
+
+  console.log(data)
+
+  useEffect(() => {
+    if (!data || hydrated.current) return;
+    hydrated.current = true;
+    setup.value = {
+      economy: data.economy,
+      financials: data.financials,
+      risk_toggles: data.risk_toggles,
+      custom_risks: data.custom_risks,
+      correlations: data.correlations ?? { pairs: {} },
+    };
+  }, [data, setup]);
 
   return (
     <PrometheusContext.Provider value={setup}>
@@ -45,6 +62,7 @@ const initialState: FinancialState = {
     career_opt_loss: 0,
     career_pess_loss: 0,
     career_recoverable: 0,
+    career_once_every: 5,
     severance_invest_rate: 0,
   },
   custom_risks: [

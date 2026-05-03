@@ -30,7 +30,6 @@ export const PrometheusSimulation = () => {
 
   const response = location.state?.simulationResponse as SimulationResponse | undefined;
   const simulationInput = location.state?.simulationInput;
-  console.log(simulationInput)
 
   const serverErrors = useSignal<any[]>([]);
   const {mutate:runSimulation, isPending} = useRunMCSimulation(navigate, serverErrors);
@@ -38,7 +37,6 @@ export const PrometheusSimulation = () => {
   const handleReSimulate = useCallback(() => {
     if (isPending) return;
     if (!simulationInput) {
-      console.log("entered")
       navigate('/prometheus/setup');
       return;
     }
