@@ -18,6 +18,7 @@ ChartJS.register(LinearScale, PointElement, LineElement, Filler, Tooltip);
 interface PDFChartProps {
   summary: SimulationSummary;
   selectedWealth: number;
+  percentileLabel: string;
 }
 
 const normalPDF = (x: number, mu: number, sigma: number): number => {
@@ -27,7 +28,7 @@ const normalPDF = (x: number, mu: number, sigma: number): number => {
 
 const NUM_POINTS = 200;
 
-export const PDFChart = ({ summary, selectedWealth }: PDFChartProps) => {
+export const PDFChart = ({ summary, selectedWealth, percentileLabel }: PDFChartProps) => {
   const { data, options } = useMemo(() => {
     const mu = summary.mean;
     const sigma = summary.std;
@@ -92,7 +93,7 @@ export const PDFChart = ({ summary, selectedWealth }: PDFChartProps) => {
     const chartOptions: ChartOptions<'line'> = {
       responsive: true,
       maintainAspectRatio: false,
-      interaction: { mode: 'nearest', intersect: false },
+      interaction: { mode: 'point', intersect: true },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -106,10 +107,11 @@ export const PDFChart = ({ summary, selectedWealth }: PDFChartProps) => {
           bodyColor: '#d4d4d8',
           padding: 12,
           cornerRadius: 8,
+          displayColors: false,
           filter: (item) => item.datasetIndex === 2,
           callbacks: {
-            title: () => 'Selected Percentile',
-            label: (ctx) => `  Wealth: ${formatSimCurrency(ctx.parsed.x)}`,
+            title: () => percentileLabel,
+            label: () => `Wealth: ${formatSimCurrency(selectedWealth)}`,
           },
         },
       },
@@ -138,7 +140,7 @@ export const PDFChart = ({ summary, selectedWealth }: PDFChartProps) => {
     };
 
     return { data: chartData, options: chartOptions };
-  }, [summary, selectedWealth]);
+  }, [summary, selectedWealth, percentileLabel]);
 
   return (
     <ChartWrap>

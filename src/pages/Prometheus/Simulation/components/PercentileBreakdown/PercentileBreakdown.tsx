@@ -80,7 +80,7 @@ export const PercentileBreakdown = () => {
 
         <Card style={{ marginBottom: '1.5rem' }}>
           <CardTitle><MdTimeline /> Probability Density Function</CardTitle>
-          <PDFChart summary={response.summary} selectedWealth={scenario.wealth} />
+          <PDFChart summary={response.summary} selectedWealth={scenario.wealth} percentileLabel={ordinalLabel} />
         </Card>
 
         <TwoCol>
