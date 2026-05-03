@@ -17,6 +17,7 @@ const KNOWN_FIELDS = new Set([
   'percentile', 'wealth', 'equity_return', 'portfolio_end', 'bond_portfolio_end',
   'income', 'expenses', 'bond_pnl', 'delta_y_bps',
   'delta_infl_1yr', 'property_return', 'property_end',
+  'career_severance',
 ]);
 
 const pnlColor = (val: number): string =>
@@ -98,10 +99,31 @@ export const PathMetrics = ({ scenario, startingWealth }: PathMetricsProps) => {
       )}
 
       <SectionLabel>CASH FLOW</SectionLabel>
-      <Row>
-        <MetricName>Income</MetricName>
-        <MetricValue $color="#34d399">{formatSimCurrency(scenario.income)}</MetricValue>
-      </Row>
+      {scenario.career_severance > 0 ? (
+        <>
+          <Row>
+            <MetricName>Salary Income</MetricName>
+            <MetricValue $color="#34d399">
+              {formatSimCurrency(scenario.income - scenario.career_severance)}
+            </MetricValue>
+          </Row>
+          <Row>
+            <MetricName>Severance Package</MetricName>
+            <MetricValue $color="#ddb7ff">
+              {formatSimCurrency(scenario.career_severance)}
+            </MetricValue>
+          </Row>
+          <Row>
+            <MetricName>Total Income</MetricName>
+            <MetricValue $color="#34d399">{formatSimCurrency(scenario.income)}</MetricValue>
+          </Row>
+        </>
+      ) : (
+        <Row>
+          <MetricName>Income</MetricName>
+          <MetricValue $color="#34d399">{formatSimCurrency(scenario.income)}</MetricValue>
+        </Row>
+      )}
       <Row>
         <MetricName>Expenses</MetricName>
         <MetricValue $color="#ef4444">{formatSimCurrency(scenario.expenses)}</MetricValue>

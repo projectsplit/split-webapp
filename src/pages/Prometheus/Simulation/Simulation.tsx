@@ -1,4 +1,6 @@
+import { useState, useCallback } from 'react';
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { useSignal } from '@preact/signals-react';
 import { usePrometheusMode } from '../usePrometheusMode';
 import { SimulationResponse } from './interfaces';
 import { SimNav } from './components/SimNav/SimNav';
@@ -6,6 +8,8 @@ import { WealthMountain } from './components/WealthMountain/WealthMountain';
 import { DistributionStats } from './components/DistributionStats/DistributionStats';
 import { ScenarioNarratives } from './components/ScenarioNarratives/ScenarioNarratives';
 import { ResiliencyScore } from './components/ResiliencyScore/ResiliencyScore';
+import { SimulationWaveOverlay } from '@/components/Animations/SimulationWaveOverlay';
+import { useRunMCSimulation } from '@/api/auth/CommandHooks/useRunMCSimulation';
 import {
   PageRoot,
   Main,
@@ -23,10 +27,26 @@ export const PrometheusSimulation = () => {
   usePrometheusMode();
   const location = useLocation();
   const navigate = useNavigate();
+
   const response = location.state?.simulationResponse as SimulationResponse | undefined;
+  const simulationInput = location.state?.simulationInput;
+  console.log(simulationInput)
+
+  const serverErrors = useSignal<any[]>([]);
+  const {mutate:runSimulation, isPending} = useRunMCSimulation(navigate, serverErrors);
+
+  const handleReSimulate = useCallback(() => {
+    if (isPending) return;
+    if (!simulationInput) {
+      console.log("entered")
+      navigate('/prometheus/setup');
+      return;
+    }
+    runSimulation(simulationInput);
+  }, [simulationInput, isPending, runSimulation, navigate]);
 
   if (!response) {
-    return <Navigate to="/prometheus/correlation" replace />;
+    return <Navigate to="/prometheus/setup" replace />;
   }
 
   const initialWealth = response.starting_wealth;
@@ -40,6 +60,7 @@ export const PrometheusSimulation = () => {
 
   return (
     <PageRoot>
+      <SimulationWaveOverlay isActive={isPending} isResim={true} />
       <SimNav activeKey="sims" />
 
       <Main>
@@ -53,7 +74,7 @@ export const PrometheusSimulation = () => {
         <WealthMountain
           response={response}
           initialWealth={initialWealth}
-          onReSimulate={() => navigate('/prometheus/correlation')}
+          onReSimulate={handleReSimulate}
         />
 
         <Section>

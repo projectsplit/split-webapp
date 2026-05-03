@@ -5,6 +5,7 @@ const KNOWN_FIELDS = new Set([
   'percentile', 'wealth', 'equity_return', 'portfolio_end','bond_portfolio_end',
   'income', 'expenses', 'bond_pnl', 'delta_y_bps',
   'delta_infl_1yr', 'property_return', 'property_end',
+  'career_severance',
 ]);
 
 const getCustomRiskHits = (scenario: SimulationScenario): string[] => {
@@ -78,6 +79,14 @@ const describeWealthChange = (
   return `wealth falls by ${formatSimCurrency(Math.abs(diff))} (${pct.toFixed(1)}%) to ${formatSimCurrency(ending)}`;
 };
 
+const describeIncome = (s: SimulationScenario): string => {
+  if (s.career_severance > 0) {
+    const salary = s.income - s.career_severance;
+    return `${formatSimCurrency(s.income)} in total income (${formatSimCurrency(salary)} salary + ${formatSimCurrency(s.career_severance)} severance package following a career loss event)`;
+  }
+  return `${formatSimCurrency(s.income)} in income`;
+};
+
 const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 
 // -------------------- narrative builders --------------------
@@ -101,7 +110,7 @@ export const buildBestEstimate = (
   if (infl) parts.push(`${cap(infl)}.`);
 
   parts.push(
-    `After earning ${formatSimCurrency(s.income)} in income and spending ${formatSimCurrency(s.expenses)} on expenses, ${describeWealthChange(startingWealth, s.wealth)}.`,
+    `After earning ${describeIncome(s)} and spending ${formatSimCurrency(s.expenses)} on expenses, ${describeWealthChange(startingWealth, s.wealth)}.`,
   );
 
   const risks = getCustomRiskHits(s);
@@ -135,7 +144,7 @@ export const buildDifficultYear = (
   parts.push(`${cap(drivers.join(', '))}.`);
 
   parts.push(
-    `Income of ${formatSimCurrency(s.income)} partially offsets expenses of ${formatSimCurrency(s.expenses)}.`,
+    `${cap(describeIncome(s))} partially offsets expenses of ${formatSimCurrency(s.expenses)}.`,
   );
 
   const risks = getCustomRiskHits(s);
@@ -184,7 +193,7 @@ export const buildRoughYear = (
   }
 
   parts.push(
-    `Income of ${formatSimCurrency(s.income)} is not enough to cushion the blow — ${describeWealthChange(startingWealth, s.wealth)}.`,
+    `${cap(describeIncome(s))} is not enough to cushion the blow — ${describeWealthChange(startingWealth, s.wealth)}.`,
   );
 
   return parts.join(' ');
@@ -210,7 +219,7 @@ export const buildNightmare = (
   if (infl) parts.push(`${cap(infl)}.`);
 
   parts.push(
-    `Expenses reach ${formatSimCurrency(s.expenses)} against income of only ${formatSimCurrency(s.income)}.`,
+    `Expenses reach ${formatSimCurrency(s.expenses)} against only ${describeIncome(s)}.`,
   );
 
   const risks = getCustomRiskHits(s);
@@ -249,7 +258,7 @@ export const buildExceptionalYear = (
   if (infl) parts.push(`${cap(infl)}.`);
 
   parts.push(
-    `Income of ${formatSimCurrency(s.income)} and expenses of ${formatSimCurrency(s.expenses)} contribute to a remarkable outcome.`,
+    `${cap(describeIncome(s))} and expenses of ${formatSimCurrency(s.expenses)} contribute to a remarkable outcome.`,
   );
 
   const risks = getCustomRiskHits(s);
@@ -287,7 +296,7 @@ export const buildStrongYear = (
   if (infl) parts.push(`${cap(infl)}.`);
 
   parts.push(
-    `After earning ${formatSimCurrency(s.income)} in income and spending ${formatSimCurrency(s.expenses)} on expenses, ${describeWealthChange(startingWealth, s.wealth)}.`,
+    `After earning ${describeIncome(s)} and spending ${formatSimCurrency(s.expenses)} on expenses, ${describeWealthChange(startingWealth, s.wealth)}.`,
   );
 
   const risks = getCustomRiskHits(s);
@@ -321,7 +330,7 @@ export const buildGreatYear = (
   parts.push(`${cap(drivers.join(', '))}.`);
 
   parts.push(
-    `Income of ${formatSimCurrency(s.income)} and expenses of ${formatSimCurrency(s.expenses)} round out a strong position — ${describeWealthChange(startingWealth, s.wealth)}.`,
+    `${cap(describeIncome(s))} and expenses of ${formatSimCurrency(s.expenses)} round out a strong position — ${describeWealthChange(startingWealth, s.wealth)}.`,
   );
 
   const risks = getCustomRiskHits(s);
@@ -355,7 +364,7 @@ export const buildGoodYear = (
   if (infl) parts.push(`${cap(infl)}.`);
 
   parts.push(
-    `After earning ${formatSimCurrency(s.income)} in income and spending ${formatSimCurrency(s.expenses)} on expenses, ${describeWealthChange(startingWealth, s.wealth)}.`,
+    `After earning ${describeIncome(s)} and spending ${formatSimCurrency(s.expenses)} on expenses, ${describeWealthChange(startingWealth, s.wealth)}.`,
   );
 
   const risks = getCustomRiskHits(s);
@@ -388,7 +397,7 @@ export const buildAboveAverage = (
   if (infl) parts.push(`${cap(infl)}.`);
 
   parts.push(
-    `After earning ${formatSimCurrency(s.income)} in income and spending ${formatSimCurrency(s.expenses)} on expenses, ${describeWealthChange(startingWealth, s.wealth)}.`,
+    `After earning ${describeIncome(s)} and spending ${formatSimCurrency(s.expenses)} on expenses, ${describeWealthChange(startingWealth, s.wealth)}.`,
   );
 
   const risks = getCustomRiskHits(s);
@@ -422,7 +431,7 @@ export const buildBelowAverage = (
   parts.push(`${cap(drivers.join(', '))}.`);
 
   parts.push(
-    `Income of ${formatSimCurrency(s.income)} partially offsets expenses of ${formatSimCurrency(s.expenses)}.`,
+    `${cap(describeIncome(s))} partially offsets expenses of ${formatSimCurrency(s.expenses)}.`,
   );
 
   const risks = getCustomRiskHits(s);
@@ -455,7 +464,7 @@ export const buildSevereYear = (
   if (infl) parts.push(`${cap(infl)}.`);
 
   parts.push(
-    `Expenses reach ${formatSimCurrency(s.expenses)} against income of ${formatSimCurrency(s.income)}.`,
+    `Expenses reach ${formatSimCurrency(s.expenses)} against ${describeIncome(s)}.`,
   );
 
   const risks = getCustomRiskHits(s);

@@ -32,12 +32,11 @@ export const useRunMCSimulation = (
       const errorData = error.response?.data;
       serverErrors.value = errorData;
     },
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['simulation'] });
       navigate('/prometheus/simulations', {
         replace: true,
-        state: { simulationResponse: data },
+        state: { simulationResponse: data, simulationInput: variables },
       });
     },
   });

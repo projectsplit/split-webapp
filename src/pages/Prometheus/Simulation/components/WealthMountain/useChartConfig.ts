@@ -66,6 +66,7 @@ const KNOWN_FIELDS = new Set([
   'equity_return',
   'portfolio_end',
   'bond_portfolio_end',
+  'career_severance',
   'income',
   'expenses',
   'bond_pnl',
@@ -82,7 +83,8 @@ const buildTooltipLines = (s: SimulationScenario): string[] => {
     `Equity Return:   ${formatPercent(s.equity_return)}`,
     `Equity Portfolio:${formatSimCurrency(s.portfolio_end)}`,
     `Bonds Portfolio: ${formatSimCurrency(s.bond_portfolio_end)}`,
-    `Income:          ${formatSimCurrency(s.income)}`,
+    `Income:          ${formatSimCurrency(s.income-s.career_severance)}`,
+    `Severance package:${formatSimCurrency(s.career_severance)}`,
     `Expenses:        ${formatSimCurrency(s.expenses)}`,
     `Bond P&L:        ${formatSimCurrency(s.bond_pnl)}`,
     `Δ Interest Rates:         ${formatBps(s.delta_y_bps)}`,
@@ -173,7 +175,7 @@ export const useChartConfig = (
       responsive: true,
       maintainAspectRatio: false,
       layout: { padding: { left: 10, right: 20 } },
-      interaction: { mode: 'nearest', intersect: true },
+      interaction: { mode: 'nearest', intersect: false },
       onHover: (event, elements) => {
         const canvas = event.native?.target as HTMLCanvasElement | undefined;
         if (!canvas) return;

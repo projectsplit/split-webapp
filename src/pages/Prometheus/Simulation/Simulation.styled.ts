@@ -25,7 +25,12 @@ export const Main = styled.main`
 `;
 
 export const PageHeader = styled.div`
-  margin-bottom: 3rem;
+
+  margin-bottom: 2rem;
+  @media (max-width: 1024px) {
+    margin-bottom: 2rem;
+    margin-top: 4.5rem;
+  }
 `;
 
 export const PageTitle = styled.h1`
