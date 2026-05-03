@@ -174,6 +174,15 @@ export const useChartConfig = (
       maintainAspectRatio: false,
       layout: { padding: { left: 10, right: 20 } },
       interaction: { mode: 'nearest', intersect: true },
+      onHover: (event, elements) => {
+        const canvas = event.native?.target as HTMLCanvasElement | undefined;
+        if (!canvas) return;
+        const isEnd = elements.some((el) => {
+          const pt = (event.chart.data.datasets[el.datasetIndex]?.data?.[el.index] as any);
+          return pt?.x === 12;
+        });
+        canvas.style.cursor = isEnd ? 'pointer' : 'default';
+      },
       plugins: {
         legend: {
           display: true,

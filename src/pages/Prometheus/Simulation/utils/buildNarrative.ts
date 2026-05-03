@@ -226,3 +226,276 @@ export const buildNightmare = (
 
   return parts.join(' ');
 };
+
+// -------------------- upside narratives --------------------
+
+export const buildExceptionalYear = (
+  s: SimulationScenario,
+  startingWealth: number,
+): string => {
+  const parts: string[] = [
+    `An extraordinary year — only 1 in 200 years would be this good or better.`,
+  ];
+
+  parts.push(`${cap(describeEquity(s.equity_return))}.`);
+
+  const bond = describeBonds(s.bond_pnl, s.delta_y_bps);
+  if (bond) parts.push(`${cap(bond)}.`);
+
+  const prop = describeProperty(s.property_return, s.property_end);
+  if (prop) parts.push(`${cap(prop)}.`);
+
+  const infl = describeInflation(s.delta_infl_1yr);
+  if (infl) parts.push(`${cap(infl)}.`);
+
+  parts.push(
+    `Income of ${formatSimCurrency(s.income)} and expenses of ${formatSimCurrency(s.expenses)} contribute to a remarkable outcome.`,
+  );
+
+  const risks = getCustomRiskHits(s);
+  if (risks.length > 0) {
+    parts.push(`Despite ${risks.join(' and ')}, the strong returns dominate.`);
+  }
+
+  parts.push(
+    `Overall, ${describeWealthChange(startingWealth, s.wealth)}, with the combined equities and bonds portfolio at ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
+  );
+
+  return parts.join(' ');
+};
+
+export const buildStrongYear = (
+  s: SimulationScenario,
+  startingWealth: number,
+): string => {
+  const parts: string[] = [
+    `A very strong year — better than 99 in 100 outcomes.`,
+  ];
+
+  const drivers: string[] = [];
+  drivers.push(describeEquity(s.equity_return));
+
+  const bond = describeBonds(s.bond_pnl, s.delta_y_bps);
+  if (bond) drivers.push(bond);
+
+  const prop = describeProperty(s.property_return, s.property_end);
+  if (prop) drivers.push(prop);
+
+  parts.push(`${cap(drivers.join(', '))}.`);
+
+  const infl = describeInflation(s.delta_infl_1yr);
+  if (infl) parts.push(`${cap(infl)}.`);
+
+  parts.push(
+    `After earning ${formatSimCurrency(s.income)} in income and spending ${formatSimCurrency(s.expenses)} on expenses, ${describeWealthChange(startingWealth, s.wealth)}.`,
+  );
+
+  const risks = getCustomRiskHits(s);
+  if (risks.length > 0) {
+    parts.push(`This path also includes ${risks.join(' and ')}.`);
+  }
+
+  return parts.join(' ');
+};
+
+export const buildGreatYear = (
+  s: SimulationScenario,
+  startingWealth: number,
+): string => {
+  const parts: string[] = [
+    `An above-average year — better than 19 in 20 outcomes.`,
+  ];
+
+  const drivers: string[] = [];
+  drivers.push(describeEquity(s.equity_return));
+
+  const bond = describeBonds(s.bond_pnl, s.delta_y_bps);
+  if (bond) drivers.push(bond);
+
+  const prop = describeProperty(s.property_return, s.property_end);
+  if (prop) drivers.push(prop);
+
+  const infl = describeInflation(s.delta_infl_1yr);
+  if (infl) drivers.push(infl);
+
+  parts.push(`${cap(drivers.join(', '))}.`);
+
+  parts.push(
+    `Income of ${formatSimCurrency(s.income)} and expenses of ${formatSimCurrency(s.expenses)} round out a strong position — ${describeWealthChange(startingWealth, s.wealth)}.`,
+  );
+
+  const risks = getCustomRiskHits(s);
+  if (risks.length > 0) {
+    parts.push(`This path also includes ${risks.join(' and ')}.`);
+  }
+
+  return parts.join(' ');
+};
+
+export const buildGoodYear = (
+  s: SimulationScenario,
+  startingWealth: number,
+): string => {
+  const parts: string[] = [
+    `A favourable year — better than 9 in 10 outcomes.`,
+  ];
+
+  const drivers: string[] = [];
+  drivers.push(describeEquity(s.equity_return));
+
+  const bond = describeBonds(s.bond_pnl, s.delta_y_bps);
+  if (bond) drivers.push(bond);
+
+  const prop = describeProperty(s.property_return, s.property_end);
+  if (prop) drivers.push(prop);
+
+  parts.push(`${cap(drivers.join(', '))}.`);
+
+  const infl = describeInflation(s.delta_infl_1yr);
+  if (infl) parts.push(`${cap(infl)}.`);
+
+  parts.push(
+    `After earning ${formatSimCurrency(s.income)} in income and spending ${formatSimCurrency(s.expenses)} on expenses, ${describeWealthChange(startingWealth, s.wealth)}.`,
+  );
+
+  const risks = getCustomRiskHits(s);
+  if (risks.length > 0) {
+    parts.push(`This path also includes ${risks.join(' and ')}.`);
+  }
+
+  return parts.join(' ');
+};
+
+export const buildAboveAverage = (
+  s: SimulationScenario,
+  startingWealth: number,
+): string => {
+  const parts: string[] = [
+    `A moderately good year — better than 3 in 4 outcomes.`,
+  ];
+
+  parts.push(
+    `${cap(describeEquity(s.equity_return))}, bringing the combined equities and bonds portfolio to ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
+  );
+
+  const bond = describeBonds(s.bond_pnl, s.delta_y_bps);
+  if (bond) parts.push(`${cap(bond)}.`);
+
+  const prop = describeProperty(s.property_return, s.property_end);
+  if (prop) parts.push(`${cap(prop)}.`);
+
+  const infl = describeInflation(s.delta_infl_1yr);
+  if (infl) parts.push(`${cap(infl)}.`);
+
+  parts.push(
+    `After earning ${formatSimCurrency(s.income)} in income and spending ${formatSimCurrency(s.expenses)} on expenses, ${describeWealthChange(startingWealth, s.wealth)}.`,
+  );
+
+  const risks = getCustomRiskHits(s);
+  if (risks.length > 0) {
+    parts.push(`This path also includes ${risks.join(' and ')}.`);
+  }
+
+  return parts.join(' ');
+};
+
+export const buildBelowAverage = (
+  s: SimulationScenario,
+  startingWealth: number,
+): string => {
+  const parts: string[] = [
+    `A below-median year — worse than 3 in 4 outcomes.`,
+  ];
+
+  const drivers: string[] = [];
+  drivers.push(describeEquity(s.equity_return));
+
+  const bond = describeBonds(s.bond_pnl, s.delta_y_bps);
+  if (bond) drivers.push(bond);
+
+  const prop = describeProperty(s.property_return, s.property_end);
+  if (prop) drivers.push(prop);
+
+  const infl = describeInflation(s.delta_infl_1yr);
+  if (infl) drivers.push(infl);
+
+  parts.push(`${cap(drivers.join(', '))}.`);
+
+  parts.push(
+    `Income of ${formatSimCurrency(s.income)} partially offsets expenses of ${formatSimCurrency(s.expenses)}.`,
+  );
+
+  const risks = getCustomRiskHits(s);
+  if (risks.length > 0) {
+    parts.push(`The path is further impacted by ${risks.join(' and ')}.`);
+  }
+
+  parts.push(`Overall, ${describeWealthChange(startingWealth, s.wealth)}.`);
+
+  return parts.join(' ');
+};
+
+export const buildSevereYear = (
+  s: SimulationScenario,
+  startingWealth: number,
+): string => {
+  const parts: string[] = [
+    `A severe outcome — worse than 99 in 100 years.`,
+  ];
+
+  parts.push(`${cap(describeEquity(s.equity_return))}.`);
+
+  const bond = describeBonds(s.bond_pnl, s.delta_y_bps);
+  if (bond) parts.push(`${cap(bond)}.`);
+
+  const prop = describeProperty(s.property_return, s.property_end);
+  if (prop) parts.push(`${cap(prop)}.`);
+
+  const infl = describeInflation(s.delta_infl_1yr);
+  if (infl) parts.push(`${cap(infl)}.`);
+
+  parts.push(
+    `Expenses reach ${formatSimCurrency(s.expenses)} against income of ${formatSimCurrency(s.income)}.`,
+  );
+
+  const risks = getCustomRiskHits(s);
+  if (risks.length > 0) {
+    parts.push(`Adding to the damage: ${risks.join(' and ')}.`);
+  }
+
+  parts.push(
+    `The result: ${describeWealthChange(startingWealth, s.wealth)}, with the combined equities and bonds portfolio at ${formatSimCurrency(s.portfolio_end + s.bond_portfolio_end)}.`,
+  );
+
+  return parts.join(' ');
+};
+
+// -------------------- percentile → builder map --------------------
+
+export const PERCENTILE_BUILDERS: Record<number, (s: SimulationScenario, startingWealth: number) => string> = {
+  99.5: buildExceptionalYear,
+  99: buildStrongYear,
+  95: buildGreatYear,
+  90: buildGoodYear,
+  75: buildAboveAverage,
+  50: buildBestEstimate,
+  25: buildBelowAverage,
+  10: buildDifficultYear,
+  5: buildRoughYear,
+  1: buildSevereYear,
+  0.5: buildNightmare,
+};
+
+export const PERCENTILE_META: Record<number, { title: string; subtitle: string }> = {
+  99.5: { title: 'Exceptional Year', subtitle: 'Top 0.5% outcome — 1 in 200 year event' },
+  99:   { title: 'Outstanding Year', subtitle: 'Top 1% outcome — 1 in 100 year event' },
+  95:   { title: 'Great Year', subtitle: 'Top 5% outcome — 1 in 20 year event' },
+  90:   { title: 'Good Year', subtitle: 'Top 10% outcome — 1 in 10 year event' },
+  75:   { title: 'Above Average', subtitle: 'Top 25% outcome — better than 3 in 4 years' },
+  50:   { title: 'Best Estimate', subtitle: 'Median outcome — the most typical expectation' },
+  25:   { title: 'Below Average', subtitle: 'Bottom 25% outcome — worse than 3 in 4 years' },
+  10:   { title: 'Difficult Year', subtitle: 'Bottom 10% outcome — 1 in 10 year event' },
+  5:    { title: 'Rough Year', subtitle: 'Bottom 5% outcome — 1 in 20 year event' },
+  1:    { title: 'Severe Year', subtitle: 'Bottom 1% outcome — 1 in 100 year event' },
+  0.5:  { title: 'Nightmare Scenario', subtitle: 'Bottom 0.5% outcome — 1 in 200 year event' },
+};

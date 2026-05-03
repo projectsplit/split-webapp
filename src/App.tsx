@@ -33,6 +33,7 @@ import { PrometheusSetup } from './pages/Prometheus/Setup/Setup';
 import { PrometheusCorrelation } from './pages/Prometheus/Correlation/Correlation';
 import { PrometheusProvider } from './pages/Prometheus/PrometheusProvider';
 import { PrometheusSimulation } from './pages/Prometheus/Simulation/Simulation';
+import { PercentileBreakdown } from './pages/Prometheus/Simulation/components/PercentileBreakdown/PercentileBreakdown';
 
 const App = () => {
   return (
@@ -98,6 +99,10 @@ const App = () => {
             <Route
               path={routes.PROMETHEUS_SIMULATIONS}
               element={<PrometheusSimulation />}
+            />
+            <Route
+              path={routes.PROMETHEUS_PERCENTILE_DETAIL}
+              element={<PercentileBreakdown />}
             />
           </Route>
 

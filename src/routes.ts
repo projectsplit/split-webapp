@@ -11,6 +11,7 @@ const routes = {
   PROMETHEUS_SETUP: '/prometheus/setup',
   PROMETHEUS_CORRELATION: '/prometheus/correlation',
   PROMETHEUS_SIMULATIONS: '/prometheus/simulations',
+  PROMETHEUS_PERCENTILE_DETAIL: '/prometheus/simulations/:percentile',
 };
 
 export default routes;
