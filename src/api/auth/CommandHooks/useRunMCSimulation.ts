@@ -1,6 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { apiClient } from '../../apiClients';
-import { NavigateFunction } from 'react-router-dom';
 import { Signal } from '@preact/signals-react';
 
 import {
@@ -18,36 +17,13 @@ type SimulationRequest = {
   correlations?: Correlations;
 };
 
-type SimulationCache = {
-  input: SimulationRequest;
-  response: any;
-};
-
-export const SIMULATION_CACHE_KEY = ['simulation-cache'] as const;
-
-export const useRunMCSimulation = (
-  navigate: NavigateFunction,
-  serverErrors: Signal<any[]>,
-
-) => {
-  const queryClient = useQueryClient();
-
+export const useRunMCSimulation = (serverErrors: Signal<any[]>) => {
   return useMutation<any, any, SimulationRequest>({
     mutationKey: ['simulation'],
     mutationFn: runMCSimulation,
     onError: (error) => {
       const errorData = error.response?.data;
       serverErrors.value = errorData;
-    },
-    onSuccess: (data, variables) => {
-      queryClient.setQueryData<SimulationCache>(
-        SIMULATION_CACHE_KEY,
-        { input: variables, response: data },
-      );
-      navigate('/prometheus/simulations', {
-        replace: true,
-        state: { simulationResponse: data, simulationInput: variables },
-      });
     },
   });
 };

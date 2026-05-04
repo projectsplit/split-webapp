@@ -8,7 +8,7 @@ import {
   MdReport,
 } from 'react-icons/md';
 import { GiSkullCrossedBones } from 'react-icons/gi';
-import { SimulationScenario } from '../../interfaces';
+import { SimulationResponse, SimulationScenario } from '../../interfaces';
 import { findScenario } from '../../utils/findScenario';
 import {
   buildBestEstimate,
@@ -27,10 +27,10 @@ import {
   NarrativeText,
   CornerIcon,
 } from './ScenarioNarratives.styled';
+import { useNavigate } from 'react-router-dom';
 
 interface ScenarioNarrativesProps {
-  scenarios: SimulationScenario[];
-  startingWealth: number;
+  response: SimulationResponse;
 }
 
 interface CardConfig {
@@ -102,37 +102,55 @@ const CARDS: CardConfig[] = [
   },
 ];
 
-export const ScenarioNarratives = ({ scenarios, startingWealth }: ScenarioNarrativesProps) => (
-  <NarrativesGrid>
-    {CARDS.map((card) => {
-      const scenario = findScenario(scenarios, card.percentile);
-      const narrative = scenario
-        ? card.builder(scenario, startingWealth)
-        : 'No scenario data available for this percentile.';
+export const ScenarioNarratives = ({ response }: ScenarioNarrativesProps) => {
+  const navigate = useNavigate();
+  const { scenarios, starting_wealth: startingWealth } = response;
 
-      return (
-        <ScenarioCard key={card.variant} $variant={card.variant}>
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <CardTop>
-              <CardTitleBlock>
-                <IconBox $bg={card.iconBg} $color={card.iconColor}>
-                  {card.icon}
-                </IconBox>
-                <div>
-                  <PercentileLabel style={{ color: card.labelColor }}>
-                    {card.label}
-                  </PercentileLabel>
-                  <CardTitle>{card.title}</CardTitle>
-                </div>
-              </CardTitleBlock>
-              <CornerIcon $color={card.variant === 'nightmare' ? '#ef4444' : undefined}>
-                {card.cornerIcon}
-              </CornerIcon>
-            </CardTop>
-            <NarrativeText>"{narrative}"</NarrativeText>
-          </div>
-        </ScenarioCard>
-      );
-    })}
-  </NarrativesGrid>
-);
+  return (
+    <NarrativesGrid>
+      {CARDS.map((card) => {
+        const scenario = findScenario(scenarios, card.percentile);
+        const narrative = scenario
+          ? card.builder(scenario, startingWealth)
+          : 'No scenario data available for this percentile.';
+
+        return (
+          <ScenarioCard
+            key={card.variant}
+            $variant={card.variant}
+            onClick={() =>
+              navigate(`/prometheus/simulations/${card.percentile}`, {
+                state: {
+                  simulationResponse: response,
+                  percentile: card.percentile,
+                },
+              })
+            }
+          >
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <CardTop>
+                <CardTitleBlock>
+                  <IconBox $bg={card.iconBg} $color={card.iconColor}>
+                    {card.icon}
+                  </IconBox>
+                  <div>
+                    <PercentileLabel style={{ color: card.labelColor }}>
+                      {card.label}
+                    </PercentileLabel>
+                    <CardTitle>{card.title}</CardTitle>
+                  </div>
+                </CardTitleBlock>
+                <CornerIcon $color={card.variant === 'nightmare' ? '#ef4444' : undefined}>
+                  {card.cornerIcon}
+                </CornerIcon>
+              </CardTop>
+              <NarrativeText>"{narrative}"</NarrativeText>
+            </div>
+          </ScenarioCard>
+        );
+      })}
+    </NarrativesGrid>
+  );
+};
+
+

@@ -2,39 +2,60 @@ import { createContext, useContext, useEffect, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Signal, useSignal } from '@preact/signals-react';
 import { FinancialState } from './interfaces';
+import { SimulationResponse } from './Simulation/interfaces';
 import { useGetMostRecentRiskSetup } from '@/api/auth/QueryHooks/useGetMostRecentRiskSetup';
+import { useGetCalculatedWealth } from '@/api/auth/QueryHooks/useGetCalculatedWealth';
 
-const PrometheusContext = createContext<Signal<FinancialState> | null>(null);
+type PrometheusContextValue = {
+  setup: Signal<FinancialState>;
+  lastCalculatedSetup: Signal<FinancialState | null>;
+  simulationResponse: Signal<SimulationResponse | null>;
+};
 
-export const usePrometheusSetup = (): Signal<FinancialState> => {
+const PrometheusContext = createContext<PrometheusContextValue | null>(null);
+
+const useCtx = () => {
   const ctx = useContext(PrometheusContext);
   if (!ctx) {
-    throw new Error('usePrometheusSetup must be used within PrometheusProvider');
+    throw new Error('Prometheus hooks must be used within PrometheusProvider');
   }
   return ctx;
 };
 
+export const usePrometheusSetup = (): Signal<FinancialState> => useCtx().setup;
+export const useLastCalculatedSetup = (): Signal<FinancialState | null> => useCtx().lastCalculatedSetup;
+export const useSimulationResponse = (): Signal<SimulationResponse | null> => useCtx().simulationResponse;
+
 export const PrometheusProvider = () => {
   const setup = useSignal<FinancialState>(initialState);
+  const lastCalculatedSetup = useSignal<FinancialState | null>(null);
+  const simulationResponse = useSignal<SimulationResponse | null>(null);
   const hydrated = useRef(false);
-  const { data } = useGetMostRecentRiskSetup();
-
-  console.log(data)
+  const { data: setupData } = useGetMostRecentRiskSetup();
+  const { data: calculatedWealth } = useGetCalculatedWealth();
 
   useEffect(() => {
-    if (!data || hydrated.current) return;
+    if (!setupData || hydrated.current) return;
     hydrated.current = true;
-    setup.value = {
-      economy: data.economy,
-      financials: data.financials,
-      risk_toggles: data.risk_toggles,
-      custom_risks: data.custom_risks,
-      correlations: data.correlations ?? { pairs: {} },
+    const hydratedSetup: FinancialState = {
+      economy: setupData.economy,
+      financials: setupData.financials,
+      risk_toggles: setupData.risk_toggles,
+      custom_risks: setupData.custom_risks,
+      correlations: setupData.correlations ?? { pairs: {} },
     };
-  }, [data, setup]);
+    setup.value = hydratedSetup;
+    lastCalculatedSetup.value = JSON.parse(JSON.stringify(hydratedSetup));
+  }, [setupData, setup, lastCalculatedSetup]);
+
+  useEffect(() => {
+    if (calculatedWealth && !simulationResponse.value) {
+      simulationResponse.value = calculatedWealth;
+    }
+  }, [calculatedWealth, simulationResponse]);
 
   return (
-    <PrometheusContext.Provider value={setup}>
+    <PrometheusContext.Provider value={{ setup, lastCalculatedSetup, simulationResponse }}>
       <Outlet />
     </PrometheusContext.Provider>
   );

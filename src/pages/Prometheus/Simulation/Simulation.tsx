@@ -1,8 +1,12 @@
-import { useState, useCallback } from 'react';
-import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { useCallback } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useSignal } from '@preact/signals-react';
 import { usePrometheusMode } from '../usePrometheusMode';
-import { SimulationResponse } from './interfaces';
+import {
+  usePrometheusSetup,
+  useLastCalculatedSetup,
+  useSimulationResponse,
+} from '../PrometheusProvider';
 import { SimNav } from './components/SimNav/SimNav';
 import { WealthMountain } from './components/WealthMountain/WealthMountain';
 import { DistributionStats } from './components/DistributionStats/DistributionStats';
@@ -10,6 +14,7 @@ import { ScenarioNarratives } from './components/ScenarioNarratives/ScenarioNarr
 import { ResiliencyScore } from './components/ResiliencyScore/ResiliencyScore';
 import { SimulationWaveOverlay } from '@/components/Animations/SimulationWaveOverlay';
 import { useRunMCSimulation } from '@/api/auth/CommandHooks/useRunMCSimulation';
+import { useGetCalculatedWealth } from '@/api/auth/QueryHooks/useGetCalculatedWealth';
 import {
   PageRoot,
   Main,
@@ -25,23 +30,39 @@ import { MdDataExploration, MdAutoStories } from 'react-icons/md';
 
 export const PrometheusSimulation = () => {
   usePrometheusMode();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const setup = usePrometheusSetup();
+  const lastCalculatedSetup = useLastCalculatedSetup();
+  const simulationResponse = useSimulationResponse();
 
-  const response = location.state?.simulationResponse as SimulationResponse | undefined;
-  const simulationInput = location.state?.simulationInput;
+  const { isLoading } = useGetCalculatedWealth();
+
+  const response = simulationResponse.value;
 
   const serverErrors = useSignal<any[]>([]);
-  const {mutate:runSimulation, isPending} = useRunMCSimulation(navigate, serverErrors);
+  const { mutateAsync: runSimulation, isPending } = useRunMCSimulation(serverErrors);
 
-  const handleReSimulate = useCallback(() => {
+  const handleReSimulate = useCallback(async () => {
     if (isPending) return;
-    if (!simulationInput) {
-      navigate('/prometheus/setup');
-      return;
+    const input = setup.value;
+    try {
+      const data = await runSimulation(input);
+      lastCalculatedSetup.value = JSON.parse(JSON.stringify(input));
+      simulationResponse.value = data;
+    } catch {
+      // error already captured in serverErrors via onError
     }
-    runSimulation(simulationInput);
-  }, [simulationInput, isPending, runSimulation, navigate]);
+  }, [setup, isPending, runSimulation, lastCalculatedSetup, simulationResponse]);
+
+  if (isLoading && !response) {
+    return (
+      <PageRoot>
+        <SimulationWaveOverlay isActive={true} isResim={false} />
+        <SimNav activeKey="sims" />
+        <Main />
+        <Vignette />
+      </PageRoot>
+    );
+  }
 
   if (!response) {
     return <Navigate to="/prometheus/setup" replace />;
@@ -88,7 +109,7 @@ export const PrometheusSimulation = () => {
             <SectionIcon><MdAutoStories /></SectionIcon>
             Qualitative Scenario Narratives
           </SectionTitle>
-          <ScenarioNarratives scenarios={response.scenarios} startingWealth={initialWealth} />
+          <ScenarioNarratives response={response} />
         </Section>
 
         <Section>
