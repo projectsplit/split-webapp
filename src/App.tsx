@@ -34,6 +34,7 @@ import { PrometheusCorrelation } from './pages/Prometheus/Correlation/Correlatio
 import { PrometheusProvider } from './pages/Prometheus/PrometheusProvider';
 import { PrometheusSimulation } from './pages/Prometheus/Simulation/Simulation';
 import { PercentileBreakdown } from './pages/Prometheus/Simulation/components/PercentileBreakdown/PercentileBreakdown';
+import { WhatIfScenarios } from './pages/Prometheus/WhatIf/WhatIf';
 
 const App = () => {
   return (
@@ -103,6 +104,10 @@ const App = () => {
             <Route
               path={routes.PROMETHEUS_PERCENTILE_DETAIL}
               element={<PercentileBreakdown />}
+            />
+            <Route
+              path={routes.PROMETHEUS_WHATIF}
+              element={<WhatIfScenarios />}
             />
           </Route>
 

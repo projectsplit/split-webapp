@@ -34,9 +34,9 @@ export const PrometheusSimulation = () => {
   const lastCalculatedSetup = useLastCalculatedSetup();
   const simulationResponse = useSimulationResponse();
 
-  const { isLoading } = useGetCalculatedWealth();
+  const { isLoading, data: fetchedWealth } = useGetCalculatedWealth();
 
-  const response = simulationResponse.value;
+  const response = simulationResponse.value ?? fetchedWealth ?? null;
 
   const serverErrors = useSignal<any[]>([]);
   const { mutateAsync: runSimulation, isPending } = useRunMCSimulation(serverErrors);
@@ -53,7 +53,7 @@ export const PrometheusSimulation = () => {
     }
   }, [setup, isPending, runSimulation, lastCalculatedSetup, simulationResponse]);
 
-  if (isLoading && !response) {
+  if (!response && isLoading) {
     return (
       <PageRoot>
         <SimulationWaveOverlay isActive={true} isResim={false} />

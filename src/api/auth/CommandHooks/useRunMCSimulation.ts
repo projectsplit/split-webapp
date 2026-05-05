@@ -1,6 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../apiClients';
 import { Signal } from '@preact/signals-react';
+import { clearWhatIfCache } from './useRunWhatIfSimulation';
 
 import {
   Financials,
@@ -18,9 +19,14 @@ type SimulationRequest = {
 };
 
 export const useRunMCSimulation = (serverErrors: Signal<any[]>) => {
+  const queryClient = useQueryClient();
+
   return useMutation<any, any, SimulationRequest>({
     mutationKey: ['simulation'],
     mutationFn: runMCSimulation,
+    onSuccess: () => {
+      clearWhatIfCache(queryClient);
+    },
     onError: (error) => {
       const errorData = error.response?.data;
       serverErrors.value = errorData;
