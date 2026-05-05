@@ -50,10 +50,13 @@ export interface WhatIfResponse {
 }
 
 export interface FactorStats {
+  min: number;
+  p01: number;
+  p50: number;
+  p99: number;
+  max: number;
   mean: number;
   std: number;
-  p5: number;
-  p95: number;
 }
 
 export interface RiskStats extends FactorStats {

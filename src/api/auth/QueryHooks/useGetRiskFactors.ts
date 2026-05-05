@@ -2,11 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../apiClients';
 import { FactorsResponse } from '@/pages/Prometheus/WhatIf/interfaces';
 
-export const useGetRiskFactors = (runId: string | undefined) => {
+export const useGetRiskFactors = () => {
   return useQuery<FactorsResponse>({
-    queryKey: ['riskFactors', runId],
+    queryKey: ['riskFactors'],
     queryFn: getRiskFactors,
-    enabled: !!runId,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
     gcTime: Infinity,

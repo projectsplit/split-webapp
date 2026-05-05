@@ -14,7 +14,7 @@ export const RiskCard = styled.div`
 
 export const RiskName = styled.span`
   font-family: 'Roboto Mono', monospace;
-  font-size: 0.625rem;
+  font-size: 0.8125rem;
   letter-spacing: 0.05em;
   color: #e5e2e1;
   display: block;
@@ -70,7 +70,7 @@ export const ModeRadio = styled.span<{ $active: boolean }>`
 
 export const ModeLabel = styled.span`
   font-family: 'Roboto Mono', monospace;
-  font-size: 0.5625rem;
+  font-size: 0.75rem;
   letter-spacing: 0.03em;
   color: #e5e2e1;
   text-transform: uppercase;
@@ -78,6 +78,7 @@ export const ModeLabel = styled.span`
 
 export const FieldRow = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 0.75rem;
 `;
 
@@ -88,7 +89,7 @@ export const FieldGroup = styled.div`
 
 export const RiskInputLabel = styled.label`
   font-family: 'Roboto Mono', monospace;
-  font-size: 0.5625rem;
+  font-size: 0.75rem;
   color: #968e99;
   display: block;
   margin-bottom: 0.25rem;
@@ -102,7 +103,7 @@ export const RiskInputField = styled.input`
   height: 2rem;
   padding: 0 0.5rem;
   font-family: 'Roboto Mono', monospace;
-  font-size: 0.625rem;
+  font-size: 0.8125rem;
   color: #e5e2e1;
 
   &:focus {
@@ -113,9 +114,28 @@ export const RiskInputField = styled.input`
 
 export const FairPremiumHint = styled.p`
   font-family: 'Roboto Mono', monospace;
-  font-size: 0.5rem;
+  font-size: 0.6875rem;
   color: #968e99;
   margin: 0.5rem 0 0;
+`;
+
+export const GrossWarning = styled.p`
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: #f9bb4d;
+  background: rgba(249, 187, 77, 0.06);
+  border: 1px solid rgba(249, 187, 77, 0.15);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  margin: 0.5rem 0 0;
+`;
+
+export const ExpectedLossHint = styled.p`
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0;
 `;
 
 export const CapOption = styled.button<{ $active: boolean }>`
@@ -161,7 +181,7 @@ export const CapOptionRadio = styled.span<{ $active: boolean }>`
 
 export const CapOptionLabel = styled.span`
   font-family: 'Roboto Mono', monospace;
-  font-size: 0.5rem;
+  font-size: 0.6875rem;
   color: #cdc3d0;
   flex: 1;
   text-align: left;
@@ -169,7 +189,7 @@ export const CapOptionLabel = styled.span`
 
 export const CapOptionValue = styled.span`
   font-family: 'Roboto Mono', monospace;
-  font-size: 0.5rem;
+  font-size: 0.6875rem;
   color: #f9bb4d;
   flex-shrink: 0;
 `;
@@ -185,7 +205,7 @@ export const ToggleRow = styled.div`
 
 export const ToggleLabel = styled.span`
   font-family: 'Roboto Mono', monospace;
-  font-size: 0.625rem;
+  font-size: 0.8125rem;
   letter-spacing: 0.05em;
   color: #cdc3d0;
 `;

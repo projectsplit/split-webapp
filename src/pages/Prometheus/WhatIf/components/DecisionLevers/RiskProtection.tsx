@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MdHealthAndSafety } from 'react-icons/md';
 import { WhatIfRequest, FactorsResponse, RiskStats } from '../../interfaces';
 import { formatCompact } from '../../utils';
+
+const r2 = (v: number) => Math.round(v * 100) / 100;
 import {
   RiskCard,
   RiskName,
@@ -14,6 +16,8 @@ import {
   RiskInputLabel,
   RiskInputField,
   FairPremiumHint,
+  GrossWarning,
+  ExpectedLossHint,
   CapOption,
   CapOptionRadio,
   CapOptionLabel,
@@ -30,11 +34,16 @@ import {
 } from './DecisionLevers.styled';
 
 type RiskMode =
-  | { kind: 'off' }
+  | { kind: 'none' }
   | { kind: 'insure'; premium: number }
   | { kind: 'cap'; maxLoss: number; premium: number };
 
 type RisksState = Record<string, RiskMode>;
+
+type PrevValues = Record<
+  string,
+  { insure?: { premium: number }; cap?: { maxLoss: number; premium: number } }
+>;
 
 const buildRisksState = (
   riskNames: string[],
@@ -45,19 +54,19 @@ const buildRisksState = (
     if (request.disabled_risks[name] !== undefined) {
       state[name] = {
         kind: 'insure',
-        premium: request.disabled_risks[name],
+        premium: r2(request.disabled_risks[name]),
       };
     } else if (request.risk_caps[name]) {
-      const [premium, maxLoss] = request.risk_caps[name];
-      state[name] = { kind: 'cap', maxLoss, premium };
+      const [maxLoss, premium] = request.risk_caps[name];
+      state[name] = { kind: 'cap', maxLoss: r2(maxLoss), premium: r2(premium) };
     } else {
-      state[name] = { kind: 'off' };
+      state[name] = { kind: 'none' };
     }
   }
   return state;
 };
 
-const flattenToRequest = (
+const flatten = (
   risksState: RisksState,
   request: WhatIfRequest,
 ): WhatIfRequest => {
@@ -68,7 +77,7 @@ const flattenToRequest = (
     if (mode.kind === 'insure') {
       disabled_risks[name] = mode.premium;
     } else if (mode.kind === 'cap') {
-      risk_caps[name] = [mode.premium, mode.maxLoss];
+      risk_caps[name] = [mode.maxLoss, mode.premium];
     }
   }
 
@@ -97,12 +106,14 @@ export const RiskProtection = ({
     buildRisksState(riskNames, request),
   );
 
+  const prevValues = useRef<PrevValues>({});
+
   useEffect(() => {
     if (riskNames.length === 0) return;
     setRisks((prev) => {
       const next = { ...prev };
       for (const name of riskNames) {
-        if (!(name in next)) next[name] = { kind: 'off' };
+        if (!(name in next)) next[name] = { kind: 'none' };
       }
       return next;
     });
@@ -110,31 +121,59 @@ export const RiskProtection = ({
   }, [riskNames.join(',')]);
 
   useEffect(() => {
-    onChange(flattenToRequest(risks, request));
+    onChange(flatten(risks, request));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [risks]);
 
-  const setMode = (name: string, kind: 'off' | 'insure' | 'cap') => {
+  const getStats = (name: string): RiskStats | undefined =>
+    factors?.risks[name];
+
+  const setMode = (name: string, kind: 'none' | 'insure' | 'cap') => {
     setRisks((prev) => {
       const current = prev[name];
-      if (kind === 'off') return { ...prev, [name]: { kind: 'off' } };
+      const stats = getStats(name);
+
+      if (current?.kind === 'insure') {
+        prevValues.current[name] = {
+          ...prevValues.current[name],
+          insure: { premium: current.premium },
+        };
+      } else if (current?.kind === 'cap') {
+        prevValues.current[name] = {
+          ...prevValues.current[name],
+          cap: { maxLoss: current.maxLoss, premium: current.premium },
+        };
+      }
+
+      if (kind === 'none') return { ...prev, [name]: { kind: 'none' } };
+
       if (kind === 'insure') {
-        const premium =
-          current?.kind === 'insure'
-            ? current.premium
-            : current?.kind === 'cap'
-              ? current.premium
-              : 0;
+        const saved = prevValues.current[name]?.insure;
+        const premium = saved
+          ? saved.premium
+          : r2(stats?.fair_premium.full ?? 0);
         return { ...prev, [name]: { kind: 'insure', premium } };
       }
-      const premium =
-        current?.kind === 'cap'
-          ? current.premium
-          : current?.kind === 'insure'
-            ? current.premium
-            : 0;
-      const maxLoss = current?.kind === 'cap' ? current.maxLoss : 0;
-      return { ...prev, [name]: { kind: 'cap', maxLoss, premium } };
+
+      const saved = prevValues.current[name]?.cap;
+      if (saved) {
+        return {
+          ...prev,
+          [name]: { kind: 'cap', maxLoss: saved.maxLoss, premium: saved.premium },
+        };
+      }
+      const caps = stats?.fair_premium.caps ?? [];
+      const medianCap = caps.length > 0
+        ? caps[Math.floor(caps.length / 2)]
+        : undefined;
+      return {
+        ...prev,
+        [name]: {
+          kind: 'cap',
+          maxLoss: r2(medianCap?.max_loss ?? 0),
+          premium: r2(medianCap?.premium ?? 0),
+        },
+      };
     });
   };
 
@@ -145,7 +184,7 @@ export const RiskProtection = ({
   ) => {
     setRisks((prev) => {
       const current = prev[name];
-      if (!current || current.kind === 'off') return prev;
+      if (!current || current.kind === 'none') return prev;
       if (current.kind === 'insure' && field === 'premium') {
         return { ...prev, [name]: { ...current, premium: val } };
       }
@@ -162,8 +201,18 @@ export const RiskProtection = ({
   ) => {
     setRisks((prev) => ({
       ...prev,
-      [name]: { kind: 'cap', maxLoss: cap.max_loss, premium: cap.premium },
+      [name]: { kind: 'cap', maxLoss: r2(cap.max_loss), premium: r2(cap.premium) },
     }));
+  };
+
+  const nearestCap = (stats: RiskStats, maxLoss: number) => {
+    const caps = stats.fair_premium.caps;
+    if (caps.length === 0) return undefined;
+    return caps.reduce((best, c) =>
+      Math.abs(c.max_loss - maxLoss) < Math.abs(best.max_loss - maxLoss)
+        ? c
+        : best,
+    );
   };
 
   return (
@@ -175,19 +224,15 @@ export const RiskProtection = ({
         <PanelSectionLabel>Risk Protection</PanelSectionLabel>
       </PanelSectionHeader>
 
-      {riskEntries.length === 0 && (
-        <FairPremiumHint>
-          Run a simulation first to see available risks.
-        </FairPremiumHint>
-      )}
-
       {riskEntries.map(([name, stats]) => {
-        const mode = risks[name] ?? { kind: 'off' };
+        const mode = risks[name] ?? { kind: 'none' };
+        const isGross = stats.fair_premium.basis === 'gross';
+
         return (
           <RiskCard key={name}>
             <RiskName>{name.replace(/_/g, ' ')}</RiskName>
             <ModeRow>
-              {(['off', 'insure', 'cap'] as const).map((k) => (
+              {(['none', 'insure', 'cap'] as const).map((k) => (
                 <ModeOption
                   key={k}
                   $active={mode.kind === k}
@@ -195,17 +240,27 @@ export const RiskProtection = ({
                 >
                   <ModeRadio $active={mode.kind === k} />
                   <ModeLabel>
-                    {k === 'off' ? 'Off' : k === 'insure' ? 'Insure' : 'Cap'}
+                    {k === 'none'
+                      ? 'None'
+                      : k === 'insure'
+                        ? 'Full cover'
+                        : 'Cap'}
                   </ModeLabel>
                 </ModeOption>
               ))}
             </ModeRow>
 
+            {mode.kind === 'none' && (
+              <ExpectedLossHint>
+                Expected annual loss: {formatCompact(stats.mean)} {currency}
+              </ExpectedLossHint>
+            )}
+
             {mode.kind === 'insure' && (
               <>
                 <FieldRow>
                   <FieldGroup>
-                    <RiskInputLabel>PREMIUM /YR ({currency})</RiskInputLabel>
+                    <RiskInputLabel>ANNUAL PREMIUM ({currency})</RiskInputLabel>
                     <RiskInputField
                       type="number"
                       value={mode.premium || ''}
@@ -217,9 +272,16 @@ export const RiskProtection = ({
                   </FieldGroup>
                 </FieldRow>
                 <FairPremiumHint>
-                  Fair premium: {formatCompact(stats.fair_premium.full)}{' '}
-                  {currency}/yr
+                  Fair price: {formatCompact(stats.fair_premium.full)} {currency}
+                  {' '}(insurer break-even). Real quotes typically 1.5–2× this.
                 </FairPremiumHint>
+                {isGross && (
+                  <GrossWarning>
+                    Career Loss insurance covers gross income loss; severance is
+                    kept on top. This is why the fair price is higher than the
+                    displayed expected loss.
+                  </GrossWarning>
+                )}
               </>
             )}
 
@@ -238,7 +300,7 @@ export const RiskProtection = ({
                     />
                   </FieldGroup>
                   <FieldGroup>
-                    <RiskInputLabel>PREMIUM /YR ({currency})</RiskInputLabel>
+                    <RiskInputLabel>ANNUAL PREMIUM ({currency})</RiskInputLabel>
                     <RiskInputField
                       type="number"
                       value={mode.premium || ''}
@@ -249,9 +311,17 @@ export const RiskProtection = ({
                     />
                   </FieldGroup>
                 </FieldRow>
+                {(() => {
+                  const nearest = nearestCap(stats, mode.maxLoss);
+                  return nearest ? (
+                    <FairPremiumHint>
+                      Fair price for this cap: {formatCompact(nearest.premium)}{' '}
+                      {currency}
+                    </FairPremiumHint>
+                  ) : null;
+                })()}
                 {stats.fair_premium.caps.length > 0 && (
                   <>
-                    <FairPremiumHint>Suggested cap levels:</FairPremiumHint>
                     {stats.fair_premium.caps.map((cap) => (
                       <CapOption
                         key={cap.max_loss}
@@ -276,6 +346,13 @@ export const RiskProtection = ({
                       </CapOption>
                     ))}
                   </>
+                )}
+                {isGross && (
+                  <GrossWarning>
+                    Career Loss insurance covers gross income loss; severance is
+                    kept on top. This is why the fair price is higher than the
+                    displayed expected loss.
+                  </GrossWarning>
                 )}
               </>
             )}
