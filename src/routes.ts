@@ -13,6 +13,7 @@ const routes = {
   PROMETHEUS_SIMULATIONS: '/prometheus/simulations',
   PROMETHEUS_PERCENTILE_DETAIL: '/prometheus/simulations/:percentile',
   PROMETHEUS_WHATIF: '/prometheus/whatif',
+  PROMETHEUS_CONDITIONAL: '/prometheus/conditional',
 };
 
 export default routes;
