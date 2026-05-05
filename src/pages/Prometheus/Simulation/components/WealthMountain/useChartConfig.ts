@@ -186,6 +186,7 @@ export const useChartConfig = (
         canvas.style.cursor = isEnd ? 'pointer' : 'default';
       },
       plugins: {
+        mcCloud: { enabled: true } as any,
         legend: {
           display: true,
           position: 'top',

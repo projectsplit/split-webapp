@@ -36,7 +36,7 @@ export const ComparisonChart = ({
   scenario,
 }: ComparisonChartProps) => {
   const { data, options } = useMemo(() => {
-    const labels = ['P5 (Worst)', 'P25', 'Median', 'P75', 'P95 (Best)'];
+    const labels = ['P5 (1-in-20 Worst)', 'P25 (1-in-4)', 'Median (1-in-2)', 'P75 (3-in-4)', 'P95 (1-in-20 Best)'];
 
     const chartData = {
       labels,
@@ -63,7 +63,7 @@ export const ComparisonChart = ({
             scenario.p75,
             scenario.p95,
           ],
-          backgroundColor: 'rgba(221, 183, 255, 0.5)',
+          backgroundColor: 'rgba(221, 143, 255, 0.7)',
           borderWidth: 0,
           borderRadius: 6,
         },

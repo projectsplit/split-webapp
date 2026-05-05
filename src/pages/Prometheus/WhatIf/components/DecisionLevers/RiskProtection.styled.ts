@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 export const RiskCard = styled.div`
   background: #0e0e0e;
@@ -109,6 +109,70 @@ export const RiskInputField = styled.input`
   &:focus {
     outline: none;
     border-color: #f9bb4d;
+  }
+`;
+
+const shimmer = keyframes`
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+`;
+
+const pulseGlow = keyframes`
+  0%, 100% { border-color: rgba(249, 187, 77, 0.15); }
+  50% { border-color: rgba(249, 187, 77, 0.5); }
+`;
+
+const dotPulse = keyframes`
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+`;
+
+export const PremiumFieldWrap = styled.div<{ $loading: boolean }>`
+  position: relative;
+
+  ${({ $loading }) =>
+    $loading &&
+    css`
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 0.25rem;
+        pointer-events: none;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(249, 187, 77, 0.06) 25%,
+          rgba(249, 187, 77, 0.12) 50%,
+          rgba(249, 187, 77, 0.06) 75%,
+          transparent 100%
+        );
+        background-size: 200% 100%;
+        animation: ${shimmer} 1.5s ease-in-out infinite;
+      }
+
+      & > input {
+        animation: ${pulseGlow} 1.5s ease-in-out infinite;
+        color: rgba(249, 187, 77, 0.5);
+      }
+    `}
+`;
+
+export const LoadingDots = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 0.375rem;
+
+  & > span {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #f9bb4d;
+    animation: ${dotPulse} 1s ease-in-out infinite;
+
+    &:nth-child(2) { animation-delay: 0.2s; }
+    &:nth-child(3) { animation-delay: 0.4s; }
   }
 `;
 

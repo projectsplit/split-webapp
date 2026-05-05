@@ -72,3 +72,15 @@ export interface FactorsResponse {
   risks: Record<string, RiskStats>;
   factors: Record<string, FactorStats>;
 }
+
+export interface FairPremiumRequest {
+  risk_name: string;
+  max_loss: number;
+}
+
+export interface FairPremiumResponse {
+  risk_name: string;
+  max_loss: number | null;
+  premium: number;
+  basis: 'loss' | 'gross';
+}

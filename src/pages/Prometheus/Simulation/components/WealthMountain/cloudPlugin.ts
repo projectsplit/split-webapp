@@ -18,6 +18,7 @@ export const cloudPlugin: Plugin = {
   id: 'mcCloud',
   beforeDatasetsDraw(chart: Chart) {
     if (chart.config.type !== 'line') return;
+    if (!(chart.config.options as any)?.plugins?.mcCloud?.enabled) return;
 
     const { ctx, chartArea, scales } = chart;
     if (!chartArea || !scales.y) return;

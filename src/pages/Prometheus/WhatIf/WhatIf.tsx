@@ -58,7 +58,6 @@ export const WhatIfScenarios = () => {
   const simResult = simulationResponse.value ?? fetchedWealth ?? null;
   const currency = simResult?.economy?.requested?.toUpperCase() ?? 'USD';
   const { data: factors } = useGetRiskFactors();
- 
 
   const serverErrors = useSignal<any[]>([]);
   const { runWithCache, saveSnapshot, getSnapshot, isPending } =

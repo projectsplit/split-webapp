@@ -52,7 +52,7 @@ export const SettingsComparison = ({
       <CompRow>
         <RowLabel>INCOME CHANGE</RowLabel>
         <BaselineValue>$0/yr</BaselineValue>
-        <ScenarioValue $color="secondary">
+        <ScenarioValue $color={request.salary_delta < 0 ? 'negative' : 'secondary'}>
           {formatDeltaMonthly(request.salary_delta)}
         </ScenarioValue>
       </CompRow>
@@ -83,7 +83,7 @@ export const SettingsComparison = ({
 
       {disabledCount > 0 && (
         <CompRow>
-          <RowLabel>DISABLED RISKS</RowLabel>
+          <RowLabel>FULLY INSURED</RowLabel>
           <BaselineValue>None</BaselineValue>
           <ScenarioValue $color="tertiary">
             {disabledCount} risk(s)

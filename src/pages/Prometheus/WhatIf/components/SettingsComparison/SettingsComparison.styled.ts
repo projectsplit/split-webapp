@@ -104,12 +104,13 @@ export const BaselineValue = styled.span`
   }
 `;
 
-type PillColor = 'secondary' | 'primary' | 'tertiary';
+type PillColor = 'secondary' | 'primary' | 'tertiary' | 'negative';
 
 const pillColors: Record<PillColor, { bg: string; text: string }> = {
   secondary: { bg: 'rgba(74, 225, 118, 0.1)', text: '#4ae176' },
   primary: { bg: 'rgba(221, 183, 255, 0.1)', text: '#ddb7ff' },
   tertiary: { bg: 'rgba(249, 187, 77, 0.1)', text: '#f9bb4d' },
+  negative: { bg: 'rgba(229, 87, 79, 0.1)', text: '#e5574f' },
 };
 
 export const ScenarioValue = styled.span<{ $color?: PillColor }>`
