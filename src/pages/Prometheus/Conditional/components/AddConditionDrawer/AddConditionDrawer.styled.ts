@@ -234,6 +234,66 @@ export const FactorName = styled.span`
   font-weight: 500;
 `;
 
+export const FactorDesc = styled.span`
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6875rem;
+  color: #968e99;
+  line-height: 1.4;
+  margin-top: 0.25rem;
+`;
+
+export const AdvancedToggle = styled.button<{ $open: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.75rem 0;
+  background: none;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: color 0.15s ease;
+
+  &:hover {
+    span {
+      color: #ddb7ff;
+    }
+  }
+`;
+
+export const AdvancedToggleLabel = styled.span`
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #968e99;
+  transition: color 0.15s ease;
+`;
+
+export const AdvancedToggleIcon = styled.span<{ $open: boolean }>`
+  color: #968e99;
+  display: flex;
+  align-items: center;
+  transition: transform 0.25s ease, color 0.15s ease;
+  transform: rotate(${({ $open }) => ($open ? '180deg' : '0deg')});
+
+  svg {
+    font-size: 1rem;
+  }
+`;
+
+export const AdvancedContent = styled.div<{ $open: boolean }>`
+  display: grid;
+  grid-template-rows: ${({ $open }) => ($open ? '1fr' : '0fr')};
+  transition: grid-template-rows 0.3s ease;
+  overflow: hidden;
+`;
+
+export const AdvancedInner = styled.div`
+  min-height: 0;
+`;
+
 const shimmer = keyframes`
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }

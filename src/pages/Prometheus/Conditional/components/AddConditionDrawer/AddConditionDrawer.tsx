@@ -1,7 +1,8 @@
-import { MdClose, MdAccountBalance, MdWork, MdPublic, MdRadar } from 'react-icons/md';
+import { useState } from 'react';
+import { MdClose, MdAccountBalance, MdPublic, MdScience, MdRadar, MdExpandMore } from 'react-icons/md';
 import { Signal } from '@preact/signals-react';
 import { Condition } from '../../interfaces';
-import { isVisibleFactor, formatFactorName } from '../../utils';
+import { MAIN_FACTORS, ADVANCED_FACTORS, formatFactorName, isFactorVisible, getFactorLabel, RiskVisibility } from '../../utils';
 import { FactorsResponse } from '@/pages/Prometheus/WhatIf/interfaces';
 import {
   Overlay,
@@ -20,6 +21,12 @@ import {
   FactorGrid,
   FactorButton,
   FactorName,
+  FactorDesc,
+  AdvancedToggle,
+  AdvancedToggleLabel,
+  AdvancedToggleIcon,
+  AdvancedContent,
+  AdvancedInner,
   LoadingContainer,
   LoadingOrb,
   LoadingLabel,
@@ -36,6 +43,7 @@ interface AddConditionDrawerProps {
   factors: FactorsResponse | undefined;
   isLoading: boolean;
   bondTenor: number;
+  riskToggles: RiskVisibility;
 }
 
 const getDefaultValue = (
@@ -57,7 +65,9 @@ export const AddConditionDrawer = ({
   factors,
   isLoading,
   bondTenor,
+  riskToggles,
 }: AddConditionDrawerProps) => {
+  const [advancedOpen, setAdvancedOpen] = useState(false);
   const existingFactors = new Set(conditions.value.map((c) => c.factor));
 
   const handleSelect = (factorName: string) => {
@@ -70,12 +80,18 @@ export const AddConditionDrawer = ({
     onClose();
   };
 
-  const riskNames = factors
-    ? Object.keys(factors.risks).filter(isVisibleFactor)
-    : [];
-  const factorNames = factors
-    ? Object.keys(factors.factors).filter(isVisibleFactor)
-    : [];
+  const allData = factors
+    ? { ...factors.risks, ...factors.factors }
+    : {};
+
+  const riskKeys = factors ? Object.keys(factors.risks) : [];
+
+  const availableMain = MAIN_FACTORS.filter(
+    (f) => f.key in allData && isFactorVisible(f.key, riskToggles),
+  );
+  const availableAdvanced = ADVANCED_FACTORS.filter(
+    (f) => f.key in allData && isFactorVisible(f.key, riskToggles),
+  );
 
   return (
     <>
@@ -111,64 +127,81 @@ export const AddConditionDrawer = ({
               </SkeletonGrid>
             </LoadingContainer>
           ) : (
-            <CategoryGrid>
-              <CategorySection>
-                <CategoryHeader>
-                  <MdAccountBalance />
-                  <CategoryLabel>Risks</CategoryLabel>
-                </CategoryHeader>
-                <FactorGrid>
-                  {riskNames.map((name) => (
-                    <FactorButton
-                      key={name}
-                      $disabled={existingFactors.has(name)}
-                      disabled={existingFactors.has(name)}
-                      onClick={() => handleSelect(name)}
-                    >
-                      <FactorName>{formatFactorName(name, bondTenor)}</FactorName>
-                    </FactorButton>
-                  ))}
-                </FactorGrid>
-              </CategorySection>
+            <>
+              <CategoryGrid>
+                <CategorySection>
+                  <CategoryHeader>
+                    <MdAccountBalance />
+                    <CategoryLabel>Risks</CategoryLabel>
+                  </CategoryHeader>
+                  <FactorGrid>
+                    {riskKeys.map((name) => (
+                      <FactorButton
+                        key={name}
+                        $disabled={existingFactors.has(name)}
+                        disabled={existingFactors.has(name)}
+                        onClick={() => handleSelect(name)}
+                      >
+                        <FactorName>{formatFactorName(name, bondTenor)}</FactorName>
+                      </FactorButton>
+                    ))}
+                  </FactorGrid>
+                </CategorySection>
 
-              <CategorySection>
-                <CategoryHeader>
-                  <MdPublic />
-                  <CategoryLabel>Market Factors</CategoryLabel>
-                </CategoryHeader>
-                <FactorGrid>
-                  {factorNames.slice(0, Math.ceil(factorNames.length / 2)).map((name) => (
-                    <FactorButton
-                      key={name}
-                      $disabled={existingFactors.has(name)}
-                      disabled={existingFactors.has(name)}
-                      onClick={() => handleSelect(name)}
-                    >
-                      <FactorName>{formatFactorName(name, bondTenor)}</FactorName>
-                    </FactorButton>
-                  ))}
-                </FactorGrid>
-              </CategorySection>
+                <CategorySection>
+                  <CategoryHeader>
+                    <MdPublic />
+                    <CategoryLabel>Market Factors</CategoryLabel>
+                  </CategoryHeader>
+                  <FactorGrid>
+                    {availableMain.map((meta) => (
+                      <FactorButton
+                        key={meta.key}
+                        $disabled={existingFactors.has(meta.key)}
+                        disabled={existingFactors.has(meta.key)}
+                        onClick={() => handleSelect(meta.key)}
+                      >
+                        <FactorName>{getFactorLabel(meta, bondTenor)}</FactorName>
+                        <FactorDesc>{meta.description}</FactorDesc>
+                      </FactorButton>
+                    ))}
+                  </FactorGrid>
+                </CategorySection>
 
-              <CategorySection>
-                <CategoryHeader>
-                  <MdWork />
-                  <CategoryLabel>Market Factors (cont.)</CategoryLabel>
-                </CategoryHeader>
-                <FactorGrid>
-                  {factorNames.slice(Math.ceil(factorNames.length / 2)).map((name) => (
-                    <FactorButton
-                      key={name}
-                      $disabled={existingFactors.has(name)}
-                      disabled={existingFactors.has(name)}
-                      onClick={() => handleSelect(name)}
-                    >
-                      <FactorName>{formatFactorName(name, bondTenor)}</FactorName>
-                    </FactorButton>
-                  ))}
-                </FactorGrid>
-              </CategorySection>
-            </CategoryGrid>
+                <CategorySection>
+                  <AdvancedToggle
+                    $open={advancedOpen}
+                    onClick={() => setAdvancedOpen((o) => !o)}
+                  >
+                    <AdvancedToggleLabel>Advanced Factors</AdvancedToggleLabel>
+                    <AdvancedToggleIcon $open={advancedOpen}>
+                      <MdExpandMore />
+                    </AdvancedToggleIcon>
+                  </AdvancedToggle>
+                  <AdvancedContent $open={advancedOpen}>
+                    <AdvancedInner>
+                      <CategoryHeader>
+                        <MdScience />
+                        <CategoryLabel>Advanced / Raw</CategoryLabel>
+                      </CategoryHeader>
+                      <FactorGrid>
+                        {availableAdvanced.map((meta) => (
+                          <FactorButton
+                            key={meta.key}
+                            $disabled={existingFactors.has(meta.key)}
+                            disabled={existingFactors.has(meta.key)}
+                            onClick={() => handleSelect(meta.key)}
+                          >
+                            <FactorName>{meta.label}</FactorName>
+                            <FactorDesc>{meta.description}</FactorDesc>
+                          </FactorButton>
+                        ))}
+                      </FactorGrid>
+                    </AdvancedInner>
+                  </AdvancedContent>
+                </CategorySection>
+              </CategoryGrid>
+            </>
           )}
         </DrawerContent>
       </Drawer>

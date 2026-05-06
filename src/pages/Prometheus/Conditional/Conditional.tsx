@@ -36,6 +36,7 @@ export const ConditionalProbability = () => {
   const navigate = useNavigate();
   const setup = usePrometheusSetup();
   const bondTenor = setup.value.financials.bond_tenor;
+  const riskToggles = setup.value.risk_toggles;
   const { data: factors, isFetching } = useGetRiskFactors();
 
   const serverErrors = useSignal<any[]>([]);
@@ -135,6 +136,7 @@ export const ConditionalProbability = () => {
         factors={factors}
         isLoading={isFetching}
         bondTenor={bondTenor}
+        riskToggles={riskToggles}
       />
 
       <Vignette />
