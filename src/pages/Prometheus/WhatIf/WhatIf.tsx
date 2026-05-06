@@ -57,7 +57,7 @@ export const WhatIfScenarios = () => {
   const { data: fetchedWealth } = useGetCalculatedWealth();
   const simResult = simulationResponse.value ?? fetchedWealth ?? null;
   const currency = simResult?.economy?.requested?.toUpperCase() ?? 'USD';
-  const { data: factors } = useGetRiskFactors();
+  const { data: factors, isFetching: isLoadingFactors } = useGetRiskFactors();
 
   const serverErrors = useSignal<any[]>([]);
   const { runWithCache, saveSnapshot, getSnapshot, isPending } =
@@ -223,6 +223,7 @@ export const WhatIfScenarios = () => {
         onSalaryLimitChange={setSalaryLimit}
         onRun={handleRun}
         isPending={isPending}
+        isLoadingFactors={isLoadingFactors}
       />
 
       <Vignette />

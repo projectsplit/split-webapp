@@ -19,6 +19,7 @@ interface RiskSelectorProps {
   onAddClick: () => void;
   onRun: () => void;
   isPending: boolean;
+  bondTenor: number;
 }
 
 const getFactorBounds = (
@@ -39,6 +40,7 @@ export const RiskSelector = ({
   onAddClick,
   onRun,
   isPending,
+  bondTenor,
 }: RiskSelectorProps) => {
   const handleChange = (index: number, updated: Condition) => {
     const next = [...conditions.value];
@@ -76,6 +78,7 @@ export const RiskSelector = ({
                 max={bounds.max}
                 onChange={(updated) => handleChange(i, updated)}
                 onRemove={() => handleRemove(i)}
+                bondTenor={bondTenor}
               />
             );
           })

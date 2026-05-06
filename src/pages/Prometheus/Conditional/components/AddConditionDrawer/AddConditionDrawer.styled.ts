@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const Overlay = styled.div<{ $open: boolean }>`
   position: fixed;
@@ -232,4 +232,104 @@ export const FactorName = styled.span`
   font-size: 0.8125rem;
   color: #e5e2e1;
   font-weight: 500;
+`;
+
+const shimmer = keyframes`
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+`;
+
+const pulseOrb = keyframes`
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+`;
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 2rem;
+`;
+
+export const LoadingOrb = styled.div`
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(221, 183, 255, 0.15),
+    rgba(221, 183, 255, 0.03)
+  );
+  border: 1px solid rgba(221, 183, 255, 0.1);
+  animation: ${pulseOrb} 2s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    font-size: 1.5rem;
+    color: rgba(221, 183, 255, 0.4);
+  }
+`;
+
+export const LoadingLabel = styled.p`
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(221, 183, 255, 0.5);
+  margin: 0;
+`;
+
+export const SkeletonGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 48rem;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`;
+
+export const SkeletonSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+export const SkeletonBar = styled.div<{ $width?: string }>`
+  height: 0.625rem;
+  width: ${({ $width }) => $width ?? '100%'};
+  border-radius: 0.25rem;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(221, 183, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 1.8s ease-in-out infinite;
+`;
+
+export const SkeletonCard = styled.div`
+  height: 2.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(221, 183, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 1.8s ease-in-out infinite;
 `;

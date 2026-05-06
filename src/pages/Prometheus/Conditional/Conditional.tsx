@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSignal } from '@preact/signals-react';
 import { MdCalculate, MdAdd, MdArrowBack } from 'react-icons/md';
 import { usePrometheusMode } from '../usePrometheusMode';
+import { usePrometheusSetup } from '../PrometheusProvider';
 import { useGetRiskFactors } from '@/api/auth/QueryHooks/useGetRiskFactors';
 import { useRunConditionalQuery } from '@/api/auth/CommandHooks/useRunConditionalQuery';
 import { SimNav } from '../Simulation/components/SimNav/SimNav';
@@ -33,20 +34,25 @@ import {
 export const ConditionalProbability = () => {
   usePrometheusMode();
   const navigate = useNavigate();
-  const { data: factors } = useGetRiskFactors();
+  const setup = usePrometheusSetup();
+  const bondTenor = setup.value.financials.bond_tenor;
+  const { data: factors, isFetching } = useGetRiskFactors();
 
   const serverErrors = useSignal<any[]>([]);
   const conditions = useSignal<Condition[]>([]);
 
   const { mutateAsync, isPending } = useRunConditionalQuery(serverErrors);
   const [response, setResponse] = useState<ConditionalQueryResponse | null>(null);
+  const [queriedConditions, setQueriedConditions] = useState<Condition[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleRun = useCallback(async () => {
     if (isPending || conditions.value.length === 0) return;
+    const snapshot = conditions.value.map((c) => ({ ...c }));
     try {
-      const result = await mutateAsync({ conditions: conditions.value });
+      const result = await mutateAsync({ conditions: snapshot });
       setResponse(result);
+      setQueriedConditions(snapshot);
     } catch {
       /* captured by onError */
     }
@@ -69,7 +75,8 @@ export const ConditionalProbability = () => {
             <LeftColumn>
               <ResultHero
                 response={response}
-                conditions={conditions.value}
+                conditions={queriedConditions}
+                bondTenor={bondTenor}
               />
               <NarrativePanel narrative={response.narrative} />
             </LeftColumn>
@@ -80,6 +87,7 @@ export const ConditionalProbability = () => {
                 onAddClick={() => setDrawerOpen(true)}
                 onRun={handleRun}
                 isPending={isPending}
+                bondTenor={bondTenor}
               />
             </RightColumn>
           </ContentGrid>
@@ -108,6 +116,7 @@ export const ConditionalProbability = () => {
                   onAddClick={() => setDrawerOpen(true)}
                   onRun={handleRun}
                   isPending={isPending}
+                  bondTenor={bondTenor}
                 />
               </RightColumn>
             </ContentGrid>
@@ -124,6 +133,8 @@ export const ConditionalProbability = () => {
         onClose={() => setDrawerOpen(false)}
         conditions={conditions}
         factors={factors}
+        isLoading={isFetching}
+        bondTenor={bondTenor}
       />
 
       <Vignette />

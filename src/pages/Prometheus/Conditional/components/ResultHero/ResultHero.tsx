@@ -31,6 +31,7 @@ import {
 interface ResultHeroProps {
   response: ConditionalQueryResponse;
   conditions: Condition[];
+  bondTenor: number;
 }
 
 const formatPct = (val: number | null): string => {
@@ -52,11 +53,11 @@ const formatConditionValue = (val: number): string => {
   return val.toFixed(1);
 };
 
-const formatConditionLabel = (c: Condition): string => {
-  return `${formatFactorName(c.factor)} ${OP_LABELS[c.op]} ${formatConditionValue(c.value)}`;
+const formatConditionLabel = (c: Condition, bondTenor: number): string => {
+  return `${formatFactorName(c.factor, bondTenor)} ${OP_LABELS[c.op]} ${formatConditionValue(c.value)}`;
 };
 
-export const ResultHero = ({ response, conditions }: ResultHeroProps) => {
+export const ResultHero = ({ response, conditions, bondTenor }: ResultHeroProps) => {
   return (
     <HeroSection>
       <AmbientOrb />
@@ -98,7 +99,7 @@ export const ResultHero = ({ response, conditions }: ResultHeroProps) => {
             {conditions.map((c, i) => (
               <FilterChip key={i}>
                 <MdTrendingDown />
-                {formatConditionLabel(c)}
+                {formatConditionLabel(c, bondTenor)}
               </FilterChip>
             ))}
           </FilterChips>

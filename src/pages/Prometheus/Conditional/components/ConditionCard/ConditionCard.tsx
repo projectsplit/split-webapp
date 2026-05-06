@@ -1,6 +1,6 @@
 import { MdClose } from 'react-icons/md';
 import { Condition, OP_LABELS, OP_ORDER } from '../../interfaces';
-import { formatFactorName, getClampedMax } from '../../utils';
+import { formatFactorName, formatFactorValue, getClampedMax } from '../../utils';
 import {
   Card,
   CardHeader,
@@ -20,14 +20,8 @@ interface ConditionCardProps {
   max: number;
   onChange: (updated: Condition) => void;
   onRemove: () => void;
+  bondTenor: number;
 }
-
-const formatBound = (val: number): string => {
-  if (Math.abs(val) >= 1_000_000) return `${(val / 1_000_000).toFixed(1)}M`;
-  if (Math.abs(val) >= 1_000) return `${(val / 1_000).toFixed(1)}K`;
-  if (Math.abs(val) < 1 && val !== 0) return `${(val * 100).toFixed(1)}%`;
-  return val.toFixed(1);
-};
 
 export const ConditionCard = ({
   condition,
@@ -35,6 +29,7 @@ export const ConditionCard = ({
   max: rawMax,
   onChange,
   onRemove,
+  bondTenor,
 }: ConditionCardProps) => {
   const max = getClampedMax(condition.factor, rawMax);
   const step = (max - min) / 200;
@@ -42,9 +37,9 @@ export const ConditionCard = ({
   return (
     <Card>
       <CardHeader>
-        <FactorLabel>{formatFactorName(condition.factor)}</FactorLabel>
+        <FactorLabel>{formatFactorName(condition.factor, bondTenor)}</FactorLabel>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <CurrentValue>{formatBound(condition.value)}</CurrentValue>
+          <CurrentValue>{formatFactorValue(condition.value, condition.factor)}</CurrentValue>
           <RemoveButton onClick={onRemove}>
             <MdClose />
           </RemoveButton>
@@ -73,8 +68,8 @@ export const ConditionCard = ({
         }
       />
       <BoundsRow>
-        <BoundLabel>{formatBound(min)}</BoundLabel>
-        <BoundLabel>{formatBound(max)}</BoundLabel>
+        <BoundLabel>{formatFactorValue(min, condition.factor)}</BoundLabel>
+        <BoundLabel>{formatFactorValue(max, condition.factor)}</BoundLabel>
       </BoundsRow>
     </Card>
   );

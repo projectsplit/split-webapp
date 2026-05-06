@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const Overlay = styled.div<{ $open: boolean }>`
   position: fixed;
@@ -320,4 +320,74 @@ export const RunButton = styled.button`
       font-size: 1.25rem;
     }
   }
+`;
+
+const shimmer = keyframes`
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+`;
+
+const pulseOrb = keyframes`
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+`;
+
+export const RiskLoadingWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  gap: 1.5rem;
+`;
+
+export const RiskLoadingOrb = styled.div`
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(249, 187, 77, 0.15),
+    rgba(249, 187, 77, 0.03)
+  );
+  border: 1px solid rgba(249, 187, 77, 0.1);
+  animation: ${pulseOrb} 2s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    font-size: 1.25rem;
+    color: rgba(249, 187, 77, 0.4);
+  }
+`;
+
+export const RiskLoadingLabel = styled.p`
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(249, 187, 77, 0.5);
+  margin: 0;
+`;
+
+export const RiskSkeletonCard = styled.div`
+  height: 5rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(249, 187, 77, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 1.8s ease-in-out infinite;
+`;
+
+export const RiskSkeletonStack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
 `;

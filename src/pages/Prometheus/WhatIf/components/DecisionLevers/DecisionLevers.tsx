@@ -3,6 +3,7 @@ import {
   MdWaterDrop,
   MdDonutSmall,
   MdPlayArrow,
+  MdHealthAndSafety,
 } from 'react-icons/md';
 import { Financials } from '@/pages/Prometheus/interfaces';
 import { WhatIfRequest, FactorsResponse } from '../../interfaces';
@@ -31,6 +32,11 @@ import {
   SplitSegment,
   ExpenseCutDisplay,
   RunButton,
+  RiskLoadingWrap,
+  RiskLoadingOrb,
+  RiskLoadingLabel,
+  RiskSkeletonCard,
+  RiskSkeletonStack,
 } from './DecisionLevers.styled';
 
 interface DecisionLeversProps {
@@ -49,6 +55,7 @@ interface DecisionLeversProps {
   onSalaryLimitChange: (val: number) => void;
   onRun: () => void;
   isPending: boolean;
+  isLoadingFactors: boolean;
 }
 
 export const DecisionLevers = ({
@@ -67,6 +74,7 @@ export const DecisionLevers = ({
   onSalaryLimitChange,
   onRun,
   isPending,
+  isLoadingFactors,
 }: DecisionLeversProps) => {
   const bondSplit = 100 - equitySplit;
   const expensePct = Math.round(request.expense_cut * 100);
@@ -168,12 +176,34 @@ export const DecisionLevers = ({
             </DrawerLeftCol>
 
             <DrawerRightCol>
-              <RiskProtection
-                factors={factors}
-                currency={currency}
-                request={request}
-                onChange={onChange}
-              />
+              {isLoadingFactors ? (
+                <GlassPanel $accent="tertiary">
+                  <PanelSectionHeader>
+                    <PanelSectionIcon $color="#f9bb4d">
+                      <MdHealthAndSafety />
+                    </PanelSectionIcon>
+                    <PanelSectionLabel>Risk Protection</PanelSectionLabel>
+                  </PanelSectionHeader>
+                  <RiskLoadingWrap>
+                    <RiskLoadingOrb>
+                      <MdHealthAndSafety />
+                    </RiskLoadingOrb>
+                    <RiskLoadingLabel>Loading risk factors...</RiskLoadingLabel>
+                    <RiskSkeletonStack>
+                      <RiskSkeletonCard />
+                      <RiskSkeletonCard />
+                      <RiskSkeletonCard />
+                    </RiskSkeletonStack>
+                  </RiskLoadingWrap>
+                </GlassPanel>
+              ) : (
+                <RiskProtection
+                  factors={factors}
+                  currency={currency}
+                  request={request}
+                  onChange={onChange}
+                />
+              )}
             </DrawerRightCol>
           </DrawerGrid>
         </DrawerContent>
