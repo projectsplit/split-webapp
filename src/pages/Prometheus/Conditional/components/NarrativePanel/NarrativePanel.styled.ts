@@ -49,3 +49,31 @@ export const NarrativeText = styled.p`
   max-width: 40rem;
   word-break: break-word;
 `;
+
+export const FactorBlock = styled.div`
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+`;
+
+export const FactorTitle = styled.h4`
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #968e99;
+  margin: 0 0 0.25rem;
+`;
+
+export const FactorExplanationLine = styled.p`
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #b8aebc;
+  margin: 0;
+  max-width: 40rem;
+  word-break: break-word;
+`;

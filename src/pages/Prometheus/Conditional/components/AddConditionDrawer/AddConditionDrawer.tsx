@@ -1,8 +1,19 @@
 import { useState } from 'react';
-import { MdClose, MdAccountBalance, MdPublic, MdScience, MdRadar, MdExpandMore } from 'react-icons/md';
+import { MdClose, MdAccountBalance, MdPublic, MdScience, MdRadar, MdExpandMore, MdWorkOff } from 'react-icons/md';
 import { Signal } from '@preact/signals-react';
 import { Condition } from '../../interfaces';
-import { MAIN_FACTORS, ADVANCED_FACTORS, formatFactorName, isFactorVisible, getFactorLabel, RiskVisibility } from '../../utils';
+import {
+  MAIN_FACTORS,
+  ADVANCED_FACTORS,
+  formatFactorName,
+  isFactorVisible,
+  getFactorLabel,
+  RiskVisibility,
+  CAREER_INTERNAL_FACTORS,
+  CAREER_RISK_KEY,
+  CAREER_GROSS_KEY,
+  monthsToCareerGross,
+} from '../../utils';
 import { FactorsResponse } from '@/pages/Prometheus/WhatIf/interfaces';
 import {
   Overlay,
@@ -44,6 +55,8 @@ interface AddConditionDrawerProps {
   isLoading: boolean;
   bondTenor: number;
   riskToggles: RiskVisibility;
+  netSalary: number;
+  careerLossEnabled: boolean;
 }
 
 const getDefaultValue = (
@@ -66,6 +79,8 @@ export const AddConditionDrawer = ({
   isLoading,
   bondTenor,
   riskToggles,
+  netSalary,
+  careerLossEnabled,
 }: AddConditionDrawerProps) => {
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const existingFactors = new Set(conditions.value.map((c) => c.factor));
@@ -80,18 +95,45 @@ export const AddConditionDrawer = ({
     onClose();
   };
 
+  const handleSelectCareerLoss = () => {
+    if (existingFactors.has(CAREER_GROSS_KEY)) return;
+    conditions.value = [
+      ...conditions.value,
+      {
+        factor: CAREER_GROSS_KEY,
+        op: 'gt',
+        value: monthsToCareerGross(6, netSalary),
+      },
+    ];
+    onClose();
+  };
+
   const allData = factors
     ? { ...factors.risks, ...factors.factors }
     : {};
 
-  const riskKeys = factors ? Object.keys(factors.risks) : [];
+  const riskKeys = factors
+    ? Object.keys(factors.risks).filter((k) => !CAREER_INTERNAL_FACTORS.has(k))
+    : [];
 
   const availableMain = MAIN_FACTORS.filter(
-    (f) => f.key in allData && isFactorVisible(f.key, riskToggles),
+    (f) =>
+      f.key in allData &&
+      isFactorVisible(f.key, riskToggles) &&
+      !CAREER_INTERNAL_FACTORS.has(f.key),
   );
   const availableAdvanced = ADVANCED_FACTORS.filter(
-    (f) => f.key in allData && isFactorVisible(f.key, riskToggles),
+    (f) =>
+      f.key in allData &&
+      isFactorVisible(f.key, riskToggles) &&
+      !CAREER_INTERNAL_FACTORS.has(f.key),
   );
+
+  const showCareerLoss =
+    careerLossEnabled &&
+    !!factors &&
+    CAREER_RISK_KEY in factors.risks &&
+    netSalary > 0;
 
   return (
     <>
@@ -145,6 +187,19 @@ export const AddConditionDrawer = ({
                         <FactorName>{formatFactorName(name, bondTenor)}</FactorName>
                       </FactorButton>
                     ))}
+                    {showCareerLoss && (
+                      <FactorButton
+                        $disabled={existingFactors.has(CAREER_GROSS_KEY)}
+                        disabled={existingFactors.has(CAREER_GROSS_KEY)}
+                        onClick={handleSelectCareerLoss}
+                      >
+                        <MdWorkOff />
+                        <FactorName>Career Loss</FactorName>
+                        <FactorDesc>
+                          Months of unemployment, with severance offset.
+                        </FactorDesc>
+                      </FactorButton>
+                    )}
                   </FactorGrid>
                 </CategorySection>
 

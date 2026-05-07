@@ -20,9 +20,11 @@ export const useRunConditionalQuery = (serverErrors: Signal<any[]>) => {
 const runConditionalQuery = async (
   request: ConditionalQueryRequest,
 ): Promise<ConditionalQueryResponse> => {
+  console.log(request)
   const response = await apiClient.post<ConditionalQueryResponse>(
     'risk-engine/conditional',
     request,
   );
+  console.log(response.data)
   return response.data;
 };

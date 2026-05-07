@@ -1,4 +1,4 @@
-import { MdRadar, MdTrendingDown } from 'react-icons/md';
+import { MdRadar, MdTrendingDown, MdWarningAmber } from 'react-icons/md';
 import { ConditionalQueryResponse, Condition, OP_LABELS } from '../../interfaces';
 import { formatFactorName } from '../../utils';
 import {
@@ -20,6 +20,10 @@ import {
   VsBadge,
   FilterChips,
   FilterChip,
+  SampleWarning,
+  SampleWarningText,
+  SampleWarningTitle,
+  SampleWarningBody,
   MetricsGrid,
   MetricBox,
   MetricLabel,
@@ -57,7 +61,20 @@ const formatConditionLabel = (c: Condition, bondTenor: number): string => {
   return `${formatFactorName(c.factor, bondTenor)} ${OP_LABELS[c.op]} ${formatConditionValue(c.value)}`;
 };
 
+const LOW_SAMPLE_THRESHOLD = 100;
+const VERY_LOW_SAMPLE_THRESHOLD = 30;
+
 export const ResultHero = ({ response, conditions, bondTenor }: ResultHeroProps) => {
+  const lowSample = response.n_subset < LOW_SAMPLE_THRESHOLD;
+  const verySevere = response.n_subset < VERY_LOW_SAMPLE_THRESHOLD;
+  const severity: 'caution' | 'severe' = verySevere ? 'severe' : 'caution';
+  const warningTitle = verySevere
+    ? 'Very small subset — estimate is unreliable'
+    : 'Small subset — estimate is noisy';
+  const warningBody = verySevere
+    ? `Only ${response.n_subset} paths matched these conditions. The conditional probability is highly uncertain — consider loosening the conditions to broaden the sample.`
+    : `Only ${response.n_subset} paths matched these conditions. The conditional probability has wide error bars at this sample size — interpret with caution or relax the conditions.`;
+
   return (
     <HeroSection>
       <AmbientOrb />
@@ -104,6 +121,16 @@ export const ResultHero = ({ response, conditions, bondTenor }: ResultHeroProps)
             ))}
           </FilterChips>
         </ComparisonContainer>
+
+        {lowSample && (
+          <SampleWarning $severity={severity}>
+            <MdWarningAmber />
+            <SampleWarningText>
+              <SampleWarningTitle>{warningTitle}</SampleWarningTitle>
+              <SampleWarningBody>{warningBody}</SampleWarningBody>
+            </SampleWarningText>
+          </SampleWarning>
+        )}
 
         <MetricsGrid>
           <MetricBox>

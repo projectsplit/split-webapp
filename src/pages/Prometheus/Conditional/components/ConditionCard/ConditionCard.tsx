@@ -1,6 +1,6 @@
 import { MdClose } from 'react-icons/md';
 import { Condition, OP_LABELS, OP_ORDER } from '../../interfaces';
-import { formatFactorName, formatFactorValue, getClampedMax } from '../../utils';
+import { formatFactorName, formatFactorValue, getClampedMax, getClampedMin } from '../../utils';
 import {
   Card,
   CardHeader,
@@ -25,12 +25,13 @@ interface ConditionCardProps {
 
 export const ConditionCard = ({
   condition,
-  min,
+  min: rawMin,
   max: rawMax,
   onChange,
   onRemove,
   bondTenor,
 }: ConditionCardProps) => {
+  const min = getClampedMin(condition.factor, rawMin);
   const max = getClampedMax(condition.factor, rawMax);
   const step = (max - min) / 200;
 

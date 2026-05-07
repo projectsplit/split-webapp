@@ -6,8 +6,8 @@ export interface FactorMeta {
 
 export const MAIN_FACTORS: FactorMeta[] = [
   { key: 'equity_returns', label: 'Equity Returns', description: 'Annual return on your equity portfolio.' },
-  { key: 'PC1_avg_bp', label: 'Interest Rate Level', description: 'Parallel shift in rates across all maturities. Rising rates cause bond losses; falling rates cause bond gains.' },
-  { key: 'PC2_slope_bp', label: 'Yield Curve Slope', description: 'How much the long end moves relative to the short end. Positive = steepening, negative = flattening or inversion.' },
+  { key: 'PC1_avg_bp', label: 'Interest Rate Level (bps)', description: 'Parallel shift in rates across all maturities. Rising rates cause bond losses; falling rates cause bond gains.' },
+  { key: 'PC2_slope_bp', label: 'Yield Curve Slope (bps)', description: 'How much the long end moves relative to the short end. Positive = steepening, negative = flattening or inversion.' },
   { key: 'infl_1yr_level', label: 'Inflation Level (1yr)', description: 'Annualised inflation rate over the year. Higher inflation increases your living expenses.' },
   { key: 'income', label: 'Net Annual Income', description: 'Your net salary after tax.' },
   { key: 'expenses', label: 'Living Expenses', description: 'Total annual expenses including the inflation adjustment.' },
@@ -29,9 +29,27 @@ export const ADVANCED_FACTORS: FactorMeta[] = [
   { key: 'property_return', label: 'Property Total Return', description: 'Total return on property including both the excess return and the risk-free rate component.' },
   { key: 'property_excess', label: 'Property Excess Return', description: 'Property return above the risk-free rate. Calibrated from the property distribution.' },
   { key: 'property_rfr', label: 'Property Risk-Free Rate', description: 'Risk-free rate component of property return, derived from the yield curve model.' },
-  { key: 'career_severance', label: 'Career Severance', description: 'Severance payment received on career loss. Offsets part of the gross income loss.' },
-  { key: 'career_gross', label: 'Career Gross Loss', description: 'Gross income lost in a career loss event, before severance offset.' },
 ];
+
+export const CAREER_INTERNAL_FACTORS = new Set([
+  'career_gross',
+  'career_severance',
+  'salary_cash',
+  'severance_cash',
+  'Career Loss',
+]);
+
+export const CAREER_RISK_KEY = 'Career Loss';
+export const CAREER_GROSS_KEY = 'career_gross';
+
+export const monthsToCareerGross = (months: number, netSalary: number): number => {
+  return (months / 12) * netSalary;
+};
+
+export const careerGrossToMonths = (value: number, netSalary: number): number => {
+  if (netSalary <= 0) return 0;
+  return Math.max(0, Math.min(12, (value / netSalary) * 12));
+};
 
 const ALL_CATALOG = new Map<string, FactorMeta>();
 for (const f of [...MAIN_FACTORS, ...ADVANCED_FACTORS]) {
@@ -55,14 +73,18 @@ const RATE_FACTORS = new Set([
   'property_return',
   'property_excess',
   'property_rfr',
+]);
+
+const PERCENT_FACTORS = new Set([
   'infl_1yr_level',
-  'infl_slope',
+  'delta_infl_1yr',
 ]);
 
 export const isRateFactor = (name: string): boolean => RATE_FACTORS.has(name);
 
 export const formatFactorValue = (val: number, factorName: string): string => {
-  if (isRateFactor(factorName)) return `${(val * 100).toFixed(1)}%`;
+  if (RATE_FACTORS.has(factorName)) return `${(val * 100).toFixed(1)}%`;
+  if (PERCENT_FACTORS.has(factorName)) return `${val.toFixed(2)}%`;
   if (Math.abs(val) >= 1_000_000) return `${(val / 1_000_000).toFixed(1)}M`;
   if (Math.abs(val) >= 1_000) return `${(val / 1_000).toFixed(1)}K`;
   return val.toFixed(1);
@@ -75,6 +97,18 @@ export const getClampedMax = (factorName: string, max: number): number => {
     return EQUITY_MAX_CAP;
   }
   return max;
+};
+
+const NON_NEGATIVE_FACTORS = new Set([
+  'expenses',
+  'expenses_base',
+]);
+
+export const getClampedMin = (factorName: string, min: number): number => {
+  if (NON_NEGATIVE_FACTORS.has(factorName) && min < 0) {
+    return 0;
+  }
+  return min;
 };
 
 const YIELDS_FACTORS = new Set([

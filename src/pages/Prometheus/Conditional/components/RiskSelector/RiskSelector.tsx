@@ -1,8 +1,10 @@
 import { MdTune, MdAdd, MdPlayArrow } from 'react-icons/md';
 import { Signal } from '@preact/signals-react';
 import { Condition } from '../../interfaces';
+import { CAREER_GROSS_KEY } from '../../utils';
 import { FactorsResponse } from '@/pages/Prometheus/WhatIf/interfaces';
 import { ConditionCard } from '../ConditionCard/ConditionCard';
+import { CareerLossCard } from '../CareerLossCard/CareerLossCard';
 import {
   SelectorPanel,
   SelectorHeader,
@@ -20,6 +22,9 @@ interface RiskSelectorProps {
   onRun: () => void;
   isPending: boolean;
   bondTenor: number;
+  netSalary: number;
+  careerRecoverable: number;
+  currency: string;
 }
 
 const getFactorBounds = (
@@ -41,6 +46,9 @@ export const RiskSelector = ({
   onRun,
   isPending,
   bondTenor,
+  netSalary,
+  careerRecoverable,
+  currency,
 }: RiskSelectorProps) => {
   const handleChange = (index: number, updated: Condition) => {
     const next = [...conditions.value];
@@ -69,6 +77,19 @@ export const RiskSelector = ({
           </EmptyConditions>
         ) : (
           conditions.value.map((cond, i) => {
+            if (cond.factor === CAREER_GROSS_KEY) {
+              return (
+                <CareerLossCard
+                  key={`${cond.factor}-${i}`}
+                  condition={cond}
+                  netSalary={netSalary}
+                  careerRecoverable={careerRecoverable}
+                  currency={currency}
+                  onChange={(updated) => handleChange(i, updated)}
+                  onRemove={() => handleRemove(i)}
+                />
+              );
+            }
             const bounds = getFactorBounds(cond.factor, factors);
             return (
               <ConditionCard

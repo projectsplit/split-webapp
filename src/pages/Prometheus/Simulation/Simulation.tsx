@@ -31,6 +31,7 @@ import { MdDataExploration, MdAutoStories } from 'react-icons/md';
 export const PrometheusSimulation = () => {
   usePrometheusMode();
   const setup = usePrometheusSetup();
+  console.log(setup.value);
   const lastCalculatedSetup = useLastCalculatedSetup();
   const simulationResponse = useSimulationResponse();
 

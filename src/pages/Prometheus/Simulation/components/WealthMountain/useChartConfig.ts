@@ -67,6 +67,8 @@ const KNOWN_FIELDS = new Set([
   'portfolio_end',
   'bond_portfolio_end',
   'career_severance',
+  'salary_cash',
+  'severance_cash',
   'income',
   'expenses',
   'bond_pnl',
@@ -74,6 +76,7 @@ const KNOWN_FIELDS = new Set([
   'delta_infl_1yr',
   'property_return',
   'property_end',
+  'Career Loss',
 ]);
 
 const buildTooltipLines = (s: SimulationScenario): string[] => {
@@ -83,8 +86,8 @@ const buildTooltipLines = (s: SimulationScenario): string[] => {
     `Equity Return:   ${formatPercent(s.equity_return)}`,
     `Equity Portfolio:${formatSimCurrency(s.portfolio_end)}`,
     `Bonds Portfolio: ${formatSimCurrency(s.bond_portfolio_end)}`,
-    `Income:          ${formatSimCurrency(s.income-s.career_severance)}`,
-    `Severance package:${formatSimCurrency(s.career_severance)}`,
+    `Salary Income:   ${formatSimCurrency(s.salary_cash)}`,
+    `Severance Cash:  ${formatSimCurrency(s.severance_cash)}`,
     `Expenses:        ${formatSimCurrency(s.expenses)}`,
     `Bond P&L:        ${formatSimCurrency(s.bond_pnl)}`,
     `Δ Interest Rates:         ${formatBps(s.delta_y_bps)}`,

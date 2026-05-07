@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useSignal } from '@preact/signals-react';
 import { MdCalculate, MdAdd, MdArrowBack } from 'react-icons/md';
 import { usePrometheusMode } from '../usePrometheusMode';
-import { usePrometheusSetup } from '../PrometheusProvider';
+import { usePrometheusSetup, useSimulationResponse } from '../PrometheusProvider';
+import { useGetCalculatedWealth } from '@/api/auth/QueryHooks/useGetCalculatedWealth';
 import { useGetRiskFactors } from '@/api/auth/QueryHooks/useGetRiskFactors';
 import { useRunConditionalQuery } from '@/api/auth/CommandHooks/useRunConditionalQuery';
 import { SimNav } from '../Simulation/components/SimNav/SimNav';
@@ -36,7 +37,14 @@ export const ConditionalProbability = () => {
   const navigate = useNavigate();
   const setup = usePrometheusSetup();
   const bondTenor = setup.value.financials.bond_tenor;
+  const netSalary = setup.value.financials.net_salary;
   const riskToggles = setup.value.risk_toggles;
+  const careerRecoverable = riskToggles.career_recoverable;
+  const careerLossEnabled = riskToggles.career_loss;
+  const simulationResponse = useSimulationResponse();
+  const { data: fetchedWealth } = useGetCalculatedWealth();
+  const simResult = simulationResponse.value ?? fetchedWealth ?? null;
+  const currency = simResult?.economy?.requested?.toUpperCase() ?? 'USD';
   const { data: factors, isFetching } = useGetRiskFactors();
 
   const serverErrors = useSignal<any[]>([]);
@@ -79,7 +87,11 @@ export const ConditionalProbability = () => {
                 conditions={queriedConditions}
                 bondTenor={bondTenor}
               />
-              <NarrativePanel narrative={response.narrative} />
+              <NarrativePanel
+                narrative={response.narrative}
+                factorExplanations={response.factor_explanations}
+                bondTenor={bondTenor}
+              />
             </LeftColumn>
             <RightColumn>
               <RiskSelector
@@ -89,6 +101,9 @@ export const ConditionalProbability = () => {
                 onRun={handleRun}
                 isPending={isPending}
                 bondTenor={bondTenor}
+                netSalary={netSalary}
+                careerRecoverable={careerRecoverable}
+                currency={currency}
               />
             </RightColumn>
           </ContentGrid>
@@ -118,6 +133,9 @@ export const ConditionalProbability = () => {
                   onRun={handleRun}
                   isPending={isPending}
                   bondTenor={bondTenor}
+                  netSalary={netSalary}
+                  careerRecoverable={careerRecoverable}
+                  currency={currency}
                 />
               </RightColumn>
             </ContentGrid>
@@ -137,6 +155,8 @@ export const ConditionalProbability = () => {
         isLoading={isFetching}
         bondTenor={bondTenor}
         riskToggles={riskToggles}
+        netSalary={netSalary}
+        careerLossEnabled={careerLossEnabled}
       />
 
       <Vignette />

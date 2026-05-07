@@ -253,6 +253,54 @@ export const FilterChip = styled.div`
   }
 `;
 
+export const SampleWarning = styled.div<{ $severity: 'caution' | 'severe' }>`
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid
+    ${({ $severity }) =>
+      $severity === 'severe'
+        ? 'rgba(239, 96, 96, 0.35)'
+        : 'rgba(245, 200, 90, 0.3)'};
+  background: ${({ $severity }) =>
+    $severity === 'severe'
+      ? 'rgba(239, 96, 96, 0.08)'
+      : 'rgba(245, 200, 90, 0.06)'};
+
+  svg {
+    color: ${({ $severity }) =>
+      $severity === 'severe' ? '#ef6060' : '#f5c85a'};
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+`;
+
+export const SampleWarningText = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+`;
+
+export const SampleWarningTitle = styled.span`
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #e5e2e1;
+`;
+
+export const SampleWarningBody = styled.span`
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #cdc3d0;
+`;
+
 export const MetricsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;

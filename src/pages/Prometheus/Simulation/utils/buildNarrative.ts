@@ -2,19 +2,20 @@ import { SimulationScenario } from '../interfaces';
 import { formatSimCurrency, formatPercent, formatBps } from './formatCurrency';
 
 const KNOWN_FIELDS = new Set([
-  'percentile', 'wealth', 'equity_return', 'portfolio_end','bond_portfolio_end',
+  'percentile', 'wealth', 'equity_return', 'portfolio_end', 'bond_portfolio_end',
   'income', 'expenses', 'bond_pnl', 'delta_y_bps',
   'delta_infl_1yr', 'property_return', 'property_end',
-  'career_severance',
+  'career_severance', 'salary_cash', 'severance_cash',
+  'Career Loss',
 ]);
 
 const getCustomRiskHits = (scenario: SimulationScenario): string[] => {
   const hits: string[] = [];
   for (const [key, val] of Object.entries(scenario)) {
     if (KNOWN_FIELDS.has(key) || val === null || val === 0) continue;
-    if (typeof val === 'number') {
+    if (typeof val === 'number' && val > 0) {
       const label = key.replace(/_/g, ' ');
-      hits.push(`a ${label} costing ${formatSimCurrency(Math.abs(val))}`);
+      hits.push(`a ${label} costing ${formatSimCurrency(val)}`);
     }
   }
   return hits;
@@ -80,9 +81,11 @@ const describeWealthChange = (
 };
 
 const describeIncome = (s: SimulationScenario): string => {
-  if (s.career_severance > 0) {
-    const salary = s.income - s.career_severance;
-    return `${formatSimCurrency(s.income)} in total income (${formatSimCurrency(salary)} salary + ${formatSimCurrency(s.career_severance)} severance package following a career loss event)`;
+  if (s.severance_cash > 0) {
+    return `${formatSimCurrency(s.income)} in total income (` +
+           `${formatSimCurrency(s.salary_cash)} salary + ` +
+           `${formatSimCurrency(s.severance_cash)} severance ` +
+           `following a career loss event)`;
   }
   return `${formatSimCurrency(s.income)} in income`;
 };
