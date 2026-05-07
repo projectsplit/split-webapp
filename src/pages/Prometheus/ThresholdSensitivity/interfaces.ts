@@ -36,12 +36,18 @@ export interface SweepRow {
   reliability: SweepReliability;
 }
 
+interface SweepNarrative {
+  header:     string[];
+  body:       string[];
+  conclusion: string[];
+}
+
 export interface ConditionalSweepResponse {
   run_id: string;
   factor: string;
   op: string;
   thresholds: number[];
   rows: SweepRow[];
-  narrative: string[];
+  narrative: SweepNarrative;
   factor_explanations: Record<string, string[]>;
 }

@@ -12,6 +12,7 @@ import { useRunWhatIfSimulation } from '@/api/auth/CommandHooks/useRunWhatIfSimu
 import { WhatIfRequest, WhatIfResponse } from './interfaces';
 import { formatDelta } from './utils';
 import { DecisionLevers } from './components/DecisionLevers/DecisionLevers';
+import { AdvancedCapitalState } from './components/DecisionLevers/AdvancedCapital';
 import { SettingsComparison } from './components/SettingsComparison/SettingsComparison';
 import { ResiliencyImpact } from './components/ResiliencyImpact/ResiliencyImpact';
 import { NarrativeIntelligence } from './components/NarrativeIntelligence/NarrativeIntelligence';
@@ -77,6 +78,13 @@ export const WhatIfScenarios = () => {
   const [equitySplit, setEquitySplit] = useState(
     snapshot?.equitySplit ?? defaultEquityPct,
   );
+  const [capital, setCapital] = useState<AdvancedCapitalState>(
+    snapshot?.capital ?? {
+      mode: 'none',
+      moveAmount: 0,
+      hypotheticalTotal: totalPortfolio,
+    },
+  );
 
   const [savingsLimit, setSavingsLimit] = useState(
     Math.max(Math.round(financials.savings * 0.5), 1000),
@@ -91,17 +99,40 @@ export const WhatIfScenarios = () => {
   const handleRun = useCallback(async () => {
     if (isPending) return;
     const req = { ...request };
-    if (equitySplit !== defaultEquityPct) {
+    const splitChanged = equitySplit !== defaultEquityPct;
+    const equityFrac = equitySplit / 100;
+    const bondFrac = (100 - equitySplit) / 100;
+
+    if (capital.mode === 'move-cash') {
+      const moved = Math.max(
+        0,
+        Math.min(capital.moveAmount, financials.savings),
+      );
+      req.buffer_delta = -moved;
       req.reweight = {
-        equity: equitySplit / 100,
-        bond: (100 - equitySplit) / 100,
-        total: totalPortfolio,
+        equity: equityFrac,
+        bond: bondFrac,
+        total: totalPortfolio + moved,
       };
+    } else if (capital.mode === 'hypothetical') {
+      req.reweight = {
+        equity: equityFrac,
+        bond: bondFrac,
+        total: capital.hypotheticalTotal,
+      };
+    } else if (splitChanged) {
+      req.reweight = { equity: equityFrac, bond: bondFrac };
     }
+
     try {
       const result = await runWithCache(req);
       setResponse(result);
-      saveSnapshot({ request: req, response: result, equitySplit });
+      saveSnapshot({
+        request: req,
+        response: result,
+        equitySplit,
+        capital,
+      });
       setDrawerOpen(false);
     } catch {
       /* captured by onError */
@@ -110,7 +141,9 @@ export const WhatIfScenarios = () => {
     request,
     equitySplit,
     defaultEquityPct,
+    capital,
     totalPortfolio,
+    financials.savings,
     isPending,
     runWithCache,
     saveSnapshot,
@@ -136,6 +169,8 @@ export const WhatIfScenarios = () => {
                 financials={financials}
                 equitySplit={equitySplit}
                 defaultEquityPct={defaultEquityPct}
+                capital={capital}
+                defaultTotal={totalPortfolio}
               />
               <ResiliencyImpact
                 baseline={response.baseline}
@@ -217,6 +252,9 @@ export const WhatIfScenarios = () => {
         currency={currency}
         equitySplit={equitySplit}
         onEquitySplitChange={setEquitySplit}
+        capital={capital}
+        onCapitalChange={setCapital}
+        defaultTotal={totalPortfolio}
         savingsLimit={savingsLimit}
         onSavingsLimitChange={setSavingsLimit}
         salaryLimit={salaryLimit}

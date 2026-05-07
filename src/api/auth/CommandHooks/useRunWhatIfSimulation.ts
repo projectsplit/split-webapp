@@ -5,11 +5,13 @@ import {
   WhatIfRequest,
   WhatIfResponse,
 } from '@/pages/Prometheus/WhatIf/interfaces';
+import { AdvancedCapitalState } from '@/pages/Prometheus/WhatIf/components/DecisionLevers/AdvancedCapital';
 
 export interface WhatIfSnapshot {
   request: WhatIfRequest;
   response: WhatIfResponse;
   equitySplit: number;
+  capital?: AdvancedCapitalState;
 }
 
 const STORAGE_KEY = 'whatif-snapshot';
@@ -92,6 +94,7 @@ export const useRunWhatIfSimulation = (serverErrors: Signal<any[]>) => {
 const runWhatIfSimulation = async (
   request: WhatIfRequest,
 ): Promise<WhatIfResponse> => {
+  console.log(request)
   const response = await apiClient.post<WhatIfResponse>(
     'risk-engine/whatif',
     request,

@@ -11,6 +11,7 @@ import { formatDelta, formatDeltaMonthly, formatCompact } from '../../utils';
 import { LeverSlider } from './LeverSlider';
 import { RiskProtection } from './RiskProtection';
 import { StyledRange } from './LeverSlider.styled';
+import { AdvancedCapital, AdvancedCapitalState } from './AdvancedCapital';
 import {
   Overlay,
   Drawer,
@@ -49,6 +50,9 @@ interface DecisionLeversProps {
   currency: string;
   equitySplit: number;
   onEquitySplitChange: (val: number) => void;
+  capital: AdvancedCapitalState;
+  onCapitalChange: (next: AdvancedCapitalState) => void;
+  defaultTotal: number;
   savingsLimit: number;
   onSavingsLimitChange: (val: number) => void;
   salaryLimit: number;
@@ -68,6 +72,9 @@ export const DecisionLevers = ({
   currency,
   equitySplit,
   onEquitySplitChange,
+  capital,
+  onCapitalChange,
+  defaultTotal,
   savingsLimit,
   onSavingsLimitChange,
   salaryLimit,
@@ -77,6 +84,15 @@ export const DecisionLevers = ({
   isLoadingFactors,
 }: DecisionLeversProps) => {
   const bondSplit = 100 - equitySplit;
+  const liquidated =
+    capital.mode === 'hypothetical' && capital.hypotheticalTotal === 0;
+  const moveCashActive = capital.mode === 'move-cash';
+  const movedAmount = moveCashActive
+    ? Math.max(0, Math.min(capital.moveAmount, financials.savings))
+    : 0;
+  const savingsDisplayValue = moveCashActive
+    ? -movedAmount
+    : request.buffer_delta;
   const expensePct = Math.round(request.expense_cut * 100);
   const estimatedExpenses =
     financials.net_salary * (1 - financials.savings_rate);
@@ -111,13 +127,15 @@ export const DecisionLevers = ({
 
                 <LeverSlider
                   label="ONE-TIME SAVINGS ADJUSTMENT"
-                  value={request.buffer_delta}
+                  value={savingsDisplayValue}
                   onChange={(v) => onChange({ ...request, buffer_delta: v })}
                   min={-financials.savings}
                   max={savingsLimit}
                   formatValue={formatDelta}
                   maxEditable
                   onMaxChange={onSavingsLimitChange}
+                  locked={moveCashActive}
+                  lockNote="Linked to Move Cash · Advanced Capital"
                 />
                 <LeverSlider
                   label="ANNUAL INCOME CHANGE"
@@ -154,23 +172,40 @@ export const DecisionLevers = ({
                   </PanelSectionIcon>
                   <PanelSectionLabel>Portfolio Rebalancing</PanelSectionLabel>
                 </PanelSectionHeader>
-                <SplitDisplay>
-                  <SplitLabel $color="#ddb7ff">
-                    EQUITY: {equitySplit}%
-                  </SplitLabel>
-                  <SplitLabel>BONDS: {bondSplit}%</SplitLabel>
-                </SplitDisplay>
-                <SplitBar>
-                  <SplitSegment $width={equitySplit} $color="#ddb7ff" />
-                  <SplitSegment $width={bondSplit} $color="#393939" />
-                </SplitBar>
-                <StyledRange
-                  min={0}
-                  max={100}
-                  value={equitySplit}
-                  onChange={(e: any) =>
-                    onEquitySplitChange(Number(e.target.value))
-                  }
+
+                <div
+                  style={{
+                    opacity: liquidated ? 0.35 : 1,
+                    pointerEvents: liquidated ? 'none' : 'auto',
+                    transition: 'opacity 0.2s ease',
+                  }}
+                >
+                  <SplitDisplay>
+                    <SplitLabel $color="#ddb7ff">
+                      EQUITY: {equitySplit}%
+                    </SplitLabel>
+                    <SplitLabel>BONDS: {bondSplit}%</SplitLabel>
+                  </SplitDisplay>
+                  <SplitBar>
+                    <SplitSegment $width={equitySplit} $color="#ddb7ff" />
+                    <SplitSegment $width={bondSplit} $color="#393939" />
+                  </SplitBar>
+                  <StyledRange
+                    min={0}
+                    max={100}
+                    value={equitySplit}
+                    disabled={liquidated}
+                    onChange={(e: any) =>
+                      onEquitySplitChange(Number(e.target.value))
+                    }
+                  />
+                </div>
+
+                <AdvancedCapital
+                  state={capital}
+                  onChange={onCapitalChange}
+                  savings={financials.savings}
+                  defaultTotal={defaultTotal}
                 />
               </GlassPanel>
             </DrawerLeftCol>

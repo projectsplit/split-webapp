@@ -2,6 +2,7 @@ import { MdTune } from 'react-icons/md';
 import { WhatIfRequest } from '../../interfaces';
 import { Financials } from '@/pages/Prometheus/interfaces';
 import { formatDelta, formatDeltaMonthly, formatCompact } from '../../utils';
+import { AdvancedCapitalState } from '../DecisionLevers/AdvancedCapital';
 import {
   Panel,
   PanelGlow,
@@ -18,6 +19,8 @@ interface SettingsComparisonProps {
   financials: Financials;
   equitySplit: number;
   defaultEquityPct: number;
+  capital: AdvancedCapitalState;
+  defaultTotal: number;
 }
 
 export const SettingsComparison = ({
@@ -25,9 +28,24 @@ export const SettingsComparison = ({
   financials,
   equitySplit,
   defaultEquityPct,
+  capital,
+  defaultTotal,
 }: SettingsComparisonProps) => {
+  const liquidated =
+    capital.mode === 'hypothetical' && capital.hypotheticalTotal === 0;
   const defaultBondPct = 100 - defaultEquityPct;
   const bondSplit = 100 - equitySplit;
+  const movedAmount =
+    capital.mode === 'move-cash'
+      ? Math.max(0, Math.min(capital.moveAmount, financials.savings))
+      : 0;
+  const scenarioTotal =
+    capital.mode === 'hypothetical'
+      ? capital.hypotheticalTotal
+      : capital.mode === 'move-cash'
+        ? defaultTotal + movedAmount
+        : defaultTotal;
+  const totalChanged = capital.mode !== 'none' && scenarioTotal !== defaultTotal;
   const disabledCount = Object.keys(request.disabled_risks).length;
   const cappedCount = Object.keys(request.risk_caps).filter(
     (k) => request.risk_caps[k][0] > 0 || request.risk_caps[k][1] > 0,
@@ -44,7 +62,9 @@ export const SettingsComparison = ({
       <CompRow>
         <RowLabel>CASH INJECTION</RowLabel>
         <BaselineValue>$0</BaselineValue>
-        <ScenarioValue $color="secondary">
+        <ScenarioValue
+          $color={request.buffer_delta < 0 ? 'negative' : 'secondary'}
+        >
           {formatDelta(request.buffer_delta)}
         </ScenarioValue>
       </CompRow>
@@ -77,9 +97,25 @@ export const SettingsComparison = ({
           {defaultEquityPct}/{defaultBondPct}
         </BaselineValue>
         <ScenarioValue $color="primary">
-          {equitySplit}/{bondSplit}
+          {liquidated ? '—' : `${equitySplit}/${bondSplit}`}
         </ScenarioValue>
       </CompRow>
+
+      {totalChanged && (
+        <CompRow>
+          <RowLabel>
+            {capital.mode === 'move-cash' ? 'CASH → PORTFOLIO' : 'TOTAL ALLOCATION'}
+          </RowLabel>
+          <BaselineValue>{formatCompact(defaultTotal)}</BaselineValue>
+          <ScenarioValue $color={liquidated ? 'negative' : 'primary'}>
+            {liquidated
+              ? 'LIQUIDATED'
+              : capital.mode === 'move-cash'
+                ? `+${formatCompact(movedAmount)} → ${formatCompact(scenarioTotal)}`
+                : formatCompact(scenarioTotal)}
+          </ScenarioValue>
+        </CompRow>
+      )}
 
       {disabledCount > 0 && (
         <CompRow>

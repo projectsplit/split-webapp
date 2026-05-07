@@ -1,3 +1,4 @@
+import { MdLock } from 'react-icons/md';
 import { formatCompact } from '../../utils';
 import {
   SliderWrapper,
@@ -8,6 +9,7 @@ import {
   SliderFooter,
   MinMaxLabel,
   MaxInputField,
+  LockNote,
 } from './LeverSlider.styled';
 
 interface LeverSliderProps {
@@ -21,6 +23,8 @@ interface LeverSliderProps {
   formatBound?: (val: number) => string;
   maxEditable?: boolean;
   onMaxChange?: (val: number) => void;
+  locked?: boolean;
+  lockNote?: string;
 }
 
 export const LeverSlider = ({
@@ -34,12 +38,14 @@ export const LeverSlider = ({
   formatBound,
   maxEditable,
   onMaxChange,
+  locked,
+  lockNote,
 }: LeverSliderProps) => {
   const display = formatBound ?? formatCompact;
   const isPositive = value > 0;
 
   return (
-    <SliderWrapper>
+    <SliderWrapper $locked={locked}>
       <SliderHeader>
         <SliderLabel>{label}</SliderLabel>
         <SliderValue $positive={value === 0 ? undefined : isPositive}>
@@ -51,11 +57,16 @@ export const LeverSlider = ({
         max={max}
         step={step}
         value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
+        disabled={locked}
+        readOnly={locked}
+        onChange={(e) => {
+          if (locked) return;
+          onChange(Number(e.target.value));
+        }}
       />
       <SliderFooter>
         <MinMaxLabel>{display(min)}</MinMaxLabel>
-        {maxEditable && onMaxChange ? (
+        {maxEditable && onMaxChange && !locked ? (
           <MaxInputField
             type="number"
             value={max}
@@ -65,6 +76,12 @@ export const LeverSlider = ({
           <MinMaxLabel>{display(max)}</MinMaxLabel>
         )}
       </SliderFooter>
+      {locked && lockNote && (
+        <LockNote>
+          <MdLock />
+          {lockNote}
+        </LockNote>
+      )}
     </SliderWrapper>
   );
 };
