@@ -104,6 +104,14 @@ export const RightColumn = styled.div`
   min-width: 0;
 `;
 
+export const FullWidthRow = styled.div`
+  min-width: 0;
+
+  @media (min-width: 1024px) {
+    grid-column: 1 / -1;
+  }
+`;
+
 export const Vignette = styled.div`
   position: fixed;
   inset: 0;

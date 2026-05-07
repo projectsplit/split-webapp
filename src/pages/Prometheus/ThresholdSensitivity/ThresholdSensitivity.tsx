@@ -23,6 +23,7 @@ import {
   ContentGrid,
   LeftColumn,
   RightColumn,
+  FullWidthRow,
   Vignette,
   EmptyState,
   EmptyIcon,
@@ -91,13 +92,6 @@ export const ThresholdSensitivity = () => {
               isPending={isPending}
               bondTenor={bondTenor}
             />
-            {response && (
-              <SweepNarrativePanel
-                narrative={response.narrative}
-                factorExplanations={response.factor_explanations}
-                bondTenor={bondTenor}
-              />
-            )}
           </LeftColumn>
 
           <RightColumn>
@@ -124,6 +118,16 @@ export const ThresholdSensitivity = () => {
               </EmptyState>
             )}
           </RightColumn>
+
+          {response && (
+            <FullWidthRow>
+              <SweepNarrativePanel
+                narrative={response.narrative}
+                factorExplanations={response.factor_explanations}
+                bondTenor={bondTenor}
+              />
+            </FullWidthRow>
+          )}
         </ContentGrid>
       </Main>
 

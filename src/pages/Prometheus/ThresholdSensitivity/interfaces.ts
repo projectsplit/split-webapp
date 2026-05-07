@@ -36,7 +36,7 @@ export interface SweepRow {
   reliability: SweepReliability;
 }
 
-interface SweepNarrative {
+export interface SweepNarrative {
   header:     string[];
   body:       string[];
   conclusion: string[];
