@@ -14,6 +14,7 @@ const routes = {
   PROMETHEUS_PERCENTILE_DETAIL: '/prometheus/simulations/:percentile',
   PROMETHEUS_WHATIF: '/prometheus/whatif',
   PROMETHEUS_CONDITIONAL: '/prometheus/conditional',
+  PROMETHEUS_SENSITIVITY: '/prometheus/sensitivity',
 };
 
 export default routes;

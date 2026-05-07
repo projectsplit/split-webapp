@@ -6,8 +6,9 @@ import {
   MdAnalytics,
   MdSmartDisplay,
   MdPerson,
+  MdCalculate,
+  MdSsidChart,
 } from 'react-icons/md';
-import { MdCalculate } from 'react-icons/md';
 import {
   DesktopSidebar,
   LogoBlock,
@@ -35,6 +36,7 @@ const NAV_ITEMS: NavEntry[] = [
   { key: 'sims', label: 'SIMULATIONS', shortLabel: 'Sims', icon: <MdQueryStats />, route: '/prometheus/simulations' },
   { key: 'whatif', label: 'WHAT-IF SCENARIOS', shortLabel: 'What-If', icon: <MdAnalytics />, route: '/prometheus/whatif' },
   { key: 'condprob', label: 'CONDITIONAL PROB', shortLabel: 'Cond Prob', icon: <MdCalculate />, route: '/prometheus/conditional' },
+  { key: 'sensitivity', label: 'THRESHOLD SWEEP', shortLabel: 'Sweep', icon: <MdSsidChart />, route: '/prometheus/sensitivity' },
   { key: 'tail', label: 'TAIL RISK ANALYSIS', shortLabel: 'Tail', icon: <MdSmartDisplay />, route: '/prometheus/tail' },
 ];
 
