@@ -199,6 +199,35 @@ export const OrbValue = styled.div<{ $variant: 'baseline' | 'conditional' }>`
   }
 `;
 
+export const OrbCiRange = styled.span`
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.5625rem;
+  color: rgba(221, 183, 255, 0.6);
+  letter-spacing: 0.04em;
+  position: relative;
+  margin-top: 0.125rem;
+
+  @media (min-width: 768px) {
+    font-size: 0.6875rem;
+  }
+`;
+
+export const OrbInsufficient = styled.span`
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.5rem;
+  color: rgba(239, 96, 96, 0.7);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  position: relative;
+  margin-top: 0.25rem;
+  line-height: 1.4;
+
+  @media (min-width: 768px) {
+    font-size: 0.5625rem;
+  }
+`;
+
 export const VsSeparator = styled.div`
   display: flex;
   flex-direction: column;

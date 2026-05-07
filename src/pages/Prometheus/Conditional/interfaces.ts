@@ -8,6 +8,8 @@ export interface ConditionalQueryRequest {
   conditions: Condition[];
 }
 
+export type Reliability = 'reliable' | 'wide_ci' | 'insufficient';
+
 export interface ConditionalQueryResponse {
   run_id: string;
   condition: string;
@@ -18,6 +20,9 @@ export interface ConditionalQueryResponse {
   n_busts_in_subset: number;
   frac_busts: number;
   p_bust: number | null;
+  p_bust_ci_low: number | null;   // NEW — Wilson 95% lower bound (%)
+  p_bust_ci_high: number | null;  // NEW — Wilson 95% upper bound (%)
+  reliability: Reliability;       // NEW
   baseline_p_bust: number;
   lift: number | null;
   narrative: string[];

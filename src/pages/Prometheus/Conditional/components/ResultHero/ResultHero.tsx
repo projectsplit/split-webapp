@@ -15,6 +15,8 @@ import {
   OrbGradient,
   OrbLabel,
   OrbValue,
+  OrbCiRange,
+  OrbInsufficient,
   VsSeparator,
   VsLine,
   VsBadge,
@@ -61,19 +63,55 @@ const formatConditionLabel = (c: Condition, bondTenor: number): string => {
   return `${formatFactorName(c.factor, bondTenor)} ${OP_LABELS[c.op]} ${formatConditionValue(c.value)}`;
 };
 
-const LOW_SAMPLE_THRESHOLD = 100;
-const VERY_LOW_SAMPLE_THRESHOLD = 30;
+const ConditionalOrbContent = ({ response }: { response: ConditionalQueryResponse }) => {
+  const { reliability, p_bust, p_bust_ci_low, p_bust_ci_high, n_subset, n_busts_in_subset } = response;
+
+  if (reliability === 'insufficient') {
+    return (
+      <>
+        <OrbValue $variant="conditional">--</OrbValue>
+        <OrbInsufficient>
+          N={n_subset}, {n_busts_in_subset} bust{n_busts_in_subset !== 1 ? 's' : ''}
+        </OrbInsufficient>
+      </>
+    );
+  }
+
+  if (reliability === 'wide_ci') {
+    return (
+      <>
+        <OrbValue $variant="conditional">{formatPct(p_bust)}</OrbValue>
+        <OrbCiRange>
+          [{formatPct(p_bust_ci_low)} – {formatPct(p_bust_ci_high)}]
+        </OrbCiRange>
+      </>
+    );
+  }
+
+  return (
+    <OrbValue
+      $variant="conditional"
+      title={
+        p_bust_ci_low !== null && p_bust_ci_high !== null
+          ? `95% CI: ${formatPct(p_bust_ci_low)} – ${formatPct(p_bust_ci_high)}`
+          : undefined
+      }
+    >
+      {formatPct(p_bust)}
+    </OrbValue>
+  );
+};
 
 export const ResultHero = ({ response, conditions, bondTenor }: ResultHeroProps) => {
-  const lowSample = response.n_subset < LOW_SAMPLE_THRESHOLD;
-  const verySevere = response.n_subset < VERY_LOW_SAMPLE_THRESHOLD;
-  const severity: 'caution' | 'severe' = verySevere ? 'severe' : 'caution';
-  const warningTitle = verySevere
-    ? 'Very small subset — estimate is unreliable'
-    : 'Small subset — estimate is noisy';
-  const warningBody = verySevere
-    ? `Only ${response.n_subset} paths matched these conditions. The conditional probability is highly uncertain — consider loosening the conditions to broaden the sample.`
-    : `Only ${response.n_subset} paths matched these conditions. The conditional probability has wide error bars at this sample size — interpret with caution or relax the conditions.`;
+  const { reliability } = response;
+  const showWarning = reliability !== 'reliable';
+  const severity: 'caution' | 'severe' = reliability === 'insufficient' ? 'severe' : 'caution';
+  const warningTitle = reliability === 'insufficient'
+    ? 'Insufficient data — estimate suppressed'
+    : 'Wide confidence interval — interpret with caution';
+  const warningBody = reliability === 'insufficient'
+    ? `Only ${response.n_subset} paths matched (${response.n_busts_in_subset} bust events). The sample is too small to produce a meaningful estimate — consider loosening the conditions.`
+    : `The conditional estimate has a wide 95% CI: ${formatPct(response.p_bust_ci_low)} – ${formatPct(response.p_bust_ci_high)}. The point estimate is noisy at this sample size.`;
 
   return (
     <HeroSection>
@@ -106,9 +144,7 @@ export const ResultHero = ({ response, conditions, bondTenor }: ResultHeroProps)
             <ProbabilityOrb $variant="conditional">
               <OrbGradient $variant="conditional" />
               <OrbLabel $variant="conditional">Conditional</OrbLabel>
-              <OrbValue $variant="conditional">
-                {formatPct(response.p_bust)}
-              </OrbValue>
+              <ConditionalOrbContent response={response} />
             </ProbabilityOrb>
           </OrbRow>
 
@@ -122,7 +158,7 @@ export const ResultHero = ({ response, conditions, bondTenor }: ResultHeroProps)
           </FilterChips>
         </ComparisonContainer>
 
-        {lowSample && (
+        {showWarning && (
           <SampleWarning $severity={severity}>
             <MdWarningAmber />
             <SampleWarningText>
