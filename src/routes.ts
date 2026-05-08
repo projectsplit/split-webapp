@@ -15,6 +15,7 @@ const routes = {
   PROMETHEUS_WHATIF: '/prometheus/whatif',
   PROMETHEUS_CONDITIONAL: '/prometheus/conditional',
   PROMETHEUS_SENSITIVITY: '/prometheus/sensitivity',
+  PROMETHEUS_TAIL: '/prometheus/tail',
 };
 
 export default routes;

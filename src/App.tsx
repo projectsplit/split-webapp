@@ -37,6 +37,7 @@ import { PercentileBreakdown } from './pages/Prometheus/Simulation/components/Pe
 import { WhatIfScenarios } from './pages/Prometheus/WhatIf/WhatIf';
 import { ConditionalProbability } from './pages/Prometheus/Conditional/Conditional';
 import { ThresholdSensitivity } from './pages/Prometheus/ThresholdSensitivity/ThresholdSensitivity';
+import { TailRisk } from './pages/Prometheus/TailRisk/TailRisk';
 
 const App = () => {
   return (
@@ -118,6 +119,10 @@ const App = () => {
             <Route
               path={routes.PROMETHEUS_SENSITIVITY}
               element={<ThresholdSensitivity />}
+            />
+            <Route
+              path={routes.PROMETHEUS_TAIL}
+              element={<TailRisk />}
             />
           </Route>
 
