@@ -123,7 +123,7 @@ export const EngineSettings = ({
           </Field>
 
           <StepperField
-            label="Tail Threshold (Busts)"
+            label="Tail Threshold (Ruin Paths)"
             hint="Minimum ruin paths needed for analysis. Widens to fallback % if not met."
             value={request.tail_threshold_busts}
             onChange={(v) => set({ tail_threshold_busts: v })}

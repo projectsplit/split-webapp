@@ -34,16 +34,13 @@ export const SimulationNarrative = ({
 
   return (
     <Panel>
-      <Header>
-        <MdHistoryEdu />
-        <Title>Simulation Narrative</Title>
-      </Header>
+
 
       {portrait.length > 0 && (
         <Section>
           <SectionLabel $tone="portrait">
             <MdAutoStories />
-            Portrait of a Bust Year
+            Portrait of a Ruinous Year
           </SectionLabel>
           {portrait.map((line, i) => (
             <Paragraph key={i}>{line}</Paragraph>

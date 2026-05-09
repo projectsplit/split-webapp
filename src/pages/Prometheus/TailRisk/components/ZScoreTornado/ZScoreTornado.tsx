@@ -9,8 +9,6 @@ import {
   Legend,
   LegendDot,
   ChartArea,
-  ThresholdLine,
-  ThresholdLabel,
   Centerline,
   Row,
   RowHeader,
@@ -30,7 +28,6 @@ interface ZScoreTornadoProps {
   currency: string;
 }
 
-const NOTABLE_THRESHOLD = 2.0;
 const MIN_AXIS = 3.5;
 
 export const ZScoreTornado = ({
@@ -54,7 +51,6 @@ export const ZScoreTornado = ({
 
   const sorted = [...rows].sort((a, b) => b.abs_z - a.abs_z);
   const maxAbsZ = Math.max(MIN_AXIS, ...sorted.map((r) => r.abs_z));
-  const notableOffsetRight = 50 + (NOTABLE_THRESHOLD / maxAbsZ) * 50;
 
   return (
     <Panel>
@@ -73,14 +69,10 @@ export const ZScoreTornado = ({
 
       <ChartArea>
         <Centerline />
-        <ThresholdLine $offsetPct={notableOffsetRight} />
-        <ThresholdLabel $offsetPct={notableOffsetRight}>
-          NOTABLE |z| = {NOTABLE_THRESHOLD}
-        </ThresholdLabel>
 
         {sorted.map((row) => {
           const tier = concentrationTier(row.abs_z);
-          const direction = row.direction === 'high' ? 'right' : 'left';
+          const direction = row.mean_tail >= 0 ? 'right' : 'left';
           const widthPct = Math.min(50, (row.abs_z / maxAbsZ) * 50);
           const factorLabel = formatFactorName(row.factor, bondTenor);
 
@@ -101,13 +93,13 @@ export const ZScoreTornado = ({
                 />
                 <ValueLabels $direction={direction}>
                   <ValueChip $tone="pop">
-                    <small>POP</small>
+                    <small>AVG</small>
                     <strong>
                       {formatTailValue(row.mean_full, row.factor, currency)}
                     </strong>
                   </ValueChip>
                   <ValueChip $tone="tail">
-                    <small>TAIL</small>
+                    <small>TAIL AVG</small>
                     <strong>
                       {formatTailValue(row.mean_tail, row.factor, currency)}
                     </strong>

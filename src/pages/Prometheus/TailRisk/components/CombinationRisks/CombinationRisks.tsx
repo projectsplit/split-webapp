@@ -13,12 +13,16 @@ import {
   Explanation,
   Grid,
   Cell,
-  CriticalBadge,
+  CellTone,
+  SeverityBadge,
   CellLabels,
   CellLabel,
   CellValue,
   StatsBlock,
   StatLine,
+  StatLabel,
+  HintIcon,
+  HintTooltip,
   EmptyState,
 } from './CombinationRisks.styled';
 
@@ -47,8 +51,23 @@ const buildExplanation = (pair: PairRow, bondTenor: number): string => {
   const bPct = formatPct(pair.p_b_alone * 100);
   const jointPct = formatPct(pair.p_joint * 100);
   const expectedPct = formatPct(pair.expected_indep * 100);
-  const excessPp = formatPpDelta(pair.interaction_excess * 100);
-  return `When only ${a} is bad, bust rate is ${aPct}. When only ${b} is bad, bust rate is ${bPct}. When both are bad together, bust rate is ${jointPct}. If they were independent, you would expect ${expectedPct} — the extra ${excessPp} is the compounding effect.`;
+  const excess = pair.interaction_excess * 100;
+  const effectText =
+    excess >= 0
+      ? `the extra ${formatPpDelta(excess)} is the compounding effect.`
+      : `the actual rate is ${formatPpDelta(Math.abs(excess))} lower, meaning these factors partially offset each other rather than compound.`;
+  return `When only ${a} is bad, ruin rate is ${aPct}. When only ${b} is bad, ruin rate is ${bPct}. When both are bad together, ruin rate is ${jointPct}. If they were independent, you would expect ${expectedPct} — ${effectText}`;
+};
+
+const jointSeverity = (
+  pair: PairRow,
+): { tone: CellTone; label: string } => {
+  const lift =
+    pair.p_baseline > 0 ? pair.cells.both.p_bust / pair.p_baseline : 1;
+  if (lift >= 5) return { tone: 'critical', label: 'Critical' };
+  if (lift >= 2.5) return { tone: 'elevated', label: 'Elevated' };
+  if (lift >= 1.5) return { tone: 'moderate', label: 'Heightened' };
+  return { tone: 'neutral', label: 'Combined' };
 };
 
 export const CombinationRisks = ({
@@ -78,6 +97,7 @@ export const CombinationRisks = ({
 
   const safeIdx = Math.min(activeIdx, visiblePairs.length - 1);
   const pair = visiblePairs[safeIdx];
+  const severity = jointSeverity(pair);
   const aShort = shortFactorName(pair.factor_a, bondTenor);
   const bShort = shortFactorName(pair.factor_b, bondTenor);
   const aDir = directionLabel(pair.factor_a, pair.direction_a);
@@ -131,7 +151,7 @@ export const CombinationRisks = ({
             </CellLabel>
           </CellLabels>
           <CellValue>
-            <small>P(BUST) · n {fmtCount(pair.cells.neither.n)}</small>
+            <small>P(RUIN) · n {fmtCount(pair.cells.neither.n)}</small>
             <strong>{fmtP(pair.cells.neither.p_bust)}</strong>
           </CellValue>
         </Cell>
@@ -148,7 +168,7 @@ export const CombinationRisks = ({
             </CellLabel>
           </CellLabels>
           <CellValue>
-            <small>P(BUST) · n {fmtCount(pair.cells.a_only.n)}</small>
+            <small>P(Ruin) · n {fmtCount(pair.cells.a_only.n)}</small>
             <strong>{fmtP(pair.cells.a_only.p_bust)}</strong>
           </CellValue>
         </Cell>
@@ -165,13 +185,15 @@ export const CombinationRisks = ({
             </CellLabel>
           </CellLabels>
           <CellValue>
-            <small>P(BUST) · n {fmtCount(pair.cells.b_only.n)}</small>
+            <small>P(Ruin) · n {fmtCount(pair.cells.b_only.n)}</small>
             <strong>{fmtP(pair.cells.b_only.p_bust)}</strong>
           </CellValue>
         </Cell>
 
-        <Cell $tone="critical">
-          <CriticalBadge>CRITICAL</CriticalBadge>
+        <Cell $tone={severity.tone}>
+          <SeverityBadge $tone={severity.tone}>
+            {severity.label}
+          </SeverityBadge>
           <CellLabels>
             <CellLabel $color="#ef4444">
               {arrowFor(pair.direction_a, true)}
@@ -183,7 +205,7 @@ export const CombinationRisks = ({
             </CellLabel>
           </CellLabels>
           <CellValue>
-            <small>P(BUST) · n {fmtCount(pair.cells.both.n)}</small>
+            <small>P(Ruin) · n {fmtCount(pair.cells.both.n)}</small>
             <strong style={{ color: '#ef4444' }}>
               {fmtP(pair.cells.both.p_bust)}
             </strong>
@@ -193,15 +215,43 @@ export const CombinationRisks = ({
 
       <StatsBlock>
         <StatLine>
-          <span>EXPECTED INDEP</span>
+          <StatLabel>
+            Expected if independent
+            <HintIcon>
+              ?
+              <HintTooltip>
+                If these two risks had nothing to do with each other, this is how
+                often you'd face ruin when both are bad at the same time.
+              </HintTooltip>
+            </HintIcon>
+          </StatLabel>
           <span>{fmtP(pair.expected_indep)}</span>
         </StatLine>
         <StatLine $tone="error">
-          <span>INTERACTION EXCESS</span>
+          <StatLabel>
+            Interaction excess
+            <HintIcon>
+              ?
+              <HintTooltip>
+                How much the actual ruin rate differs from expected. Positive
+                means the two risks make each other worse. Negative means one
+                partly cushions the other.
+              </HintTooltip>
+            </HintIcon>
+          </StatLabel>
           <span>{formatPpDelta(pair.interaction_excess * 100)}</span>
         </StatLine>
         <StatLine $tone="primary">
-          <span>JOINT EXCESS</span>
+          <StatLabel>
+            Joint excess
+            <HintIcon>
+              ?
+              <HintTooltip>
+                How much extra ruin risk you face from both risks being bad
+                together, compared to only your single worst risk being bad.
+              </HintTooltip>
+            </HintIcon>
+          </StatLabel>
           <span>{formatPpDelta(pair.joint_excess * 100)}</span>
         </StatLine>
       </StatsBlock>

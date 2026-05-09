@@ -204,6 +204,22 @@ export const BaselineLegend = styled.div`
   }
 `;
 
+export const LeafExplanation = styled.p`
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid rgba(221, 183, 255, 0.15);
+  border-radius: 0 0.25rem 0.25rem 0;
+
+  @media (min-width: 1024px) {
+    grid-column: 1 / -1;
+  }
+`;
+
 export const EmptyState = styled.div`
   padding: 2.5rem 1rem;
   text-align: center;

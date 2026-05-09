@@ -69,34 +69,6 @@ export const ChartArea = styled.div`
   padding-top: 1.25rem;
 `;
 
-export const ThresholdLine = styled.div<{ $offsetPct: number }>`
-  position: absolute;
-  top: 0;
-  bottom: 1.5rem;
-  left: ${({ $offsetPct }) => $offsetPct}%;
-  width: 1px;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(221, 183, 255, 0.35) 0,
-    rgba(221, 183, 255, 0.35) 3px,
-    transparent 3px,
-    transparent 6px
-  );
-  pointer-events: none;
-`;
-
-export const ThresholdLabel = styled.span<{ $offsetPct: number }>`
-  position: absolute;
-  top: 0;
-  left: ${({ $offsetPct }) => $offsetPct}%;
-  transform: translateX(-50%);
-  font-family: 'Roboto Mono', monospace;
-  font-size: 0.5625rem;
-  letter-spacing: 0.1em;
-  color: rgba(221, 183, 255, 0.6);
-  white-space: nowrap;
-  pointer-events: none;
-`;
 
 export const Centerline = styled.div`
   position: absolute;
@@ -166,7 +138,7 @@ export const ValueLabels = styled.div<{ $direction: 'left' | 'right' }>`
   display: flex;
   align-items: center;
   justify-content: ${({ $direction }) =>
-    $direction === 'right' ? 'flex-start' : 'flex-end'};
+    $direction === 'right' ? 'flex-end' : 'flex-start'};
   padding: 0 0.75rem;
   font-family: 'Roboto Mono', monospace;
   font-size: 0.6875rem;

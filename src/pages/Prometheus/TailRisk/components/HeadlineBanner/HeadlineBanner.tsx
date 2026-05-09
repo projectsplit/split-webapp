@@ -57,10 +57,10 @@ export const HeadlineBanner = ({
       <Accent />
       <SubMeta>
         <MetaItem>
-          BASELINE P(BUST): <strong>{formatPct(baselinePBust * 100, 4)}</strong>
+          Baseline P(Ruin): <strong>{formatPct(baselinePBust * 100, 4)}</strong>
         </MetaItem>
         <MetaItem>
-          TAIL: <strong>{tailLabel}</strong>
+          Tail: <strong>{tailLabel}</strong>
         </MetaItem>
       </SubMeta>
     </Banner>

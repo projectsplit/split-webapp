@@ -61,6 +61,7 @@ export interface PathwayLeaf {
   n_busts: number;
   bust_rate: number;
   lift_vs_baseline: number;
+  explanation?: string;
 }
 
 export interface PathwaysResult {
@@ -78,8 +79,6 @@ export interface NarrativeSections {
   headline: string;
   portrait: string[];
   diagnosis: string[];
-  pairs: string[];
-  pathways: string[];
 }
 
 export interface TailDriversResponse {

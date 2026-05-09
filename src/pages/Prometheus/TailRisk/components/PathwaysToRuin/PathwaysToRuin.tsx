@@ -26,6 +26,7 @@ import {
   Volume,
   Capture,
   BaselineLegend,
+  LeafExplanation,
   EmptyState,
 } from './PathwaysToRuin.styled';
 
@@ -69,38 +70,10 @@ export const PathwaysToRuin = ({
 }: PathwaysToRuinProps) => {
   if (!pathways) return null;
 
-  if (!pathways.available) {
-    return (
-      <Panel>
-        <Header>
-          <Title>
-            <MdAccountTree />
-            Pathways to Ruin
-          </Title>
-        </Header>
-        <EmptyState>{pathways.reason ?? 'Pathways analysis unavailable.'}</EmptyState>
-      </Panel>
-    );
-  }
-
   const leaves: PathwayLeaf[] = pathways.leaves ?? [];
+  const hasExplanations = leaves.some((l) => l.explanation);
 
-  if (!leaves.length) {
-    return (
-      <Panel>
-        <Header>
-          <Title>
-            <MdAccountTree />
-            Pathways to Ruin
-          </Title>
-        </Header>
-        <EmptyState>
-          No concentrated ruin pathways found — bust risk is spread diffusely
-          across scenarios.
-        </EmptyState>
-      </Panel>
-    );
-  }
+  if (!pathways.available || !leaves.length || !hasExplanations) return null;
 
   const baseline = pathways.p_baseline ?? 0;
   const totalNBusts = pathways.n_busts ?? 0;
@@ -119,7 +92,7 @@ export const PathwaysToRuin = ({
           Pathways to Ruin
         </Title>
         <Meta>
-          {leaves.length} leaves · depth {pathways.depth} · baseline P(bust){' '}
+          {leaves.length} leaves · depth {pathways.depth} · baseline P(ruin){' '}
           {formatPct(baseline * 100)}
         </Meta>
       </Header>
@@ -164,10 +137,14 @@ export const PathwaysToRuin = ({
                 </Volume>
                 {captureFraction !== null && (
                   <Capture>
-                    {captureFraction.toFixed(1)}% of all busts
+                    {captureFraction.toFixed(1)}% of all ruin paths
                   </Capture>
                 )}
               </Annotation>
+
+              {leaf.explanation && (
+                <LeafExplanation>{leaf.explanation}</LeafExplanation>
+              )}
             </LeafRow>
           );
         })}
@@ -175,7 +152,7 @@ export const PathwaysToRuin = ({
 
       {baseline > 0 && (
         <BaselineLegend>
-          dashed line = baseline P(bust) {formatPct(baseline * 100)}
+          dashed line = baseline P(ruin) {formatPct(baseline * 100)}
         </BaselineLegend>
       )}
     </Panel>

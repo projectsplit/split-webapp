@@ -54,7 +54,16 @@ export const TailRisk = () => {
   const [request, setRequest] = useState<Required<TailDriversRequest>>({
     ...DEFAULT_TAIL_REQUEST,
   });
-  const [response, setResponse] = useState<TailDriversResponse | null>(null);
+  const STORAGE_KEY = 'prometheus_tail_response';
+
+  const [response, setResponse] = useState<TailDriversResponse | null>(() => {
+    try {
+      const cached = sessionStorage.getItem(STORAGE_KEY);
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const handleRun = useCallback(async () => {
@@ -62,6 +71,7 @@ export const TailRisk = () => {
     try {
       const result = await mutateAsync(request);
       setResponse(result);
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(result));
       setSettingsOpen(false);
     } catch {
       /* captured by onError */
