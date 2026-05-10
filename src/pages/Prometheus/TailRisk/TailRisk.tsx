@@ -117,7 +117,6 @@ export const TailRisk = () => {
               <CombinationRisks
                 pairs={response.pairs}
                 bondTenor={bondTenor}
-                maxPairs={5}
               />
             </SplitGrid>
 

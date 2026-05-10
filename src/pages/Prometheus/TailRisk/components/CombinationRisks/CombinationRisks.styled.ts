@@ -37,8 +37,22 @@ export const Title = styled.h3`
 
 export const Tabs = styled.div`
   display: flex;
-  flex-wrap: wrap;
   gap: 0.375rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(221, 183, 255, 0.2) transparent;
+
+  &::-webkit-scrollbar {
+    height: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(221, 183, 255, 0.2);
+    border-radius: 3px;
+  }
 `;
 
 export const TabChip = styled.button<{ $active: boolean }>`
@@ -46,6 +60,8 @@ export const TabChip = styled.button<{ $active: boolean }>`
   align-items: center;
   gap: 0.375rem;
   padding: 0.375rem 0.625rem;
+  flex-shrink: 0;
+  white-space: nowrap;
   background: ${({ $active }) =>
     $active ? 'rgba(221, 183, 255, 0.1)' : 'rgba(255, 255, 255, 0.04)'};
   border: 1px solid

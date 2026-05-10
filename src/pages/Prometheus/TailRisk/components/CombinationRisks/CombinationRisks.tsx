@@ -29,10 +29,7 @@ import {
 interface CombinationRisksProps {
   pairs: PairRow[];
   bondTenor: number;
-  maxPairs?: number;
 }
-
-const MAX_DEFAULT = 5;
 
 const shortFactorName = (raw: string, bondTenor: number): string => {
   const full = formatFactorName(raw, bondTenor);
@@ -73,15 +70,11 @@ const jointSeverity = (
 export const CombinationRisks = ({
   pairs,
   bondTenor,
-  maxPairs = MAX_DEFAULT,
 }: CombinationRisksProps) => {
-  const visiblePairs = useMemo(
-    () => (pairs ?? []).slice(0, maxPairs),
-    [pairs, maxPairs],
-  );
+  const allPairs = useMemo(() => pairs ?? [], [pairs]);
   const [activeIdx, setActiveIdx] = useState(0);
 
-  if (!visiblePairs.length) {
+  if (!allPairs.length) {
     return (
       <Panel>
         <Header>
@@ -95,8 +88,8 @@ export const CombinationRisks = ({
     );
   }
 
-  const safeIdx = Math.min(activeIdx, visiblePairs.length - 1);
-  const pair = visiblePairs[safeIdx];
+  const safeIdx = Math.min(activeIdx, allPairs.length - 1);
+  const pair = allPairs[safeIdx];
   const severity = jointSeverity(pair);
   const aShort = shortFactorName(pair.factor_a, bondTenor);
   const bShort = shortFactorName(pair.factor_b, bondTenor);
@@ -118,7 +111,7 @@ export const CombinationRisks = ({
       </Header>
 
       <Tabs>
-        {visiblePairs.map((p, i) => (
+        {allPairs.map((p, i) => (
           <TabChip
             key={`${p.factor_a}-${p.factor_b}-${i}`}
             $active={i === safeIdx}
