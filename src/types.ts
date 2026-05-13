@@ -17,10 +17,32 @@ export type PasswordSignInResponse = {
 export type PasswordSignUpRequest = {
   username: string;
   password: string;
+  email: string;
 };
 
 export type PasswordSignUpResponse = {
   accessToken: string;
+};
+
+export type RequestPasswordResetRequest = {
+  email: string;
+};
+
+export type ResetPasswordRequest = {
+  token: string;
+  newPassword: string;
+};
+
+export type RequestUsernameRecoveryRequest = {
+  email: string;
+};
+
+export type SetAccountEmailRequest = {
+  email: string;
+};
+
+export type VerifyAccountEmailRequest = {
+  code: string;
 };
 
 export type SendGoogleCodeRequest = {
@@ -40,6 +62,8 @@ export type UserInfo = {
   hasNewerNotifications: boolean;
   currency: string;
   showBudgetInfo: boolean;
+  email: string | null;
+  emailVerified: boolean;
 };
 
 export type ExpenseItem = {

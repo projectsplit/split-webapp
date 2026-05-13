@@ -9,11 +9,15 @@ import { createPasswordCredentials } from '../../api/auth/api';
 import { PasswordSignUpRequest, PasswordSignUpResponse } from '../../types';
 import routes from '../../routes';
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function CreateAccount() {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [networkError, setNetworkError] = useState<string>('');
   const [requestError, setRequestError] = useState<string>('');
+  const [emailError, setEmailError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
   const navigate = useNavigate();
 
@@ -29,17 +33,27 @@ export default function CreateAccount() {
   });
 
   const handleSignUp = () => {
+    if (!username) return;
+    if (!email) {
+      setEmailError('Email is required');
+      return;
+    }
+    if (!EMAIL_REGEX.test(email)) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
     if (password.length < 9) {
       setPasswordError('Password should contain at least 10 characters');
       return;
     }
-    if (!username || !password) return;
+    if (!password) return;
     setNetworkError('');
     setRequestError('');
+    setEmailError('');
     setPasswordError('');
 
     signUpWithCredentialsMutation(
-      { username, password },
+      { username, password, email },
       {
         onSuccess: (response) => {
           localStorage.setItem('accessToken', response.accessToken);
@@ -80,6 +94,24 @@ export default function CreateAccount() {
             />
             {requestError ? (
               <div className="errormsg">{requestError}&nbsp;</div>
+            ) : (
+              ''
+            )}
+          </div>
+          <div className="inputBox">
+            <Input
+              type="email"
+              inputMode="email"
+              value={email}
+              error={emailError ? true : false}
+              placeholder="Email"
+              onChange={(e) => {
+                setEmailError('');
+                setEmail(e.target.value);
+              }}
+            />
+            {emailError ? (
+              <div className="errormsg">{emailError}&nbsp;</div>
             ) : (
               ''
             )}

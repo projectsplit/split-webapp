@@ -15,6 +15,7 @@ import RedirectToBudget from './routes/RedirectToBudget';
 import RedirectToNonGroupExpenses from './routes/RedirectToNonGroupExpenses';
 import Protected from './pages/Protected/Protected';
 import CreateAccount from './pages/CreateAccount/CreateAccount';
+import ResetPassword from './pages/ResetPassword/ResetPassword';
 import Spinner from './components/Spinner/Spinner';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt/PwaInstallPrompt';
 import {
@@ -56,6 +57,7 @@ const App = () => {
             <Route path={routes.AUTH} element={<Auth />} />
             <Route path={routes.CREATE} element={<CreateAccount />} />
             <Route path={routes.GOOGLE_REDIRECT} element={<GoogleCallback />} />
+            <Route path={routes.RESET_PASSWORD} element={<ResetPassword />} />
             <Route element={<Protected />}>
               <Route path={routes.ROOT} element={<Home />} />
               <Route path={routes.JOIN} element={<Home />} />
