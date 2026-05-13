@@ -70,36 +70,14 @@ export default defineConfig({
         manualChunks(id) {
           if (!id.includes('node_modules')) return;
 
-          if (
-            id.includes('/chart.js/') ||
-            id.includes('/react-chartjs-2/') ||
-            id.includes('/chartjs-plugin-datalabels/')
-          ) {
-            return 'vendor-charts';
-          }
-
-          if (
-            id.includes('/@lexical/') ||
-            id.includes('/lexical/') ||
-            id.includes('/lexical-beautiful-mentions/')
-          ) {
-            return 'vendor-lexical';
-          }
-
-          if (id.includes('/@vis.gl/react-google-maps/')) {
-            return 'vendor-maps';
-          }
-
-          if (id.includes('/@tanstack/react-query')) {
+          if (/[\\/]node_modules[\\/]@tanstack[\\/]react-query/.test(id)) {
             return 'vendor-query';
           }
 
           if (
-            id.includes('/react/') ||
-            id.includes('/react-dom/') ||
-            id.includes('/react-router/') ||
-            id.includes('/react-router-dom/') ||
-            id.includes('/scheduler/')
+            /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(
+              id,
+            )
           ) {
             return 'vendor-react';
           }
