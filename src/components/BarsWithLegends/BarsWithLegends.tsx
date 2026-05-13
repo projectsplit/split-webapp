@@ -1,7 +1,7 @@
-import { StyledBarWithLegends } from "./BarsWithLegends.styled";
-import { BarsWithLegendsProps } from "../../interfaces";
-import { BarsAndAmounts } from "./BarsAndAmounts/BarsAndAmounts";
-import Pill from "../Pill/Pill";
+import { StyledBarWithLegends } from './BarsWithLegends.styled';
+import { BarsWithLegendsProps } from '../../interfaces';
+import { BarsAndAmounts } from './BarsAndAmounts/BarsAndAmounts';
+import { Mode } from '@/types';
 
 export default function BarsWithLegends({
   bar1Total,
@@ -12,26 +12,31 @@ export default function BarsWithLegends({
   bar1Color,
   bar2Color,
   onClick,
-
+  mode,
 }: BarsWithLegendsProps) {
-
-
-
   return (
     <StyledBarWithLegends>
-      {" "}
-      <div className="legends">
-        <div className="grouping">
-          <div className="legendGroup" style={{ backgroundColor: bar1Color }} />
-          <div className="descr">{bar1Legend}</div>
+      {' '}
+      {mode !== Mode.Personal && (
+        <div className="legends">
+          <div className="grouping">
+            <div
+              className="legendGroup"
+              style={{ backgroundColor: bar1Color }}
+            />
+            <div className="descr">{bar1Legend}</div>
+          </div>
+          <div className="grouping">
+            <div
+              className="legendUser"
+              style={{ backgroundColor: bar2Color }}
+            />
+            <div className="descr">{bar2Legend}</div>
+          </div>
         </div>
-        <div className="grouping">
-          <div className="legendUser" style={{ backgroundColor: bar2Color }} />
-          <div className="descr">{bar2Legend}</div>
-        </div>
-      </div>
-      
+      )}
       <BarsAndAmounts
+        mode={mode}
         onClick={onClick}
         currency={currency}
         bar1Total={bar1Total}

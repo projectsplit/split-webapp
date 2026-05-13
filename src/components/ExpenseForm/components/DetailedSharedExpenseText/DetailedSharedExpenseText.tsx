@@ -1,13 +1,12 @@
-import { StyledDetailedSharedExpenseText } from './DetailedSharedExpenseText.styled'
-import MemberPicker2 from '@/components/MemberPicker/MemberPicker2'
-import { TiGroup } from 'react-icons/ti'
-import { FaRegEdit } from 'react-icons/fa'
-import { Signal } from '@preact/signals-react'
-import { Group, Guest, Member, PickerMember, User, UserInfo } from '@/types'
-import { CategoryKey } from '@/components/ExpenseForm/formStore/formStoreTypes'
+import { StyledDetailedSharedExpenseText } from './DetailedSharedExpenseText.styled';
+import MemberPicker2 from '@/components/MemberPicker/MemberPicker2';
+import { TiGroup } from 'react-icons/ti';
+import { FaRegEdit } from 'react-icons/fa';
+
+import { DetailedSharedExpenseTextProps } from '@/interfaces';
 
 export default function DetailedSharedExpenseText({
-  nonGroupGroup,
+  fromHomeGroup,
   isCreateExpense,
   isPendingCreateExpense,
   isPendingEditExpense,
@@ -29,7 +28,25 @@ export default function DetailedSharedExpenseText({
   payersError,
   setPayersError,
   payersCategory,
-  isPersonal }: DetailedSharedExpenseTextProps) {
+  isPersonal,
+  userExistsInCategory,
+}: DetailedSharedExpenseTextProps) {
+  const userIdToCheck =
+    nonGroupUsers.value.length > 0 || isnonGroupExpense?.value
+      ? userInfo?.userId
+      : userMemberId;
+
+  const isUserSelectedInParticipants = adjustParticipants.some(
+    (m) => m.id === userIdToCheck && m.selected
+  );
+  const isUserSelectedInPayers = adjustPayers.some(
+    (m) => m.id === userIdToCheck && m.selected
+  );
+
+  userExistsInCategory.value = {
+    Participants: isUserSelectedInParticipants,
+    Payers: isUserSelectedInPayers,
+  };
 
   const showDetailedSharedExpenseText =
     (nonGroupUsers?.value.length > 0 || groupMembers?.value.length > 0) &&
@@ -37,103 +54,83 @@ export default function DetailedSharedExpenseText({
     !isPersonal.value;
 
   return (
-    <>  {showDetailedSharedExpenseText ? (<StyledDetailedSharedExpenseText>
-      <div className="textStyleInfo">
-        {nonGroupGroup && nonGroupGroup.value ? (
-          <div className="definition">
-            <span className="labelStyle">
-              <div className="info">
-                {" "}
-                <TiGroup />
-                {nonGroupGroup.value.name}
+    <>
+      {' '}
+      {showDetailedSharedExpenseText ? (
+        <StyledDetailedSharedExpenseText>
+          <div className="textStyleInfo">
+            {fromHomeGroup && fromHomeGroup.value ? (
+              <div className="definition">
+                <span className="labelStyle">
+                  <div className="info">
+                    {' '}
+                    <TiGroup />
+                    {fromHomeGroup.value.name}
+                  </div>
+                </span>
+                :
               </div>
-            </span>
-            :
+            ) : null}
+            <MemberPicker2
+              isLoading={
+                isCreateExpense ? isPendingCreateExpense : isPendingEditExpense
+              }
+              description={'Participants'}
+              totalAmount={amountNumber}
+              memberAmounts={adjustParticipants}
+              error={participantsError}
+              setMemberAmounts={setParticipants}
+              // group={group}
+              selectedCurrency={currencySymbol}
+              category={participantsCategory}
+              userMemberId={userMemberId}
+              setError={setParticipantsError}
+              isnonGroupExpense={isnonGroupExpense}
+              userId={userInfo.userId}
+              groupMembers={groupMembers}
+              nonGroupUsers={nonGroupUsers}
+              isCreateExpense={isCreateExpense}
+            />
+            <MemberPicker2
+              isLoading={
+                isCreateExpense ? isPendingCreateExpense : isPendingEditExpense
+              }
+              description={'Payers'}
+              totalAmount={amountNumber}
+              memberAmounts={adjustPayers}
+              error={payersError}
+              setMemberAmounts={setPayers}
+              // group={group}
+              selectedCurrency={currencySymbol}
+              category={payersCategory}
+              userMemberId={userMemberId}
+              setError={setPayersError}
+              isnonGroupExpense={isnonGroupExpense}
+              userId={userInfo.userId}
+              groupMembers={groupMembers}
+              nonGroupUsers={nonGroupUsers}
+              isCreateExpense={isCreateExpense}
+            />
+            {isCreateExpense && nonGroupMenu ? (
+              <div
+                className="editButton"
+                onClick={() => (nonGroupMenu.value = 'nonGroupExpenseUsers')}
+              >
+                <FaRegEdit />
+              </div>
+            ) : null}
           </div>
-        ) : null}
-        <MemberPicker2
-          isLoading={
-            isCreateExpense ? isPendingCreateExpense : isPendingEditExpense
-          }
-          description={"Participants"}
-          totalAmount={amountNumber}
-          memberAmounts={adjustParticipants}
-          error={participantsError}
-          setMemberAmounts={setParticipants}
-          // group={group}
-          selectedCurrency={currencySymbol}
-          category={participantsCategory}
-          userMemberId={userMemberId}
-          setError={setParticipantsError}
-          isnonGroupExpense={isnonGroupExpense}
-          userId={userInfo.userId}
-          groupMembers={groupMembers}
-          nonGroupUsers={nonGroupUsers}
-          isCreateExpense={isCreateExpense}
-        />
-        <MemberPicker2
-          isLoading={
-            isCreateExpense ? isPendingCreateExpense : isPendingEditExpense
-          }
-          description={"Payers"}
-          totalAmount={amountNumber}
-          memberAmounts={adjustPayers}
-          error={payersError}
-          setMemberAmounts={setPayers}
-          // group={group}
-          selectedCurrency={currencySymbol}
-          category={payersCategory}
-          userMemberId={userMemberId}
-          setError={setPayersError}
-          isnonGroupExpense={isnonGroupExpense}
-          userId={userInfo.userId}
-          groupMembers={groupMembers}
-          nonGroupUsers={nonGroupUsers}
-          isCreateExpense={isCreateExpense}
-        />
-        {isCreateExpense && nonGroupMenu ? (
-          <div
-            className="editButton"
-            onClick={() => (nonGroupMenu.value = "nonGroupExpenseUsers")}
-          >
-            <FaRegEdit />
+          <div className="errors">
+            {' '}
+            {participantsError && (
+              <div className="errorMsg">{participantsError}</div>
+            )}
+            {payersError && payersError !== participantsError && (
+              <div className="errorMsg">{payersError}</div>
+            )}
           </div>
-        ) : null}
-      </div>
-      <div className="errors">
-        {" "}
-        {participantsError && (
-          <div className="errorMsg">{participantsError}</div>
-        )}
-        {payersError && <div className="errorMsg">{payersError}</div>}
-      </div>
-    </StyledDetailedSharedExpenseText>) : null}</>)
-
-}
-
-
-interface DetailedSharedExpenseTextProps {
-  nonGroupGroup: Signal<Group | null> | undefined;
-  isCreateExpense: boolean;
-  isPendingCreateExpense: boolean;
-  isPendingEditExpense: boolean;
-  amountNumber: number;
-  adjustParticipants: PickerMember[];
-  setParticipants: (newParticipants: PickerMember[]) => void;
-  participantsError: string;
-  currencySymbol: string;
-  participantsCategory: Signal<CategoryKey>;
-  userMemberId: string;
-  setParticipantsError: (msgOrUpdater: string | ((prev: string) => string)) => void;
-  isnonGroupExpense: Signal<boolean> | undefined;
-  userInfo: UserInfo;
-  groupMembers: Signal<(Member | Guest)[]>;
-  nonGroupUsers: Signal<User[]>;
-  nonGroupMenu: Signal<string | null> | undefined
-  adjustPayers: PickerMember[];
-  setPayers: (newPayers: PickerMember[]) => void;
-  payersError: string;
-  setPayersError: (msgOrUpdater: string | ((prev: string) => string)) => void;
-  payersCategory: Signal<CategoryKey>;
-  isPersonal: Signal<boolean>;
+        </StyledDetailedSharedExpenseText>
+      ) : null}
+    </>
+  );
 }

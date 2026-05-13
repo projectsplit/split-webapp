@@ -1,7 +1,5 @@
-import { StyledSeparator } from './Separator.styled'
+import { StyledSeparator } from './Separator.styled';
 
 export default function Separator() {
-  return (
-    <StyledSeparator/>
-  )
+  return <StyledSeparator />;
 }

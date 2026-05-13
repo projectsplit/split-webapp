@@ -1,6 +1,6 @@
-import { FormExpense, Guest, Member, PickerMember, User } from "../../../types";
-import { isNonGroupExpense } from "./isNonGroupExpense";
-import { isGroupExpense } from "./isGroupExpense";
+import { FormExpense, Guest, Member, PickerMember, User } from '../../../types';
+import { isNonGroupExpense } from './isNonGroupExpense';
+import { isGroupExpense } from './isGroupExpense';
 
 export const createParticipantPickerArray = (
   groupMembers: (Member | Guest)[],
@@ -17,9 +17,9 @@ export const createParticipantPickerArray = (
       const participant = isNonGroupExpense(expense)
         ? expense.participants.find((p) => p.userId === user.userId)
         : undefined;
-      const actualAmount = participant?.participationAmount ?? "";
-      const isPercentageType = type === "Percentages";
-      const isSharesType = type === "Shares";
+      const actualAmount = participant?.participationAmount ?? '';
+      const isPercentageType = type === 'Percentages';
+      const isSharesType = type === 'Shares';
       const expenseAmount = Number(expense?.amount);
       const participationAmount = Number(participant?.participationAmount);
 
@@ -31,8 +31,8 @@ export const createParticipantPickerArray = (
         expenseAmount !== 0
           ? ((participationAmount / expenseAmount) * 100).toFixed(1)
           : isSharesType && !isCreateExpense
-          ? ""
-          : actualAmount;
+            ? ''
+            : actualAmount;
 
       return {
         id: user.userId,
@@ -56,9 +56,9 @@ export const createParticipantPickerArray = (
         expense && isGroupExpense(expense)
           ? expense.participants.find((p) => p.memberId === member.id)
           : undefined;
-      const actualAmount = participant?.participationAmount ?? "";
-      const isPercentageType = type === "Percentages";
-      const isSharesType = type === "Shares";
+      const actualAmount = participant?.participationAmount ?? '';
+      const isPercentageType = type === 'Percentages';
+      const isSharesType = type === 'Shares';
       const expenseAmount = Number(expense?.amount);
       const participationAmount = Number(participant?.participationAmount);
 
@@ -70,20 +70,22 @@ export const createParticipantPickerArray = (
         expenseAmount !== 0
           ? ((participationAmount / expenseAmount) * 100).toFixed(1)
           : isSharesType && !isCreateExpense
-          ? ""
-          : actualAmount;
+            ? ''
+            : actualAmount;
 
       return {
         id: member.id,
         actualAmount,
         screenQuantity,
         locked: isGroupExpense(expense)
-          ? expense?.participants.some((p) => p.memberId === member.id) ?? false
+          ? (expense?.participants.some((p) => p.memberId === member.id) ??
+            false)
           : false,
         name: member.name,
         order: 0,
         selected: isGroupExpense(expense)
-          ? expense?.participants.some((p) => p.memberId === member.id) ?? false
+          ? (expense?.participants.some((p) => p.memberId === member.id) ??
+            false)
           : false,
       };
     });

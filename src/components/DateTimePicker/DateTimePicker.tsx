@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { StyledDateTimePicker } from "./DateTimePicker.styled";
-import DayPicker from "./DayPicker/DayPicker";
-import { RxChevronLeft, RxChevronRight } from "react-icons/rx";
-import ScrollPicker from "../ScrollPicker/ScrollPicker";
-import { isNow, round, toLuxon, toUtcString } from "../../utils";
-import { DateTime as LuxonDateTime } from "luxon";
-import { DateTimePickerProps } from "../../interfaces";
+import { useEffect, useState } from 'react';
+import { StyledDateTimePicker } from './DateTimePicker.styled';
+import DayPicker from './DayPicker/DayPicker';
+import { RxChevronLeft, RxChevronRight } from 'react-icons/rx';
+import ScrollPicker from '../ScrollPicker/ScrollPicker';
+import { isNow, round, toLuxon, toUtcString } from '../../utils';
+import { DateTime as LuxonDateTime } from 'luxon';
+import { DateTimePickerProps } from '../../interfaces';
 
 const DateTimePicker = ({
   selectedDateTime,
@@ -17,9 +17,9 @@ const DateTimePicker = ({
   datePeriodClicked,
   calendarIsOpen,
   showOptions,
-  withLexicalContext
-  ,category,
-  isDateShowing
+  withLexicalContext,
+  category,
+  isDateShowing,
 }: DateTimePickerProps) => {
   const MINUTE_STEP = 1;
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
@@ -27,12 +27,12 @@ const DateTimePicker = ({
   const timePickerUtils = showTimeControls
     ? {
         hours: Array.from({ length: 24 }, (_, i) =>
-          LuxonDateTime.local().set({ hour: i }).toFormat("HH")
+          LuxonDateTime.local().set({ hour: i }).toFormat('HH')
         ),
         minutes: Array.from({ length: 60 / MINUTE_STEP }, (_, i) =>
           LuxonDateTime.local()
             .set({ minute: i * MINUTE_STEP })
-            .toFormat("mm")
+            .toFormat('mm')
         ),
         onTimeClick: () => {
           setShowTimePicker((prev) => !prev);
@@ -63,9 +63,7 @@ const DateTimePicker = ({
           );
           setRealtimeUpdate?.(false);
         },
-       
       }
-     
     : null;
 
   useEffect(() => {
@@ -99,8 +97,8 @@ const DateTimePicker = ({
   }, [selectedDateTime]);
 
   return (
-    <StyledDateTimePicker $isSearchCalendar={calendarIsOpen?.value} >
-      <div className="top-menu" >
+    <StyledDateTimePicker $isSearchCalendar={calendarIsOpen?.value}>
+      <div className="top-menu">
         <div className="month-year">
           <RxChevronLeft
             className="button"
@@ -111,7 +109,7 @@ const DateTimePicker = ({
             }
           />
           <div className="text">
-            {toLuxon(selectedDateTime, timeZoneId).toFormat("MMM")}
+            {toLuxon(selectedDateTime, timeZoneId).toFormat('MMM')}
           </div>
           <RxChevronRight
             className="button"
@@ -153,21 +151,28 @@ const DateTimePicker = ({
         showOptions={showOptions}
         withLexicalContext={withLexicalContext}
         category={category}
-       isDateShowing={isDateShowing}
+        isDateShowing={isDateShowing}
       />
       {showTimeControls && timePickerUtils && (
-        <div className="bottom-menu" onClick={()=>isDateShowing.value=true}>
+        <div
+          className="bottom-menu"
+          onClick={() => {
+            if (isDateShowing) {
+              isDateShowing.value = true;
+            }
+          }}
+        >
           <div
-            className={`button ${isNow(selectedDateTime) ? "active" : ""}`}
+            className={`button ${isNow(selectedDateTime) ? 'active' : ''}`}
             onClick={timePickerUtils.onNowClick}
           >
             Now
           </div>
           <div className="time" onClick={timePickerUtils.onTimeClick}>
-            {toLuxon(selectedDateTime, timeZoneId).toFormat("HH:mm")}
+            {toLuxon(selectedDateTime, timeZoneId).toFormat('HH:mm')}
           </div>
           <div className="timezone">
-            {toLuxon(selectedDateTime, timeZoneId).toFormat("ZZ")}
+            {toLuxon(selectedDateTime, timeZoneId).toFormat('ZZ')}
           </div>
         </div>
       )}

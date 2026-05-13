@@ -1,4 +1,4 @@
-export function copyToClipboard(invitationCode:string, baseUrl:string) {
+export function copyToClipboard(invitationCode: string, baseUrl: string) {
   if (!invitationCode) return;
 
   const formattedLink = `${baseUrl}${invitationCode}`;
@@ -6,16 +6,16 @@ export function copyToClipboard(invitationCode:string, baseUrl:string) {
   if (navigator.clipboard) {
     navigator.clipboard
       .writeText(formattedLink)
-      .catch((err) => console.error("Failed to copy: ", err));
+      .catch((err) => console.error('Failed to copy: ', err));
   } else {
-    const textarea = document.createElement("textarea");
+    const textarea = document.createElement('textarea');
     textarea.value = formattedLink;
     document.body.appendChild(textarea);
     textarea.select();
     try {
-      document.execCommand("copy");
+      document.execCommand('copy');
     } catch (err) {
-      console.error("Fallback copy failed: ", err);
+      console.error('Fallback copy failed: ', err);
     }
     document.body.removeChild(textarea);
   }

@@ -1,16 +1,15 @@
-import axios, { AxiosError } from "axios";
-import { jwtDecode } from "jwt-decode";
-import config from "../config";
+import axios, { AxiosError } from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import config from '../config';
 
-import routes from "../routes";
-import { logOut, refreshToken } from "./auth/api";
-import { Mutex } from "async-mutex";
+import routes from '../routes';
+import { logOut, refreshToken } from './auth/api';
+import { Mutex } from 'async-mutex';
 
 const mutex = new Mutex();
 
 const isAccessTokenValid = (token: string | null): boolean => {
-
-  if (!token) return false
+  if (!token) return false;
 
   const decodedToken: { exp: number } = jwtDecode(token);
   const currentTime = Math.floor(Date.now() / 1000);
@@ -26,7 +25,7 @@ export const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use(
-  async config => {
+  async (config) => {
     if (!isAccessTokenValid(getAccessToken())) {
       if (mutex.isLocked()) {
         await mutex.waitForUnlock();
@@ -35,36 +34,39 @@ apiClient.interceptors.request.use(
         try {
           const refreshResponse = await refreshToken();
           storeAccessToken(refreshResponse.accessToken);
-        }
-        catch (error) {
+        } catch (error) {
           await logOut();
           clearAccessToken();
-          clearNonGroupExpenseData()
+          clearSubmittedFromHomePersistData();
           window.location.href = routes.AUTH;
-          throw new axios.Cancel("Session expired, logging out."); 
+          throw new axios.Cancel('Session expired, logging out.');
         } finally {
           release();
         }
       }
     }
 
-    config.headers["Authorization"] = `Bearer ${getAccessToken()}`;
+    config.headers['Authorization'] = `Bearer ${getAccessToken()}`;
     return config;
   },
-  error => Promise.reject(error)
+  (error) => Promise.reject(error)
 );
 
 apiClient.interceptors.response.use(
-  response => response,
-  async error => {
-    if (error instanceof AxiosError && error.response && error.response.status === 401){
+  (response) => response,
+  async (error) => {
+    if (
+      error instanceof AxiosError &&
+      error.response &&
+      error.response.status === 401
+    ) {
       await logOut();
       clearAccessToken();
-      clearNonGroupExpenseData()
+      clearSubmittedFromHomePersistData();
       window.location.href = routes.AUTH;
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 export const authApiClient = axios.create({
@@ -76,17 +78,17 @@ export const authApiClient = axios.create({
 });
 
 function clearAccessToken() {
-  localStorage.removeItem("accessToken");
+  localStorage.removeItem('accessToken');
 }
 
 function storeAccessToken(accessToken: string) {
-  localStorage.setItem("accessToken", accessToken);
+  localStorage.setItem('accessToken', accessToken);
 }
 
 function getAccessToken() {
-  return localStorage.getItem("accessToken");
+  return localStorage.getItem('accessToken');
 }
 
-function clearNonGroupExpenseData() {
-  localStorage.removeItem("nonGroupExpenseData");
+function clearSubmittedFromHomePersistData() {
+  localStorage.removeItem('submittedFromHomePersistData');
 }

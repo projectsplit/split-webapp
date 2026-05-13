@@ -1,63 +1,24 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledExpenses = styled.div`
   min-width: 100%;
   display: flex;
-  padding: 16px 8px;
   flex-direction: column;
-  overflow-y: auto;
-  height: 100%;
-  gap: 16px;
+  height: 100%; /* Important: parent must have a defined height */
+  overflow: hidden; /* Stops the whole page from scrolling */
   flex: 1;
-  .filtersAndBars {
-    .pills {
-      padding-left: 0.7rem;
-      padding-right: 0.7rem;
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      overflow-x: auto;
-      text-align: center;
-      scrollbar-width: none;
-    }
-  }
-  .noFilteredData {
+
+  .scroll-area {
+    flex: 1;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    flex: 1;
-    .pills {
-      padding-left: 0.7rem;
-      padding-right: 0.7rem;
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      overflow-x: auto;
-      text-align: center;
-      scrollbar-width: none;
-    }
-    .textAndIcon {
-      white-space: normal;
-      text-align: center;
-      margin-top: 10rem;
+    padding: 16px 8px; /* Moves the list padding here */
+    gap: 16px;
 
-      .text {
-        opacity: 0.5;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: clip;
-        text-align: center;
-         .emoji{
-          opacity:1
-        }
-      }
-    }
-
-    .icon {
-      display: flex;
-      justify-self: center;
-      font-size: 100px;
-      opacity: 0.5;
-      margin-top: 10px;
+    .expense-highlight {
+      animation: highlight-fade 8s ease-out;
+      border-radius: 10px;
     }
   }
 
@@ -84,13 +45,16 @@ export const StyledExpenses = styled.div`
       gap: 8px;
     }
   }
-  .spinnerTotals {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0.5rem;
-    height: 100%;
+  @keyframes highlight-fade {
+    0% {
+      box-shadow:
+        0 0 0 4px #8300e7,
+        0 0 10px #8300e7;
+    }
+    100% {
+      box-shadow:
+        0 0 0 0px transparent,
+        0 0 0px transparent;
+    }
   }
 `;

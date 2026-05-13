@@ -1,30 +1,21 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  StyledSearchTransactions,
-} from "./SearchTransactions.styled";
-import { IoClose } from "react-icons/io5";
-import { EditorState } from "lexical";
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { useQueryClient } from "@tanstack/react-query";
-import {  useParams } from "react-router-dom";
-import { useSignal } from "@preact/signals-react";
-import { EditorContent } from "./EditorContent/EditorContent";
-import { handleSubmitButton } from "./helpers/handleSubmitButton";
-import { handleCancelClick } from "./helpers/handleCancelClick";
-import { initializeFilterState } from "./helpers/initializeFilterState";
-import { initialConfig } from "./utils/lexicalThemeConfiguration";
-import { EditorContentHandle, SearchTransactionsProps } from "../../interfaces";
-import {
-  CreateExpenseFilterRequest,
-  CreateTransferFilterRequest,
-  FetchedLabel,
-  FilteredMembers,
-} from "../../types";
-import MyButton from "../MyButton/MyButton";
-import { useMembers } from "./hooks/useMembers";
-
-import { CategorySelector } from "../CategorySelector/CategorySelector";
-import { localStorageStringParser } from "./helpers/localStorageStringParser";
+import { useEffect, useRef, useState } from 'react';
+import { StyledSearchTransactions } from './SearchTransactions.styled';
+import { IoClose } from 'react-icons/io5';
+import { EditorState } from 'lexical';
+import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { useQueryClient } from '@tanstack/react-query';
+import { EditorContent } from './EditorContent/EditorContent';
+import { handleSubmitButton } from './helpers/handleSubmitButton';
+import { handleCancelClick } from './helpers/handleCancelClick';
+import { initialConfig } from './utils/lexicalThemeConfiguration';
+import { EditorContentHandle, SearchTransactionsProps } from '../../interfaces';
+import { FetchedLabel } from '../../types';
+import MyButton from '../MyButton/MyButton';
+import { CategorySelector } from '../CategorySelector/CategorySelector';
+import {} from './helpers/localStorageStringParser';
+import { usePeople } from './hooks/usePeople';
+import { useSearchFilters } from './hooks/useSearchFilters';
+import { useLabels } from '@/api/auth/QueryHooks/useGetLabels';
 
 export default function SearchTransactions({
   menu,
@@ -32,70 +23,38 @@ export default function SearchTransactions({
   userInfo,
   timeZoneId,
   expenseParsedFilters,
-  transferParsedFilters
+  transferParsedFilters,
+  isPersonal,
+  // nonGroupUsers
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
-  const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
-  // const submitFiltersError = useSignal<string>("");
-  const contentEditableWrapRef = useRef<HTMLDivElement>(null);
-  const submitButtonIsActive = useSignal<boolean>(false);
-  const cancelled = useSignal<boolean>(false);
-  const path = location.pathname.split("/").pop() || "";
-  const category = useSignal<string>("expenses");
   const queryClient = useQueryClient();
 
-  const expenseFilterState = useSignal<CreateExpenseFilterRequest>({
-    groupId: group.id,
-    participantsIds: [],
-    payersIds: [],
-    freeText: "",
-    before: [],
-    during: [],
-    after: [],
-    labels: [],
-  });
-
-  const transferFilterState = useSignal<CreateTransferFilterRequest>({
-    groupId: group.id,
-    receiversIds: [],
-    sendersIds: [],
-    freeText: "",
-    before: [],
-    during: [],
-    after: [],
-  });
-
-  const filteredMembers = useSignal<FilteredMembers>({
-    payers: [],
-    participants: [],
-    senders: [],
-    receivers: [],
-  });
-
-  const filteredLabels = useSignal<FetchedLabel[]>([]);
-
-  const editorContentRef = useRef<EditorContentHandle | null>(null);
-  const params = useParams();
-
-  const { fetchedMembers, enhancedMembersWithProps } = useMembers(
+  const { fetchedPeople, enhancedPeopleWithProps, allUsers } = usePeople(
     group,
-    userInfo
+    userInfo,
+    isPersonal
   );
 
-  const fetchedLabels: FetchedLabel[] = group.labels.map((l) => ({
-    id: l.id,
-    value: l.text,
-    color: l.color,
-    prop: "category",
-  }));
+  const { data: suggestedLabels } = useLabels(
+    userInfo?.userId,
+    isPersonal,
+    group?.id
+  );
 
-  useEffect(() => {
-    if (path === "debts") {
-      category.value = "expenses";
-    } else {
-      category.value = path;
-    }
-  }, [path]);
+  const {
+    category,
+    expenseFilterState,
+    transferFilterState,
+    filteredPeople,
+    filteredLabels,
+    submitButtonIsActive,
+    cancelled,
+    searchKeyword,
+    path,
+  } = useSearchFilters(group, allUsers, suggestedLabels, isPersonal);
+
+  const editorContentRef = useRef<EditorContentHandle | null>(null);
 
   useEffect(() => {
     const handleBackNavigation = () => {
@@ -103,58 +62,26 @@ export default function SearchTransactions({
         menu.value = null;
       }
     };
-    window.addEventListener("popstate", handleBackNavigation);
+    window.addEventListener('popstate', handleBackNavigation);
     return () => {
-      window.removeEventListener("popstate", handleBackNavigation);
+      window.removeEventListener('popstate', handleBackNavigation);
     };
   }, [menu]);
 
-
-  const { expenseFilter, transferFilter } = useMemo(() => {
-    return localStorageStringParser(
-      localStorage.getItem("expenseFilter"),
-      localStorage.getItem("transferFilter")
-    );
-  },[localStorage.getItem("expenseFilter"), localStorage.getItem("transferFilter")]);
-
-  useEffect(() => {
-    initializeFilterState(
-      expenseFilter,
-      transferFilter,
-      params,
-      expenseFilterState,
-      transferFilterState,
-      filteredMembers,
-      filteredLabels,
-      group
-    );
-  }, [expenseFilter, transferFilter, params.groupid, cancelled.value]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if ((category.value = "expenses")) {
-        expenseFilterState.value.groupId = params.groupid as string;
-        if (contentEditableWrapRef.current) {
-          setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
-        }
-      } else {
-        transferFilterState.value.groupId = params.groupid as string;
-        if (contentEditableWrapRef.current) {
-          setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
-        }
-      }
-    };
-    const resizeObserver = new ResizeObserver(handleResize);
-    if (contentEditableWrapRef.current) {
-      resizeObserver.observe(contentEditableWrapRef.current);
-    }
-
-    return () => {
-      if (contentEditableWrapRef.current) {
-        resizeObserver.unobserve(contentEditableWrapRef.current);
-      }
-    };
-  }, []);
+  const fetchedLabels: FetchedLabel[] = group
+    ? group?.labels.map((l) => ({
+        id: l.id,
+        value: l.text,
+        color: l.color,
+        prop: 'category',
+      }))
+    : suggestedLabels?.labels.map((l) => ({
+        id: l.id,
+        value: l.text,
+        color: l.color,
+        prop: 'category',
+        isPersonal: isPersonal,
+      })) || [];
 
   return (
     <StyledSearchTransactions>
@@ -163,42 +90,51 @@ export default function SearchTransactions({
           <div className="gap"></div>
           <div className="searchingIn">
             Searching In:&nbsp;
-            <span className="groupName">{group.name}</span>
+            <span className="groupName">
+              {isPersonal
+                ? 'Personal'
+                : group?.name
+                  ? group?.name
+                  : 'Non Group'}
+            </span>
           </div>
           <div className="closeSign" onClick={() => (menu.value = null)}>
             <IoClose name="close-outline" className="close" />
           </div>
         </div>
-        <div className="catSelector">
-          <CategorySelector
-            activeCat={path}
-            categories={{
-              cat1: "Expenses",
-              cat2: "Transfers",
-            }}
-            navLinkUse={true}
-            activeCatAsState={category}
-          />
-        </div>
+        {!isPersonal && (
+          <div className="catSelector">
+            <CategorySelector
+              activeCat={path}
+              categories={{
+                cat1: 'Expenses',
+                cat2: 'Transfers',
+              }}
+              navLinkUse={true}
+              activeCatAsState={category}
+            />
+          </div>
+        )}
         <div className="searchBarAndCategories">
           <div className="lexicalSearch">
             <LexicalComposer initialConfig={initialConfig}>
-                <EditorContent
-                  ref={editorContentRef}
-                  contentEditableHeight={contentEditableHeight}
-                  enhancedMembersWithProps={enhancedMembersWithProps}
-                  submitButtonIsActive={submitButtonIsActive}
-                  expenseFilterState={expenseFilterState}
-                  transferFilterState={transferFilterState}
-                  setEditorState={setEditorState}
-                  members={fetchedMembers}
-                  labels={fetchedLabels}
-                  cancelled={cancelled}
-                  filteredMembers={filteredMembers}
-                  timeZoneId={timeZoneId}
-                  filteredLabels={filteredLabels}
-                  category={category}
-                />
+              <EditorContent
+                searchKeyword={searchKeyword}
+                ref={editorContentRef}
+                enhancedPeopleWithProps={enhancedPeopleWithProps}
+                submitButtonIsActive={submitButtonIsActive}
+                expenseFilterState={expenseFilterState}
+                transferFilterState={transferFilterState}
+                setEditorState={setEditorState}
+                people={fetchedPeople}
+                labels={fetchedLabels}
+                cancelled={cancelled}
+                filteredPeople={filteredPeople}
+                timeZoneId={timeZoneId}
+                filteredLabels={filteredLabels}
+                category={category}
+                isPersonal={isPersonal}
+              />
             </LexicalComposer>
           </div>
         </div>
@@ -214,11 +150,12 @@ export default function SearchTransactions({
                 category,
                 queryClient,
                 expenseParsedFilters,
-                transferParsedFilters 
+                transferParsedFilters,
+                isPersonal
               )
             }
             disabled={!submitButtonIsActive.value}
-            variant={submitButtonIsActive.value ? "primary" : "secondary"}
+            variant={submitButtonIsActive.value ? 'primary' : 'secondary'}
           >
             Apply
           </MyButton>

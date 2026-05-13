@@ -1,8 +1,8 @@
-import IonIcon from "@reacticons/ionicons";
-import Separator from "../../Separator/Separator";
-import { StyledRemoveWarning } from "./RemoveWarning.styled";
-import { RemoveWarningProps } from "../../../interfaces";
-import MyButton from "../../MyButton/MyButton";
+import IonIcon from '@reacticons/ionicons';
+import Separator from '../../Separator/Separator';
+import { StyledRemoveWarning } from './RemoveWarning.styled';
+import { RemoveWarningProps } from '../../../interfaces';
+import MyButton from '../../MyButton/MyButton';
 
 export default function RemoveWarning({
   header,
@@ -10,7 +10,7 @@ export default function RemoveWarning({
   message,
   onConfirm,
   isLoading,
-  }: RemoveWarningProps) {
+}: RemoveWarningProps) {
   return (
     <StyledRemoveWarning>
       <div className="headerSeparator">
@@ -31,7 +31,7 @@ export default function RemoveWarning({
           <div />
         </div>
       </div>
-      {onConfirm  && (
+      {onConfirm && (
         <div className="buttons">
           <MyButton isLoading={isLoading} onClick={onConfirm}>
             Confirm

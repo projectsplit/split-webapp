@@ -1,19 +1,23 @@
-
-
+import { forwardRef } from 'react';
 import {
   CalendarOptionsButtonProps,
   OptionsButtonProps,
-} from "../../../interfaces";
-import { StyledCalendarOptionsButton } from "./CalendarOptionsButton.styled";
+} from '../../../interfaces';
+import { StyledCalendarOptionsButton } from './CalendarOptionsButton.styled';
 
-export default function CalendarOptionsButton({
-  children,
-  onClick,
-  isactive,
-}: OptionsButtonProps & CalendarOptionsButtonProps) {
+const CalendarOptionsButton = forwardRef<
+  HTMLDivElement,
+  OptionsButtonProps & CalendarOptionsButtonProps
+>(({ children, onClick, isactive }, ref) => {
   return (
-    <StyledCalendarOptionsButton onClick={onClick} isactive={isactive} >
+    <StyledCalendarOptionsButton
+      ref={ref}
+      onClick={onClick}
+      $isactive={isactive}
+    >
       {children}
     </StyledCalendarOptionsButton>
   );
-}
+});
+
+export default CalendarOptionsButton;

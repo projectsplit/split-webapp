@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledGroup = styled.div`
   overflow: hidden;
   box-sizing: border-box;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   .spinner {
@@ -40,7 +40,7 @@ export const StyledGroup = styled.div`
     }
   }
   .bottomMenu {
-    bottom: env(safe-area-inset-bottom, 0); /* Respect safe area */
+    margin-top: auto;
   }
 
   .spinner {

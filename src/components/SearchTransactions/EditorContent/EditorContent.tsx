@@ -1,54 +1,62 @@
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import {
   BeautifulMentionsPlugin,
   BeautifulMentionsItemData,
   BeautifulMentionsItem,
-} from "lexical-beautiful-mentions";
-import { Menu } from "../Menu/Menu";
-import MentionsToolbar from "../Toolbars/MentionsToolbar";
-import OptionsToolBar from "../Toolbars/OptionsToolbar/OptionsToolBar";
-import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
-import { CLEAR_EDITOR_COMMAND } from "lexical";
-import { useSignal } from "@preact/signals-react";
-import { MenuItem } from "../MenuItem/MenuItem";
-import { updateMembersMentions } from "../helpers/updateMembersMentions";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { onChangeEditorContent } from "../helpers/onChangeEditorContent";
-import FilterCalendar from "../FilterCalendar/FilterCalendar";
-import { PreventEnterCommandPlugin } from "../../../lexicalPlugins/PreventEnterCommandPlugin";
-import { OnChangePlugin } from "../../../lexicalPlugins/OnChangePlugin";
-import { ClearEditorPlugin } from "../../../lexicalPlugins/LexicalClearEditorPlugin";
-import { EditorContentHandle, LexicalEditorProps } from "../../../interfaces";
-import { updateFiltersMentions } from "../helpers/updateFiltersMentions";
+} from 'lexical-beautiful-mentions';
+import { Menu } from '../Menu/Menu';
+import MentionsToolbar from '../Toolbars/MentionsToolbar';
+import OptionsToolBar from '../Toolbars/OptionsToolbar/OptionsToolBar';
+import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { CLEAR_EDITOR_COMMAND } from 'lexical';
+import { useSignal } from '@preact/signals-react';
+import { MenuItem } from '../MenuItem/MenuItem';
+import { updateMembersMentions } from '../helpers/updateMembersMentions';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { onChangeEditorContent } from '../helpers/onChangeEditorContent';
+import FilterCalendar from '../FilterCalendar/FilterCalendar';
+import { PreventEnterCommandPlugin } from '../../../lexicalPlugins/PreventEnterCommandPlugin';
+import { OnChangePlugin } from '../../../lexicalPlugins/OnChangePlugin';
+import { ClearEditorPlugin } from '../../../lexicalPlugins/LexicalClearEditorPlugin';
+import { EditorContentHandle, LexicalEditorProps } from '../../../interfaces';
+import { updateFiltersMentions } from '../helpers/updateFiltersMentions';
 
 export const EditorContent = forwardRef<
   EditorContentHandle,
   LexicalEditorProps
 >((props, ref) => {
   const {
-    contentEditableHeight,
-    enhancedMembersWithProps,
+    // contentEditableHeight,
+    enhancedPeopleWithProps,
     submitButtonIsActive,
     expenseFilterState,
     transferFilterState,
     setEditorState,
-    members,
+    people,
     cancelled,
-    filteredMembers,
+    filteredPeople,
     timeZoneId,
     labels,
     filteredLabels,
-    category
+    category,
+    searchKeyword,
+    isPersonal,
   } = props;
-
 
   const [editor] = useLexicalComposerContext();
   const [isEmpty, setIsEmpty] = useState(true);
+  const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
   const [filteredResults, setFilteredResults] = useState<
     { value: string; [key: string]: BeautifulMentionsItemData }[]
   >([]);
@@ -58,23 +66,38 @@ export const EditorContent = forwardRef<
   const showOptions = useSignal<boolean>(true);
   const calendarIsOpen = useSignal<boolean>(false);
   const removedFilter = useSignal<boolean>(false);
-  const datePeriodClicked = useSignal<string>("");
-  const showFreeTextPill = useSignal<boolean>(true)
+  const datePeriodClicked = useSignal<string>('');
+  const showFreeTextPill = useSignal<boolean>(true);
+  const mentionItems = useMemo(() => {
+    const items: Record<string, BeautifulMentionsItem[]> = {
+      'payer:': [],
+      'participant:': [],
+      'sender:': [],
+      'receiver:': [],
+      'category:': [],
+    };
+    updateMembersMentions(people, items);
+    updateFiltersMentions(labels, items);
+    return items;
+  }, [people, labels]);
 
-
-  const mentionItems: Record<string, BeautifulMentionsItem[]> = {};
-
-  mentionItems["payer:"] = [];
-  mentionItems["participant:"] = [];
-  mentionItems["sender:"] = [];
-  mentionItems["receiver:"] = [];
-  // mentionItems["before:"] = [];
-  // mentionItems["during:"] = [];
-  // mentionItems["after:"] = [];
-  mentionItems["category:"] = [];
-
-  updateMembersMentions(members, mentionItems);
-  updateFiltersMentions(labels, mentionItems);
+  useEffect(() => {
+    const handleResize = () => {
+      if (contentEditableWrapRef.current) {
+        setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
+      }
+    };
+    const resizeObserver = new ResizeObserver(handleResize);
+    const element = contentEditableWrapRef.current;
+    if (element) {
+      resizeObserver.observe(element);
+    }
+    return () => {
+      if (element) {
+        resizeObserver.unobserve(element);
+      }
+    };
+  }, [setContentEditableHeight]);
 
   const clearEditor = () => {
     editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
@@ -112,14 +135,15 @@ export const EditorContent = forwardRef<
             setEditorState,
             showOptions,
             setFilteredResults,
-            enhancedMembersWithProps,
+            enhancedPeopleWithProps,
             submitButtonIsActive,
             removedFilter,
             setEditorStateString,
             setIsEmpty,
             calendarIsOpen,
             datePeriodClicked,
-            labels
+            labels,
+            searchKeyword
           )
         }
       />
@@ -144,13 +168,13 @@ export const EditorContent = forwardRef<
           timeZoneId={timeZoneId}
           category={category}
         />
-      ) : filteredResults.length === 0 || editorStateString === "" ? (
+      ) : filteredResults.length === 0 || editorStateString === '' ? (
         <MentionsToolbar
           showOptions={showOptions}
-          filteredMembers={filteredMembers}
+          filteredPeople={filteredPeople}
           submitButtonIsActive={submitButtonIsActive}
           expenseFilterState={expenseFilterState}
-          transferFilterState = {transferFilterState}
+          transferFilterState={transferFilterState}
           cancelled={cancelled}
           removedFilter={removedFilter}
           calendarIsOpen={calendarIsOpen}
@@ -158,6 +182,7 @@ export const EditorContent = forwardRef<
           filteredLabels={filteredLabels}
           category={category}
           showFreeTextPill={showFreeTextPill}
+          isPersonal={isPersonal}
         />
       ) : (
         <OptionsToolBar

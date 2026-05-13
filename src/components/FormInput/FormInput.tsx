@@ -1,23 +1,23 @@
-import { forwardRef, useRef } from "react";
-import { StyledInput } from "./FormInput.styled";
+import { forwardRef, useRef } from 'react';
+import { StyledInput } from './FormInput.styled';
 
 const FormInput = forwardRef<HTMLInputElement, InputProps>(
   ({ description, error, ...props }, ref) => {
     const inputRef = useRef<HTMLInputElement>();
 
-    if (ref && typeof ref === "object" && ref.current) {
+    if (ref && typeof ref === 'object' && ref.current) {
       inputRef.current = ref.current;
     }
 
     const handleFocus = () => {
-      if (ref && typeof ref === "object" && ref.current) {
+      if (ref && typeof ref === 'object' && ref.current) {
         setTimeout(() => {
           const length = ref.current?.value.length || 0;
           ref.current?.setSelectionRange(length, length);
         }, 0);
       }
     };
- 
+
     return (
       <StyledInput $hasError={!!error}>
         <div className="input-container">

@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
   html, body, #root {
@@ -8,6 +8,8 @@ const GlobalStyles = createGlobalStyle`
     font-family: 'Inter', sans-serif;
     background-color: #000000;
     color: white;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
     font-size: 16px;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -116,6 +118,25 @@ const GlobalStyles = createGlobalStyle`
   .quick-actions-enter { opacity: 0; }
   .quick-actions-exit-active .new { animation: none; transform: scale(1); }
   .quick-actions-exit-done { transform: scale(0); opacity: 0; }
+
+  .search-enter {
+    clip-path: inset(0 100%);
+    opacity: 0;
+  }
+  .search-enter-active {
+    clip-path: inset(0 0);
+    opacity: 1;
+    transition: clip-path 0.3s ease-out, opacity 0.3s ease-out;
+  }
+  .search-exit {
+    clip-path: inset(0 0);
+    opacity: 1;
+  }
+  .search-exit-active {
+    clip-path: inset(0 100%);
+    opacity: 0;
+    transition: clip-path 0.3s ease-in, opacity 0.3s ease-in;
+  }
 `;
 
 export default GlobalStyles;

@@ -1,44 +1,48 @@
-import { StyledCalendar } from "./Calendar.styled";
-import { Frequency } from "../../../types";
-import { CalendarProps } from "../../../interfaces";
+import { StyledCalendar } from './Calendar.styled';
+import { Frequency } from '../../../types';
+import { CalendarProps } from '../../../interfaces';
 
 export default function Calendar({
   children,
-  budgettype,
+  budgetFrequency,
   calendarDay,
+  setError,
 }: CalendarProps) {
-
   const handleElementClick = (day: string) => {
+    setError('spendingCycleError', '');
+    setError('showSpendingCycleError', false);
+    setError('commencementDayError', '');
+    setError('showCommencementDayError', false);
     calendarDay.value = day;
   };
 
   return (
-    <StyledCalendar as="div" budgettype={budgettype}>
-      {budgettype.value == Frequency.Monthly
+    <StyledCalendar as="div" $budgetFrequency={budgetFrequency}>
+      {budgetFrequency.value == Frequency.Monthly
         ? children.map((row: any, rowIndex: any) => (
             <div key={rowIndex} className="calendar-row">
-              {row.map((day: string, dayIndex: number) => (
+              {row.map((day: any, dayIndex: number) => (
                 <div
-                  key={day + dayIndex}
+                  key={String(day) + dayIndex}
                   className={`calendar-day ${
-                    day === calendarDay.value && day !== "" ? "selected" : ""
+                    String(day) === calendarDay.value && day !== '' ? 'selected' : ''
                   }`}
-                  style={{ cursor: day !== "" ? "pointer" : "default" }}
-                  onClick={() => handleElementClick(day)}
+                  style={{ cursor: day !== '' ? 'pointer' : 'default' }}
+                  onClick={() => handleElementClick(String(day))}
                 >
                   {day}
                 </div>
               ))}
             </div>
           ))
-        : children.map((day: string, dayIndex: number) => (
+        : children.map((day: any, dayIndex: number) => (
             <div
-              key={day + dayIndex}
+              key={String(day) + dayIndex}
               className={`calendar-day ${
-                day === calendarDay.value && day !== "" ? "selected" : ""
+                String(day) === calendarDay.value && day !== '' ? 'selected' : ''
               }`}
-              style={{ cursor: day !== "" ? "pointer" : "default" }}
-              onClick={() => handleElementClick(day)}
+              style={{ cursor: day !== '' ? 'pointer' : 'default' }}
+              onClick={() => handleElementClick(String(day))}
             >
               {day}
             </div>

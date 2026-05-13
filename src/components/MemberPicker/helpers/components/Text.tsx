@@ -1,5 +1,5 @@
-import { StyledText } from "./Text.styled";
-import { memo } from "react";
+import { StyledText } from './Text.styled';
+import { memo } from 'react';
 
 interface TextProps {
   description: string;
@@ -18,58 +18,36 @@ const Text = memo(
   }: TextProps) {
     const firstSelectedName = selectedMembers[0]?.name;
 
+    const splitLabel = isEquallySplit ? 'equally' : 'unequally';
+
+    const conjunction = selectedCount === 2 ? 'between' : 'among';
+
     return (
       <StyledText $error={error}>
-        {description === "Participants" ? (
+        {description === 'Participants' ? (
           selectedCount === 0 ? (
-            ""
+            ''
           ) : selectedCount === 1 ? (
             <>
               Billed to <div className="button">{firstSelectedName} </div> and
             </>
-          ) : selectedCount === 2 && isEquallySplit ? (
-            <>
-              Split <div className="button">equally </div> between{" "}
-              {selectedCount} and
-            </>
-          ) : selectedCount === 2 && !isEquallySplit ? (
-            <>
-              Split <div className="button">unequally </div> between{" "}
-              {selectedCount} and
-            </>
-          ) : selectedCount > 2 && isEquallySplit ? (
-            <>
-              Split <div className="button">equally </div> among {selectedCount}{" "}
-              and
-            </>
           ) : (
             <>
-              Split <div className="button">unequally </div> among{" "}
+              Split <div className="button">{splitLabel} </div> {conjunction}{' '}
               {selectedCount} and
             </>
           )
-        ) : description === "Payers" ? (
+        ) : description === 'Payers' ? (
           selectedCount === 0 ? (
-            ""
+            ''
           ) : selectedCount === 1 ? (
             <>
               paid by <div className="button">{firstSelectedName} </div>
             </>
-          ) : selectedCount === 2 && isEquallySplit ? (
-            <>
-              paid <div className="button">equally </div> by {selectedCount}
-            </>
-          ) : selectedCount === 2 && !isEquallySplit ? (
-            <>
-              paid <div className="button">unequally </div> by {selectedCount}
-            </>
-          ) : selectedCount > 2 && isEquallySplit ? (
-            <>
-              paid <div className="button">equally </div> by {selectedCount}
-            </>
           ) : (
             <>
-              paid <div className="button">unequally </div> by {selectedCount}
+              paid <div className="button">{splitLabel} </div> by{' '}
+              {selectedCount}
             </>
           )
         ) : null}

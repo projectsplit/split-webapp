@@ -1,35 +1,35 @@
-import { styled } from "styled-components";
-import { StyledMiddleScreenMenu } from "../../../components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import { styled } from 'styled-components';
+import { StyledMiddleScreenMenu } from '../../../components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
 
 export const StyledGroupTotalsByCurrency = styled(StyledMiddleScreenMenu)`
   font-size: 14px;
   max-height: 80vh; /* Limit height to 80% of viewport height */
   overflow-y: auto;
   .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 10px;
-      .infoLogo {
-        font-size: 30px;
-        color: ${({ theme }) => theme.yellow};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    .infoLogo {
+      font-size: 30px;
+      color: ${({ theme }) => theme.yellow};
+    }
+
+    .closeButton {
+      font-size: 30px;
+      color: #6f6f6f;
+      height: 17px;
+      margin-top: -15px;
+      margin-right: -8px;
+      &:hover {
+        color: ${({ theme }) => theme.whiteText};
       }
-    
-      .closeButton {
-        font-size: 30px;
-        color: #6f6f6f;
-        height: 17px;
-        margin-top: -15px;
-        margin-right: -8px;
-        &:hover {
-          color: ${({ theme }) => theme.whiteText};
-        }
-        .close {
-          cursor: pointer;
-          display: block;
-        }
+      .close {
+        cursor: pointer;
+        display: block;
       }
     }
+  }
   .legends {
     display: flex;
     flex-direction: row;

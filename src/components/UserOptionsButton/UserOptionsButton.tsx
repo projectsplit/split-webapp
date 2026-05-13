@@ -1,6 +1,6 @@
-import { getInitials } from "../../helpers/getInitials";
-import { OptionsButtonProps } from "../../interfaces";
-import { StyledUserOptionsButton } from "./UserOptionsButton.styled";
+import { getInitials } from '../../helpers/getInitials';
+import { OptionsButtonProps } from '../../interfaces';
+import { StyledUserOptionsButton } from './UserOptionsButton.styled';
 
 export default function UserOptionsButton({
   onClick,

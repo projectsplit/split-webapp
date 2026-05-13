@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledOptionsButton } from "../OptionsButton/OptionsButton.styled";
+import styled from 'styled-components';
+import { StyledOptionsButton } from '../OptionsButton/OptionsButton.styled';
 
 export const StyledUserOptionsButton = styled(StyledOptionsButton)`
   display: flex;
@@ -16,5 +16,4 @@ export const StyledUserOptionsButton = styled(StyledOptionsButton)`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; /* Ensures username stays in one line */
-
 `;

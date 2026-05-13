@@ -1,6 +1,6 @@
-import IonIcon from "@reacticons/ionicons";
-import { Details } from "../types";
-import { joinAmounts } from "../helpers/joinAmounts";
+import IonIcon from '@reacticons/ionicons';
+import { Details } from '../types';
+import { joinAmounts } from '../helpers/joinAmounts';
 
 export const TreeItemBuilderForHomeAndGroups = (
   details: Details | undefined

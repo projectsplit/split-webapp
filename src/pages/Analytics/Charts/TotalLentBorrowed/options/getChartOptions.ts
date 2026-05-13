@@ -1,11 +1,11 @@
-import { Context } from "chartjs-plugin-datalabels/types/context";
-import { roundThousandsAndMillions } from "../../../../../helpers/roundThousandsAndMils";
-import { Frequency } from "../../../../../types";
-import { enhanceStringArray } from "../../../helpers/enhanceStringArray";
-import { swapMonthDayToDayMonth } from "../../../helpers/swapMonthDayToDayMonth";
-import { displayCurrencyAndAmount } from "../../../../../helpers/displayCurrencyAndAmount";
-import { months, shortWeekdays } from "../../../../../constants";
-import { getSymbolFromCurrency } from "../../../../../helpers/currency-symbol-map";
+import { Context } from 'chartjs-plugin-datalabels/types/context';
+import { roundThousandsAndMillions } from '../../../../../helpers/roundThousandsAndMils';
+import { Frequency } from '../../../../../types';
+import { enhanceStringArray } from '../../../helpers/enhanceStringArray';
+import { swapMonthDayToDayMonth } from '../../../helpers/swapMonthDayToDayMonth';
+import { displayCurrencyAndAmount } from '../../../../../helpers/displayCurrencyAndAmount';
+import { months, shortWeekdays } from '../../../../../constants';
+import { getSymbolFromCurrency } from '../../../../../helpers/currency-symbol-map';
 
 export const getChartOptions = (
   isSuccess: boolean,
@@ -19,72 +19,75 @@ export const getChartOptions = (
   currentWeekIndex: number,
   hitRadius: number[],
   fractalFactor: number,
-  currency:string
+  currency: string
 ) => {
   const date = new Date(selectedYear, selectedTimeCycleIndex, 1);
 
-  const dateOptions: Intl.DateTimeFormatOptions = { month: "long" };
+  const dateOptions: Intl.DateTimeFormatOptions = { month: 'long' };
 
-  const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
+  const fullMonthName = date.toLocaleDateString('en-US', dateOptions);
 
   const enhancedWeekDays = enhanceStringArray(shortWeekdays, fractalFactor);
 
-  const abbreviatedMonths = months.map((month) => month.slice(0, 3))
+  const abbreviatedMonths = months.map((month) => month.slice(0, 3));
 
-  const enhancedAbbreviatedMonths = enhanceStringArray(abbreviatedMonths, fractalFactor);
-  
-  const currencySymbol = getSymbolFromCurrency(currency)
+  const enhancedAbbreviatedMonths = enhanceStringArray(
+    abbreviatedMonths,
+    fractalFactor
+  );
+
+  const currencySymbol = getSymbolFromCurrency(currency);
 
   return {
     transitions: {
       show: {
         animations: {
           x: {
-            from: 0
+            from: 0,
           },
           y: {
-            from: 0
-          }
-        }
+            from: 0,
+          },
+        },
       },
       hide: {
         animations: {
           x: {
-            to: 0
+            to: 0,
           },
           y: {
-            to: 0
-          }
-        }
-      }
+            to: 0,
+          },
+        },
+      },
     },
     isSuccess: isSuccess,
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "top",
-        align: "start",
+        position: 'top',
+        align: 'start',
         labels: {
           usePointStyle: false, // use a square instead of a rectangle
           boxWidth: 10, // set the width of the square
           boxHeight: 10, // set the height of the square
-          color: "#DDDDDD", // set the color of the square
+          color: '#DDDDDD', // set the color of the square
         },
-        onHover: ((event: any) => {
-          event.chart.canvas.style.cursor = "pointer"
-        }),
-        onLeave: ((event: any) => {
-          event.chart.canvas.style.cursor = "default"
-        })
+        onHover: (event: any) => {
+          event.chart.canvas.style.cursor = 'pointer';
+        },
+        onLeave: (event: any) => {
+          event.chart.canvas.style.cursor = 'default';
+        },
       },
       title: {
         display: false,
-        text: "Chart.js Line Chart",
+        text: 'Chart.js Line Chart',
       },
 
       tooltip: {
-        yAlign: "bottom",
+        yAlign: 'bottom',
         displayColors: false,
         enabled: true,
         callbacks: {
@@ -93,22 +96,34 @@ export const getChartOptions = (
             if (selectedCycle === Frequency.Monthly)
               return (
                 labels[index] +
-                " " +
+                ' ' +
                 fullMonthName +
-                " " +
+                ' ' +
                 selectedYear.toString()
               );
             if (selectedCycle === Frequency.Weekly)
-              return swapMonthDayToDayMonth(labels)[index] + " " + selectedYear.toString();
+              return (
+                swapMonthDayToDayMonth(labels)[index] +
+                ' ' +
+                selectedYear.toString()
+              );
             if (selectedCycle === Frequency.Annually)
-              return labels[index] + " " + selectedYear.toString();
+              return labels[index] + ' ' + selectedYear.toString();
           },
           label: (context: any) => {
             const value = context.parsed.y;
-            if (context.dataset.label === "Total Lent") {
-              return `Total Lent:` + ` ` + `${displayCurrencyAndAmount(value.toString(), currency)}`;
+            if (context.dataset.label === 'Total Lent') {
+              return (
+                `Total Lent:` +
+                ` ` +
+                `${displayCurrencyAndAmount(value.toString(), currency)}`
+              );
             } else {
-              return `Total Borrowed:` + ` ` + `${displayCurrencyAndAmount(value.toString(), currency)}`;
+              return (
+                `Total Borrowed:` +
+                ` ` +
+                `${displayCurrencyAndAmount(value.toString(), currency)}`
+              );
             }
           },
         },
@@ -118,42 +133,41 @@ export const getChartOptions = (
         // color: "white",
         font: {
           size: 14,
-          weight: "bold",
+          weight: 'bold',
         },
         color: (context: Context) => {
-          if (context.dataset.label === "Total Lent") {
-            return "#317E24";
+          if (context.dataset.label === 'Total Lent') {
+            return '#317E24';
           } else {
-            return "#FF3D3D";
+            return '#FF3D3D';
           }
         },
 
         align: (context: Context) => {
           if (totalLentExt !== undefined && totalBorrowedExt !== undefined)
             if (
-              context.dataset.label === "Total Lent" &&
+              context.dataset.label === 'Total Lent' &&
               totalLentExt[context.dataIndex] >
-              totalBorrowedExt[context.dataIndex]
+                totalBorrowedExt[context.dataIndex]
             ) {
-              return "top";
+              return 'top';
             } else if (
-              context.dataset.label === "Total Lent" &&
+              context.dataset.label === 'Total Lent' &&
               totalLentExt[context.dataIndex] <
-              totalBorrowedExt[context.dataIndex]
+                totalBorrowedExt[context.dataIndex]
             )
-              return "bottom";
+              return 'bottom';
             else if (
-              context.dataset.label === "Total Borrowed" &&
+              context.dataset.label === 'Total Borrowed' &&
               totalLentExt[context.dataIndex] <
-              totalBorrowedExt[context.dataIndex]
+                totalBorrowedExt[context.dataIndex]
             ) {
-              return "top";
-            } else return "bottom";
+              return 'top';
+            } else return 'bottom';
           return;
         },
         padding: 5,
         formatter: (value: number, context: Context) => {
-
           // Show price label for first, middle, and last data points
           if (
             context.dataIndex === 0 ||
@@ -165,9 +179,8 @@ export const getChartOptions = (
               (enhancedDatesToNumbers[context.dataset.data.length - 1] === 14 ||
                 enhancedDatesToNumbers[context.dataset.data.length - 1] === 16) //condition to not show 15th and 16th consecutive data points
             )
-              return "";
+              return '';
             return `${currencySymbol}` + roundThousandsAndMillions(value);
-
           } else {
             return null;
           }
@@ -188,9 +201,9 @@ export const getChartOptions = (
           display: false,
         },
         ticks: {
-          color: "#DDDDDD",
+          color: '#DDDDDD',
           font: {
-            weight: "bold",
+            weight: 'bold',
             size: 20,
           },
           callback: (index: number, value: number) => {
@@ -211,7 +224,7 @@ export const getChartOptions = (
                 ) {
                   return Math.floor(parseFloat(labels[index]))
                     .toString()
-                    .padStart(2, "0");
+                    .padStart(2, '0');
                 }
                 // hide all other x axis values
                 break;
@@ -220,10 +233,12 @@ export const getChartOptions = (
                   index === 0 ||
                   index === enhancedWeekDays.length - 1 ||
                   index % 5 === 0
-                ) { return enhancedWeekDays[index]; } break;
+                ) {
+                  return enhancedWeekDays[index];
+                }
+                break;
 
               case Frequency.Annually:
-
                 if (
                   index === 0 ||
                   index === enhancedAbbreviatedMonths.length - 1 ||
@@ -251,9 +266,9 @@ export const getChartOptions = (
         borderWidth: 3,
         hitRadius: hitRadius,
         hoverRadius: 10,
-        pointStyle: "circle",
+        pointStyle: 'circle',
         pointLabelFontSize: 14,
-        pointLabelFontWeight: "bold",
+        pointLabelFontWeight: 'bold',
       },
     },
   } as any;

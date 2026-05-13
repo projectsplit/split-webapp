@@ -1,34 +1,39 @@
-import { create } from "zustand";
-import { ExpenseState, CategoryKey } from "./formStoreTypes";
+import { create } from 'zustand';
+import { ExpenseState, SplitMethod } from './formStoreTypes';
 import {
+  ExpenseRequest,
   FormExpense,
+  Group,
   Guest,
   Member,
   User,
   UserInfo,
-} from "../../../types";
-import { signal, Signal } from "@preact/signals-react";
+} from '../../../types';
+
+import { signal, Signal } from '@preact/signals-react';
 import {
   generatePickerArrays,
   validateExpenseState,
   submitExpenseFromState,
-} from "../expenseFormUtils";
+} from '../expenseFormUtils';
+import { recalculateAmounts } from '@/components/MemberPicker/helpers/recalculateAmounts';
+import { significantDigitsFromTicker } from '@/helpers/openExchangeRates';
 
 export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   // Default / initial values
-  amount: "",
-  description: "",
-  currencySymbol: "USD", // or your app default
+  amount: '',
+  description: '',
+  currencySymbol: 'USD', // or your app default
   expenseTime: new Date().toISOString(),
   labels: [],
   location: undefined,
-  userMemberId: "",
+  userMemberId: '',
 
-  amountError: "",
+  amountError: '',
   showAmountError: false,
-  participantsError: "",
-  payersError: "",
-  descriptionError: "",
+  participantsError: '',
+  payersError: '',
+  descriptionError: '',
 
   isSubmitting: false,
 
@@ -47,44 +52,45 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   makePersonalClicked: false,
   showPicker: false,
 
-  participantsCategory: signal<CategoryKey>("Amounts"),
-  payersCategory: signal<CategoryKey>("Amounts"),
+  participantsCategory: signal<SplitMethod>('Amounts'),
+  payersCategory: signal<SplitMethod>('Amounts'),
 
   // ── Simple setters ──────────────────────────────────────────────
-  setAmount: (value) => set({ amount: value }),
-  setDescription: (value) => set({ description: value }),
+  setAmount: (value: string) => set({ amount: value }),
+  setDescription: (value: string) => set({ description: value }),
   setCurrencySymbol: (value: string) => {
     set({
       currencySymbol: value,
-      amount: "",
+      amount: '',
     });
   },
   setExpenseTime: (value: string | ((prev: string) => string)) =>
     set((state) => ({
       expenseTime:
-        typeof value === "function" ? value(state.expenseTime) : value,
+        typeof value === 'function' ? value(state.expenseTime) : value,
     })),
 
-  setMakePersonalClicked: (value) => set({ makePersonalClicked: value }),
-  setShowPicker: (value) => set({ showPicker: value }),
+  setMakePersonalClicked: (value: boolean) =>
+    set({ makePersonalClicked: value }),
+  setShowPicker: (value: boolean) => set({ showPicker: value }),
   setLabels: (labels) => set({ labels }),
   setLocation: (location) => set({ location }),
 
-  setIsSubmitting: (value) => set({ isSubmitting: value }),
+  setIsSubmitting: (value: boolean) => set({ isSubmitting: value }),
 
   setAmountError: (msg: string) => set({ amountError: msg }),
   setShowAmountError: (show: boolean) => set({ showAmountError: show }),
   setParticipantsError: (msgOrUpdater: string | ((prev: string) => string)) =>
     set((state) => ({
       participantsError:
-        typeof msgOrUpdater === "function"
+        typeof msgOrUpdater === 'function'
           ? msgOrUpdater(state.participantsError)
           : msgOrUpdater,
     })),
   setPayersError: (msgOrUpdater: string | ((prev: string) => string)) =>
     set((state) => ({
       payersError:
-        typeof msgOrUpdater === "function"
+        typeof msgOrUpdater === 'function'
           ? msgOrUpdater(state.payersError)
           : msgOrUpdater,
     })),
@@ -95,11 +101,11 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     set((state) => {
       const prevByCategory = state.participantsByCategory;
       const newByCategory =
-        typeof updater === "function" ? updater(prevByCategory) : updater;
+        typeof updater === 'function' ? updater(prevByCategory) : updater;
 
       // === PART 1: Detect if Shares changed ===
-      const prevShares = prevByCategory["Shares"] ?? [];
-      const newShares = newByCategory["Shares"] ?? [];
+      const prevShares = prevByCategory['Shares'] ?? [];
+      const newShares = newByCategory['Shares'] ?? [];
       const sharesChanged = newShares !== prevShares;
 
       let finalByCategory = newByCategory;
@@ -117,8 +123,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
           if (wasJustSelected) {
             return {
               ...member,
-              actualAmount: "",
-              screenQuantity: "",
+              actualAmount: '',
+              screenQuantity: '',
               locked: false,
             };
           }
@@ -134,7 +140,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       // === PART 3: Clear error if Shares changed ===
       return {
         participantsByCategory: finalByCategory,
-        ...(sharesChanged ? { participantsError: "" } : {}),
+        ...(sharesChanged ? { participantsError: '' } : {}),
       };
     }),
 
@@ -142,10 +148,10 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     set((state) => {
       const prevByCategory = state.payersByCategory;
       const newByCategory =
-        typeof updater === "function" ? updater(prevByCategory) : updater;
+        typeof updater === 'function' ? updater(prevByCategory) : updater;
 
-      const prevShares = prevByCategory["Shares"] ?? [];
-      const newShares = newByCategory["Shares"] ?? [];
+      const prevShares = prevByCategory['Shares'] ?? [];
+      const newShares = newByCategory['Shares'] ?? [];
       const sharesChanged = newShares !== prevShares;
 
       let finalByCategory = newByCategory;
@@ -162,8 +168,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
           if (wasJustSelected) {
             return {
               ...member,
-              actualAmount: "",
-              screenQuantity: "",
+              actualAmount: '',
+              screenQuantity: '',
               locked: false,
             };
           }
@@ -178,7 +184,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
 
       return {
         payersByCategory: finalByCategory,
-        ...(sharesChanged ? { payersError: "" } : {}),
+        ...(sharesChanged ? { payersError: '' } : {}),
       };
     }),
 
@@ -220,7 +226,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     } = config;
     const userMembers = groupMembers
       ?.peek()
-      .filter((item): item is Member => "userId" in item);
+      .filter((item): item is Member => 'userId' in item);
 
     const userMemberId = userMembers?.find(
       (m) => m.userId === userInfo?.userId
@@ -229,10 +235,10 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     const initialCurrency =
       isCreateExpense || !expense ? currency : expense.currency;
 
-    const initialAmount = isCreateExpense || !expense ? "" : expense.amount;
+    const initialAmount = isCreateExpense || !expense ? '' : expense.amount;
 
     const initialDescription =
-      isCreateExpense || !expense ? "" : expense.description;
+      isCreateExpense || !expense ? '' : expense.description;
 
     const initialLabels = isCreateExpense || !expense ? [] : expense.labels;
 
@@ -258,6 +264,31 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       initialAmount
     );
 
+    const amountNum = Number(initialAmount);
+    const decimalDigits = significantDigitsFromTicker(initialCurrency);
+
+    const finalParticipants = { ...participantsByCategory };
+    const finalPayers = { ...payersByCategory };
+
+    for (const cat of ['Amounts', 'Shares', 'Percentages'] as const) {
+      finalParticipants[cat] = recalculateAmounts(
+        participantsByCategory[cat],
+        amountNum,
+        decimalDigits,
+        { value: cat } as Signal<string>,
+        initialCurrency,
+        isCreateExpense
+      );
+      finalPayers[cat] = recalculateAmounts(
+        payersByCategory[cat],
+        amountNum,
+        decimalDigits,
+        { value: cat } as Signal<string>,
+        initialCurrency,
+        isCreateExpense
+      );
+    }
+
     set({
       amount: initialAmount,
       description: initialDescription,
@@ -265,14 +296,14 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       expenseTime: initialExpenseTime,
       labels: initialLabels,
       location: initialLocation,
-      participantsByCategory,
-      payersByCategory,
+      participantsByCategory: finalParticipants,
+      payersByCategory: finalPayers,
 
-      amountError: "",
+      amountError: '',
       showAmountError: false,
-      participantsError: "",
-      payersError: "",
-      descriptionError: "",
+      participantsError: '',
+      payersError: '',
+      descriptionError: '',
       isSubmitting: false,
       userMemberId: userMemberId,
     });
@@ -290,32 +321,23 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
 
     const userMembers = groupMembers
       ?.peek()
-      .filter((item): item is Member => "userId" in item);
+      .filter((item): item is Member => 'userId' in item);
 
-    // If we have a userMemberId passed in config, use it (though likely undefined/stale if coming from effect)
-    // Otherwise, try to find it in the new groupMembers list
     let derivedUserMemberId = userMemberId;
     if (!derivedUserMemberId && userMembers) {
       derivedUserMemberId = userMembers.find(
         (m) => m.userId === userInfo?.userId
       )?.id;
     }
-    // Also re-check against current group members if we have an ID but it might be from a diff group?
-    // Actually, simply re-deriving it unconditionally from the current groupMembers is safer when switching groups.
     derivedUserMemberId = userMembers?.find(
       (m) => m.userId === userInfo?.userId
     )?.id;
 
-    // Recalculate participants/payers based on NEW member lists,
-    // but keep existing amount/description/etc. in the store.
     const groupArr = groupMembers?.peek() ?? [];
     const nonGroupArr = nonGroupUsers?.peek() ?? [];
     const isNonGroup = isnonGroupExpense?.peek() ?? false;
 
     const currentAmount = get().amount;
-    // NOTE: This re-creates the arrays. If we want to preserve *selected* states
-    // logic would need to be more complex (merging). For now, we assume
-    // adding/removing members resets the *picker* state to default for those members.
     const { participantsByCategory, payersByCategory } = generatePickerArrays(
       groupArr,
       nonGroupArr,
@@ -327,25 +349,48 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       currentAmount
     );
 
+    const amountNum = Number(currentAmount);
+    const decimalDigits = significantDigitsFromTicker(get().currencySymbol);
+
+    const finalParticipants = { ...participantsByCategory };
+    const finalPayers = { ...payersByCategory };
+
+    for (const cat of ['Amounts', 'Shares', 'Percentages'] as const) {
+      finalParticipants[cat] = recalculateAmounts(
+        participantsByCategory[cat],
+        amountNum,
+        decimalDigits,
+        { value: cat } as Signal<string>,
+        get().currencySymbol,
+        isCreateExpense
+      );
+      finalPayers[cat] = recalculateAmounts(
+        payersByCategory[cat],
+        amountNum,
+        decimalDigits,
+        { value: cat } as Signal<string>,
+        get().currencySymbol,
+        isCreateExpense
+      );
+    }
+
     set({
-      participantsByCategory,
-      payersByCategory,
-      userMemberId: derivedUserMemberId, // Update store with the correct ID
+      participantsByCategory: finalParticipants,
+      payersByCategory: finalPayers,
+      userMemberId: derivedUserMemberId,
     });
   },
   resetForm: () => {
     set({
-      amount: "",
-      description: "",
+      amount: '',
+      description: '',
       labels: [],
       location: undefined,
-      amountError: "",
-      participantsError: "",
-      payersError: "",
-      descriptionError: "",
+      amountError: '',
+      participantsError: '',
+      payersError: '',
+      descriptionError: '',
       showAmountError: false,
-      // Note: we usually DON'T reset categories here
-      // unless it's a full form reset
     });
   },
   validateForm: (options = { showErrors: true }) => {
@@ -375,8 +420,6 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     );
 
     if (options.showErrors) {
-      // Optimized set (exact match with functional check)
-
       set((s) => ({
         amountError: s.amountError === amountErr ? s.amountError : amountErr,
       }));
@@ -402,7 +445,17 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       errors: validationErrors,
     };
   },
-  submitExpense: (inputs) => {
+  submitExpense: (inputs: {
+    groupId?: string;
+    createExpenseMutation: (req: ExpenseRequest) => void;
+    editExpenseMutation: (req: ExpenseRequest) => void;
+    isCreateExpense: boolean;
+    expense: FormExpense | null;
+    isnonGroupExpense?: Signal<boolean>;
+    isPersonal?: Signal<boolean>;
+    fromPersonal?: Signal<boolean>;
+    fromHomeGroup?: Signal<Group | null>;
+  }) => {
     const state = get();
     submitExpenseFromState(
       {
@@ -419,8 +472,13 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
         setAmountError: state.setAmountError,
         setDescriptionError: state.setDescriptionError,
         setIsSubmitting: state.setIsSubmitting,
+        setShowAmountError: state.setShowAmountError,
       },
-      inputs
+      {
+        ...inputs,
+        fromPersonal:
+          inputs.fromPersonal?.peek() || inputs.isPersonal?.peek() || undefined,
+      }
     );
   },
 }));

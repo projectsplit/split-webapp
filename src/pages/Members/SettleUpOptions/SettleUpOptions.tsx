@@ -1,27 +1,36 @@
-import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import { useSignal } from "@preact/signals-react";
-import { useParams } from "react-router-dom";
-import { SettleUpOptionsProps } from "../../../interfaces";
-import { StyledSettleUpOptions } from "./SettleUpOptions.Styled";
-import { CreateTransfersRequest, Transfer } from "../../../types";
-import { DateTime } from "luxon";
-import { useMultipleTransfers } from "../../../api/services/useMultipleTransfers";
-import MyButton from "../../../components/MyButton/MyButton";
+import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
+import { useSignal } from '@preact/signals-react';
+import { useParams } from 'react-router-dom';
+import { SettleUpOptionsProps } from '../../../interfaces';
+import { StyledSettleUpOptions } from './SettleUpOptions.Styled';
+import { CreateTransfersRequest, Transfer } from '../../../types';
+import { DateTime } from 'luxon';
+import MyButton from '../../../components/MyButton/MyButton';
+import { useTheme } from 'styled-components';
+import { getUserName } from '@/helpers/getUserName';
+import { useMultipleTransfers } from '@/api/auth/CommandHooks/useMultipleTransfers';
 
 export default function SettleUpOptions({
   pendingTransactions,
-  memberIdSelectedToSettleUp,
+  idSelectedToSettleUp,
   menu,
   members,
+  userId,
 }: SettleUpOptionsProps) {
   const selectedItem = useSignal<number[]>([0]);
   const params = useParams();
   const groupId = params?.groupid;
-  const {mutate:submitMultipleTransfers, isPending} = useMultipleTransfers(menu);
+  const { mutate: submitMultipleTransfers, isPending } = useMultipleTransfers(
+    menu,
+    groupId
+  );
   const enabled = selectedItem.value.length > 0;
+  const theme = useTheme();
 
   const memberPendingTransactions = pendingTransactions.filter(
-    (p) => p.debtor === memberIdSelectedToSettleUp.value
+    (p) =>
+      p.debtor === idSelectedToSettleUp.value ||
+      p.creditor === idSelectedToSettleUp.value
   );
 
   const submitButtonHandler = () => {
@@ -30,7 +39,7 @@ export default function SettleUpOptions({
     );
 
     const transfers: Transfer[] = selectedTransactions.map((transaction) => ({
-      description: "Settled Debt",
+      description: 'Settled Debt',
       amount: transaction.amount,
       currency: transaction.currency,
       receiverId: transaction.creditor,
@@ -39,12 +48,11 @@ export default function SettleUpOptions({
     }));
 
     const createTransfersRequest: CreateTransfersRequest = {
-      groupId: groupId as string,
+      groupId,
       transfers,
     };
 
     submitMultipleTransfers(createTransfersRequest);
-    
   };
 
   return (
@@ -54,7 +62,7 @@ export default function SettleUpOptions({
       {memberPendingTransactions.map((p, index) => (
         <div
           className={`settleUpOption ${
-            selectedItem.value.includes(index) ? "clicked" : ""
+            selectedItem.value.includes(index) ? 'clicked' : ''
           }`}
           key={index}
           onClick={() => {
@@ -67,20 +75,44 @@ export default function SettleUpOptions({
             }
           }}
         >
-          <span className="currencyOwes">
+          <span
+            className="currencyOwes"
+            style={{
+              color:
+                p.creditor === idSelectedToSettleUp.value
+                  ? theme.green
+                  : theme.redish,
+            }}
+          >
             {displayCurrencyAndAmount(p.amount.toString(), p.currency)}
-          </span>{" "}
+          </span>{' '}
           &nbsp;
-          <span className="preposition">to</span> &nbsp;
-          <span>
-            {members.find((member) => member.id === p.creditor)?.name}
-          </span>
+          <div className="text">
+            <span className="preposition">
+              <span className="word1">from</span>
+              <span className="word2">
+                {getUserName(p, members, userId, 'from')}
+              </span>
+            </span>
+            &nbsp;
+            <span className="preposition">
+              <span className="word1">to</span>
+              <span className="word2">
+                {getUserName(p, members, userId, 'to')}
+              </span>
+            </span>{' '}
+            &nbsp;
+          </div>
         </div>
       ))}
 
       <div className="settleUpButton">
-        {" "}
-        <MyButton onClick={() => submitButtonHandler()} disabled={!enabled} isLoading={isPending}>
+        {' '}
+        <MyButton
+          onClick={() => submitButtonHandler()}
+          disabled={!enabled}
+          isLoading={isPending}
+        >
           Settle Up
         </MyButton>
       </div>

@@ -1,5 +1,4 @@
-import styled from "styled-components";
-
+import styled from 'styled-components';
 
 export const StyledNewButton = styled.div`
   display: flex;
@@ -14,7 +13,7 @@ export const StyledNewButton = styled.div`
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   border-radius: 8px;
-  .plus{
-    font-size:15px;
+  .plus {
+    font-size: 15px;
   }
 `;

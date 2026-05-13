@@ -1,9 +1,7 @@
-import { useRedirectToBudget } from "../hooks/useRedirectToBudget";
-import useBudgetInfo from "../api/services/useBudgetInfo";
-import { useOutletContext } from "react-router-dom";
-import { UserInfo } from "../types";
-
-
+import { useRedirectToBudget } from '../hooks/useRedirectToBudget';
+import useBudgetInfo from '../api/auth/QueryHooks/useBudgetInfo';
+import { useOutletContext } from 'react-router-dom';
+import { UserInfo } from '../types';
 
 export default function RedirectToBudget() {
   const { data, isFetching } = useBudgetInfo();

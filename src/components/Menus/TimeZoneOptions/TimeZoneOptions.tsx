@@ -1,16 +1,15 @@
-import { useState } from "react";
-import { StyledTimeZoneOptions } from "./TimeZoneOptions.styled";
-import { TimeZoneOptionsProps } from "../../../interfaces";
-import { timeZones } from "../../../helpers/timeZones";
+import { useState } from 'react';
+import { StyledTimeZoneOptions } from './TimeZoneOptions.styled';
+import { TimeZoneOptionsProps } from '../../../interfaces';
+import { timeZones } from '../../../helpers/timeZones';
 
 export default function TimeZoneOptions({
   clickHandler,
   userInfo,
 }: TimeZoneOptionsProps) {
-  const [searchItem, setSearchItem] = useState<string>("");
-  const [filteredTimeZones, setFilteredTimeZones] = useState<string[]>(
-   timeZones
-  );
+  const [searchItem, setSearchItem] = useState<string>('');
+  const [filteredTimeZones, setFilteredTimeZones] =
+    useState<string[]>(timeZones);
   const timeZone = userInfo?.timeZone;
   const allTimeZones = timeZones;
 
@@ -26,10 +25,10 @@ export default function TimeZoneOptions({
 
   return (
     <StyledTimeZoneOptions height="75vh">
-      {" "}
+      {' '}
       <div className="headerAndSearchbar">
         <div className="header">
-          {" "}
+          {' '}
           <strong>Select Timezone</strong>
         </div>
         <input
@@ -45,7 +44,7 @@ export default function TimeZoneOptions({
       {filteredTimeZones.map((ft, index) => (
         <div
           key={index}
-          className={`timeZoneOption ${timeZone === ft ? "clicked" : ""}`}
+          className={`timeZoneOption ${timeZone === ft ? 'clicked' : ''}`}
           onClick={() => clickHandler(ft)}
         >
           <div className="timeZone">

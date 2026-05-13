@@ -1,6 +1,5 @@
-import currency from "currency.js";
-import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
-import { DateTime } from "luxon";
+import currency from 'currency.js';
+import { BeautifulMentionsItemData } from 'lexical-beautiful-mentions';
 
 export type RefreshTokenResponse = {
   accessToken: string;
@@ -37,9 +36,10 @@ export type UserInfo = {
   username: string;
   timeZone: string;
   timeZoneCoordinates: Coordinates;
-  recentGroupId: string;
+  recentContextId: string;
   hasNewerNotifications: boolean;
   currency: string;
+  showBudgetInfo: boolean;
 };
 
 export type ExpenseItem = {
@@ -61,16 +61,6 @@ export type TransferItem = {
   currency: string;
   senderName: string;
   receiverName: string;
-};
-
-export type GetGroupExpensesResponse = {
-  expenses: ExpenseResponseItem[];
-  next: string | null;
-};
-
-export type GetGroupTransfersResponse = {
-  transfers: TransferResponseItem[];
-  next: string | null;
 };
 
 export type GroupedTransaction = {
@@ -118,12 +108,6 @@ export type FormPersonalExpense = FormExpense & {
   shares?: never;
 };
 
-export type ExpenseType =
-  | "Group"
-  | "NonGroup"
-  | "Personal"
-  | "undefined expense";
-
 export type GroupTransaction = {
   memberId: string;
   amount: number;
@@ -134,6 +118,7 @@ export type NonGroupTransaction = {
 };
 
 export type ExpenseResponseItem = {
+  transactionType: TransactionType;
   id: string;
   created: string;
   updated: string;
@@ -153,28 +138,42 @@ export type ExpenseResponseItem = {
   }[];
 };
 
+export type GetExpensesResponse = {
+  expenses: ExpenseResponseItem[];
+  next: string | null;
+  previous: string | null;
+};
+
+export type GetGroupTransfersResponse = {
+  transfers: TransferResponseItem[];
+  next: string | null;
+};
+
 export type GroupExpenseResponseItem = ExpenseResponseItem & {
   groupId: string;
   payments: GroupPayment[];
   shares: GroupShare[];
+  next: string | null;
 };
 
 export type NonGroupExpenseResponseItem = ExpenseResponseItem & {
   payments: Payment[];
   shares: Share[];
+  next: string | null;
 };
 
 export type PersonalExpenseResponseItem = ExpenseResponseItem & {
   groupId?: never;
   payments?: never;
   shares?: never;
+  next: string | null;
 };
 
 export type TransferResponseItem = {
   id: string;
   created: string;
   updated: string;
-  groupId: string;
+  groupId?: string;
   creatorId: string;
   amount: number;
   occurred: string;
@@ -193,13 +192,16 @@ export type GroupPayment = {
   memberId: string;
   amount: number;
 };
+
 export type Share = {
   userId: string;
+  username: string;
   amount: number;
 };
 
 export type Payment = {
   userId: string;
+  username: string;
   amount: number;
 };
 
@@ -215,11 +217,21 @@ export type SearchUserToInviteResponse = {
   next: string | null;
 };
 
+export type SearchUserResponse = {
+  users: SearchUserResponseItem[];
+  next: string | null;
+};
+
 export type SearchUserToInviteResponseItem = {
   userId: string;
   username: string;
   isGroupMember: boolean;
   isAlreadyInvited: boolean;
+};
+
+export type SearchUserResponseItem = {
+  userId: string;
+  username: string;
 };
 
 export type Group = {
@@ -258,6 +270,7 @@ export type Guest = {
   name: string;
   joined: Date;
 };
+
 export type Invitation = {
   id: string;
   created: string;
@@ -284,6 +297,10 @@ export type Label = {
   id: string;
   text: string;
   color: string;
+};
+
+export type GetLabelsResponse = {
+  labels: (Label & { count?: number })[];
 };
 
 // export type CreateExpenseRequest = {
@@ -321,20 +338,10 @@ export type Label = {
 //   }[];
 // };
 
-export type CreateEditExpenseRequest = {
-  expenseId: string;
+export type BaseExpenseRequest = {
+  expenseId?: string;
   amount: number;
   currency: string;
-  payments: {
-    userId?: string;
-    memberId?: string;
-    amount: number;
-  }[];
-  shares: {
-    userId?: string;
-    memberId?: string;
-    amount: number;
-  }[];
   description: string;
   location: GeoLocation | null;
   occurred: string;
@@ -344,29 +351,40 @@ export type CreateEditExpenseRequest = {
   }[];
 };
 
-export type ExpenseRequest = {
-  expenseId?: string;
+export type GroupExpenseRequest = BaseExpenseRequest & {
   groupId?: string;
-  amount: number;
-  currency: string;
   payments: {
-    userId?: string;
-    memberId?: string;
+    memberId: string;
     amount: number;
   }[];
   shares: {
-    userId?: string;
-    memberId?: string;
+    memberId: string;
     amount: number;
   }[];
-  description: string;
-  location: GeoLocation | null;
-  occurred: string;
-  labels: {
-    text: string;
-    color: string;
+};
+
+export type NonGroupExpenseRequest = BaseExpenseRequest & {
+  payments: {
+    userId: string;
+    amount: number;
+  }[];
+  shares: {
+    userId: string;
+    amount: number;
   }[];
 };
+
+export type PersonalExpenseRequest = BaseExpenseRequest;
+
+export type ExpenseRequest =
+  | GroupExpenseRequest
+  | NonGroupExpenseRequest
+  | PersonalExpenseRequest;
+
+export type ExpenseRequestWithType =
+  | (GroupExpenseRequest & { type?: 'group' })
+  | (NonGroupExpenseRequest & { type?: 'non-group' })
+  | (PersonalExpenseRequest & { type?: 'personal' });
 
 export type GeoLocation = {
   coordinates: Coordinates;
@@ -389,18 +407,38 @@ export enum Frequency {
   Weekly,
   Monthly,
   Annually,
+  Custom,
 }
 
 export type BudgetInfoResponse = {
-  budgetSubmitted: boolean;
-  averageSpentPerDay?: string;
-  remainingDays?: string;
-  totalAmountSpent?: string;
-  goal?: string;
-  currency?: string;
-  budgetType?: Frequency;
-  startDate?: any;
-  endDate?: any;
+  id: string;
+  totalAmountSpent: string;
+  description: string;
+  remainingDays: string;
+  averageSpentPerDay: string;
+  goal: string;
+  currency: string;
+  frequency: Frequency;
+  scope: BudgetScope;
+  targetGroupIds?: string[];
+  startDate: string;
+  endDate: string;
+};
+
+export type InactiveBudgetsInfoResponseItem = {
+  id: string;
+  amount: string;
+  description: string;
+  currency: string;
+  frequency: Frequency;
+  scope: BudgetScope;
+  targetGroupIds?: string[];
+  endDate: string;
+  startDate: string;
+};
+
+export type InactiveBudgetsInfoResponse = {
+  budgets: InactiveBudgetsInfoResponseItem[];
 };
 
 export type UserPendingTransaction = {
@@ -488,12 +526,12 @@ export type Transfer = {
 };
 
 export type CreateTransfersRequest = {
-  groupId: string;
+  groupId?: string;
   transfers: Transfer[];
 };
 
 export type CreateTransferRequest = {
-  groupId: string | undefined;
+  groupId?: string;
   description: string;
   amount: number;
   currency: string;
@@ -509,7 +547,9 @@ export type GetUserInvitationsResponse = {
 
 export type Debt = {
   debtor: string;
+  debtorName?: string;
   creditor: string;
+  creditorName?: string;
   amount: number;
   currency: string;
 };
@@ -517,8 +557,11 @@ export type Debt = {
 export type DebtsResponse = {
   debts: Debt[];
   totalSpent: Record<string, Record<string, number>>;
+  convertedTotalSpent: Record<string, number>;
   totalSent: Record<string, Record<string, number>>;
+  convertedTotalSent: Record<string, number>;
   totalReceived: Record<string, Record<string, number>>;
+  convertedTotalReceived: Record<string, number>;
 };
 
 export type TotalSpent = Record<string, Record<string, number>>;
@@ -533,9 +576,12 @@ export type GetUserInvitationsResponseItem = {
   guestId: string | null;
   guestName: string | null;
 };
-
+export type SplitCategory = 'Participants' | 'Payers';
 export type DeleteExpenseRequest = {
   expenseId: string;
+};
+export type DeleteUserLabelRequest = {
+  labelId: string;
 };
 export type DeleteTransferRequest = {
   transferId: string;
@@ -544,9 +590,12 @@ export type DeleteTransferRequest = {
 export type UpdateNotificationRequest = {
   timestamp: string | undefined;
 };
+export type SetShowBudgetInfoRequest = {
+  showBudgetInfo: boolean;
+};
 
-export type UpdateMostRecentGroupRequest = {
-  groupId: string;
+export type UpdateMostRecentContextRequest = {
+  contextId: string;
 };
 export type UpdateSelectedCurrencyRequest = {
   currency: string;
@@ -584,35 +633,36 @@ export type ExpenseFormState = {
   };
 };
 
-export type FetchedMember = {
-  memberId: string;
+export type FetchedPerson = {
+  id: string;
   value: string;
   isUser: boolean;
 };
 
-export type FetchedMembers = FetchedMember[];
+export type FetchedPeople = FetchedPerson[];
 
-export type EnhancedMembersWithProps = {
+export type EnhancedPeopleWithProps = {
   value: string;
-  memberId: string;
+  id: string;
   isUser: boolean;
   prop: string;
 }[];
 
-export type Members = {
-  payers: FetchedMembers;
-  participants: FetchedMembers;
-  senders: FetchedMembers;
-  receivers: FetchedMembers;
+export type People = {
+  payers: FetchedPeople;
+  participants: FetchedPeople;
+  senders: FetchedPeople;
+  receivers: FetchedPeople;
 };
 
-export type FilteredMembers = Members;
+export type FilteredPeople = People;
 
 export type FetchedLabel = {
   id: string;
   value: string;
   color: string;
   prop: string;
+  isPersonal?: boolean;
 };
 
 export type FilteredResultItem = {
@@ -639,13 +689,13 @@ export type CreateExpenseFilterRequest = {
 };
 
 export type ExpenseFilter = {
-  groupId: string;
+  groupId?: string;
   participantsIds: string[];
   payersIds: string[];
   freeText: string;
-  before: string;
-  during: string;
-  after: string;
+  before: string | null;
+  during: string | null;
+  after: string | null;
   labels: string[];
 };
 
@@ -661,13 +711,13 @@ export type CreateTransferFilterRequest = {
 };
 
 export type TransferFilter = {
-  groupId: string;
+  groupId?: string;
   receiversIds: string[];
   sendersIds: string[];
   freeText: string;
-  before: string;
-  during: string;
-  after: string;
+  before: string | null;
+  during: string | null;
+  after: string | null;
 };
 
 export type SerializedLexicalNode = {
@@ -676,7 +726,7 @@ export type SerializedLexicalNode = {
 };
 
 export type SerializedBeautifulMentionNode = SerializedLexicalNode & {
-  type: "beautifulMention";
+  type: 'beautifulMention';
   trigger: string;
   value: string;
   data: {
@@ -703,8 +753,8 @@ export type SerializedElementNode = SerializedLexicalNode & {
 // };
 
 export type ExpenseFilterResponse = {
-  payers: FetchedMembers;
-  participants: FetchedMembers;
+  payers: FetchedPeople;
+  participants: FetchedPeople;
   before: string[];
   during: string[];
   after: string[];
@@ -713,8 +763,8 @@ export type ExpenseFilterResponse = {
 };
 
 export type TransferFilterResponse = {
-  senders: FetchedMembers;
-  receivers: FetchedMembers;
+  senders: FetchedPeople;
+  receivers: FetchedPeople;
   before: string[];
   during: string[];
   after: string[];
@@ -739,7 +789,7 @@ export type TransferParsedFilters = {
 };
 
 export type DateConstraint = {
-  trigger: "before:" | "after:" | "during:";
+  trigger: 'before:' | 'after:' | 'during:';
   value: string;
 };
 
@@ -750,9 +800,19 @@ export type GetTotalLentTotalBorrowedResponse = {
 
 export type CreateBudgetRequest = {
   amount: string;
+  description: string;
   currency: string;
-  budgetType: Frequency;
-  day: string | null;
+  frequency: Frequency;
+  scope: BudgetScope;
+  targetGroupIds: string[];
+  commencementDay: string | null;
+  activate?: boolean;
+  startDate?: string;
+  endDate?: string;
+};
+
+export type EditBudgetRequest = CreateBudgetRequest & {
+  budgetId: string;
 };
 
 export type SpendingInfoResponse = {
@@ -790,4 +850,22 @@ export type SpendingChartsResponseItem = {
   to: Date;
 };
 
-export type Variant = "non" | "active" | "archived";
+export type Variant = 'non' | 'active' | 'archived';
+
+export enum TransactionType {
+  Personal = 0,
+  Group = 1,
+  NonGroup = 2,
+}
+
+export enum Mode {
+  Personal = 0,
+  Group = 1,
+  NonGroup = 2,
+}
+
+export enum BudgetScope {
+  Personal = 1,
+  NonGroup = 2,
+  Group = 4,
+}

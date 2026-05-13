@@ -1,11 +1,11 @@
-import { useMemo } from "react";
-import { Signal } from "@preact/signals-react";
+import { useMemo } from 'react';
+import { Signal } from '@preact/signals-react';
 import {
   dateStringToMonthAndDay,
   findIndexForCurrentDate,
   generateAllWeeksPerYear,
   weeksToDateString,
-} from "../../../helpers/weeklyDataHelpers";
+} from '../../../helpers/weeklyDataHelpers';
 
 export const useWeeklyDatesMemo = (
   selectedYear: Signal<number>

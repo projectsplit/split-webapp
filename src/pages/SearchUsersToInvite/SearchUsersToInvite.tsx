@@ -1,42 +1,49 @@
-import { useState } from "react";
-import { StyledSearchUsersToInvite } from "./SearchUsersToInvite.styled";
-import { useSearchUsersToInvite } from "../../api/services/useSearchUsersToInvite";
-import Input from "../../components/Input/Input";
-import MyButton from "../../components/MyButton/MyButton";
-import { useParams } from "react-router-dom";
-import { IoClose } from "react-icons/io5";
-import { SearchUsersToInviteProps } from "../../interfaces";
-import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import { useSignal } from "@preact/signals-react";
-import { useCreateGuest } from "../../api/services/useCreateGuest";
-import { useQueryClient } from "@tanstack/react-query";
-import useGroup from "../../api/services/useGroup";
-import MemberItem from "../../components/Menus/RemoveUserFromGroupMenu/MemberItem/MemberItem";
-import RemoveGuestWarningAnimation from "../../components/Menus/MenuAnimations/RemoveWarningAnimation";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import Sentinel from "../../components/Sentinel";
-import { SearchResultItem } from "./SearchResultItem/SearchResultItem";
-import useDebounce from "../../hooks/useDebounce";
+import { useEffect, useState } from 'react';
+import { StyledSearchUsersToInvite } from './SearchUsersToInvite.styled';
+import { useSearchUsersToInvite } from '../../api/auth/QueryHooks/useSearchUsersToInvite';
+import Input from '../../components/Input/Input';
+import MyButton from '../../components/MyButton/MyButton';
+import { useParams } from 'react-router-dom';
+import { IoClose } from 'react-icons/io5';
+import { SearchUsersToInviteProps } from '../../interfaces';
+import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
+import { useSignal } from '@preact/signals-react';
+import { useCreateGuest } from '../../api/auth/CommandHooks/useCreateGuest';
+import { useQueryClient } from '@tanstack/react-query';
+import useGroup from '../../api/auth/QueryHooks/useGroup';
+import MemberItem from '../../components/Menus/RemoveUserFromGroupMenu/MemberItem/MemberItem';
+import RemoveGuestWarningAnimation from '../../components/Animations/RemoveWarningAnimation';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import Sentinel from '../../components/Sentinel';
+import { SearchResultItem } from './SearchResultItem/SearchResultItem';
+import useDebounce from '../../hooks/useDebounce';
 
 const SearchUsersToInvite = ({
   menu,
   guestToBeReplaced,
+  newGroupId,
+  newMembers,
+  accessedNewUsersInvitationsMenu,
 }: SearchUsersToInviteProps) => {
   const params = useParams();
-  const groupId = params.groupid!;
+  const groupId = params.groupid! || newGroupId || '';
   const pageSize = 10;
   const queryClient = useQueryClient();
-  const [keyword, setKeyword] = useState("");
-  const category = useSignal<string>("Invite User");
-  const cannotBeRemovedClickedWarning = useSignal<string>("");
-  const [guestName, setGuestName] = useState<string>("");
+  const [keyword, setKeyword] = useState('');
+  const category = useSignal<string>('Invite User');
+  const cannotBeRemovedClickedWarning = useSignal<string>('');
+  const [guestName, setGuestName] = useState<string>('');
   const userInvitationSent = useSignal<boolean>(false);
-  const noGroupError = useSignal<string>("");
-  const noMemberError = useSignal<string>("");
+  const noGroupError = useSignal<string>('');
+  const noMemberError = useSignal<string>('');
   const [debouncedKeyword] = useDebounce(
-    keyword.length > 1 ? keyword : "",
+    keyword.length > 1 ? keyword : '',
     300
   );
+
+  useEffect(() => {
+    if (accessedNewUsersInvitationsMenu) accessedNewUsersInvitationsMenu.value = true;
+  }, []);
 
   const {
     data,
@@ -60,22 +67,22 @@ const SearchUsersToInvite = ({
   const groupGuests = group?.guests ?? [];
 
   const handleCannotRemoveClick = () => {
-    cannotBeRemovedClickedWarning.value = "cannotRemoveGuest";
+    cannotBeRemovedClickedWarning.value = 'cannotRemoveGuest';
   };
   return (
     <StyledSearchUsersToInvite>
       <div className="fixed-header-container">
         <div className="header">
           <div className="gap"></div>
-          {guestToBeReplaced?.guestId && guestToBeReplaced?.guestId != "" ? (
-            ""
+          {guestToBeReplaced?.guestId && guestToBeReplaced?.guestId != '' ? (
+            ''
           ) : (
             <div className="title">
               <CategorySelector
-                activeCat={"Invite User"}
+                activeCat={'Invite User'}
                 categories={{
-                  cat1: "Invite User",
-                  cat2: "Create Guest",
+                  cat1: 'Invite User',
+                  cat2: 'Create Guest',
                 }}
                 navLinkUse={false}
                 activeCatAsState={category}
@@ -92,7 +99,7 @@ const SearchUsersToInvite = ({
                   exact: false,
                 })
                 .catch((error) => {
-                  console.error("Failed to invalidate queries:", error);
+                  console.error('Failed to invalidate queries:', error);
                 });
             }}
           >
@@ -100,15 +107,15 @@ const SearchUsersToInvite = ({
           </div>
         </div>
       </div>
-      {category.value === "Invite User" ? (
+      {category.value === 'Invite User' ? (
         <div className="scrollable-content">
-          <div className="input">
+          <div className="inputField">
             <Input
               className="search-input"
               placeholder="Search"
               backgroundcolor="#2d2d2d"
               onChange={(e) => setKeyword(e.target.value)}
-              value={keyword || ""}
+              value={keyword || ''}
             />
           </div>
 
@@ -123,38 +130,63 @@ const SearchUsersToInvite = ({
                 groupId={groupId}
                 guestId={guestToBeReplaced?.guestId}
                 guestName={guestToBeReplaced?.guestName}
-                onInviteSuccess={() => {
-                  updateUserInvitationStatus(
-                    user.userId,
-                    !user.isAlreadyInvited
-                  );
+                onInviteSuccess={(wasInvited) => {
+                  updateUserInvitationStatus(user.userId, wasInvited);
+                  if (wasInvited) {
+                    if (newMembers) {
+                      newMembers.value = [
+                        ...newMembers.value,
+                        { name: user.username, isUser: true },
+                      ];
+                    }
+                  } else {
+                    if (newMembers) {
+                      newMembers.value = newMembers.value.filter(
+                        (m) => m.name !== user.username
+                      );
+                    }
+                  }
                 }}
                 userInvitationSent={userInvitationSent}
               />
             ))
           )}
           <Sentinel
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
+            fetchPage={fetchNextPage}
+            hasMore={hasNextPage}
+            isFetchingPage={isFetchingNextPage}
           />
         </div>
       ) : (
         <div className="scrollable-content">
-          <div className="input">
+          <div className="inputField">
             <Input
               className="search-input"
               placeholder="guest's name"
               backgroundcolor="#2d2d2d"
               onChange={(e) => setGuestName(e.target.value)}
-              value={guestName || ""}
+              value={guestName || ''}
               autoFocus={true}
             />
             <div className="createButton">
               <MyButton
                 isLoading={isPendingCreateGuest}
                 disabled={!guestName}
-                onClick={() => createGuestExpenseMutation()}
+                onClick={() =>
+                  createGuestExpenseMutation(undefined, {
+                    onSuccess: () => {
+                      if (newMembers) {
+                        newMembers.value = [
+                          ...newMembers.value,
+                          {
+                            name: guestName,
+                            isUser: false,
+                          },
+                        ];
+                      }
+                    },
+                  })
+                }
               >
                 Create
               </MyButton>
@@ -170,9 +202,10 @@ const SearchUsersToInvite = ({
                 noMemberError={noMemberError}
                 isGuest={true}
                 canBeRemoved={
-                  "canBeRemoved" in member ? member.canBeRemoved : true
+                  'canBeRemoved' in member ? member.canBeRemoved : true
                 }
                 onCannotRemoveClick={handleCannotRemoveClick}
+                newMembers={newMembers}
               />
             ))}
           </div>

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledSearchUsersToInvite = styled.div`
   position: fixed;
@@ -13,7 +13,7 @@ export const StyledSearchUsersToInvite = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  
+
   .fixed-header-container {
     position: sticky;
     top: 0;
@@ -42,7 +42,7 @@ export const StyledSearchUsersToInvite = styled.div`
     }
 
     .closeButtonContainer:hover::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;
@@ -55,9 +55,9 @@ export const StyledSearchUsersToInvite = styled.div`
     }
 
     .title {
-      display:flex;
-      flex-direction:row;
-      gap:10px;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
       font-weight: 600;
     }
     .gap {
@@ -70,6 +70,7 @@ export const StyledSearchUsersToInvite = styled.div`
     flex: 1;
     padding-top: 1rem;
     padding-bottom: 180px;
+
     .members {
       display: flex;
       flex-direction: column;
@@ -94,21 +95,19 @@ export const StyledSearchUsersToInvite = styled.div`
     }
   }
 
-  .input {
+  .inputField {
     display: flex;
-    width: 100%;
+    flex-direction: row;
     padding-left: 10px;
     padding-right: 10px;
 
-
     .search-input {
-      width: 100%;
       flex: 1;
       padding-top: 7px;
       padding-bottom: 7px;
       font-size: 16px;
     }
-    .createButton{
+    .createButton {
       margin-left: 10px;
     }
   }

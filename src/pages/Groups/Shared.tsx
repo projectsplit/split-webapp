@@ -1,76 +1,100 @@
-import { StyledGroupsContainer } from "./GroupsContainer.styled";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { Signal, useSignal } from "@preact/signals-react";
-import CreateGroupAnimation from "../../components/Menus/MenuAnimations/CreateGroupAnimation";
-import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import { useEffect } from "react";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { getGroupsTotalAmounts } from "../../api/services/api";
-import { useMostRecentGroup } from "../../api/services/useMostRecentGroup";
-import { StyledGroups } from "./GroupTypes/Groups.styled";
-import { MdGroupOff, MdOutlineGroupOff } from "react-icons/md";
-import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
-import Sentinel from "../../components/Sentinel";
-import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
-import { GoArchive } from "react-icons/go";
-import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
-import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import Spinner from "../../components/Spinner/Spinner";
-import { StyledSharedContainer } from "./SharedContainer.styled";
-import Separator from "../../components/Separator/Separator";
-import VerticalSeparator from "../../components/VerticalSeparator/VerticalSeparator";
-import { TiGroup } from "react-icons/ti";
-import { IoIosArchive } from "react-icons/io";
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { Signal, useSignal } from '@preact/signals-react';
+import CreateGroupAnimation from '../../components/Animations/CreateGroupAnimation';
+import { useEffect, useRef, useState } from 'react';
+import { useMostRecentContext } from '../../api/auth/CommandHooks/useMostRecentContext';
+import { StyledGroups } from './GroupTypes/Groups.styled';
+import TreeAdjustedContainer from '../../components/TreeAdjustedContainer/TreeAdjustedContainer';
+import Sentinel from '../../components/Sentinel';
+import { TreeItemBuilderForHomeAndGroups } from '../../components/TreeItemBuilderForHomeAndGroups';
+import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';
+import ConfirmUnArchiveGroupAnimation from '../../components/Animations/ConfirmUnArchiveGroupAnimation';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import Spinner from '../../components/Spinner/Spinner';
+import { StyledSharedContainer } from './SharedContainer.styled';
+import Separator from '../../components/Separator/Separator';
+import VerticalSeparator from '../../components/VerticalSeparator/VerticalSeparator';
+import GroupSearchBarAnimation from '../../components/Animations/GroupSearchBarAnimation';
+import useDebounce from '@/hooks/useDebounce';
+import NoGroupsFound from './NoGroupsFound/NoGroupsFound';
+import OptionsButtons from './OptionsButtons/OptionsButtons';
+import { Mode, UserInfo } from '@/types';
+import { computeNetPerCurrency } from '@/helpers/computeNetPerCurrency';
+import { useGroupsList } from './hooks/useGroupList';
+import { useFetchAndGroupNonGroupDebts } from './hooks/useFetchAndGroupNonGroupDebts';
 
 export default function Shared() {
-  const queryClient = useQueryClient();
   const menu = useSignal<string | null>(null);
   const currencyMenu = useSignal<string | null>(null);
-  const groupIdClicked = useSignal<string>("");
+  const groupIdClicked = useSignal<string>('');
+  const showSearchBar = useSignal(false);
+  const searchBarRef = useRef<any>(null);
+  const generalRef = useRef<any>(null);
+  const [keyword, setKeyword] = useState('');
+  const [debouncedKeyword] = useDebounce(
+    keyword.length > 1 ? keyword : '',
+    400
+  );
 
-  const { topMenuTitle, activeGroupCatAsState, openGroupOptionsMenu } =
-    useOutletContext<{
-      topMenuTitle: Signal<string>;
-      openGroupOptionsMenu: Signal<boolean>;
-      activeGroupCatAsState: Signal<string>;
-    }>();
+  const {
+    topMenuTitle,
+    activeGroupCatAsState,
+    openGroupOptionsMenu,
+    userInfo,
+  } = useOutletContext<{
+    topMenuTitle: Signal<string>;
+    openGroupOptionsMenu: Signal<boolean>;
+    activeGroupCatAsState: Signal<string>;
+    userInfo: UserInfo;
+  }>();
 
+  const mode =
+    activeGroupCatAsState.value === 'NonGroup' ? Mode.NonGroup : Mode.Group;
   const navigate = useNavigate();
   const pageSize = 10;
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useInfiniteQuery({
-      queryKey: ["shared", activeGroupCatAsState.value.toLowerCase()],
-      queryFn: ({ pageParam: next }) =>
-        getGroupsTotalAmounts(
-          pageSize,
-          next,
-          activeGroupCatAsState.value === "Archived"
-        ),
-      getNextPageParam: (lastPage) => lastPage?.next || undefined,
-      initialPageParam: "",
-      staleTime: 0,
-    });
+  const {
+    filteredGroups,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingGroups,
+  } = useGroupsList(pageSize, debouncedKeyword, activeGroupCatAsState);
 
-  const groups = data?.pages.flatMap((p) => p.groups);
-  const filteredGroups = groups?.filter((g) =>
-    activeGroupCatAsState.value === "Active" ? !g.isArchived : g.isArchived
-  );
+  const { groupedTransactions, isFetchingDebts } =
+    useFetchAndGroupNonGroupDebts(userInfo?.userId || '', mode);
 
   useEffect(() => {
-    topMenuTitle.value = "Shared";
-    queryClient.invalidateQueries({
-      queryKey: ["shared", activeGroupCatAsState.value.toLowerCase()],
-      exact: true,
-    });
+    if (!showSearchBar.value) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        searchBarRef.current &&
+        !searchBarRef.current.contains(e.target as Node) &&
+        generalRef.current &&
+        !generalRef.current.contains(e.target as Node)
+      ) {
+        showSearchBar.value = false;
+        setKeyword('');
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSearchBar.value]);
+
+  useEffect(() => {
+    topMenuTitle.value = 'Shared';
   }, [activeGroupCatAsState.value]);
 
-  const updateMostRecentGroupId = useMostRecentGroup();
+  const updateMostRecentContextId = useMostRecentContext();
 
   const onGroupClickHandler = (id: string, groupName: string) => {
     navigate(`/shared/${id}/expenses`, { state: { groupName } });
-    updateMostRecentGroupId.mutate(id);
+    updateMostRecentContextId.mutate(id);
+  };
+  const onNonGroupClickHandler = () => {
+    navigate(`/shared/nongroup/expenses`);
+    updateMostRecentContextId.mutate('NON_GROUP');
   };
 
   const onIconClick = (
@@ -84,7 +108,7 @@ export default function Shared() {
     } else {
       e.stopPropagation();
       groupIdClicked.value = groupId;
-      menu.value = "unarchiveGroup";
+      menu.value = 'unarchiveGroup';
     }
   };
 
@@ -92,89 +116,46 @@ export default function Shared() {
     <StyledSharedContainer $groupState={activeGroupCatAsState.value}>
       <Separator />
       <div className="optionButtonsAndGroups">
-        <div className="optionButtons">
-          <div className="buttonWrapper">
-            {activeGroupCatAsState.value === "NonGroup" && (
-              <div className="activeBar" />
-            )}
-            <div
-              className="button"
-              onClick={() => (activeGroupCatAsState.value = "NonGroup")}
-            >
-              <MdGroupOff className="groupIcon non" />
-              <span className="descr">Non</span>
-              <span className="descr">Group</span>
-            </div>
-          </div>
-          <div className="buttonWrapper">
-            {activeGroupCatAsState.value === "Active" && (
-              <div className="activeBar" />
-            )}
-            <div
-              className="button"
-              onClick={() => (activeGroupCatAsState.value = "Active")}
-            >
-              <TiGroup className="groupIcon active" />
-              <span className="descr">Active</span>
-              <span className="descr">Groups</span>
-            </div>
-          </div>
-
-          <div className="buttonWrapper">
-            {activeGroupCatAsState.value === "Archived" && (
-              <div className="activeBar" />
-            )}
-
-            <div
-              className="button"
-              onClick={() => (activeGroupCatAsState.value = "Archived")}
-            >
-              <IoIosArchive className="groupIcon archived" />
-              <span className="descr">Archived </span>
-              <span className="descr">Groups</span>
-            </div>
-          </div>
-        </div>
+        <OptionsButtons
+          activeGroupCatAsState={activeGroupCatAsState}
+          generalRef={generalRef}
+          setKeyword={setKeyword}
+          showSearchBar={showSearchBar}
+        />
         <VerticalSeparator />
         <StyledGroups>
-          {isFetching && !isFetchingNextPage ? (
+          <GroupSearchBarAnimation
+            showSearchBar={showSearchBar}
+            searchBarRef={searchBarRef}
+            keyword={keyword}
+            setKeyword={setKeyword}
+          />
+          {isLoadingGroups || (isFetchingDebts && activeGroupCatAsState.value === 'NonGroup') ? (
             <Spinner />
           ) : (
             <div className="groups">
-              {groups?.length === 0 ? (
-                activeGroupCatAsState.value === "Active" ? (
-                  <div className="noData">
-                    <div className="msg">
-                      There are currently no active groups
-                    </div>
-                    <MdOutlineGroupOff className="icon" />
-                  </div>
-                ) : (
-                  <div className="noData">
-                    <div className="msg">
-                      There are currently no archived groups
-                    </div>
-                    <GoArchive className="icon" />
-                  </div>
-                )
-              ) : null}
+              <NoGroupsFound
+                activeGroupCatAsState={activeGroupCatAsState}
+                filteredGroups={filteredGroups}
+                keyword={keyword}
+              />
               {filteredGroups?.map((g: any) => (
                 <div key={g.id}>
                   <TreeAdjustedContainer
                     onClick={() => onGroupClickHandler(g.id, g.name)}
                     hasOption={true}
                     optionname={
-                      activeGroupCatAsState.value === "Archived"
-                        ? "arrow-undo-outline"
-                        : "qr-code"
+                      activeGroupCatAsState.value === 'Archived'
+                        ? 'arrow-undo-outline'
+                        : 'qr-code'
                     }
                     iconfontsize={30}
                     right={0.8}
                     items={TreeItemBuilderForHomeAndGroups(g?.details)}
                     $optionColor={
-                      activeGroupCatAsState.value === "Archived"
-                        ? "#D79244"
-                        : ""
+                      activeGroupCatAsState.value === 'Archived'
+                        ? '#D79244'
+                        : ''
                     }
                     onIconClick={(
                       e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -182,7 +163,7 @@ export default function Shared() {
                       onIconClick(
                         e,
                         g.id,
-                        activeGroupCatAsState.value === "Archived"
+                        activeGroupCatAsState.value === 'Archived'
                       )
                     }
                   >
@@ -190,37 +171,40 @@ export default function Shared() {
                   </TreeAdjustedContainer>
                 </div>
               ))}
-              {activeGroupCatAsState.value === "NonGroup" && (
+              {activeGroupCatAsState.value === 'NonGroup' && (
                 <TreeAdjustedContainer
-                  onClick={() => navigate(`/shared/nongroup/expenses`)}
+                  onClick={() => onNonGroupClickHandler()}
                   hasOption={true}
-                  items={[
-                    <div className="groupsInfo" key="settled">
-                      <div className="settled">
-                        <div>You are settled </div>
-                        {/* <IonIcon name="checkmark-sharp" className="checkmark" /> */}
-                      </div>
-                    </div>,
-                  ]}
+                  items={TreeItemBuilderForHomeAndGroups(
+                    computeNetPerCurrency(
+                      groupedTransactions,
+                      userInfo.userId || ''
+                    )
+                  )}
                   optionname={'chevron-forward-outline'}
                 >
-
-                  <div className="groupName">Non Group transactions</div>
-
+                  <div className="groupName">Non Group Transactions</div>
                 </TreeAdjustedContainer>
               )}
-
               <Sentinel
-                fetchNextPage={fetchNextPage}
-                hasNextPage={hasNextPage}
-                isFetchingNextPage={isFetchingNextPage}
+                fetchPage={fetchNextPage}
+                hasMore={hasNextPage}
+                isFetchingPage={isFetchingNextPage}
               />
             </div>
           )}
         </StyledGroups>
       </div>
       <MenuAnimationBackground menu={menu} />
-      <BottomMainMenu onClick={() => (menu.value = "createGroup")} />
+      <BottomMainMenu
+        onClick={() => (menu.value = 'createGroup')}
+        onGroupSearchClick={() => {
+          activeGroupCatAsState.value !== 'NonGroup'
+            ? (showSearchBar.value = true)
+            : null;
+        }}
+        bottomBarRef={generalRef}
+      />
       <CreateGroupAnimation menu={menu} currencyMenu={currencyMenu} />
       <ConfirmUnArchiveGroupAnimation
         menu={menu}
@@ -231,5 +215,3 @@ export default function Shared() {
     </StyledSharedContainer>
   );
 }
-
-

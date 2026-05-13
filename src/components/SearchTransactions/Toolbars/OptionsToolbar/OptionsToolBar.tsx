@@ -1,11 +1,11 @@
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { useBeautifulMentions } from "lexical-beautiful-mentions";
-import { OptionsToolbarProps } from "../../../../interfaces";
-import { $getNodeByKey } from "lexical";
-import { StyledOptionsToolbar } from "./OptionsToolbar.styled";
-import Pill from "../../../Pill/Pill";
-import { FilteredResultItem, GroupedItem } from "../../../../types";
-import labelColors from "../../../../labelColors";
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useBeautifulMentions } from 'lexical-beautiful-mentions';
+import { OptionsToolbarProps } from '../../../../interfaces';
+import { $getNodeByKey } from 'lexical';
+import { StyledOptionsToolbar } from './OptionsToolbar.styled';
+import Pill from '../../../Pill/Pill';
+import { FilteredResultItem, GroupedItem } from '../../../../types';
+import labelColors from '../../../../labelColors';
 
 const OptionsToolBar = ({
   editorStateString,
@@ -26,7 +26,7 @@ const OptionsToolBar = ({
 
   return (
     <>
-      {editorStateString === ""
+      {editorStateString === ''
         ? null
         : Object.entries(groupedResults).map(([prop, results]) => (
             <StyledOptionsToolbar key={prop}>
@@ -36,21 +36,21 @@ const OptionsToolBar = ({
                   {results.map((result, index) => (
                     <Pill
                       key={index}
-                      $textColor={"#000000c8"}
+                      $textColor={'#000000c8'}
                       color={
-                        prop === "category"
+                        prop === 'category'
                           ? labelColors[result?.color]
-                          : "#ffffff"
+                          : '#ffffff'
                       }
                       title={result.value}
                       closeButton={false}
-                      $border={prop === "category" ? false : true}
+                      $border={prop === 'category' ? false : true}
                       onClick={() => {
                         editor.update(() => {
                           const nodeMap = editor._editorState._nodeMap;
                           let lastTextNodeKey = null;
                           for (let [key, node] of nodeMap.entries()) {
-                            if (node.__type === "text") {
+                            if (node.__type === 'text') {
                               lastTextNodeKey = key;
                             }
                           }
@@ -60,15 +60,16 @@ const OptionsToolBar = ({
                               lastTextNode.remove();
                             }
                           }
-                          if (result.prop === "category") {
+                          if (result.prop === 'category') {
                             insertMention({
-                              trigger: result.prop + ":",
+                              trigger: result.prop + ':',
                               value: result.value,
                               data: { id: result.id },
                             });
-                          } else { //else is going to be a member
+                          } else {
+                            //else is going to be a member
                             insertMention({
-                              trigger: result.prop + ":",
+                              trigger: result.prop + ':',
                               value: result.value,
                               data: { memberId: result.memberId },
                             });

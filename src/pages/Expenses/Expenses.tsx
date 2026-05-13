@@ -1,103 +1,150 @@
-import { useEffect } from "react";
-import Expense from "../../components/Expense/Expense";
-import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef } from 'react';
+import Expense from '../../components/Expense/Expense';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   ExpenseParsedFilters,
   ExpenseResponseItem,
   Group,
   UserInfo,
-} from "../../types";
-
-import { useOutletContext } from "react-router-dom";
-import { StyledExpenses } from "./Expenses.styled";
-import BarsWithLegends from "../../components/BarsWithLegends/BarsWithLegends";
-import { CiReceipt } from "react-icons/ci";
-import { Signal, useSignal } from "@preact/signals-react";
-import DetailedExpense from "../../components/DetailedExpense/DetailedExpense";
-import { DateOnly } from "../../helpers/timeHelpers";
-import { mergeMembersAndGuests } from "../../helpers/mergeMembersAndGuests";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import ErrorMenuAnimation from "../../components/Menus/MenuAnimations/ErrorMenuAnimation";
-import Sentinel from "../../components/Sentinel";
-import useDebts from "../../api/services/useDebts";
+  Mode,
+  TransactionType,
+} from '../../types';
+import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { StyledExpenses } from './Expenses.styled';
+import { signal, Signal, useSignal } from '@preact/signals-react';
+import DetailedExpense from '../../components/DetailedExpense/DetailedExpense';
+import { DateOnly } from '../../helpers/timeHelpers';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import ErrorMenuAnimation from '../../components/Animations/ErrorMenuAnimation';
+import Sentinel from '../../components/Sentinel';
+import GroupTotalsByCurrencyAnimation from '../../components/Animations/GroupTotalsByCurrencyAnimation';
+import Spinner from '../../components/Spinner/Spinner';
 import {
-  getAllCurrencyTotals,
-  getGroupTotalByCurrency,
-  getCurrencyValues,
-} from "../../helpers/getGroupTotalByCurrency";
-import GroupTotalsByCurrencyAnimation from "../../components/Menus/MenuAnimations/GroupTotalsByCurrencyAnimation";
-import Spinner from "../../components/Spinner/Spinner";
-import { FaMagnifyingGlass } from "react-icons/fa6";
-import { renderExpenseFilterPills } from "../../helpers/renderExpenseFilterPills";
-import useGetGroupExpenses from "../../api/services/useGetGroupExpenses";
-import { getExpenseType, isGroupExpense, isNonGroupExpense } from "../../helpers/getExpenseType";
-import { getFirst } from "../../helpers/getFirst";
+  isGroupExpense,
+  isNonGroupExpense,
+} from '../../helpers/getExpenseType';
+import { useExpenseList } from './hooks/useExpenseList';
+import { useGetAllNonGroupUsers } from '@/api/auth/QueryHooks/useGetAllNonGroupUsers';
+import getAllExpenseParticipants from '@/helpers/getAllExpenseParticipants';
+import { groupBy } from '../../helpers/groupBy';
+import { NoExpensesFound } from './NoExpensesFound/NoExpensesFound';
+import { FiltersAndBars } from './FiltersAndBars/FiltersAndBars';
+import { useExpenseTotals } from './hooks/useExpenseTotals';
+import { useCenterToExpense } from './hooks/useCenterToExpense';
+import { hasActiveExpenseFilters } from '../../helpers/hasActiveExpenseFilters';
+import { useGetUserAndGroupsLabels } from '@/api/auth/QueryHooks/useGetUserAndGroupsLabels';
+import LongPressMenu from '../../components/LongPressMenu/LongPressMenu';
+import DeleteExpenseAnimation from '../../components/Animations/DeleteExpenseAnimation';
+import EditExpenseAnimation from '../../components/Animations/EditExpenseAnimation';
+import { buildFormExpense, toUser } from '../../components/DetailedExpense/utils';
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
-  const errorMessage = useSignal<string>("");
-  const menu = useSignal<string | null>(errorMessage.value ? "error" : null);
+  const errorMessage = useSignal<string>('');
+  const menu = useSignal<string | null>(errorMessage.value ? 'error' : null);
+  const longPressExpense = useSignal<ExpenseResponseItem | null>(null);
+  const longPressMenu = useSignal<string | null>(null);
   const queryClient = useQueryClient();
-  const { userInfo, group, showBottomBar, expenseParsedFilters } =
+  const [searchParams] = useSearchParams();
+  const jumpToken = searchParams.get('jumpTo') || '';
+  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const isScrolled = useSignal<boolean>(false);
+
+  const { userInfo, group, showBottomBar, expenseParsedFilters, mode } =
     useOutletContext<{
       userInfo: UserInfo;
       group: Group;
       showBottomBar: Signal<boolean>;
       expenseParsedFilters: Signal<ExpenseParsedFilters>;
+      mode: Mode;
     }>();
 
   const timeZoneId = userInfo?.timeZone;
   const pageSize = 10;
-  const members = group?.members;
-  const guests = group?.guests;
-  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
+  const userMemberId = group?.members?.find(
+    (m) => m.userId === userInfo?.userId
+  )?.id; //group specific
 
-  const allParticipants = mergeMembersAndGuests(members || [], guests || []);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    fetchPreviousPage,
+    hasPreviousPage,
+    isFetchingNextPage,
+    isFetchingPreviousPage,
+    isFetching,
+  } = useExpenseList(
+    mode,
+    group,
+    expenseParsedFilters,
+    pageSize,
+    timeZoneId,
+    jumpToken
+  );
+  const { allUsers } = useGetAllNonGroupUsers(mode);
 
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(group.id);
-  const totalSpent: Record<
-    string,
-    Record<string, number>
-  > = debts?.totalSpent ?? {};
+  // Deduplicate expenses by id to avoid React key conflicts when pages overlap
+  const rawExpenses = data?.pages.flatMap((p) => p.expenses);
 
-  const groupTotalsByCurrency = getAllCurrencyTotals(totalSpent);
-  const userTotalsByCurrency = getCurrencyValues(totalSpent, userMemberId);
-  const shouldOpenMultiCurrencyTable =
-    Object.keys(groupTotalsByCurrency).length > 1;
+  const expenses = rawExpenses
+    ? Array.from(new Map(rawExpenses.map((e) => [e.id, e])).values())
+    : undefined;
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useGetGroupExpenses(group, expenseParsedFilters, pageSize, timeZoneId)
+  const allParticipants =
+    mode === Mode.Personal
+      ? []
+      : getAllExpenseParticipants(
+          expenses,
+          mode,
+          group?.members || [],
+          group?.guests || [],
+          allUsers.map((u) => ({
+            id: u.userId,
+            name: u.username,
+          }))
+        );
 
-  const expenses = data?.pages.flatMap((p) => p.expenses);
-  const expenseType = getExpenseType(getFirst(expenses));
-  
+  const {
+    groupTotalsByCurrency,
+    userTotalsByCurrency,
+    totalFromAllExpensesConverted,
+    totalFromUserExpensesConverted,
+    totalsAreFetching,
+  } = useExpenseTotals(
+    group,
+    mode,
+    userInfo,
+    userMemberId,
+    expenseParsedFilters
+  );
+
   useEffect(() => {
-    const expenseFilters = localStorage.getItem("expenseFilter");
-    if (expenseFilters) {
-      const paresedFilter = JSON.parse(expenseFilters);
-      if (paresedFilter.groupId === group.id) {
-        expenseParsedFilters.value = JSON.parse(expenseFilters);
-      } else {
-        localStorage.removeItem("expenseFilter");
-        queryClient.invalidateQueries({
-          queryKey: ["groupExpenses"],
-          exact: false,
-        });
-      }
+    if (isFetching && !isFetchingNextPage) {
+      showBottomBar.value = false;
+    } else {
+      showBottomBar.value = true;
     }
-  }, []);
+  }, [isFetching, isFetchingNextPage, showBottomBar]);
+
+  useCenterToExpense(
+    scrollAreaRef,
+    isScrolled,
+    expenses,
+    jumpToken,
+    isFetchingPreviousPage
+  );
+  const { data: fetchedUserAndGroupLabels } = useGetUserAndGroupsLabels(
+    userInfo?.userId,
+    true,
+    group?.id
+  );
 
   useEffect(() => {
-    isFetching && !isFetchingNextPage
-      ? (showBottomBar.value = false)
-      : (showBottomBar.value = true);
-  }, [isFetching]);
+    menu.value = errorMessage.value ? 'error' : menu.value;
+  }, [errorMessage.value, menu]);
 
-  useEffect(() => {
-    menu.value = errorMessage.value ? "error" : menu.value;
-  }, [errorMessage.value]);
-
-  if (isFetching && !isFetchingNextPage) {
+  if (isFetching && !isFetchingNextPage && !isFetchingPreviousPage) {
     return (
       <div className="spinner">
         <Spinner />
@@ -105,124 +152,99 @@ const Expenses = () => {
     );
   }
 
-  const totalExpense = getGroupTotalByCurrency(totalSpent, group.currency);
-  const userExpense =
-    userMemberId && group.currency
-      ? totalSpent[userMemberId]?.[group.currency] ?? 0
-      : 0;
-
-  const hasAnySearchParams =
-    (expenseParsedFilters.value.before !== null &&
-      expenseParsedFilters.value.before !== undefined) ||
-    (expenseParsedFilters.value.after !== null &&
-      expenseParsedFilters.value.after !== undefined) ||
-    (expenseParsedFilters.value.freeText !== "" &&
-      expenseParsedFilters.value.freeText !== undefined) ||
-    (expenseParsedFilters.value.labels !== undefined &&
-      expenseParsedFilters.value.labels.length > 0) ||
-    (expenseParsedFilters.value.participantsIds !== undefined &&
-      expenseParsedFilters.value.participantsIds.length > 0) ||
-    (expenseParsedFilters.value.payersIds !== undefined &&
-      expenseParsedFilters.value.payersIds.length > 0);
-
   const getUserAmount = (e: ExpenseResponseItem) => {
     if (isGroupExpense(e)) {
-      return e.shares.find((x) => x.memberId === userMemberId)?.amount ?? 0;
+      return e.shares?.find((x) => x.memberId === userMemberId)?.amount ?? 0;
     }
     if (isNonGroupExpense(e)) {
-      return e.shares.find((x) => x.userId === userInfo.userId)?.amount ?? 0;
+      return e.shares?.find((x) => x.userId === userInfo?.userId)?.amount ?? 0;
     }
     return e.amount;
   };
 
+  const showFiltersAndBars =
+    mode !== Mode.Personal ||
+    hasActiveExpenseFilters(expenseParsedFilters.value);
+
   return (
     <StyledExpenses>
-      {!expenses || expenses.length === 0 ? (
-        hasAnySearchParams ? (
-          <div className="noFilteredData">
-            <div className="pills">
-              {renderExpenseFilterPills(expenseParsedFilters, group, queryClient)}
-            </div>
-            <div className="textAndIcon">
-              <span className="text">No expenses found. Have a go and refine your search!</span>
-              <span className="emoji">🧐</span>
-              <FaMagnifyingGlass className="icon" />
-            </div>
-            <div />
-          </div>
+      <div className="scroll-area" ref={scrollAreaRef}>
+        {expenses &&
+          expenses.length > 0 &&
+          showFiltersAndBars &&
+          fetchedUserAndGroupLabels &&
+          !hasPreviousPage && (
+            <FiltersAndBars
+              expenseParsedFilters={expenseParsedFilters}
+              allParticipants={allParticipants}
+              group={group}
+              queryClient={queryClient}
+              mode={mode}
+              menu={menu}
+              totalsAreFetching={totalsAreFetching}
+              totalExpense={totalFromAllExpensesConverted}
+              userExpense={totalFromUserExpensesConverted}
+              currency={userInfo?.currency}
+              fetchedUserAndGroupLabels={fetchedUserAndGroupLabels}
+            />
+          )}
+        {!expenses || expenses.length === 0 ? (
+          <NoExpensesFound
+            expenseParsedFilters={expenseParsedFilters}
+            allParticipants={allParticipants}
+            group={group}
+            queryClient={queryClient}
+            mode={mode}
+            fetchedUserAndGroupLabels={fetchedUserAndGroupLabels}
+          />
         ) : (
-          <div className="noData">
-            <div className="msg">There are currently no expenses</div>
-            <CiReceipt className="icon" />
-          </div>
-        )
-      ) : (
-        <>
-          {totalsAreFetching ? (
-            <div className="spinnerTotals">
-              <Spinner />
-            </div>
-          ) : (
-            <div className="filtersAndBars">
-              <div className="pills">
-                {renderExpenseFilterPills(expenseParsedFilters, group, queryClient)}
-              </div>
-
-              <BarsWithLegends
-                bar1Legend={expenseType === "Group" ? "Group Total" :expenseType === "NonGroup" ? "Total" : ""}
-                bar2Legend="Your Share"
-                bar1Total={totalExpense || 0}
-                bar2Total={userExpense || 0}
-                currency={group.currency}
-                bar2Color="#e151ee"
-                bar1Color="#5183ee"
-                onClick={() => {
-                  if (shouldOpenMultiCurrencyTable) {
-                    menu.value = "epensesByCurrency";
-                  }
-                }}
-              />
-            </div>
-          )}
-
-          {Object.entries(groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))).map(
-            ([date, expenses]) => {
-              return (
-                <div key={date} className="same-date-container">
-                  <div className="date-only">{date}</div>
-                  <div className="expenses">
-                    {expenses.map((e) => (
-                      <div className="expense" key={e.id}>
-                        <Expense
-                          amount={e.amount}
-                          currency={e.currency}
-                          occurred={e.occurred}
-                          description={e.description}
-                          location={e.location}
-                          timeZoneId={timeZoneId}
-                          onClick={() => (selectedExpense.value = e)}
-                          userAmount={getUserAmount(e)}
-                          labels={e.labels}
-                        />
-                      </div>
-                    ))}
-                  </div>
+          <>
+            <Sentinel
+              fetchPage={() => fetchPreviousPage()}
+              hasMore={hasPreviousPage}
+              isFetchingPage={isFetchingPreviousPage}
+              id="sentinel-top"
+              isTop={true}
+            />
+            {Object.entries(
+              groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))
+            ).map(([date, items]) => (
+              <div key={date} className="same-date-container">
+                <div className="date-only">{date}</div>
+                <div className="expenses">
+                  {items.map((e) => (
+                    <div className="expense" key={e.id} id={`expense-${e.id}`}>
+                      <Expense
+                        amount={e.amount}
+                        currency={e.currency}
+                        occurred={e.occurred}
+                        description={e.description}
+                        location={e.location}
+                        timeZoneId={timeZoneId}
+                        onClick={() => (selectedExpense.value = e)}
+                        onLongPress={() => {
+                          longPressExpense.value = e;
+                          longPressMenu.value = 'options';
+                        }}
+                        userAmount={getUserAmount(e)}
+                        labels={e.labels}
+                        mode={mode}
+                      />
+                    </div>
+                  ))}
                 </div>
-              );
-            }
-          )}
-        </>
-      )}
-
-      <Sentinel
-        fetchNextPage={fetchNextPage}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-      />
-
+              </div>
+            ))}
+            <Sentinel
+              fetchPage={fetchNextPage}
+              hasMore={hasNextPage}
+              isFetchingPage={isFetchingNextPage}
+            />
+          </>
+        )}
+      </div>
       {selectedExpense.value && (
         <DetailedExpense
-          expenseType={expenseType}
           selectedExpense={selectedExpense}
           amount={selectedExpense.value.amount}
           currency={selectedExpense.value.currency}
@@ -236,33 +258,79 @@ const Expenses = () => {
           timeZoneCoordinates={userInfo.timeZoneCoordinates}
           creator={selectedExpense.value.creatorId}
           created={selectedExpense.value.created}
-          members={allParticipants}
+          participants={allParticipants}
           errorMessage={errorMessage}
-          userMemberId={userMemberId || ""}
+          userMemberId={userMemberId || ''}
           group={group}
-
+          userId={userInfo?.userId}
+          mode={mode}
         />
       )}
-
+      {longPressMenu.value === 'options' &&
+        longPressExpense.value &&
+        ((group && !group.isArchived) ||
+          (mode === Mode.NonGroup && !group) ||
+          longPressExpense.value.transactionType ===
+            TransactionType.Personal) && (
+          <LongPressMenu
+            onEdit={() => (longPressMenu.value = 'editExpense')}
+            onDelete={() => (longPressMenu.value = 'deleteExpense')}
+            onClose={() => (longPressMenu.value = null)}
+          />
+        )}
+      {longPressMenu.value === 'deleteExpense' && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.45)',
+            backdropFilter: 'blur(2px)',
+            zIndex: 998,
+          }}
+          onClick={() => (longPressMenu.value = null)}
+        />
+      )}
+      <DeleteExpenseAnimation
+        menu={longPressMenu}
+        description={longPressExpense.value?.description ?? ''}
+        selectedExpense={longPressExpense}
+        errorMessage={errorMessage}
+      />
+      <EditExpenseAnimation
+        expense={buildFormExpense(longPressExpense, mode, group) ?? null}
+        groupId={group?.id}
+        timeZoneId={timeZoneId}
+        menu={longPressMenu}
+        selectedExpense={longPressExpense}
+        timeZoneCoordinates={userInfo?.timeZoneCoordinates}
+        currency={userInfo?.currency}
+        groupMembers={
+          group ? signal([...group.members, ...group.guests]) : signal([])
+        }
+        nonGroupUsers={signal(allParticipants.map((p) => toUser(p)))}
+        isPersonal={mode === Mode.Personal ? signal(true) : signal(false)}
+        isnonGroupExpense={
+          mode === Mode.NonGroup ? signal(true) : signal(false)
+        }
+      />
       <MenuAnimationBackground menu={menu} />
-      <ErrorMenuAnimation menu={menu} message={errorMessage.value} type="expense" />
+      <ErrorMenuAnimation
+        menu={menu}
+        message={errorMessage.value}
+        type="expense"
+      />
       <GroupTotalsByCurrencyAnimation
         menu={menu}
         bar1Legend="Group Total"
-        bar2Legend="Your Share"
+        bar2Legend={mode === Mode.Personal ? 'Your Total' : 'Your Share'}
         bar2Color="#e151ee"
         bar1Color="#5183ee"
         groupTotalsByCurrency={groupTotalsByCurrency}
         userTotalsByCurrency={userTotalsByCurrency}
+        mode={mode}
       />
     </StyledExpenses>
   );
 };
 
 export default Expenses;
-
-const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
-  arr.reduce((groups, item) => {
-    (groups[key(item)] ||= []).push(item);
-    return groups;
-  }, {} as Record<K, T[]>);

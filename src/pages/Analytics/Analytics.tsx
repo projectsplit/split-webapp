@@ -1,35 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { StyledAnalytics } from "./Analytics.styled";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { MdOutlineShowChart } from "react-icons/md";
-import { MdBarChart } from "react-icons/md";
-import { MdSsidChart } from "react-icons/md";
-import { CumulativeSpending } from "./Charts/CumulativeSpending/CumulativeSpending";
-import { TotalLentBorrowed } from "./Charts/TotalLentBorrowed/TotalLentBorrowed";
-import { BarChart } from "./Charts/BarChart/BarChart";
-import { useSignal } from "@preact/signals-react";
-import CycleOptions from "./CycleOption/CycleOption";
-import Years from "./YearOption/YearOption";
-import { Frequency, UserInfo } from "../../types";
-import PeriodOption from "./Charts/PeriodOption/PeriodOption";
-import { initialiseSelectedTimeCycle } from "../../helpers/initialiseSelectedTimeCycle";
-import { buildStartAndEndDates } from "./helpers/buildStartAndEndDates";
-import { useQueryClient } from "@tanstack/react-query";
-import CurrencyOptionsAnimation from "../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
-import AnalyticsTimePeriodSelectionAnimation from "../../components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsTimePeriodSelectionAnimation";
-import AnalyticsCycleSelectionAnimation from "../../components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsCycleSelectionAnimation";
-import AnalyticsYearSelectionAnimation from "../../components/Menus/MenuAnimations/AnalyticsMenuAnimations/AnalyticsYearSelectionAnimation";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import { useWeeklyDatesMemo } from "../../components/SearchTransactions/hooks/useWeeklyDatesMemo";
-import { CategoryButton } from "../../components/CategoryButton/CategoryButton";
-import TopBarWithBackButton from "../../components/TopBarWithBackButton/TopBarWithBackButton";
-import Spinner from "../../components/Spinner/Spinner";
-import { useCumulativeSpendingArray } from "../../api/services/useCumulativeSpendingArray";
-import { timeZones } from "../../helpers/timeZones";
+import React, { useEffect, useState } from 'react';
+import { StyledAnalytics } from './Analytics.styled';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { MdOutlineShowChart } from 'react-icons/md';
+import { MdBarChart } from 'react-icons/md';
+import { MdSsidChart } from 'react-icons/md';
+import { CumulativeSpending } from './Charts/CumulativeSpending/CumulativeSpending';
+import { TotalLentBorrowed } from './Charts/TotalLentBorrowed/TotalLentBorrowed';
+import { BarChart } from './Charts/BarChart/BarChart';
+import { useSignal } from '@preact/signals-react';
+import CycleOptions from './CycleOption/CycleOption';
+import Years from './YearOption/YearOption';
+import { Frequency, UserInfo } from '../../types';
+import PeriodOption from './Charts/PeriodOption/PeriodOption';
+import { initialiseSelectedTimeCycle } from '../../helpers/initialiseSelectedTimeCycle';
+import { buildStartAndEndDates } from './helpers/buildStartAndEndDates';
+import { useQueryClient } from '@tanstack/react-query';
+import CurrencyOptionsAnimation from '../../components/Animations/CurrencyOptionsAnimation';
+import AnalyticsTimePeriodSelectionAnimation from '../../components/Animations/AnalyticsMenuAnimations/AnalyticsTimePeriodSelectionAnimation';
+import AnalyticsCycleSelectionAnimation from '../../components/Animations/AnalyticsMenuAnimations/AnalyticsCycleSelectionAnimation';
+import AnalyticsYearSelectionAnimation from '../../components/Animations/AnalyticsMenuAnimations/AnalyticsYearSelectionAnimation';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import { useWeeklyDatesMemo } from '../../components/SearchTransactions/hooks/useWeeklyDatesMemo';
+import { CategoryButton } from '../../components/CategoryButton/CategoryButton';
+import TopBarWithBackButton from '../../components/TopBarWithBackButton/TopBarWithBackButton';
+import Spinner from '../../components/Spinner/Spinner';
+import { useCumulativeSpendingArray } from '../../api/auth/QueryHooks/useCumulativeSpendingArray';
 
 export default function Analytics() {
   const [selectedChart, setSelectedChart] =
-    useState<string>("cumulativeSpending");
+    useState<string>('cumulativeSpending');
   const selectedCycle = useSignal<Frequency>(Frequency.Monthly);
   const selectedYear = useSignal<number>(new Date().getFullYear());
   const cyclehaschanged = useSignal<boolean>(false);
@@ -38,7 +37,7 @@ export default function Analytics() {
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
-  const [currency, setCurrency] = useState<string>("");
+  const [currency, setCurrency] = useState<string>('');
 
   const queryClient = useQueryClient();
   const [
@@ -100,7 +99,7 @@ export default function Analytics() {
 
     queryClient.invalidateQueries({
       queryKey: [
-        "cumulativeArray",
+        'cumulativeArray',
         startDate,
         endDate,
         currency,
@@ -132,22 +131,22 @@ export default function Analytics() {
           <div className="buttons">
             <div className="groupCategories">
               <CategoryButton
-                selected={selectedChart === "cumulativeSpending"}
-                onClick={() => setSelectedChart("cumulativeSpending")}
+                selected={selectedChart === 'cumulativeSpending'}
+                onClick={() => setSelectedChart('cumulativeSpending')}
               >
                 <MdOutlineShowChart className="buttonChart" />
               </CategoryButton>
 
               <CategoryButton
-                selected={selectedChart === "barChart"}
-                onClick={() => setSelectedChart("barChart")}
+                selected={selectedChart === 'barChart'}
+                onClick={() => setSelectedChart('barChart')}
               >
                 <MdBarChart className="buttonChart" />
               </CategoryButton>
 
               <CategoryButton
-                selected={selectedChart === "totalLentBorrowed"}
-                onClick={() => setSelectedChart("totalLentBorrowed")}
+                selected={selectedChart === 'totalLentBorrowed'}
+                onClick={() => setSelectedChart('totalLentBorrowed')}
               >
                 <MdSsidChart className="buttonChart" />
               </CategoryButton>
@@ -155,17 +154,17 @@ export default function Analytics() {
           </div>
 
           <div className="dateOptions">
-            <CategoryButton onClick={() => (menu.value = "cycle")}>
+            <CategoryButton onClick={() => (menu.value = 'cycle')}>
               <div className="height"></div>
               <span>{Frequency[selectedCycle.value]}</span>
               <div className="height"></div>
             </CategoryButton>
-            <CategoryButton onClick={() => (menu.value = "year")}>
+            <CategoryButton onClick={() => (menu.value = 'year')}>
               <div className="height"></div>
               <span>{selectedYear.value}</span>
               <div className="height"></div>
             </CategoryButton>
-            <CategoryButton onClick={() => (menu.value = "currencyOptions")}>
+            <CategoryButton onClick={() => (menu.value = 'currencyOptions')}>
               <div className="height"></div>
               <span>{currency}</span>
               <div className="height"></div>
@@ -174,7 +173,7 @@ export default function Analytics() {
 
           <div className="chartWrapper">
             <div className="chart">
-              {selectedChart === "cumulativeSpending" && (
+              {selectedChart === 'cumulativeSpending' && (
                 <CumulativeSpending
                   selectedCycle={selectedCycle}
                   selectedYear={selectedYear}
@@ -192,7 +191,7 @@ export default function Analytics() {
                   timeZone={userInfo.timeZone}
                 />
               )}
-              {selectedChart === "barChart" && (
+              {selectedChart === 'barChart' && (
                 <BarChart
                   selectedCycle={selectedCycle}
                   selectedYear={selectedYear}
@@ -210,7 +209,7 @@ export default function Analytics() {
                   timeZone={userInfo.timeZone}
                 />
               )}
-              {selectedChart === "totalLentBorrowed" && (
+              {selectedChart === 'totalLentBorrowed' && (
                 <TotalLentBorrowed
                   selectedCycle={selectedCycle}
                   selectedYear={selectedYear}
@@ -253,8 +252,8 @@ export default function Analytics() {
             menu={menu}
             header={
               selectedCycle.value === Frequency.Monthly
-                ? "Select Month"
-                : "Select Week"
+                ? 'Select Month'
+                : 'Select Week'
             }
           >
             <PeriodOption

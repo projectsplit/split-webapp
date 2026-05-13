@@ -1,12 +1,14 @@
-import { styled } from "styled-components";
-import { GeoLocation } from "../../types";
+import { styled } from 'styled-components';
+import { GeoLocation } from '../../types';
 
 interface StyledLocationPickerProps {
   location: GeoLocation | undefined;
 }
 export const StyledLocationPicker = styled.div<StyledLocationPickerProps>`
-
   .main {
+    .locationIcon {
+      font-size: 30px;
+    }
     cursor: pointer;
     .locationPicker {
       flex: 1;
@@ -21,7 +23,7 @@ export const StyledLocationPicker = styled.div<StyledLocationPickerProps>`
       .closeButton {
         font-size: 1.4rem;
         color: ${({ location, theme }) =>
-          !!location ? theme.textActiveColor : ""};
+          !!location ? theme.textActiveColor : ''};
       }
     }
     .icon {

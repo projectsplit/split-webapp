@@ -1,10 +1,9 @@
-
-const currencySymbolMap : Record<string, string> = {
-  AED: 'د.إ',     // adjusted from "د.إ." to match sample output
+const currencySymbolMap: Record<string, string> = {
+  AED: 'د.إ', // adjusted from "د.إ." to match sample output
   AFN: '؋',
   ALL: 'L',
   AMD: '֏',
-  ANG: 'ƒ',      // adjusted from "NAf." to match sample output
+  ANG: 'ƒ', // adjusted from "NAf." to match sample output
   AOA: 'Kz',
   ARS: '$',
   AUD: '$',
@@ -176,21 +175,21 @@ const currencySymbolMap : Record<string, string> = {
   YER: 'ر.ي.',
   ZAR: 'R',
   ZMW: 'K',
-  ZWG: 'Z$'
-  }
-  
-export const getSymbolFromCurrency= (currencyCode:string|undefined):string | undefined =>{
+  ZWG: 'Z$',
+};
+
+export const getSymbolFromCurrency = (
+  currencyCode: string | undefined
+): string | undefined => {
   if (typeof currencyCode !== 'string') {
-    return undefined
+    return undefined;
   }
 
-  const code = currencyCode.toUpperCase()
+  const code = currencyCode.toUpperCase();
 
   if (!Object.prototype.hasOwnProperty.call(currencySymbolMap, code)) {
-    return undefined
+    return undefined;
   }
 
-  return currencySymbolMap[code]
-}
-
-
+  return currencySymbolMap[code];
+};

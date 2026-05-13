@@ -1,4 +1,4 @@
-import { keyframes, styled } from "styled-components";
+import { keyframes, styled } from 'styled-components';
 
 const fadeIn = keyframes`
   0% {
@@ -16,7 +16,7 @@ export const StyledMemberPicker = styled.div<{
   $category: string;
 }>`
   color: ${({ theme, $selectedCount }) =>
-    $selectedCount > 0 ? "" : theme.secondaryTextColor};
+    $selectedCount > 0 ? '' : theme.secondaryTextColor};
   display: flex;
   flex-direction: column;
   position: relative;
@@ -52,7 +52,7 @@ export const StyledMemberPicker = styled.div<{
     color: ${({ theme }) => theme.textActiveColor};
     background-color: ${({ theme }) => theme.backgroundcolor};
     width: 100%;
-    height: 100%;
+    height: 100dvh;
     left: 0;
     right: 0;
     margin: 0;
@@ -61,7 +61,7 @@ export const StyledMemberPicker = styled.div<{
     flex-direction: column;
     padding: 12px 16px;
     gap: 20px;
-    bottom: 0;
+    top: 0;
     overflow-y: auto;
     .header {
       display: flex;
@@ -83,7 +83,7 @@ export const StyledMemberPicker = styled.div<{
       }
 
       .closeButtonContainer:hover::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 50%;
         left: 50%;
@@ -186,7 +186,7 @@ export const StyledMemberPicker = styled.div<{
         .inputField {
           display: flex;
           flex-direction: row;
-          ${({ $category }) => ($category === "Shares" ? "gap:5px" : "")};
+          ${({ $category }) => ($category === 'Shares' ? 'gap:5px' : '')};
           align-items: center;
           .shares {
             display: flex;
@@ -246,18 +246,18 @@ export const StyledMemberPicker = styled.div<{
       display: flex;
       flex-direction: column;
       font-size: 15px;
-      
+
       .checkmark {
         font-size: 25px;
         bottom: 0px;
         color: ${({ theme }) => theme.green};
       }
       .firstRow {
-        display:flex;
-        flex-direction:row;
-        justify-content:center;
-        align-items:center;
-        gap:5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
       }
       .secondRow {
         .redText {

@@ -1,56 +1,79 @@
-import OnTrackMessage from "./OnTrackMessage/OnTrackMessage";
-import OverspentMessage from "./OverspentMessage/OverspentMessage";
-import ReceivedMoreThanSpentMessage from "./ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage";
-import Recommendation from "./Recommendation/Recommendation";
-import SimpleOnTrackMessage from "./SimpleOnTrackMessage/SimpleOnTrackMessage";
-import { BudgetInfoResponse } from "../../types";
-import { DefaultTheme } from "styled-components";
+import OnTrackMessage from './OnTrackMessage/OnTrackMessage';
+import OverspentMessage from './OverspentMessage/OverspentMessage';
+import ReceivedMoreThanSpentMessage from './ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage';
+import Recommendation from './Recommendation/Recommendation';
+import SimpleOnTrackMessage from './SimpleOnTrackMessage/SimpleOnTrackMessage';
+import { BudgetInfoResponse } from '../../types';
+import { DefaultTheme } from 'styled-components';
+import { NoBudgetSubmittedMessage } from './NoBudgetSubmittedMessage/NoBudgetSubmittedMessage';
+import { dateIsInPast } from '../../helpers/dateIsInPast';
 
 export const BudgetInfoMessage = (
   theme: DefaultTheme | undefined,
   closeButton: boolean,
-  data: BudgetInfoResponse,
-  onclick?: (event: React.MouseEvent<HTMLDivElement>) => void
+  data: BudgetInfoResponse | undefined,
+  noSubmissions?: boolean,
+  onclick?: (event: React.MouseEvent<HTMLDivElement>) => void,
+  style?: React.CSSProperties
 ): JSX.Element => {
-  if (data.totalAmountSpent === undefined || data.currency === undefined) {
+  if (data === undefined) {
+    return <NoBudgetSubmittedMessage noSubmissions={noSubmissions} />;
+  }
+
+  if (dateIsInPast(data.endDate)) {
     return (
-      <div>
-        <p>
-          Some required budget data is missing. Cannot calculate projections.
-        </p>
-      </div>
+      <SimpleOnTrackMessage
+        endDate={data.endDate}
+        onClick={onclick}
+        closeButton={closeButton}
+        style={
+          style || {
+            backgroundColor: theme?.layer2,
+            borderColor: theme?.layer2,
+            borderStyle: 'solid',
+            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+            borderRadius: '6px',
+            padding: '0.4rem',
+          }
+        }
+      />
     );
   }
-  const totalAmountSpent = parseFloat(data.totalAmountSpent);
+
+  const totalAmountSpent = parseFloat(data?.totalAmountSpent);
 
   // Check if remainingDays, goal, and averageSpentPerDay are provided
   if (
-    data.remainingDays !== undefined &&
-    data.goal !== undefined &&
-    data.averageSpentPerDay !== undefined &&
-    data.budgetType !== undefined
+    data?.remainingDays !== undefined &&
+    data?.goal !== undefined &&
+    data?.averageSpentPerDay !== undefined &&
+    data?.frequency !== undefined
   ) {
-    const remainingDays = parseFloat(data.remainingDays);
-    const averageSpentPerDay = parseFloat(data.averageSpentPerDay);
-    const goal = parseFloat(data.goal);
+    const remainingDays = parseFloat(data?.remainingDays);
+    const averageSpentPerDay = parseFloat(data?.averageSpentPerDay);
+    const goal = parseFloat(data?.goal);
     const spendingProjection =
       totalAmountSpent + remainingDays * averageSpentPerDay;
+
     if (totalAmountSpent === 0)
       return (
         <SimpleOnTrackMessage
+          startDate={data?.startDate}
           onClick={onclick}
           closeButton={closeButton}
-          style={{
-            backgroundColor: theme?.layer2,
-            borderColor: theme?.layer2,
-            borderStyle: "solid",
-            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-            borderRadius: "6px",
-            padding: "0.8rem",
-          }}
+          style={
+            style || {
+              backgroundColor: theme?.layer2,
+              borderColor: theme?.layer2,
+              borderStyle: 'solid',
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              borderRadius: '6px',
+              padding: '0.4rem',
+            }
+          }
         />
       );
-      
+
     if (totalAmountSpent < 0)
       return (
         <ReceivedMoreThanSpentMessage
@@ -58,15 +81,17 @@ export const BudgetInfoMessage = (
           amount={totalAmountSpent.toString()}
           currency={data.currency}
           closeButton={closeButton}
-          budgetType={data.budgetType}
-          style={{
-            backgroundColor: theme?.layer2,
-            borderColor: theme?.layer2,
-            borderStyle: "solid",
-            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-            borderRadius: "6px",
-            padding: "0.8rem",
-          }}
+          budgetFrequency={data.frequency}
+          style={
+            style || {
+              backgroundColor: theme?.layer2,
+              borderColor: theme?.layer2,
+              borderStyle: 'solid',
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              borderRadius: '6px',
+              padding: '0.4rem',
+            }
+          }
         />
       );
     if (totalAmountSpent >= goal) {
@@ -80,15 +105,17 @@ export const BudgetInfoMessage = (
           overspentBy={overspentBy}
           currency={data.currency}
           closeButton={closeButton}
-          budgetType={data.budgetType}
-          style={{
-            backgroundColor: theme?.layer2,
-            borderColor: theme?.layer2,
-            borderStyle: "solid",
-            // boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-            borderRadius: "6px",
-            padding: "0.8rem",
-          }}
+          budgetFrequency={data.frequency}
+          style={
+            style || {
+              backgroundColor: theme?.layer2,
+              borderColor: theme?.layer2,
+              borderStyle: 'solid',
+              // boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+              borderRadius: '6px',
+              padding: '0.4rem',
+            }
+          }
         />
       );
     } else {
@@ -113,15 +140,17 @@ export const BudgetInfoMessage = (
             reduceAmount={reduceByRecommendation}
             currency={data.currency}
             closeButton={closeButton}
-            budgetType={data.budgetType}
-            style={{
-              backgroundColor: theme?.layer2,
-              borderColor: theme?.layer2,
-              borderStyle: "solid",
-              //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-              borderRadius: "6px",
-              padding: "0.8rem",
-            }}
+            budgetFrequency={data.frequency}
+            style={
+              style || {
+                backgroundColor: theme?.layer2,
+                borderColor: theme?.layer2,
+                borderStyle: 'solid',
+                //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                borderRadius: '6px',
+                padding: '0.4rem',
+              }
+            }
           />
         );
       } else {
@@ -132,15 +161,17 @@ export const BudgetInfoMessage = (
             amount={onTargetAmount}
             currency={data.currency}
             closeButton={closeButton}
-            budgetType={data.budgetType}
-            style={{
-              backgroundColor: theme?.layer2,
-              borderColor: theme?.layer2,
-              borderStyle: "solid",
-              //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-              borderRadius: "6px",
-              padding: "0.8rem",
-            }}
+            budgetFrequency={data.frequency}
+            style={
+              style || {
+                backgroundColor: theme?.layer2,
+                borderColor: theme?.layer2,
+                borderStyle: 'solid',
+                //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                borderRadius: '6px',
+                padding: '0.4rem',
+              }
+            }
           />
         );
       }

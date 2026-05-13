@@ -1,11 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-interface StyledProgressBarProps {
-  percentage: number;
-  color: string;
-}
-
-export const StyledProgressBar = styled.div<StyledProgressBarProps>`
+export const StyledProgressBar = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.layer2};
@@ -17,6 +12,23 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
   padding: 0.8rem;
   font-size: 15px;
 
+  .cogContainer {
+    display: flex;
+    justify-content: end;
+    font-size: 25px;
+    color: #6f6f6f;
+    height: 17px;
+    margin-top: -5px;
+    margin-right: -8px;
+
+    .cog {
+      cursor: pointer;
+      display: block;
+      &:hover {
+        color: ${({ theme }) => theme.whiteText};
+      }
+    }
+  }
   .closeButton {
     display: flex;
     justify-content: end;
@@ -34,85 +46,26 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
     }
   }
 
-  .budgetTitle {
+  .toggleAndInfo {
     display: flex;
-    justify-content: center;
-    .sup {
-      margin-top: -3px;
-    }
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
   }
   .miscInfo {
     display: flex;
     flex-direction: column;
     gap: 5px;
     margin-top: 25px;
-  }
-  .monetaryProgress {
-    display: flex;
-    justify-content: center;
-    margin-top: 5px;
-    font-size: 14px;
-  }
-  .progressBar {
-    display: flex;
-    flex-direction: row;
-    margin-top: 10px;
-    margin-bottom: 5px;
-
-    .wrapper {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      align-items: center;
-      justify-content: end;
-    }
-    
-    .targetIcon {
-      color: #bebebe;
-      box-shadow: 0 0 10px 2px ${(props) => props.color};;
-      font-size: 25px;
-      align-self: center;
-      margin-top: -20px;
-      border-radius: 50px;
-    }
-    .amount {
-      font-weight: bold;
-      height: 33px;
-      font-size: 14px;
-      margin-top: -5px;
-      margin-right: -3px;
-    }
-    .barWrapper {
-      position: relative;
-      width: 97%;
-      background-color: black;
-      border-radius: 20px;
-      display: grid;
-      height: 0.3rem;
-      border-color: grey;
-
-      .wrapper > * {
-        grid-column: 1 / -1;
-        grid-row: 1 / -1;
-      }
-      .bar {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        overflow: hidden;
-        border-radius: inherit;
-      }
-      .bar:after {
-        content: "";
-        width: 100%;
-        height: 100%;
-        background-color: ${(props) => props.color};
-        transform: translateX(
-          calc(-100% + ${(props) => Math.min(props.percentage, 100)} * 1%)
-        );
-        transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
-      }
+    min-width: 0;
+    .description,
+    .averageSpending,
+    .remainingDays,
+    .scope {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 `;

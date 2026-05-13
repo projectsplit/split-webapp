@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledTransfer = styled.div<{
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  $outlineColor?:string
+  $outlineColor?: string;
 }>`
   display: flex;
   flex-direction: column;
@@ -12,7 +12,8 @@ export const StyledTransfer = styled.div<{
   padding-right: 10px;
   font-size: 14px;
   background-color: ${({ theme }) => theme.layer2};
-  ${({ $outlineColor }) => $outlineColor && `border: 1px solid ${$outlineColor};`}
+  ${({ $outlineColor }) =>
+    $outlineColor && `border: 1px solid ${$outlineColor};`}
 
   .main {
     display: flex;
@@ -40,7 +41,7 @@ export const StyledTransfer = styled.div<{
       }
     }
     .time {
-      padding-top:10px;
+      padding-top: 10px;
       font-size: 14px;
       font-weight: 800;
       color: ${({ theme }) => theme.secondaryTextColor};
@@ -55,6 +56,6 @@ export const StyledTransfer = styled.div<{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-bottom:5px;
+    margin-bottom: 5px;
   }
 `;

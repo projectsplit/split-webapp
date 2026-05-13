@@ -1,7 +1,7 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const StyledPlacePicker = styled.div`
-  height: 100%;
+  height: 100dvh;
   width: 100%;
   padding: 1rem;
   border: 1px solid ${({ theme }) => theme.lineColor};
@@ -59,8 +59,8 @@ export const StyledPlacePicker = styled.div`
     .view-in-maps-button {
       padding: 0.5em;
       display: flex;
-      .pin{
-        color:${({ theme }) => theme.yellow} ;
+      .pin {
+        color: ${({ theme }) => theme.yellow};
       }
     }
 

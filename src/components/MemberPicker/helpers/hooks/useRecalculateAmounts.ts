@@ -1,7 +1,7 @@
-import { useEffect, useLayoutEffect } from "react";
-import { recalculateAmounts } from "../recalculateAmounts";
-import { Guest, Member, PickerMember, User } from "../../../../types";
-import { Signal } from "@preact/signals-react";
+import { useEffect, useLayoutEffect } from 'react';
+import { recalculateAmounts } from '../recalculateAmounts';
+import { Guest, Member, PickerMember, User } from '../../../../types';
+import { Signal } from '@preact/signals-react';
 
 export const useRecalculateAmounts = (
   memberAmounts: PickerMember[],
@@ -16,8 +16,8 @@ export const useRecalculateAmounts = (
   userId: string,
   groupMembers: Signal<(Member | Guest)[]>,
   nonGroupUsers: Signal<User[]>,
-  isCreateExpense:boolean,
-   isnonGroupExpense?: Signal<boolean>
+  isCreateExpense: boolean,
+  isnonGroupExpense?: Signal<boolean>
 ) => {
   useLayoutEffect(() => {
     setMemberAmounts(
@@ -33,7 +33,7 @@ export const useRecalculateAmounts = (
 
     if (totalAmount > 0) {
       if (
-        description === "Participants" &&
+        description === 'Participants' &&
         !memberAmounts.some((m) => m.selected)
       ) {
         const newFormMembers = memberAmounts.map((m) => ({
@@ -41,6 +41,7 @@ export const useRecalculateAmounts = (
           selected: true,
           order: renderCounter.current,
         }));
+
         setMemberAmounts(
           recalculateAmounts(
             newFormMembers,
@@ -52,17 +53,22 @@ export const useRecalculateAmounts = (
           )
         );
       }
-      if (description === "Payers" && !memberAmounts.some((m) => m.selected)) {
+      if (description === 'Payers' && !memberAmounts.some((m) => m.selected)) {
         const newFormMembers = memberAmounts.map((m) => ({
           ...m,
           selected:
-           isnonGroupExpense&& isnonGroupExpense.value && nonGroupUsers.value.length > 0
+            isnonGroupExpense &&
+            isnonGroupExpense.value &&
+            nonGroupUsers.value.length > 0
               ? m.id === userId
-              : isnonGroupExpense&& isnonGroupExpense.value && groupMembers.value.length > 0
-              ? m.id === userMemberId
-              : m.id === userMemberId,
+              : isnonGroupExpense &&
+                  isnonGroupExpense.value &&
+                  groupMembers.value.length > 0
+                ? m.id === userMemberId
+                : m.id === userMemberId,
           order: renderCounter.current,
         }));
+
         setMemberAmounts(
           recalculateAmounts(
             newFormMembers,
@@ -80,8 +86,8 @@ export const useRecalculateAmounts = (
       const newFormMembers = memberAmounts.map((m) => ({
         ...m,
         selected: false,
-        actualAmount: "",
-        screenQuantity: "",
+        actualAmount: '',
+        screenQuantity: '',
         locked: false,
       }));
       setMemberAmounts(newFormMembers);
@@ -91,7 +97,6 @@ export const useRecalculateAmounts = (
     totalAmount,
     category.value,
     memberAmounts.length,
-    groupMembers.value,
-    nonGroupUsers.value,
+    isnonGroupExpense?.value,
   ]);
 };

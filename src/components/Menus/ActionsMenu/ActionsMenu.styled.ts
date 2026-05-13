@@ -1,13 +1,14 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface StyledActionsMenuProps {
-  $bottom?: string | number
+  $bottom?: string | number;
 }
 
 export const StyledActionsMenu = styled.div<StyledActionsMenuProps>`
   z-index: 4;
   position: fixed;
-  bottom: ${({ $bottom }) => (typeof $bottom === 'number' ? `${$bottom}px` : $bottom)};
+  bottom: ${({ $bottom }) =>
+    typeof $bottom === 'number' ? `${$bottom}px` : $bottom};
   right: 30px;
   .buttons {
     display: flex;
@@ -44,7 +45,7 @@ export const StyledActionsMenu = styled.div<StyledActionsMenuProps>`
           padding: 0.6rem;
           border-radius: 50%;
           display: flex;
-        
+
           cursor: pointer;
           color: rgb(81, 131, 238);
           background-color: white;

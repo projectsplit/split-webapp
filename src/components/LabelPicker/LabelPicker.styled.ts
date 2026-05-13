@@ -1,4 +1,4 @@
-import { keyframes, styled } from "styled-components";
+import { keyframes, styled } from 'styled-components';
 const fadeIn = keyframes`
   0% {
     opacity: 0;
@@ -10,6 +10,7 @@ const fadeIn = keyframes`
 
 export const StyledLabelPicker = styled.div<{
   $hasError?: boolean;
+  $deleteClicked: boolean;
   // $isOpen?: boolean;
 }>`
   color: ${({ theme }) => theme.secondaryTextColor};
@@ -17,13 +18,19 @@ export const StyledLabelPicker = styled.div<{
   flex-direction: column;
   position: relative;
   cursor: text;
+  flex: 1;
+  min-height: 0;
 
   .main {
     &:focus-within {
-      border-color: ${({ theme, $hasError }) =>
-        $hasError ? theme.errorColor : theme.highlightColor};
+      border-color: ${({ theme, $hasError, $deleteClicked }) =>
+        $hasError
+          ? theme.errorColor
+          : $deleteClicked
+            ? ''
+            : theme.highlightColor};
     }
-      transition: border-color 0.15s;
+    transition: border-color 0.15s;
     background-color: ${({ theme }) => theme.layer2};
     display: flex;
     gap: 4px;
@@ -80,17 +87,20 @@ export const StyledLabelPicker = styled.div<{
   .dropdown {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     /* position: absolute; */
     z-index: 3;
     width: 100%;
     /* box-sizing: border-box; */
-
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
     top: calc(100% + 10px);
 
-    @media (max-width: 768px) {
-      max-height: 200px;
+
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      padding: 16px;
     }
 
     .suggested-label-container {
@@ -101,6 +111,16 @@ export const StyledLabelPicker = styled.div<{
       align-items: center;
       padding: 10px 14px;
       box-sizing: content-box;
+      .spinnerAndTrash {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        margin-right: ${({ $deleteClicked }) =>
+          !$deleteClicked ? '0px' : '10px'};
+        width: 20px;
+        height: 20px;
+      }
 
       .suggested-label-text {
         display: flex;

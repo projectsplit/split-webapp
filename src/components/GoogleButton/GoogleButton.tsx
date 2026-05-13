@@ -1,11 +1,13 @@
-import React from "react";
-import config from "../../config";
-import { StyledGoogleButton } from "./GoogleButton.styled";
-import routes from "../../routes";
+import React from 'react';
+import config from '../../config';
+import { StyledGoogleButton } from './GoogleButton.styled';
+import routes from '../../routes';
 
 const redirectToGoogleLoginPage = () => {
   const clientId = `${config.googleApiClientId}`;
-  const redirectUri = encodeURIComponent(`${config.clientUrl}${routes.GOOGLE_REDIRECT}`);
+  const redirectUri = encodeURIComponent(
+    `${config.clientUrl}${routes.GOOGLE_REDIRECT}`
+  );
   const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=email%20profile&prompt=select_account`;
 
   window.location.href = googleAuthUrl;
@@ -20,7 +22,7 @@ const GoogleButton: React.FC = () => {
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 48 48"
         xmlnsXlink="http://www.w3.org/1999/xlink"
-        style={{ display: "block" }}
+        style={{ display: 'block' }}
       >
         <path
           fill="#EA4335"
@@ -42,7 +44,6 @@ const GoogleButton: React.FC = () => {
       </svg>
 
       <div className="prompt">Continue with Google</div>
-
     </StyledGoogleButton>
   );
 };

@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledCreateBudget = styled.div`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.lightColor};
   box-sizing: border-box;
- width: 100%;
+  width: 100%;
   height: 100%;
   left: 0;
   right: 0;
@@ -13,6 +13,19 @@ export const StyledCreateBudget = styled.div`
   padding: 14px;
   gap: 20px;
   position: relative;
+  overflow-x: hidden;
+
+  .errorsWrapper {
+    display: flex;
+    flex-direction: column;
+    .errorMsg {
+      font-size: 12px;
+      color: ${({ theme }) => theme.errorColor};
+      display: flex;
+      justify-content: start;
+      padding: 0px 4px;
+    }
+  }
 
   .backButtonContainer {
     position: relative;
@@ -27,7 +40,7 @@ export const StyledCreateBudget = styled.div`
   }
 
   .backButtonContainer:hover::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 50%;
     left: 50%;
@@ -58,7 +71,10 @@ export const StyledCreateBudget = styled.div`
     gap: 10px;
     .errorMsg {
       font-size: 12px;
-      color: ${({ theme }) => theme.pink};
+      color: ${({ theme }) => theme.errorColor};
+      display: flex;
+      justify-content: start;
+      padding: 0px 4px;
     }
     .calendarAndErrorsWrapper,
     .inputAndErrorsWrapper {
@@ -83,7 +99,6 @@ export const StyledCreateBudget = styled.div`
     color: ${({ theme }) => theme.layer6};
     animation: fadeIn 0.5s;
     font-size: 14px;
-    
   }
 
   .categoryButtons {
@@ -106,48 +121,11 @@ export const StyledCreateBudget = styled.div`
     }
   }
 
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+  .step-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
   }
 
-  @-moz-keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  @-webkit-keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  @-o-keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  @-ms-keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
 `;

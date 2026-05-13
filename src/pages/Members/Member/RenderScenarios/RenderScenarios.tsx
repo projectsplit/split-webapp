@@ -1,16 +1,22 @@
-import IonIcon from "@reacticons/ionicons";
-import { RenderBothScenariosProps, RenderScenariosProps, RenderSettledProps } from "../../../../interfaces";
-import { DescriptionAndTree } from "../DescriptionAndTree/DescriptionAndTree";
+import IonIcon from '@reacticons/ionicons';
+import {
+  RenderBothScenariosProps,
+  RenderScenariosProps,
+  RenderSettledProps,
+} from '../../../../interfaces';
+import { DescriptionAndTree } from '../DescriptionAndTree/DescriptionAndTree';
 
 export const RenderOwedOnly = ({
   memberTransactions,
   pendingTransactions,
   isLogedUser,
-  memberId,
+  id,
   name,
   showTree,
   treeItems,
-  members
+  participants,
+  userOrMemberId,
+  mode,
 }: RenderScenariosProps) => {
   return (
     <div className="isOwed">
@@ -18,12 +24,14 @@ export const RenderOwedOnly = ({
         memberTransactions={memberTransactions}
         pendingTransactions={pendingTransactions}
         isLogedUser={isLogedUser}
-        memberId={memberId}
+        id={id}
         name={name}
         isOwed={true}
         showTree={showTree}
         treeItems={treeItems}
-        members={members}
+        participants={participants}
+        userOrMemberId={userOrMemberId}
+        mode={mode}
       />
     </div>
   );
@@ -33,11 +41,13 @@ export const RenderOwesOnly = ({
   memberTransactions,
   pendingTransactions,
   isLogedUser,
-  memberId,
+  id,
   name,
   showTree,
   treeItems,
-  members
+  participants,
+  userOrMemberId,
+  mode,
 }: RenderScenariosProps) => {
   return (
     <div className="owes">
@@ -45,12 +55,14 @@ export const RenderOwesOnly = ({
         memberTransactions={memberTransactions}
         pendingTransactions={pendingTransactions}
         isLogedUser={isLogedUser}
-        memberId={memberId}
+        id={id}
         name={name}
         isOwed={false}
         showTree={showTree}
         treeItems={treeItems}
-        members={members}
+        participants={participants}
+        userOrMemberId={userOrMemberId}
+        mode={mode}
       />
     </div>
   );
@@ -65,9 +77,10 @@ export const RenderSettled = ({ isLogedUser, name }: RenderSettledProps) => {
         </div>
       ) : (
         <div>
-          <span className="you">{name}</span>&nbsp;<span className="is">is</span>
+          <span className="you">{name}</span>&nbsp;
+          <span className="is">is</span>
         </div>
-      )}{" "}
+      )}{' '}
       &nbsp;settled
       <IonIcon name="checkmark-sharp" className="checkmark" />
     </div>
@@ -78,13 +91,15 @@ export const RenderBoth = ({
   memberTransactions,
   pendingTransactions,
   isLogedUser,
-  memberId,
+  id,
   name,
   doNotshowTreeWhenMemberIsOwed,
   doNotshowTreeWhenMemberOwes,
   memberIsOwedItems,
   memberOwesItems,
-  members
+  participants,
+  userOrMemberId,
+  mode,
 }: RenderBothScenariosProps) => {
   const showOwedFirst =
     !doNotshowTreeWhenMemberIsOwed && doNotshowTreeWhenMemberOwes;
@@ -96,23 +111,27 @@ export const RenderBoth = ({
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
           isLogedUser={isLogedUser}
-          memberId={memberId}
+          id={id}
           name={name}
           isOwed={false}
           showTree={!doNotshowTreeWhenMemberOwes}
           treeItems={memberOwesItems}
-          members={members}
+          participants={participants}
+          userOrMemberId={userOrMemberId}
+          mode={mode}
         />
         <DescriptionAndTree
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
           isLogedUser={isLogedUser}
-          memberId={memberId}
+          id={id}
           name={name}
           isOwed={true}
           showTree={!doNotshowTreeWhenMemberIsOwed}
           treeItems={memberIsOwedItems}
-          members={members}
+          participants={participants}
+          userOrMemberId={userOrMemberId}
+          mode={mode}
         />
       </div>
     );
@@ -123,23 +142,27 @@ export const RenderBoth = ({
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
           isLogedUser={isLogedUser}
-          memberId={memberId}
+          id={id}
           name={name}
           isOwed={true}
           showTree={!doNotshowTreeWhenMemberIsOwed}
           treeItems={memberIsOwedItems}
-          members={members}
+          participants={participants}
+          userOrMemberId={userOrMemberId}
+          mode={mode}
         />
         <DescriptionAndTree
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
           isLogedUser={isLogedUser}
-          memberId={memberId}
+          id={id}
           name={name}
           isOwed={false}
           showTree={!doNotshowTreeWhenMemberOwes}
           treeItems={memberOwesItems}
-          members={members}
+          participants={participants}
+          userOrMemberId={userOrMemberId}
+          mode={mode}
         />
       </div>
     );
@@ -150,23 +173,27 @@ export const RenderBoth = ({
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
           isLogedUser={isLogedUser}
-          memberId={memberId}
+          id={id}
           name={name}
           isOwed={true}
           showTree={!doNotshowTreeWhenMemberIsOwed}
           treeItems={memberIsOwedItems}
-          members={members}
+          participants={participants}
+          userOrMemberId={userOrMemberId}
+          mode={mode}
         />
         <DescriptionAndTree
           memberTransactions={memberTransactions}
           pendingTransactions={pendingTransactions}
           isLogedUser={isLogedUser}
-          memberId={memberId}
+          id={id}
           name={name}
           isOwed={false}
           showTree={!doNotshowTreeWhenMemberOwes}
           treeItems={memberOwesItems}
-          members={members}
+          participants={participants}
+          userOrMemberId={userOrMemberId}
+          mode={mode}
         />
       </div>
     );

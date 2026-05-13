@@ -1,28 +1,29 @@
-import React, { useEffect, useRef } from "react";
-import Spinner from "../Spinner/Spinner";
+import React, { useEffect, useRef } from 'react';
+import Spinner from '../Spinner/Spinner';
 
 interface SentinelProps {
-  fetchNextPage: () => void;
-  hasNextPage: boolean;
-  isFetchingNextPage: boolean;
+  fetchPage: () => void;
+  hasMore: boolean;
+  isFetchingPage: boolean;
   id?: string;
-  loadingText?: string;
+  isTop?: boolean;
 }
 
 const Sentinel: React.FC<SentinelProps> = ({
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
-  id = "sentinel",
+  fetchPage,
+  hasMore,
+  isFetchingPage,
+  id = 'sentinel',
+  isTop = false,
 }) => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!hasNextPage || isFetchingNextPage) return;
+    if (!hasMore || isFetchingPage) return;
 
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        fetchNextPage();
+        fetchPage();
       }
     });
 
@@ -32,12 +33,19 @@ const Sentinel: React.FC<SentinelProps> = ({
     return () => {
       if (sentinel) observer.unobserve(sentinel);
     };
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage, id]);
+  }, [fetchPage, hasMore, isFetchingPage, id]);
 
   return (
-    <div style={{ display: "flex", flexDirection:"column", justifyContent:"center", marginBottom:"20px" }}>
-      <div ref={sentinelRef} style={{ height: "1px" }} data-sentinel-id={id} />
-      {isFetchingNextPage && <Spinner/>}
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        marginBottom: isTop ? '0px' : '20px',
+      }}
+    >
+      <div ref={sentinelRef} style={{ height: '1px' }} data-sentinel-id={id} />
+      {isFetchingPage && <Spinner />}
     </div>
   );
 };

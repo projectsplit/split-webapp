@@ -1,33 +1,27 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { GoArchive } from "react-icons/go";
-import { getGroupsTotalAmounts } from "../../../../api/services/api";
-import { StyledGroups } from "../Groups.styled";
-import Spinner from "../../../../components/Spinner/Spinner";
-import TreeAdjustedContainer from "../../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
-import { TreeItemBuilderForHomeAndGroups } from "../../../../components/TreeItemBuilderForHomeAndGroups";
-import Sentinel from "../../../../components/Sentinel";
-import ConfirmUnArchiveGroupAnimation from "../../../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
-import { useSignal } from "@preact/signals-react";
+import { GoArchive } from 'react-icons/go';
+import { StyledGroups } from '../Groups.styled';
+import Spinner from '../../../../components/Spinner/Spinner';
+import TreeAdjustedContainer from '../../../../components/TreeAdjustedContainer/TreeAdjustedContainer';
+import { TreeItemBuilderForHomeAndGroups } from '../../../../components/TreeItemBuilderForHomeAndGroups';
+import Sentinel from '../../../../components/Sentinel';
+import ConfirmUnArchiveGroupAnimation from '../../../../components/Animations/ConfirmUnArchiveGroupAnimation';
+import { useSignal } from '@preact/signals-react';
+import { useGetTotalsArchiveGroups } from '@/api/auth/QueryHooks/useGetTotalsArchivedGroups';
 
 export default function ArchivedGroups() {
   const pageSize = 10;
-  const menu = useSignal<string|null>(null)
-  const groupId = useSignal<string|undefined>("")
-  const openGroupOptionsMenu = useSignal<boolean>(true)
+  const menu = useSignal<string | null>(null);
+  const groupId = useSignal<string | undefined>('');
+  const openGroupOptionsMenu = useSignal<boolean>(true);
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useInfiniteQuery({
-      queryKey: ["shared", "archived"],
-      queryFn: ({ pageParam: next }) =>
-        getGroupsTotalAmounts(pageSize, next, true),
-      getNextPageParam: (lastPage) => lastPage?.next || undefined,
-      initialPageParam: "",
-    });
+    useGetTotalsArchiveGroups(pageSize);
 
   const groups = data?.pages.flatMap((p) => p.groups);
 
   const onGroupClickHandler = (id: string) => {
-    menu.value="unarchiveGroup"
-    groupId.value=id;
+    menu.value = 'unarchiveGroup';
+    groupId.value = id;
   };
 
   return (
@@ -42,19 +36,18 @@ export default function ArchivedGroups() {
               <GoArchive className="icon" />
             </div>
           ) : (
-            ""
+            ''
           )}
           {groups?.map((g: any) => (
             <div key={g.id}>
               <TreeAdjustedContainer
                 onClick={() => onGroupClickHandler(g.id)}
                 hasOption={true}
-                optionname={"file-tray-full-outline"}
+                optionname={'file-tray-full-outline'}
                 iconfontsize={30}
                 right={0.8}
                 items={TreeItemBuilderForHomeAndGroups(g?.details)}
                 $optionColor="#D79244"
-               
               >
                 <div className="groupName">{g.name}</div>
               </TreeAdjustedContainer>
@@ -62,9 +55,9 @@ export default function ArchivedGroups() {
           ))}
 
           <Sentinel
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
+            fetchPage={fetchNextPage}
+            hasMore={hasNextPage}
+            isFetchingPage={isFetchingNextPage}
           />
         </div>
       )}

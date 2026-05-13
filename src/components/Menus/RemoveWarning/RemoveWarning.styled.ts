@@ -1,11 +1,11 @@
-import styled from "styled-components";
-import { StyledMiddleScreenMenu } from "../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import styled from 'styled-components';
+import { StyledMiddleScreenMenu } from '../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
 
 export const StyledRemoveWarning = styled(StyledMiddleScreenMenu)`
   .headerSeparator {
     position: sticky;
     top: 0;
-    z-index:5;
+    z-index: 5;
     background-color: ${({ theme }) => theme.layer2};
 
     .separator {
@@ -46,10 +46,10 @@ export const StyledRemoveWarning = styled(StyledMiddleScreenMenu)`
     align-items: center;
     gap: 5px;
   }
-    .buttons{
+  .buttons {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap:10px;
+    gap: 10px;
   }
 `;

@@ -1,37 +1,38 @@
-import { useQuery } from "@tanstack/react-query";
-import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
-import { useSignal } from "@preact/signals-react";
-import { StyledProtected } from "./Protected.styled";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import NotificationsMenuAnimation from "../../components/Menus/MenuAnimations/NotificationsMenuAnimation";
-import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
-import { getMe } from "../../api/services/api";
-import TopMenu from "../../components/Menus/TopMenu/TopMenu";
-import { JoinOverlay } from "../Join/JoinOverslay";
+import { useEffect } from 'react';
+import { Navigate, Outlet, useLocation, useParams } from 'react-router-dom';
+import { useSignal } from '@preact/signals-react';
+import { StyledProtected } from './Protected.styled';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import NotificationsMenuAnimation from '../../components/Animations/NotificationsMenuAnimation';
+import SettingsMenuAnimation from '../../components/Animations/SettingsMenuAnimation';
+import TopMenu from '../../components/Menus/TopMenu/TopMenu';
+import { JoinOverlay } from '../Join/JoinOverslay';
+import { useGetMe } from '@/api/auth/QueryHooks/useGetMe';
+import { prewarmRoutes } from '@/lazyRoutes';
 
 const Protected: React.FC = () => {
   const location = useLocation();
   const { code } = useParams<{ code?: string }>();
-  const { data: userInfo } = useQuery({
-    queryKey: ["getMe"],
-    queryFn: getMe,
-    enabled: isUserAuthenticated(),
-  });
+  const { data: userInfo } = useGetMe();
+
+  useEffect(() => {
+    prewarmRoutes();
+  }, []);
 
   const groupIsArchived = useSignal<boolean>(false);
 
   const hasNewerNotifications = userInfo?.hasNewerNotifications;
 
-  const topMenuTitle = useSignal<string>("");
+  const topMenuTitle = useSignal<string>('');
   const menu = useSignal<string | null>(null);
   const openGroupOptionsMenu = useSignal<boolean>(false);
-  const activeGroupCatAsState = useSignal<string>("Active");
+  const activeGroupCatAsState = useSignal<string>('Active');
   const confirmUnarchiveMenu = useSignal<string | null>(null);
 
   const excludeTopMenu = shouldExcludeTopMenu([
-    "/analytics",
-    "/budget",
-    "/shared/generatecode",
+    '/analytics',
+    '/budget',
+    '/shared/generatecode',
   ]);
 
   return isUserAuthenticated() ? (
@@ -78,7 +79,7 @@ const Protected: React.FC = () => {
 export default Protected;
 
 const isUserAuthenticated = () => {
-  return !!localStorage.getItem("accessToken");
+  return !!localStorage.getItem('accessToken');
 };
 
 const shouldExcludeTopMenu = (excludeRoutes: string[]): boolean => {

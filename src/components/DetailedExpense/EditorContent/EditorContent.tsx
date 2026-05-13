@@ -1,15 +1,14 @@
-import { forwardRef, useRef, useState } from "react";
+import { forwardRef, useRef, useState } from 'react';
 
-import IonIcon from "@reacticons/ionicons";
-import { EditorContentHandle } from "../../../interfaces";
-import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-
+import IonIcon from '@reacticons/ionicons';
+import { EditorContentHandle } from '../../../interfaces';
+import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 
 export const EditorContent = forwardRef<EditorContentHandle>((props, ref) => {
   const {} = props;
@@ -35,12 +34,12 @@ export const EditorContent = forwardRef<EditorContentHandle>((props, ref) => {
           }
           ErrorBoundary={LexicalErrorBoundary}
         />
-       
       </div>
-      <div className="options"><IonIcon name="send" className="sendIcon"/></div>
+      <div className="options">
+        <IonIcon name="send" className="sendIcon" />
+      </div>
       <HistoryPlugin />
-      <OnChangePlugin onChange={(editorState) => console.log("")} />
-
+      <OnChangePlugin onChange={(editorState) => console.log('')} />
     </>
   );
 });

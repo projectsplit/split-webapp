@@ -1,6 +1,6 @@
-import { StyledNewButton } from "./NewButton.styled";
-import { NewButtonProps } from "../../../interfaces";
-import { FaPlus } from "react-icons/fa";
+import { StyledNewButton } from './NewButton.styled';
+import { NewButtonProps } from '../../../interfaces';
+import { FaPlus } from 'react-icons/fa';
 
 export default function NewButton({ onClick }: NewButtonProps) {
   return (

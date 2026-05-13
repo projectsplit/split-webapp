@@ -1,5 +1,5 @@
-import { PickerMember } from "../../../types";
-import { split } from "./split";
+import { PickerMember } from '../../../types';
+import { split } from './split';
 
 export const isEquallySplitFn = (
   memberAmounts: PickerMember[],
@@ -7,7 +7,7 @@ export const isEquallySplitFn = (
   decimalDigits: number
 ): boolean => {
   const pickedMembersCount = memberAmounts.filter(
-    (m) => m.actualAmount !== ""
+    (m) => m.actualAmount !== ''
   ).length;
 
   if (pickedMembersCount === 0) {
@@ -27,7 +27,7 @@ export const isEquallySplitFn = (
   );
 
   return memberAmounts
-    .filter((m) => m.actualAmount !== "")
+    .filter((m) => m.actualAmount !== '')
     .every(
       (m) =>
         Number(m.actualAmount) === equallySplitAmount ||

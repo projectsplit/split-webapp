@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const StyledSplashScreen = styled.div`
   display: flex;
@@ -11,7 +11,6 @@ export const StyledSplashScreen = styled.div`
 `;
 
 export const Logo = styled.img`
-
   max-width: 300px;
   max-height: 300px;
   width: auto;

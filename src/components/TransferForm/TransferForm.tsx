@@ -1,23 +1,24 @@
-import { IoClose } from "react-icons/io5";
-import { TransferFormProps } from "../../interfaces";
-import { StyledTransferForm } from "./TransferForm.styled";
-import InputMonetary from "../InputMonetary/InputMonetary";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { signal, useComputed, useSignal } from "@preact/signals-react";
-import { handleInputChange } from "../../helpers/handleInputChange";
-import { amountIsValid } from "../../helpers/amountIsValid";
-import { DateTime } from "../DateTime";
-import MyButton from "../MyButton/MyButton";
-import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
-import CurrencyOptionsAnimation from "../Menus/MenuAnimations/CurrencyOptionsAnimation";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { CreateTransferRequest, Member, UserInfo } from "../../types";
-import { useTransfer } from "../../api/services/useTransfers";
-import FormInput from "../FormInput/FormInput";
-import DateDisplay from "../ExpenseForm/components/DateDisplay/DateDisplay";
-import SendMenuWrapper from "./SendMenuWrapper/SendMenuWrapper";
-import { TiGroup } from "react-icons/ti";
-import { SelectedGroup } from "../Menus/NonGroupUsersMenus/SelectionLists/SelectedGroup";
+import { TransferFormProps } from '../../interfaces';
+import { StyledTransferForm } from './TransferForm.styled';
+import { useEffect } from 'react';
+import { signal, useSignal } from '@preact/signals-react';
+import { DateTime } from '../DateTime';
+import MyButton from '../MyButton/MyButton';
+import MenuAnimationBackground from '../Animations/MenuAnimationBackground';
+import CurrencyOptionsAnimation from '../Animations/CurrencyOptionsAnimation';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { UserInfo } from '../../types';
+import FormInput from '../FormInput/FormInput';
+import DateDisplay from '../ExpenseForm/components/DateDisplay/DateDisplay';
+import {
+  useTransferActions,
+  useTransferData,
+} from './hooks/useTransferFormStore';
+import { Header } from './Header/Header';
+import { InputAndErrorsWrapper } from './InputAndErrorsWrapper/InputAndErrorsWrapper';
+import { NonGroupMenu } from './NonGroupMenu/NonGroupMenu';
+import { GroupMenu } from './GroupMenu/GroupMenu';
+import { useTransferFormLogic } from './hooks/useTransferFormLogic';
 
 export default function TransferForm({
   groupMembers,
@@ -25,324 +26,105 @@ export default function TransferForm({
   currency,
   timeZoneId,
   menu,
-  nonGroupGroup,
+  fromHomeGroup,
   groupId,
   isnonGroupTransfer,
   nonGroupMenu,
   fromHome,
 }: TransferFormProps) {
-  const [currencySymbol, setCurrencySymbol] = useState<string>(currency);
+  const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
   const isSubmitting = useSignal<boolean>(false);
   const navigate = useNavigate();
-  const displayedAmount = useSignal<string>("");
-  const [amount, setAmount] = useState<string>("");
+  const displayedAmount = useSignal<string>('');
   const currencyMenu = useSignal<string | null>(null);
-  const [showAmountError, setShowAmountError] = useState<boolean>(false);
-  const [showIdError, setShowIdError] = useState<boolean>(false);
-  const [idError, setIdError] = useState<{
-    isSenderError: boolean;
-    isReceiverError: boolean;
-    error: string;
-  }>({ isSenderError: false, isReceiverError: false, error: "" });
-  const [amountError, setAmountError] = useState<string>("");
-  const [userSelectionError, setUserSelectionError] = useState<{
-    recipientError: string;
-    isSameUserError: string;
-  }>({ recipientError: "", isSameUserError: "" });
-  const [description, setDescription] = useState<string>("");
-  const { userInfo } = useOutletContext<{
-    userInfo: UserInfo;
-  }>();
-  const [transferTime, setTransferTime] = useState<string>(
-    new Date().toISOString()
-  );
-  const [senderId, setSenderId] = useState<string>("");
-  const [receiverId, setReceiverId] = useState<string>("");
-  const [showPicker, setShowPicker] = useState<boolean>(false);
-  const [showSamePersonError, setShowSamePersonError] =
-    useState<boolean>(false);
   const isDateShowing = useSignal<boolean>(false);
-  const handleInputBlur = useCallback(() => {
-    setShowAmountError(true);
-    amountIsValid(amount, setAmountError);
-  }, [amount, setShowAmountError, setAmountError]);
 
-  const userMembers = groupMembers?.value.filter(
-    (item): item is Member => "userId" in item
-  );
-
-  const userMemberId = userMembers?.find(
-    (m) => m.userId === userInfo?.userId
-  )?.id;
-
-  const { noReceiverSelected, isSamePerson } = useMemo(() => {
-    return {
-      noReceiverSelected: nonGroupMenu?.value.receiverName === "",
-      isSamePerson:
-        nonGroupMenu?.value.senderId === nonGroupMenu?.value.receiverId,
-    };
-  }, [nonGroupMenu?.value.senderId, nonGroupMenu?.value.receiverId]);
-
-  const { mutate: createTransferMutation, isPending } = useTransfer(
-    menu,
-    groupId,
-    navigate,
-    isSubmitting,
-    nonGroupGroup
-  );
-
-  const handldeCurrencyOptionsClick = useCallback(
-    (curr: string) => {
-      setCurrencySymbol(curr);
-      currencyMenu.value = null;
-      setAmount("");
-      displayedAmount.value = "";
-    },
-    [currencyMenu]
-  );
-
-  const submitTransfer = useCallback(() => {
-    setShowAmountError(true);
-    setShowIdError(true);
-    if (noReceiverSelected) {
-      setUserSelectionError({
-        ...userSelectionError,
-        recipientError: "Select a recipient",
-      });
-    }
-    if (isSamePerson) {
-      setUserSelectionError({
-        ...userSelectionError,
-        isSameUserError: "Sender and receiver cannot be the same person",
-      });
-      setShowSamePersonError(true);
-    }
-    if (!amountIsValid(amount, setAmountError)) return;
-    if (!!idError.error) return;
-
-    const createTransferRequest: CreateTransferRequest = {
-      amount: Number(amount),
-      groupId: groupId,
-      currency: currencySymbol,
-      receiverId: receiverId,
-      senderId: senderId,
-      occurred: transferTime,
-      description: description,
-    };
-
-    createTransferMutation(createTransferRequest);
-  }, [
-    setShowAmountError,
-    setShowIdError,
-    amount,
-    idError.error,
-    groupId,
-    currencySymbol,
-    receiverId,
-    senderId,
-    transferTime,
-    description,
-  ]);
-
-  const sortedMembers = useComputed(() => {
-    return [...groupMembers.value].sort((a, b) =>
-      a.id === userMemberId ? -1 : b.id === userMemberId ? 1 : 0
-    );
-  });
+  const data = useTransferData();
+  const actions = useTransferActions();
 
   useEffect(() => {
-    if (senderId === receiverId && senderId !== "") {
-      setIdError({
-        isReceiverError: true,
-        isSenderError: true,
-        error: "Sender and receiver cannot be the same person",
-      });
-    } else if (senderId === "" && receiverId !== "") {
-      setIdError({
-        isReceiverError: false,
-        isSenderError: true,
-        error: "Select a sender",
-      });
-    } else if (receiverId === "" && senderId !== "") {
-      setIdError({
-        isReceiverError: true,
-        isSenderError: false,
-        error: "Select a receiver",
-      });
-    } else if (senderId === "" && receiverId === "") {
-      setIdError({
-        isReceiverError: true,
-        isSenderError: true,
-        error: "Select a sender and a receiver",
-      });
-    } else {
-      setIdError({ isSenderError: false, isReceiverError: false, error: "" });
+    if (userInfo?.userId) {
+      actions.initForm(currency, userInfo.userId, !!isnonGroupTransfer?.value);
     }
-  }, [senderId, receiverId]);
+  }, [userInfo?.userId, currency, isnonGroupTransfer?.value, actions]);
 
+  const {
+    handleInputBlur,
+    handleCurrencyOptionsClick,
+    submitTransfer,
+    userMemberId,
+    noReceiverSelected,
+    sortedMembers,
+    idError,
+    isPendingCreateTransfer,
+  } = useTransferFormLogic({
+    userInfo,
+    groupId,
+    groupMembers,
+    menu,
+    nonGroupUsers,
+    isnonGroupTransfer,
+    nonGroupMenu,
+    fromHomeGroup,
+    navigate,
+    isSubmitting,
+    displayedAmount,
+    currencyMenu,
+    data,
+    actions,
+  });
 
   return (
     <StyledTransferForm
-      $inputError={showIdError}
+      $inputError={data.errors.showIdError}
       $noReceiverSelected={noReceiverSelected}
-      $isSamePersonError={showSamePersonError}
+      $isSamePersonError={data.errors.showSamePersonError}
     >
-      {" "}
-      <div className="header">
-        <div className="gap"></div>
-        <div className="title">New Transfer</div>
-        <div
-          className="closeButtonContainer"
-          onClick={() => (menu.value = null)}
-        >
-          <IoClose className="closeButton" />
-        </div>
-      </div>
-      <div className="inputAndErrorsWrapper">
-        <InputMonetary
-          currencyMenu={currencyMenu}
-          value={displayedAmount.value}
-          onChange={(e) => {
-            handleInputChange(e, currencySymbol, displayedAmount, setAmount);
-            setShowAmountError(false);
-            setShowSamePersonError(false);
-            setUserSelectionError({ isSameUserError: "", recipientError: "" });
-          }}
-          onBlur={handleInputBlur}
-          currency={currencySymbol}
-          autoFocus={true}
-          $inputError={showAmountError && !!amountError}
-        />
-        <span className="errorMsg">
-          {showAmountError && amountError ? amountError : ""}
-        </span>
-      </div>
+      {' '}
+      <Header menu={menu} />
+      <InputAndErrorsWrapper
+        currencyMenu={currencyMenu}
+        displayedAmount={displayedAmount}
+        data={data}
+        actions={actions}
+        handleInputBlur={handleInputBlur}
+      />
       {isnonGroupTransfer &&
-        isnonGroupTransfer.value &&
-        nonGroupMenu &&
-        nonGroupGroup?.value === null ? (
-        <div className="options">
-          <div className="nonGroupMenu">
-            <div className="textAndButton">
-              <div className="text"> Sent from </div>
-              <div
-                className="button senderButton"
-                onClick={() => {
-                  nonGroupMenu.value = {
-                    ...nonGroupMenu.value,
-                    attribute: "sender",
-                    menu: "nonGroupTransfer",
-                  };
-                  setShowSamePersonError(false);
-                  setUserSelectionError({
-                    ...userSelectionError,
-                    isSameUserError: "",
-                  });
-                }}
-              >
-                {nonGroupMenu.value.senderName}
-              </div>{" "}
-            </div>
-            <div className="textAndButton">
-              <div className="text"> and received by </div>
-              <div
-                className="button receiverButton"
-                onClick={() => {
-                  nonGroupMenu.value = {
-                    ...nonGroupMenu.value,
-                    attribute: "receiver",
-                    menu: "nonGroupTransfer",
-                  };
-                  setShowSamePersonError(false);
-                  setUserSelectionError({
-                    ...userSelectionError,
-                    isSameUserError: "",
-                  });
-                }}
-              >
-                {nonGroupMenu.value.receiverName === ""
-                  ? "select user"
-                  : nonGroupMenu.value.receiverName}
-              </div>
-            </div>
-          </div>
-          <span className="errorMsg">
-            {showAmountError &&
-              userSelectionError.recipientError &&
-              noReceiverSelected
-              ? userSelectionError.recipientError
-              : ""}
-            {showAmountError && userSelectionError.isSameUserError
-              ? userSelectionError.isSameUserError
-              : ""}
-          </span>
-          {fromHome && <div className="buttonWrapper">
-            <div
-              className="groupButton"
-              onClick={() => {
-                setShowAmountError(false);
-                setShowIdError(false);
-                nonGroupMenu.value = {
-                  ...nonGroupMenu.value,
-                  attribute: "groups",
-                  menu: "nonGroupTransfer",
-                };
-              }}
-            >
-              <TiGroup className="groupIcon" />
-              <span className="descr">Groups</span>
-            </div>
-          </div>}
-        </div>
+      isnonGroupTransfer.value &&
+      nonGroupMenu &&
+      fromHomeGroup?.value === null ? (
+        <NonGroupMenu
+          $noReceiverSelected={noReceiverSelected}
+          $isSamePersonError={data.errors.showSamePersonError}
+          data={data}
+          actions={actions}
+          fromHome={fromHome}
+          nonGroupMenu={nonGroupMenu}
+        />
       ) : (
-        <div className="groupMenu">
-          {nonGroupGroup && isnonGroupTransfer && (
-            <div className="nonGroupGroupPill">
-              <SelectedGroup
-                group={nonGroupGroup.value}
-                onRemove={() => {
-                  nonGroupGroup.value = null;
-                  isnonGroupTransfer.value = true;
-                }}
-              />
-              <div />
-            </div>
-          )}
-          <SendMenuWrapper
-            title="Sender"
-            idError={idError}
-            id={senderId}
-            setId={setSenderId}
-            setShowIdError={setShowIdError}
-            userMemberId={userMemberId}
-            showIdError={showIdError}
-            sortedMembers={sortedMembers}
-          />
-          <SendMenuWrapper
-            title="Receiver"
-            idError={idError}
-            id={receiverId}
-            setId={setReceiverId}
-            setShowIdError={setShowIdError}
-            userMemberId={userMemberId}
-            showIdError={showIdError}
-            sortedMembers={sortedMembers}
-          />
-        </div>
+        <GroupMenu
+          fromHomeGroup={fromHomeGroup}
+          isnonGroupTransfer={isnonGroupTransfer}
+          idError={idError}
+          data={data}
+          actions={actions}
+          userMemberId={userMemberId}
+          sortedMembers={sortedMembers}
+        />
       )}
       <FormInput
         description=""
         placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        value={data.description}
+        onChange={(e) => actions.setDescription(e.target.value)}
       />
       {isDateShowing.value && (
         <DateDisplay
-          selectedDateTime={transferTime}
+          selectedDateTime={data.transferTime}
           timeZoneId={timeZoneId}
-          setTime={setTransferTime}
+          setTime={actions.setTransferTime}
           isDateShowing={isDateShowing}
-          setShowPicker={setShowPicker}
+          setShowPicker={actions.setShowPicker}
         />
       )}
       <div className="spacer"></div>
@@ -351,28 +133,28 @@ export default function TransferForm({
           <MyButton
             fontSize="16"
             onClick={submitTransfer}
-            isLoading={isPending}
+            isLoading={isPendingCreateTransfer}
           >
             Submit
           </MyButton>
         </div>
 
         <DateTime
-          selectedDateTime={transferTime}
-          setSelectedDateTime={setTransferTime}
+          selectedDateTime={data.transferTime}
+          setSelectedDateTime={actions.setTransferTime}
           timeZoneId={timeZoneId}
           isEdit={false}
-          category={signal("Transfers")}
+          category={signal('Transfers')}
           isDateShowing={isDateShowing}
-          showPicker={showPicker}
-          setShowPicker={setShowPicker}
+          showPicker={data.showPicker}
+          setShowPicker={actions.setShowPicker}
         />
       </div>
       <MenuAnimationBackground menu={currencyMenu} />
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
-        clickHandler={handldeCurrencyOptionsClick}
-        selectedCurrency={currencySymbol}
+        clickHandler={handleCurrencyOptionsClick}
+        selectedCurrency={data.currencySymbol}
       />
     </StyledTransferForm>
   );

@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface StyledMemberFC {
   isGuest: boolean;
   isLogedUser: boolean;
 }
 export const StyledMemberFC = styled.div.withConfig({
-  shouldForwardProp: (prop) => !["isGuest", "isLogedUser"].includes(prop),
+  shouldForwardProp: (prop) => !['isGuest', 'isLogedUser'].includes(prop),
 })<StyledMemberFC>`
   position: relative;
   display: flex;
@@ -38,12 +38,12 @@ export const StyledMemberFC = styled.div.withConfig({
       display: flex;
       flex-direction: column;
       .totalSpent {
-        line-height:1.4;
+        line-height: 1.4;
         margin-top: 10px;
         color: ${({ theme }) => theme.layer6};
         font-size: 15px;
-        .name{
-          color:${({ theme }) => theme.textActiveColor};
+        .name {
+          color: ${({ theme }) => theme.textActiveColor};
         }
         .amounts {
           color: ${({ theme }) => theme.orange};
@@ -102,8 +102,8 @@ export const StyledMemberFC = styled.div.withConfig({
     }
   }
   .guest {
-    display:flex;
-    justify-content:flex-end;
+    display: flex;
+    justify-content: flex-end;
     font-weight: 300;
     font-size: 12px;
   }

@@ -1,9 +1,9 @@
-import { styled } from "styled-components";
-import { DateTime as LuxonDateTime } from "luxon";
-import { DayPickerProps } from "../../../interfaces";
-import { insertDateMention } from "../../SearchTransactions/helpers/insertDateMention";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { useBeautifulMentions } from "lexical-beautiful-mentions";
+import { styled } from 'styled-components';
+import { DateTime as LuxonDateTime } from 'luxon';
+import { DayPickerProps } from '../../../interfaces';
+import { insertDateMention } from '../../SearchTransactions/helpers/insertDateMention';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useBeautifulMentions } from 'lexical-beautiful-mentions';
 
 const DayPicker = (props: DayPickerProps) => {
   const {
@@ -15,7 +15,7 @@ const DayPicker = (props: DayPickerProps) => {
     showOptions,
     withLexicalContext = false,
     category,
-    isDateShowing
+    isDateShowing,
   } = props;
 
   const [editor] = withLexicalContext ? useLexicalComposerContext() : [null];
@@ -31,7 +31,7 @@ const DayPicker = (props: DayPickerProps) => {
 
   const { month, year } = selectedDt;
 
-  const dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+  const dayNames = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
   const getDayNames = (offset: number): string[] => {
     return Array.from({ length: 7 }, (_, i) => dayNames[(i + offset) % 7]);
@@ -69,7 +69,8 @@ const DayPicker = (props: DayPickerProps) => {
       calendarIsOpen &&
       showOptions &&
       editor &&
-      insertMention
+      insertMention &&
+      category
     ) {
       insertDateMention(
         day,
@@ -93,20 +94,27 @@ const DayPicker = (props: DayPickerProps) => {
         ))}
       </div>
 
-      <div className="month-grid" onClick={()=>isDateShowing.value=true}>
+      <div
+        className="month-grid"
+        onClick={() => {
+          if (isDateShowing) {
+            isDateShowing.value = true;
+          }
+        }}
+      >
         {calendarGrid.map((week, i) => (
           <div key={i} className="week-row">
             {week.map((day, j) => {
               const isInactive = day.month !== month;
-              const isToday = day.hasSame(now, "day");
-              const isSelected = day.hasSame(selectedDt, "day");
+              const isToday = day.hasSame(now, 'day');
+              const isSelected = day.hasSame(selectedDt, 'day');
 
               return (
                 <div
                   key={j}
-                  className={`day${isInactive ? " inactive" : ""}${
-                    isToday ? " today" : ""
-                  }${isSelected ? " selected" : ""}`}
+                  className={`day${isInactive ? ' inactive' : ''}${
+                    isToday ? ' today' : ''
+                  }${isSelected ? ' selected' : ''}`}
                   onClick={() => onDayClick(day)}
                 >
                   {day.day}

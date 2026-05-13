@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledCreateGroup = styled.div`
   position: fixed;
   font-size: 1.125rem;
-  bottom: 0;
+  top: 0;
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   overflow: auto;
   box-sizing: border-box;
   background-color: black;
@@ -17,12 +17,11 @@ export const StyledCreateGroup = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    .input {
+    .formInputWrapper {
       margin-top: 0.6rem;
-      display: flex;
-      flex-direction: column;
       padding: 0 0.875rem;
     }
+
     .currencySelectorWrapper {
       padding: 0 0.875rem;
       .currencySelector {
@@ -30,28 +29,20 @@ export const StyledCreateGroup = styled.div`
         flex-direction: row;
         gap: 0.5rem;
         background-color: ${({ theme }) => theme.layer2};
-        border: 1px solid
-      ${({ theme}) =>theme.lineColor};
+        border: 1px solid ${({ theme }) => theme.lineColor};
         border-radius: 10px;
         padding: 0.5rem;
         font-size: 1.125rem;
-        width:140px;
+        width: 140px;
         align-items: center;
         justify-content: space-between;
         cursor: pointer;
-       
+
         .angleDown {
           font-size: 1.5rem;
         }
       }
-
     }
-  }
-  .input {
-    margin-top: 0.625rem;
-    display: flex;
-    flex-direction: column;
-    padding: 0 0.875rem;
   }
 
   .submitButton {
@@ -83,7 +74,7 @@ export const StyledCreateGroup = styled.div`
     }
 
     .closeButtonContainer:hover::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;

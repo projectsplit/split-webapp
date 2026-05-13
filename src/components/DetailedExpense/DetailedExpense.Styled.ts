@@ -1,7 +1,14 @@
-import styled from "styled-components";
-import { StyledMiddleScreenMenu } from "../Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import styled from 'styled-components';
+import { StyledMiddleScreenMenu } from '../Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
+import { Mode } from '@/types';
 
-export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
+interface StyledDetailedExpenseProps {
+  mode: Mode;
+}
+
+export const StyledDetailedExpense = styled(
+  StyledMiddleScreenMenu
+)<StyledDetailedExpenseProps>`
   display: flex;
   flex-direction: column;
   height: 99vh;
@@ -15,6 +22,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     display: flex;
     flex-direction: column;
     gap: 15px;
+    flex-shrink: 0;
 
     .labelsWrapper {
       overflow-x: auto;
@@ -34,8 +42,12 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
   .descriptionAndCloseButton {
     display: flex;
     flex-direction: row;
+
     align-items: center;
     justify-content: space-between;
+    position: relative;
+
+    flex-shrink: 0;
     .expenseName {
       font-size: 20px;
     }
@@ -73,12 +85,15 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 18px;
+    margin-top: ${({ mode }) => (mode === Mode.Personal ? '50px' : '15px')};
+    margin-bottom: ${({ mode }) => (mode === Mode.Personal ? '30px' : '15px')};
+    font-size: ${({ mode }) => (mode === Mode.Personal ? '60px' : '18px')};
     font-weight: 400;
     color: ${({ theme }) => theme.whiteText};
-
     min-height: 21px;
     font-weight: bold;
+    position: relative;
+    flex-shrink: 0;
   }
   .editDeleteButtons {
     display: flex;
@@ -101,6 +116,7 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     font-size: 15px;
     font-weight: 600;
     color: ${({ theme }) => theme.grey};
+    flex-shrink: 0;
   }
   p {
     margin: 0;
@@ -186,6 +202,22 @@ export const StyledDetailedExpense = styled(StyledMiddleScreenMenu)`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    .navigatePrompt {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .info {
+        font-size: 14px;
+      }
+      .navigateButton {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        margin: 50px;
+      }
+    }
 
     .buttons {
       display: flex;

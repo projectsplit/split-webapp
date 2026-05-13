@@ -1,20 +1,22 @@
-import { StyledDetailedExpense } from "./DetailedExpense.Styled";
-import MembersInfoBox from "./MembersInfoBox/MembersInfoBox";
-import IonIcon from "@reacticons/ionicons";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
-import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
-import MyButton from "../MyButton/MyButton";
-import { DetailedExpenseProps } from "../../interfaces";
-import Pill from "../Pill/Pill";
-import { DateOnly, TimeOnly, YearOnly } from "../../helpers/timeHelpers";
-import MapsInfoBox from "./MapsInfoBox/MapsInfoBox";
-import MenuAnimationBackground from "../Menus/MenuAnimations/MenuAnimationBackground";
-import { signal, useSignal } from "@preact/signals-react";
-import DeleteExpenseAnimation from "../Menus/MenuAnimations/DeleteExpenseAnimation";
-import { FormExpense, GeoLocation, User } from "../../types";
-import EditExpenseAnimation from "../Menus/MenuAnimations/EditExpenseAnimation";
-import labelColors from "../../labelColors";
-import { buildFormExpense, getNonGroupUsers } from "./utils";
+import { StyledDetailedExpense } from './DetailedExpense.Styled';
+import MembersInfoBox from './MembersInfoBox/MembersInfoBox';
+import IonIcon from '@reacticons/ionicons';
+import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
+import { displayCurrencyAndAmount } from '../../helpers/displayCurrencyAndAmount';
+import MyButton from '../MyButton/MyButton';
+import { DetailedExpenseProps } from '../../interfaces';
+import Pill from '../Pill/Pill';
+import { DateOnly, TimeOnly, YearOnly } from '../../helpers/timeHelpers';
+import MapsInfoBox from './MapsInfoBox/MapsInfoBox';
+import MenuAnimationBackground from '../Animations/MenuAnimationBackground';
+import { signal, useSignal } from '@preact/signals-react';
+import DeleteExpenseAnimation from '../Animations/DeleteExpenseAnimation';
+import { Mode, TransactionType, GeoLocation } from '../../types';
+import EditExpenseAnimation from '../Animations/EditExpenseAnimation';
+import labelColors from '../../labelColors';
+import { MdGroup } from 'react-icons/md';
+import { buildFormExpense, toUser } from './utils';
+import NavigateToExpenseAnimation from '../Animations/NavigateToExpenseAnimation';
 
 export default function DetailedExpense({
   selectedExpense,
@@ -30,13 +32,15 @@ export default function DetailedExpense({
   timeZoneCoordinates,
   creator,
   created,
-  members,
+  participants,
   errorMessage,
   userMemberId,
   group,
-  expenseType,
+  userId,
+  mode,
 }: DetailedExpenseProps) {
-  const googleUrl = "https://www.google.com/maps/search/?api=1&query=";
+  const expenseType = selectedExpense.value?.transactionType;
+  const googleUrl = 'https://www.google.com/maps/search/?api=1&query=';
   // const theme = {
   //   text: {
   //     bold: "editor-bold",
@@ -65,15 +69,14 @@ export default function DetailedExpense({
   };
   const googleMapsUrl = googleMapsUrlBuilder(location);
 
-  const expenseToEdit = buildFormExpense(selectedExpense, expenseType, group);
-
+  const expenseToEdit = buildFormExpense(selectedExpense, mode, group);
 
   return (
-    <StyledDetailedExpense>
+    <StyledDetailedExpense mode={mode}>
       <div className="descriptionAndCloseButton">
         <div />
         <div className="descreption">
-          {description ? <span>"{description}"</span> : ""}
+          {description ? <span>"{description}"</span> : ''}
         </div>
         <div
           className="closeButton"
@@ -86,16 +89,20 @@ export default function DetailedExpense({
         <div className="dateAndLabels">
           <div className="labelsWrapper">
             <div className="labels">
-              {labels.map((l, i) => (
+              {labels.map((l: { id: string; text: string; color: string }) => (
                 <Pill
-                  key={i}
+                  key={l.id}
                   title={l.text}
                   $textColor="#000000c8"
-                  color={labelColors[l.color]}
+                  color={l.color === '' ? 'white' : labelColors[l.color]}
                   closeButton={false}
                   fontSize="18px"
                   $border={false}
-                />
+                >
+                  {mode === Mode.Personal && !l.id.includes('_') && (
+                    <MdGroup style={{ marginRight: '4px' }} />
+                  )}
+                </Pill>
               ))}
             </div>
           </div>
@@ -104,29 +111,41 @@ export default function DetailedExpense({
       <div className="total">
         {displayCurrencyAndAmount(amount.toString(), currency)}
       </div>
-      <MembersInfoBox
-        transactions={shares}
-        areShares={true}
-        currency={currency}
-        members={members}
-        userMemberId={userMemberId}
-      />
-      <MembersInfoBox
-        transactions={payments}
-        areShares={false}
-        currency={currency}
-        members={members}
-        userMemberId={userMemberId}
-      />
-      <MapsInfoBox location={location} googleMapsUrl={googleMapsUrl} />
+      {mode !== Mode.Personal && (
+        <div>
+          <MembersInfoBox
+            transactions={shares}
+            areShares={true}
+            currency={currency}
+            participants={participants}
+            userMemberId={userMemberId}
+            userId={userId}
+            expenseType={expenseType}
+          />
+          <MembersInfoBox
+            transactions={payments}
+            areShares={false}
+            currency={currency}
+            participants={participants}
+            userMemberId={userMemberId}
+            userId={userId}
+            expenseType={expenseType}
+          />
+        </div>
+      )}
+      {mode === Mode.Personal && !location ? null : (
+        <MapsInfoBox location={location} googleMapsUrl={googleMapsUrl} />
+      )}
 
       <div className="editDeleteButtons">
         <div className="dummyDiv" />
 
-        {group && !group.isArchived ? (
+        {(group && !group.isArchived) ||
+        (mode === Mode.NonGroup && !group) ||
+        expenseType === TransactionType.Personal ? (
           <div className="buttons">
             <div className="editButton">
-              <MyButton onClick={() => (menu.value = "editExpense")}>
+              <MyButton onClick={() => (menu.value = 'editExpense')}>
                 <div className="buttonChildren">
                   <AiFillEdit className="icon" />
                   <span>Edit</span>
@@ -135,7 +154,7 @@ export default function DetailedExpense({
             </div>
             <div className="deleteButton">
               <MyButton
-                onClick={() => (menu.value = "deleteExpense")}
+                onClick={() => (menu.value = 'deleteExpense')}
                 variant="secondary"
               >
                 <div className="buttonChildren">
@@ -145,32 +164,51 @@ export default function DetailedExpense({
               </MyButton>
             </div>
           </div>
-        ) : null}
+        ) : (
+          <div>
+            {mode === Mode.Personal && <div className="navigatePrompt">
+              <span className="info">{`This is your share from a ${expenseType === TransactionType.Group ? 'group' : 'non group'} expense`}</span>
+              <div className="navigateButton">
+                <MyButton
+                  onClick={() => (menu.value = 'navigateToExpense')}
+                  variant="primary"
+                >
+                  <div className="buttonChildren">
+                    <span>{`Go to ${expenseType === TransactionType.Group ? 'group' : 'non group'} expense`}</span>
+                  </div>
+                </MyButton>
+              </div>
+            </div>}
+          </div>
+        )}
 
         <div className="dummyDiv" />
       </div>
       <div className="createdBy">
-        Created by {members.find((x) => x.id === creator)?.name}{" "}
-        {DateOnly(occurred, timeZoneId) === "Today" ||
-          DateOnly(occurred, timeZoneId) === "Yesterday"
+        Created{' '}
+        {mode === Mode.Personal
+          ? ''
+          : participants.find((x) => x.id === creator)?.name}{' '}
+        {DateOnly(occurred, timeZoneId) === 'Today' ||
+        DateOnly(occurred, timeZoneId) === 'Yesterday'
           ? DateOnly(created, timeZoneId)
-          : "on" +
-          " " +
-          DateOnly(occurred, timeZoneId) +
-          " " +
-          YearOnly(occurred, timeZoneId)}{" "}
+          : 'on' +
+            ' ' +
+            DateOnly(occurred, timeZoneId) +
+            ' ' +
+            YearOnly(occurred, timeZoneId)}{' '}
         at {TimeOnly(created, timeZoneId)}
       </div>
       <div className="date">
-        Occurred{" "}
-        {DateOnly(occurred, timeZoneId) === "Today" ||
-          DateOnly(occurred, timeZoneId) === "Yesterday"
+        Occurred{' '}
+        {DateOnly(occurred, timeZoneId) === 'Today' ||
+        DateOnly(occurred, timeZoneId) === 'Yesterday'
           ? DateOnly(occurred, timeZoneId)
-          : "on" +
-          " " +
-          DateOnly(occurred, timeZoneId) +
-          " " +
-          YearOnly(occurred, timeZoneId)}{" "}
+          : 'on' +
+            ' ' +
+            DateOnly(occurred, timeZoneId) +
+            ' ' +
+            YearOnly(occurred, timeZoneId)}{' '}
         at {TimeOnly(occurred, timeZoneId)}
       </div>
       <div className="commentSection">
@@ -201,10 +239,19 @@ export default function DetailedExpense({
         selectedExpense={selectedExpense}
         timeZoneCoordinates={timeZoneCoordinates}
         currency={currency}
-        groupMembers={group ? signal([...group.members, ...group.guests]) : signal([])}
-        nonGroupUsers={signal(getNonGroupUsers(expenseType, shares, payments, members))}
-        isPersonal={expenseType === "Personal" ? signal(true) : signal(false)}
-
+        groupMembers={
+          group ? signal([...group.members, ...group.guests]) : signal([])
+        }
+        nonGroupUsers={signal(participants.map((p) => toUser(p)))}
+        isPersonal={mode === Mode.Personal ? signal(true) : signal(false)}
+        isnonGroupExpense={
+          mode === Mode.NonGroup ? signal(true) : signal(false)
+        }
+      />
+      <NavigateToExpenseAnimation
+        menu={menu}
+        selectedExpense={selectedExpense}
+        errorMessage={errorMessage}
       />
     </StyledDetailedExpense>
   );

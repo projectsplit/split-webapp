@@ -1,4 +1,13 @@
-import styled from "styled-components";
+import styled, { keyframes } from 'styled-components';
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 export const StyledHomepage = styled.div`
   display: flex;
@@ -9,101 +18,23 @@ export const StyledHomepage = styled.div`
   width: 100%;
   overflow: hidden;
   position: relative;
-  > div[style*="position: fixed"] {
+
+  .fadeIn {
+    animation: ${fadeIn} 0.3s ease-out;
+    display: contents;
+  }
+  > div[style*='position: fixed'] {
     z-index: 1; /* Ensure fixed children (background) are above */
   }
   .fixedTop {
-    padding: 14px;
+   padding-left: 14px;
+    padding-right: 14px;
   }
 
   .welcomeStripe {
     font-size: 15px;
     padding: 1rem 0 1rem 0;
     white-space: initial;
-  }
-
-  .scrollableContent {
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow-y: auto;
-    min-height: 0;
-    z-index: 1;
-    .groupsInfo {
-      .settled {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-      }
-    }
-    .optionsStripe {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 15px;
-
-      .groups {
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        gap: 9px;
-        align-items: center;
-
-        .groupIconAndNumberOfGroups {
-          position: relative;
-        }
-        .groupCount {
-          position: absolute;
-          color: ${({ theme }) => theme.whiteText};
-          font-size: 15px;
-          bottom: -2px;
-          right: 0;
-          padding: -8px 3px;
-          font-weight: bold;
-        }
-        .groupName {
-          font-size: 20px;
-          font-weight: bold;
-        }
-      }
-
-      .analyticsIcon,
-      .personalIcon,
-      .budgetIcon,
-      .groupIcon {
-        color: ${({ theme }) => theme.deepPurple};
-        font-size: 30px;
-      }
-
-      .group {
-        color: #9918ff;
-        font-size: 25px;
-        position: relative;
-      }
-
-      .groupsInfo {
-        font-size: 15px;
-        color: ${({ theme }) => theme.layer6};
-        .owe {
-          color: ${({ theme }) => theme.redish};
-        }
-        .owed {
-          color: ${({ theme }) => theme.green};
-        }
-      }
-      .mostRecent {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin-bottom: 1rem;
-
-        .mostRecentMsg {
-          font-size: 12px;
-          margin-left: 5px;
-        }
-      }
-    }
   }
 
   .actions {
@@ -119,7 +50,9 @@ export const StyledHomepage = styled.div`
     justify-content: center;
     z-index: 4;
     cursor: pointer;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    transition:
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
     box-shadow: 0 0 10px ${({ theme }) => theme.pinkish};
     will-change: box-shadow;
     overflow: hidden; /* clips glow to circular boundary */
@@ -138,32 +71,38 @@ export const StyledHomepage = styled.div`
 
   @keyframes glowRandom {
     0% {
-      box-shadow: 0 0 10px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        0 0 10px ${({ theme }) => theme.pinkish},
         2px -2px 15px ${({ theme }) => theme.pinkish},
         -3px 3px 20px ${({ theme }) => theme.pinkish};
     }
     20% {
-      box-shadow: -2px 1px 12px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        -2px 1px 12px ${({ theme }) => theme.pinkish},
         3px -3px 18px ${({ theme }) => theme.pinkish},
         1px 2px 25px ${({ theme }) => theme.pinkish};
     }
     40% {
-      box-shadow: 3px 2px 10px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        3px 2px 10px ${({ theme }) => theme.pinkish},
         -2px -3px 20px ${({ theme }) => theme.pinkish},
         0 0 15px ${({ theme }) => theme.pinkish};
     }
     60% {
-      box-shadow: -3px -1px 12px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        -3px -1px 12px ${({ theme }) => theme.pinkish},
         2px 3px 18px ${({ theme }) => theme.pinkish},
         0 0 20px ${({ theme }) => theme.pinkish};
     }
     80% {
-      box-shadow: 2px 3px 10px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        2px 3px 10px ${({ theme }) => theme.pinkish},
         -1px -2px 18px ${({ theme }) => theme.pinkish},
         1px 1px 25px ${({ theme }) => theme.pinkish};
     }
     100% {
-      box-shadow: 0 0 10px ${({ theme }) => theme.pinkish},
+      box-shadow:
+        0 0 10px ${({ theme }) => theme.pinkish},
         2px -2px 15px ${({ theme }) => theme.pinkish},
         -3px 3px 20px ${({ theme }) => theme.pinkish};
     }

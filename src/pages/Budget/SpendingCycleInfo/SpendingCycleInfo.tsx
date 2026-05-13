@@ -1,7 +1,7 @@
-import React from "react";
-import { StyledSpendingCycleInfo } from "./SpendingCycleInfo.styled";
-import { SpendingCycleInfoProps } from "../../../interfaces";
-import IonIcon from "@reacticons/ionicons";
+import React from 'react';
+import { StyledSpendingCycleInfo } from './SpendingCycleInfo.styled';
+import { SpendingCycleInfoProps } from '../../../interfaces';
+import IonIcon from '@reacticons/ionicons';
 
 export default function SpendingCycleInfo({ menu }: SpendingCycleInfoProps) {
   return (
@@ -23,26 +23,26 @@ export default function SpendingCycleInfo({ menu }: SpendingCycleInfoProps) {
         </span>
         <span className="secondP">
           For example, if you choose <strong>Monday</strong> as the day your
-          budget commences, your budget will run from midnight{" "}
-          <strong>00:00:00</strong> on a <strong>Monday</strong> until{" "}
-          <strong>23:59:59</strong> on the following <strong>Sunday</strong>,{" "}
+          budget commences, your budget will run from midnight{' '}
+          <strong>00:00:00</strong> on a <strong>Monday</strong> until{' '}
+          <strong>23:59:59</strong> on the following <strong>Sunday</strong>,{' '}
           effectively covering <strong>7</strong> days.
         </span>
 
         <span className="thirdP">
-          If you choose the{" "}
+          If you choose the{' '}
           <strong>
             5<sup>th</sup>
-          </strong>{" "}
+          </strong>{' '}
           of the month as your starting day, your budget for the month will run
-          from midnight <strong>00:00:00</strong> on the{" "}
+          from midnight <strong>00:00:00</strong> on the{' '}
           <strong>
             5<sup>th</sup>
-          </strong>{" "}
-          of one month until <strong>23:59:59</strong> on the{" "}
+          </strong>{' '}
+          of one month until <strong>23:59:59</strong> on the{' '}
           <strong>
             4<sup>th</sup>
-          </strong>{" "}
+          </strong>{' '}
           of the next month.
         </span>
       </div>

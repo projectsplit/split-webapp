@@ -1,16 +1,16 @@
-import { useMemo } from "react";
-import { Signal } from "@preact/signals-react";
-import { PickerMember, User } from "@/types";
+import { useMemo } from 'react';
+import { Signal } from '@preact/signals-react';
+import { PickerMember, User } from '@/types';
 import {
-  CategoryKey,
+  SplitMethod,
   CategoryMap,
-} from "@/components/ExpenseForm/formStore/formStoreTypes";
+} from '@/components/ExpenseForm/formStore/formStoreTypes';
 
 interface UseAdjustedMembersParams {
   participantsByCategory: CategoryMap<PickerMember[]>;
   payersByCategory: CategoryMap<PickerMember[]>;
-  participantsCategory: Signal<CategoryKey>;
-  payersCategory: Signal<CategoryKey>;
+  participantsCategory: Signal<SplitMethod>;
+  payersCategory: Signal<SplitMethod>;
   nonGroupUsers: Signal<User[]>;
   isnonGroupExpense: Signal<boolean> | undefined;
   userInfo: { userId: string } | undefined;
@@ -42,7 +42,7 @@ export function useAdjustedMembers({
         ? userInfo?.userId
         : userMemberId;
     return participants.map((m) =>
-      m.id === userIdToCheck ? { ...m, name: "you" } : m
+      m.id === userIdToCheck ? { ...m, name: 'you' } : m
     );
   }, [
     participants,
@@ -59,7 +59,7 @@ export function useAdjustedMembers({
         ? userInfo?.userId
         : userMemberId;
     return payers.map((m) =>
-      m.id === userIdToCheck ? { ...m, name: "you" } : m
+      m.id === userIdToCheck ? { ...m, name: 'you' } : m
     );
   }, [
     payers,

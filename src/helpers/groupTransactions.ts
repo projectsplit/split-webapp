@@ -1,10 +1,10 @@
-import currency from "currency.js";
-import { GroupedTransaction, TruncatedMember } from "../types";
+import currency from 'currency.js';
+import { GroupedTransaction, TruncatedMember } from '../types';
 
 export function groupTransactions(
   transactions: any,
-  members:TruncatedMember[],
-  userId:string
+  members: TruncatedMember[],
+  userId: string
 ): GroupedTransaction[] {
   const groupedMap = new Map<string, GroupedTransaction>();
 
@@ -14,12 +14,14 @@ export function groupTransactions(
 
     if (!groupedMap.has(receiverKey)) {
       groupedMap.set(receiverKey, {
-        totalAmount: currency(0, { symbol: "" }),
+        totalAmount: currency(0, { symbol: '' }),
         currency: transaction.currency,
         id: transaction.creditor,
         isOwed: true,
-        isUser: transaction.creditor===userId,
-        name: (members.find(member=>member.id===transaction.creditor)?.name)||"",
+        isUser: transaction.creditor === userId,
+        name:
+          members.find((member) => member.id === transaction.creditor)?.name ||
+          '',
       });
     }
     groupedMap.get(receiverKey)!.totalAmount = currency(
@@ -28,15 +30,17 @@ export function groupTransactions(
 
     // Group by senderId
     const senderKey = `sender-${transaction.currency}-${transaction.debtor}`;
-  
+
     if (!groupedMap.has(senderKey)) {
       groupedMap.set(senderKey, {
-        totalAmount: currency(0, { symbol: "" }),
+        totalAmount: currency(0, { symbol: '' }),
         currency: transaction.currency,
         id: transaction.debtor,
         isOwed: false,
-        isUser: transaction.debtor===userId,
-        name: (members.find(member=>member.id===transaction.debtor)?.name)||"",
+        isUser: transaction.debtor === userId,
+        name:
+          members.find((member) => member.id === transaction.debtor)?.name ||
+          '',
       });
     }
     groupedMap.get(senderKey)!.totalAmount = currency(

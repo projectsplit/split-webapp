@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const StyledRemoveUserFromGroup = styled.div`
   position: fixed;
@@ -6,9 +6,9 @@ export const StyledRemoveUserFromGroup = styled.div`
   left: 0;
   right: 0;
   margin: 0;
-  bottom: 0;
+  top: 0;
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   overflow: auto;
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.layer2};
@@ -42,7 +42,7 @@ export const StyledRemoveUserFromGroup = styled.div`
     }
 
     .closeButtonContainer:hover::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;
@@ -87,9 +87,28 @@ export const StyledRemoveUserFromGroup = styled.div`
           }
         }
       }
+      .noData {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        margin-top: 100px;
+        .msg {
+          font-size: 16px;
+          color: ${({ theme }) => theme.textInactiveColor};
+          text-wrap: wrap;
+          text-align: center;
+        }
+        .icon {
+          margin-top: 10px;
+
+          color: ${({ theme }) => theme.textInactiveColor};
+        }
+      }
     }
   }
-  .input {
+  .inputField {
     display: flex;
     width: 100%;
     padding-left: 10px;

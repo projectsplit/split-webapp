@@ -1,4 +1,4 @@
-import { PickerMember } from "../../../types";
+import { PickerMember } from '../../../types';
 
 export function distributeRemainderCents(
   decimalDigits: number,
@@ -17,11 +17,11 @@ export function distributeRemainderCents(
   const splitOfLockeAmountsInCents = lockedPercentages.map(
     (s) => Math.round((s * totalCents) / 100),
     0
-  ); 
+  );
   const remainderCents =
     totalCents -
     splitOfUnlockedAmountsInCents.reduce((a, b) => a + b, 0) -
-    splitOfLockeAmountsInCents.reduce((a, b) => a + b, 0); 
+    splitOfLockeAmountsInCents.reduce((a, b) => a + b, 0);
 
   if (remainderCents === 0) {
     const adjustedLockedToOriginalAmount = splitOfLockeAmountsInCents.map((s) =>
@@ -31,7 +31,7 @@ export function distributeRemainderCents(
       (s) => (s / multiplier).toFixed(decimalDigits)
     );
     return { adjustedUnlockedToOriginalAmount, adjustedLockedToOriginalAmount };
-  } 
+  }
   const adjustArray = (arr: number[], remainder: number) => {
     const adjusted = [...arr];
     const absRemainder = Math.abs(remainder);
@@ -45,26 +45,24 @@ export function distributeRemainderCents(
 
     // Distribute remainder across the largest values
     for (let i = 0; i < absRemainder; i++) {
-      const index = indices[i % indices.length]; 
+      const index = indices[i % indices.length];
       adjusted[index] += isNegative ? -1 : 1;
     }
 
     return adjusted;
-  }; 
+  };
 
   let adjustedUnlocked = [...splitOfUnlockedAmountsInCents];
   let adjustedLocked = [...splitOfLockeAmountsInCents];
 
   if (splitOfLockeAmountsInCents.length > 0) {
-
     adjustedLocked = adjustArray(splitOfLockeAmountsInCents, remainderCents);
   } else if (splitOfUnlockedAmountsInCents.length > 0) {
- 
     adjustedUnlocked = adjustArray(
       splitOfUnlockedAmountsInCents,
       remainderCents
     );
-  } 
+  }
   const newTotal =
     adjustedUnlocked.reduce((a, b) => a + b, 0) +
     adjustedLocked.reduce((a, b) => a + b, 0);

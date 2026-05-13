@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function RedirectToExpenses() {
   const { groupid } = useParams();
@@ -10,5 +10,4 @@ export default function RedirectToExpenses() {
   }, [groupid]);
 
   return null;
-
 }

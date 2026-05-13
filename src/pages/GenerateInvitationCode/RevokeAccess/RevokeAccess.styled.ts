@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledRevokeAccess = styled.div`
   display: flex;
@@ -44,11 +44,9 @@ export const StyledRevokeAccess = styled.div`
         opacity: 1;
       }
     }
-    .icon{
- 
+    .icon {
       font-size: 100px;
       opacity: 0.5;
-
     }
   }
   .spinner {

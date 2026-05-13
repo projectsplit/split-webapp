@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface StyledUserProps {
-  $isSelected:boolean
+  $isSelected: boolean;
 }
 export const StyledUser = styled.div<StyledUserProps>`
   margin-top: 0.5rem;
@@ -9,13 +9,12 @@ export const StyledUser = styled.div<StyledUserProps>`
   display: flex;
   flex-direction: column;
   padding: 0 1rem;
-  
+
   cursor: pointer;
 
   .nameAndTick {
-    background-color:${props => 
-      props.$isSelected ? props.theme.inputGrey : 'transparent'
-    };
+    background-color: ${(props) =>
+      props.$isSelected ? props.theme.inputGrey : 'transparent'};
     border-radius: 8px;
     display: flex;
     flex-direction: row;
@@ -25,6 +24,5 @@ export const StyledUser = styled.div<StyledUserProps>`
     .tick {
       font-size: 20px;
     }
-
   }
 `;

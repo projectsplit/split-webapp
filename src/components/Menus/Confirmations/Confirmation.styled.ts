@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledMiddleScreenMenu } from "../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import styled from 'styled-components';
+import { StyledMiddleScreenMenu } from '../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
 
 export const StyledConfirmation = styled(StyledMiddleScreenMenu)`
   .headerSeparator {
@@ -21,7 +21,7 @@ export const StyledConfirmation = styled(StyledMiddleScreenMenu)`
         font-size: 30px;
         color: ${({ theme }) => theme.yellow};
       }
-    
+
       .closeButton {
         font-size: 30px;
         color: #6f6f6f;
@@ -42,7 +42,6 @@ export const StyledConfirmation = styled(StyledMiddleScreenMenu)`
     font-size: 14px;
     .descr {
       font-style: italic;
-     
     }
     display: flex;
     flex-direction: row;
@@ -50,10 +49,10 @@ export const StyledConfirmation = styled(StyledMiddleScreenMenu)`
     align-items: center;
     gap: 5px;
   }
-  .buttons{
+  .buttons {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap:10px;
+    gap: 10px;
   }
 `;

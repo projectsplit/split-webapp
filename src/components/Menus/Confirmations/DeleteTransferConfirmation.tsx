@@ -1,13 +1,13 @@
-import { DeleteTransferConfirmationProps } from "../../../interfaces";
-import { useDeleteTransfer } from "../../../api/services/useDeleteTransfer";
-import Confirmation from "./Confirmation";
+import { DeleteTransferConfirmationProps } from '../../../interfaces';
+import Confirmation from './Confirmation';
+import { useDeleteTransferMutation } from '@/api/auth/CommandHooks/useDeleteTransferMutation';
 
 export default function DeleteTransferConfirmation({
   menu,
   selectedTransfer,
   errorMessage,
 }: DeleteTransferConfirmationProps) {
-  const { mutate: deleteTransfer, isPending } = useDeleteTransfer(
+  const { mutate: deleteTransfer, isPending } = useDeleteTransferMutation(
     menu,
     errorMessage,
     selectedTransfer
@@ -21,7 +21,12 @@ export default function DeleteTransferConfirmation({
   };
 
   return (
-    <Confirmation onClick={handleDelete} menu={menu} isLoading={isPending} header={"Confirmation"}>
+    <Confirmation
+      onClick={handleDelete}
+      menu={menu}
+      isLoading={isPending}
+      header={'Confirmation'}
+    >
       <div>Are you sure you want to delete this transfer?</div>
     </Confirmation>
   );

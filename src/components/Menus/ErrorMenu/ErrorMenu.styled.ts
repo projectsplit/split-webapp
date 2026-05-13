@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledMiddleScreenMenu } from "../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import styled from 'styled-components';
+import { StyledMiddleScreenMenu } from '../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
 
 export const StyledErrorMenu = styled(StyledMiddleScreenMenu)`
   .headerSeparator {
@@ -21,7 +21,7 @@ export const StyledErrorMenu = styled(StyledMiddleScreenMenu)`
         font-size: 30px;
         color: ${({ theme }) => theme.redish};
       }
-    
+
       .closeButton {
         font-size: 30px;
         color: #6f6f6f;

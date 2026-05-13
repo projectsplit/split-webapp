@@ -8,26 +8,26 @@ import {
   Tooltip,
   Legend,
   Filler,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-import { StyledCumulativeSpending } from "./CumulativeSpending.styled";
-import Carousel from "../../Carousel/Carousel";
-import { CumulativeSpendingProps } from "../../../../interfaces";
-import { noData } from "../plugins/noData";
-import { getAllDaysInMonth } from "../../../../helpers/monthlyDataHelpers";
-import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
-import { getChartOptions } from "./options/getChartOptions";
-import { getData } from "./data/getData";
-import { buildLabels } from "../../helpers/buildLabels";
-import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
-import { Frequency } from "../../../../types";
-import { deCumulArray } from "../../helpers/deCumulArray";
-import { enhanceNumberArray } from "../../../../helpers/enhanceNumberArray";
-import { isCurrentPeriod } from "../../helpers/isCurrentPeriod";
-import { months } from "../../../../constants";
-import { significantDigitsFromTicker } from "../../../../helpers/openExchangeRates";
-import { getCumulativeShares } from "../../helpers/getCumulativeArray";
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { StyledCumulativeSpending } from './CumulativeSpending.styled';
+import Carousel from '../../Carousel/Carousel';
+import { CumulativeSpendingProps } from '../../../../interfaces';
+import { noData } from '../plugins/noData';
+import { getAllDaysInMonth } from '../../../../helpers/monthlyDataHelpers';
+import { getCarouselItemsBasedOnCycle } from '../../helpers/getCarouselItemsBasedOnCycle';
+import { getChartOptions } from './options/getChartOptions';
+import { getData } from './data/getData';
+import { buildLabels } from '../../helpers/buildLabels';
+import { useStartAndEndDatesEffect } from '../../hooks/useStartEndDatesEffect';
+import { Frequency } from '../../../../types';
+import { deCumulArray } from '../../helpers/deCumulArray';
+import { enhanceNumberArray } from '../../../../helpers/enhanceNumberArray';
+import { isCurrentPeriod } from '../../helpers/isCurrentPeriod';
+import { months } from '../../../../constants';
+import { significantDigitsFromTicker } from '../../../../helpers/openExchangeRates';
+import { getCumulativeShares } from '../../helpers/getCumulativeArray';
 
 ChartJS.register(
   CategoryScale,
@@ -54,7 +54,7 @@ export function CumulativeSpending({
   currency,
   backendData,
   isSuccess,
-  timeZone
+  timeZone,
 }: CumulativeSpendingProps) {
   const fractalFactor = 1;
 
@@ -192,10 +192,10 @@ export function CumulativeSpending({
       indx === lastNumberBeforeNaN
     ) {
       pointRadiusProjection.push(2);
-      pointBackgroundColorProjection.push("#A12BFF");
+      pointBackgroundColorProjection.push('#A12BFF');
     } else {
       pointRadiusProjection.push(0);
-      pointBackgroundColorProjection.push("transparent");
+      pointBackgroundColorProjection.push('transparent');
     }
     if (enhancedDatesToNumbers[indx] % 1 === 0) {
       hitRadius.push(10);
@@ -204,7 +204,7 @@ export function CumulativeSpending({
     }
   });
 
-  pointBackgroundColorProjection[projectedArray.length - 1] = "grey";
+  pointBackgroundColorProjection[projectedArray.length - 1] = 'grey';
 
   const options = getChartOptions(
     isSuccess,

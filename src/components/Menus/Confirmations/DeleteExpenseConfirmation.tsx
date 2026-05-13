@@ -1,6 +1,6 @@
-import { DeleteExpenseConfirmationProps } from "../../../interfaces";
-import { useDeleteExpense } from "../../../api/services/useDeleteExpense";
-import Confirmation from "./Confirmation";
+import { DeleteExpenseConfirmationProps } from '../../../interfaces';
+import Confirmation from './Confirmation';
+import { useDeleteExpenseMutation } from '@/api/auth/CommandHooks/useDeleteExpenseMutation';
 
 export default function DeleteExpenseConfirmation({
   menu,
@@ -8,7 +8,7 @@ export default function DeleteExpenseConfirmation({
   selectedExpense,
   errorMessage,
 }: DeleteExpenseConfirmationProps) {
-  const { mutate: deleteExpense, isPending } = useDeleteExpense(
+  const { mutate: deleteExpense, isPending } = useDeleteExpenseMutation(
     menu,
     errorMessage,
     selectedExpense
@@ -22,11 +22,16 @@ export default function DeleteExpenseConfirmation({
   };
 
   return (
-    <Confirmation onClick={handleDelete} menu={menu} isLoading={isPending} header={"Confirmation"}>
+    <Confirmation
+      onClick={handleDelete}
+      menu={menu}
+      isLoading={isPending}
+      header={'Confirmation'}
+    >
       {description ? (
         <div>
-          Are you sure you want to delete{" "}
-          <span className="descr">"{description}"</span> ?{" "}
+          Are you sure you want to delete{' '}
+          <span className="descr">"{description}"</span> ?{' '}
         </div>
       ) : (
         <div>Delete this expense?</div>

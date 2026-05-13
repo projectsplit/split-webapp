@@ -1,7 +1,7 @@
-import { IoClose } from "react-icons/io5";
-import { StyledExpenseFormHeader } from "./ExpenseFormHeader.styled";
-import { Signal } from "@preact/signals-react";
-import { Group, Guest, Member, User } from "@/types";
+import { IoClose } from 'react-icons/io5';
+import { StyledExpenseFormHeader } from './ExpenseFormHeader.styled';
+import { Signal } from '@preact/signals-react';
+import { Group, Guest, Member, User } from '@/types';
 
 interface ExpenseFormHeaderProps {
   header: string;
@@ -10,7 +10,7 @@ interface ExpenseFormHeaderProps {
   nonGroupUsers: Signal<User[]>;
   groupMembers: Signal<(Member | Guest)[]>;
   isPersonal: Signal<boolean>;
-  nonGroupGroup?: Signal<Group | null>;
+  fromHomeGroup?: Signal<Group | null>;
   menu: Signal<string | null>;
 }
 
@@ -21,7 +21,7 @@ export const ExpenseFormHeader = ({
   nonGroupUsers,
   groupMembers,
   isPersonal,
-  nonGroupGroup,
+  fromHomeGroup,
   menu,
 }: ExpenseFormHeaderProps) => {
   return (
@@ -37,8 +37,8 @@ export const ExpenseFormHeader = ({
               groupMembers.value = [];
               isPersonal.value = true;
               isnonGroupExpense.value = false;
-              if (nonGroupGroup) {
-                nonGroupGroup.value = null;
+              if (fromHomeGroup) {
+                fromHomeGroup.value = null;
               }
             }
           }

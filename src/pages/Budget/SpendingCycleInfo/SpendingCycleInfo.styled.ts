@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledMiddleScreenMenu } from "../../../components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import styled from 'styled-components';
+import { StyledMiddleScreenMenu } from '../../../components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
 
 export const StyledSpendingCycleInfo = styled(StyledMiddleScreenMenu)`
   .header {

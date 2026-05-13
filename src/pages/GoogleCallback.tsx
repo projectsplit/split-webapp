@@ -1,19 +1,18 @@
-import React, { useCallback, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
-import routes from "../routes";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { sendGoogleAccessToken } from "../api/auth/api";
-import Spinner from "../components/Spinner/Spinner";
+import React, { useCallback, useEffect } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import routes from '../routes';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { sendGoogleAccessToken } from '../api/auth/api';
+import Spinner from '../components/Spinner/Spinner';
 
 const GoogleCallback: React.FC = () => {
-    
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const mutation = useMutation({
     mutationFn: sendGoogleAccessToken,
     onSuccess: (res) => {
-      localStorage.setItem("accessToken", res.accessToken);
+      localStorage.setItem('accessToken', res.accessToken);
       navigate(routes.ROOT, { replace: true });
     },
     onError: () => {
@@ -22,7 +21,7 @@ const GoogleCallback: React.FC = () => {
   });
 
   const handleAuthCode = useCallback(() => {
-    const code = searchParams.get("code");
+    const code = searchParams.get('code');
     if (code && mutation.isIdle) {
       mutation.mutate({ code });
       setSearchParams({}, { replace: true });
@@ -34,7 +33,7 @@ const GoogleCallback: React.FC = () => {
   }, [handleAuthCode]);
 
   return (
-    <div style={{ textAlign: "center", marginTop: "20px" }}>
+    <div style={{ textAlign: 'center', marginTop: '20px' }}>
       {mutation.isPending && <Spinner />}
       {mutation.isSuccess && (
         <div>

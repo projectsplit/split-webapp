@@ -1,0 +1,41 @@
+import styled from 'styled-components';
+
+export const StyledPersonal = styled.div`
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  .noData {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+
+    .msg {
+      opacity: 0.5;
+      white-space: normal;
+      text-align: center;
+      max-width: 90%;
+      word-break: break-word;
+    }
+    .icon {
+      display: flex;
+      font-size: 100px;
+      opacity: 0.5;
+      margin-top: 20px;
+    }
+  }
+
+  .bottomMenu {
+  }
+
+  .spinner {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    flex: 1;
+  }
+`;

@@ -1,7 +1,7 @@
-import { StyledRecommendation } from "./Recommendation.styled";
-import IonIcon from "@reacticons/ionicons";
-import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import { RecommendationMessageProps } from "../../../interfaces";
+import { StyledRecommendation } from './Recommendation.styled';
+import IonIcon from '@reacticons/ionicons';
+import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
+import { RecommendationMessageProps } from '../../../interfaces';
 
 export default function Recommendation({
   onClick,
@@ -11,7 +11,7 @@ export default function Recommendation({
   style,
   currency,
   closeButton,
-  budgetType,
+  budgetFrequency,
 }: RecommendationMessageProps) {
   const displayedDays = (days: string) => {
     const days2number = parseFloat(days);
@@ -29,21 +29,21 @@ export default function Recommendation({
           </div>
           <div className="paragraphs">
             <div className="firstParagraph">
-              Reduce your spending by{" "}
+              Reduce your spending by{' '}
               <strong className="amount">
                 {displayCurrencyAndAmount(reduceAmount, currency)}
-              </strong>{" "}
-              per day to not exceed your monthly cap.
+              </strong>{' '}
+              per day to not exceed your {budgetFrequency === 0 ? 'weekly' : budgetFrequency === 1 ? 'monthly' : ''} cap.
             </div>
             <div className="secondParagraph">
-              At this rate you will reach your cap in{" "}
-              <strong>{displayedDays(days)}</strong>{" "}
-              {displayedDays(days) === "1" ? "day" : "days"} and you will be off
-              budget by{" "}
+              At this rate you will reach your cap in{' '}
+              <strong>{displayedDays(days)}</strong>{' '}
+              {displayedDays(days) === '1' ? 'day' : 'days'} and you will be off
+              budget by{' '}
               <strong className="amount">
                 {displayCurrencyAndAmount(offBudgetAmount, currency)}
-              </strong>{" "}
-              at the end of the {budgetType === 1 ? "month" : "week"}.
+              </strong>{' '}
+              at the end of the {budgetFrequency === 0 ? 'week' : budgetFrequency === 1 ? 'month' : 'period'}.
             </div>
           </div>
         </div>

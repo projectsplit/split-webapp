@@ -1,6 +1,5 @@
-import styled from "styled-components";
-import { StyledBottomMenuProps } from "../../../../interfaces";
-
+import styled from 'styled-components';
+import { StyledBottomMenuProps } from '../../../../interfaces';
 
 export const StyledBottomMenu = styled.div<StyledBottomMenuProps>`
   box-sizing: border-box;

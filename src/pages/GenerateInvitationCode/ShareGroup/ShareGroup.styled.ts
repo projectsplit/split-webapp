@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledShareGroup = styled.div`
   margin-top: 50px;
@@ -31,20 +31,20 @@ export const StyledShareGroup = styled.div`
       flex-direction: row;
       justify-content: center;
       gap: 10px;
-          cursor:pointer;
+      cursor: pointer;
       .copy {
         display: flex;
         align-self: center;
         font-size: 18px;
       }
     }
-    .expires{
-      display:flex;
-      flex-direction:row;
-      justify-content:center;
-       margin-top:50px;
-      .text{
-        color:${({theme})=>theme.redish}
+    .expires {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 50px;
+      .text {
+        color: ${({ theme }) => theme.redish};
       }
     }
   }
@@ -55,10 +55,10 @@ export const StyledShareGroup = styled.div`
     right: 0;
     display: flex;
     justify-content: center;
-    padding: 0 10px; 
+    padding: 0 10px;
   }
   .buttonContainer > button {
     width: 100%;
-    max-width: 100%; 
+    max-width: 100%;
   }
 `;

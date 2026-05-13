@@ -1,7 +1,6 @@
-import { OptionsContainerProps } from "../../interfaces";
-import { StyledOptionsContainer } from "./OptionsContainer.styled";
-import IonIcon from "@reacticons/ionicons";
-
+import { OptionsContainerProps } from '../../interfaces';
+import { StyledOptionsContainer } from './OptionsContainer.styled';
+import IonIcon from '@reacticons/ionicons';
 
 export default function OptionsContainer({
   children,
@@ -13,7 +12,6 @@ export default function OptionsContainer({
   right,
   onIconClick,
 }: OptionsContainerProps) {
-
   return (
     <StyledOptionsContainer
       onClick={onClick}
@@ -23,7 +21,12 @@ export default function OptionsContainer({
     >
       {children}
       {hasOption && (
-        <IonIcon name={optionname} className="arrow" onClick={onIconClick} style={{color:$optionColor}}/>
+        <IonIcon
+          name={optionname}
+          className="arrow"
+          onClick={onIconClick}
+          style={{ color: $optionColor }}
+        />
       )}
     </StyledOptionsContainer>
   );

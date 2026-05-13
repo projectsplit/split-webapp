@@ -1,6 +1,6 @@
-import { StyledConfirmationForBudgetSubmission } from "./ConfirmationForBudgetSubmission.styled";
-import MyButton from "../../../components/MyButton/MyButton";
-import { ConfirmationForBudgetSubmissionProps } from "../../../interfaces";
+import { StyledConfirmationForBudgetSubmission } from './ConfirmationForBudgetSubmission.styled';
+import MyButton from '../../../components/MyButton/MyButton';
+import { ConfirmationForBudgetSubmissionProps } from '../../../interfaces';
 
 export default function ConfirmationForBudgetSubmission({
   submitBudget,
@@ -10,7 +10,7 @@ export default function ConfirmationForBudgetSubmission({
   return (
     <StyledConfirmationForBudgetSubmission>
       <div className="header">
-        {" "}
+        {' '}
         <strong>Submit Budget</strong>
       </div>
       <div className="prompt">

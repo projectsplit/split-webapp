@@ -1,5 +1,5 @@
-import { SendMenuWrapperInterface } from "../../../interfaces";
-import { StyledSendMenu } from "./SendMenu.styled";
+import { SendMenuWrapperInterface } from '../../../interfaces';
+import { StyledSendMenu } from './SendMenu.styled';
 
 const SendMenuWrapper = ({
   title,
@@ -11,9 +11,8 @@ const SendMenuWrapper = ({
   setId,
   setShowIdError,
 }: SendMenuWrapperInterface) => {
-  
   const errorCondition =
-    title === "Sender"
+    title === 'Sender'
       ? idError.isSenderError && showIdError
       : idError.isReceiverError && showIdError;
 
@@ -22,7 +21,7 @@ const SendMenuWrapper = ({
       <div
         className="sendMenu"
         style={{
-          borderColor: errorCondition ? "#ba5d5d" : "#000000",
+          borderColor: errorCondition ? '#ba5d5d' : '#000000',
         }}
       >
         <div className="title">{title}</div>
@@ -32,20 +31,20 @@ const SendMenuWrapper = ({
               key={i}
               className="name"
               style={{
-                backgroundColor: id === m.id ? "white" : "",
-                color: id === m.id ? "#26272B" : "",
+                backgroundColor: id === m.id ? 'white' : '',
+                color: id === m.id ? '#26272B' : '',
               }}
               onClick={() => {
-                setId((prev) => (prev === m.id ? "" : m.id));
+                setId(m.id);
                 setShowIdError(false);
               }}
             >
-              {m.id === userMemberId ? "You" : m.name}
+              {m.id === userMemberId ? 'You' : m.name}
             </div>
           ))}
         </div>
       </div>
-      <span className="errorMsg">{errorCondition ? idError.error : ""}</span>
+      <span className="errorMsg">{errorCondition ? idError.error : ''}</span>
     </StyledSendMenu>
   );
 };

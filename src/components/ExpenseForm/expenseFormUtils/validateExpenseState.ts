@@ -1,49 +1,49 @@
-import currency from "currency.js";
-import { CategoryKey, CategoryMap } from "../formStore/formStoreTypes";
-import { PickerMember } from "../../../types";
-import { significantDigitsFromTicker } from "../../../helpers/openExchangeRates";
+import currency from 'currency.js';
+import { SplitMethod, CategoryMap } from '../formStore/formStoreTypes';
+import { PickerMember } from '../../../types';
+import { significantDigitsFromTicker } from '../../../helpers/openExchangeRates';
 
 export const validateExpenseState = (
   amount: string,
-  participantsCategory: CategoryKey,
-  payersCategory: CategoryKey,
+  participantsCategory: SplitMethod,
+  payersCategory: SplitMethod,
   currencySymbol: string,
   participantsByCategory: CategoryMap<PickerMember[]>,
   payersByCategory: CategoryMap<PickerMember[]>
 ) => {
-  let amountErr = "";
-  let participantsErr = "";
-  let payersErr = "";
+  let amountErr = '';
+  let participantsErr = '';
+  let payersErr = '';
   let showAmountErr = false;
 
   // Category skip
-  if (participantsCategory === "Shares" && payersCategory === "Shares") {
+  if (participantsCategory === 'Shares' && payersCategory === 'Shares') {
     return {
       isValid: true,
       errors: {
-        amount: "",
-        participants: "",
-        payers: "",
+        amount: '',
+        participants: '',
+        payers: '',
       },
       showAmountErr: false,
-      amountErr: "",
-      participantsErr: "",
-      payersErr: "",
+      amountErr: '',
+      participantsErr: '',
+      payersErr: '',
     };
   }
 
   const amountTrimmed = amount.trim();
   const isAmountEmptyOrZero =
-    !amountTrimmed || amountTrimmed === "0" || amountTrimmed === "0.";
+    !amountTrimmed || amountTrimmed === '0' || amountTrimmed === '0.';
 
   if (isAmountEmptyOrZero) {
     return {
       isValid: false,
       errors: {}, // or define logic for empty amount
       showAmountErr: false,
-      amountErr: "",
-      participantsErr: "",
-      payersErr: "",
+      amountErr: '',
+      participantsErr: '',
+      payersErr: '',
     };
   }
 
@@ -61,7 +61,7 @@ export const validateExpenseState = (
 
   // Participants validation
   const areParticipantsValid = selectedParticipants.every(
-    (p) => p.actualAmount !== "NaN" && Number(p.actualAmount) > 0
+    (p) => p.actualAmount !== 'NaN' && Number(p.actualAmount) > 0
   );
   const digits = significantDigitsFromTicker(currencySymbol);
   let isParticipantsSumInvalid = false;
@@ -82,14 +82,14 @@ export const validateExpenseState = (
   }
 
   participantsErr = !areParticipantsValid
-    ? "Participation amounts must be positive"
+    ? 'Participation amounts must be positive'
     : isParticipantsSumInvalid
-    ? "Participation amounts must add up to total"
-    : "";
+      ? 'Participation amounts must add up to total'
+      : '';
 
   // Payers validation
   const arePayersValid = selectedPayers.every(
-    (p) => p.actualAmount !== "NaN" && Number(p.actualAmount) > 0
+    (p) => p.actualAmount !== 'NaN' && Number(p.actualAmount) > 0
   );
   let isPayersSumInvalid = false;
   if (digits >= 3) {
@@ -109,10 +109,10 @@ export const validateExpenseState = (
   }
 
   payersErr = !arePayersValid
-    ? "Payment amounts must be positive"
+    ? 'Payment amounts must be positive'
     : isPayersSumInvalid
-    ? "Payment amounts must add up to total"
-    : "";
+      ? 'Payment amounts must add up to total'
+      : '';
 
   const isValid = !amountErr && !participantsErr && !payersErr;
 

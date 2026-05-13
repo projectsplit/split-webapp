@@ -1,6 +1,7 @@
 export const getIsoDateInfo = (
-  dateString: string
+  dateString: string | undefined
 ): { dayOfWeek: string; month: string; dateNumber: string } => {
+  if (!dateString) return { dayOfWeek: '', month: '', dateNumber: '' };
   const date = new Date(dateString);
 
   const dayOfWeek = date.getDay();
@@ -10,27 +11,27 @@ export const getIsoDateInfo = (
   const dateNumber = date.getDate().toString();
 
   const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
   ];
   const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   const dayOfWeekName = daysOfWeek[dayOfWeek];

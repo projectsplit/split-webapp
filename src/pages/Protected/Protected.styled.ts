@@ -1,7 +1,7 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const StyledProtected = styled.div<{ $shouldStyleBorder: boolean }>`
-${({ $shouldStyleBorder }) =>
+  ${({ $shouldStyleBorder }) =>
     $shouldStyleBorder &&
     `
     border: 2px solid #D79244;
@@ -9,11 +9,12 @@ ${({ $shouldStyleBorder }) =>
   `}
   overflow: auto;
   position: fixed;
+  top: 0;
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-> div[style*="position: fixed"] {
+  > div[style*='position: fixed'] {
     z-index: 4; /* Ensure fixed children (background) are above */
   }
 `;

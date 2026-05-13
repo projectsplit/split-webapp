@@ -1,11 +1,11 @@
-import { Context } from "chartjs-plugin-datalabels/types/context";
-import { roundThousandsAndMillions } from "../../../../../helpers/roundThousandsAndMils";
-import { Frequency } from "../../../../../types";
-import { convertToFullMonthNames } from "../../../../../helpers/monthlyDataHelpers";
-import { swapMonthDayToDayMonth } from "../../../helpers/swapMonthDayToDayMonth";
-import { displayCurrencyAndAmount } from "../../../../../helpers/displayCurrencyAndAmount";
-import { months } from "../../../../../constants";
-import { getSymbolFromCurrency } from "../../../../../helpers/currency-symbol-map";
+import { Context } from 'chartjs-plugin-datalabels/types/context';
+import { roundThousandsAndMillions } from '../../../../../helpers/roundThousandsAndMils';
+import { Frequency } from '../../../../../types';
+import { convertToFullMonthNames } from '../../../../../helpers/monthlyDataHelpers';
+import { swapMonthDayToDayMonth } from '../../../helpers/swapMonthDayToDayMonth';
+import { displayCurrencyAndAmount } from '../../../../../helpers/displayCurrencyAndAmount';
+import { months } from '../../../../../constants';
+import { getSymbolFromCurrency } from '../../../../../helpers/currency-symbol-map';
 
 export const getChartOptions = (
   isSuccess: boolean,
@@ -19,12 +19,12 @@ export const getChartOptions = (
 ) => {
   const date = new Date(selectedYear, selectedTimeCycleIndex, 1);
 
-  const dateOptions: Intl.DateTimeFormatOptions = { month: "long" };
+  const dateOptions: Intl.DateTimeFormatOptions = { month: 'long' };
 
-  const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
+  const fullMonthName = date.toLocaleDateString('en-US', dateOptions);
 
-  const currencySymbol = getSymbolFromCurrency(currency)
-  
+  const currencySymbol = getSymbolFromCurrency(currency);
+
   return {
     isSuccess: isSuccess,
     responsive: true,
@@ -35,13 +35,13 @@ export const getChartOptions = (
       },
       title: {
         display: false,
-        text: "Chart.js Line Chart",
+        text: 'Chart.js Line Chart',
       },
       tooltip: {
         yAlign: (ctx: any) => {
           // Adjust yAlign based on data value
-          if (ctx.tooltip.dataPoints[0].raw > 0) return 'top'
-          return 'bottom'
+          if (ctx.tooltip.dataPoints[0].raw > 0) return 'top';
+          return 'bottom';
         },
         displayColors: false,
         enabled: true,
@@ -50,44 +50,55 @@ export const getChartOptions = (
             const index = context[0].dataIndex;
             switch (selectedCycle) {
               case Frequency.Monthly:
-                return labels[index] + " " + fullMonthName + " " + selectedYear;
+                return labels[index] + ' ' + fullMonthName + ' ' + selectedYear;
               case Frequency.Weekly:
-                return swapMonthDayToDayMonth(convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex])[index] + " " + selectedYear;
+                return (
+                  swapMonthDayToDayMonth(
+                    convertToFullMonthNames(monthsAndDaysArrays)[
+                      selectedTimeCycleIndex
+                    ]
+                  )[index] +
+                  ' ' +
+                  selectedYear
+                );
               case Frequency.Annually:
-                return months[index] + " " + selectedYear;
+                return months[index] + ' ' + selectedYear;
             }
           },
           label: (context: any) => {
             const value = context.parsed.y;
-            return value >= 0 ?
-              `Total spent:` + ` ` + `${displayCurrencyAndAmount(value.toString(), currency)}`
-              :
-              `Total received:` + ` ` + `${displayCurrencyAndAmount((-value).toString(), currency)}`;
+            return value >= 0
+              ? `Total spent:` +
+                  ` ` +
+                  `${displayCurrencyAndAmount(value.toString(), currency)}`
+              : `Total received:` +
+                  ` ` +
+                  `${displayCurrencyAndAmount((-value).toString(), currency)}`;
           },
         },
       },
       datalabels: {
         display: true,
-        color: "white",
+        color: 'white',
         font: {
           size: 12, //TODO adjust based on screen size
-          weight: "bold",
+          weight: 'bold',
         },
         anchor: (context: any) => {
-          const anchor = []
+          const anchor = [];
           if (context.dataset.data[context.dataIndex] >= 0) {
-            anchor.push('end')
+            anchor.push('end');
           } else {
-            anchor.push('start')
+            anchor.push('start');
           }
           return anchor;
         },
         align: (context: any) => {
-          const align = []
+          const align = [];
           if (context.dataset.data[context.dataIndex] >= 0) {
-            align.push('top')
+            align.push('top');
           } else {
-            align.push('bottom')
+            align.push('bottom');
           }
           return align;
         },
@@ -96,13 +107,13 @@ export const getChartOptions = (
         formatter: (value: number) => {
           if (value < 0) {
             // If negative, format within parentheses
-            return `(${currencySymbol}${roundThousandsAndMillions(value)})`
+            return `(${currencySymbol}${roundThousandsAndMillions(value)})`;
           }
           if (value > 0) {
             // If non-negative, format normally
             return `${currencySymbol}` + roundThousandsAndMillions(value);
           }
-          if (value === 0) return ""
+          if (value === 0) return '';
         },
       },
     },
@@ -120,9 +131,9 @@ export const getChartOptions = (
           display: false,
         },
         ticks: {
-          color: "#DDDDDD",
+          color: '#DDDDDD',
           font: {
-            weight: "bold",
+            weight: 'bold',
             size: 20, //TODO adjust based on screen size
           },
           callback: (index: number, value: number) => {
@@ -131,7 +142,6 @@ export const getChartOptions = (
         },
       },
       y: {
-
         offset: true,
         display: false,
 

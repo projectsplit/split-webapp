@@ -1,19 +1,19 @@
-import { useState } from "react";
-import { StyledRenameGroupMenu } from "./RenameGroupMenu.styled";
-import { RenameGroupMenuProps } from "../../../interfaces";
-import MyButton from "../../MyButton/MyButton";
-import Separator from "../../Separator/Separator";
-import IonIcon from "@reacticons/ionicons";
-import { useUpdateGroupName } from "../../../api/services/useUpdateGroupName";
-import { useSignal } from "@preact/signals-react";
+import { useState } from 'react';
+import { StyledRenameGroupMenu } from './RenameGroupMenu.styled';
+import { RenameGroupMenuProps } from '../../../interfaces';
+import MyButton from '../../MyButton/MyButton';
+import Separator from '../../Separator/Separator';
+import IonIcon from '@reacticons/ionicons';
+import { useUpdateGroupName } from '../../../api/auth/CommandHooks/useUpdateGroupName';
+import { useSignal } from '@preact/signals-react';
 
 export default function RenameGroupMenu({
   menu,
   groupId,
   groupName,
 }: RenameGroupMenuProps) {
-  const changeNameError = useSignal<string>("");
-  const [newGroupName, setNewGroupName] = useState(groupName || "");
+  const changeNameError = useSignal<string>('');
+  const [newGroupName, setNewGroupName] = useState(groupName || '');
 
   const { mutate: updategroupName, isPending } = useUpdateGroupName(
     groupId,
@@ -26,24 +26,20 @@ export default function RenameGroupMenu({
 
   return (
     <StyledRenameGroupMenu>
-      {changeNameError.value !== "" ? (
+      {changeNameError.value !== '' ? (
         <div className="errorWrapper">
           <div className="errorMessage">
             <div className="closeButton" onClick={() => (menu.value = null)}>
               <IonIcon name="close-outline" className="close" />
             </div>
             <span className="exclamation">❗</span>
-            <span className="error">
-             {changeNameError}
-            </span>
+            <span className="error">{changeNameError}</span>
           </div>
         </div>
       ) : (
         <>
           <div className="headerSeparator">
             <div className="header">
-              
-
               <input
                 className="input"
                 value={newGroupName}

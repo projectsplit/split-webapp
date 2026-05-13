@@ -1,8 +1,9 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { CategoryButton } from "../CategoryButton/CategoryButton";
-import Separator from "../Separator/Separator";
-import { CategorySelectorProps } from "../../interfaces";
-import { StyledCategorySelector } from "./CategorySelector.styled";
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { CategoryButton } from '../CategoryButton/CategoryButton';
+import Separator from '../Separator/Separator';
+import { CategorySelectorProps } from '../../interfaces';
+import { StyledCategorySelector } from './CategorySelector.styled';
+import { useCategorySwipe } from './useCategorySwipe';
 
 export const CategorySelector = ({
   categories,
@@ -18,9 +19,9 @@ export const CategorySelector = ({
     const currentValue = navLinkUse
       ? activeCat.charAt(0).toUpperCase() + activeCat.slice(1)
       : activeCatAsState
-      ? activeCatAsState.value.charAt(0).toUpperCase() +
-        activeCatAsState.value.slice(1)
-      : activeCat.charAt(0).toUpperCase() + activeCat.slice(1);
+        ? activeCatAsState.value.charAt(0).toUpperCase() +
+          activeCatAsState.value.slice(1)
+        : activeCat.charAt(0).toUpperCase() + activeCat.slice(1);
     const initialIndex = Object.values(categories).indexOf(currentValue);
     return initialIndex !== -1 ? categoryKeys[initialIndex] : categoryKeys[0];
   };
@@ -28,6 +29,13 @@ export const CategorySelector = ({
   const [activeCategory, setActiveCategory] = useState(
     getInitialActiveCategory
   );
+
+  const { onTouchStart, onTouchEnd } = useCategorySwipe({
+    categories,
+    activeCat,
+    navLinkUse,
+    activeCatAsState,
+  });
 
   useEffect(() => {
     const updatedCategory = getInitialActiveCategory();
@@ -37,9 +45,9 @@ export const CategorySelector = ({
   }, [activeCatAsState?.value, activeCat]);
 
   const [indicatorPosition, setIndicatorPosition] = useState({
-    left: "0px",
-    width: "0px",
-    transition: "none", //Start without transition
+    left: '0px',
+    width: '0px',
+    transition: 'none', //Start without transition
   });
 
   const categoryRefs: Record<string, React.RefObject<HTMLButtonElement>> = {};
@@ -58,7 +66,7 @@ export const CategorySelector = ({
       setIndicatorPosition({
         left: `${offsetLeft + clientWidth / 2}px`,
         width: `${reducedWidth}px`,
-        transition: "none", // No transition on first render
+        transition: 'none', // No transition on first render
       });
     }
 
@@ -78,26 +86,29 @@ export const CategorySelector = ({
         setIndicatorPosition({
           left: `${offsetLeft + clientWidth / 2}px`,
           width: `${reducedWidth}px`,
-          transition: "left 0.15s ease-in-out", //Apply transition only after first render
+          transition: 'left 0.15s ease-in-out', //Apply transition only after first render
         });
       }
     };
 
     updateIndicator();
-    window.addEventListener("resize", updateIndicator);
-    return () => window.removeEventListener("resize", updateIndicator);
+    window.addEventListener('resize', updateIndicator);
+    return () => window.removeEventListener('resize', updateIndicator);
   }, [activeCategory, activeCatAsState?.value, activeCat]);
 
-  const isSmallScreen = window.matchMedia("(max-width: 400px)").matches;
+  const isSmallScreen = window.matchMedia('(max-width: 400px)').matches;
   const getCategoryLabel = (label: string) => {
-    if (label === "Percentages" && isSmallScreen) {
-      return "%ages";
+    if (label === 'Percentages' && isSmallScreen) {
+      return '%ages';
     }
     return label;
   };
 
   return (
-    <StyledCategorySelector>
+    <StyledCategorySelector
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       <div className="categories">
         {Object.entries(categories).map(([key, label]) => (
           <CategoryButton
@@ -127,7 +138,7 @@ export const CategorySelector = ({
           style={{
             left: indicatorPosition.left,
             width: indicatorPosition.width,
-            transform: "translateX(-50%)",
+            transform: 'translateX(-50%)',
             transition: indicatorPosition.transition,
           }}
         />

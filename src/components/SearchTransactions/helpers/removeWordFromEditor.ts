@@ -3,7 +3,7 @@ import {
   $isRangeSelection,
   $isTextNode,
   LexicalEditor,
-} from "lexical";
+} from 'lexical';
 
 export const removeWordFromEditor = (
   editor: LexicalEditor,
@@ -20,7 +20,7 @@ export const removeWordFromEditor = (
 
         const triggerIndex = textContent.indexOf(wordToRemove);
         if (triggerIndex !== -1) {
-          anchorNode.spliceText(triggerIndex, wordToRemove.length, "");
+          anchorNode.spliceText(triggerIndex, wordToRemove.length, '');
           selection.setTextNodeRange(
             anchorNode,
             triggerIndex,

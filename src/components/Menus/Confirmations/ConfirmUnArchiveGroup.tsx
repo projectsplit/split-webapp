@@ -1,20 +1,20 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { ConfirmArchiveGroupProps } from "../../../interfaces";
-import Confirmation from "./Confirmation";
-import { useArchiveGroup } from "../../../api/services/useArchiveGroup";
-import { Signal, useSignal } from "@preact/signals-react";
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { ConfirmArchiveGroupProps } from '../../../interfaces';
+import Confirmation from './Confirmation';
+import { useArchiveGroup } from '../../../api/auth/CommandHooks/useArchiveGroup';
+import { Signal, useSignal } from '@preact/signals-react';
 
 export default function ConfirmUnArchiveGroup({
   menu,
   groupId,
   openGroupOptionsMenu,
-  navigateToGroups
+  navigateToGroups,
 }: ConfirmArchiveGroupProps) {
-  const noGroupFoundError = useSignal<string>("");
+  const noGroupFoundError = useSignal<string>('');
   const navigate = useNavigate();
   const { activeGroupCatAsState, groupIsArchived } = useOutletContext<{
     activeGroupCatAsState: Signal<string>;
-    groupIsArchived: Signal<boolean>
+    groupIsArchived: Signal<boolean>;
   }>();
 
   const { mutate: archiveGroup, isPending } = useArchiveGroup(
@@ -26,9 +26,9 @@ export default function ConfirmUnArchiveGroup({
   const handleConfirm = () => {
     archiveGroup(false);
     openGroupOptionsMenu.value = false;
-    activeGroupCatAsState.value = "Active";
+    activeGroupCatAsState.value = 'Active';
     if (navigateToGroups) {
-      navigate("/shared");
+      navigate('/shared');
     }
     groupIsArchived.value = false;
   };
@@ -38,7 +38,7 @@ export default function ConfirmUnArchiveGroup({
       menu={menu}
       isLoading={isPending}
       onClick={handleConfirm}
-      header={"Confirmation"}
+      header={'Confirmation'}
     >
       <div className="archiveGroupText">
         <span>Would you like to un-archive this group? </span>

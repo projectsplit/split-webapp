@@ -1,6 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const ScrollableContainer = styled.div<{ $contentEditableHeight: number}>`
+export const ScrollableContainer = styled.div<{
+  $contentEditableHeight: number;
+}>`
   margin-top: 1rem;
   height: calc(100vh - 18rem);
   overflow-y: auto;
@@ -33,4 +35,3 @@ export const ScrollableContainer = styled.div<{ $contentEditableHeight: number}>
     }
   }
 `;
-

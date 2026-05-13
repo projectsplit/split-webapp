@@ -1,21 +1,21 @@
 export const getOrdinalSuffix = (x: string | undefined): string => {
-  if (x === undefined) return "";
+  if (x === undefined) return '';
   const number = parseFloat(x);
   const lastDigit = number % 10;
   const lastTwoDigits = number % 100;
 
   if (lastTwoDigits >= 11 && lastTwoDigits <= 13) {
-    return "th"; // 11th, 12th, and 13th are exceptions
+    return 'th'; // 11th, 12th, and 13th are exceptions
   }
 
   switch (lastDigit) {
     case 1:
-      return "st";
+      return 'st';
     case 2:
-      return "nd";
+      return 'nd';
     case 3:
-      return "rd";
+      return 'rd';
     default:
-      return "th";
+      return 'th';
   }
 };

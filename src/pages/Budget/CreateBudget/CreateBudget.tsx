@@ -1,203 +1,233 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import {
-  Frequency,
-  SpendingInfoResponse,
   UserInfo,
-} from "../../../types";
-import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import "../../../styles/freakflags/freakflags.css";
-import { StyledCreateBudget } from "./CreateBudget.styled";
-import SetUpSpendingGoal from "./SetUpSpendingGoal/SetUpSpendingGoal";
-import SpendingCycle from "./SpendingCycle/SpendingCycle";
-import { useSignal } from "@preact/signals-react";
-import MyButton from "../../../components/MyButton/MyButton";
-import TopBarWithBackButton from "../../../components/TopBarWithBackButton/TopBarWithBackButton";
-import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
-import { useCreateBudget } from "../../../api/services/useCreateBudget";
-import { useSpendingInfo } from "../../../api/services/useSpengindInfo";
-import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import InfoBoxAnimation from "../../../components/Menus/MenuAnimations/InfoBoxAnimation";
-import CreateBudgetConfirmationAnimation from "../../../components/Menus/MenuAnimations/BudgetAnimations/CreateBudgetConfirmationAnimation";
-import { handleInputChange } from "../../../helpers/handleInputChange";
+} from '../../../types';
+import '../../../styles/freakflags/freakflags.css';
+import { StyledCreateBudget } from './CreateBudget.styled';
+import { useSignal } from '@preact/signals-react';
+import MyButton from '../../../components/MyButton/MyButton';
+import TopBarWithBackButton from '../../../components/TopBarWithBackButton/TopBarWithBackButton';
+import CurrencyOptionsAnimation from '../../../components/Animations/CurrencyOptionsAnimation';
+import { useCreateBudget } from '../../../api/auth/CommandHooks/useCreateBudget';
+
+import MenuAnimationBackground from '../../../components/Animations/MenuAnimationBackground';
+import InfoBoxAnimation from '../../../components/Animations/InfoBoxAnimation';
+import CreateBudgetConfirmationAnimation from '../../../components/Animations/BudgetAnimations/CreateBudgetConfirmationAnimation';
+import { handleInputChange } from '../../../helpers/handleInputChange';
+import { ScopeSelectionMenu } from '@/components/Menus/ScopeSelectionMenu/ScopeSelectionMenu';
+import {
+  useCreateBudgetActions,
+  useCreateBudgetData,
+} from './hooks/useCreateBudgetActions';
+import { SecondPage } from './SecondPage/SecondPage';
+import { BackAndForthAnimation } from '@/components/Animations/BackAndForthAnimation/BackAndForthAnimation';
+import { FirstPage } from './FirstPage/FirstPage';
+import SpendingCycleInfo from '../SpendingCycleInfo/SpendingCycleInfo';
+import MakeBudgetActiveMenuAnimation from '@/components/Animations/MakeBudgetActiveMenuAnimation';
+import useBudgetInfo from '@/api/auth/QueryHooks/useBudgetInfo';
+import useGetInactiveBudgetInfo from '@/api/auth/QueryHooks/useGetInactiveBudgetInfo';
+import { useEditBudget } from '@/api/auth/CommandHooks/useEditBudget';
 
 export default function CreateBudget() {
-
-  const [amount, setAmount] = useState<string>("");
-  const displayedAmount = useSignal<string>("");
-  const openCalendar = useSignal<boolean>(false);
-  const calendarDay = useSignal<string>("");
-  const budgettype = useSignal<Frequency>(Frequency.Monthly);
-  const hasSwitchedBudgetType = useSignal<boolean>(false);
-  const submitBudgetErrors = useSignal<any[]>([]);
+  const data = useCreateBudgetData();
+  const actions = useCreateBudgetActions();
   const menu = useSignal<string | null>(null);
-   const { userInfo } = useOutletContext<{
+  const makeBudgetActiveMenu = useSignal<string | null>(null);
+  const scopeMenu = useSignal<string | null>(null);
+
+  const { userInfo, timeZoneId } = useOutletContext<{
     userInfo: UserInfo;
+    timeZoneId: string;
   }>();
 
-  const [currencySymbol, setCurrencySymbol] = useState<string>('');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const budgetInfoQueryKey = ["budget"];
-  const spendingInfoQueryKey = ["spending", budgettype.value, currencySymbol];
+  const { data: activeBudgetData } = useBudgetInfo();
+  const { data: inactiveBudgetsData } = useGetInactiveBudgetInfo();
 
-  const createBudget = useCreateBudget(navigate,submitBudgetErrors)
+  const { mutateAsync: createBudget, isPending: isCreatePending } = useCreateBudget(
+    navigate,
+    data.serverErrors,
+    menu,
+  );
+
+  const { mutateAsync: updateBudget, isPending: isUpdatePending } = useEditBudget(
+    navigate,
+    data.serverErrors,
+    menu,
+  );
+
+  const isPending = isCreatePending || isUpdatePending;
+  const location = useLocation();
+  const populatedKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (userInfo?.currency) {
-      setCurrencySymbol(userInfo.currency);
+    if (location.state?.editBudget) {
+      if (populatedKeyRef.current !== location.key) {
+        populatedKeyRef.current = location.key;
+        actions.populateForm(location.state.editBudget, userInfo?.currency || '');
+      }
+    } else {
+      populatedKeyRef.current = null;
+      if (data.isEditMode) {
+        actions.initForm(userInfo?.currency || '');
+      } else if (userInfo?.currency && !data.currencySymbol) {
+        actions.setCurrencySymbol(userInfo.currency);
+      }
     }
-  }, [userInfo]);
-
-  // const { data, isFetching, isStale } = useSpendingInfo(
-  //   budgettype.value,
-  //   currencySymbol
-  // );
-
-  const data = {
-    "budgetSubmitted": false,
-    "totalAmountSpent": "0",
-    "currency": "USD"
-}
-  const isFetching=false;
-  const isStale=false;
-
+  }, [location.state, location.key, userInfo, data.isEditMode, data.currencySymbol]);
 
   const handleInputChangeCallback = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      handleInputChange(e, currencySymbol, displayedAmount, setAmount);
-  
+      handleInputChange(
+        e,
+        data.currencySymbol,
+        data.displayedAmount,
+        actions.setAmount
+      );
+      actions.setError('amountError', '');
+      actions.setError('showAmountError', false);
     },
-    [currencySymbol, displayedAmount, setAmount]
+    [data.currencySymbol, data.displayedAmount, actions.setAmount]
   );
 
-  const getDayNumber = (day: string): string | null => {
-    const index = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].indexOf(day);
-    if (index !== -1) return (index + 1).toString();
-    return null;
-  };
-
   const submitBudget = async () => {
-    if (budgettype.value === Frequency.Monthly) {
-      createBudget.mutate({
-        amount: amount,
-        budgetType: budgettype.value,
-        currency: currencySymbol,
-        day: calendarDay.value.toString(),
-      });
+    if (
+      !data.isEditMode &&
+      (!!activeBudgetData ||
+        (!!inactiveBudgetsData && inactiveBudgetsData?.budgets.length > 0))
+    ) {
+      makeBudgetActiveMenu.value = 'makeBudgetActive';
+      return;
     }
-    if (budgettype.value === Frequency.Weekly) {
-      createBudget.mutate({
-        amount: amount,
-        budgetType: budgettype.value,
-        currency: currencySymbol,
-        day: getDayNumber(calendarDay.value),
-      });
-    }
-
-    submitBudgetErrors.value = [];
-    openCalendar.value = false;
-   queryClient.invalidateQueries({ queryKey: budgetInfoQueryKey, exact:false});
-    hasSwitchedBudgetType.value = false;
-    displayedAmount.value = "";
-    menu.value = null;
-    setAmount("");
-  };
-
-  const querydata = queryClient.getQueryData(
-    spendingInfoQueryKey
-  ) as SpendingInfoResponse;
-
-  const handleBackButtonClick = () => {
-    if (data && data.budgetSubmitted) {
-      navigate(`/budget/current`);
-    } else {
-      navigate(`/`);
-    }
+    setAnimDirection('none');
+    await actions.submitBudget({
+      createBudgetMutation: createBudget,
+      updateBudgetMutation: updateBudget,
+      menu,
+      step: data.currentStep,
+      activate: !data.isEditMode ? true : undefined,
+    });
   };
 
 
   const handldeCurrencyOptionsClick = (curr: string) => {
-    //setCurrency(currency);
-    setCurrencySymbol(curr);
-    queryClient.invalidateQueries({ queryKey: ["spending", budgettype, curr], exact: false });
-    queryClient.getQueryData(["spending", budgettype, curr]);
+    actions.setCurrencySymbol(curr);
+    queryClient.invalidateQueries({
+      queryKey: ['spending', data.budgetFrequency, curr],
+      exact: false,
+    });
+    queryClient.getQueryData(['spending', data.budgetFrequency, curr]);
     menu.value = null;
+  };
+
+  const [animDirection, setAnimDirection] = useState<
+    'forward' | 'back' | 'none'
+  >('forward');
+
+  const handleNext = () => {
+    const { errors } = actions.validateForm(data.currentStep);
+    const hasStep1Errors =
+      !!errors.amountError ||
+      !!errors.spendingCycleError ||
+      !!errors.commencementDayError;
+
+    if (!hasStep1Errors) {
+      setAnimDirection('forward');
+      actions.setStep(2);
+    }
+  };
+
+  const handleBack = () => {
+    setAnimDirection('back');
+    actions.setStep(1);
   };
 
   return (
     <StyledCreateBudget>
       <TopBarWithBackButton
-        header="Budget"
-        onClick={() => handleBackButtonClick()}
+        header={data.isEditMode ? "Edit Budget" : "Create Budget"}
+        onClick={() => {
+          if (data.currentStep === 2) {
+            handleBack();
+          } else {
+            actions.resetForm();
+            if (data.isEditMode) {
+              navigate('/budget/manage');
+            } else {
+              navigate('/budget/actions');
+            }
+          }
+        }}
       />
-
-      <SetUpSpendingGoal
-        menu={menu}
-        displayedAmount={displayedAmount}
-        currency={currencySymbol}
-        submitBudgetErrors={submitBudgetErrors}
-        onChange={handleInputChangeCallback}
-      />
-
-      <SpendingCycle
-        submitBudgetErrors={submitBudgetErrors}
-        calendarDay={calendarDay}
-        budgettype={budgettype}
-        menu={menu}
-        isStale={isStale}
-        openCalendar={openCalendar}
-        hasSwitchedBudgetType={hasSwitchedBudgetType}
-      />
-
-      {isFetching ? (
-        <></>
-      ) : (
-        querydata && (
-          <div className="spentInfo">
-            <div>
-              You have spent{" "}
-              {displayCurrencyAndAmount(
-                data?.totalAmountSpent,
-                querydata?.currency
-              )}{" "}
-              this {budgettype.value === 1 ? "month" : "week"}
-            </div>
-          </div>
-        )
-      )}
-
+      <BackAndForthAnimation
+        firstChild={
+          <FirstPage
+            data={data}
+            actions={actions}
+            menu={menu}
+            handleInputChangeCallback={handleInputChangeCallback}
+            timeZoneId={timeZoneId}
+          />
+        }
+        secondChild={
+          <SecondPage data={data} actions={actions} scopeMenu={scopeMenu} />
+        }
+        currentStep={data.currentStep}
+        animDirection={animDirection}
+      ></BackAndForthAnimation>
       <div className="submitButton">
         <MyButton
-        fontSize="16"
-          onClick={() => {
-            if (querydata.budgetSubmitted) {
-              menu.value = "createBudgetConfirmation";
-            } else {
-              submitBudget();
-            }
-          }}
+          fontSize="16"
+          onClick={data.currentStep === 1 ? handleNext : submitBudget}
+          isLoading={isPending}
         >
-          Submit Budget
+          {data.currentStep === 1 ? 'Next' : data.isEditMode ? 'Update Budget' : 'Submit Budget'}
         </MyButton>
       </div>
 
       <MenuAnimationBackground menu={menu} />
-
+      <MenuAnimationBackground menu={makeBudgetActiveMenu} />
+      {scopeMenu.value === 'scopeSelector' && (
+        <ScopeSelectionMenu
+          menu={scopeMenu}
+          scopeState={data.scopeState}
+          targetGroupIds={data.targetGroupIds}
+          allGroupsSelected={data.allGroupsSelected}
+        />
+      )}
       <CreateBudgetConfirmationAnimation
         menu={menu}
-        submitBudget={submitBudget}
+        submitBudget={async () => {
+          await submitBudget();
+        }}
       />
-
-      <InfoBoxAnimation menu={menu} />
-
+      <InfoBoxAnimation menu={menu}>
+        <SpendingCycleInfo menu={menu} />
+      </InfoBoxAnimation>
+      <MakeBudgetActiveMenuAnimation
+        menu={makeBudgetActiveMenu}
+        hasActiveBudgetData={!!activeBudgetData}
+        hasInactiveBudgetData={
+          !!inactiveBudgetsData && inactiveBudgetsData.budgets.length > 0
+        }
+        onConfirm={(activate: boolean) => {
+          actions.submitBudget({
+            createBudgetMutation: createBudget,
+            updateBudgetMutation: updateBudget,
+            menu: makeBudgetActiveMenu,
+            step: data.currentStep,
+            activate,
+          });
+        }}
+      />
       <CurrencyOptionsAnimation
         currencyMenu={menu}
         clickHandler={handldeCurrencyOptionsClick}
-        selectedCurrency={currencySymbol}
+        selectedCurrency={data.currencySymbol}
       />
-
     </StyledCreateBudget>
   );
 }

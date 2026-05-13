@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const StyledOptionsButton = styled.div`
   border-radius: 8px;

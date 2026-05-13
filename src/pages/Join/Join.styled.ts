@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledMiddleScreenMenu } from "../../components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import styled from 'styled-components';
+import { StyledMiddleScreenMenu } from '../../components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
 
 export const StyledJoin = styled(StyledMiddleScreenMenu)`
   display: flex;
@@ -20,7 +20,7 @@ export const StyledJoin = styled(StyledMiddleScreenMenu)`
     margin-top: 0.5rem;
     height: 100%;
   }
-  
+
   .headerSeparator {
     position: sticky;
     top: 0;

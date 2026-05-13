@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledLabelsPillsDisplay = styled.div`
   display: flex;
@@ -18,7 +18,7 @@ export const StyledLabelsPillsDisplay = styled.div`
     padding-bottom: 4px;
   }
 
-  .type{
+  .type {
     color: ${({ theme }) => theme.grey};
   }
 `;

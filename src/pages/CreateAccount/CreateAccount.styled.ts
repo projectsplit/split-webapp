@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledCreateAccount = styled.div`
   margin: 0rem 2rem 0rem 2rem;
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.lightColor};
-  
+
   .loginBox {
     padding: 1rem 0.8rem;
     border-radius: 10px;
@@ -13,11 +13,11 @@ export const StyledCreateAccount = styled.div`
     flex-direction: column;
     background-color: ${({ theme }) => theme.layer1};
     border-color: ${({ theme }) => theme.layer1};
-    border-style: "solid";
+    border-style: 'solid';
 
     .promptMsg {
-      display:flex;
-      justify-content:center;
+      display: flex;
+      justify-content: center;
       color: ${({ theme }) => theme.lightColor};
       padding-bottom: 1rem;
       white-space: initial;
@@ -40,5 +40,4 @@ export const StyledCreateAccount = styled.div`
       }
     }
   }
-
-  `
+`;

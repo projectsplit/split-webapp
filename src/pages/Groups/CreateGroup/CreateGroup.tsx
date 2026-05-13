@@ -1,28 +1,27 @@
-import React, { useState } from "react";
-import { StyledCreateGroup } from "./CreateGroup.styled";
-import { IoClose } from "react-icons/io5";
-import { CreateGroupProps } from "../../../interfaces";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createGroupFn } from "../../../api/services/api";
-import { Currency, GroupRequest, UserInfo } from "../../../types";
-import { FaAngleDown } from "react-icons/fa";
-import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import { useSignal } from "@preact/signals-react";
-import { currencyData } from "../../../helpers/openExchangeRates";
-import { useOutletContext } from "react-router-dom";
-import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
-import MyButton from "../../../components/MyButton/MyButton";
-import FormInput from "../../../components/FormInput/FormInput";
-//TODO invite people when creating group. When create group is hit then multiple invitations should be sent
+import React, { useState } from 'react';
+import { StyledCreateGroup } from './CreateGroup.styled';
+import { IoClose } from 'react-icons/io5';
+import { CreateGroupProps } from '../../../interfaces';
+import { Currency, UserInfo } from '../../../types';
+import { FaAngleDown } from 'react-icons/fa';
+import MenuAnimationBackground from '../../../components/Animations/MenuAnimationBackground';
+import { useSignal } from '@preact/signals-react';
+import { currencyData } from '../../../helpers/openExchangeRates';
+import { useOutletContext } from 'react-router-dom';
+import CurrencyOptionsAnimation from '../../../components/Animations/CurrencyOptionsAnimation';
+import MyButton from '../../../components/MyButton/MyButton';
+import FormInput from '../../../components/FormInput/FormInput';
+import { useCreateGroup } from '@/api/auth/CommandHooks/useCreateGroup';
+import InviteUsersToNewGroupAnimation from '@/components/Animations/InviteUsersToNewGroupAnimation';
+import { useMostRecentContext } from '@/api/auth/CommandHooks/useMostRecentContext';
 
 export default function CreateGroup({
   menu,
   currencyMenu,
   nodeRef,
 }: CreateGroupProps) {
-  const [groupName, setGroupName] = useState<string>("");
-  const queryClient = useQueryClient();
-
+  const inviteUsersMenu = useSignal<string | null>(null); //CHANGE HERE
+  const [groupName, setGroupName] = useState<string>('');
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
   }>();
@@ -30,21 +29,28 @@ export default function CreateGroup({
   const userCurrency = userInfo?.currency;
   const [currencySymbol, setCurrencySymbol] = useState<string>(userCurrency);
   const allCurrencies = useSignal<Currency[]>(currencyData);
+  const newGroup = useSignal<{ groupName: string; groupId: string }>({
+    groupName: '',
+    groupId: '',
+  });
 
   const selectedCurrency = allCurrencies.value.find(
     (c) => c.symbol === currencySymbol
   );
-  const {mutate:createGroup, isPending} = useMutation<any, any, GroupRequest>({
-    mutationFn: (groupData) => createGroupFn(groupData),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["shared", "active"] });
-      await queryClient.invalidateQueries({ queryKey: ["home"] });
-      menu.value = null;
-    },
-  });
+  const { mutate: createGroup, isPending } = useCreateGroup();
+  const updateMostRecentContextId = useMostRecentContext();
 
   const onClickHandler = () => {
-    createGroup({ name: groupName, currency: currencySymbol });
+    createGroup(
+      { name: groupName, currency: currencySymbol },
+      {
+        onSuccess: (data) => {
+          updateMostRecentContextId.mutate(data.groupId);
+          newGroup.value = { groupName, groupId: data.groupId };
+          inviteUsersMenu.value = 'inviteUsersToNewGroup';
+        },
+      }
+    );
   };
 
   const handldeCurrencyOptionsClick = (curr: string) => {
@@ -66,7 +72,7 @@ export default function CreateGroup({
         </div>
       </div>
       <div className="inputAndCurrWrapper">
-        <div className="input">
+        <div className="formInputWrapper">
           <FormInput
             placeholder="Group Name"
             value={groupName}
@@ -78,7 +84,7 @@ export default function CreateGroup({
         <div className="currencySelectorWrapper">
           <div
             className="currencySelector"
-            onClick={() => (currencyMenu.value = "currencyOptions")}
+            onClick={() => (currencyMenu.value = 'currencyOptions')}
           >
             <div className={selectedCurrency?.flagClass} />
             <div>{selectedCurrency?.symbol}</div>
@@ -88,20 +94,25 @@ export default function CreateGroup({
       </div>
       <div className="submitButton">
         <MyButton
-          disabled={groupName.trim() === "" ? true : false}
+          disabled={groupName.trim() === '' ? true : false}
           onClick={onClickHandler}
           isLoading={isPending}
-         fontSize="16"
+          fontSize="16"
         >
           Create Group
         </MyButton>
       </div>
 
       <MenuAnimationBackground menu={currencyMenu} />
+      <MenuAnimationBackground menu={inviteUsersMenu} />
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handldeCurrencyOptionsClick}
         selectedCurrency={currencySymbol}
+      />
+      <InviteUsersToNewGroupAnimation
+        menu={inviteUsersMenu}
+        newGroup={newGroup}
       />
     </StyledCreateGroup>
   );

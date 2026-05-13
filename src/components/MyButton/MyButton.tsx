@@ -6,16 +6,17 @@ const spin = keyframes`
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 `;
-interface SpinnerProps{
-  variant:string;
+interface SpinnerProps {
+  variant: string;
 }
-const Spinner = styled.span.withConfig({
-  shouldForwardProp: (prop) => prop !== "selected"
+export const Spinner = styled.span.withConfig({
+  shouldForwardProp: (prop) => prop !== 'selected',
 })<SpinnerProps>`
   display: inline-block;
   width: 1em;
   height: 1em;
-  border: 2px solid ${({ variant }) => variant === 'secondary' ? '#8594E0' : '#26272B'};
+  border: 2px solid
+    ${({ variant }) => (variant === 'secondary' ? '#8594E0' : '#26272B')};
   border-radius: 50%;
   border-top-color: transparent;
   animation: ${spin} 1s linear infinite;
@@ -26,13 +27,13 @@ const Spinner = styled.span.withConfig({
 const MyButton = ({
   children,
   variant = 'primary',
-  disabled ,
-  isLoading ,
-  hasFailed ,
+  disabled,
+  isLoading,
+  hasFailed,
   onClick,
-  fontSize
+  fontSize,
+  style,
 }: MyButtonProps) => {
-
   return (
     <StyledMyButton
       variant={variant}
@@ -41,12 +42,10 @@ const MyButton = ({
       hasFailed={hasFailed}
       onClick={onClick}
       fontSize={fontSize}
- 
+      style={style}
     >
-      {isLoading && <Spinner variant={variant}/>}
-      <span style={{ opacity: isLoading ? 0 : 1 }}>
-        {children}
-      </span>
+      {isLoading && <Spinner variant={variant} />}
+      <span style={{ opacity: isLoading ? 0 : 1 }}>{children}</span>
     </StyledMyButton>
   );
 };
@@ -60,6 +59,7 @@ interface MyButtonProps {
   hasFailed?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: React.ReactNode;
-  primaryBackgroundColor?:string;
-  fontSize?:string;
+  primaryBackgroundColor?: string;
+  fontSize?: string;
+  style?: React.CSSProperties;
 }

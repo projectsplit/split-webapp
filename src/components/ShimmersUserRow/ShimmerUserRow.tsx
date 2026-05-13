@@ -1,4 +1,4 @@
-import { Line, ShimmerRow } from "./ShimmerUserRow.styled";
+import { Line, ShimmerRow } from './ShimmerUserRow.styled';
 
 export default function ShimmerUserRow() {
   return (

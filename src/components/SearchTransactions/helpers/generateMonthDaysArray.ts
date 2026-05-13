@@ -14,7 +14,7 @@ export function generateMonthDaysArray(
 
   if (weeks.length && weeks[weeks.length - 1].length < 7) {
     while (weeks[weeks.length - 1].length < 7) {
-      weeks[weeks.length - 1].push("");
+      weeks[weeks.length - 1].push('');
     }
   }
 

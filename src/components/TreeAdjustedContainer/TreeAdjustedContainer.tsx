@@ -1,8 +1,8 @@
-import { StyledTreeAdjustedContainer } from "./TreeAdjustedContainer.styled";
-import Tree from "../Tree/Tree";
-import OptionsContainer from "../OptionsContainer/OptionsContainer";
-import IonIcon from "@reacticons/ionicons";
-import { TreeAdjustedContainerProps } from "../../interfaces";
+import { StyledTreeAdjustedContainer } from './TreeAdjustedContainer.styled';
+import Tree from '../Tree/Tree';
+import OptionsContainer from '../OptionsContainer/OptionsContainer';
+import IonIcon from '@reacticons/ionicons';
+import { TreeAdjustedContainerProps } from '../../interfaces';
 
 export default function TreeAdjustedContainer({
   children,
@@ -13,7 +13,7 @@ export default function TreeAdjustedContainer({
   iconfontsize,
   right,
   onIconClick,
-  $optionColor
+  $optionColor,
 }: TreeAdjustedContainerProps) {
   const hasTreeComponent = items.length > 1 ? true : false;
   if (!hasTreeComponent) {
@@ -45,14 +45,9 @@ export default function TreeAdjustedContainer({
     >
       {children}
       {hasOption && (
-        <IonIcon
-          name={optionname}
-          className="arrow"
-          onClick={onIconClick}
-        />
+        <IonIcon name={optionname} className="arrow" onClick={onIconClick} />
       )}
       <Tree items={items} />
     </StyledTreeAdjustedContainer>
   );
 }
-

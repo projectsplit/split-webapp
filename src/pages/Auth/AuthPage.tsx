@@ -1,25 +1,25 @@
-import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { PasswordSignInRequest, PasswordSignInResponse } from "../../types";
-import GoogleButton from "../../components/GoogleButton/GoogleButton";
-import { useLocation, useNavigate } from "react-router-dom";
-import routes from "../../routes";
-import { StyledAuthPage } from "./Auth.styled";
-import WelcomeHeader from "./WelcomeHeader/WelcomeHeader";
-import Input from "../../components/Input/Input";
-import { sendPasswordCredentials } from "../../api/auth/api";
-import MyButton from "../../components/MyButton/MyButton";
+import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { PasswordSignInRequest, PasswordSignInResponse } from '../../types';
+import GoogleButton from '../../components/GoogleButton/GoogleButton';
+import { useLocation, useNavigate } from 'react-router-dom';
+import routes from '../../routes';
+import { StyledAuthPage } from './Auth.styled';
+import WelcomeHeader from './WelcomeHeader/WelcomeHeader';
+import Input from '../../components/Input/Input';
+import { sendPasswordCredentials } from '../../api/auth/api';
+import MyButton from '../../components/MyButton/MyButton';
 
 const AuthPage: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [networkError, setNetworkError] = useState<string>("");
-  const [requestError, setRequestError]= useState<string>("")
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [networkError, setNetworkError] = useState<string>('');
+  const [requestError, setRequestError] = useState<string>('');
   const navigate = useNavigate();
   const location = useLocation();
 
   const redirect =
-    new URLSearchParams(location.search).get("redirect") || routes.ROOT;
+    new URLSearchParams(location.search).get('redirect') || routes.ROOT;
 
   const { mutate: signInWithCredentialsMutation, isPending } = useMutation<
     PasswordSignInResponse,
@@ -31,24 +31,24 @@ const AuthPage: React.FC = () => {
 
   const handleSignIn = () => {
     if (!username || !password) return;
-    setNetworkError("");
-    setRequestError("")
+    setNetworkError('');
+    setRequestError('');
 
     signInWithCredentialsMutation(
       { username, password },
       {
         onSuccess: (response) => {
-          localStorage.setItem("accessToken", response.accessToken);
+          localStorage.setItem('accessToken', response.accessToken);
           navigate(redirect);
         },
         onError: (error) => {
-          if (error.code === "ERR_NETWORK") {
-            setNetworkError(error.message + ": Check your internet connection");
+          if (error.code === 'ERR_NETWORK') {
+            setNetworkError(error.message + ': Check your internet connection');
           }
-          if ((error.code = "ERR_BAD_REQUEST")) {
+          if ((error.code = 'ERR_BAD_REQUEST')) {
             setRequestError(error.response.data);
           }
-          console.error("Sign-in failed", error.message);
+          console.error('Sign-in failed', error.message);
         },
       }
     );
@@ -66,12 +66,15 @@ const AuthPage: React.FC = () => {
               value={username}
               //error={signInError ? true : false}
               placeholder="Username"
-              onChange={(e) => {setUsername(e.target.value); setRequestError("")}}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setRequestError('');
+              }}
             />
-             {requestError ? (
+            {requestError ? (
               <div className="errormsg">{requestError}&nbsp;</div>
             ) : (
-              ""
+              ''
             )}
           </div>
           <div className="inputBox">
@@ -80,7 +83,10 @@ const AuthPage: React.FC = () => {
               value={password}
               //error={signInError ? true : false}
               placeholder="Password"
-              onChange={(e) => {setPassword(e.target.value); setRequestError("")}}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setRequestError('');
+              }}
             />
             {/* <div className="mailmsg">{signInError}&nbsp;</div> */}
           </div>
@@ -93,10 +99,7 @@ const AuthPage: React.FC = () => {
             >
               Sign In
             </MyButton>
-              <MyButton
-              onClick={()=>navigate('/entry')}
-              fontSize="18"
-            >
+            <MyButton onClick={() => navigate('/entry')} fontSize="18">
               Create Account
             </MyButton>
           </div>

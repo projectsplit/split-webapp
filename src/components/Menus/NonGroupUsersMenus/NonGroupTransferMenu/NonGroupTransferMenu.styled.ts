@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledNonGroupTransferUsersMenu = styled.div`
   position: fixed;
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.layer2};
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   left: 0;
   right: 0;
   margin: 0;
@@ -13,7 +13,7 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  bottom: 0;
+  top: 0;
   overflow-y: auto;
 
   .fixedHeader {
@@ -43,7 +43,7 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
       }
 
       .closeButtonContainer:hover::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 50%;
         left: 50%;
@@ -83,11 +83,12 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
         margin-top: 19px;
       }
     }
-    .input {
+    .inputField {
       display: flex;
-      width: 100%;
-      padding-right: 12px;
-      padding-left: 12px;
+      flex-direction: row;
+      padding-left: 10px;
+      padding-right: 10px;
+
       .search-input {
         width: 100%;
         flex: 1;

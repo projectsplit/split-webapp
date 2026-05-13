@@ -1,6 +1,6 @@
-import { Signal } from "@preact/signals-react";
-import { currencyMask } from "./currencyMask";
-import { removeCommas } from "./removeCommas";
+import { Signal } from '@preact/signals-react';
+import { currencyMask } from './currencyMask';
+import { removeCommas } from './removeCommas';
 
 export const handleInputChange = (
   e: React.ChangeEvent<HTMLInputElement>,
@@ -12,7 +12,8 @@ export const handleInputChange = (
   const rawLength = e.target.value.length;
   const isAddition = rawLength > oldDisplayedLength;
   const isDeletion = rawLength < oldDisplayedLength;
-  const newValue = currencyMask(e, currencySymbol, displayedAmount.value,false).target.value;
+  const newValue = currencyMask(e, currencySymbol, displayedAmount.value, false)
+    .target.value;
   const clean = removeCommas(newValue);
   let numericValue = Number(clean);
   if (isNaN(numericValue)) {

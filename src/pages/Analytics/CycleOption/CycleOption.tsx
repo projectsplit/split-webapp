@@ -1,6 +1,6 @@
-import { StyledCycleOption } from "./CycleOption.styled";
-import { Frequency } from "../../../types";
-import { CycleOptionProps } from "../../../interfaces";
+import { StyledCycleOption } from './CycleOption.styled';
+import { Frequency } from '../../../types';
+import { CycleOptionProps } from '../../../interfaces';
 
 export default function CycleOption({
   selectedCycle,
@@ -8,17 +8,18 @@ export default function CycleOption({
   cyclehaschanged,
 }: CycleOptionProps) {
   return (
-    <StyledCycleOption>  
+    <StyledCycleOption>
       <div
         onClick={() => {
-          selectedCycle.value === Frequency.Weekly || selectedCycle.value === Frequency.Monthly
+          selectedCycle.value === Frequency.Weekly ||
+          selectedCycle.value === Frequency.Monthly
             ? (cyclehaschanged.value = true)
             : (cyclehaschanged.value = false);
           selectedCycle.value = Frequency.Annually;
           menu.value = null;
         }}
         className={`item ${
-          selectedCycle.value === Frequency.Annually ? "clicked" : ""
+          selectedCycle.value === Frequency.Annually ? 'clicked' : ''
         }`}
       >
         Annually
@@ -26,33 +27,34 @@ export default function CycleOption({
 
       <div
         onClick={() => {
-          selectedCycle.value === Frequency.Weekly || selectedCycle.value === Frequency.Annually
+          selectedCycle.value === Frequency.Weekly ||
+          selectedCycle.value === Frequency.Annually
             ? (cyclehaschanged.value = true)
             : (cyclehaschanged.value = false);
           selectedCycle.value = Frequency.Monthly;
           menu.value = null;
         }}
         className={`item ${
-          selectedCycle.value === Frequency.Monthly ? "clicked" : ""
+          selectedCycle.value === Frequency.Monthly ? 'clicked' : ''
         }`}
       >
         Monthly
       </div>
       <div
         onClick={() => {
-          selectedCycle.value === Frequency.Monthly || selectedCycle.value === Frequency.Annually
+          selectedCycle.value === Frequency.Monthly ||
+          selectedCycle.value === Frequency.Annually
             ? (cyclehaschanged.value = true)
             : (cyclehaschanged.value = false);
           selectedCycle.value = Frequency.Weekly;
           menu.value = null;
         }}
         className={`item ${
-          selectedCycle.value === Frequency.Weekly ? "clicked" : ""
+          selectedCycle.value === Frequency.Weekly ? 'clicked' : ''
         }`}
       >
         Weekly
       </div>
-
     </StyledCycleOption>
   );
 }

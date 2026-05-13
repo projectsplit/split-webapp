@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 interface StyledPillOptions {
   color: string;
   $textColor: string;
@@ -7,7 +7,7 @@ interface StyledPillOptions {
 }
 export const StyledPill = styled.div<StyledPillOptions>`
   font-weight: 400;
-  font-size: ${({ fontSize }) => (fontSize ? fontSize : "18px")};
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : '18px')};
   background-color: ${(props) => props.color};
 
   ${({ $border }) =>
@@ -18,7 +18,7 @@ export const StyledPill = styled.div<StyledPillOptions>`
           border-color: white;
 
         `
-      : ""}
+      : ''}
 
   -webkit-tap-highlight-color: transparent;
 
@@ -41,8 +41,17 @@ export const StyledPill = styled.div<StyledPillOptions>`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 100%; 
-    gap: 10px; 
+    width: 100%;
+    gap: 10px;
+    .childrenAndTitle {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      .children {
+        display: flex;
+      }
+    }
     cursor: pointer;
     .title {
       color: ${(props) => props.$textColor};

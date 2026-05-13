@@ -1,6 +1,5 @@
-import styled from "styled-components";
-import { StyledBottomMenu } from "../Layouts/BottomMenu/BottomMenu.styled";
-
+import styled from 'styled-components';
+import { StyledBottomMenu } from '../Layouts/BottomMenu/BottomMenu.styled';
 
 export const StyledCurrencyOptions = styled(StyledBottomMenu)`
   overflow: auto;

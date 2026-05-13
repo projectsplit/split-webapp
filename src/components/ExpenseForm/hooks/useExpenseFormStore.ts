@@ -1,5 +1,5 @@
-import { useExpenseStore } from "@/components/ExpenseForm/formStore/formStore";
-import { useShallow } from "zustand/react/shallow";
+import { useExpenseStore } from '@/components/ExpenseForm/formStore/formStore';
+import { useShallow } from 'zustand/react/shallow';
 
 export const useExpenseFormStore = () =>
   useExpenseStore(

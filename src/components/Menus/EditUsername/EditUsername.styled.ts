@@ -1,9 +1,7 @@
-import styled from "styled-components";
-import { StyledMiddleScreenMenu } from "../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import styled from 'styled-components';
+import { StyledMiddleScreenMenu } from '../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
 
 export const StyledEditUsername = styled(StyledMiddleScreenMenu)`
-
-
   .username-status {
     display: flex;
     flex-direction: column;
@@ -30,13 +28,12 @@ export const StyledEditUsername = styled(StyledMiddleScreenMenu)`
       justify-content: space-between;
       align-items: center;
       padding-bottom: 10px;
-      .checkmark{
-    
+      .checkmark {
         font-size: 25px;
         bottom: 0px;
         color: ${({ theme }) => theme.green};
       }
-      .warning{
+      .warning {
         font-size: 25px;
         bottom: 0px;
         color: ${({ theme }) => theme.redish};

@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledOnTrackMessageProps } from "../../../interfaces";
+import styled from 'styled-components';
+import { StyledOnTrackMessageProps } from '../../../interfaces';
 
 export const StyledOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
   .main {
@@ -13,6 +13,9 @@ export const StyledOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
       flex-direction: row;
       /* align-items: center; */
       .sign {
+        display: flex;
+        justify-self: center;
+        align-self: center;
         margin-right: 10px;
       }
       .paragraphs {

@@ -1,17 +1,16 @@
-import { useState } from "react";
-import { StyledCurrencyOptions } from "./CurrencyOptions.styled";
-import { Currency } from "../../../types";
-import { currencyData } from "../../../helpers/openExchangeRates";
-import { CurrencyOptionProps } from "../../../interfaces";
+import { useState } from 'react';
+import { StyledCurrencyOptions } from './CurrencyOptions.styled';
+import { Currency } from '../../../types';
+import { currencyData } from '../../../helpers/openExchangeRates';
+import { CurrencyOptionProps } from '../../../interfaces';
 
 export default function CurrencyOptions({
   clickHandler,
   selectedCurrency,
 }: CurrencyOptionProps) {
-  const [searchItem, setSearchItem] = useState<string>("");
+  const [searchItem, setSearchItem] = useState<string>('');
   const [filteredCurrencies, setFilteredCurrencies] =
     useState<Currency[]>(currencyData);
-
 
   const handleInputChange = (e: any) => {
     const searchTerm = e.target.value;
@@ -26,13 +25,11 @@ export default function CurrencyOptions({
     setFilteredCurrencies(filteredItems);
   };
 
-
-
   return (
     <StyledCurrencyOptions height="75vh">
       <div className="headerAndSearchbar">
         <div className="header">
-          {" "}
+          {' '}
           <strong>Select Currency</strong>
         </div>
         <input
@@ -50,10 +47,10 @@ export default function CurrencyOptions({
         <div
           key={index}
           className={`currencyOption ${
-            (!selectedCurrency && currency.symbol === "USD") ||
+            (!selectedCurrency && currency.symbol === 'USD') ||
             selectedCurrency === currency.symbol
-              ? "clicked"
-              : ""
+              ? 'clicked'
+              : ''
           }`}
           onClick={() => clickHandler(currency.symbol)}
         >

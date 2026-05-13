@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledTopMenu = styled.div<{ title: string }>`
   display: flex;
@@ -9,11 +9,12 @@ export const StyledTopMenu = styled.div<{ title: string }>`
   padding-right: 14px;
   padding-bottom: 25px;
   padding-top: 20px;
-  .useOptionsContainer{
+  padding-top: calc(20px + env(safe-area-inset-top));
+  .useOptionsContainer {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap:20px;
+    gap: 20px;
   }
   .bellAndCog {
     display: flex;
@@ -26,11 +27,11 @@ export const StyledTopMenu = styled.div<{ title: string }>`
       position: relative;
       cursor: pointer;
     }
-    .arrow{
+    .arrow {
       font-size: 1.5rem;
       position: relative;
       cursor: pointer;
-      color: ${({ theme }) => theme.orange}
+      color: ${({ theme }) => theme.orange};
     }
   }
 
@@ -57,7 +58,7 @@ export const StyledTopMenu = styled.div<{ title: string }>`
     flex-direction: row;
 
     .title {
-      font-size: ${({ title }) => (title === "Shared" ? 24 : 18)}px;
+      font-size: ${({ title }) => (title === 'Shared' ? 24 : 18)}px;
       font-weight: 600;
     }
   }

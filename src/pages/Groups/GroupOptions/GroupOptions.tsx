@@ -1,23 +1,29 @@
-import { IoClose, IoExit, IoPersonAdd, IoPersonRemove, IoQrCode } from "react-icons/io5";
-import { StyledGroupOptions } from "./GroupOptions.styled";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { Signal, useSignal } from "@preact/signals-react";
-import Separator from "../../../components/Separator/Separator";
-import MenuAnimationBackground from "../../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import CurrencyOptionsAnimation from "../../../components/Menus/MenuAnimations/CurrencyOptionsAnimation";
-import { Currency, UserInfo } from "../../../types";
-import { currencyData } from "../../../helpers/openExchangeRates";
-import { GroupOptionsProps } from "../../../interfaces";
-import { MdEdit } from "react-icons/md";
-import { FaArchive } from "react-icons/fa";
-import ConfirmArchiveGroupAnimation from "../../../components/Menus/MenuAnimations/ConfirmArchiveGroupAnimation";
-import ConfirmLeaveGroupAnimation from "../../../components/Menus/MenuAnimations/ConfirmLeaveGroupAnimation";
-import RenameGroupAnimationAnimation from "../../../components/Menus/MenuAnimations/RenameGroupAnimation";
-import { useChangeGroupCurrency } from "../../../api/services/useChangeGroupCurrency";
-import { useQueryClient } from "@tanstack/react-query";
-import RemoveUserFromGroupMenu from "../../../components/Menus/RemoveUserFromGroupMenu/RemoveUserFromGroupMenu";
-import { useEffect } from "react";
-import AddNewUserAnimation from "../../../components/Menus/MenuAnimations/AddNewUserAnimation";
+import {
+  IoClose,
+  IoExit,
+  IoPersonAdd,
+  IoPersonRemove,
+  IoQrCode,
+} from 'react-icons/io5';
+import { StyledGroupOptions } from './GroupOptions.styled';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { Signal, useSignal } from '@preact/signals-react';
+import Separator from '../../../components/Separator/Separator';
+import MenuAnimationBackground from '../../../components/Animations/MenuAnimationBackground';
+import CurrencyOptionsAnimation from '../../../components/Animations/CurrencyOptionsAnimation';
+import { Currency, UserInfo } from '../../../types';
+import { currencyData } from '../../../helpers/openExchangeRates';
+import { GroupOptionsProps } from '../../../interfaces';
+import { MdEdit } from 'react-icons/md';
+import { FaArchive } from 'react-icons/fa';
+import ConfirmArchiveGroupAnimation from '../../../components/Animations/ConfirmArchiveGroupAnimation';
+import ConfirmLeaveGroupAnimation from '../../../components/Animations/ConfirmLeaveGroupAnimation';
+import RenameGroupAnimationAnimation from '../../../components/Animations/RenameGroupAnimation';
+import { useChangeGroupCurrency } from '../../../api/auth/CommandHooks/useChangeGroupCurrency';
+import { useQueryClient } from '@tanstack/react-query';
+import RemoveUserFromGroupMenu from '../../../components/Menus/RemoveUserFromGroupMenu/RemoveUserFromGroupMenu';
+import { useEffect } from 'react';
+import AddNewUserAnimation from '../../../components/Animations/AddNewUserAnimation';
 
 export default function GroupOptions({ group }: GroupOptionsProps) {
   const navigate = useNavigate();
@@ -27,14 +33,14 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
   }>();
   const queryClient = useQueryClient();
   const refetchQueries = useSignal<boolean>(false);
-  const groupCurrency = group?.currency || "";
+  const groupCurrency = group?.currency || '';
   const groupName = group?.name;
   const currencyMenu = useSignal<string | null>(null);
   const archiveGroupMenu = useSignal<string | null>(null);
   const leaveGroupMenu = useSignal<string | null>(null);
   const newUserMenu = useSignal<string | null>(null);
   const renameMenu = useSignal<string | null>(null);
-  const noGroupFoundError = useSignal<string>("");
+  const noGroupFoundError = useSignal<string>('');
   const allCurrencies = useSignal<Currency[]>(currencyData);
   const openRemoveUserMenu = useSignal<boolean>(false);
   const selectedCurrency = allCurrencies.value.find(
@@ -63,15 +69,15 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
           exact: false,
         });
         await queryClient.invalidateQueries({
-          queryKey: ["shared"],
+          queryKey: ['shared'],
           exact: false,
         });
         await queryClient.invalidateQueries({
-          queryKey: ["mostRecentGroup"],
+          queryKey: ['mostRecentGroup'],
           exact: false,
         });
       } catch (error) {
-        console.error("Error refetching queries:", error);
+        console.error('Error refetching queries:', error);
       }
     }
   };
@@ -82,15 +88,15 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
         handleClose();
       }
     };
-    window.addEventListener("popstate", handleBackNavigation);
+    window.addEventListener('popstate', handleBackNavigation);
     return () => {
-      window.removeEventListener("popstate", handleBackNavigation);
+      window.removeEventListener('popstate', handleBackNavigation);
     };
   }, [openGroupOptionsMenu]);
 
   return (
     <StyledGroupOptions>
-      {" "}
+      {' '}
       <div className="headerWrapper">
         <div className="header">
           <div className="gap"></div>
@@ -105,7 +111,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
       <div className="optionsContainer">
         <div
           className="option"
-          onClick={() => (currencyMenu.value = "currencyOptions")}
+          onClick={() => (currencyMenu.value = 'currencyOptions')}
         >
           <div className={selectedCurrency?.flagClass} />
           <div className="description">Group Base Currency</div>
@@ -113,7 +119,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
 
         <div
           className="option"
-          onClick={() => (renameMenu.value = "renameGroup")}
+          onClick={() => (renameMenu.value = 'renameGroup')}
         >
           <MdEdit className="icon" />
           <div className="description">Edit Group Name </div>
@@ -121,16 +127,13 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
 
         <div
           className="option"
-          onClick={() => (archiveGroupMenu.value = "archiveGroup")}
+          onClick={() => (archiveGroupMenu.value = 'archiveGroup')}
         >
           <FaArchive className="icon" />
           <div className="description">Archive Group </div>
         </div>
 
-        <div
-          className="option"
-          onClick={() => (newUserMenu.value = "newUser")}
-        >
+        <div className="option" onClick={() => (newUserMenu.value = 'newUser')}>
           <IoPersonAdd className="icon" />
           <div className="description">New User </div>
         </div>
@@ -147,9 +150,9 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
           className="option"
           onClick={() => {
             const searchParams = new URLSearchParams(location.search);
-            searchParams.set("in", "true");
+            searchParams.set('in', 'true');
             navigate(
-                `/shared/generatecode/${group?.id}?${searchParams.toString()}`,
+              `/shared/generatecode/${group?.id}?${searchParams.toString()}`,
               {
                 replace: true,
               }
@@ -162,7 +165,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
 
         <div
           className="option-leave"
-          onClick={() => (leaveGroupMenu.value = "leaveGroup")}
+          onClick={() => (leaveGroupMenu.value = 'leaveGroup')}
         >
           <IoExit className="icon-exit" />
           <div className="description">Leave Group </div>
@@ -202,7 +205,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
           userInfo={userInfo}
         />
       )}
-      {group && <AddNewUserAnimation menu={newUserMenu} groupName={groupName} />}
+      {group && <AddNewUserAnimation menu={newUserMenu} />}
     </StyledGroupOptions>
   );
 }

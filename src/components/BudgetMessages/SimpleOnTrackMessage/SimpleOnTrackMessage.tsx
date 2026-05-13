@@ -1,13 +1,22 @@
-import { SimpleOnTrackMessageProps } from "../../../interfaces";
-import { StyledSimpleOnTrackMessage } from "./SimpleOnTrackMessage.styled";
-import IonIcon from "@reacticons/ionicons";
-
+import { dateIsInFuture } from '@/helpers/dateIsInFuture';
+import { dateIsInPast } from '@/helpers/dateIsInPast';
+import { SimpleOnTrackMessageProps } from '../../../interfaces';
+import { StyledSimpleOnTrackMessage } from './SimpleOnTrackMessage.styled';
+import IonIcon from '@reacticons/ionicons';
 
 export default function SimpleOnTrackMessage({
   onClick,
   style,
   closeButton,
+  startDate,
+  endDate,
 }: SimpleOnTrackMessageProps) {
+  const getMessage = () => {
+    if (endDate && dateIsInPast(endDate)) return 'This budget has expired.';
+    if (dateIsInFuture(startDate)) return 'Your budget is not yet in effect.';
+    return 'You are on track to meeting your spending goal.';
+  };
+
   return (
     <StyledSimpleOnTrackMessage style={style}>
       <div className="main">
@@ -20,7 +29,7 @@ export default function SimpleOnTrackMessage({
           </div>
           <div className="paragraph">
             <div className="firstParagraph">
-              You are on track to meeting your spending goal.
+             {getMessage()}
             </div>
           </div>
         </div>

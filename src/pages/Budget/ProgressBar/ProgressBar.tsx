@@ -1,126 +1,103 @@
-import React from "react";
-import { StyledProgressBar } from "./ProgressBar.styled";
-import { TbTargetArrow } from "react-icons/tb";
-import { ProgressBarProps } from "../../../interfaces";
-import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import { BudgetInfoResponse } from "../../../types";
-import { useTheme } from "styled-components";
-import { getIsoDateInfo } from "../../../helpers/getIsoDateInfo";
+import { StyledProgressBar } from './ProgressBar.styled';
+import { ProgressBarProps } from '../../../interfaces';
+import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
+import { useTheme } from 'styled-components';
+import ToggleSwitch from '@/components/ToggleSwitch/ToggleSwitch';
+import { progressBarColor } from './utils/progressBarColor';
+import { convertDaysToDaysHoursAndMinutes } from './utils/convertDaysToDaysHoursAndMinutes';
+import { useToggleBudget } from '@/api/auth/CommandHooks/useToggleBudget';
+import { Bar } from './Bar/Bar';
+import { getActiveScopes } from '@/helpers/getActiveScopes';
+import IonIcon from '@reacticons/ionicons';
+import { dateIsInFuture } from '@/helpers/dateIsInFuture';
+import { dateIsInPast } from '@/helpers/dateIsInPast';
 
-export default function ProgressBar({ data}: ProgressBarProps) {
+export default function ProgressBar({
+  data,
+  isOn,
+  setIsOn,
+  menu,
+  timeZoneId,
+}: ProgressBarProps) {
   const theme = useTheme();
-  let percentage: number = 0;
-
-  if (data?.totalAmountSpent !== undefined && data?.goal !== undefined) {
-    const totalAmountSpent = parseFloat(data.totalAmountSpent);
-    const goal = parseFloat(data.goal);
-    if (!isNaN(totalAmountSpent) && !isNaN(goal)) {
-      percentage = parseFloat(((totalAmountSpent / goal) * 100).toFixed(1));
-    }
-  }
-
-  const progressBarColor = (data: BudgetInfoResponse | undefined) => {
-    if (
-      data !== undefined &&
-      data.remainingDays !== undefined &&
-      data.goal !== undefined &&
-      data.averageSpentPerDay !== undefined&&
-      data.totalAmountSpent!== undefined
-    ) {
-      const totalAmountSpent = parseFloat(data.totalAmountSpent);
-      const remainingDays = parseFloat(data.remainingDays);
-      const averageSpentPerDay = parseFloat(data.averageSpentPerDay);
-      const goal = parseFloat(data.goal);
-      const spendingProjection =
-        totalAmountSpent + remainingDays * averageSpentPerDay;
-      if (totalAmountSpent < goal && spendingProjection < goal) {
-        return theme?.green;
-      } else return theme?.redish;
-    } else {
-      return "black";
-    }
-  };
-
-  const convertDaysToDaysHoursAndMinutes = (
-    days: string | undefined
-  ): { days: number; hours: number; minutes: number } => {
-    if (days === undefined) return { days: 0, hours: 0, minutes: 0 };
-    const days2decimal = parseFloat(days);
-    const wholeDays = Math.floor(days2decimal);
-    const remainingHoursDecimal = (days2decimal - wholeDays) * 24;
-    const remainingHours = Math.floor(remainingHoursDecimal);
-    const remainingMinutes = Math.round(
-      (remainingHoursDecimal - remainingHours) * 60
-    );
-    return {
-      days: wholeDays,
-      hours: remainingHours,
-      minutes: remainingMinutes,
-    };
-  };
-
   const convertedDaysHoursMinutes = convertDaysToDaysHoursAndMinutes(
-    data?.remainingDays
+    data?.endDate,
+    timeZoneId
   );
 
-  const startDateDecomposed = getIsoDateInfo(data?.startDate);
-  const endDateDecomposed = getIsoDateInfo(data?.endDate);
+  const { mutate: toggleBudget } = useToggleBudget();
 
   return (
-    <StyledProgressBar percentage={percentage} color={progressBarColor(data)}>
+    <StyledProgressBar>
       {/* <div className="closeButton" onClick={()=>setMenu("deleteBudgetConfirmation")}>
         <IonIcon name="close-outline" className="close" />
       </div> */}
+      <div
+        className="cogContainer"
+        onClick={() => {
+          menu.value = 'manageBudgetMenu';
+        }}
+      >
+        {' '}
+        <IonIcon name="settings-outline" className="cog" />
+      </div>
       <div className="budgetInfo">
         <div className="thisPeriod">
-          <div className="budgetTitle">
-            {startDateDecomposed.dateNumber} {startDateDecomposed.month} -{" "}
-            {endDateDecomposed.dateNumber} {endDateDecomposed.month}
-          </div>
-          <div className="progressBar">
-           
-            <TbTargetArrow className="targetIcon" />
-           
-            <div className="wrapper">
-              <div className="barWrapper">
-                <div className="bar" />
+          <Bar color={progressBarColor(data, theme)} data={data} />
+          <div className="toggleAndInfo">
+            <div className="miscInfo">
+              <div className="description">
+                Description:&nbsp; "
+                {data?.description !== undefined ? data.description : ''}"
               </div>
-              <div className="monetaryProgress">
-                {data?.currency !== undefined ? (
+              {dateIsInFuture(data?.startDate) ? (
+                <div className="remainingDays">Not Started Yet</div>
+              ) : dateIsInPast(data?.endDate) ? (
+                <div className="remainingDays" style={{ color: '#FC6F6F' }}>Expired</div>
+              ) : (
+                <div className="remainingDays">
+                  Remaining time:{' '}
                   <strong>
-                    {displayCurrencyAndAmount(
-                      data.totalAmountSpent,
-                      data.currency
-                    )}{" "}
-                    / {displayCurrencyAndAmount(data.goal, data.currency)}
+                    {convertedDaysHoursMinutes.days}d{' '}
+                    {convertedDaysHoursMinutes.hours}h{' '}
+                    {convertedDaysHoursMinutes.minutes}m{' '}
                   </strong>
-                ) : (
-                  ""
-                )}
+                </div>
+              )}
+              <div className="averageSpending">
+                Avg spent per day:&nbsp;
+                <strong>
+                  {data?.currency !== undefined
+                    ? displayCurrencyAndAmount(
+                        data.averageSpentPerDay,
+                        data.currency
+                      )
+                    : ''}
+                </strong>
+              </div>
+              <div className="scope">
+                Scope:&nbsp;
+                <strong>
+                  {getActiveScopes(data?.scope, data?.targetGroupIds).join(
+                    ', '
+                  )}
+                </strong>
               </div>
             </div>
-            <div className="amount">{percentage < 0 ? 0 : percentage}%</div>
-          </div>
-          <div className="miscInfo">
-            <div className="remainingDays">
-              Remaining time:{" "}
-              <strong>
-                {convertedDaysHoursMinutes.days}d{" "}
-                {convertedDaysHoursMinutes.hours}h{" "}
-                {convertedDaysHoursMinutes.minutes}m{" "}
-              </strong>
-            </div>
-            <div className="averageSpending">
-              Avg spent per day:&nbsp;
-              <strong>
-                {data?.currency !== undefined
-                  ? displayCurrencyAndAmount(
-                      data.averageSpentPerDay,
-                      data.currency
-                    )
-                  : ""}
-              </strong>
-            </div>
+            <ToggleSwitch
+              isOn={isOn}
+              onToggle={() => {
+                setIsOn(false);
+                setTimeout(() => {
+                  toggleBudget(
+                    { budgetId: data?.id },
+                    {
+                      onError: () => setIsOn(true),
+                    }
+                  );
+                }, 400);
+              }}
+            />
           </div>
         </div>
       </div>

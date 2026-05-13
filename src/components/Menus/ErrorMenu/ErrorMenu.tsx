@@ -1,7 +1,7 @@
-import IonIcon from "@reacticons/ionicons";
-import { ErrorMenuProps } from "../../../interfaces";
-import { StyledErrorMenu } from "./ErrorMenu.styled";
-import Separator from "../../Separator/Separator";
+import IonIcon from '@reacticons/ionicons';
+import { ErrorMenuProps } from '../../../interfaces';
+import { StyledErrorMenu } from './ErrorMenu.styled';
+import Separator from '../../Separator/Separator';
 
 export default function ErrorMenu({ menu, children, type }: ErrorMenuProps) {
   return (
@@ -19,9 +19,9 @@ export default function ErrorMenu({ menu, children, type }: ErrorMenuProps) {
         </div>
       </div>
       <div className="info">
-        {type === "expense"
-          ? "Expense not found. Possibly already deleted by another user."
-          : "Transfer not found. Possibly already deleted by another user."}
+        {type === 'expense'
+          ? 'Expense not found. Possibly already deleted by another user.'
+          : 'Transfer not found. Possibly already deleted by another user.'}
       </div>
     </StyledErrorMenu>
   );

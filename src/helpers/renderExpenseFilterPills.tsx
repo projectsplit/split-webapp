@@ -1,39 +1,57 @@
-import { Signal } from "@preact/signals-react";
-import Pill from "../components/Pill/Pill";
-import { ExpenseParsedFilters, Group } from "../types";
-import { QueryClient } from "@tanstack/react-query";
-import labelColors from "../labelColors";
-import { mergeMembersAndGuests } from "./mergeMembersAndGuests";
+import { Signal } from '@preact/signals-react';
+import Pill from '../components/Pill/Pill';
+import {
+  ExpenseParsedFilters,
+  GetLabelsResponse,
+  Group,
+  Mode,
+  TruncatedMember,
+} from '../types';
+import { QueryClient } from '@tanstack/react-query';
+import labelColors from '../labelColors';
+import { getFilterStorageKey } from '../components/SearchTransactions/helpers/localStorageStringParser';
+import { MdGroup } from 'react-icons/md';
 
 const updateFiltersAndSave = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   updatedFilters: any,
-  queryClient: QueryClient
+  queryClient: QueryClient,
+  mode: Mode,
+  groupId?: string
 ) => {
   expenseParsedFilters.value = {
     ...expenseParsedFilters.value,
     ...updatedFilters,
   };
   localStorage.setItem(
-    "expenseFilter",
+    getFilterStorageKey('expense', groupId, mode === Mode.Personal),
     JSON.stringify(expenseParsedFilters.value)
   );
-  queryClient.invalidateQueries({ queryKey: ["groupExpenses"], exact: false });
+  queryClient.invalidateQueries({ queryKey: ['groupExpenses'], exact: false });
+  queryClient.invalidateQueries({
+    queryKey: ['nonGroupExpenses'],
+    exact: false,
+  });
+  queryClient.invalidateQueries({
+    queryKey: ['personalExpenses'],
+    exact: false,
+  });
 };
 
 export const renderExpenseFilterPills = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
-  group: Group,
-  queryClient: QueryClient
+  allParticipants: TruncatedMember[],
+  group: Group | null,
+  queryClient: QueryClient,
+  mode: Mode,
+  fetchedUserAndGroupLabels: GetLabelsResponse | undefined
 ) => {
-  const members = group?.members;
-  const guests = group?.guests;
-  const allParticipants = mergeMembersAndGuests(members || [], guests || []);
-
   const { freeText, before, after, participantsIds, payersIds, labels } =
     expenseParsedFilters.value;
+
   const pills = [];
-  if (freeText && freeText != "") {
+
+  if (freeText && freeText != '') {
     pills.push(
       <Pill
         key="freeTextExpense"
@@ -47,8 +65,10 @@ export const renderExpenseFilterPills = (
         onClose={() =>
           updateFiltersAndSave(
             expenseParsedFilters,
-            { freeText: "" },
-            queryClient
+            { freeText: '' },
+            queryClient,
+            mode,
+            group?.id
           )
         }
       />
@@ -70,7 +90,9 @@ export const renderExpenseFilterPills = (
           updateFiltersAndSave(
             expenseParsedFilters,
             { before: null, after: null },
-            queryClient
+            queryClient,
+            mode,
+            group?.id
           )
         }
       />
@@ -92,13 +114,14 @@ export const renderExpenseFilterPills = (
           updateFiltersAndSave(
             expenseParsedFilters,
             { before: null },
-            queryClient
+            queryClient,
+            mode,
+            group?.id
           )
         }
       />
     );
   }
-
 
   if (after && before !== after) {
     pills.push(
@@ -115,13 +138,14 @@ export const renderExpenseFilterPills = (
           updateFiltersAndSave(
             expenseParsedFilters,
             { after: null },
-            queryClient
+            queryClient,
+            mode,
+            group?.id
           )
         }
       />
     );
   }
-
 
   if (participantsIds && participantsIds?.length > 0) {
     participantsIds?.forEach((id, index) => {
@@ -143,14 +167,15 @@ export const renderExpenseFilterPills = (
               {
                 participantsIds: participantsIds.filter((pid) => pid !== id),
               },
-              queryClient
+              queryClient,
+              mode,
+              group?.id
             )
           }
         />
       );
     });
   }
-
 
   if (payersIds && payersIds?.length > 0) {
     payersIds?.forEach((id, index) => {
@@ -172,7 +197,9 @@ export const renderExpenseFilterPills = (
               {
                 payersIds: payersIds.filter((pid) => pid !== id),
               },
-              queryClient
+              queryClient,
+              mode,
+              group?.id
             )
           }
         />
@@ -180,10 +207,9 @@ export const renderExpenseFilterPills = (
     });
   }
 
-
   if (labels && labels?.length > 0) {
     labels?.forEach((id, index) => {
-      const label = group.labels.find((l) => l.id === id);
+      const label = fetchedUserAndGroupLabels?.labels?.find((l) => l.id === id);
       const labelTitle = label?.text;
       const labelColor = label?.color;
 
@@ -191,7 +217,7 @@ export const renderExpenseFilterPills = (
         <Pill
           key={`label-${index}`}
           title={`${labelTitle}`}
-          color={labelColors[labelColor || "#e0e0e0"]}
+          color={labelColors[labelColor || '#e0e0e0']}
           closeButton={true}
           fontSize="14px"
           $textColor="black"
@@ -203,10 +229,16 @@ export const renderExpenseFilterPills = (
               {
                 labels: labels.filter((lid) => lid !== id),
               },
-              queryClient
+              queryClient,
+              mode,
+              group?.id
             )
           }
-        />
+        >
+          {mode === Mode.Personal && !id.includes('_') && (
+            <MdGroup style={{ marginRight: '4px' }} />
+          )}
+        </Pill>
       );
     });
   }

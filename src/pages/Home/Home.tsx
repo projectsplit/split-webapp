@@ -1,65 +1,43 @@
-import { useEffect, useState } from "react";
-import { StyledHomepage } from "./Home.Styled";
-import { BsBarChartFill } from "react-icons/bs";
-import { BsFillPiggyBankFill } from "react-icons/bs";
-import { BsFillPersonFill } from "react-icons/bs";
-import { TiGroup } from "react-icons/ti";
-import OptionButton from "./SelectionButton/SelectionButton";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { useTheme } from "styled-components";
-import TreeAdjustedContainer from "../../components/TreeAdjustedContainer/TreeAdjustedContainer";
+import { useEffect} from 'react';
+import { StyledHomepage } from './Home.Styled';
+import { useNavigate } from 'react-router-dom';
 import {
-  ExpenseResponseItem,
   Group,
-  GroupsAllBalancesResponse,
   Guest,
   Member,
-  MostRecentGroupDetailsResponse,
   User,
   UserInfo,
-} from "../../types";
-import {
-  getGroupsAllBalances,
-  getMostRecentGroup,
-} from "../../api/services/api";
-import useBudgetInfo from "../../api/services/useBudgetInfo";
-
-import { BudgetInfoMessage } from "../../components/BudgetMessages/BudgetInfoMessage";
-import { useOutletContext } from "react-router-dom";
-import { signal, Signal, useSignal } from "@preact/signals-react";
-import SettingsMenuAnimation from "../../components/Menus/MenuAnimations/SettingsMenuAnimation";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import { TreeItemBuilderForHomeAndGroups } from "../../components/TreeItemBuilderForHomeAndGroups";
-import Spinner from "../../components/Spinner/Spinner";
-import { AiFillThunderbolt } from "react-icons/ai";
-import HomeQuickActionsAnimation from "../../components/Menus/MenuAnimations/HomeQuickActionsAnimation";
-import useGroup from "../../api/services/useGroup";
-import CreateExpenseForm from "../../components/CreateExpenseForm/CreateExpenseForm";
-import TransferForm from "../../components/TransferForm/TransferForm";
-import NonGroupExpenseUsersAnimation from "../../components/Menus/MenuAnimations/NonGroupExpenseUsersAnimation";
-import NonGroupTransferAnimation from "../../components/Menus/MenuAnimations/NonGroupTransferAnimation";
+} from '../../types';
+import useBudgetInfo from '../../api/auth/QueryHooks/useBudgetInfo';
+import { useOutletContext } from 'react-router-dom';
+import {  Signal, useSignal } from '@preact/signals-react';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import { HomeSkeleton } from '../../components/HomeSkeleton/HomeSkeleton';
+import { AiFillThunderbolt } from 'react-icons/ai';
+import HomeQuickActionsAnimation from '../../components/Animations/HomeQuickActionsAnimation';
+import CreateExpenseForm from '../../components/CreateExpenseForm/CreateExpenseForm';
+import TransferForm from '../../components/TransferForm/TransferForm';
+import NonGroupExpenseUsersAnimation from '../../components/Animations/NonGroupExpenseUsersAnimation';
+import NonGroupTransferAnimation from '../../components/Animations/NonGroupTransferAnimation';
+import { useGetMostRecentGroups } from '@/api/auth/QueryHooks/useGetMostRecentGroups';
+import { useTotalUserBalance } from './hooks/useTotalUserBalance';
+import ScrollableMenuButtons from './ScrollableMenuButtons/ScrollableMenuButtons';
 
 export default function Home() {
   const navigate = useNavigate();
-  const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
+
   const isPersonal = useSignal<boolean>(true);
   const isNonGroupExpense = useSignal<boolean>(false);
   const isNonGroupTransfer = useSignal<boolean>(true);
-  const [showAdvice, setShowAdvice] = useState(true);
-  const theme = useTheme();
 
   const nonGroupUsers = useSignal<User[]>([]);
-  const nonGroupGroup = useSignal<Group | null>(null);
+  const fromHomeGroup = useSignal<Group | null>(null);
   const groupMembers = useSignal<(Guest | Member)[]>([]);
-  const { userInfo, topMenuTitle } = useOutletContext<{
+  const { userInfo, topMenuTitle, } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
   }>();
 
-  const timeZoneId = userInfo?.timeZone;
-  const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
-  const menu = useSignal<string | null>(null);
   const nonGroupExpenseMenu = useSignal<string | null>(null);
   const nonGroupTransferMenu = useSignal<{
     attribute: string;
@@ -69,175 +47,97 @@ export default function Home() {
     receiverId: string;
     receiverName: string;
   }>({
-    attribute: "",
+    attribute: '',
     menu: null,
-    senderId: "",
-    senderName: "",
-    receiverId: "",
-    receiverName: "",
+    senderId: '',
+    senderName: '',
+    receiverId: '',
+    receiverName: '',
   });
 
   const quickActionsMenu = useSignal<string | null>(null);
-  const recentGroupId = userInfo?.recentGroupId;
+  const recentContextId = userInfo?.recentContextId;
 
   const {
-    data,
+    totalBalances,
+    isLoading,
     isFetching,
-    isLoading: isLoadingAllBalancesResponse,
-  } = useQuery<GroupsAllBalancesResponse>({
-    queryKey: ["home"],
-    queryFn: getGroupsAllBalances,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-  });
+    groupsData,
+    nonGroupGroupedTransactions,
+  } = useTotalUserBalance(userInfo?.userId || '');
 
   const {
     data: mostRecentGroupData,
     isFetching: mostRecentGroupDataIsFetching,
-  } = useQuery<MostRecentGroupDetailsResponse>({
-    queryKey: ["mostRecentGroup", recentGroupId],
-    queryFn: () => getMostRecentGroup(recentGroupId),
-    enabled: recentGroupId !== undefined && recentGroupId !== null,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-  });
+  } = useGetMostRecentGroups(recentContextId);
+
+  const { data: activeBudgetData} = useBudgetInfo();
 
   useEffect(() => {
-    topMenuTitle.value = "";
+    topMenuTitle.value = '';
+    const saved = localStorage.getItem('submittedFromHomePersistData');
+    if (saved) {
+      const {
+        nonGroupUsers: u,
+        fromHomeGroup: g,
+        groupMembers: m,
+      } = JSON.parse(saved);
+      nonGroupUsers.value = u ?? [];
+      fromHomeGroup.value = g ?? null;
+      groupMembers.value = m ?? [];
+      isPersonal.value = false;
+      if (fromHomeGroup.value !== null) {
+        isNonGroupExpense.value = false;
+      }
+    }
   }, []);
 
-  useEffect(() => {
-      const saved = localStorage.getItem("nonGroupExpenseData");
-      if (saved) {
-        const {
-          nonGroupUsers: u,
-          nonGroupGroup: g,
-          groupMembers: m,
-        } = JSON.parse(saved);
-        nonGroupUsers.value = u ?? [];
-        nonGroupGroup.value = g ?? null;
-        groupMembers.value = m ?? [];
-        isPersonal.value = false;
-        if(nonGroupGroup.value !== null){
-          isNonGroupExpense.value = false;
-        }
-      }
-  },[]);
-
-  const isGlowing = quickActionsMenu.value === "quickActions";
+  const isGlowing = quickActionsMenu.value === 'quickActions';
 
   return (
     <StyledHomepage>
       {isFetching || !userInfo?.username ? (
-        // && budgetIsFetching ?
-        <Spinner />
+        <HomeSkeleton />
       ) : (
-        <>
+        <div className="fadeIn">
           <div className="fixedTop">
             <div className="welcomeStripe">
               Welcome, <strong>{userInfo?.username}</strong>
             </div>
           </div>
-          <div className="scrollableContent">
-            <div className="optionsStripe">
-              {/* {showAdvice && budgetData?.budgetSubmitted && (
-              <>
-                {BudgetInfoMessage(theme, true, budgetData, () =>
-                  setShowAdvice(false)
-                )}
-              </>
-            )} */}
-
-              {mostRecentGroupDataIsFetching ? (
-                <Spinner />
-              ) : mostRecentGroupData ? (
-                <div className="mostRecent">
-                  <div className="mostRecentMsg">Most recent</div>
-                  <TreeAdjustedContainer
-                    onClick={() => {
-                      navigate(`/shared/${mostRecentGroupData.id}`);
-                    }}
-                    hasOption={true}
-                    optionname="chevron-forward-outline"
-                    items={TreeItemBuilderForHomeAndGroups(
-                      mostRecentGroupData?.details
-                    )}
-                  >
-                    <div className="groupName">{mostRecentGroupData?.name}</div>
-                  </TreeAdjustedContainer>
-                </div>
-              ) : null}
-
-              {!isLoadingAllBalancesResponse &&
-                !isFetching &&
-                data?.groupCount === 0 ? (
-                <OptionButton
-                  onClick={() => navigate("/shared")}
-                  name="Groups"
-                  description="Keep track of your shared finances"
-                  hasArrow={false}
-                >
-                  <TiGroup className="groupIcon" />
-                </OptionButton>
-              ) : (
-                <TreeAdjustedContainer
-                  hasOption={false}
-                  optionname="chevron-forward-outline"
-                  onClick={() => navigate("/shared")}
-                  items={TreeItemBuilderForHomeAndGroups(data?.balances)}
-                >
-                  <div className="groups">
-                    <div className="groupIconAndNumberOfGroups">
-                      <TiGroup className="groupIcon" />
-                      <span className="groupCount">{data?.groupCount}</span>
-                    </div>
-                    <div className="groupName">Shared</div>
-                  </div>
-                </TreeAdjustedContainer>
-              )}
-              <OptionButton
-                name="Personal"
-                description="Your personal expense tracker"
-                hasArrow={false}
-              >
-                <BsFillPersonFill className="personalIcon" />
-              </OptionButton>
-              <OptionButton
-                name="Analytics"
-                description="View your spending trends"
-                onClick={() => navigate("/analytics")}
-                hasArrow={false}
-              >
-                <BsBarChartFill className="analyticsIcon" />
-              </OptionButton>
-              <OptionButton
-                name="Budget"
-                description="Set up a spending cap or goal"
-                onClick={() => navigate("/budget")}
-                hasArrow={false}
-              >
-                <BsFillPiggyBankFill className="budgetIcon" />
-              </OptionButton>
-            </div>
-          </div>
+          <ScrollableMenuButtons
+            mostRecentGroupDataIsFetching={mostRecentGroupDataIsFetching}
+            mostRecentGroupData={mostRecentGroupData}
+            recentContextId={recentContextId}
+            nonGroupGroupedTransactions={nonGroupGroupedTransactions}
+            userInfo={userInfo}
+            navigate={navigate}
+            isLoading={isLoading}
+            isFetching={isFetching}
+            groupsData={groupsData}
+            totalBalances={totalBalances}
+            topMenuTitle={topMenuTitle}
+            activeBudgetData={activeBudgetData}
+            showBudgetInfo={userInfo.showBudgetInfo}
+          />
           <div
-            className={`actions ${isGlowing ? "glow" : ""}`}
+            className={`actions ${isGlowing ? 'glow' : ''}`}
             onClick={() =>
-            (quickActionsMenu.value =
-              quickActionsMenu.value === "quickActions"
-                ? null
-                : "quickActions")
+              (quickActionsMenu.value =
+                quickActionsMenu.value === 'quickActions'
+                  ? null
+                  : 'quickActions')
             }
           >
             <AiFillThunderbolt className="thunder" />
           </div>
-        </>
+        </div>
       )}
       <MenuAnimationBackground menu={quickActionsMenu} />
 
-      {quickActionsMenu.value === "newExpense" && (
+      {quickActionsMenu.value === 'newExpense' && (
         <CreateExpenseForm
-          groupId={nonGroupGroup.value?.id}
+          groupId={fromHomeGroup.value?.id}
           expense={null}
           timeZoneId={userInfo.timeZone}
           menu={quickActionsMenu}
@@ -250,21 +150,22 @@ export default function Home() {
           currency={userInfo.currency}
           nonGroupUsers={nonGroupUsers}
           nonGroupMenu={nonGroupExpenseMenu}
-          nonGroupGroup={nonGroupGroup}
+          fromHomeGroup={fromHomeGroup}
           fromHome={true}
         />
       )}
-      {quickActionsMenu.value === "newTransfer" && (
+      {quickActionsMenu.value === 'newTransfer' && (
         <TransferForm
-          groupId={nonGroupGroup.value?.id}
+          groupId={fromHomeGroup.value?.id}
           timeZoneId={userInfo.timeZone}
           menu={quickActionsMenu}
           isnonGroupTransfer={isNonGroupTransfer}
           groupMembers={groupMembers}
           currency={userInfo.currency}
           nonGroupUsers={nonGroupUsers}
-          nonGroupGroup={nonGroupGroup}
+          fromHomeGroup={fromHomeGroup}
           nonGroupMenu={nonGroupTransferMenu}
+          fromHome={true}
         />
       )}
 
@@ -272,6 +173,7 @@ export default function Home() {
         quickActionsMenu={quickActionsMenu}
         isNonGroupExpense={isNonGroupExpense}
         nonGroupTransferMenu={nonGroupTransferMenu}
+        fromHomeGroup={fromHomeGroup}
         userInfo={userInfo}
       />
       <NonGroupExpenseUsersAnimation
@@ -279,13 +181,13 @@ export default function Home() {
         nonGroupUsers={nonGroupUsers}
         isPersonal={isPersonal}
         groupMembers={groupMembers}
-        nonGroupGroup={nonGroupGroup}
+        fromHomeGroup={fromHomeGroup}
         isNonGroupExpense={isNonGroupExpense}
         fromNonGroup={false}
       />
       <NonGroupTransferAnimation
         nonGroupTransferMenu={nonGroupTransferMenu}
-        nonGroupGroup={nonGroupGroup}
+        fromHomeGroup={fromHomeGroup}
         groupMembers={groupMembers}
         isNonGroupTransfer={isNonGroupTransfer}
       />

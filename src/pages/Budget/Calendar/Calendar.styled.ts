@@ -1,15 +1,15 @@
-import styled from "styled-components";
-import { Frequency } from "../../../types";
-import { Signal } from "@preact/signals-react";
+import styled from 'styled-components';
+import { Frequency } from '../../../types';
+import { Signal } from '@preact/signals-react';
 
 interface StyledCalendarProps {
-  budgettype: Signal<Frequency>;
+  $budgetFrequency: Signal<Frequency>;
 }
 
 export const StyledCalendar = styled.div<StyledCalendarProps>`
   display: flex;
   flex-direction: ${(props) =>
-    props.budgettype.value === Frequency.Monthly ? "column" : "row"};
+    props.$budgetFrequency.value === Frequency.Monthly ? 'column' : 'row'};
   padding: 1rem 0.8rem;
   border-radius: 6px;
   gap: 10px;
@@ -25,7 +25,6 @@ export const StyledCalendar = styled.div<StyledCalendarProps>`
 
   .calendar-day {
     flex: 1;
-
     border-radius: 6px;
     padding: 0.1rem;
     text-align: center;
@@ -36,20 +35,20 @@ export const StyledCalendar = styled.div<StyledCalendarProps>`
       font-weight: bold;
     }
     &.selected:before {
-      content: ""; 
+      content: '';
       position: absolute;
       top: 50%;
-      left: 50%; 
+      left: 50%;
       transform: translate(-50%, -50%);
       width: 30px;
       height: 30px;
       background-color: ${({ theme }) => theme.whiteText};
       border-radius: 50%;
-      z-index: -1; 
+      z-index: -1;
     }
 
     &.selected {
-      z-index: 1;
+      z-index: 0;
     }
   }
 `;

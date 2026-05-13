@@ -1,4 +1,4 @@
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
   $createParagraphNode,
   $getRoot,
@@ -8,7 +8,7 @@ import {
   COMMAND_PRIORITY_EDITOR,
 } from 'lexical';
 
-import {useEffect, useLayoutEffect} from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 
 const CAN_USE_DOM: boolean =
   typeof window !== 'undefined' &&
@@ -28,7 +28,7 @@ type Props = Readonly<{
   onClear?: () => void;
 }>;
 
-export function ClearEditorPlugin({onClear}: Props): JSX.Element | null {
+export function ClearEditorPlugin({ onClear }: Props): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
 
   useLayoutEffect(() => {
@@ -55,7 +55,7 @@ export function ClearEditorPlugin({onClear}: Props): JSX.Element | null {
         });
         return true;
       },
-      COMMAND_PRIORITY_EDITOR,
+      COMMAND_PRIORITY_EDITOR
     );
   }, [editor, onClear]);
 

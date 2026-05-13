@@ -4,29 +4,36 @@ import {
   useNavigate,
   useOutletContext,
   useParams,
-} from "react-router-dom";
-import { StyledGroup } from "./Group.styled";
-import { CategorySelector } from "../../components/CategorySelector/CategorySelector";
-import { signal, Signal, useSignal } from "@preact/signals-react";
+} from 'react-router-dom';
+import { StyledGroup } from './Group.styled';
+import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
+import { useCategorySwipe } from '../../components/CategorySelector/useCategorySwipe';
+import { signal, Signal, useSignal } from '@preact/signals-react';
 import {
-  ExpenseParsedFilters,
-  ExpenseResponseItem,
-  TransferParsedFilters,
-  UserInfo,
-} from "../../types";
-import BottomMainMenu from "../../components/Menus/BottomMainMenu/BottomMainMenu";
-import MenuAnimationBackground from "../../components/Menus/MenuAnimations/MenuAnimationBackground";
-import NewExpenseAnimation from "../../components/Menus/MenuAnimations/NewExpenseAnimation";
-import GroupQuickActionsAnimation from "../../components/Menus/MenuAnimations/MenuWithOptionsToAddAnimation";
-import useGroup from "../../api/services/useGroup";
-import { useEffect } from "react";
-import NewTransferAnimation from "../../components/Menus/MenuAnimations/NewTransferAnimation";
-import GroupOptions from "../Groups/GroupOptions/GroupOptions";
-import ConfirmUnArchiveGroupAnimation from "../../components/Menus/MenuAnimations/ConfirmUnArchiveGroupAnimation";
-import Spinner from "../../components/Spinner/Spinner";
-import { AxiosError, InternalAxiosRequestConfig } from "axios";
-import GroupError from "./GroupError";
-import SearchTransactionsAnimation from "../../components/Menus/MenuAnimations/SearchTransactionsAnimation";
+  type ExpenseParsedFilters,
+  type ExpenseResponseItem,
+  type Group,
+  Mode,
+  type UserInfo,
+  type TransferParsedFilters,
+} from '../../types';
+import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import NewExpenseAnimation from '../../components/Animations/NewExpenseAnimation';
+import GroupQuickActionsAnimation from '../../components/Animations/MenuWithOptionsToAddAnimation';
+import useGroup from '../../api/auth/QueryHooks/useGroup';
+import { useEffect } from 'react';
+import NewTransferAnimation from '../../components/Animations/NewTransferAnimation';
+import GroupOptions from '../Groups/GroupOptions/GroupOptions';
+import ConfirmUnArchiveGroupAnimation from '../../components/Animations/ConfirmUnArchiveGroupAnimation';
+import Spinner from '../../components/Spinner/Spinner';
+import { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import GroupError from './GroupError';
+import SearchTransactionsAnimation from '../../components/Animations/SearchTransactionsAnimation';
+import {
+  localStorageStringParser,
+  getFilterStorageKey,
+} from '../../components/SearchTransactions/helpers/localStorageStringParser';
 
 type errorObject = {
   message: string;
@@ -34,17 +41,26 @@ type errorObject = {
   status: number | undefined;
   config: InternalAxiosRequestConfig<any> | undefined;
 };
+
 export default function Group() {
+  const { groupid } = useParams();
   const menu = useSignal<string | null>(null);
   const showBottomBar = useSignal<boolean>(false);
   const groupError = useSignal<errorObject>();
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
-  const expenseParsedFilters = useSignal<ExpenseParsedFilters>({});
-  const transferParsedFilters = useSignal<TransferParsedFilters>({});
+
+  const { expenseFilter, transferFilter } = localStorageStringParser(
+    localStorage.getItem(getFilterStorageKey('expense', groupid)),
+    localStorage.getItem(getFilterStorageKey('transfer', groupid))
+  );
+
+  const expenseParsedFilters = useSignal<ExpenseParsedFilters>(expenseFilter);
+  const transferParsedFilters =
+    useSignal<TransferParsedFilters>(transferFilter);
   const location = useLocation();
-  const path = location.pathname.split("/").pop() || "";
-  const { groupid } = useParams();
+  const path = location.pathname.split('/').pop() || '';
   const navigate = useNavigate();
+  const mode: Mode = Mode.Group;
 
   const {
     userInfo,
@@ -62,17 +78,30 @@ export default function Group() {
 
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
-  const { data: group, isFetching, isError, error } = useGroup(groupid);
+  const { data: group, isLoading, isFetching, isError, error } = useGroup(groupid);
+
+  const categoryCategories = {
+    cat1: 'Expenses',
+    cat2: 'Transfers',
+    cat3: 'Debts',
+  };
+  const swipeHandlers = useCategorySwipe({
+    categories: categoryCategories,
+    activeCat: path,
+    navLinkUse: true,
+  });
 
   useEffect(() => {
-    groupIsArchived.value = group?.isArchived || false;
+    if (!isFetching) {
+      groupIsArchived.value = group?.isArchived || false;
+    }
     return () => {
       groupIsArchived.value = false;
     };
-  }, [group, groupIsArchived.value]);
+  }, [group, isFetching, groupIsArchived.value]);
 
   useEffect(() => {
-    topMenuTitle.value = group?.name || "";
+    topMenuTitle.value = group?.name || '';
   }, [group, showBottomBar.value]);
 
   useEffect(() => {
@@ -93,37 +122,28 @@ export default function Group() {
     if (
       isError &&
       groupError.value &&
-      typeof groupError.value.status === "number" &&
+      typeof groupError.value.status === 'number' &&
       groupError.value.status === 404
     ) {
-      navigate("/shared");
+      navigate('/shared');
     }
   }, [isError, groupError.value, navigate]);
 
   return (
     <StyledGroup>
-      {isFetching ? (
+      {isLoading ? (
         <div className="group">
           <div className="spinner">
             <Spinner />
           </div>
-          <div className="bottomMenu">
-            {" "}
-            {<BottomMainMenu onClick={() => (menu.value = null)} />}
-          </div>
-          {openGroupOptionsMenu.value && <GroupOptions group={group} />}
         </div>
       ) : isError ? (
         <GroupError groupError={groupError} />
       ) : (
-        <div className="group">
+        <div className="group" {...swipeHandlers}>
           <CategorySelector
             activeCat={path}
-            categories={{
-              cat1: "Expenses",
-              cat2: "Transfers",
-              cat3: "Debts",
-            }}
+            categories={categoryCategories}
             navLinkUse={true}
           />
           <Outlet
@@ -133,6 +153,7 @@ export default function Group() {
               showBottomBar,
               expenseParsedFilters,
               transferParsedFilters,
+              mode,
             }}
           />
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}
@@ -186,14 +207,14 @@ export default function Group() {
             />
           )}
           <div className="bottomMenu">
-            {" "}
+            {' '}
             <BottomMainMenu
               group={group}
               menu={menu}
               onClick={() => {
                 if (group && !group.isArchived) {
-                  menu.value = "quickActions";
-                } 
+                  menu.value = 'quickActions';
+                }
               }}
             />
           </div>

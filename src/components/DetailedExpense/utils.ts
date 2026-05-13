@@ -1,6 +1,7 @@
-import { Signal } from "@preact/signals-react";
+import { Signal } from '@preact/signals-react';
 import {
   ExpenseResponseItem,
+  Mode,
   FormExpense,
   Group,
   GroupPayment,
@@ -9,11 +10,11 @@ import {
   Share,
   TruncatedMember,
   User,
-} from "../../types";
+} from '../../types';
 
 export const buildFormExpense = (
   selectedExpense: Signal<ExpenseResponseItem | undefined | null>,
-  expenseType: string,
+  mode: Mode,
   group: Group | undefined
 ): FormExpense | undefined => {
   if (!selectedExpense.value) return undefined;
@@ -29,17 +30,17 @@ export const buildFormExpense = (
     lastUpdateTime: new Date(selectedExpense.value.updated),
   };
 
-  if (expenseType === "Group") {
+  if (mode === Mode.Group) {
     return {
       ...baseExpense,
       groupId: group?.id,
-      participants: (selectedExpense.value.shares as GroupShare[]).map(
+      participants: (selectedExpense.value.shares as GroupShare[])?.map(
         (share) => ({
           memberId: share.memberId,
           participationAmount: share.amount.toString(),
         })
       ),
-      payers: (selectedExpense.value.payments as GroupPayment[]).map(
+      payers: (selectedExpense.value.payments as GroupPayment[])?.map(
         (payment) => ({
           memberId: payment.memberId,
           paymentAmount: payment.amount.toString(),
@@ -48,14 +49,14 @@ export const buildFormExpense = (
     };
   }
 
-  if (expenseType === "NonGroup") {
+  if (mode === Mode.NonGroup) {
     return {
       ...baseExpense,
-      participants: (selectedExpense.value.shares as Share[]).map((share) => ({
+      participants: (selectedExpense.value.shares as Share[])?.map((share) => ({
         userId: share.userId,
         participationAmount: share.amount.toString(),
       })),
-      payers: (selectedExpense.value.payments as Payment[]).map((payment) => ({
+      payers: (selectedExpense.value.payments as Payment[])?.map((payment) => ({
         userId: payment.userId,
         paymentAmount: payment.amount.toString(),
       })),
@@ -64,40 +65,9 @@ export const buildFormExpense = (
   return { ...baseExpense };
 };
 
-export const getNonGroupUsers = (
-  expenseType: string,
-  shares: Share[] | GroupShare[] | undefined,
-  payments: Payment[] | GroupPayment[] | undefined,
-  members: TruncatedMember[]
-): User[] => {
-  if (expenseType !== "NonGroup") return [];
-  const uniqueUserIds = new Set<string>();
-
-  // Helper to safely add IDs
-  const addIds = (
-    transactions:
-      | Share[]
-      | GroupShare[]
-      | Payment[]
-      | GroupPayment[]
-      | undefined
-  ) => {
-    if (!transactions) return;
-    transactions.forEach((t) => {
-      if ("userId" in t) uniqueUserIds.add(t.userId);
-      if ("memberId" in t) uniqueUserIds.add(t.memberId);
-    });
+export const toUser = (member: TruncatedMember): User => {
+  return {
+    userId: member.id,
+    username: member.name,
   };
-
-  addIds(shares);
-  addIds(payments);
-
-  const users: User[] = [];
-  uniqueUserIds.forEach((id) => {
-    const member = members.find((m) => m.id === id);
-    if (member) {
-      users.push({ userId: id, username: member.name });
-    }
-  });
-  return users;
 };

@@ -1,4 +1,4 @@
-import { FormExpense, FormGroupExpense } from "../../../types";
+import { FormExpense, FormGroupExpense } from '../../../types';
 
 export function isGroupExpense(
   expense: FormExpense | null

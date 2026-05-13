@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { BudgetInfoResponse } from "../types";
-import { useEffect } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
+import { BudgetInfoResponse } from '../types';
+import { useEffect } from 'react';
 
 export const useRedirectToBudget = (
   data: BudgetInfoResponse | undefined,
@@ -8,16 +8,22 @@ export const useRedirectToBudget = (
   hasUserInfo: boolean
 ) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    if (isLoading || !hasUserInfo) return;
-    if (data && data?.budgetSubmitted) {
-    
-      navigate(`/budget/current`, { replace: true });
-    } else {
+    const validPaths = ['/budget/actions', '/budget/manage', '/budget/create'];
+    if (validPaths.includes(pathname)) return;
+
+    if (pathname.includes('/actions')) {
+      navigate(`/budget/actions`, { replace: true });
+    } else if (pathname.includes('/manage')) {
+      navigate(`/budget/manage`, { replace: true });
+    } else if (pathname.includes('/create')) {
       navigate(`/budget/create`, { replace: true });
+    } else {
+      navigate(`/budget/actions`, { replace: true });
     }
-  }, [isLoading,data,hasUserInfo]);
+  }, [isLoading, data, hasUserInfo, pathname]);
 
   return null;
 };

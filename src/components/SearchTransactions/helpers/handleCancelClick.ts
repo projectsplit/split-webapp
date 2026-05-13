@@ -1,8 +1,9 @@
-import { EditorContentHandle } from "../../../interfaces";
+import { EditorContentHandle } from '../../../interfaces';
 
-
-export const handleCancelClick = (editorContentRef: React.MutableRefObject<EditorContentHandle | null>) => {
-    if (editorContentRef.current) {
-      editorContentRef.current.clearEditor();
-    }
-  };
+export const handleCancelClick = (
+  editorContentRef: React.MutableRefObject<EditorContentHandle | null>
+) => {
+  if (editorContentRef.current) {
+    editorContentRef.current.clearEditor();
+  }
+};

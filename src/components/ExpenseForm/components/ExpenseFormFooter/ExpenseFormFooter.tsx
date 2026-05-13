@@ -1,9 +1,9 @@
-import { Signal, signal } from "@preact/signals-react";
-import MyButton from "@/components/MyButton/MyButton";
-import LocationPicker from "@/components/LocationPicker/LocationPicker";
-import { DateTime } from "@/components/DateTime";
-import { StyledExpenseFormFooter } from "./ExpenseFormFooter.styled";
-import { GeoLocation, Coordinates } from "@/types";
+import { Signal, signal } from '@preact/signals-react';
+import MyButton from '@/components/MyButton/MyButton';
+import LocationPicker from '@/components/LocationPicker/LocationPicker';
+import { DateTime } from '@/components/DateTime';
+import { StyledExpenseFormFooter } from './ExpenseFormFooter.styled';
+import { GeoLocation, Coordinates } from '@/types';
 
 interface ExpenseFormFooterProps {
   onSubmit: () => void;
@@ -66,7 +66,7 @@ export const ExpenseFormFooter = ({
         setSelectedDateTime={setExpenseTime}
         timeZoneId={timeZoneId}
         isEdit={!isCreateExpense}
-        category={signal("Expense")}
+        category={signal('Expense')}
         isDateShowing={isDateShowing}
         showPicker={showPicker}
         setShowPicker={setShowPicker}

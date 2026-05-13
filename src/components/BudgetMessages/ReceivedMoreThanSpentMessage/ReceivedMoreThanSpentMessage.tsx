@@ -1,8 +1,7 @@
-
-import { StyledReceivedMoreThanSpentMessage } from "./ReceivedMoreThanSpentMessage.styled";
-import IonIcon from "@reacticons/ionicons";
-import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import { ReceivedMoreThanSpentMessageProps } from "../../../interfaces";
+import { StyledReceivedMoreThanSpentMessage } from './ReceivedMoreThanSpentMessage.styled';
+import IonIcon from '@reacticons/ionicons';
+import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
+import { ReceivedMoreThanSpentMessageProps } from '../../../interfaces';
 
 export default function ReceivedMoreThanSpentMessage({
   onClick,
@@ -10,9 +9,8 @@ export default function ReceivedMoreThanSpentMessage({
   style,
   currency,
   closeButton,
-  budgetType,
+  budgetFrequency,
 }: ReceivedMoreThanSpentMessageProps) {
-
   const negativeAmountToPositive = (parseFloat(amount) * -1).toString();
 
   return (
@@ -27,14 +25,15 @@ export default function ReceivedMoreThanSpentMessage({
           </div>
           <div className="paragraphs">
             <div className="firstParagraph">
-               You have received more
-              funds than you have spent this {budgetType === 1 ? "month" : "week"}.
+              You have received more funds than you have spent this{' '}
+              {budgetFrequency === 0 ? 'week' : budgetFrequency === 1 ? 'month' : 'period'}.
             </div>
             <div className="secondParagraph">
-              The total amount received in excess of your expenses is{" "}
+              The total amount received in excess of your expenses is{' '}
               <strong className="amount">
-                {displayCurrencyAndAmount(negativeAmountToPositive , currency)}
-              </strong>.{" "}
+                {displayCurrencyAndAmount(negativeAmountToPositive, currency)}
+              </strong>
+              .{' '}
             </div>
           </div>
         </div>

@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledLabelMenu = styled.div`
   position: fixed;
   color: ${({ theme }) => theme.textActiveColor};
   background-color: ${({ theme }) => theme.backgroundcolor};
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   left: 0;
   right: 0;
   margin: 0;
@@ -14,7 +14,7 @@ export const StyledLabelMenu = styled.div`
   flex-direction: column;
   padding: 12px 16px;
   gap: 20px;
-  bottom: 0;
+  top: 0;
   overflow-y: auto;
   .info {
     display: flex;
@@ -46,7 +46,7 @@ export const StyledLabelMenu = styled.div`
     }
 
     .closeButtonContainer:hover::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;

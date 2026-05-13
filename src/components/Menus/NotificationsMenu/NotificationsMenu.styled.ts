@@ -1,5 +1,5 @@
-import { styled } from "styled-components";
-import { StyledMiddleScreenMenu } from "../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled";
+import { styled } from 'styled-components';
+import { StyledMiddleScreenMenu } from '../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
 
 export const StyledNotificationsMenu = styled(StyledMiddleScreenMenu)`
   /* transform: translateZ(0); */
@@ -27,13 +27,12 @@ export const StyledNotificationsMenu = styled(StyledMiddleScreenMenu)`
       justify-content: space-between;
       align-items: center;
       padding-bottom: 10px;
-   
+
       .info {
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
-      
       }
       .closeButton {
         font-size: 30px;

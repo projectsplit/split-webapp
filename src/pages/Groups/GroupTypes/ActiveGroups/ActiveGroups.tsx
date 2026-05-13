@@ -1,28 +1,22 @@
-import { StyledGroups } from "../Groups.styled";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import TreeAdjustedContainer from "../../../../components/TreeAdjustedContainer/TreeAdjustedContainer";
-import Spinner from "../../../../components/Spinner/Spinner";
-import { getGroupsTotalAmounts } from "../../../../api/services/api";
-import { useMostRecentGroup } from "../../../../api/services/useMostRecentGroup";
-import { TreeItemBuilderForHomeAndGroups } from "../../../../components/TreeItemBuilderForHomeAndGroups";
-import Sentinel from "../../../../components/Sentinel";
-import { MdOutlineGroupOff } from "react-icons/md";
+import { StyledGroups } from '../Groups.styled';
+import { useNavigate } from 'react-router-dom';
+import TreeAdjustedContainer from '../../../../components/TreeAdjustedContainer/TreeAdjustedContainer';
+import Spinner from '../../../../components/Spinner/Spinner';
+import { useMostRecentContext } from '../../../../api/auth/CommandHooks/useMostRecentContext';
+import { TreeItemBuilderForHomeAndGroups } from '../../../../components/TreeItemBuilderForHomeAndGroups';
+import Sentinel from '../../../../components/Sentinel';
+import { MdOutlineGroupOff } from 'react-icons/md';
+import { useGetTotalsActiveGroups } from '@/api/auth/QueryHooks/useGetTotalsActiveGroups';
 
 export default function ActiveGroups() {
   const navigate = useNavigate();
   const pageSize = 10;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    useInfiniteQuery({
-      queryKey: ["shared", "active"],
-      queryFn: ({ pageParam: next }) => getGroupsTotalAmounts(pageSize, next, false),
-      getNextPageParam: (lastPage) => lastPage?.next || undefined,
-      initialPageParam: "",
-    });
+    useGetTotalsActiveGroups(pageSize);
 
   const groups = data?.pages.flatMap((p) => p.groups);
-  const updateMostRecentGroupId = useMostRecentGroup();
+  const updateMostRecentGroupId = useMostRecentContext();
 
   const onGroupClickHandler = (id: string, groupName: string) => {
     navigate(`/shared/active/${id}/expenses`, { state: { groupName } });
@@ -41,14 +35,14 @@ export default function ActiveGroups() {
               <MdOutlineGroupOff className="icon" />
             </div>
           ) : (
-            ""
+            ''
           )}
           {groups?.map((g: any) => (
-            <div key={g.id} >
+            <div key={g.id}>
               <TreeAdjustedContainer
                 onClick={() => onGroupClickHandler(g.id, g.name)}
                 hasOption={false}
-                optionname={"settings-outline"}
+                optionname={'settings-outline'}
                 iconfontsize={30}
                 right={0.8}
                 items={TreeItemBuilderForHomeAndGroups(g?.details)}
@@ -57,11 +51,11 @@ export default function ActiveGroups() {
               </TreeAdjustedContainer>
             </div>
           ))}
-  
+
           <Sentinel
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
+            fetchPage={fetchNextPage}
+            hasMore={hasNextPage}
+            isFetchingPage={isFetchingNextPage}
           />
         </div>
       )}
