@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Navigate, Outlet, useLocation, useParams } from 'react-router-dom';
 import { useSignal } from '@preact/signals-react';
 import { StyledProtected } from './Protected.styled';
@@ -7,11 +8,16 @@ import SettingsMenuAnimation from '../../components/Animations/SettingsMenuAnima
 import TopMenu from '../../components/Menus/TopMenu/TopMenu';
 import { JoinOverlay } from '../Join/JoinOverslay';
 import { useGetMe } from '@/api/auth/QueryHooks/useGetMe';
+import { prewarmRoutes } from '@/lazyRoutes';
 
 const Protected: React.FC = () => {
   const location = useLocation();
   const { code } = useParams<{ code?: string }>();
   const { data: userInfo } = useGetMe();
+
+  useEffect(() => {
+    prewarmRoutes();
+  }, []);
 
   const groupIsArchived = useSignal<boolean>(false);
 
