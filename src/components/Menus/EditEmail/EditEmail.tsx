@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { setAccountEmail, verifyAccountEmail } from '../../../api/auth/api';
 import {
   SetAccountEmailRequest,
+  UserInfo,
   VerifyAccountEmailRequest,
 } from '../../../types';
 import MyButton from '../../MyButton/MyButton';
@@ -52,6 +53,14 @@ export default function EditEmail({
       { email },
       {
         onSuccess: () => {
+          const current = queryClient.getQueryData<UserInfo>(['getMe']);
+          if (current) {
+            queryClient.setQueryData<UserInfo>(['getMe'], {
+              ...current,
+              email,
+              emailVerified: false,
+            });
+          }
           setPendingEmail(email);
           setCode('');
           setCodeError('');
@@ -80,7 +89,18 @@ export default function EditEmail({
       { code },
       {
         onSuccess: async () => {
-          await queryClient.invalidateQueries({ queryKey: ['getMe'] });
+          const current = queryClient.getQueryData<UserInfo>(['getMe']);
+          if (current) {
+            queryClient.setQueryData<UserInfo>(['getMe'], {
+              ...current,
+              email: pendingEmail || current.email,
+              emailVerified: true,
+            });
+          }
+          await queryClient.refetchQueries({
+            queryKey: ['getMe'],
+            exact: true,
+          });
           editEmailMenu.value = null;
         },
         onError: () => {
