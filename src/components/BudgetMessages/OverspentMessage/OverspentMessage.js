@@ -1,0 +1,7 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { StyledOverspentMessage } from './OverspentMessage.styled';
+import IonIcon from '@reacticons/ionicons';
+import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
+export default function OverspentMessage({ onClick, offBudgetAmount, style, currency, overspentBy, overspent, closeButton, budgetFrequency, }) {
+    return (_jsx(StyledOverspentMessage, { style: style, children: _jsxs("div", { className: "main", children: [_jsxs("div", { className: "signParagraphWrap", children: [_jsx("div", { className: "sign", children: _jsx(IonIcon, { name: "warning-outline", className: "warning" }) }), _jsxs("div", { className: "paragraphs", children: [_jsx("div", { className: "firstParagraph", children: overspent ? (_jsxs("span", { children: ["You have overspent by", ' ', _jsx("strong", { className: "amount", children: displayCurrencyAndAmount(overspentBy, currency) }), "."] })) : (_jsx("span", { children: "You have reached your spending goal." })) }), _jsxs("div", { className: "secondParagraph", children: ["By spending at this rate you will be off budget by", ' ', _jsx("strong", { className: "amount", children: displayCurrencyAndAmount(offBudgetAmount, currency) }), ' ', "at the end of the ", budgetFrequency === 0 ? 'week' : budgetFrequency === 1 ? 'month' : 'period', "."] })] })] }), closeButton && (_jsx("div", { className: "closeButton", onClick: onClick, children: _jsx(IonIcon, { name: "close-outline", className: "close" }) }))] }) }));
+}

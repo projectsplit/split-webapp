@@ -14,6 +14,11 @@ import Item from '../Item/Item';
 import { SelectedGroup } from '../SelectionLists/SelectedGroup';
 import Spinner from '../../../Spinner/Spinner';
 import { useSearchUsers } from '@/api/auth/QueryHooks/useSearchUsers';
+import { useGetConnectionStatuses } from '@/api/auth/QueryHooks/useGetConnectionStatuses';
+import { useSendConnectionRequest } from '@/api/auth/CommandHooks/useSendConnectionRequest';
+import { useAcceptConnectionRequest } from '@/api/auth/CommandHooks/useAcceptConnectionRequest';
+import ConnectableUserItem from '../ConnectableUserItem/ConnectableUserItem';
+import ConnectRequestConfirm from '../ConnectRequestConfirm/ConnectRequestConfirm';
 
 export default function NonGroupTransferMenu({
   nonGroupTransferMenu,
@@ -98,6 +103,26 @@ export default function NonGroupTransferMenu({
   };
 
   const result = useSearchUsers(debouncedKeyword, pageSize);
+
+  const searchedUserIds = (result.data?.pages.flatMap((x) => x.users) ?? [])
+    .map((u) => u.userId)
+    .filter((id) => id !== userInfo.userId);
+
+  const { data: connectionStatuses } =
+    useGetConnectionStatuses(searchedUserIds);
+
+  const sendConnectionRequest = useSendConnectionRequest();
+  const acceptConnectionRequest = useAcceptConnectionRequest();
+  const [connectTarget, setConnectTarget] = useState<{
+    userId: string;
+    username: string;
+  } | null>(null);
+
+  const statusByUserId = useMemo(() => {
+    return new Map(
+      connectionStatuses?.statuses.map((s) => [s.userId, s]) ?? []
+    );
+  }, [connectionStatuses]);
 
   if (!result) return null;
 
@@ -215,19 +240,50 @@ export default function NonGroupTransferMenu({
           ) : users.length > 0 &&
             (nonGroupTransferMenu.value.attribute === 'sender' ||
               nonGroupTransferMenu.value.attribute === 'receiver') ? (
-            users.map((user) => (
-              <User
-                key={user.userId}
-                currentUserId={userInfo.userId}
-                name={user.username}
-                userId={user.userId}
-                nonGroupTransferMenu={nonGroupTransferMenu}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSuggestedUserClick(user.userId, user.username);
-                }}
-              />
-            ))
+            users.map((user) => {
+              const isSelf = user.userId === userInfo.userId;
+              const status = statusByUserId.get(user.userId)?.status;
+
+              return isSelf || status === 'connected' ? (
+                <User
+                  key={user.userId}
+                  currentUserId={userInfo.userId}
+                  name={user.username}
+                  userId={user.userId}
+                  nonGroupTransferMenu={nonGroupTransferMenu}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSuggestedUserClick(user.userId, user.username);
+                  }}
+                />
+              ) : (
+                <ConnectableUserItem
+                  key={user.userId}
+                  name={user.username}
+                  status={status}
+                  onSelect={(e) => {
+                    e.stopPropagation();
+                    handleSuggestedUserClick(user.userId, user.username);
+                  }}
+                  onRequest={(e) => {
+                    e.stopPropagation();
+                    setConnectTarget({
+                      userId: user.userId,
+                      username: user.username,
+                    });
+                  }}
+                  onAccept={(e) => {
+                    e.stopPropagation();
+                    const connectionId = statusByUserId.get(
+                      user.userId
+                    )?.connectionId;
+                    if (connectionId) {
+                      acceptConnectionRequest.mutate(connectionId);
+                    }
+                  }}
+                />
+              );
+            })
           ) : (
             remainingSuggestedGroups.length > 0 && (
               <div className="dropdown" ref={dropdownRef}>
@@ -263,6 +319,18 @@ export default function NonGroupTransferMenu({
           Done
         </MyButton>
       </div>
+      {connectTarget && (
+        <ConnectRequestConfirm
+          username={connectTarget.username}
+          isLoading={sendConnectionRequest.isPending}
+          onConfirm={() =>
+            sendConnectionRequest.mutate(connectTarget.userId, {
+              onSettled: () => setConnectTarget(null),
+            })
+          }
+          onCancel={() => setConnectTarget(null)}
+        />
+      )}
     </StyledNonGroupTransferUsersMenu>
   );
 }

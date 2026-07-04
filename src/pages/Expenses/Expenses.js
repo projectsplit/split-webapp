@@ -1,0 +1,107 @@
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { useEffect, useRef } from 'react';
+import Expense from '../../components/Expense/Expense';
+import { useQueryClient } from '@tanstack/react-query';
+import { Mode, TransactionType, } from '../../types';
+import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { StyledExpenses } from './Expenses.styled';
+import { signal, useSignal } from '@preact/signals-react';
+import DetailedExpense from '../../components/DetailedExpense/DetailedExpense';
+import { DateOnly } from '../../helpers/timeHelpers';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import ErrorMenuAnimation from '../../components/Animations/ErrorMenuAnimation';
+import Sentinel from '../../components/Sentinel';
+import GroupTotalsByCurrencyAnimation from '../../components/Animations/GroupTotalsByCurrencyAnimation';
+import Spinner from '../../components/Spinner/Spinner';
+import { isGroupExpense, isNonGroupExpense, } from '../../helpers/getExpenseType';
+import { useExpenseList } from './hooks/useExpenseList';
+import { useGetAllNonGroupUsers } from '@/api/auth/QueryHooks/useGetAllNonGroupUsers';
+import getAllExpenseParticipants from '@/helpers/getAllExpenseParticipants';
+import { groupBy } from '../../helpers/groupBy';
+import { NoExpensesFound } from './NoExpensesFound/NoExpensesFound';
+import { FiltersAndBars } from './FiltersAndBars/FiltersAndBars';
+import { useExpenseTotals } from './hooks/useExpenseTotals';
+import { useCenterToExpense } from './hooks/useCenterToExpense';
+import { hasActiveExpenseFilters } from '../../helpers/hasActiveExpenseFilters';
+import { useGetUserAndGroupsLabels } from '@/api/auth/QueryHooks/useGetUserAndGroupsLabels';
+import LongPressMenu from '../../components/LongPressMenu/LongPressMenu';
+import DeleteExpenseAnimation from '../../components/Animations/DeleteExpenseAnimation';
+import EditExpenseAnimation from '../../components/Animations/EditExpenseAnimation';
+import { buildFormExpense, toUser } from '../../components/DetailedExpense/utils';
+const Expenses = () => {
+    const selectedExpense = useSignal(null);
+    const errorMessage = useSignal('');
+    const menu = useSignal(errorMessage.value ? 'error' : null);
+    const longPressExpense = useSignal(null);
+    const longPressMenu = useSignal(null);
+    const queryClient = useQueryClient();
+    const [searchParams] = useSearchParams();
+    const jumpToken = searchParams.get('jumpTo') || '';
+    const scrollAreaRef = useRef(null);
+    const isScrolled = useSignal(false);
+    const { userInfo, group, showBottomBar, expenseParsedFilters, mode } = useOutletContext();
+    const timeZoneId = userInfo?.timeZone;
+    const pageSize = 10;
+    const userMemberId = group?.members?.find((m) => m.userId === userInfo?.userId)?.id; //group specific
+    const { data, fetchNextPage, hasNextPage, fetchPreviousPage, hasPreviousPage, isFetchingNextPage, isFetchingPreviousPage, isFetching, } = useExpenseList(mode, group, expenseParsedFilters, pageSize, timeZoneId, jumpToken);
+    const { allUsers } = useGetAllNonGroupUsers(mode);
+    // Deduplicate expenses by id to avoid React key conflicts when pages overlap
+    const rawExpenses = data?.pages.flatMap((p) => p.expenses);
+    const expenses = rawExpenses
+        ? Array.from(new Map(rawExpenses.map((e) => [e.id, e])).values())
+        : undefined;
+    const allParticipants = mode === Mode.Personal
+        ? []
+        : getAllExpenseParticipants(expenses, mode, group?.members || [], group?.guests || [], allUsers.map((u) => ({
+            id: u.userId,
+            name: u.username,
+        })));
+    const { groupTotalsByCurrency, userTotalsByCurrency, totalFromAllExpensesConverted, totalFromUserExpensesConverted, totalsAreFetching, } = useExpenseTotals(group, mode, userInfo, userMemberId, expenseParsedFilters);
+    useEffect(() => {
+        if (isFetching && !isFetchingNextPage) {
+            showBottomBar.value = false;
+        }
+        else {
+            showBottomBar.value = true;
+        }
+    }, [isFetching, isFetchingNextPage, showBottomBar]);
+    useCenterToExpense(scrollAreaRef, isScrolled, expenses, jumpToken, isFetchingPreviousPage);
+    const { data: fetchedUserAndGroupLabels } = useGetUserAndGroupsLabels(userInfo?.userId, true, group?.id);
+    useEffect(() => {
+        menu.value = errorMessage.value ? 'error' : menu.value;
+    }, [errorMessage.value, menu]);
+    if (isFetching && !isFetchingNextPage && !isFetchingPreviousPage) {
+        return (_jsx("div", { className: "spinner", children: _jsx(Spinner, {}) }));
+    }
+    const getUserAmount = (e) => {
+        if (isGroupExpense(e)) {
+            return e.shares?.find((x) => x.memberId === userMemberId)?.amount ?? 0;
+        }
+        if (isNonGroupExpense(e)) {
+            return e.shares?.find((x) => x.userId === userInfo?.userId)?.amount ?? 0;
+        }
+        return e.amount;
+    };
+    const showFiltersAndBars = mode !== Mode.Personal ||
+        hasActiveExpenseFilters(expenseParsedFilters.value);
+    return (_jsxs(StyledExpenses, { children: [_jsxs("div", { className: "scroll-area", ref: scrollAreaRef, children: [expenses &&
+                        expenses.length > 0 &&
+                        showFiltersAndBars &&
+                        fetchedUserAndGroupLabels &&
+                        !hasPreviousPage && (_jsx(FiltersAndBars, { expenseParsedFilters: expenseParsedFilters, allParticipants: allParticipants, group: group, queryClient: queryClient, mode: mode, menu: menu, totalsAreFetching: totalsAreFetching, totalExpense: totalFromAllExpensesConverted, userExpense: totalFromUserExpensesConverted, currency: userInfo?.currency, fetchedUserAndGroupLabels: fetchedUserAndGroupLabels })), !expenses || expenses.length === 0 ? (_jsx(NoExpensesFound, { expenseParsedFilters: expenseParsedFilters, allParticipants: allParticipants, group: group, queryClient: queryClient, mode: mode, fetchedUserAndGroupLabels: fetchedUserAndGroupLabels })) : (_jsxs(_Fragment, { children: [_jsx(Sentinel, { fetchPage: () => fetchPreviousPage(), hasMore: hasPreviousPage, isFetchingPage: isFetchingPreviousPage, id: "sentinel-top", isTop: true }), Object.entries(groupBy(expenses, (x) => DateOnly(x.occurred, timeZoneId))).map(([date, items]) => (_jsxs("div", { className: "same-date-container", children: [_jsx("div", { className: "date-only", children: date }), _jsx("div", { className: "expenses", children: items.map((e) => (_jsx("div", { className: "expense", id: `expense-${e.id}`, children: _jsx(Expense, { amount: e.amount, currency: e.currency, occurred: e.occurred, description: e.description, location: e.location, timeZoneId: timeZoneId, onClick: () => (selectedExpense.value = e), onLongPress: () => {
+                                                    longPressExpense.value = e;
+                                                    longPressMenu.value = 'options';
+                                                }, userAmount: getUserAmount(e), labels: e.labels, mode: mode }) }, e.id))) })] }, date))), _jsx(Sentinel, { fetchPage: fetchNextPage, hasMore: hasNextPage, isFetchingPage: isFetchingNextPage })] }))] }), selectedExpense.value && (_jsx(DetailedExpense, { selectedExpense: selectedExpense, amount: selectedExpense.value.amount, currency: selectedExpense.value.currency, description: selectedExpense.value.description, labels: selectedExpense.value.labels, location: selectedExpense.value.location, occurred: selectedExpense.value.occurred, payments: selectedExpense.value.payments, shares: selectedExpense.value.shares, timeZoneId: timeZoneId, timeZoneCoordinates: userInfo.timeZoneCoordinates, creator: selectedExpense.value.creatorId, created: selectedExpense.value.created, participants: allParticipants, errorMessage: errorMessage, userMemberId: userMemberId || '', group: group, userId: userInfo?.userId, mode: mode })), longPressMenu.value === 'options' &&
+                longPressExpense.value &&
+                ((group && !group.isArchived) ||
+                    (mode === Mode.NonGroup && !group) ||
+                    longPressExpense.value.transactionType ===
+                        TransactionType.Personal) && (_jsx(LongPressMenu, { onEdit: () => (longPressMenu.value = 'editExpense'), onDelete: () => (longPressMenu.value = 'deleteExpense'), onClose: () => (longPressMenu.value = null) })), longPressMenu.value === 'deleteExpense' && (_jsx("div", { style: {
+                    position: 'fixed',
+                    inset: 0,
+                    background: 'rgba(0, 0, 0, 0.45)',
+                    backdropFilter: 'blur(2px)',
+                    zIndex: 998,
+                }, onClick: () => (longPressMenu.value = null) })), _jsx(DeleteExpenseAnimation, { menu: longPressMenu, description: longPressExpense.value?.description ?? '', selectedExpense: longPressExpense, errorMessage: errorMessage }), _jsx(EditExpenseAnimation, { expense: buildFormExpense(longPressExpense, mode, group) ?? null, groupId: group?.id, timeZoneId: timeZoneId, menu: longPressMenu, selectedExpense: longPressExpense, timeZoneCoordinates: userInfo?.timeZoneCoordinates, currency: userInfo?.currency, groupMembers: group ? signal([...group.members, ...group.guests]) : signal([]), nonGroupUsers: signal(allParticipants.map((p) => toUser(p))), isPersonal: mode === Mode.Personal ? signal(true) : signal(false), isnonGroupExpense: mode === Mode.NonGroup ? signal(true) : signal(false) }), _jsx(MenuAnimationBackground, { menu: menu }), _jsx(ErrorMenuAnimation, { menu: menu, message: errorMessage.value, type: "expense" }), _jsx(GroupTotalsByCurrencyAnimation, { menu: menu, bar1Legend: "Group Total", bar2Legend: mode === Mode.Personal ? 'Your Total' : 'Your Share', bar2Color: "#e151ee", bar1Color: "#5183ee", groupTotalsByCurrency: groupTotalsByCurrency, userTotalsByCurrency: userTotalsByCurrency, mode: mode })] }));
+};
+export default Expenses;

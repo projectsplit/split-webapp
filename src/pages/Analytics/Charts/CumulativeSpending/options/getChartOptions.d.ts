@@ -1,0 +1,2 @@
+import { Frequency } from '../../../../../types';
+export declare const getChartOptions: (isSuccess: boolean, expensePoints: number[], selectedCycle: Frequency, labels: string[], enhancedDatesToNumbers: number[], selectedYear: number, selectedTimeCycleIndex: number, lastNumberBeforeNaN: number | undefined, currentWeekIndex: number, hitRadius: number[], fractalFactor: number, currency: string) => any;

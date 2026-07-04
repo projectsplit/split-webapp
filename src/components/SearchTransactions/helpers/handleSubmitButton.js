@@ -1,0 +1,154 @@
+import { $getRoot } from 'lexical';
+import { isBeautifulMentionNode, isElementNode } from './isElementNode';
+import { addExistingTriggerElement } from './addExistingTriggerElement';
+import { finalProcessConstraints } from './finalProcessConstraints';
+import { getFilterStorageKey } from './localStorageStringParser';
+export const handleSubmitButton = (editorState, expenseFilterState, transferFilterState, menu, category, queryClient, expenseParsedFilters, transferParsedFilters, isPersonal) => {
+    if (editorState === null)
+        return;
+    const searchTerm = editorState.read(() => {
+        const root = $getRoot();
+        return root.getTextContent();
+    });
+    const mentionRegex = /(\S*)(payer|receiver|sender|participant|before|after|category|during):\S+/g;
+    const cleanedInput = (searchTerm.replace(mentionRegex, '').trim() +
+        ' ' +
+        (expenseFilterState.value.freeText || '')).trim();
+    const jsonObject = editorState.toJSON().root.children;
+    const expensesDateTriggerOrder = [];
+    const transfersDateTriggerOrder = [];
+    if (isElementNode(jsonObject[0])) {
+        const children = jsonObject[0].children;
+        children.map((c) => {
+            const actualId = c.id || c.data?.id || c.data?.memberId;
+            if (c.type === 'beautifulMention' &&
+                ['before:', 'during:', 'after:'].includes(c.trigger) &&
+                c.data.category === 'expenses') {
+                // Record the trigger in the order it appears
+                expensesDateTriggerOrder.push({ trigger: c.trigger, value: c.value });
+            }
+            if (c.type === 'beautifulMention' &&
+                ['before:', 'during:', 'after:'].includes(c.trigger) &&
+                c.data.category === 'transfers') {
+                // Record the trigger in the order it appears
+                transfersDateTriggerOrder.push({ trigger: c.trigger, value: c.value });
+            }
+            // Deduplicate
+            if (c.trigger === 'payer:' &&
+                actualId &&
+                !expenseFilterState.value.payersIds.includes(actualId)) {
+                expenseFilterState.value.payersIds.push(actualId);
+            }
+            if (c.trigger === 'participant:' &&
+                actualId &&
+                !expenseFilterState.value.participantsIds.includes(actualId)) {
+                expenseFilterState.value.participantsIds.push(actualId);
+            }
+            if (c.trigger === 'sender:' &&
+                actualId &&
+                !transferFilterState.value.sendersIds.includes(actualId)) {
+                transferFilterState.value.sendersIds.push(actualId);
+            }
+            if (c.trigger === 'receiver:' &&
+                actualId &&
+                !transferFilterState.value.receiversIds.includes(actualId)) {
+                transferFilterState.value.receiversIds.push(actualId);
+            }
+            if (c.trigger === 'before:') {
+                if (isBeautifulMentionNode(c) &&
+                    c.data.category === 'expenses' &&
+                    !expenseFilterState.value.before.includes(c.value)) {
+                    expenseFilterState.value.before.push(c.value);
+                }
+                if (isBeautifulMentionNode(c) &&
+                    c.data.category === 'transfers' &&
+                    !transferFilterState.value.before.includes(c.value)) {
+                    transferFilterState.value.before.push(c.value);
+                }
+            }
+            if (c.trigger === 'during:') {
+                if (isBeautifulMentionNode(c) &&
+                    c.data.category === 'expenses' &&
+                    !expenseFilterState.value.during.includes(c.value)) {
+                    expenseFilterState.value.during.push(c.value);
+                }
+                if (isBeautifulMentionNode(c) &&
+                    c.data.category === 'transfers' &&
+                    !transferFilterState.value.during.includes(c.value)) {
+                    transferFilterState.value.during.push(c.value);
+                }
+            }
+            if (c.trigger === 'after:') {
+                if (isBeautifulMentionNode(c) &&
+                    c.data.category === 'expenses' &&
+                    !expenseFilterState.value.after.includes(c.value)) {
+                    expenseFilterState.value.after.push(c.value);
+                }
+                if (isBeautifulMentionNode(c) &&
+                    c.data.category === 'transfers' &&
+                    !transferFilterState.value.after.includes(c.value)) {
+                    transferFilterState.value.after.push(c.value);
+                }
+            }
+            // Deduplicate labels
+            if (c.trigger === 'category:' &&
+                actualId &&
+                !expenseFilterState.value.labels.includes(actualId)) {
+                expenseFilterState.value.labels.push(actualId);
+            }
+            if (category.value === 'expenses') {
+                expenseFilterState.value.freeText = cleanedInput;
+            }
+            if (category.value === 'transfers') {
+                transferFilterState.value.freeText = cleanedInput;
+            }
+        });
+        const expenseDatesBackend = finalProcessConstraints(addExistingTriggerElement(expenseFilterState, expensesDateTriggerOrder));
+        const transferDatesBackend = finalProcessConstraints(addExistingTriggerElement(transferFilterState, transfersDateTriggerOrder));
+        const expenseFilter = {
+            groupId: expenseFilterState.value.groupId,
+            participantsIds: expenseFilterState.value.participantsIds,
+            payersIds: expenseFilterState.value.payersIds,
+            freeText: expenseFilterState.value.freeText,
+            before: expenseDatesBackend?.find((e) => e.trigger === 'before:')?.value ||
+                null,
+            after: expenseDatesBackend?.find((e) => e.trigger === 'after:')?.value || null,
+            labels: expenseFilterState.value.labels,
+        };
+        const transferFilter = {
+            groupId: transferFilterState.value.groupId,
+            receiversIds: transferFilterState.value.receiversIds,
+            sendersIds: transferFilterState.value.sendersIds,
+            freeText: transferFilterState.value.freeText,
+            before: transferDatesBackend?.find((e) => e.trigger === 'before:')?.value ||
+                null,
+            after: transferDatesBackend?.find((e) => e.trigger === 'after:')?.value ||
+                null,
+        };
+        localStorage.setItem(getFilterStorageKey('expense', expenseFilter.groupId, isPersonal), JSON.stringify(expenseFilter));
+        localStorage.setItem(getFilterStorageKey('transfer', transferFilter.groupId), JSON.stringify(transferFilter));
+        expenseParsedFilters.value = expenseFilter;
+        transferParsedFilters.value = transferFilter;
+        if (expenseFilterState.value.groupId) {
+            queryClient.invalidateQueries({
+                queryKey: ['groupExpenses'],
+                exact: false,
+            });
+            queryClient.invalidateQueries({
+                queryKey: ['groupTransfers'],
+                exact: false,
+            });
+        }
+        else {
+            queryClient.invalidateQueries({
+                queryKey: ['nonGroupExpenses'],
+                exact: false,
+            });
+            queryClient.invalidateQueries({
+                queryKey: ['personalExpenses'],
+                exact: false,
+            });
+        }
+        menu.value = null;
+    }
+};

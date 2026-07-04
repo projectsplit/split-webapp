@@ -1,0 +1,61 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useEffect } from 'react';
+import { StyledHomepage } from './Home.Styled';
+import { useNavigate } from 'react-router-dom';
+import useBudgetInfo from '../../api/auth/QueryHooks/useBudgetInfo';
+import { useOutletContext } from 'react-router-dom';
+import { useSignal } from '@preact/signals-react';
+import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
+import { HomeSkeleton } from '../../components/HomeSkeleton/HomeSkeleton';
+import { AiFillThunderbolt } from 'react-icons/ai';
+import HomeQuickActionsAnimation from '../../components/Animations/HomeQuickActionsAnimation';
+import CreateExpenseForm from '../../components/CreateExpenseForm/CreateExpenseForm';
+import TransferForm from '../../components/TransferForm/TransferForm';
+import NonGroupExpenseUsersAnimation from '../../components/Animations/NonGroupExpenseUsersAnimation';
+import NonGroupTransferAnimation from '../../components/Animations/NonGroupTransferAnimation';
+import { useGetMostRecentGroups } from '@/api/auth/QueryHooks/useGetMostRecentGroups';
+import { useTotalUserBalance } from './hooks/useTotalUserBalance';
+import ScrollableMenuButtons from './ScrollableMenuButtons/ScrollableMenuButtons';
+export default function Home() {
+    const navigate = useNavigate();
+    const isPersonal = useSignal(true);
+    const isNonGroupExpense = useSignal(false);
+    const isNonGroupTransfer = useSignal(true);
+    const nonGroupUsers = useSignal([]);
+    const fromHomeGroup = useSignal(null);
+    const groupMembers = useSignal([]);
+    const { userInfo, topMenuTitle, } = useOutletContext();
+    const nonGroupExpenseMenu = useSignal(null);
+    const nonGroupTransferMenu = useSignal({
+        attribute: '',
+        menu: null,
+        senderId: '',
+        senderName: '',
+        receiverId: '',
+        receiverName: '',
+    });
+    const quickActionsMenu = useSignal(null);
+    const recentContextId = userInfo?.recentContextId;
+    const { totalBalances, isLoading, isFetching, groupsData, nonGroupGroupedTransactions, } = useTotalUserBalance(userInfo?.userId || '');
+    const { data: mostRecentGroupData, isFetching: mostRecentGroupDataIsFetching, } = useGetMostRecentGroups(recentContextId);
+    const { data: activeBudgetData } = useBudgetInfo();
+    useEffect(() => {
+        topMenuTitle.value = '';
+        const saved = localStorage.getItem('submittedFromHomePersistData');
+        if (saved) {
+            const { nonGroupUsers: u, fromHomeGroup: g, groupMembers: m, } = JSON.parse(saved);
+            nonGroupUsers.value = u ?? [];
+            fromHomeGroup.value = g ?? null;
+            groupMembers.value = m ?? [];
+            isPersonal.value = false;
+            if (fromHomeGroup.value !== null) {
+                isNonGroupExpense.value = false;
+            }
+        }
+    }, []);
+    const isGlowing = quickActionsMenu.value === 'quickActions';
+    return (_jsxs(StyledHomepage, { children: [isFetching || !userInfo?.username ? (_jsx(HomeSkeleton, {})) : (_jsxs("div", { className: "fadeIn", children: [_jsx("div", { className: "fixedTop", children: _jsxs("div", { className: "welcomeStripe", children: ["Welcome, ", _jsx("strong", { children: userInfo?.username })] }) }), _jsx(ScrollableMenuButtons, { mostRecentGroupDataIsFetching: mostRecentGroupDataIsFetching, mostRecentGroupData: mostRecentGroupData, recentContextId: recentContextId, nonGroupGroupedTransactions: nonGroupGroupedTransactions, userInfo: userInfo, navigate: navigate, isLoading: isLoading, isFetching: isFetching, groupsData: groupsData, totalBalances: totalBalances, topMenuTitle: topMenuTitle, activeBudgetData: activeBudgetData, showBudgetInfo: userInfo.showBudgetInfo }), _jsx("div", { className: `actions ${isGlowing ? 'glow' : ''}`, onClick: () => (quickActionsMenu.value =
+                            quickActionsMenu.value === 'quickActions'
+                                ? null
+                                : 'quickActions'), children: _jsx(AiFillThunderbolt, { className: "thunder" }) })] })), _jsx(MenuAnimationBackground, { menu: quickActionsMenu }), quickActionsMenu.value === 'newExpense' && (_jsx(CreateExpenseForm, { groupId: fromHomeGroup.value?.id, expense: null, timeZoneId: userInfo.timeZone, menu: quickActionsMenu, timeZoneCoordinates: userInfo.timeZoneCoordinates, header: "Create New Expense", isCreateExpense: true, isPersonal: isPersonal, isnonGroupExpense: isNonGroupExpense, groupMembers: groupMembers, currency: userInfo.currency, nonGroupUsers: nonGroupUsers, nonGroupMenu: nonGroupExpenseMenu, fromHomeGroup: fromHomeGroup, fromHome: true })), quickActionsMenu.value === 'newTransfer' && (_jsx(TransferForm, { groupId: fromHomeGroup.value?.id, timeZoneId: userInfo.timeZone, menu: quickActionsMenu, isnonGroupTransfer: isNonGroupTransfer, groupMembers: groupMembers, currency: userInfo.currency, nonGroupUsers: nonGroupUsers, fromHomeGroup: fromHomeGroup, nonGroupMenu: nonGroupTransferMenu, fromHome: true })), _jsx(HomeQuickActionsAnimation, { quickActionsMenu: quickActionsMenu, isNonGroupExpense: isNonGroupExpense, nonGroupTransferMenu: nonGroupTransferMenu, fromHomeGroup: fromHomeGroup, userInfo: userInfo }), _jsx(NonGroupExpenseUsersAnimation, { menu: nonGroupExpenseMenu, nonGroupUsers: nonGroupUsers, isPersonal: isPersonal, groupMembers: groupMembers, fromHomeGroup: fromHomeGroup, isNonGroupExpense: isNonGroupExpense, fromNonGroup: false }), _jsx(NonGroupTransferAnimation, { nonGroupTransferMenu: nonGroupTransferMenu, fromHomeGroup: fromHomeGroup, groupMembers: groupMembers, isNonGroupTransfer: isNonGroupTransfer })] }));
+}

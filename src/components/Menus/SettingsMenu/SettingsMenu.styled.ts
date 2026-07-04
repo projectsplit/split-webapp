@@ -103,6 +103,12 @@ export const StyledSettingsMenu = styled.div`
         font-size: 1.5rem;
       }
     }
+    .pushWarning {
+      margin-top: 0.5rem;
+      padding: 0 1rem;
+      font-size: 0.8rem;
+      color: #e0a800;
+    }
   }
   .info {
     display: flex;

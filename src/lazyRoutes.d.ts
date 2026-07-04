@@ -1,0 +1,14 @@
+export declare const Group: import("react").LazyExoticComponent<typeof import("@/pages/TransactionsWrappers/Group").default>;
+export declare const NonGroup: import("react").LazyExoticComponent<typeof import("@/pages/TransactionsWrappers/NonGroup").default>;
+export declare const Expenses: import("react").LazyExoticComponent<() => import("react/jsx-runtime").JSX.Element>;
+export declare const Transfers: import("react").LazyExoticComponent<import("react").FC<{}>>;
+export declare const Members: import("react").LazyExoticComponent<typeof import("@/pages/Members/Members").default>;
+export declare const Analytics: import("react").LazyExoticComponent<typeof import("@/pages/Analytics/Analytics").default>;
+export declare const Budget: import("react").LazyExoticComponent<typeof import("@/pages/Budget/Budget").default>;
+export declare const CreateBudget: import("react").LazyExoticComponent<typeof import("@/pages/Budget/CreateBudget/CreateBudget").default>;
+export declare const Shared: import("react").LazyExoticComponent<typeof import("@/pages/Groups/Shared").default>;
+export declare const GenerateInvitationCode: import("react").LazyExoticComponent<typeof import("@/pages/GenerateInvitationCode/GenerateInvitationCode").default>;
+export declare const Personal: import("react").LazyExoticComponent<() => import("react/jsx-runtime").JSX.Element>;
+export declare const BudgetActions: import("react").LazyExoticComponent<() => import("react/jsx-runtime").JSX.Element>;
+export declare const ManageBudgets: import("react").LazyExoticComponent<() => import("react/jsx-runtime").JSX.Element>;
+export declare const prewarmRoutes: () => void;

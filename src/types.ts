@@ -40,6 +40,7 @@ export type UserInfo = {
   hasNewerNotifications: boolean;
   currency: string;
   showBudgetInfo: boolean;
+  pushNotificationsEnabled: boolean;
 };
 
 export type ExpenseItem = {
@@ -543,6 +544,38 @@ export type CreateTransferRequest = {
 export type GetUserInvitationsResponse = {
   invitations: GetUserInvitationsResponseItem[];
   next: string | null;
+};
+
+export type ConnectionRequestItem = {
+  id: string;
+  created: string;
+  senderId: string;
+  senderUsername: string;
+};
+
+export type GetConnectionRequestsResponse = {
+  connectionRequests: ConnectionRequestItem[];
+  next: string | null;
+};
+
+export type ConnectionStatus =
+  | 'connected'
+  | 'pending_sent'
+  | 'pending_received'
+  | 'none';
+
+export type ConnectionStatusItem = {
+  userId: string;
+  status: ConnectionStatus;
+  connectionId: string | null;
+};
+
+export type GetConnectionStatusesResponse = {
+  statuses: ConnectionStatusItem[];
+};
+
+export type GetVapidPublicKeyResponse = {
+  publicKey: string;
 };
 
 export type Debt = {

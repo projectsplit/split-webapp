@@ -1,0 +1,1 @@
+export declare const StyledReceivedMoreThanSpentMessage: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components/dist/types").Substitute<import("react").DetailedHTMLProps<import("react").HTMLAttributes<HTMLDivElement>, HTMLDivElement>, import("../../../interfaces").StyledOnTrackMessageProps>> & string;

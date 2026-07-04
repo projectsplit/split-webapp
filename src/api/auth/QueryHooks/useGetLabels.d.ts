@@ -1,0 +1,1 @@
+export declare const useLabels: (userId: string | undefined, isPersonal: boolean | undefined, groupId: string | undefined) => import("@tanstack/react-query").UseQueryResult<import("../../../types").GetLabelsResponse, Error>;

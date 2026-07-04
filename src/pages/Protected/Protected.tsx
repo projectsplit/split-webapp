@@ -9,6 +9,7 @@ import TopMenu from '../../components/Menus/TopMenu/TopMenu';
 import { JoinOverlay } from '../Join/JoinOverslay';
 import { useGetMe } from '@/api/auth/QueryHooks/useGetMe';
 import { prewarmRoutes } from '@/lazyRoutes';
+import { syncPushSubscription } from '@/helpers/pushNotifications';
 
 const Protected: React.FC = () => {
   const location = useLocation();
@@ -18,6 +19,13 @@ const Protected: React.FC = () => {
   useEffect(() => {
     prewarmRoutes();
   }, []);
+
+  // Push endpoints can rotate, so re-register this device on app start
+  useEffect(() => {
+    if (userInfo?.pushNotificationsEnabled) {
+      syncPushSubscription();
+    }
+  }, [userInfo?.pushNotificationsEnabled]);
 
   const groupIsArchived = useSignal<boolean>(false);
 

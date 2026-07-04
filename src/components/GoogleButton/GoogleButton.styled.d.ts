@@ -1,0 +1,3 @@
+export declare const StyledGoogleButton: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components").FastOmit<Omit<import("styled-components").FastOmit<import("react").DetailedHTMLProps<import("react").ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, keyof import("../../interfaces").SubmitButtonProps> & import("../../interfaces").SubmitButtonProps, "ref"> & {
+    ref?: import("react").RefObject<HTMLButtonElement> | ((instance: HTMLButtonElement | null) => void | import("react").DO_NOT_USE_OR_YOU_WILL_BE_FIRED_CALLBACK_REF_RETURN_VALUES[keyof import("react").DO_NOT_USE_OR_YOU_WILL_BE_FIRED_CALLBACK_REF_RETURN_VALUES]) | null | undefined;
+}, never>> & string;

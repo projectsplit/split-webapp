@@ -1,0 +1,13 @@
+import styled from 'styled-components';
+export const StyledInput = styled.input.withConfig({
+    shouldForwardProp: (prop) => prop !== 'backgroundcolor',
+}) `
+  border-radius: 10px;
+  padding: 0.8rem;
+  outline: none;
+  color: white;
+  background-color: ${({ theme, backgroundcolor }) => backgroundcolor || theme.layer2};
+  border-style: none;
+  font-size: 18px;
+  border: ${({ error, theme }) => error ? `1px solid  ${theme.redish}` : 'none'};
+`;

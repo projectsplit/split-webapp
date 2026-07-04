@@ -1,0 +1,72 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useEffect, useState } from 'react';
+import { StyledDateTimePicker } from './DateTimePicker.styled';
+import DayPicker from './DayPicker/DayPicker';
+import { RxChevronLeft, RxChevronRight } from 'react-icons/rx';
+import ScrollPicker from '../ScrollPicker/ScrollPicker';
+import { isNow, round, toLuxon, toUtcString } from '../../utils';
+import { DateTime as LuxonDateTime } from 'luxon';
+const DateTimePicker = ({ selectedDateTime, setSelectedDateTime, realtimeUpdate, setRealtimeUpdate, timeZoneId, showTimeControls, datePeriodClicked, calendarIsOpen, showOptions, withLexicalContext, category, isDateShowing, }) => {
+    const MINUTE_STEP = 1;
+    const [showTimePicker, setShowTimePicker] = useState(false);
+    const timePickerUtils = showTimeControls
+        ? {
+            hours: Array.from({ length: 24 }, (_, i) => LuxonDateTime.local().set({ hour: i }).toFormat('HH')),
+            minutes: Array.from({ length: 60 / MINUTE_STEP }, (_, i) => LuxonDateTime.local()
+                .set({ minute: i * MINUTE_STEP })
+                .toFormat('mm')),
+            onTimeClick: () => {
+                setShowTimePicker((prev) => !prev);
+            },
+            closestMinuteIndex: (dateTimeISO) => {
+                const dt = toLuxon(dateTimeISO, timeZoneId);
+                const closestMinute = round(dt.minute, MINUTE_STEP);
+                return closestMinute / MINUTE_STEP;
+            },
+            onNowClick: () => {
+                setSelectedDateTime(toUtcString(LuxonDateTime.utc().setZone(timeZoneId)));
+                setRealtimeUpdate?.(true);
+                setShowTimePicker(false);
+            },
+            onHourChange: (i) => {
+                setSelectedDateTime((prev) => toUtcString(toLuxon(prev, timeZoneId).set({ hour: i })));
+                setRealtimeUpdate?.(false);
+            },
+            onMinuteChange: (i) => {
+                setSelectedDateTime((prev) => toUtcString(toLuxon(prev, timeZoneId).set({ minute: i * MINUTE_STEP })));
+                setRealtimeUpdate?.(false);
+            },
+        }
+        : null;
+    useEffect(() => {
+        let interval;
+        if (realtimeUpdate && showTimeControls && setRealtimeUpdate) {
+            interval = setInterval(() => {
+                setSelectedDateTime((prev) => {
+                    const now = LuxonDateTime.utc().setZone(timeZoneId);
+                    const updatedDateTime = toLuxon(prev, timeZoneId).set({
+                        hour: now.hour,
+                        minute: now.minute,
+                        second: now.second,
+                    });
+                    return toUtcString(updatedDateTime);
+                });
+            }, 1000);
+        }
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [realtimeUpdate]);
+    useEffect(() => {
+        if (!realtimeUpdate && showTimeControls && setRealtimeUpdate)
+            setRealtimeUpdate(isNow(selectedDateTime));
+    }, [selectedDateTime]);
+    return (_jsxs(StyledDateTimePicker, { "$isSearchCalendar": calendarIsOpen?.value, children: [_jsxs("div", { className: "top-menu", children: [_jsxs("div", { className: "month-year", children: [_jsx(RxChevronLeft, { className: "button", onClick: () => setSelectedDateTime((prev) => toUtcString(toLuxon(prev, timeZoneId).minus({ months: 1 }))) }), _jsx("div", { className: "text", children: toLuxon(selectedDateTime, timeZoneId).toFormat('MMM') }), _jsx(RxChevronRight, { className: "button", onClick: () => setSelectedDateTime((prev) => toUtcString(toLuxon(prev, timeZoneId).plus({ months: 1 }))) })] }), _jsxs("div", { className: "month-year", children: [_jsx(RxChevronLeft, { className: "button", onClick: () => setSelectedDateTime((prev) => toUtcString(toLuxon(prev, timeZoneId).minus({ years: 1 }))) }), _jsx("div", { className: "text", children: toLuxon(selectedDateTime, timeZoneId).year }), _jsx(RxChevronRight, { className: "button", onClick: () => setSelectedDateTime((prev) => toUtcString(toLuxon(prev, timeZoneId).plus({ years: 1 }))) })] })] }), _jsx(DayPicker, { selectedDateTime: selectedDateTime, setSelectedDateTime: setSelectedDateTime, timeZoneId: timeZoneId, datePeriodClicked: datePeriodClicked, calendarIsOpen: calendarIsOpen, showOptions: showOptions, withLexicalContext: withLexicalContext, category: category, isDateShowing: isDateShowing }), showTimeControls && timePickerUtils && (_jsxs("div", { className: "bottom-menu", onClick: () => {
+                    if (isDateShowing) {
+                        isDateShowing.value = true;
+                    }
+                }, children: [_jsx("div", { className: `button ${isNow(selectedDateTime) ? 'active' : ''}`, onClick: timePickerUtils.onNowClick, children: "Now" }), _jsx("div", { className: "time", onClick: timePickerUtils.onTimeClick, children: toLuxon(selectedDateTime, timeZoneId).toFormat('HH:mm') }), _jsx("div", { className: "timezone", children: toLuxon(selectedDateTime, timeZoneId).toFormat('ZZ') })] })), showTimeControls && timePickerUtils && showTimePicker && (_jsxs("div", { className: "time-picker", children: [_jsx(ScrollPicker, { items: timePickerUtils.hours, selectedIndex: toLuxon(selectedDateTime, timeZoneId).hour, setSelectedIndex: timePickerUtils.onHourChange }), _jsx(ScrollPicker, { items: timePickerUtils.minutes, selectedIndex: timePickerUtils.closestMinuteIndex(selectedDateTime), setSelectedIndex: timePickerUtils.onMinuteChange })] }))] }));
+};
+export default DateTimePicker;

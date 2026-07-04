@@ -26,6 +26,12 @@ import { timeZones } from '../../../helpers/timeZones';
 import EditUsernameAnimation from '../../Animations/EditUsernameAnimation';
 import { FaUserPen } from 'react-icons/fa6';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
+import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPushNotificationsEnabled';
+import {
+  isPushSupported,
+  subscribeToPush,
+} from '@/helpers/pushNotifications';
+import { IoNotificationsOutline } from 'react-icons/io5';
 
 export default function SettingsMenu({
   menu,
@@ -78,6 +84,37 @@ export default function SettingsMenu({
   };
 
   const {mutateAsync:setShowBudgetInfo} = useSetShowBudgetInfo();
+  const { mutate: setPushNotificationsEnabled } =
+    useSetPushNotificationsEnabled();
+  const [pushWarning, setPushWarning] = useState<string | null>(null);
+
+  const handlePushToggle = async () => {
+    setPushWarning(null);
+
+    if (userInfo?.pushNotificationsEnabled) {
+      setPushNotificationsEnabled(false);
+      return;
+    }
+
+    if (!isPushSupported()) {
+      setPushWarning('Push notifications are not supported on this device.');
+      return;
+    }
+
+    try {
+      const subscribed = await subscribeToPush();
+      if (subscribed) {
+        setPushNotificationsEnabled(true);
+      } else {
+        setPushWarning(
+          'Notifications are blocked. Allow notifications for Buqs in your device settings.'
+        );
+      }
+    } catch (error) {
+      console.error('Failed to enable push notifications:', error);
+      setPushWarning('Something went wrong while enabling notifications.');
+    }
+  };
 
   const allCurrencies = useSignal<Currency[]>(currencyData);
 
@@ -135,6 +172,16 @@ export default function SettingsMenu({
           <div className="description">Show budget info</div>
           <ToggleSwitch isOn={userInfo?.showBudgetInfo} onToggle={handleToggle} />
         </div>
+
+        <div className="toggleOption">
+          <IoNotificationsOutline className="icon" />
+          <div className="description">Push notifications</div>
+          <ToggleSwitch
+            isOn={!!userInfo?.pushNotificationsEnabled}
+            onToggle={handlePushToggle}
+          />
+        </div>
+        {pushWarning && <div className="pushWarning">{pushWarning}</div>}
 
         <div
           className="option"
