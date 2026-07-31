@@ -79,6 +79,12 @@ export const StyledSettingsMenu = styled.div`
       .description {
         font-size: 1rem;
       }
+      .emailDescription {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.35rem;
+      }
       .icon {
         font-size: 1.5rem;
       }

@@ -16,7 +16,7 @@ import { currencyData } from '../../../helpers/openExchangeRates';
 import ToggleSwitch from '../../ToggleSwitch/ToggleSwitch';
 import { logOut } from '../../../api/auth/api';
 import routes from '../../../routes';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useIsFetching, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSelectedCurrency } from '../../../api/auth/CommandHooks/useSelectedCurrency';
 import { RiTimeZoneLine } from 'react-icons/ri';
 import TimeZoneOptionsAnimation from '../../Animations/TimeZoneOptionsAnimation';
@@ -24,8 +24,11 @@ import { useTimeZone } from '../../../api/auth/CommandHooks/useTimeZone';
 import { getInitials } from '../../../helpers/getInitials';
 import { timeZones } from '../../../helpers/timeZones';
 import EditUsernameAnimation from '../../Animations/EditUsernameAnimation';
+import EditEmailAnimation from '../../Animations/EditEmailAnimation';
 import { FaUserPen } from 'react-icons/fa6';
+import { MdOutlineEmail } from 'react-icons/md';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
+import Spinner from '../../Spinner/Spinner';
 
 export default function SettingsMenu({
   menu,
@@ -37,8 +40,11 @@ export default function SettingsMenu({
   const currencyMenu = useSignal<string | null>(null);
   const timeZoneMenu = useSignal<string | null>(null);
   const editUsernameMenu = useSignal<string | null>(null);
+  const editEmailMenu = useSignal<string | null>(null);
 
   const queryClient = useQueryClient();
+
+  const isUserInfoFetching = useIsFetching({ queryKey: ['getMe'] }) > 0;
 
   const userCurrency = userInfo?.currency;
   const timeZone = userInfo?.timeZone;
@@ -144,6 +150,27 @@ export default function SettingsMenu({
           <div className="description">Change username</div>
         </div>
 
+        <div
+          className="option"
+          onClick={() => (editEmailMenu.value = 'editEmail')}
+        >
+          <MdOutlineEmail className="icon" />
+          <div className="description emailDescription">
+            <span>Email</span>
+            {isUserInfoFetching ? (
+              <Spinner fontSize="1rem" />
+            ) : (
+              <span>
+                {userInfo?.email
+                  ? userInfo.emailVerified
+                    ? '(Verified)'
+                    : '(Unverified)'
+                  : '(Not set)'}
+              </span>
+            )}
+          </div>
+        </div>
+
         <div className="option" onClick={handleLogout}>
           <TbLogout2 className="icon" />
           <div className="description">Log out</div>
@@ -156,6 +183,7 @@ export default function SettingsMenu({
       <MenuAnimationBackground menu={currencyMenu} />
       <MenuAnimationBackground menu={timeZoneMenu} />
       <MenuAnimationBackground menu={editUsernameMenu} />
+      <MenuAnimationBackground menu={editEmailMenu} />
       <TimeZoneOptionsAnimation
         timeZoneMenu={timeZoneMenu}
         clickHandler={handldeTimeZoneOptionsClick}
@@ -169,6 +197,11 @@ export default function SettingsMenu({
       <EditUsernameAnimation
         editUsernameMenu={editUsernameMenu}
         existingUsername={userInfo?.username}
+      />
+      <EditEmailAnimation
+        editEmailMenu={editEmailMenu}
+        existingEmail={userInfo?.email}
+        emailVerified={userInfo?.emailVerified}
       />
     </StyledSettingsMenu>
   );
