@@ -83,26 +83,27 @@ export default function Members() {
       {isFetching ? (
         <Spinner />
       ) : mode === Mode.NonGroup ? (
+        // Every non group debt is pairwise between the logged in user and someone else,
+        // so a single card for the logged in user covers all of them.
         <MemberFC
           group={group}
-          key={allParticipants.length > 0 ? allParticipants[0].id : userInfo.userId}
+          key={userInfo.userId}
           pendingTransactions={debts ?? []}
           groupedTransactions={groupedTransactions}
-          id={allParticipants.length > 0 ? allParticipants[0].id : userInfo.userId}
-          name={allParticipants.length > 0 ? allParticipants[0].name : userInfo.username}
-          isLogedUser={
-            allParticipants.length > 0
-              ? allParticipants[0].id === userMemberId ||
-                allParticipants[0].id === userInfo.userId
-              : true
-          }
-          isGuest={allParticipants.length > 0 ? (guests?.some((g) => g.id === allParticipants[0].id) ?? false) : false}
+          id={userInfo.userId}
+          name={userInfo.username}
+          isLogedUser={true}
+          isGuest={false}
           menu={menu}
           idSelectedToSettleUp={idSelectedToSettleUp}
-          participants={allParticipants.length > 0 ? allParticipants : [{ id: userInfo.userId, name: userInfo.username }]}
+          participants={
+            allParticipants.length > 0
+              ? allParticipants
+              : [{ id: userInfo.userId, name: userInfo.username }]
+          }
           totalSpent={totalSpent}
           guestToBeReplaced={guestToBeReplaced}
-          userOrMemberId={userMemberId ?? userInfo.userId}
+          userOrMemberId={userInfo.userId}
         />
       ) : (
         sortedParticipants?.map((p) => (

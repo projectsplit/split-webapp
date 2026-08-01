@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Currency, PickerMember, SplitCategory, UserInfo } from '@/types';
+import { Currency, PickerMember, UserInfo } from '@/types';
 import MenuAnimationBackground from '@/components/Animations/MenuAnimationBackground';
 import CurrencyOptionsAnimation from '@/components/Animations/CurrencyOptionsAnimation';
 import InputMonetary from '@/components/InputMonetary/InputMonetary';
@@ -46,9 +46,6 @@ export default function ExpenseForm({
   fromPersonal,
 }: ExpenseFormProps) {
   const isInitialRender = useRef<boolean>(true);
-  const userExistsInCategory = useSignal<
-    Record<SplitCategory, boolean | undefined>
-  >({ Participants: false, Payers: false });
   const navigate = useNavigate();
   const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
   const inputs = useExpenseFormStore();
@@ -98,6 +95,13 @@ export default function ExpenseForm({
 
   const currencyMenu = useSignal<string | null>(null);
   const warningMenu = useSignal<string | null>(null);
+  const warningMessage = useSignal<string>('');
+
+  const showWarning = (message: string) => {
+    warningMessage.value = message;
+    warningMenu.value = 'generalWarning';
+  };
+
   const isMapOpen = useSignal<boolean>(false);
   const isDateShowing = useSignal<boolean>(!isCreateExpense);
   const labelMenuIsOpen = useSignal<boolean>(false);
@@ -145,7 +149,8 @@ export default function ExpenseForm({
       groupMembers,
       fromHome,
       isnonGroupExpense,
-      isPersonal
+      isPersonal,
+      showWarning
     );
 
   const { mutate: editExpenseMutation, isPending: isPendingEditExpense } =
@@ -157,19 +162,11 @@ export default function ExpenseForm({
       groupMembers,
       inputs.makePersonalClicked,
       isnonGroupExpense,
-      selectedExpense
+      selectedExpense,
+      showWarning
     );
 
   const onSubmit = () => {
-    if (
-      isnonGroupExpense?.value &&
-      !userExistsInCategory.value.Participants &&
-      !userExistsInCategory.value.Payers &&
-      !isPersonal?.value
-    ) {
-      warningMenu.value = 'generalWarning';
-      return;
-    }
     inputs.submitExpense({
       groupId,
       createExpenseMutation,
@@ -180,6 +177,11 @@ export default function ExpenseForm({
       isCreateExpense,
       expense,
       fromHomeGroup,
+      userId: userInfo.userId,
+      onUserNotInExpense: () =>
+        showWarning(
+          'You need to be either a participant or a payer in order to submit a non-group expense.'
+        ),
     });
   };
 
@@ -266,7 +268,6 @@ export default function ExpenseForm({
         setPayersError={inputs.setPayersError}
         payersCategory={inputs.payersCategory}
         isPersonal={isPersonal}
-        userExistsInCategory={userExistsInCategory}
       />
       <FormInputWithTag
         description="Description"
@@ -346,9 +347,7 @@ export default function ExpenseForm({
       />
       <GeneralWarningMenuAnimation
         menu={warningMenu}
-        message={
-          'You need to be either a participant or a payer in order to submit a non-group expense.'
-        }
+        message={warningMessage.value}
       />
     </StyledExpenseForm>
   );

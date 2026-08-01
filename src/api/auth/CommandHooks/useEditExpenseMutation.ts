@@ -19,7 +19,8 @@ export const useEditExpenseMutation = (
   groupMembers: Signal<(Member | Guest)[]>,
   makePersonalClicked: boolean,
   isNonGroupExpense: Signal<boolean> | undefined,
-  selectedExpense?: Signal<ExpenseResponseItem | null>
+  selectedExpense?: Signal<ExpenseResponseItem | null>,
+  onError?: (message: string) => void
 ) => {
   const group = useEditExpense(
     menu,
@@ -41,7 +42,8 @@ export const useEditExpenseMutation = (
     groupMembers,
     makePersonalClicked,
     isNonGroupExpense,
-    selectedExpense
+    selectedExpense,
+    onError
   );
 
   const personal = useEditPersonalExpense(

@@ -34,7 +34,6 @@ import {
   EnhancedPeopleWithProps,
   FetchedPeople,
   FilteredPeople,
-  SplitCategory,
   Mode,
   TransactionType,
   Currency,
@@ -1486,7 +1485,6 @@ export interface DetailedSharedExpenseTextProps {
   setPayersError: (msgOrUpdater: string | ((prev: string) => string)) => void;
   payersCategory: Signal<SplitMethod>;
   isPersonal: Signal<boolean>;
-  userExistsInCategory: Signal<Record<SplitCategory, boolean | undefined>>;
 }
 
 export interface CalendarAndErrorsWrapperProps {

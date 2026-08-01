@@ -25,7 +25,8 @@ export const useCreateExpenseMutation = (
   groupMembers: Signal<(Member | Guest)[]>,
   fromHome: boolean | undefined,
   isnonGroupExpense: Signal<boolean> | undefined,
-  isPersonal: Signal<boolean> | undefined
+  isPersonal: Signal<boolean> | undefined,
+  onError?: (message: string) => void
 ) => {
   const {
     mutate: createGroupExpenseMutation,
@@ -52,7 +53,8 @@ export const useCreateExpenseMutation = (
     nonGroupUsers,
     fromHomeGroup,
     groupMembers,
-    makePersonalClicked
+    makePersonalClicked,
+    onError
   );
 
   const {
