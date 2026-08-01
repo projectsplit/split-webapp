@@ -53,6 +53,12 @@ export default function ScrollableMenuButtons({
   const { mutateAsync: setShowBudgetInfo } = useSetShowBudgetInfo();
   const [showButton, setShowButton] = useState(false);
 
+  // Balances cover groups and non group transactions alike, so a user with no groups
+  // but with outstanding non group debts still has a total worth showing.
+  const hasBalanceToShow = Object.values(totalBalances).some(
+    (amount) => amount !== 0
+  );
+
   return (
     <StyledScrollableMenuButtons>
       {showBudgetInfo && activeBudgetData && (
@@ -84,7 +90,10 @@ export default function ScrollableMenuButtons({
         navigate={navigate}
       />
 
-      {!isLoading && !isFetching && groupsData?.groupCount === 0 ? (
+      {!isLoading &&
+      !isFetching &&
+      groupsData?.groupCount === 0 &&
+      !hasBalanceToShow ? (
         <OptionButton
           onClick={() => navigate('/shared')}
           name="Shared"

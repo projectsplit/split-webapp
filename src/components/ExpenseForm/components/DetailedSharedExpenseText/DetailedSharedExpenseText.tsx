@@ -29,25 +29,7 @@ export default function DetailedSharedExpenseText({
   setPayersError,
   payersCategory,
   isPersonal,
-  userExistsInCategory,
 }: DetailedSharedExpenseTextProps) {
-  const userIdToCheck =
-    nonGroupUsers.value.length > 0 || isnonGroupExpense?.value
-      ? userInfo?.userId
-      : userMemberId;
-
-  const isUserSelectedInParticipants = adjustParticipants.some(
-    (m) => m.id === userIdToCheck && m.selected
-  );
-  const isUserSelectedInPayers = adjustPayers.some(
-    (m) => m.id === userIdToCheck && m.selected
-  );
-
-  userExistsInCategory.value = {
-    Participants: isUserSelectedInParticipants,
-    Payers: isUserSelectedInPayers,
-  };
-
   const showDetailedSharedExpenseText =
     (nonGroupUsers?.value.length > 0 || groupMembers?.value.length > 0) &&
     !!amountNumber &&

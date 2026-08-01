@@ -11,12 +11,21 @@ import routes from '../../routes';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// The server reports sign-up failures as a plain message, so map it back to the
+// field it belongs to instead of always blaming the username.
+const resolveErrorField = (message: string): 'username' | 'email' | 'form' => {
+  const normalized = message.toLowerCase();
+  if (normalized.includes('username')) return 'username';
+  if (normalized.includes('email')) return 'email';
+  return 'form';
+};
+
 export default function CreateAccount() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [networkError, setNetworkError] = useState<string>('');
-  const [requestError, setRequestError] = useState<string>('');
+  const [formError, setFormError] = useState<string>('');
+  const [usernameError, setUsernameError] = useState<string>('');
   const [emailError, setEmailError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
   const navigate = useNavigate();
@@ -47,8 +56,8 @@ export default function CreateAccount() {
       return;
     }
     if (!password) return;
-    setNetworkError('');
-    setRequestError('');
+    setFormError('');
+    setUsernameError('');
     setEmailError('');
     setPasswordError('');
 
@@ -61,21 +70,25 @@ export default function CreateAccount() {
         },
         onError: (error) => {
           if (error.code === 'ERR_NETWORK') {
-            setNetworkError(error.message + ': Check your internet connection');
-          }
-          if ((error.code = 'ERR_BAD_REQUEST')) {
-            setRequestError(error.response.data);
+            setFormError(error.message + ': Check your internet connection');
+          } else {
+            const message = error.response?.data;
+
+            if (typeof message !== 'string' || !message) {
+              setFormError('Sign-up failed. Please try again.');
+            } else {
+              const field = resolveErrorField(message);
+
+              if (field === 'username') setUsernameError(message);
+              else if (field === 'email') setEmailError(message);
+              else setFormError(message);
+            }
           }
 
           console.error('Sign-up failed', error.message);
         },
       }
     );
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRequestError('');
-    setUsername(e.target.value);
   };
 
   return (
@@ -88,12 +101,15 @@ export default function CreateAccount() {
             <Input
               inputMode="text"
               value={username}
-              error={requestError ? true : false}
+              error={usernameError ? true : false}
               placeholder="New Username"
-              onChange={(e) => handleChange(e)}
+              onChange={(e) => {
+                setUsernameError('');
+                setUsername(e.target.value);
+              }}
             />
-            {requestError ? (
-              <div className="errormsg">{requestError}&nbsp;</div>
+            {usernameError ? (
+              <div className="errormsg">{usernameError}&nbsp;</div>
             ) : (
               ''
             )}
@@ -122,7 +138,10 @@ export default function CreateAccount() {
               value={password}
               error={passwordError ? true : false}
               placeholder="New Password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPasswordError('');
+                setPassword(e.target.value);
+              }}
             />
             {passwordError ? (
               <div className="errormsg">{passwordError}&nbsp;</div>
@@ -134,7 +153,7 @@ export default function CreateAccount() {
           <MyButton fontSize="18" onClick={handleSignUp} isLoading={isPending}>
             Sign Up
           </MyButton>
-          <div className="errormsg">{networkError}</div>
+          <div className="errormsg">{formError}</div>
         </div>
       </div>
     </StyledCreateAccount>

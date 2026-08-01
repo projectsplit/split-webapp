@@ -12,6 +12,10 @@ import { StyledEditEmail } from './EditEmail.styled';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Substring of AlreadyClaimedError in the server's VerifyAccountEmailCommandHandler. That failure
+// is terminal for this address, unlike a bad code, so it has to be told apart from one.
+const ALREADY_CLAIMED_MARKER = 'already associated with another account';
+
 interface EditEmailProps {
   existingEmail: string | null | undefined;
   emailVerified: boolean | undefined;
@@ -55,10 +59,16 @@ export default function EditEmail({
         onSuccess: () => {
           const current = queryClient.getQueryData<UserInfo>(['getMe']);
           if (current) {
+            // Resubmitting the address you already verified keeps that verification server-side,
+            // so only a real change may clear it here.
+            const isSameAsCurrent =
+              !!current.email &&
+              current.email.toLowerCase() === email.toLowerCase();
+
             queryClient.setQueryData<UserInfo>(['getMe'], {
               ...current,
               email,
-              emailVerified: false,
+              emailVerified: isSameAsCurrent ? current.emailVerified : false,
             });
           }
           setPendingEmail(email);
@@ -103,8 +113,22 @@ export default function EditEmail({
           });
           editEmailMenu.value = null;
         },
-        onError: () => {
-          setCodeError('Invalid or expired code. Please try again.');
+        onError: (error) => {
+          const raw = error?.response?.data?.message || error?.response?.data;
+          const message = typeof raw === 'string' && raw ? raw : '';
+
+          // Another account owns this address, so no code will ever work. Send them back to
+          // pick a different one rather than leaving them retrying against a dead end.
+          if (message.includes(ALREADY_CLAIMED_MARKER)) {
+            setCode('');
+            setCodeError('');
+            setEmail('');
+            setEmailError(message);
+            setStep('edit');
+            return;
+          }
+
+          setCodeError(message || 'Invalid or expired code. Please try again.');
         },
       }
     );

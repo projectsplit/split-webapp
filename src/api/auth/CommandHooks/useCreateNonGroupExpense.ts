@@ -18,7 +18,8 @@ export const useCreateNonGroupExpense = (
   nonGroupUsers: Signal<User[]>,
   fromHomeGroup: Signal<Group | null> | undefined,
   groupMembers: Signal<(Member | Guest)[]>,
-  makePersonalClicked: boolean
+  makePersonalClicked: boolean,
+  onError?: (message: string) => void
 ) => {
   const queryClient = useQueryClient();
 
@@ -78,6 +79,14 @@ export const useCreateNonGroupExpense = (
       if (makePersonalClicked) {
         localStorage.removeItem('submittedFromHomePersistData');
       }
+    },
+    onError: (err) => {
+      const error = err as AxiosError;
+      onError?.(
+        error.response?.data
+          ? String(error.response.data)
+          : 'Could not create the expense. Please try again.'
+      );
     },
     onSettled: () => {
       setIsSubmitting(false);

@@ -127,5 +127,7 @@ export interface ExpenseState {
     isPersonal?: Signal<boolean>;
     fromPersonal?: Signal<boolean>;
     fromHomeGroup?: Signal<Group | null>;
+    userId: string;
+    onUserNotInExpense: () => void;
   }) => void;
 }

@@ -455,6 +455,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     isPersonal?: Signal<boolean>;
     fromPersonal?: Signal<boolean>;
     fromHomeGroup?: Signal<Group | null>;
+    userId: string;
+    onUserNotInExpense: () => void;
   }) => {
     const state = get();
     submitExpenseFromState(

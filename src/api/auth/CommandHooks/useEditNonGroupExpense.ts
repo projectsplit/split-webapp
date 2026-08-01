@@ -19,7 +19,8 @@ export const useEditNonGroupExpense = (
   groupMembers: Signal<(Member | Guest)[]>,
   makePersonalClicked: boolean,
   isNonGroupExpense: Signal<boolean> | undefined,
-  selectedExpense?: Signal<ExpenseResponseItem | null>
+  selectedExpense?: Signal<ExpenseResponseItem | null>,
+  onError?: (message: string) => void
 ) => {
   const queryClient = useQueryClient();
 
@@ -74,6 +75,14 @@ export const useEditNonGroupExpense = (
         localStorage.removeItem('submittedFromHomePersistData');
       }
       menu.value = null;
+    },
+    onError: (err) => {
+      const error = err as AxiosError;
+      onError?.(
+        error.response?.data
+          ? String(error.response.data)
+          : 'Could not save the expense. Please try again.'
+      );
     },
     onSettled: () => {
       setIsSubmitting(false);

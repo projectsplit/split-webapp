@@ -37,6 +37,8 @@ export function submitExpenseFromState(
     isnonGroupExpense?: Signal<boolean>;
     fromPersonal?: boolean;
     fromHomeGroup?: Signal<Group | null>;
+    userId: string;
+    onUserNotInExpense: () => void;
   }
 ) {
   const {
@@ -48,6 +50,8 @@ export function submitExpenseFromState(
     isCreateExpense,
     expense,
     fromHomeGroup,
+    userId,
+    onUserNotInExpense,
   } = inputs;
 
   const participants =
@@ -77,6 +81,21 @@ export function submitExpenseFromState(
         p.selected = false;
       }
     });
+  }
+
+  // A non group expense must involve the user submitting it. Checked here, after the
+  // zero amount deselection above, so it holds for exactly what gets sent rather than
+  // for what was selected in the picker.
+  if (!fromPersonal && isnonGroupExpense?.value) {
+    const userIsPayer = payers.some((p) => p.selected && p.id === userId);
+    const userIsParticipant = participants.some(
+      (p) => p.selected && p.id === userId
+    );
+
+    if (!userIsPayer && !userIsParticipant) {
+      onUserNotInExpense();
+      return;
+    }
   }
 
   if (
