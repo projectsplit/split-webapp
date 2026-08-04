@@ -20,7 +20,7 @@ import { currencyData } from '../../../helpers/openExchangeRates';
 import ToggleSwitch from '../../ToggleSwitch/ToggleSwitch';
 import { logOut } from '../../../api/auth/api';
 import routes from '../../../routes';
-import { useIsFetching, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSelectedCurrency } from '../../../api/auth/CommandHooks/useSelectedCurrency';
 import { RiTimeZoneLine } from 'react-icons/ri';
 import TimeZoneOptionsAnimation from '../../Animations/TimeZoneOptionsAnimation';
@@ -35,9 +35,20 @@ import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetIn
 import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPushNotificationsEnabled';
 import {
   isPushSupported,
+  PushSubscribeFailure,
   unsubscribeFromPush,
 } from '../../../helpers/pushNotifications';
 import Spinner from '../../Spinner/Spinner';
+
+const pushFailureMessages: Record<PushSubscribeFailure, string> = {
+  unsupported: 'This browser cannot receive push notifications.',
+  'permission-denied':
+    'Notifications are blocked for this site. Allow them in your browser settings, then try again.',
+  'permission-dismissed':
+    'The permission prompt was dismissed. Try again and choose Allow.',
+  'not-configured': 'Push notifications are not available on this server.',
+  failed: 'Could not register this device. Please try again.',
+};
 
 export default function SettingsMenu({
   menu,
@@ -52,8 +63,6 @@ export default function SettingsMenu({
   const editEmailMenu = useSignal<string | null>(null);
 
   const queryClient = useQueryClient();
-
-  const isUserInfoFetching = useIsFetching({ queryKey: ['getMe'] }) > 0;
 
   const userCurrency = userInfo?.currency;
   const timeZone = userInfo?.timeZone;
@@ -117,8 +126,19 @@ export default function SettingsMenu({
   const { mutate: setPushEnabled, isPending: isPushPending } =
     useSetPushNotificationsEnabled();
 
+  const [pushError, setPushError] = useState<string | null>(null);
+
   const handlePushToggle = () => {
-    setPushEnabled(!userInfo?.pushNotificationsEnabled);
+    setPushError(null);
+
+    setPushEnabled(!userInfo?.pushNotificationsEnabled, {
+      onSuccess: (result) =>
+        setPushError(
+          result.failure ? pushFailureMessages[result.failure] : null
+        ),
+      onError: () =>
+        setPushError('Could not update this setting. Please try again.'),
+    });
   };
 
   return (
@@ -170,14 +190,17 @@ export default function SettingsMenu({
         {/* Hidden rather than disabled where the browser has no push support at all —
             an inert switch reads as a bug. */}
         {isPushSupported() && (
-          <div className="toggleOption">
-            <IoNotificationsOutline className="icon" />
-            <div className="description">Push notifications</div>
-            <ToggleSwitch
-              isOn={userInfo?.pushNotificationsEnabled}
-              onToggle={isPushPending ? () => {} : handlePushToggle}
-            />
-          </div>
+          <>
+            <div className="toggleOption">
+              <IoNotificationsOutline className="icon" />
+              <div className="description">Push notifications</div>
+              <ToggleSwitch
+                isOn={userInfo?.pushNotificationsEnabled}
+                onToggle={isPushPending ? () => {} : handlePushToggle}
+              />
+            </div>
+            {pushError && <div className="optionNote">{pushError}</div>}
+          </>
         )}
 
         <div
@@ -195,11 +218,15 @@ export default function SettingsMenu({
           <MdOutlineEmail className="icon" />
           <div className="description emailDescription">
             <span>Email</span>
-            {isUserInfoFetching ? (
+            {/* Only while there is genuinely nothing to show. Keying this off any in-flight
+                getMe made the status blink to a spinner on every background refetch — the 60s
+                poll, and every unrelated setting that invalidates the query, the push toggle
+                included. */}
+            {!userInfo ? (
               <Spinner fontSize="1rem" />
             ) : (
               <span>
-                {userInfo?.email
+                {userInfo.email
                   ? userInfo.emailVerified
                     ? '(Verified)'
                     : '(Unverified)'
