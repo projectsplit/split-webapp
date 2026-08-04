@@ -34,39 +34,70 @@ const registerSubscriptionWithServer = async (
 };
 
 /**
- * Requests notification permission if needed and subscribes this device.
- * Returns false when push is unsupported or the permission was not granted.
+ * Why a device could not be subscribed. Every one of these used to collapse into a bare false,
+ * which the settings toggle turned into a switch that flipped itself back with no explanation —
+ * indistinguishable from the feature being broken.
  */
-export const subscribeToPush = async (): Promise<boolean> => {
-  if (!isPushSupported()) return false;
+export type PushSubscribeFailure =
+  | 'unsupported'
+  | 'permission-denied'
+  | 'permission-dismissed'
+  | 'not-configured'
+  | 'failed';
 
+export type PushSubscribeResult =
+  | { subscribed: true }
+  | { subscribed: false; failure: PushSubscribeFailure };
+
+/**
+ * Requests notification permission if needed and subscribes this device. Reports why it could
+ * not, so the caller can say something useful rather than silently give up.
+ */
+export const subscribeToPush = async (): Promise<PushSubscribeResult> => {
+  if (!isPushSupported()) return { subscribed: false, failure: 'unsupported' };
+
+  // Returns the standing answer without prompting when the user has already decided, so a
+  // previously blocked site never gets a second prompt no matter how often this is called.
   const permission = await Notification.requestPermission();
 
-  if (permission !== 'granted') return false;
-
-  const registration = await navigator.serviceWorker.ready;
-
-  let subscription = await registration.pushManager.getSubscription();
-
-  if (!subscription) {
-    const { data } = await apiClient.get<
-      void,
-      AxiosResponse<GetVapidPublicKeyResponse>
-    >('/notifications/vapid-public-key');
-
-    if (!data.publicKey) return false;
-
-    subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(
-        data.publicKey
-      ) as BufferSource,
-    });
+  if (permission !== 'granted') {
+    return {
+      subscribed: false,
+      failure:
+        permission === 'denied' ? 'permission-denied' : 'permission-dismissed',
+    };
   }
 
-  await registerSubscriptionWithServer(subscription);
+  try {
+    const registration = await navigator.serviceWorker.ready;
 
-  return true;
+    let subscription = await registration.pushManager.getSubscription();
+
+    if (!subscription) {
+      const { data } = await apiClient.get<
+        void,
+        AxiosResponse<GetVapidPublicKeyResponse>
+      >('/notifications/vapid-public-key');
+
+      if (!data.publicKey) {
+        return { subscribed: false, failure: 'not-configured' };
+      }
+
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(
+          data.publicKey
+        ) as BufferSource,
+      });
+    }
+
+    await registerSubscriptionWithServer(subscription);
+
+    return { subscribed: true };
+  } catch (error) {
+    console.error('Failed to subscribe this device to push:', error);
+    return { subscribed: false, failure: 'failed' };
+  }
 };
 
 /** Removes this device's push subscription, both locally and on the server. */
@@ -95,9 +126,9 @@ export const unsubscribeFromPush = async (): Promise<void> => {
 export const syncPushSubscription = async (): Promise<void> => {
   if (!isPushSupported() || Notification.permission !== 'granted') return;
 
-  try {
-    await subscribeToPush();
-  } catch (error) {
-    console.error('Failed to sync push subscription:', error);
+  const result = await subscribeToPush();
+
+  if (!result.subscribed) {
+    console.error('Failed to sync push subscription:', result.failure);
   }
 };

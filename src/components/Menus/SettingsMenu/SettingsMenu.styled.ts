@@ -109,6 +109,13 @@ export const StyledSettingsMenu = styled.div`
         font-size: 1.5rem;
       }
     }
+    .optionNote {
+      margin-top: 0.5rem;
+      padding: 0 1rem;
+      font-size: 0.8125rem;
+      line-height: 1.35;
+      color: #ff5c63;
+    }
   }
   .info {
     display: flex;

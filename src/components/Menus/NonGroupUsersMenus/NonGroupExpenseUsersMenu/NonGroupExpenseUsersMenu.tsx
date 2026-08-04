@@ -17,6 +17,12 @@ import useDebounce from '../../../../hooks/useDebounce';
 import { SelectedGroup } from '../SelectionLists/SelectedGroup';
 import { useSearchUsers } from '@/api/auth/QueryHooks/useSearchUsers';
 import { MdOutlineGroupOff } from 'react-icons/md';
+import { useGetConnectionStatuses } from '@/api/auth/QueryHooks/useGetConnectionStatuses';
+import { useSendConnectionRequest } from '@/api/auth/CommandHooks/useSendConnectionRequest';
+import { useAcceptConnectionRequest } from '@/api/auth/CommandHooks/useAcceptConnectionRequest';
+import { useRevokeConnectionRequest } from '@/api/auth/CommandHooks/useRevokeConnectionRequest';
+import ConnectableUserItem from '../ConnectableUserItem/ConnectableUserItem';
+import ConnectRequestConfirm from '../ConnectRequestConfirm/ConnectRequestConfirm';
 
 export const NonGroupExpenseUsersMenu = ({
   menu,
@@ -46,6 +52,27 @@ export const NonGroupExpenseUsersMenu = ({
     //TODO we need new endpoint to bring users (so we can do useSearchUsers)
     debouncedKeyword,
     pageSize
+  );
+
+  const searchedUserIds = useMemo(
+    () =>
+      (result.data?.pages.flatMap((x) => x.users) ?? [])
+        .map((u) => u.userId)
+        .filter((id) => id !== userInfo.userId),
+    [result.data, userInfo.userId]
+  );
+
+  const { data: connectionStatuses } =
+    useGetConnectionStatuses(searchedUserIds);
+
+  const sendConnectionRequest = useSendConnectionRequest();
+  const acceptConnectionRequest = useAcceptConnectionRequest();
+  const revokeConnectionRequest = useRevokeConnectionRequest();
+  const [connectTarget, setConnectTarget] = useState<User | null>(null);
+
+  const statusByUserId = useMemo(
+    () => new Map(connectionStatuses?.statuses.map((s) => [s.userId, s]) ?? []),
+    [connectionStatuses]
   );
 
   if (!result) return null;
@@ -165,9 +192,8 @@ export const NonGroupExpenseUsersMenu = ({
 
   const allActiveGroups = useMemo(() => {
     return (
-      userGroups?.pages
-        .flatMap((x) => x.groups)
-        .filter((x) => !x.isArchived) ?? []
+      userGroups?.pages.flatMap((x) => x.groups).filter((x) => !x.isArchived) ??
+      []
     );
   }, [userGroups]);
 
@@ -265,12 +291,48 @@ export const NonGroupExpenseUsersMenu = ({
             <div className="dropdown" ref={dropdownRef}>
               {remainingSuggestedUsers.map((user) =>
                 user.userId !== userInfo.userId ? (
-                  <Item
+                  <ConnectableUserItem
                     key={user.userId}
                     name={user.username}
-                    onClick={(e) => {
+                    status={statusByUserId.get(user.userId)?.status}
+                    isAcceptPending={
+                      acceptConnectionRequest.isPending &&
+                      acceptConnectionRequest.variables ===
+                        statusByUserId.get(user.userId)?.connectionId
+                    }
+                    isRevokePending={
+                      revokeConnectionRequest.isPending &&
+                      revokeConnectionRequest.variables ===
+                        statusByUserId.get(user.userId)?.connectionId
+                    }
+                    onSelect={(e) => {
                       e.stopPropagation();
                       handleSuggestedUserClick(user.username);
+                    }}
+                    onRequest={(e) => {
+                      e.stopPropagation();
+                      setConnectTarget({
+                        userId: user.userId,
+                        username: user.username,
+                      });
+                    }}
+                    onAccept={(e) => {
+                      e.stopPropagation();
+                      const connectionId = statusByUserId.get(
+                        user.userId
+                      )?.connectionId;
+                      if (connectionId) {
+                        acceptConnectionRequest.mutate(connectionId);
+                      }
+                    }}
+                    onRevoke={(e) => {
+                      e.stopPropagation();
+                      const connectionId = statusByUserId.get(
+                        user.userId
+                      )?.connectionId;
+                      if (connectionId) {
+                        revokeConnectionRequest.mutate(connectionId);
+                      }
                     }}
                   />
                 ) : null
@@ -327,6 +389,18 @@ export const NonGroupExpenseUsersMenu = ({
           Done
         </MyButton>
       </div>
+      {connectTarget && (
+        <ConnectRequestConfirm
+          username={connectTarget.username}
+          isLoading={sendConnectionRequest.isPending}
+          onConfirm={() =>
+            sendConnectionRequest.mutate(connectTarget.userId, {
+              onSettled: () => setConnectTarget(null),
+            })
+          }
+          onCancel={() => setConnectTarget(null)}
+        />
+      )}
     </StyledNonGroupExpenseUsersMenu>
   );
 };

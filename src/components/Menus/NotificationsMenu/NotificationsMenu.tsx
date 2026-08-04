@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLastViewedNotification } from '../../../api/auth/CommandHooks/useLastViewedNotification';
 import { useGetUserInvitations } from '../../../api/auth/QueryHooks/useGetUserInvitations';
 import { useGetNotifications } from '../../../api/auth/QueryHooks/useGetNotifications';
+import { useGetConnectionRequests } from '../../../api/auth/QueryHooks/useGetConnectionRequests';
+import ConnectionRequest from '../../ConnectionRequest/ConnectionRequest';
 import Spinner from '../../Spinner/Spinner';
 
 const formatNotificationDate = (
@@ -45,21 +47,42 @@ export default function NotificationsMenu({
     isSuccess: notificationsLoaded,
   } = useGetNotifications(10);
 
+  const {
+    data: connectionRequestsData,
+    fetchNextPage: fetchNextConnectionRequests,
+    hasNextPage: hasMoreConnectionRequests,
+    isFetchingNextPage: isFetchingConnectionRequests,
+    isSuccess: connectionRequestsLoaded,
+  } = useGetConnectionRequests(10);
+
   const userInvitations = invitationsData?.pages.flatMap((p) => p.invitations);
-  const notifications = notificationsData?.pages.flatMap((p) => p.notifications);
+  const notifications = notificationsData?.pages.flatMap(
+    (p) => p.notifications
+  );
+  const connectionRequests = connectionRequestsData?.pages.flatMap(
+    (p) => p.connectionRequests
+  );
 
   const { mutate: updateNotification } = useLastViewedNotification();
 
   const newestInvitation = invitationsData?.pages[0]?.invitations[0]?.created;
-  const newestNotification = notificationsData?.pages[0]?.notifications[0]?.created;
+  const newestNotification =
+    notificationsData?.pages[0]?.notifications[0]?.created;
+  const newestConnectionRequest =
+    connectionRequestsData?.pages[0]?.connectionRequests[0]?.created;
 
-  // The bell's unread dot compares one timestamp against both feeds, so it has to be advanced to
-  // whichever is newer. Recording only the newest invitation would leave the dot lit forever once
-  // an activity notification arrived after it.
+  // The bell's unread dot compares one timestamp against all three feeds, so it has to be advanced
+  // to whichever is newest. Recording only the newest invitation would leave the dot lit forever
+  // once an activity notification or a connection request arrived after it.
   useEffect(() => {
-    if (!invitationsLoaded || !notificationsLoaded) return;
+    if (!invitationsLoaded || !notificationsLoaded || !connectionRequestsLoaded)
+      return;
 
-    const latest = [newestInvitation, newestNotification]
+    const latest = [
+      newestInvitation,
+      newestNotification,
+      newestConnectionRequest,
+    ]
       .filter((x): x is string => !!x)
       .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0];
 
@@ -69,14 +92,18 @@ export default function NotificationsMenu({
   }, [
     invitationsLoaded,
     notificationsLoaded,
+    connectionRequestsLoaded,
     newestInvitation,
     newestNotification,
+    newestConnectionRequest,
     updateNotification,
   ]);
 
-  const isLoading = !userInvitations || !notifications;
+  const isLoading = !userInvitations || !notifications || !connectionRequests;
   const isEmpty =
-    userInvitations?.length === 0 && notifications?.length === 0;
+    userInvitations?.length === 0 &&
+    notifications?.length === 0 &&
+    connectionRequests?.length === 0;
 
   return (
     <StyledNotificationsMenu>
@@ -104,6 +131,22 @@ export default function NotificationsMenu({
           </div>
         ) : (
           <div className="data">
+            {connectionRequests.length > 0 && (
+              <>
+                <div className="sectionTitle">Requests</div>
+                {connectionRequests.map((x) => (
+                  <div className="item" key={x.id}>
+                    <ConnectionRequest connectionRequest={x} />
+                  </div>
+                ))}
+                <Sentinel
+                  fetchPage={fetchNextConnectionRequests}
+                  hasMore={hasMoreConnectionRequests}
+                  isFetchingPage={isFetchingConnectionRequests}
+                />
+              </>
+            )}
+
             {userInvitations.length > 0 && (
               <>
                 <div className="sectionTitle">Invitations</div>

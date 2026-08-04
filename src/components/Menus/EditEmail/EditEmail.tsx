@@ -164,7 +164,7 @@ export default function EditEmail({
               <span className="badge verified">Verified</span>
             ) : (
               <span className="badge unverified" onClick={handleVerifyNow}>
-                Unverified — verify now
+                Unverified - verify now
               </span>
             )
           ) : null}

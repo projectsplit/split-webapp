@@ -43,6 +43,12 @@ export const useCreateNonGroupTransfer = (
       });
       isSubmitting.value = false;
     },
+    // The server can refuse a transfer with someone the user is not connected with, which the
+    // picker normally prevents but a stale menu can still reach. Without this the button would
+    // spin forever on any rejection.
+    onError: () => {
+      isSubmitting.value = false;
+    },
   });
 };
 
