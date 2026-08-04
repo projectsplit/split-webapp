@@ -15,6 +15,10 @@ node_modules/
 .env*.local
 .env.*
 
+# Generated service worker output. Committing these meant a stale generateSW worker kept being
+# served after the switch to injectManifest.
+dev-dist/
+
 # Personal Claude Code settings
 .claude/settings.local.json
 

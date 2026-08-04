@@ -64,6 +64,28 @@ export type UserInfo = {
   showBudgetInfo: boolean;
   email: string | null;
   emailVerified: boolean;
+  pushNotificationsEnabled: boolean;
+};
+
+export type GetVapidPublicKeyResponse = {
+  publicKey: string;
+};
+
+export type NotificationItem = {
+  id: string;
+  created: string;
+  title: string;
+  body: string;
+  url: string | null;
+};
+
+export type GetNotificationsResponse = {
+  notifications: NotificationItem[];
+  next: string | null;
+};
+
+export type SetPushNotificationsEnabledRequest = {
+  enabled: boolean;
 };
 
 export type ExpenseItem = {

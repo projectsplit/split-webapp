@@ -64,6 +64,39 @@ export const StyledNotificationsMenu = styled(StyledMiddleScreenMenu)`
       }
     }
 
+    .sectionTitle {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.5;
+      padding-top: 16px;
+    }
+
+    .activityItem {
+      padding-top: 16px;
+
+      .activityTitle {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .activityBody {
+        font-size: 13px;
+        opacity: 0.8;
+        white-space: initial;
+      }
+
+      .activityDate {
+        font-size: 11px;
+        opacity: 0.5;
+        padding-top: 2px;
+      }
+    }
+
+    .clickable {
+      cursor: pointer;
+    }
+
     .noData {
       display: flex;
       flex-direction: column;

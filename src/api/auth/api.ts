@@ -7,6 +7,7 @@ import {
   ResetPasswordRequest,
   SendGoogleCodeRequest,
   SetAccountEmailRequest,
+  SetPushNotificationsEnabledRequest,
   VerifyAccountEmailRequest,
 } from '../../types';
 import { apiClient, authApiClient } from '../apiClients';
@@ -61,6 +62,13 @@ export const verifyAccountEmail = async (
   request: VerifyAccountEmailRequest
 ) => {
   const response = await apiClient.post('/auth/account/email/verify', request);
+  return response.data;
+};
+
+export const setPushNotificationsEnabled = async (
+  request: SetPushNotificationsEnabledRequest
+) => {
+  const response = await apiClient.post('/notifications/preference', request);
   return response.data;
 };
 
