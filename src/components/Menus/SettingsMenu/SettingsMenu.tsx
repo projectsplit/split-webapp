@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { StyledSettingsMenu } from './SettingsMenu.styled';
 import { SettingsMenuProps } from '../../../interfaces';
-import { IoClose, IoInformationCircleOutline } from 'react-icons/io5';
+import {
+  IoClose,
+  IoInformationCircleOutline,
+  IoNotificationsOutline,
+} from 'react-icons/io5';
 import { StyledUserOptionsButton } from '../../UserOptionsButton/UserOptionsButton.styled';
 import { useNavigate } from 'react-router-dom';
 import { Currency } from '../../../types';
@@ -28,6 +32,11 @@ import EditEmailAnimation from '../../Animations/EditEmailAnimation';
 import { FaUserPen } from 'react-icons/fa6';
 import { MdOutlineEmail } from 'react-icons/md';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
+import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPushNotificationsEnabled';
+import {
+  isPushSupported,
+  unsubscribeFromPush,
+} from '../../../helpers/pushNotifications';
 import Spinner from '../../Spinner/Spinner';
 
 export default function SettingsMenu({
@@ -79,6 +88,15 @@ export default function SettingsMenu({
   });
 
   const handleLogout = async () => {
+    // Detach this device before the session goes away: the call needs the current token, and a row
+    // left behind stays bound to this account while the browser passes to whoever signs in next,
+    // delivering this account's notifications to them. Never block logout if it fails.
+    try {
+      await unsubscribeFromPush();
+    } catch (error) {
+      console.error('Failed to remove push subscription on logout:', error);
+    }
+
     logOutMutation.mutate();
     navigate(routes.AUTH);
   };
@@ -94,6 +112,13 @@ export default function SettingsMenu({
 
   const handleToggle = () => {
     setShowBudgetInfo(!userInfo?.showBudgetInfo);
+  };
+
+  const { mutate: setPushEnabled, isPending: isPushPending } =
+    useSetPushNotificationsEnabled();
+
+  const handlePushToggle = () => {
+    setPushEnabled(!userInfo?.pushNotificationsEnabled);
   };
 
   return (
@@ -141,6 +166,19 @@ export default function SettingsMenu({
           <div className="description">Show budget info</div>
           <ToggleSwitch isOn={userInfo?.showBudgetInfo} onToggle={handleToggle} />
         </div>
+
+        {/* Hidden rather than disabled where the browser has no push support at all —
+            an inert switch reads as a bug. */}
+        {isPushSupported() && (
+          <div className="toggleOption">
+            <IoNotificationsOutline className="icon" />
+            <div className="description">Push notifications</div>
+            <ToggleSwitch
+              isOn={userInfo?.pushNotificationsEnabled}
+              onToggle={isPushPending ? () => {} : handlePushToggle}
+            />
+          </div>
+        )}
 
         <div
           className="option"

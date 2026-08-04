@@ -24,6 +24,12 @@ export default defineConfig({
       }
     }),
     VitePWA({
+      // injectManifest rather than the default generateSW: a generated service worker cannot carry
+      // the push/notificationclick listeners, so src/sw.ts is our own worker and Workbox only
+      // injects the precache manifest into it.
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
       registerType: 'autoUpdate',
       includeAssets: ['icon-192x192.png', 'icon-512x512.png'],
       manifest: {
@@ -50,11 +56,14 @@ export default defineConfig({
           }
         ]
       },
-      workbox: {
+      injectManifest: {
         maximumFileSizeToCacheInBytes: 3000000 // 3MB
       },
       devOptions: {
-        enabled: true
+        enabled: true,
+        // A TypeScript worker is served as an ES module in dev; without this the browser
+        // refuses to register it.
+        type: 'module'
       }
     }),
     // checker({ typescript: true }),
