@@ -203,20 +203,19 @@ export default function SettingsMenu({
           </>
         )}
 
-        {/* Only once there is something to manage — an entry that always opens an empty list is
-            just a dead end. */}
-        {userInfo?.hasRecurringExpenses && (
-          <div
-            className="option"
-            onClick={() => {
-              menu.value = null;
-              navigate('/recurring-expenses');
-            }}
-          >
-            <FaRepeat className="icon" />
-            <div className="description">Manage recurring expenses</div>
-          </div>
-        )}
+        {/* Always listed. Hiding it when there is nothing to manage made the entry appear and
+            disappear as a side effect of unrelated actions, and left no way in to a list that is
+            about to have something in it. The page states when it is empty instead. */}
+        <div
+          className="option"
+          onClick={() => {
+            menu.value = null;
+            navigate('/recurring-expenses');
+          }}
+        >
+          <FaRepeat className="icon" />
+          <div className="description">Manage recurring expenses</div>
+        </div>
 
         <div
           className="option"

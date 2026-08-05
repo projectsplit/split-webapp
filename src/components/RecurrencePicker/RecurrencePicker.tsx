@@ -27,6 +27,8 @@ interface RecurrencePickerProps {
   showPicker: boolean;
   setShowPicker: (value: boolean) => void;
   timeZoneId: string;
+  /** True while editing a series that is already running, where "first" would be untrue. */
+  isExistingSeries: boolean;
 }
 
 const hours = Array.from({ length: 24 }, (_, i) =>
@@ -43,6 +45,7 @@ export const RecurrencePicker = ({
   showPicker,
   setShowPicker,
   timeZoneId,
+  isExistingSeries,
 }: RecurrencePickerProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -221,10 +224,21 @@ export const RecurrencePicker = ({
                 </div>
               )}
 
+              {/* Said out loud rather than left to surprise someone in February. The server
+                  clamps the day down in months that are too short and returns to the chosen day
+                  after, but nothing on screen would otherwise hint at that. */}
+              {schedule.frequency === RecurrenceFrequency.Monthly &&
+                (schedule.dayOfMonth ?? 1) > 28 && (
+                  <div className="footnote">
+                    Months without a {schedule.dayOfMonth} use their last day.
+                  </div>
+                )}
+
               {/* Confirms the choice while the picker is still open; the form keeps showing it
                   afterwards on the schedule chip. */}
               <div className="footnote">
-                First on {firstOccurrenceLabel(schedule, timeZoneId)}
+                {isExistingSeries ? 'Next' : 'First'} on{' '}
+                {firstOccurrenceLabel(schedule, timeZoneId)}
               </div>
             </>
           )}

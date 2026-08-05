@@ -65,7 +65,6 @@ export type UserInfo = {
   email: string | null;
   emailVerified: boolean;
   pushNotificationsEnabled: boolean;
-  hasRecurringExpenses: boolean;
 };
 
 export type GetVapidPublicKeyResponse = {
@@ -507,7 +506,8 @@ export type RecurringExpenseResponseItem = {
     text: string;
     color: string;
   }[];
-  schedule: RecurrenceSchedule;
+  /** Null when the stored template has no readable schedule; the row is then unrunnable. */
+  schedule: RecurrenceSchedule | null;
   anchorDate: string;
   nextOccurrence: string;
   isPaused: boolean;

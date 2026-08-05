@@ -28,6 +28,8 @@ interface ExpenseFormFooterProps {
   setShowRecurrencePicker: (value: boolean) => void;
   /** The zone the chosen day and time are read in. */
   timeZoneIdForSchedule: string;
+  /** True while editing a series that is already running. */
+  isExistingSeries: boolean;
   /** Editing an existing one-off expense cannot turn it into a series after the fact. */
   canRecur: boolean;
   /**
@@ -60,6 +62,7 @@ export const ExpenseFormFooter = ({
   canRecur,
   canPickDate,
   timeZoneIdForSchedule,
+  isExistingSeries,
 }: ExpenseFormFooterProps) => {
   return (
     <StyledExpenseFormFooter>
@@ -101,6 +104,7 @@ export const ExpenseFormFooter = ({
           showPicker={showRecurrencePicker}
           setShowPicker={setShowRecurrencePicker}
           timeZoneId={timeZoneIdForSchedule}
+          isExistingSeries={isExistingSeries}
         />
       )}
     </StyledExpenseFormFooter>

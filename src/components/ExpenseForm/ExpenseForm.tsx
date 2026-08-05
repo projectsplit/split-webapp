@@ -374,6 +374,7 @@ export default function ExpenseForm({
           schedule={inputs.recurrenceSchedule}
           timeZoneId={timeZoneId}
           scheduleTimeLabel={scheduleTimeLabel(inputs.recurrenceSchedule)}
+          isNewSeries={!recurringExpenseId}
           onEdit={() => inputs.setShowRecurrencePicker(true)}
           // Editing a template has no "make this a one-off" — that would mean deleting the series,
           // which belongs on the manage screen, not behind a small × here.
@@ -421,6 +422,7 @@ export default function ExpenseForm({
         // control with nothing to act on.
         canPickDate={!recurringExpenseId && inputs.recurrenceSchedule === null}
         timeZoneIdForSchedule={timeZoneId}
+        isExistingSeries={!!recurringExpenseId}
       />
       <MenuAnimationBackground menu={currencyMenu} />
       <MenuAnimationBackground menu={warningMenu} />

@@ -14,7 +14,7 @@ import MyButton from '@/components/MyButton/MyButton';
 import Spinner from '@/components/Spinner/Spinner';
 import LongPressMenu from '@/components/LongPressMenu/LongPressMenu';
 import MenuAnimationBackground from '@/components/Animations/MenuAnimationBackground';
-import ErrorMenuAnimation from '@/components/Animations/ErrorMenuAnimation';
+import GeneralWarningMenuAnimation from '@/components/Animations/GeneralWarningMenuAnimation';
 import Pill from '@/components/Pill/Pill';
 import labelColors from '@/labelColors';
 import { useGetRecurringExpenses } from '@/api/auth/QueryHooks/useGetRecurringExpenses';
@@ -62,7 +62,7 @@ export const RecurringExpenses = () => {
 
   const showError = (message: string) => {
     errorMessage.value = message;
-    menu.value = 'error';
+    menu.value = 'generalWarning';
   };
 
   const { mutate: deleteRecurringExpense, isPending: isDeleting } =
@@ -106,8 +106,11 @@ export const RecurringExpenses = () => {
         </div>
       ) : recurringExpenses.length === 0 ? (
         <div className="empty">
-          You have no recurring expenses. Create one by picking a cycle when you
-          submit an expense.
+          <FaRepeat className="emptyIcon" />
+          <div className="emptyTitle">No recurring expenses</div>
+          <div className="emptyHint">
+            Set one up with the repeat button when you submit an expense.
+          </div>
         </div>
       ) : (
         <div className="scrollContainer">
@@ -140,11 +143,17 @@ export const RecurringExpenses = () => {
           onDelete={() => (rowMenu.value = 'deleteRecurringExpense')}
           onClose={() => (rowMenu.value = null)}
           extraOptions={[
-            {
-              label: selected.isPaused ? 'Resume' : 'Pause',
-              icon: selected.isPaused ? <MdPlayArrow /> : <MdPause />,
-              onClick: () => toggleStatus(selected.id),
-            },
+            // Pausing a row that cannot run either way is meaningless, and resuming one is
+            // refused by the server. Edit and delete are the only moves that make sense there.
+            ...(selected.schedule
+              ? [
+                  {
+                    label: selected.isPaused ? 'Resume' : 'Pause',
+                    icon: selected.isPaused ? <MdPlayArrow /> : <MdPause />,
+                    onClick: () => toggleStatus(selected.id),
+                  },
+                ]
+              : []),
             // Offered only when there is one to open. Deleting the expense a series produced
             // leaves the schedule intact and this option simply goes away, rather than becoming
             // a button that fails.
@@ -167,11 +176,10 @@ export const RecurringExpenses = () => {
       )}
       <MenuAnimationBackground menu={menu} />
 
-      <ErrorMenuAnimation
-        menu={menu}
-        message={errorMessage.value}
-        type="recurring expense"
-      />
+      {/* GeneralWarningMenu rather than ErrorMenu: ErrorMenu ignores what it is given and prints
+          one of two fixed strings about a missing expense or transfer, neither of which describes
+          a schedule that could not be paused or deleted. */}
+      <GeneralWarningMenuAnimation menu={menu} message={errorMessage.value} />
 
       <RecurringExpenseDeleteConfirmation
         menu={rowMenu}
@@ -249,9 +257,16 @@ const RecurringExpenseRow = ({
       <div className="bottomRow">
         <div className="cycle">
           <FaRepeat />
-          <span>{scheduleSentence(template.schedule)}</span>
+          {/* A stored template can come back without a readable schedule. The row still has to
+              render — it is the only way to reach the edit that repairs it or the delete that
+              removes it — so it says so rather than dereferencing nothing. */}
+          <span>
+            {template.schedule
+              ? scheduleSentence(template.schedule)
+              : 'Schedule unavailable'}
+          </span>
         </div>
-        {template.isPaused ? (
+        {!template.schedule ? null : template.isPaused ? (
           <span className="paused">Paused</span>
         ) : (
           <span>

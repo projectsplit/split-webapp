@@ -11,6 +11,8 @@ interface ScheduleDisplayProps {
   /** Undefined while editing a template, where clearing would have to mean deleting the series. */
   onClear?: () => void;
   scheduleTimeLabel: string;
+  /** False while editing a series that is already running, where "first" would be untrue. */
+  isNewSeries: boolean;
 }
 
 /**
@@ -24,6 +26,7 @@ export const ScheduleDisplay = ({
   onEdit,
   onClear,
   scheduleTimeLabel,
+  isNewSeries,
 }: ScheduleDisplayProps) => {
   return (
     <StyledScheduleDisplay>
@@ -32,8 +35,8 @@ export const ScheduleDisplay = ({
         <div className="text">
           <div className="rule">{scheduleSentence(schedule)}</div>
           <div className="first">
-            First on {firstOccurrenceLabel(schedule, timeZoneId)} at{' '}
-            {scheduleTimeLabel}
+            {isNewSeries ? 'First' : 'Next'} on{' '}
+            {firstOccurrenceLabel(schedule, timeZoneId)} at {scheduleTimeLabel}
           </div>
         </div>
         {onClear && (

@@ -37,12 +37,31 @@ export const StyledRecurringExpenses = styled.div`
   .spinnerContainer,
   .empty {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     flex: 1;
     color: ${({ theme }) => theme.secondaryTextColor};
     text-align: center;
     padding: 0 24px;
+    gap: 10px;
+  }
+
+  .empty {
+    .emptyIcon {
+      font-size: 40px;
+      color: ${({ theme }) => theme.lineColor};
+    }
+
+    .emptyTitle {
+      color: ${({ theme }) => theme.whiteText};
+      font-size: 16px;
+    }
+
+    .emptyHint {
+      font-size: 14px;
+      max-width: 260px;
+    }
   }
 
   .submitButton {
