@@ -27,4 +27,17 @@ export const StyledExpenseFormFooter = styled.div`
 
     margin-right: 10px;
   }
+  .recurringIcon {
+    /* Grey until a cycle is picked, white once one is, so the footer reads as "off" at a glance
+       the way an unset location does. Deliberately not the highlight blue: the calendar sitting
+       next to it already owns that colour, and two blue icons read as one control. */
+    color: ${({ theme }) => theme.inactiveTabButtonTextColor};
+    flex-shrink: 0;
+    font-size: 26px;
+    margin-right: 10px;
+
+    &.active {
+      color: ${({ theme }) => theme.whiteText};
+    }
+  }
 `;

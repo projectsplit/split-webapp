@@ -95,6 +95,21 @@ export const StyledDetailedExpense = styled(
     position: relative;
     flex-shrink: 0;
   }
+  .recurringBadge {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: ${({ theme }) => theme.secondaryTextColor};
+    flex-shrink: 0;
+
+    .recurringIcon {
+      font-size: 15px;
+    }
+  }
   .editDeleteButtons {
     display: flex;
     flex-direction: row;

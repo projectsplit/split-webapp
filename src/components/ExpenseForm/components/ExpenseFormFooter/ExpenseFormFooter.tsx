@@ -3,7 +3,8 @@ import MyButton from '@/components/MyButton/MyButton';
 import LocationPicker from '@/components/LocationPicker/LocationPicker';
 import { DateTime } from '@/components/DateTime';
 import { StyledExpenseFormFooter } from './ExpenseFormFooter.styled';
-import { GeoLocation, Coordinates } from '@/types';
+import { GeoLocation, Coordinates, RecurrenceSchedule } from '@/types';
+import RecurrencePicker from '@/components/RecurrencePicker/RecurrencePicker';
 
 interface ExpenseFormFooterProps {
   onSubmit: () => void;
@@ -21,6 +22,19 @@ interface ExpenseFormFooterProps {
   isDateShowing: Signal<boolean>;
   showPicker: boolean;
   setShowPicker: (value: boolean) => void;
+  recurrenceSchedule: RecurrenceSchedule | null;
+  setRecurrenceSchedule: (schedule: RecurrenceSchedule | null) => void;
+  showRecurrencePicker: boolean;
+  setShowRecurrencePicker: (value: boolean) => void;
+  /** The zone the chosen day and time are read in. */
+  timeZoneIdForSchedule: string;
+  /** Editing an existing one-off expense cannot turn it into a series after the fact. */
+  canRecur: boolean;
+  /**
+   * A template's date is the anchor its whole schedule was derived from, not something an edit can
+   * move. Offering the picker there would be a control that silently does nothing.
+   */
+  canPickDate: boolean;
 }
 
 export const ExpenseFormFooter = ({
@@ -39,6 +53,13 @@ export const ExpenseFormFooter = ({
   isDateShowing,
   showPicker,
   setShowPicker,
+  recurrenceSchedule,
+  setRecurrenceSchedule,
+  showRecurrencePicker,
+  setShowRecurrencePicker,
+  canRecur,
+  canPickDate,
+  timeZoneIdForSchedule,
 }: ExpenseFormFooterProps) => {
   return (
     <StyledExpenseFormFooter>
@@ -61,16 +82,27 @@ export const ExpenseFormFooter = ({
         isCreateExpense={isCreateExpense}
         setDescriptionError={setDescriptionError}
       />
-      <DateTime
-        selectedDateTime={expenseTime}
-        setSelectedDateTime={setExpenseTime}
-        timeZoneId={timeZoneId}
-        isEdit={!isCreateExpense}
-        category={signal('Expense')}
-        isDateShowing={isDateShowing}
-        showPicker={showPicker}
-        setShowPicker={setShowPicker}
-      />
+      {canPickDate && (
+        <DateTime
+          selectedDateTime={expenseTime}
+          setSelectedDateTime={setExpenseTime}
+          timeZoneId={timeZoneId}
+          isEdit={!isCreateExpense}
+          category={signal('Expense')}
+          isDateShowing={isDateShowing}
+          showPicker={showPicker}
+          setShowPicker={setShowPicker}
+        />
+      )}
+      {canRecur && (
+        <RecurrencePicker
+          schedule={recurrenceSchedule}
+          setSchedule={setRecurrenceSchedule}
+          showPicker={showRecurrencePicker}
+          setShowPicker={setShowRecurrencePicker}
+          timeZoneId={timeZoneIdForSchedule}
+        />
+      )}
     </StyledExpenseFormFooter>
   );
 };

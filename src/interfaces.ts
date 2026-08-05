@@ -12,6 +12,7 @@ import {
   Label,
   Payment,
   PickerMember,
+  RecurrenceSchedule,
   Share,
   TransferItem,
   TransferResponseItem,
@@ -519,6 +520,12 @@ export interface ExpenseFormProps {
   fromHomeGroup?: Signal<Group | null>;
   fromHome?: boolean;
   fromPersonal?: Signal<boolean>;
+  /**
+   * Set when the form is editing a recurring template rather than an expense. Submitting then
+   * rewrites the schedule and leaves every expense it has already produced alone.
+   */
+  recurringExpenseId?: string;
+  initialRecurrenceSchedule?: RecurrenceSchedule | null;
 }
 
 export interface EditExpenseFormProps extends ExpenseFormProps {

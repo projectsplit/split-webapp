@@ -29,7 +29,7 @@ import { getInitials } from '../../../helpers/getInitials';
 import { timeZones } from '../../../helpers/timeZones';
 import EditUsernameAnimation from '../../Animations/EditUsernameAnimation';
 import EditEmailAnimation from '../../Animations/EditEmailAnimation';
-import { FaUserPen } from 'react-icons/fa6';
+import { FaRepeat, FaUserPen } from 'react-icons/fa6';
 import { MdOutlineEmail } from 'react-icons/md';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
 import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPushNotificationsEnabled';
@@ -201,6 +201,21 @@ export default function SettingsMenu({
             </div>
             {pushError && <div className="optionNote">{pushError}</div>}
           </>
+        )}
+
+        {/* Only once there is something to manage — an entry that always opens an empty list is
+            just a dead end. */}
+        {userInfo?.hasRecurringExpenses && (
+          <div
+            className="option"
+            onClick={() => {
+              menu.value = null;
+              navigate('/recurring-expenses');
+            }}
+          >
+            <FaRepeat className="icon" />
+            <div className="description">Manage recurring expenses</div>
+          </div>
         )}
 
         <div

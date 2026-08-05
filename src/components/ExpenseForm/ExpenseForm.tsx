@@ -25,6 +25,10 @@ import GeneralWarningMenuAnimation from '../Animations/GeneralWarningMenuAnimati
 import { currencyData } from '@/helpers/openExchangeRates';
 import { useGetGroupLabels } from '@/api/auth/QueryHooks/useGetGroupLabels';
 import { useLabels } from '@/api/auth/QueryHooks/useGetLabels';
+import { useCreateRecurringExpense } from '@/api/auth/CommandHooks/useCreateRecurringExpense';
+import { useEditRecurringExpense } from '@/api/auth/CommandHooks/useEditRecurringExpense';
+import { scheduleTimeLabel } from '@/helpers/recurrence';
+import ScheduleDisplay from './components/ScheduleDisplay/ScheduleDisplay';
 
 export default function ExpenseForm({
   groupMembers,
@@ -44,6 +48,8 @@ export default function ExpenseForm({
   fromHomeGroup,
   fromHome,
   fromPersonal,
+  recurringExpenseId,
+  initialRecurrenceSchedule,
 }: ExpenseFormProps) {
   const isInitialRender = useRef<boolean>(true);
   const navigate = useNavigate();
@@ -64,8 +70,19 @@ export default function ExpenseForm({
       userInfo,
       userMemberId: inputs.userMemberId,
       isnonGroupExpense,
+      recurrenceSchedule: recurringExpenseId
+        ? (initialRecurrenceSchedule ?? null)
+        : null,
     });
-  }, [inputs.initialize, isCreateExpense, expense?.id, currency, userInfo]);
+  }, [
+    inputs.initialize,
+    isCreateExpense,
+    expense?.id,
+    currency,
+    userInfo,
+    recurringExpenseId,
+    initialRecurrenceSchedule,
+  ]);
 
   useEffect(() => {
     if (inputs.isSubmitting) return;
@@ -166,11 +183,39 @@ export default function ExpenseForm({
       showWarning
     );
 
+  const {
+    mutate: createRecurringExpenseMutation,
+    isPending: isPendingCreateRecurringExpense,
+  } = useCreateRecurringExpense(
+    menu,
+    groupId,
+    navigate,
+    inputs.setIsSubmitting,
+    inputs.makePersonalClicked,
+    nonGroupUsers,
+    fromHomeGroup,
+    groupMembers,
+    fromHome,
+    isnonGroupExpense,
+    isPersonal,
+    showWarning
+  );
+
+  const {
+    mutate: editRecurringExpenseMutation,
+    isPending: isPendingEditRecurringExpense,
+  } = useEditRecurringExpense(() => {
+    menu.value = null;
+  }, showWarning);
+
   const onSubmit = () => {
     inputs.submitExpense({
       groupId,
       createExpenseMutation,
       editExpenseMutation: editExpenseMutation as any,
+      createRecurringExpenseMutation,
+      editRecurringExpenseMutation,
+      recurringExpenseId,
       isnonGroupExpense,
       fromPersonal,
       isPersonal,
@@ -181,6 +226,12 @@ export default function ExpenseForm({
       onUserNotInExpense: () =>
         showWarning(
           'You need to be either a participant or a payer in order to submit a non-group expense.'
+        ),
+      // Clearing the cycle here would have to mean deleting the series, which is not what an edit
+      // form should quietly do. Deleting it is its own action on the manage screen.
+      onRecurrenceRequired: () =>
+        showWarning(
+          'Pick a cycle for this recurring expense, or delete it from the recurring expenses list.'
         ),
     });
   };
@@ -250,6 +301,7 @@ export default function ExpenseForm({
         isPendingCreateExpense={isPendingCreateExpense}
         isPendingEditExpense={isPendingEditExpense}
         amountNumber={amountNumber}
+
         adjustParticipants={adjustParticipants}
         setParticipants={setParticipants}
         participantsError={inputs.participantsError}
@@ -304,13 +356,32 @@ export default function ExpenseForm({
         isMapOpen={isMapOpen}
         setLocation={inputs.setLocation}
       />
-      {isDateShowing.value && (
-        <DateDisplay
-          selectedDateTime={inputs.expenseTime}
+      {isDateShowing.value &&
+        !recurringExpenseId &&
+        inputs.recurrenceSchedule === null && (
+          <DateDisplay
+            selectedDateTime={inputs.expenseTime}
+            timeZoneId={timeZoneId}
+            setTime={inputs.setExpenseTime}
+            isDateShowing={isDateShowing}
+            setShowPicker={inputs.setShowPicker}
+          />
+        )}
+      {/* Replaces the date line when a schedule takes over, so the form still states when this
+          expense will land — just as a rule rather than a single date. */}
+      {inputs.recurrenceSchedule !== null && (
+        <ScheduleDisplay
+          schedule={inputs.recurrenceSchedule}
           timeZoneId={timeZoneId}
-          setTime={inputs.setExpenseTime}
-          isDateShowing={isDateShowing}
-          setShowPicker={inputs.setShowPicker}
+          scheduleTimeLabel={scheduleTimeLabel(inputs.recurrenceSchedule)}
+          onEdit={() => inputs.setShowRecurrencePicker(true)}
+          // Editing a template has no "make this a one-off" — that would mean deleting the series,
+          // which belongs on the manage screen, not behind a small × here.
+          onClear={
+            recurringExpenseId
+              ? undefined
+              : () => inputs.setRecurrenceSchedule(null)
+          }
         />
       )}
       {inputs.labels.length > 0 ? (
@@ -324,8 +395,12 @@ export default function ExpenseForm({
       <ExpenseFormFooter
         onSubmit={onSubmit}
         isCreateExpense={isCreateExpense}
-        isPendingCreateExpense={isPendingCreateExpense}
-        isPendingEditExpense={isPendingEditExpense}
+        isPendingCreateExpense={
+          isPendingCreateExpense || isPendingCreateRecurringExpense
+        }
+        isPendingEditExpense={
+          isPendingEditExpense || isPendingEditRecurringExpense
+        }
         location={inputs.location}
         isMapOpen={isMapOpen}
         timeZoneCoordinates={timeZoneCoordinates}
@@ -337,6 +412,15 @@ export default function ExpenseForm({
         isDateShowing={isDateShowing}
         showPicker={inputs.showPicker}
         setShowPicker={inputs.setShowPicker}
+        recurrenceSchedule={inputs.recurrenceSchedule}
+        setRecurrenceSchedule={inputs.setRecurrenceSchedule}
+        showRecurrencePicker={inputs.showRecurrencePicker}
+        setShowRecurrencePicker={inputs.setShowRecurrencePicker}
+        canRecur={isCreateExpense || !!recurringExpenseId}
+        // The schedule owns the timing once one is set, so the expense's own date would be a
+        // control with nothing to act on.
+        canPickDate={!recurringExpenseId && inputs.recurrenceSchedule === null}
+        timeZoneIdForSchedule={timeZoneId}
       />
       <MenuAnimationBackground menu={currencyMenu} />
       <MenuAnimationBackground menu={warningMenu} />

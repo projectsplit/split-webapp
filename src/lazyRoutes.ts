@@ -22,6 +22,10 @@ const loaders = {
     import('@/pages/Budget/ManageBudgets/ManageBudgets').then((m) => ({
       default: m.ManageBudgets,
     })),
+  RecurringExpenses: () =>
+    import('@/pages/RecurringExpenses/RecurringExpenses').then((m) => ({
+      default: m.RecurringExpenses,
+    })),
 };
 
 export const Group = lazy(loaders.Group);
@@ -37,6 +41,7 @@ export const GenerateInvitationCode = lazy(loaders.GenerateInvitationCode);
 export const Personal = lazy(loaders.Personal);
 export const BudgetActions = lazy(loaders.BudgetActions);
 export const ManageBudgets = lazy(loaders.ManageBudgets);
+export const RecurringExpenses = lazy(loaders.RecurringExpenses);
 
 let prewarmStarted = false;
 

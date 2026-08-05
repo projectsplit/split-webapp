@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import { StyledLongPressMenu } from './LongPressMenu.styled';
 
@@ -5,12 +6,19 @@ interface LongPressMenuProps {
   onEdit?: () => void;
   onDelete: () => void;
   onClose: () => void;
+  /** Actions beyond edit and delete, for menus that need them — pausing a recurring expense. */
+  extraOptions?: {
+    label: string;
+    icon: ReactNode;
+    onClick: () => void;
+  }[];
 }
 
 export default function LongPressMenu({
   onEdit,
   onDelete,
   onClose,
+  extraOptions,
 }: LongPressMenuProps) {
   return (
     <StyledLongPressMenu>
@@ -29,6 +37,19 @@ export default function LongPressMenu({
             <span>Edit</span>
           </button>
         )}
+        {extraOptions?.map((option) => (
+          <button
+            key={option.label}
+            className="option edit"
+            onClick={() => {
+              onClose();
+              option.onClick();
+            }}
+          >
+            <span className="icon">{option.icon}</span>
+            <span>{option.label}</span>
+          </button>
+        ))}
         <button
           className="option delete"
           onClick={() => {

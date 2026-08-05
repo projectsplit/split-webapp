@@ -65,6 +65,7 @@ export type UserInfo = {
   email: string | null;
   emailVerified: boolean;
   pushNotificationsEnabled: boolean;
+  hasRecurringExpenses: boolean;
 };
 
 export type GetVapidPublicKeyResponse = {
@@ -175,6 +176,8 @@ export type ExpenseResponseItem = {
   currency: string;
   location?: GeoLocation;
   groupId?: string;
+  /** Set when a recurring template produced this expense. */
+  recurringExpenseId?: string | null;
   payments?: GroupPayment[] | Payment[];
   shares?: GroupShare[] | Share[];
   labels: {
@@ -426,6 +429,107 @@ export type ExpenseRequest =
   | GroupExpenseRequest
   | NonGroupExpenseRequest
   | PersonalExpenseRequest;
+
+// Mirrors SplitServer's RecurrenceFrequency. Kept separate from Frequency, which is the budget
+// spending cycle and has a Custom member that means nothing for a repeating expense.
+export enum RecurrenceFrequency {
+  Daily = 0,
+  Weekly = 1,
+  Biweekly = 2,
+  Monthly = 3,
+  Annually = 4,
+}
+
+/**
+ * When a recurring expense fires, read in the user's own time zone. Day fields are per frequency:
+ * daily needs none, weekly and biweekly need dayOfWeek, monthly needs dayOfMonth, annually needs
+ * both month and dayOfMonth.
+ */
+export type RecurrenceSchedule = {
+  frequency: RecurrenceFrequency;
+  hour: number;
+  minute: number;
+  /** 0 = Sunday, matching System.DayOfWeek on the server. */
+  dayOfWeek?: number | null;
+  dayOfMonth?: number | null;
+  /** 1-12. */
+  month?: number | null;
+};
+
+export type RecurringExpenseRequest = {
+  groupId?: string;
+  amount: number;
+  currency: string;
+  description: string;
+  schedule: RecurrenceSchedule;
+  payments?: {
+    memberId: string;
+    amount: number;
+  }[];
+  shares?: {
+    memberId: string;
+    amount: number;
+  }[];
+  nonGroupPayments?: {
+    userId: string;
+    amount: number;
+  }[];
+  nonGroupShares?: {
+    userId: string;
+    amount: number;
+  }[];
+  labels: {
+    text: string;
+    color: string;
+  }[];
+  location: GeoLocation | null;
+};
+
+export type EditRecurringExpenseRequest = Omit<
+  RecurringExpenseRequest,
+  'groupId'
+> & {
+  recurringExpenseId: string;
+};
+
+export type RecurringExpenseResponseItem = {
+  id: string;
+  created: string;
+  updated: string;
+  transactionType: TransactionType;
+  groupId: string | null;
+  groupName: string | null;
+  amount: number;
+  currency: string;
+  description: string;
+  location: GeoLocation | null;
+  labels: {
+    text: string;
+    color: string;
+  }[];
+  schedule: RecurrenceSchedule;
+  anchorDate: string;
+  nextOccurrence: string;
+  isPaused: boolean;
+  lastError: string | null;
+  payments: GroupPayment[] | null;
+  shares: GroupShare[] | null;
+  nonGroupPayments: Payment[] | null;
+  nonGroupShares: Share[] | null;
+  lastExpenseId: string | null;
+  lastExpenseOccurred: string | null;
+  lastExpenseCreated: string | null;
+};
+
+export type GetRecurringExpensesResponse = {
+  recurringExpenses: RecurringExpenseResponseItem[];
+};
+
+export type CreateRecurringExpenseResponse = {
+  recurringExpenseId: string;
+  /** No expense exists yet — this is when the first one will be created. */
+  firstOccurrence: string;
+};
 
 export type ExpenseRequestWithType =
   | (GroupExpenseRequest & { type?: 'group' })

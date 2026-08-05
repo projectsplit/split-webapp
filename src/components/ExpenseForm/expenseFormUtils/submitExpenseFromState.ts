@@ -8,6 +8,9 @@ import {
   PersonalExpenseRequest,
   PickerMember,
   Group,
+  RecurrenceSchedule,
+  RecurringExpenseRequest,
+  EditRecurringExpenseRequest,
 } from '../../../types';
 import { Signal } from '@preact/signals-react';
 
@@ -23,6 +26,7 @@ export function submitExpenseFromState(
     payersByCategory: CategoryMap<PickerMember[]>;
     participantsCategory: Signal<string>;
     payersCategory: Signal<string>;
+    recurrenceSchedule: RecurrenceSchedule | null;
     setAmountError: (msg: string) => void;
     setDescriptionError: (msg: string) => void;
     setIsSubmitting: (value: boolean) => void;
@@ -32,6 +36,9 @@ export function submitExpenseFromState(
     groupId?: string;
     createExpenseMutation: (req: ExpenseRequest) => void;
     editExpenseMutation: (req: ExpenseRequest) => void;
+    createRecurringExpenseMutation: (req: RecurringExpenseRequest) => void;
+    editRecurringExpenseMutation: (req: EditRecurringExpenseRequest) => void;
+    recurringExpenseId?: string;
     isCreateExpense: boolean;
     expense: FormExpense | null;
     isnonGroupExpense?: Signal<boolean>;
@@ -39,12 +46,16 @@ export function submitExpenseFromState(
     fromHomeGroup?: Signal<Group | null>;
     userId: string;
     onUserNotInExpense: () => void;
+    onRecurrenceRequired: () => void;
   }
 ) {
   const {
     groupId,
     createExpenseMutation,
     editExpenseMutation,
+    createRecurringExpenseMutation,
+    editRecurringExpenseMutation,
+    recurringExpenseId,
     isnonGroupExpense,
     fromPersonal,
     isCreateExpense,
@@ -52,6 +63,7 @@ export function submitExpenseFromState(
     fromHomeGroup,
     userId,
     onUserNotInExpense,
+    onRecurrenceRequired,
   } = inputs;
 
   const participants =
@@ -168,9 +180,125 @@ export function submitExpenseFromState(
   }
 
   state.setIsSubmitting(true);
+
+  // Editing the template itself: the schedule is rewritten and every expense it already produced
+  // stays exactly as submitted.
+  if (recurringExpenseId) {
+    if (state.recurrenceSchedule === null) {
+      state.setIsSubmitting(false);
+      onRecurrenceRequired();
+      return;
+    }
+
+    const { groupId: _groupId, ...rest } = buildRecurringRequest(
+      state,
+      state.recurrenceSchedule,
+      participants,
+      payers,
+      fromPersonal,
+      isnonGroupExpense?.value ?? false,
+      groupId || fromHomeGroup?.value?.id
+    );
+
+    editRecurringExpenseMutation({ ...rest, recurringExpenseId });
+    return;
+  }
+
+  // A schedule only ever applies to a new expense. Editing one already submitted leaves it a
+  // one-off — the series is edited from the manage screen instead, where the scope of the change
+  // is clear.
+  if (isCreateExpense && state.recurrenceSchedule !== null) {
+    createRecurringExpenseMutation(
+      buildRecurringRequest(
+        state,
+        state.recurrenceSchedule,
+        participants,
+        payers,
+        fromPersonal,
+        isnonGroupExpense?.value ?? false,
+        groupId || fromHomeGroup?.value?.id
+      )
+    );
+    return;
+  }
+
   if (isCreateExpense) {
     createExpenseMutation(expenseRequest);
   } else {
     editExpenseMutation(expenseRequest);
   }
+}
+
+/**
+ * The recurring endpoint takes one payload for all three scopes, so group and non-group splits ride
+ * in separate fields rather than the shared payments/shares the per-scope endpoints use.
+ */
+function buildRecurringRequest(
+  state: {
+    amount: string;
+    description: string;
+    currencySymbol: string;
+    labels: Label[];
+    location: GeoLocation | undefined;
+  },
+  schedule: RecurrenceSchedule,
+  participants: PickerMember[],
+  payers: PickerMember[],
+  fromPersonal: boolean | undefined,
+  isNonGroup: boolean,
+  groupId: string | undefined
+): RecurringExpenseRequest {
+  // No occurred: the schedule decides when each expense is dated, not the moment the form was
+  // filled in.
+  const base = {
+    amount: Number(state.amount),
+    currency: state.currencySymbol,
+    description: state.description,
+    location: state.location ?? null,
+    schedule,
+    labels: state.labels.map((x) => ({ text: x.text, color: x.color })),
+  };
+
+  if (fromPersonal) {
+    return base;
+  }
+
+  if (isNonGroup) {
+    return {
+      ...base,
+      nonGroupPayments: payers
+        .filter((value) => value.selected)
+        .map((value) => ({
+          userId: value.id,
+          amount: Number(value.actualAmount),
+        })),
+      nonGroupShares: participants
+        .filter((value) => value.selected)
+        .map((value) => ({
+          userId: value.id,
+          amount: Number(value.actualAmount),
+        })),
+    };
+  }
+
+  if (!groupId) {
+    return base;
+  }
+
+  return {
+    ...base,
+    groupId,
+    payments: payers
+      .filter((value) => value.selected)
+      .map((value) => ({
+        memberId: value.id,
+        amount: Number(value.actualAmount),
+      })),
+    shares: participants
+      .filter((value) => value.selected)
+      .map((value) => ({
+        memberId: value.id,
+        amount: Number(value.actualAmount),
+      })),
+  };
 }

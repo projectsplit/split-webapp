@@ -1,11 +1,14 @@
 import { create } from 'zustand';
 import { ExpenseState, SplitMethod } from './formStoreTypes';
 import {
+  EditRecurringExpenseRequest,
   ExpenseRequest,
   FormExpense,
   Group,
   Guest,
   Member,
+  RecurrenceSchedule,
+  RecurringExpenseRequest,
   User,
   UserInfo,
 } from '../../../types';
@@ -51,6 +54,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
 
   makePersonalClicked: false,
   showPicker: false,
+  recurrenceSchedule: null,
+  showRecurrencePicker: false,
 
   participantsCategory: signal<SplitMethod>('Amounts'),
   payersCategory: signal<SplitMethod>('Amounts'),
@@ -73,6 +78,9 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   setMakePersonalClicked: (value: boolean) =>
     set({ makePersonalClicked: value }),
   setShowPicker: (value: boolean) => set({ showPicker: value }),
+  setRecurrenceSchedule: (schedule) => set({ recurrenceSchedule: schedule }),
+  setShowRecurrencePicker: (value: boolean) =>
+    set({ showRecurrencePicker: value }),
   setLabels: (labels) => set({ labels }),
   setLocation: (location) => set({ location }),
 
@@ -214,6 +222,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     userInfo: UserInfo;
     userMemberId?: string;
     isnonGroupExpense?: Signal<boolean>;
+    recurrenceSchedule?: RecurrenceSchedule | null;
   }) => {
     const {
       isCreateExpense,
@@ -223,6 +232,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       nonGroupUsers,
       isnonGroupExpense,
       userInfo,
+      recurrenceSchedule,
     } = config;
     const userMembers = groupMembers
       ?.peek()
@@ -306,6 +316,10 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       descriptionError: '',
       isSubmitting: false,
       userMemberId: userMemberId,
+      // The form is reused for every expense, so a cycle left over from the last one would
+      // silently attach itself to the next. Editing a template passes its own cycle back in.
+      recurrenceSchedule: recurrenceSchedule ?? null,
+      showRecurrencePicker: false,
     });
   },
   updateMembers: (config) => {
@@ -391,6 +405,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       payersError: '',
       descriptionError: '',
       showAmountError: false,
+      recurrenceSchedule: null,
+      showRecurrencePicker: false,
     });
   },
   validateForm: (options = { showErrors: true }) => {
@@ -449,6 +465,9 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     groupId?: string;
     createExpenseMutation: (req: ExpenseRequest) => void;
     editExpenseMutation: (req: ExpenseRequest) => void;
+    createRecurringExpenseMutation: (req: RecurringExpenseRequest) => void;
+    editRecurringExpenseMutation: (req: EditRecurringExpenseRequest) => void;
+    recurringExpenseId?: string;
     isCreateExpense: boolean;
     expense: FormExpense | null;
     isnonGroupExpense?: Signal<boolean>;
@@ -457,6 +476,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     fromHomeGroup?: Signal<Group | null>;
     userId: string;
     onUserNotInExpense: () => void;
+    onRecurrenceRequired: () => void;
   }) => {
     const state = get();
     submitExpenseFromState(
@@ -471,6 +491,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
         payersByCategory: state.payersByCategory,
         participantsCategory: state.participantsCategory,
         payersCategory: state.payersCategory,
+        recurrenceSchedule: state.recurrenceSchedule,
         setAmountError: state.setAmountError,
         setDescriptionError: state.setDescriptionError,
         setIsSubmitting: state.setIsSubmitting,
