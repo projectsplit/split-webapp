@@ -73,6 +73,7 @@ const Protected: React.FC = () => {
   const excludeTopMenu = shouldExcludeTopMenu([
     '/analytics',
     '/budget',
+    '/recurring-expenses',
     '/shared/generatecode',
   ]);
 

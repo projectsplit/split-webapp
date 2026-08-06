@@ -32,6 +32,7 @@ import {
   Personal,
   BudgetActions,
   ManageBudgets,
+  RecurringExpenses,
 } from './lazyRoutes';
 
 const SuspenseFallback = () => (
@@ -86,6 +87,11 @@ const App = () => {
               <Route path="/personal" element={<Personal />}>
                 <Route index element={<Expenses />} />
               </Route>
+
+              <Route
+                path="/recurring-expenses"
+                element={<RecurringExpenses />}
+              />
 
               <Route path="/analytics/*" element={<RedirectToAnalytics />} />
               <Route path="/analytics" element={<Analytics />} />

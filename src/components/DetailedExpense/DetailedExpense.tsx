@@ -15,6 +15,7 @@ import { Mode, TransactionType, GeoLocation } from '../../types';
 import EditExpenseAnimation from '../Animations/EditExpenseAnimation';
 import labelColors from '../../labelColors';
 import { MdGroup } from 'react-icons/md';
+import { FaRepeat } from 'react-icons/fa6';
 import { buildFormExpense, toUser } from './utils';
 import NavigateToExpenseAnimation from '../Animations/NavigateToExpenseAnimation';
 
@@ -111,6 +112,14 @@ export default function DetailedExpense({
       <div className="total">
         {displayCurrencyAndAmount(amount.toString(), currency)}
       </div>
+      {/* Marked on the expense itself rather than inferred from the scope, so it reads the same
+          whether this is a personal, group or non-group expense. */}
+      {selectedExpense.value?.recurringExpenseId && (
+        <div className="recurringBadge">
+          <FaRepeat className="recurringIcon" />
+          <span>Part of a recurring expense</span>
+        </div>
+      )}
       {mode !== Mode.Personal && (
         <div>
           <MembersInfoBox

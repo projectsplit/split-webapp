@@ -29,7 +29,7 @@ import { getInitials } from '../../../helpers/getInitials';
 import { timeZones } from '../../../helpers/timeZones';
 import EditUsernameAnimation from '../../Animations/EditUsernameAnimation';
 import EditEmailAnimation from '../../Animations/EditEmailAnimation';
-import { FaUserPen } from 'react-icons/fa6';
+import { FaRepeat, FaUserPen } from 'react-icons/fa6';
 import { MdOutlineEmail } from 'react-icons/md';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
 import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPushNotificationsEnabled';
@@ -202,6 +202,20 @@ export default function SettingsMenu({
             {pushError && <div className="optionNote">{pushError}</div>}
           </>
         )}
+
+        {/* Always listed. Hiding it when there is nothing to manage made the entry appear and
+            disappear as a side effect of unrelated actions, and left no way in to a list that is
+            about to have something in it. The page states when it is empty instead. */}
+        <div
+          className="option"
+          onClick={() => {
+            menu.value = null;
+            navigate('/recurring-expenses');
+          }}
+        >
+          <FaRepeat className="icon" />
+          <div className="description">Manage recurring expenses</div>
+        </div>
 
         <div
           className="option"

@@ -1,5 +1,6 @@
 import { Signal } from '@preact/signals-react';
 import {
+  EditRecurringExpenseRequest,
   ExpenseRequest,
   FormExpense,
   GeoLocation,
@@ -8,6 +9,8 @@ import {
   Label,
   Member,
   PickerMember,
+  RecurrenceSchedule,
+  RecurringExpenseRequest,
   User,
   UserInfo,
 } from '../../../types';
@@ -44,6 +47,9 @@ export interface ExpenseState {
   payersCategory: Signal<SplitMethod>;
   makePersonalClicked: boolean;
   showPicker: boolean;
+  /** null means the expense is a one-off. */
+  recurrenceSchedule: RecurrenceSchedule | null;
+  showRecurrencePicker: boolean;
   // ── Actions
 
   setAmount: (value: string) => void;
@@ -64,6 +70,8 @@ export interface ExpenseState {
   setIsSubmitting: (value: boolean) => void;
   setMakePersonalClicked: (value: boolean) => void;
   setShowPicker: (value: boolean) => void;
+  setRecurrenceSchedule: (schedule: RecurrenceSchedule | null) => void;
+  setShowRecurrencePicker: (value: boolean) => void;
 
   setParticipantsByCategory: (
     updater:
@@ -96,6 +104,8 @@ export interface ExpenseState {
     userInfo: UserInfo;
     userMemberId?: string;
     isnonGroupExpense?: Signal<boolean>;
+    /** Seeded here rather than by a follow-up effect, so a re-initialize cannot clear it. */
+    recurrenceSchedule?: RecurrenceSchedule | null;
   }) => void;
 
   updateMembers: (config: {
@@ -120,6 +130,9 @@ export interface ExpenseState {
     groupId?: string;
     createExpenseMutation: (req: ExpenseRequest) => void;
     editExpenseMutation: (req: ExpenseRequest) => void;
+    createRecurringExpenseMutation: (req: RecurringExpenseRequest) => void;
+    editRecurringExpenseMutation: (req: EditRecurringExpenseRequest) => void;
+    recurringExpenseId?: string;
 
     isCreateExpense: boolean;
     expense: FormExpense | null;
@@ -129,5 +142,6 @@ export interface ExpenseState {
     fromHomeGroup?: Signal<Group | null>;
     userId: string;
     onUserNotInExpense: () => void;
+    onRecurrenceRequired: () => void;
   }) => void;
 }

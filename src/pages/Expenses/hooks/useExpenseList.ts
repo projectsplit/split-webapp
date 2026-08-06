@@ -37,7 +37,8 @@ export const useExpenseList = (
     expenseParsedFilters,
     pageSize,
     timeZoneId,
-    isPersonal
+    isPersonal,
+    jumpToken
   );
 
   if (isGroup) return groupQuery;
