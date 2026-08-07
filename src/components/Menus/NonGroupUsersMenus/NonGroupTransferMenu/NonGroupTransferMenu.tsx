@@ -193,19 +193,23 @@ export default function NonGroupTransferMenu({
     nonGroupTransferMenu.value.attribute === 'receiver';
   const showUsers = isPickingUser && users.length > 0;
 
+  // useDebounce reports itself busy for its first 300ms even on mount, when the value never
+  // changed — without the length gate that blinks a spinner over cached results on every open.
+  const isTypingKeyword = isDebouncing && keyword.length > 1;
+
   // The spinner only stands in for an empty list. Showing it for every fetch swapped the loaded
   // names out while the next page was in flight, which also pulled the sentinel back into view and
   // made it request yet another page — two spinners at once and a list that kept blanking.
   const showSpinner = showUsers
     ? false
     : isPickingUser
-      ? usersAreLoading || isDebouncing
+      ? usersAreLoading || isTypingKeyword
       : groupsAreLoading;
 
   // Results for the previous keyword stay up while the new ones are on their way, so the typing
   // needs its own spinner above them — otherwise a search reads as having done nothing at all.
   const showSearchingSpinner =
-    isPickingUser && showUsers && (isDebouncing || usersAreStale);
+    isPickingUser && showUsers && (isTypingKeyword || usersAreStale);
 
   return (
     <StyledNonGroupTransferUsersMenu>
