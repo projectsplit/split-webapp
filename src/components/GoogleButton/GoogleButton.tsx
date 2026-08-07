@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import config from '../../config';
 import { StyledGoogleButton } from './GoogleButton.styled';
 import routes from '../../routes';
+import { isNativeApp } from '../../helpers/platform';
+import { signInWithGoogleNatively } from '../../helpers/nativeGoogleAuth';
+import { sendGoogleIdToken } from '../../api/auth/api';
 
 const redirectToGoogleLoginPage = () => {
   const clientId = `${config.googleApiClientId}`;
@@ -14,8 +19,44 @@ const redirectToGoogleLoginPage = () => {
 };
 
 const GoogleButton: React.FC = () => {
+  const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
+
+  const nativeSignIn = useMutation({
+    mutationFn: sendGoogleIdToken,
+    onSuccess: (res) => {
+      localStorage.setItem('accessToken', res.accessToken);
+      navigate(routes.ROOT, { replace: true });
+    },
+    onError: () => setError('Login failed. Please try again.'),
+  });
+
+  // The browser leaves the page entirely and comes back through GoogleCallback, so there is nothing
+  // to await. The native sheet resolves in place instead, and the account only exists once the
+  // server has verified the token, so the round trip has to finish before we can navigate.
+  const handleClick = async () => {
+    if (!isNativeApp()) {
+      redirectToGoogleLoginPage();
+      return;
+    }
+
+    if (nativeSignIn.isPending) return;
+
+    setError(null);
+
+    const result = await signInWithGoogleNatively();
+
+    if (!result.ok) {
+      if (!result.cancelled) setError('Login failed. Please try again.');
+      return;
+    }
+
+    nativeSignIn.mutate({ idToken: result.idToken });
+  };
+
   return (
-    <StyledGoogleButton onClick={redirectToGoogleLoginPage}>
+    <>
+    <StyledGoogleButton onClick={handleClick} aria-busy={nativeSignIn.isPending}>
       <svg
         className="googleLogo"
         version="1.1"
@@ -45,6 +86,12 @@ const GoogleButton: React.FC = () => {
 
       <div className="prompt">Continue with Google</div>
     </StyledGoogleButton>
+    {error && (
+      <div role="alert" style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+        {error}
+      </div>
+    )}
+    </>
   );
 };
 

@@ -35,6 +35,43 @@ export const StyledHomepage = styled.div`
     font-size: 15px;
     padding: 1rem 0 1rem 0;
     white-space: initial;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  /* Sits up here rather than at the foot of the page: the content below fills the screen and
+     scrolls, and the bottom right corner already belongs to the quick actions button.
+
+     Deliberately quiet — outlined, muted, small. It is the door that is always open, so it has no
+     work to do beyond being findable; anything louder would turn the whole screen into an ask. */
+  .supportButton {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid ${({ theme }) => theme.greyOutline};
+    background-color: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    color: ${({ theme }) => theme.textInactiveColor};
+    cursor: pointer;
+    transition:
+      border-color 150ms,
+      color 150ms;
+
+    .heart {
+      font-size: 13px;
+      color: ${({ theme }) => theme.pink};
+    }
+
+    &:hover {
+      border-color: ${({ theme }) => theme.pink};
+      color: ${({ theme }) => theme.primaryTextColor};
+    }
   }
 
   .actions {

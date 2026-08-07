@@ -1,6 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Navigate, Outlet, useLocation, useParams } from 'react-router-dom';
+import {
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import { useSignal } from '@preact/signals-react';
 import { StyledProtected } from './Protected.styled';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
@@ -11,12 +17,17 @@ import { JoinOverlay } from '../Join/JoinOverslay';
 import { useGetMe } from '@/api/auth/QueryHooks/useGetMe';
 import { prewarmRoutes } from '@/lazyRoutes';
 import { syncPushSubscription } from '@/helpers/pushNotifications';
+import { addNativePushTapListener } from '@/helpers/nativePush';
+import { isNativeApp } from '@/helpers/platform';
+import DonationPrompt from '../../components/DonationPrompt/DonationPrompt';
+import DonationReturnNotice from '../../components/DonationPrompt/DonationReturnNotice';
 
 const Protected: React.FC = () => {
   const location = useLocation();
   const { code } = useParams<{ code?: string }>();
   const { data: userInfo } = useGetMe();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   useEffect(() => {
     prewarmRoutes();
@@ -40,6 +51,22 @@ const Protected: React.FC = () => {
       syncPushSubscription();
     }
   }, [userInfo]);
+
+  // The native app has no service worker to relay through, so the tap on the system notification is
+  // the only signal that a push happened. Registered once for the lifetime of the screen because a
+  // tap can launch the app from cold and the delivery is only replayed to listeners already present.
+  useEffect(() => {
+    if (!isNativeApp()) return;
+
+    addNativePushTapListener((url) => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['getMe'] });
+
+      // Server-sent urls are paths within this app. Anything absolute would navigate the WebView
+      // off our own origin with no way back, so only in-app paths are followed.
+      if (url.startsWith('/')) navigate(url);
+    });
+  }, [queryClient, navigate]);
 
   // The service worker gets every push whether or not a tab is focused, so it relays one message
   // and the bell and feed refresh in place. This is the live path; useGetMe's poll is only the
@@ -108,6 +135,10 @@ const Protected: React.FC = () => {
         userInfo={userInfo}
       />
       <SettingsMenuAnimation menu={menu} userInfo={userInfo} />
+      {/* Mounted here rather than in App, because both need a signed-in account: the prompt asks the
+          server whether this person is due, and the notice is what Stripe redirects back into. */}
+      <DonationPrompt menu={menu} hasOverlay={Boolean(code)} />
+      <DonationReturnNotice />
       {/* <ConfirmUnArchiveGroupAnimation  /> */}
     </StyledProtected>
   ) : (

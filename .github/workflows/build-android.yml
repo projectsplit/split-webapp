@@ -1,0 +1,94 @@
+name: Build Android
+
+# Manual only. Every run that gets uploaded burns a versionCode permanently, so builds are made
+# deliberately rather than on each push.
+on:
+  workflow_dispatch:
+    inputs:
+      buildType:
+        description: 'aab for Play uploads, apk for sideloading onto a test device'
+        required: true
+        default: 'aab'
+        type: choice
+        options:
+          - aab
+          - apk
+
+run-name: Build Android ${{ inputs.buildType }} from ${{ github.ref_name }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23'
+
+      # AGP 8.13 will not run on anything older than 17; 21 matches the local toolchain.
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Setup .env.production
+        run: echo "${{ vars.ENV_PRODUCTION }}" > .env.production
+
+      - name: Build web bundle
+        run: npm run build-prod
+
+      # Firebase will not initialise without this, and FCM registration fails at runtime rather than
+      # at build time — so a missing secret would produce an app that installs and silently never
+      # receives a notification.
+      - name: Restore google-services.json
+        run: echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" | base64 -d > android/app/google-services.json
+
+      - name: Restore signing keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/upload-keystore.jks
+          cat > android/keystore.properties <<EOF
+          storeFile=upload-keystore.jks
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          EOF
+
+      - name: Sync web assets into the native project
+        run: npx cap sync android
+
+      - name: Build signed bundle
+        if: inputs.buildType == 'aab'
+        working-directory: android
+        run: ./gradlew bundleRelease --no-daemon
+
+      - name: Build signed apk
+        if: inputs.buildType == 'apk'
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon
+
+      # Removed before the artifact step so a failure above cannot leave the key on the runner for
+      # a later step to pick up.
+      - name: Remove signing material
+        if: always()
+        run: rm -f android/upload-keystore.jks android/keystore.properties android/app/google-services.json
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: buqs-android-${{ inputs.buildType }}
+          path: |
+            android/app/build/outputs/bundle/release/*.aab
+            android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 14

@@ -9,8 +9,13 @@ import {  useEffect, useState } from 'react';
 import SplashScreen from './pages/SplashScreen/SplashScreen';
 
 import { registerSW } from 'virtual:pwa-register';
+import { isNativeApp } from './helpers/platform';
 
-if ('serviceWorker' in navigator) {
+// The native shell serves the same bundle from https://localhost, so the worker would register and
+// then precache a copy of assets the shell already ships — an second, staler source of truth that
+// survives app updates. Native builds get their assets from the APK and their pushes from FCM, so
+// the worker has no job there.
+if ('serviceWorker' in navigator && !isNativeApp()) {
   registerSW({ immediate: true });
 }
 

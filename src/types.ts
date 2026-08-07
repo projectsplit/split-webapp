@@ -45,8 +45,25 @@ export type VerifyAccountEmailRequest = {
   code: string;
 };
 
+/**
+ * Mirrors the server's PushDeviceKind enum. The API has no string-enum converter, so these cross the
+ * wire as the numbers the server's enum actually is — naming them here keeps that off the call sites.
+ */
+export const PushDeviceKind = {
+  WebPush: 0,
+  Fcm: 1,
+} as const;
+
 export type SendGoogleCodeRequest = {
   code: string;
+};
+
+/**
+ * The native app's equivalent of SendGoogleCodeRequest. Google's Android sheet returns a signed
+ * identity token outright, so there is no code to redeem and no redirect to come back from.
+ */
+export type SendGoogleIdTokenRequest = {
+  idToken: string;
 };
 
 export type SendGoogleAccessTokenResponse = {
@@ -86,6 +103,39 @@ export type GetNotificationsResponse = {
 
 export type SetPushNotificationsEnabledRequest = {
   enabled: boolean;
+};
+
+/**
+ * Whether to ask this person for a contribution, and what to ask for. `shouldAsk` is the server's
+ * decision and the client never overrides it upwards — the client only ever declines to show a
+ * prompt it was cleared to show, never the reverse.
+ */
+export type DonationPromptInfo = {
+  shouldAsk: boolean;
+  /** False when the server has no Stripe credentials. Hides every donation entry point. */
+  isAvailable: boolean;
+  currency: string;
+  suggestedAmountMinor: number;
+  presetAmountsMinor: number[];
+  minAmountMinor: number;
+  maxAmountMinor: number;
+  hasDonated: boolean;
+  hasActiveMonthly: boolean;
+};
+
+export type CreateDonationCheckoutSessionRequest = {
+  /** Amount in the currency's minor unit. Re-checked server-side against the same bounds. */
+  amountMinor: number;
+  monthly: boolean;
+};
+
+export type CreateDonationCheckoutSessionResponse = {
+  checkoutUrl: string;
+};
+
+export type DismissDonationPromptRequest = {
+  /** True only for an explicit "don't ask again". A plain "not now" sends false. */
+  optOut: boolean;
 };
 
 export type ExpenseItem = {

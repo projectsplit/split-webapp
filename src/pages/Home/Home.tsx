@@ -22,6 +22,9 @@ import NonGroupTransferAnimation from '../../components/Animations/NonGroupTrans
 import { useGetMostRecentGroups } from '@/api/auth/QueryHooks/useGetMostRecentGroups';
 import { useTotalUserBalance } from './hooks/useTotalUserBalance';
 import ScrollableMenuButtons from './ScrollableMenuButtons/ScrollableMenuButtons';
+import { FaRegHeart } from 'react-icons/fa6';
+import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
+import SupportMenuAnimation from '../../components/Animations/SupportMenuAnimation';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -56,7 +59,13 @@ export default function Home() {
   });
 
   const quickActionsMenu = useSignal<string | null>(null);
+  const supportMenu = useSignal<string | null>(null);
   const recentContextId = userInfo?.recentContextId;
+
+  // Cached alongside the prompt's own lookup, so this costs no extra request. Only the
+  // `isAvailable` flag is read here: an instance with no Stripe account should not offer a button
+  // that can only dead-end.
+  const { data: donationInfo } = useGetDonationPrompt(true);
 
   const {
     totalBalances,
@@ -102,7 +111,22 @@ export default function Home() {
         <div className="fadeIn">
           <div className="fixedTop">
             <div className="welcomeStripe">
-              Welcome, <strong>{userInfo?.username}</strong>
+              <span>
+                Welcome, <strong>{userInfo?.username}</strong>
+              </span>
+              {/* Hidden only when the server has no Stripe credentials. Shown regardless of whether
+                  this person is due to be prompted — the prompt is the app asking, this is them
+                  choosing, and someone who turned the asking off keeps the choice. */}
+              {donationInfo?.isAvailable && (
+                <button
+                  type="button"
+                  className="supportButton"
+                  onClick={() => (supportMenu.value = 'support')}
+                >
+                  <FaRegHeart className="heart" />
+                  Support Buqs
+                </button>
+              )}
             </div>
           </div>
           <ScrollableMenuButtons
@@ -120,20 +144,26 @@ export default function Home() {
             activeBudgetData={activeBudgetData}
             showBudgetInfo={userInfo.showBudgetInfo}
           />
-          <div
-            className={`actions ${isGlowing ? 'glow' : ''}`}
-            onClick={() =>
-              (quickActionsMenu.value =
-                quickActionsMenu.value === 'quickActions'
-                  ? null
-                  : 'quickActions')
-            }
-          >
-            <AiFillThunderbolt className="thunder" />
-          </div>
+          {/* Pulled while the support form is up. It outranks the menu backdrop, so leaving it
+              would put a live quick-actions button on top of a modal. */}
+          {supportMenu.value === null && (
+            <div
+              className={`actions ${isGlowing ? 'glow' : ''}`}
+              onClick={() =>
+                (quickActionsMenu.value =
+                  quickActionsMenu.value === 'quickActions'
+                    ? null
+                    : 'quickActions')
+              }
+            >
+              <AiFillThunderbolt className="thunder" />
+            </div>
+          )}
         </div>
       )}
       <MenuAnimationBackground menu={quickActionsMenu} />
+      <MenuAnimationBackground menu={supportMenu} />
+      <SupportMenuAnimation supportMenu={supportMenu} />
 
       {quickActionsMenu.value === 'newExpense' && (
         <CreateExpenseForm

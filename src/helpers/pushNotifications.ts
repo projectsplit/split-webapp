@@ -1,11 +1,21 @@
 import { AxiosResponse } from 'axios';
 import { apiClient } from '../api/apiClients';
 import { GetVapidPublicKeyResponse } from '../types';
+import { isNativeApp } from './platform';
+import {
+  hasNativePushPermission,
+  subscribeToNativePush,
+  unsubscribeFromNativePush,
+} from './nativePush';
 
 export const isPushSupported = () =>
-  'serviceWorker' in navigator &&
-  'PushManager' in window &&
-  'Notification' in window;
+  // The native shell has no Push API at all — its WebView does not implement it — but it can still
+  // receive notifications, through FCM. Reporting unsupported there would hide the settings toggle
+  // on the one platform where notifications work best.
+  isNativeApp() ||
+  ('serviceWorker' in navigator &&
+    'PushManager' in window &&
+    'Notification' in window);
 
 // The VAPID key travels as base64url, but pushManager.subscribe wants raw bytes.
 const urlBase64ToUint8Array = (base64String: string): Uint8Array => {
@@ -56,6 +66,8 @@ export type PushSubscribeResult =
 export const subscribeToPush = async (): Promise<PushSubscribeResult> => {
   if (!isPushSupported()) return { subscribed: false, failure: 'unsupported' };
 
+  if (isNativeApp()) return subscribeToNativePush();
+
   // Returns the standing answer without prompting when the user has already decided, so a
   // previously blocked site never gets a second prompt no matter how often this is called.
   const permission = await Notification.requestPermission();
@@ -104,6 +116,8 @@ export const subscribeToPush = async (): Promise<PushSubscribeResult> => {
 export const unsubscribeFromPush = async (): Promise<void> => {
   if (!isPushSupported()) return;
 
+  if (isNativeApp()) return unsubscribeFromNativePush();
+
   const registration = await navigator.serviceWorker.ready;
   const subscription = await registration.pushManager.getSubscription();
 
@@ -124,7 +138,13 @@ export const unsubscribeFromPush = async (): Promise<void> => {
  * the next. Safe to call on every app start: it does nothing unless permission is already granted.
  */
 export const syncPushSubscription = async (): Promise<void> => {
-  if (!isPushSupported() || Notification.permission !== 'granted') return;
+  if (!isPushSupported()) return;
+
+  const alreadyGranted = isNativeApp()
+    ? await hasNativePushPermission()
+    : Notification.permission === 'granted';
+
+  if (!alreadyGranted) return;
 
   const result = await subscribeToPush();
 

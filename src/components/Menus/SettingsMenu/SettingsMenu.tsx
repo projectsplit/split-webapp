@@ -33,6 +33,9 @@ import { FaRepeat, FaUserPen } from 'react-icons/fa6';
 import { MdOutlineEmail } from 'react-icons/md';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
 import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPushNotificationsEnabled';
+import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
+import SupportMenuAnimation from '../../Animations/SupportMenuAnimation';
+import { FaRegHeart } from 'react-icons/fa6';
 import {
   isPushSupported,
   PushSubscribeFailure,
@@ -61,6 +64,11 @@ export default function SettingsMenu({
   const timeZoneMenu = useSignal<string | null>(null);
   const editUsernameMenu = useSignal<string | null>(null);
   const editEmailMenu = useSignal<string | null>(null);
+  const supportMenu = useSignal<string | null>(null);
+
+  // Only fetched to know whether donations are configured at all. An instance with no Stripe
+  // credentials should not show an entry that can only lead to a dead end.
+  const { data: donationInfo } = useGetDonationPrompt(true);
 
   const queryClient = useQueryClient();
 
@@ -250,6 +258,19 @@ export default function SettingsMenu({
           </div>
         </div>
 
+        {/* Hidden only when the server has no Stripe credentials, so an instance that cannot take
+            money does not offer to. Otherwise always here, including for someone who turned the
+            prompt off — declining to be asked is not declining to give. */}
+        {donationInfo?.isAvailable && (
+          <div
+            className="option"
+            onClick={() => (supportMenu.value = 'support')}
+          >
+            <FaRegHeart className="icon" />
+            <div className="description">Support Buqs</div>
+          </div>
+        )}
+
         <div className="option" onClick={handleLogout}>
           <TbLogout2 className="icon" />
           <div className="description">Log out</div>
@@ -263,6 +284,8 @@ export default function SettingsMenu({
       <MenuAnimationBackground menu={timeZoneMenu} />
       <MenuAnimationBackground menu={editUsernameMenu} />
       <MenuAnimationBackground menu={editEmailMenu} />
+      <MenuAnimationBackground menu={supportMenu} />
+      <SupportMenuAnimation supportMenu={supportMenu} />
       <TimeZoneOptionsAnimation
         timeZoneMenu={timeZoneMenu}
         clickHandler={handldeTimeZoneOptionsClick}
