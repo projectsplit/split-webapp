@@ -25,5 +25,5 @@ export default function ActionsMenu({
         </div>
       </div>
     </StyledActionsMenu>
-  );
+   );
 }
