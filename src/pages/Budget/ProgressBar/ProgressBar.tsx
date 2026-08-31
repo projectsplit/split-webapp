@@ -50,9 +50,9 @@ export default function ProgressBar({
                 Description:&nbsp; "
                 {data?.description !== undefined ? data.description : ''}"
               </div>
-              {dateIsInFuture(data?.startDate) ? (
+              {dateIsInFuture(data?.startDate, timeZoneId) ? (
                 <div className="remainingDays">Not Started Yet</div>
-              ) : dateIsInPast(data?.endDate) ? (
+              ) : dateIsInPast(data?.endDate, timeZoneId) ? (
                 <div className="remainingDays" style={{ color: '#FC6F6F' }}>Expired</div>
               ) : (
                 <div className="remainingDays">

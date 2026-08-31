@@ -55,7 +55,7 @@ export function TotalLentBorrowed({
 }: TotalLentBorrowedProps) {
   const fractalFactor = 4;
 
-  const totalLentBorrowed = getTotalLentBorrowed(backendData, currency);
+  const totalLentBorrowed = getTotalLentBorrowed(backendData);
 
   const allDaysInMonth = getAllDaysInMonth(
     selectedTimeCycleIndex.value + 1,
@@ -107,60 +107,28 @@ export function TotalLentBorrowed({
   const pointBackgroundColorTotalLent: string[] = [];
   const pointBackgroundColorTotalLentTotalBorrowed: string[] = [];
 
-  totalLentExt.map((dp, indx) => {
-    if (
-      indx === 0 ||
-      indx === totalLentExt.length - 1 ||
-      enhancedDatesToNumbers[indx] === 15 //createConditionForMiddlePoint(totalLentExt.length, indx)
-    ) {
-      if (
-        enhancedDatesToNumbers[indx] === 15 &&
-        (enhancedDatesToNumbers[totalLentExt.length - 1] === 14 ||
-          enhancedDatesToNumbers[totalLentExt.length - 1] === 16) //condition to not show 15th and 16th consecutive data points
-      ) {
-        pointRadius.push(0);
-        pointBackgroundColorTotalLent.push('transparent');
-      } else {
-        pointRadius.push(2);
-        pointBackgroundColorTotalLent.push('#317E24');
-      }
-    } else {
-      pointRadius.push(0);
-      pointBackgroundColorTotalLent.push('transparent');
-    }
-    if (enhancedDatesToNumbers[indx] % 1 === 0) {
-      hitRadius.push(10);
-    } else {
-      hitRadius.push(0);
-    }
-  });
+  // Both lines mark the same points, so one pass builds all four arrays together. Chart.js reads
+  // one entry per data point, and the two lines share pointRadius and hitRadius, so filling them
+  // once per line left them twice as long as the data with the second half never read.
+  totalLentExt.forEach((_, indx) => {
+    const isEdge = indx === 0 || indx === totalLentExt.length - 1;
+    const isMiddleOfMonth = enhancedDatesToNumbers[indx] === 15; //createConditionForMiddlePoint(totalLentExt.length, indx)
+    const lastPointSitsBesideTheMiddle =
+      enhancedDatesToNumbers[totalLentExt.length - 1] === 14 ||
+      enhancedDatesToNumbers[totalLentExt.length - 1] === 16;
 
-  totalBorrowedExt.map((dp, indx) => {
-    if (
-      indx === 0 ||
-      indx === totalLentExt.length - 1 ||
-      enhancedDatesToNumbers[indx] === 15
-    ) {
-      if (
-        enhancedDatesToNumbers[indx] === 15 &&
-        (enhancedDatesToNumbers[totalLentExt.length - 1] === 14 ||
-          enhancedDatesToNumbers[totalLentExt.length - 1] === 16) //condition to not show 15th and 16th consecutive data points
-      ) {
-        pointRadius.push(0);
-        pointBackgroundColorTotalLent.push('transparent');
-      } else {
-        pointRadius.push(2);
-        pointBackgroundColorTotalLentTotalBorrowed.push('#FF3D3D');
-      }
-    } else {
-      pointRadius.push(0);
-      pointBackgroundColorTotalLentTotalBorrowed.push('transparent');
-    }
-    if (enhancedDatesToNumbers[indx] % 1 === 0) {
-      hitRadius.push(10);
-    } else {
-      hitRadius.push(0);
-    }
+    //condition to not show 15th and 16th consecutive data points
+    const show =
+      (isEdge || isMiddleOfMonth) &&
+      !(isMiddleOfMonth && lastPointSitsBesideTheMiddle);
+
+    pointRadius.push(show ? 2 : 0);
+    pointBackgroundColorTotalLent.push(show ? '#317E24' : 'transparent');
+    pointBackgroundColorTotalLentTotalBorrowed.push(
+      show ? '#FF3D3D' : 'transparent'
+    );
+
+    hitRadius.push(enhancedDatesToNumbers[indx] % 1 === 0 ? 10 : 0);
   });
 
   const options = getChartOptions(
