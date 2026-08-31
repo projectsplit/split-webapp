@@ -61,9 +61,9 @@ export const InactiveBudget = ({
               {endDateDecomposed.dateNumber} {endDateDecomposed.month}
             </strong>
           </div>
-          {dateIsInFuture(budget?.startDate) ? (
+          {dateIsInFuture(budget?.startDate, timeZoneId) ? (
             <div className="remainingDays">Not Started Yet</div>
-          ) : dateIsInPast(budget?.endDate) ? (
+          ) : dateIsInPast(budget?.endDate, timeZoneId) ? (
             <div className="remainingDays" style={{ color: '#FC6F6F' }}>
               Expired
             </div>

@@ -301,6 +301,7 @@ export interface SimpleOnTrackMessageProps {
   closeButton: boolean;
   startDate?: string;
   endDate?: string;
+  timeZoneId?: string;
 }
 export interface ReceivedMoreThanSpentMessageProps extends OnTrackMessageProps {}
 

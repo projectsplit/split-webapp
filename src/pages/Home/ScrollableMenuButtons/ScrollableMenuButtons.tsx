@@ -67,6 +67,7 @@ export default function ScrollableMenuButtons({
           setShowBudgetInfo={setShowBudgetInfo}
           setShowButton={setShowButton}
           onClick={() => navigate('/budget/manage', { state: { fromHome: true } })}
+          timeZoneId={userInfo?.timeZone}
         />
       )}
       {activeBudgetData && !showBudgetInfo && showButton && (

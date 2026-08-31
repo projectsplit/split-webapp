@@ -10,10 +10,13 @@ export default function SimpleOnTrackMessage({
   closeButton,
   startDate,
   endDate,
+  timeZoneId,
 }: SimpleOnTrackMessageProps) {
   const getMessage = () => {
-    if (endDate && dateIsInPast(endDate)) return 'This budget has expired.';
-    if (dateIsInFuture(startDate)) return 'Your budget is not yet in effect.';
+    if (endDate && dateIsInPast(endDate, timeZoneId))
+      return 'This budget has expired.';
+    if (dateIsInFuture(startDate, timeZoneId))
+      return 'Your budget is not yet in effect.';
     return 'You are on track to meeting your spending goal.';
   };
 

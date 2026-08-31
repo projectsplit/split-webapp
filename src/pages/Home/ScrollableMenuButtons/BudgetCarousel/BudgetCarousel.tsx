@@ -20,6 +20,7 @@ export const BudgetCarousel = ({
   setShowBudgetInfo,
   setShowButton,
   onClick,
+  timeZoneId,
 }: BudgetCarouselProps) => {
   const theme = useTheme();
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -102,7 +103,8 @@ export const BudgetCarousel = ({
                 boxShadow: 'none',
                 border: 'none',
                 padding: 0,
-              }
+              },
+              timeZoneId
             )}
           </CarouselItemWrapper>
         }
@@ -145,4 +147,5 @@ interface BudgetCarouselProps {
   >;
   setShowButton: React.Dispatch<React.SetStateAction<boolean>>;
   onClick: React.MouseEventHandler<HTMLDivElement>;
+  timeZoneId?: string;
 }
