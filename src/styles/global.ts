@@ -21,6 +21,23 @@ const GlobalStyles = createGlobalStyle`
     min-height: 100dvh;
   }
 
+  /*
+   * Keeps the app clear of the status bar and the gesture pill.
+   *
+   * Android 15 onwards enforces edge-to-edge for anything targeting SDK 35+, and there is no longer
+   * an opt-out: the WebView is handed the whole screen, system bars included, and the old
+   * setDecorFitsSystemWindows escape hatch is ignored. Without this the header renders underneath
+   * the clock. Capacitor has no config option for it either, so the insets are the web layer's job,
+   * which is what viewport-fit=cover in index.html is there to enable.
+   *
+   * Applied to the shell rather than to each screen, so nothing below has to remember. Left and
+   * right stay on the rule above; they are zero in portrait and only matter in landscape.
+   */
+  #root {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
   /* Force perfect centering on desktop */
   @media (min-width: 769px) {
     html, body, #root {

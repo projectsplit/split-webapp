@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const StyledBottomMainMenu = styled.div<{ $groupIsArchived?: boolean }>`
   padding: 0.625rem;
   padding-bottom: 12px;
-  padding-bottom: max(env(safe-area-inset-bottom), 12px);
 
   .bottomMainBar {
     display: flex;
