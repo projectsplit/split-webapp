@@ -188,8 +188,9 @@ export const findUnregisteredPurchases = async (): Promise<
         (purchase) =>
           Boolean(purchase.purchaseToken) &&
           purchase.isAcknowledged === false &&
-          // Pending on Android, where the money has not arrived yet. Play will send the server its
-          // own notification when it does, so there is nothing for the app to report.
+          // '1' is Android's PURCHASED. A pending one ('0') is a payment method that settles later,
+          // where the money has not arrived yet; Play notifies the server itself when it does, so
+          // there is nothing for the app to report and nothing to acknowledge.
           purchase.purchaseState === '1'
       )
       .map((purchase) => ({
