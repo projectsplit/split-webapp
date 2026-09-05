@@ -1,49 +1,38 @@
-import { useState } from 'react';
-import { DonationPromptInfo } from '../../types';
-import { useCreateDonationCheckout } from '../../api/auth/CommandHooks/useCreateDonationCheckout';
+import { useEffect, useState } from 'react';
+import {
+  DonationPromptInfo,
+  DonationTier,
+  DonationTierKind,
+} from '../../types';
+import { useDonate } from '../../api/auth/CommandHooks/useDonate';
+import { useDonationTiers } from '../../api/auth/QueryHooks/useDonationTiers';
+import { useGetMe } from '@/api/auth/QueryHooks/useGetMe';
+import { isNativeApp } from '@/helpers/platform';
 import MyButton from '../MyButton/MyButton';
+import Spinner from '../Spinner/Spinner';
 import PuppyEyes from './PuppyEyes';
 import {
   AmountRow,
-  CustomAmount,
-  CustomAmountRow,
   Disclaimer,
   ErrorText,
   Footnote,
   Headline,
-  MonthlyRow,
   Preset,
   PuppyFrame,
   StyledDonationForm,
   Subhead,
+  ThankYou,
 } from './DonationPrompt.styled';
-import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 
 /**
  * The ask itself. Shared by the occasional prompt and the permanent settings entry so there is one
- * place where the wording, the amounts and the bounds live.
+ * place where the wording, the tiers and the flow live.
+ *
+ * The amounts are fixed rather than typed in, and that is Google Play's rule rather than a choice:
+ * Play only sells products defined in the Play Console, at prices it sets per country. The upside
+ * is that every price shown here is Play's own, in the reader's currency, and is exactly what they
+ * will be charged.
  */
-
-const MINOR_UNITS_PER_MAJOR = 100;
-
-const formatAmount = (minor: number, currency: string) =>
-  new Intl.NumberFormat(undefined, {
-    style: 'currency',
-    currency: currency.toUpperCase(),
-    // Whole amounts read as prices with the trailing zeroes and as asks without them.
-    minimumFractionDigits: minor % MINOR_UNITS_PER_MAJOR === 0 ? 0 : 2,
-    maximumFractionDigits: 2,
-  }).format(minor / MINOR_UNITS_PER_MAJOR);
-
-const currencySymbol = (currency: string) =>
-  new Intl.NumberFormat(undefined, {
-    style: 'currency',
-    currency: currency.toUpperCase(),
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  })
-    .formatToParts(0)
-    .find((part) => part.type === 'currency')?.value ?? '';
 
 interface DonationFormProps {
   info: DonationPromptInfo;
@@ -51,6 +40,8 @@ interface DonationFormProps {
   headline: string;
   subhead: string;
   showPuppy?: boolean;
+  /** Called once a gift has actually been recorded, so a prompt can close itself. */
+  onGiven?: () => void;
 }
 
 export default function DonationForm({
@@ -58,54 +49,103 @@ export default function DonationForm({
   headline,
   subhead,
   showPuppy = true,
+  onGiven,
 }: DonationFormProps) {
-  // The recommended amount starts selected. It is an anchor, and one that has to be easy to move
-  // off — every preset and the free-text field are one tap away.
-  const [amountMinor, setAmountMinor] = useState(info.suggestedAmountMinor);
-  const [customText, setCustomText] = useState('');
-  const [isMonthly, setIsMonthly] = useState(false);
+  const { data: userInfo } = useGetMe();
 
-  const checkout = useCreateDonationCheckout();
+  const { data: tiers, isPending: isLoadingTiers } = useDonationTiers(
+    info.products,
+    info.isAvailable
+  );
 
-  const isPreset = info.presetAmountsMinor.includes(amountMinor);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null
+  );
+  const [hasGiven, setHasGiven] = useState(false);
 
-  const handleCustomChange = (raw: string) => {
-    // Digits and one separator only. A number input would be the obvious choice but its spinners
-    // are already stripped globally, and this keeps the mobile keypad without the stepper.
-    const cleaned = raw.replace(/[^0-9.,]/g, '').replace(',', '.');
+  const donate = useDonate(userInfo?.userId);
 
-    setCustomText(cleaned);
+  // The cheapest one-off starts selected. An anchor rather than a recommendation, and one that is
+  // always one tap from any other — picking the largest by default would read as a shakedown.
+  useEffect(() => {
+    if (selectedProductId !== null || !tiers?.length) return;
 
-    // Emptying the field falls back to the suggested amount rather than leaving whatever was typed
-    // last standing behind a blank input, which would have the button offering an amount that is
-    // written down nowhere on screen.
-    if (cleaned === '') {
-      setAmountMinor(info.suggestedAmountMinor);
-      return;
-    }
+    const oneTime = tiers.filter((x) => x.kind === DonationTierKind.OneTime);
+    const cheapest = (oneTime.length ? oneTime : tiers).reduce((low, tier) =>
+      tier.price < low.price ? tier : low
+    );
 
-    const parsed = Number.parseFloat(cleaned);
+    setSelectedProductId(cheapest.productId);
+  }, [tiers, selectedProductId]);
 
-    if (Number.isFinite(parsed)) {
-      setAmountMinor(Math.round(parsed * MINOR_UNITS_PER_MAJOR));
-    }
+  const selected: DonationTier | undefined = tiers?.find(
+    (tier) => tier.productId === selectedProductId
+  );
+
+  const handleGive = () => {
+    if (!selected) return;
+
+    donate.mutate(selected, {
+      onSuccess: (outcome) => {
+        if (outcome !== 'given') return;
+
+        setHasGiven(true);
+        onGiven?.();
+      },
+    });
   };
 
-  const isAmountValid =
-    amountMinor >= info.minAmountMinor && amountMinor <= info.maxAmountMinor;
+  // Only ever shown once the server has confirmed the gift, which it does by verifying the purchase
+  // with Google before answering. Nothing here is a guess about whether the money arrived.
+  if (hasGiven) {
+    return (
+      <StyledDonationForm>
+        {showPuppy && (
+          <PuppyFrame>
+            <PuppyEyes />
+          </PuppyFrame>
+        )}
 
-  const amountError =
-    customText !== '' && !isAmountValid
-      ? `Please enter between ${formatAmount(info.minAmountMinor, info.currency)} and ${formatAmount(
-          info.maxAmountMinor,
-          info.currency
-        )}`
-      : null;
+        <ThankYou>
+          <div className="title">Thank you</div>
+          <div className="body">
+            That genuinely helps keep the server running. Google Play will email
+            you a receipt.
+          </div>
+        </ThankYou>
+      </StyledDonationForm>
+    );
+  }
 
-  // The server's message names minor units, which is right for an API and wrong for a person.
-  const requestError = checkout.isError
-    ? 'Could not open the payment page. Please try again.'
+  // The web build has no Play Billing, and the same bundle serves both. Saying where it can be done
+  // beats a button that throws on tap.
+  if (!isNativeApp()) {
+    return (
+      <StyledDonationForm>
+        {showPuppy && (
+          <PuppyFrame>
+            <PuppyEyes />
+          </PuppyFrame>
+        )}
+
+        <Headline>{headline}</Headline>
+        <Subhead>{subhead}</Subhead>
+
+        <Footnote>
+          Contributions go through Google Play, so they can only be made from
+          the Buqs Android app. Buqs is free either way.
+        </Footnote>
+      </StyledDonationForm>
+    );
+  }
+
+  const requestError = donate.isError
+    ? 'The payment could not be completed. Please try again.'
     : null;
+
+  // Play knows about none of the configured tiers. Almost always a build talking to a Play account
+  // where the products do not exist yet, and there is nothing a person can do about it.
+  const hasNoTiers = !isLoadingTiers && !tiers?.length;
 
   return (
     <StyledDonationForm>
@@ -118,62 +158,58 @@ export default function DonationForm({
       <Headline>{headline}</Headline>
       <Subhead>{subhead}</Subhead>
 
-      <AmountRow>
-        {info.presetAmountsMinor.map((preset) => (
-          <Preset
-            key={preset}
-            type="button"
-            $selected={amountMinor === preset && customText === ''}
-            onClick={() => {
-              setAmountMinor(preset);
-              setCustomText('');
-            }}
-          >
-            {formatAmount(preset, info.currency)}
-            {preset === info.suggestedAmountMinor && <span>Suggested</span>}
-          </Preset>
-        ))}
-      </AmountRow>
-
-      <CustomAmountRow $active={customText !== '' || !isPreset}>
-        <span className="symbol">{currencySymbol(info.currency)}</span>
-        <CustomAmount
-          inputMode="decimal"
-          placeholder="Other amount"
-          value={customText}
-          onChange={(event) => handleCustomChange(event.target.value)}
-        />
-      </CustomAmountRow>
-
-      <MonthlyRow>
-        <div className="label">
-          <span>Give this every month</span>
-          <span className="hint">Cancel any time, from your receipt email</span>
+      {isLoadingTiers && (
+        <div className="loading">
+          <Spinner />
         </div>
-        <ToggleSwitch isOn={isMonthly} onToggle={() => setIsMonthly(!isMonthly)} />
-      </MonthlyRow>
+      )}
 
-      {amountError && <ErrorText>{amountError}</ErrorText>}
+      {hasNoTiers && (
+        <ErrorText>
+          Contributions are unavailable right now. Please try again later.
+        </ErrorText>
+      )}
+
+      {!isLoadingTiers && Boolean(tiers?.length) && (
+        <AmountRow>
+          {tiers?.map((tier) => (
+            <Preset
+              key={tier.productId}
+              type="button"
+              $selected={tier.productId === selectedProductId}
+              onClick={() => setSelectedProductId(tier.productId)}
+            >
+              {tier.priceString}
+              {tier.kind === DonationTierKind.Monthly && (
+                <span>Every month</span>
+              )}
+            </Preset>
+          ))}
+        </AmountRow>
+      )}
+
       {requestError && <ErrorText>{requestError}</ErrorText>}
 
-      <MyButton
-        variant="primary"
-        disabled={!isAmountValid || checkout.isPending}
-        isLoading={checkout.isPending}
-        onClick={() =>
-          checkout.mutate({ amountMinor, monthly: isMonthly })
-        }
-      >
-        {isMonthly
-          ? `Give ${formatAmount(amountMinor, info.currency)} monthly`
-          : `Give ${formatAmount(amountMinor, info.currency)}`}
-      </MyButton>
+      {selected && (
+        <MyButton
+          variant="primary"
+          disabled={donate.isPending}
+          isLoading={donate.isPending}
+          onClick={handleGive}
+        >
+          {selected.kind === DonationTierKind.Monthly
+            ? `Give ${selected.priceString} monthly`
+            : `Give ${selected.priceString}`}
+        </MyButton>
+      )}
 
       <Disclaimer>
-        Payment is handled by Stripe. Buqs never sees your card details.
+        Payment is handled by Google Play. Buqs never sees your card details.
       </Disclaimer>
       <Footnote>
         Buqs is free, and stays free whether or not you give.
+        {selected?.kind === DonationTierKind.Monthly &&
+          ' A monthly gift can be cancelled any time from Google Play.'}
       </Footnote>
     </StyledDonationForm>
   );

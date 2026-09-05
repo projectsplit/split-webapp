@@ -63,8 +63,8 @@ export default function Home() {
   const recentContextId = userInfo?.recentContextId;
 
   // Cached alongside the prompt's own lookup, so this costs no extra request. Only the
-  // `isAvailable` flag is read here: an instance with no Stripe account should not offer a button
-  // that can only dead-end.
+  // `isAvailable` flag is read here: an instance with no Google Play credentials should not offer a
+  // button that can only dead-end.
   const { data: donationInfo } = useGetDonationPrompt(true);
 
   const {
@@ -114,9 +114,9 @@ export default function Home() {
               <span>
                 Welcome, <strong>{userInfo?.username}</strong>
               </span>
-              {/* Hidden only when the server has no Stripe credentials. Shown regardless of whether
-                  this person is due to be prompted — the prompt is the app asking, this is them
-                  choosing, and someone who turned the asking off keeps the choice. */}
+              {/* Hidden only when the server has no Google Play credentials. Shown regardless of
+                  whether this person is due to be prompted — the prompt is the app asking, this is
+                  them choosing, and someone who turned the asking off keeps the choice. */}
               {donationInfo?.isAvailable && (
                 <button
                   type="button"

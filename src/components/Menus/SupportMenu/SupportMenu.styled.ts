@@ -13,6 +13,23 @@ export const StyledSupportMenu = styled(StyledMiddleScreenMenu)`
     padding: 24px 0;
   }
 
+  .manage {
+    align-self: center;
+    background: none;
+    padding: 8px 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid ${({ theme }) => theme.greyOutline};
+    color: ${({ theme }) => theme.whiteText};
+    cursor: pointer;
+
+    &:hover {
+      border-color: ${({ theme }) => theme.highlightColor};
+    }
+  }
+
   .close {
     align-self: center;
     background: none;

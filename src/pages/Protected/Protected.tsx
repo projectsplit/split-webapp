@@ -20,7 +20,7 @@ import { syncPushSubscription } from '@/helpers/pushNotifications';
 import { addNativePushTapListener } from '@/helpers/nativePush';
 import { isNativeApp } from '@/helpers/platform';
 import DonationPrompt from '../../components/DonationPrompt/DonationPrompt';
-import DonationReturnNotice from '../../components/DonationPrompt/DonationReturnNotice';
+import { useRecoverDonationPurchases } from '@/hooks/useRecoverDonationPurchases';
 
 const Protected: React.FC = () => {
   const location = useLocation();
@@ -28,6 +28,10 @@ const Protected: React.FC = () => {
   const { data: userInfo } = useGetMe();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
+  // Catches a gift Google Play took payment for but whose registration never reached the server.
+  // Runs once per app start, and needs an account to attribute anything to.
+  useRecoverDonationPurchases(Boolean(userInfo));
 
   useEffect(() => {
     prewarmRoutes();
@@ -135,10 +139,9 @@ const Protected: React.FC = () => {
         userInfo={userInfo}
       />
       <SettingsMenuAnimation menu={menu} userInfo={userInfo} />
-      {/* Mounted here rather than in App, because both need a signed-in account: the prompt asks the
-          server whether this person is due, and the notice is what Stripe redirects back into. */}
+      {/* Mounted here rather than in App because it needs a signed-in account: the prompt asks the
+          server whether this person is due to be asked at all. */}
       <DonationPrompt menu={menu} hasOverlay={Boolean(code)} />
-      <DonationReturnNotice />
       {/* <ConfirmUnArchiveGroupAnimation  /> */}
     </StyledProtected>
   ) : (

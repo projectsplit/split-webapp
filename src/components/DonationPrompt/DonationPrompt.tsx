@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Signal } from '@preact/signals-react';
 import { useLocation } from 'react-router-dom';
 import { IoClose } from 'react-icons/io5';
@@ -6,6 +6,7 @@ import { useGetDonationPrompt } from '../../api/auth/QueryHooks/useGetDonationPr
 import { useRecordDonationPromptShown } from '../../api/auth/CommandHooks/useRecordDonationPromptShown';
 import { useDismissDonationPrompt } from '../../api/auth/CommandHooks/useDismissDonationPrompt';
 import { useDonationPromptTiming } from '../../hooks/useDonationPromptTiming';
+import { isNativeApp } from '@/helpers/platform';
 import DonationForm from './DonationForm';
 import {
   Backdrop,
@@ -43,6 +44,11 @@ export default function DonationPrompt({
 }: DonationPromptProps) {
   const location = useLocation();
 
+  // Latches once a gift is recorded, so the form's thank-you is not sitting above two buttons
+  // offering to stop the asking. Nothing is reported to the server: giving already set a year-long
+  // cooldown, and the ask itself was counted when it reached the screen.
+  const [hasGiven, setHasGiven] = useState(false);
+
   const { data: info } = useGetDonationPrompt(true);
   const { mutate: recordShown } = useRecordDonationPromptShown();
   const { mutate: dismiss } = useDismissDonationPrompt();
@@ -52,7 +58,10 @@ export default function DonationPrompt({
   );
 
   const { isOpen, close } = useDonationPromptTiming({
-    enabled: Boolean(info?.isAvailable && info?.shouldAsk),
+    // Native only. Contributions go through Google Play, which the web build has no access to, so
+    // on the web this would interrupt someone with an ask they could not act on even if they wanted
+    // to. The settings entry stays reachable there and explains where it can be done.
+    enabled: Boolean(info?.isAvailable && info?.shouldAsk) && isNativeApp(),
     blocked: Boolean(menu.value) || hasOverlay || isMidFlow,
   });
 
@@ -69,13 +78,14 @@ export default function DonationPrompt({
       if (event.key !== 'Escape') return;
 
       close();
-      dismiss(false);
+
+      if (!hasGiven) dismiss(false);
     };
 
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, close, dismiss]);
+  }, [isOpen, close, dismiss, hasGiven]);
 
   if (!isOpen || !info) {
     return null;
@@ -84,7 +94,10 @@ export default function DonationPrompt({
   const handleDismiss = (optOut: boolean) => {
     // Closed first, then reported. Nothing about saying no should wait on the network.
     close();
-    dismiss(optOut);
+
+    // Someone who has just given is closing a thank-you, not declining. The backdrop, the X and
+    // Escape all land here, so the distinction has to be drawn at the bottom rather than per button.
+    if (!hasGiven) dismiss(optOut);
   };
 
   return (
@@ -103,16 +116,19 @@ export default function DonationPrompt({
           info={info}
           headline="Buqs runs on a server someone pays for"
           subhead="That someone is currently me. If Buqs has been useful to you, a one-off contribution covers a slice of the bill and keeps it running for everyone."
+          onGiven={() => setHasGiven(true)}
         />
 
-        <DismissRow>
-          <DismissButton type="button" onClick={() => handleDismiss(false)}>
-            Not now
-          </DismissButton>
-          <DismissButton type="button" onClick={() => handleDismiss(true)}>
-            Don't ask again
-          </DismissButton>
-        </DismissRow>
+        {!hasGiven && (
+          <DismissRow>
+            <DismissButton type="button" onClick={() => handleDismiss(false)}>
+              Not now
+            </DismissButton>
+            <DismissButton type="button" onClick={() => handleDismiss(true)}>
+              Don't ask again
+            </DismissButton>
+          </DismissRow>
+        )}
       </Card>
     </Backdrop>
   );

@@ -53,6 +53,12 @@ export const StyledDonationForm = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
 `;
 
 export const PuppyFrame = styled.div`
@@ -79,14 +85,13 @@ export const Subhead = styled.p`
 
 export const AmountRow = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* Auto-fit rather than a fixed count, because how many tiers there are is a server setting and
+     Play drops any the console does not know about. The floor is what a price like "$12.00" needs
+     before it wraps mid-amount; below that the row folds to fewer columns on its own. */
+  grid-template-columns: repeat(auto-fit, minmax(74px, 1fr));
   gap: 8px;
-  margin-top: 4px;
-
-  /* Four across is tight below roughly 360px, where the labels start to wrap mid-amount. */
-  @media (max-width: 360px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  /* Room for the badge that overhangs the top of a tier. */
+  margin-top: 11px;
 `;
 
 export const Preset = styled.button<{ $selected: boolean }>`
@@ -110,8 +115,8 @@ export const Preset = styled.button<{ $selected: boolean }>`
     ${({ theme, $selected }) =>
       $selected ? theme.highlightColor : theme.greyOutline};
 
-  /* The suggested amount is labelled rather than dressed up as popular. It is what the running
-     costs work out at, and claiming other people chose it would not be true. */
+  /* Marks the recurring tier. Labelled plainly rather than dressed up as popular or recommended —
+     claiming other people chose it would not be true. */
   span {
     position: absolute;
     top: -7px;
@@ -126,55 +131,6 @@ export const Preset = styled.button<{ $selected: boolean }>`
     border-radius: 999px;
     background-color: ${({ theme }) => theme.highlightColor};
     color: #ffffff;
-  }
-`;
-
-export const CustomAmountRow = styled.div<{ $active: boolean }>`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 14px;
-  border-radius: 10px;
-  background-color: ${({ theme }) => theme.layer1};
-  border: 1px solid
-    ${({ theme, $active }) =>
-      $active ? theme.highlightColor : theme.greyOutline};
-
-  .symbol {
-    font-size: 15px;
-    color: ${({ theme }) => theme.secondaryTextColor};
-  }
-`;
-
-export const CustomAmount = styled.input`
-  flex: 1;
-  font-family: inherit;
-  font-size: 15px;
-  color: ${({ theme }) => theme.primaryTextColor};
-
-  &::placeholder {
-    color: ${({ theme }) => theme.secondaryTextColor};
-  }
-`;
-
-export const MonthlyRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 4px 2px;
-
-  .label {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    font-size: 14px;
-    color: ${({ theme }) => theme.whiteText};
-  }
-
-  .hint {
-    font-size: 12px;
-    color: ${({ theme }) => theme.secondaryTextColor};
   }
 `;
 

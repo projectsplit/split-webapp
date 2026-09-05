@@ -1,12 +1,11 @@
 import {
-  CreateDonationCheckoutSessionRequest,
-  CreateDonationCheckoutSessionResponse,
   DismissDonationPromptRequest,
   DonationPromptInfo,
   PasswordSignInRequest,
   PasswordSignUpRequest,
   RefreshTokenResponse,
   RequestPasswordResetRequest,
+  RegisterDonationPurchaseRequest,
   RequestUsernameRecoveryRequest,
   ResetPasswordRequest,
   SendGoogleCodeRequest,
@@ -105,13 +104,10 @@ export const dismissDonationPrompt = async (
   return response.data;
 };
 
-export const createDonationCheckoutSession = async (
-  request: CreateDonationCheckoutSessionRequest
+export const registerDonationPurchase = async (
+  request: RegisterDonationPurchaseRequest
 ) => {
-  const response = await apiClient.post<
-    CreateDonationCheckoutSessionRequest,
-    AxiosResponse<CreateDonationCheckoutSessionResponse>
-  >('/donations/checkout-session', request);
+  const response = await apiClient.post('/donations/purchase', request);
   return response.data;
 };
 

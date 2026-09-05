@@ -66,7 +66,7 @@ export default function SettingsMenu({
   const editEmailMenu = useSignal<string | null>(null);
   const supportMenu = useSignal<string | null>(null);
 
-  // Only fetched to know whether donations are configured at all. An instance with no Stripe
+  // Only fetched to know whether donations are configured at all. An instance with no Google Play
   // credentials should not show an entry that can only lead to a dead end.
   const { data: donationInfo } = useGetDonationPrompt(true);
 
@@ -258,9 +258,9 @@ export default function SettingsMenu({
           </div>
         </div>
 
-        {/* Hidden only when the server has no Stripe credentials, so an instance that cannot take
-            money does not offer to. Otherwise always here, including for someone who turned the
-            prompt off — declining to be asked is not declining to give. */}
+        {/* Hidden only when the server has no Google Play credentials, so an instance that cannot
+            take money does not offer to. Otherwise always here, including for someone who turned
+            the prompt off — declining to be asked is not declining to give. */}
         {donationInfo?.isAvailable && (
           <div
             className="option"
