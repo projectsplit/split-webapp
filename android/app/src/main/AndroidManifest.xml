@@ -19,6 +19,31 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!--
+              Group invitations are shared as https://buqs.uk/j/<code> links. Without this they open
+              in a browser even on a phone that has the app, which is the one moment someone is most
+              likely to want it. autoVerify makes Android check
+              https://buqs.uk/.well-known/assetlinks.json at install time and, if this app's signing
+              certificate is listed there, hand the link straight over with no chooser.
+
+              Scoped to /j/ deliberately. A filter on the whole host would also capture links someone
+              opened in a browser on purpose, and there is nothing else on the site that is better in
+              the app than out of it.
+
+              Verification is silent when it fails: the links simply keep opening in the browser. If
+              that happens, check assetlinks.json is reachable, is served as application/json, and
+              lists the SHA-256 of the Play App Signing certificate rather than only the upload key.
+            -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="buqs.uk"
+                    android:pathPrefix="/j/" />
+            </intent-filter>
         </activity>
 
         <provider
