@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { App } from '@capacitor/app';
 import { isNativeApp } from '@/helpers/platform';
@@ -21,6 +21,17 @@ const JOIN_PREFIX = '/j/';
 
 export default function AppUrlListener() {
   const navigate = useNavigate();
+
+  // Read through a ref so the listener is registered exactly once. `navigate` is a new value after
+  // every navigation, so depending on it tore the listener down and rebuilt it each time — four
+  // registrations for a single deep link, on the device. Harmless in itself, but a link arriving in
+  // one of those gaps is a link dropped, and the one that matters most is the cold start, where the
+  // event is replayed the moment the web layer first registers.
+  const latestNavigate = useRef(navigate);
+
+  useEffect(() => {
+    latestNavigate.current = navigate;
+  });
 
   useEffect(() => {
     if (!isNativeApp()) return;
@@ -46,13 +57,13 @@ export default function AppUrlListener() {
       // A path within this app, never the absolute URL: routing to the origin would reload the
       // WebView out of the app shell. Anyone not signed in lands on the join route and is sent to
       // sign-in by Protected, which is where the code is picked up again afterwards.
-      navigate(path);
+      latestNavigate.current(path);
     });
 
     return () => {
       void listener.then((handle) => handle.remove());
     };
-  }, [navigate]);
+  }, []);
 
   return null;
 }
