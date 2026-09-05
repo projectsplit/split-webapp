@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { App } from '@capacitor/app';
 import { isNativeApp } from '@/helpers/platform';
+import { handleBack } from '@/helpers/backHandlers';
 
 /**
  * Makes the Android hardware back button work.
@@ -15,10 +16,9 @@ import { isNativeApp } from '@/helpers/platform';
  * Registering a listener also takes over the navigating half: once anything is listening the plugin
  * stops calling `goBack` itself and only reports, so both branches have to be handled here.
  *
- * Menus and modals are drawn from signals rather than routes, so back navigates the page underneath
- * them instead of closing them. That was true before this too — it is what the plugin's own
- * `goBack` did — and closing them first would mean every menu declaring itself to something like
- * this. Worth doing, but as its own change.
+ * Menus and modals come first, before history is touched at all. They are drawn from signals rather
+ * than routes, so there is no history entry behind an open menu — going back would navigate the page
+ * underneath it and leave it floating over an unrelated screen.
  */
 export function useAndroidBackButton() {
   useEffect(() => {
@@ -27,6 +27,10 @@ export function useAndroidBackButton() {
     // Returns a promise, and the effect may be torn down before it settles, so the handle is
     // removed by chaining rather than by awaiting it here.
     const listener = App.addListener('backButton', ({ canGoBack }) => {
+      // Anything open closes first, topmost outwards. Only once nothing is left does back mean
+      // navigation.
+      if (handleBack()) return;
+
       if (canGoBack) {
         window.history.back();
 

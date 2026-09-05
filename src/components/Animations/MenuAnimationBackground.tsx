@@ -1,4 +1,5 @@
 import { MenuAnimationBackgroundProps } from '../../interfaces';
+import { useBackHandler } from '@/hooks/useBackHandler';
 
 /**
  * The dim layer behind every menu. Deliberately not a CSSTransition: it has no animation — the old
@@ -13,7 +14,16 @@ import { MenuAnimationBackgroundProps } from '../../interfaces';
 export default function MenuAnimationBackground({
   menu,
 }: MenuAnimationBackgroundProps) {
-  if (!menu.value) return null;
+  const isOpen = Boolean(menu.value);
+
+  // Every menu in the app pairs itself with one of these, which makes this the one place back has
+  // to be taught about rather than forty. Back does exactly what tapping the backdrop does, because
+  // dismissing is dismissing however it was asked for.
+  useBackHandler(isOpen, () => {
+    menu.value = null;
+  });
+
+  if (!isOpen) return null;
 
   return (
     <div

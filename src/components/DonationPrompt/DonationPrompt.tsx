@@ -7,6 +7,7 @@ import { useRecordDonationPromptShown } from '../../api/auth/CommandHooks/useRec
 import { useDismissDonationPrompt } from '../../api/auth/CommandHooks/useDismissDonationPrompt';
 import { useDonationPromptTiming } from '../../hooks/useDonationPromptTiming';
 import { isNativeApp } from '@/helpers/platform';
+import { useBackHandler } from '@/hooks/useBackHandler';
 import DonationForm from './DonationForm';
 import {
   Backdrop,
@@ -65,32 +66,6 @@ export default function DonationPrompt({
     blocked: Boolean(menu.value) || hasOverlay || isMidFlow,
   });
 
-  // The ask is counted when it reaches the screen, not when eligibility was fetched — that fetch
-  // happens on every load and usually ends in nothing being shown.
-  useEffect(() => {
-    if (isOpen) recordShown();
-  }, [isOpen, recordShown]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
-
-      close();
-
-      if (!hasGiven) dismiss(false);
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, close, dismiss, hasGiven]);
-
-  if (!isOpen || !info) {
-    return null;
-  }
-
   const handleDismiss = (optOut: boolean) => {
     // Closed first, then reported. Nothing about saying no should wait on the network.
     close();
@@ -99,6 +74,37 @@ export default function DonationPrompt({
     // Escape all land here, so the distinction has to be drawn at the bottom rather than per button.
     if (!hasGiven) dismiss(optOut);
   };
+
+  // The ask is counted when it reaches the screen, not when eligibility was fetched — that fetch
+  // happens on every load and usually ends in nothing being shown.
+  useEffect(() => {
+    if (isOpen) recordShown();
+  }, [isOpen, recordShown]);
+
+  // Its own backdrop rather than the shared MenuAnimationBackground, so back has to be told about
+  // this one directly. Same meaning as the X and Escape: closing counts as "not now".
+  useBackHandler(isOpen, () => handleDismiss(false));
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+
+      handleDismiss(false);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+    // handleDismiss is redefined every render and would re-bind the listener each time; the rule it
+    // applies is captured by the two values it actually reads.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, close, dismiss, hasGiven]);
+
+  if (!isOpen || !info) {
+    return null;
+  }
 
   return (
     <Backdrop
