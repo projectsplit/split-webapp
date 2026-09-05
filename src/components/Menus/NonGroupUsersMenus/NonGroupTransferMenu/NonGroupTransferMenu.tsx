@@ -103,14 +103,26 @@ export default function NonGroupTransferMenu({
     inputRef.current?.focus();
   };
 
-  const result = useSearchUsers(debouncedKeyword, pageSize);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: usersAreLoading,
+    isPlaceholderData: usersAreStale,
+  } = useSearchUsers(debouncedKeyword, pageSize);
+
+  const { data: userGroups, isLoading: groupsAreLoading } =
+    useSearchGroupsByName(debouncedKeyword, pageSize);
+
+  const users = useMemo(
+    () => data?.pages.flatMap((x) => x.users) ?? [],
+    [data]
+  );
 
   const searchedUserIds = useMemo(
-    () =>
-      (result.data?.pages.flatMap((x) => x.users) ?? [])
-        .map((u) => u.userId)
-        .filter((id) => id !== userInfo.userId),
-    [result.data, userInfo.userId]
+    () => users.map((u) => u.userId).filter((id) => id !== userInfo.userId),
+    [users, userInfo.userId]
   );
 
   const { data: connectionStatuses } =
@@ -128,15 +140,6 @@ export default function NonGroupTransferMenu({
     () => new Map(connectionStatuses?.statuses.map((s) => [s.userId, s]) ?? []),
     [connectionStatuses]
   );
-
-  if (!result) return null;
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
-    result;
-  const users = data?.pages.flatMap((x) => x.users) ?? [];
-
-  const { data: userGroups, isFetching: groupsAreFetching } =
-    useSearchGroupsByName(debouncedKeyword, pageSize);
 
   const remainingSuggestedGroups = useMemo(() => {
     return (
@@ -184,6 +187,29 @@ export default function NonGroupTransferMenu({
     groupMembers.value = [];
     isNonGroupTransfer.value = true;
   };
+
+  const isPickingUser =
+    nonGroupTransferMenu.value.attribute === 'sender' ||
+    nonGroupTransferMenu.value.attribute === 'receiver';
+  const showUsers = isPickingUser && users.length > 0;
+
+  // useDebounce reports itself busy for its first 300ms even on mount, when the value never
+  // changed — without the length gate that blinks a spinner over cached results on every open.
+  const isTypingKeyword = isDebouncing && keyword.length > 1;
+
+  // The spinner only stands in for an empty list. Showing it for every fetch swapped the loaded
+  // names out while the next page was in flight, which also pulled the sentinel back into view and
+  // made it request yet another page — two spinners at once and a list that kept blanking.
+  const showSpinner = showUsers
+    ? false
+    : isPickingUser
+      ? usersAreLoading || isTypingKeyword
+      : groupsAreLoading;
+
+  // Results for the previous keyword stay up while the new ones are on their way, so the typing
+  // needs its own spinner above them — otherwise a search reads as having done nothing at all.
+  const showSearchingSpinner =
+    isPickingUser && showUsers && (isTypingKeyword || usersAreStale);
 
   return (
     <StyledNonGroupTransferUsersMenu>
@@ -237,14 +263,15 @@ export default function NonGroupTransferMenu({
             {isEmpty && <div className="search-annotation">Search</div>}
           </div>
         </div>
+        <div className="searchStatus">
+          {showSearchingSpinner && <Spinner fontSize="18px" />}
+        </div>
         <div className="dropdown" ref={dropdownRef}>
-          {isFetching || groupsAreFetching ? (
+          {showSpinner ? (
             <div className="spinner">
               <Spinner />
             </div>
-          ) : users.length > 0 &&
-            (nonGroupTransferMenu.value.attribute === 'sender' ||
-              nonGroupTransferMenu.value.attribute === 'receiver') ? (
+          ) : showUsers ? (
             users.map((user) => {
               const isSelf = user.userId === userInfo.userId;
               const status = statusByUserId.get(user.userId)?.status;
@@ -315,27 +342,25 @@ export default function NonGroupTransferMenu({
               );
             })
           ) : (
-            remainingSuggestedGroups.length > 0 && (
-              <div className="dropdown" ref={dropdownRef}>
-                {remainingSuggestedGroups.map((group) => (
-                  <Item
-                    key={group.id}
-                    name={group.name}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSuggestedGroupClick(group.id);
-                    }}
-                  />
-                ))}
-              </div>
-            )
+            remainingSuggestedGroups.map((group) => (
+              <Item
+                key={group.id}
+                name={group.name}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSuggestedGroupClick(group.id);
+                }}
+              />
+            ))
           )}
         </div>
-        <Sentinel
-          fetchPage={fetchNextPage}
-          hasMore={hasNextPage}
-          isFetchingPage={isFetchingNextPage}
-        />
+        {showUsers && (
+          <Sentinel
+            fetchPage={fetchNextPage}
+            hasMore={hasNextPage}
+            isFetchingPage={isFetchingNextPage}
+          />
+        )}
       </div>
       <div className="doneButton">
         <MyButton

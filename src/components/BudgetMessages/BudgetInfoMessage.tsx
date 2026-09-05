@@ -14,16 +14,18 @@ export const BudgetInfoMessage = (
   data: BudgetInfoResponse | undefined,
   noSubmissions?: boolean,
   onclick?: (event: React.MouseEvent<HTMLDivElement>) => void,
-  style?: React.CSSProperties
+  style?: React.CSSProperties,
+  timeZoneId?: string
 ): JSX.Element => {
   if (data === undefined) {
     return <NoBudgetSubmittedMessage noSubmissions={noSubmissions} />;
   }
 
-  if (dateIsInPast(data.endDate)) {
+  if (dateIsInPast(data.endDate, timeZoneId)) {
     return (
       <SimpleOnTrackMessage
         endDate={data.endDate}
+        timeZoneId={timeZoneId}
         onClick={onclick}
         closeButton={closeButton}
         style={
@@ -59,6 +61,7 @@ export const BudgetInfoMessage = (
       return (
         <SimpleOnTrackMessage
           startDate={data?.startDate}
+          timeZoneId={timeZoneId}
           onClick={onclick}
           closeButton={closeButton}
           style={

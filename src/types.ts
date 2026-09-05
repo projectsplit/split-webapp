@@ -1021,11 +1021,6 @@ export type DateConstraint = {
   value: string;
 };
 
-export type GetTotalLentTotalBorrowedResponse = {
-  totalBorrowed: number[];
-  totalLent: number[];
-};
-
 export type CreateBudgetRequest = {
   amount: string;
   description: string;
@@ -1074,6 +1069,10 @@ export type SpendingChartsResponseItem = {
   accumulativeShareAmount: number;
   paymentAmount: number;
   accumulativePaymentAmount: number;
+  lentAmount: number;
+  accumulativeLentAmount: number;
+  borrowedAmount: number;
+  accumulativeBorrowedAmount: number;
   from: Date;
   to: Date;
 };

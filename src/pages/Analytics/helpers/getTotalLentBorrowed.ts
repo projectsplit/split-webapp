@@ -1,40 +1,23 @@
-import { significantDigitsFromTicker } from '../../../helpers/openExchangeRates';
 import { SpendingChartsResponse } from '../../../types';
 
 export const getTotalLentBorrowed = (
-  backendData: SpendingChartsResponse | undefined,
-  currency: string
+  backendData: SpendingChartsResponse | undefined
 ): { totalLent: number[]; totalBorrowed: number[] } => {
-  const totalLent: number[] = [];
-  const totalBorrowed: number[] = [];
-  const digits = significantDigitsFromTicker(currency);
+  const items = backendData?.items;
 
-  if (!backendData?.items) return { totalLent, totalBorrowed };
-  if (
-    backendData.items[backendData.items.length - 1]?.accumulativeShareAmount ===
-      0 &&
-    backendData.items[backendData.items.length - 1]
-      ?.accumulativePaymentAmount === 0
-  )
+  if (!items?.length) return { totalLent: [], totalBorrowed: [] };
+
+  // The backend classifies each expense as lent or borrowed and accumulates in decimal, so the
+  // running totals are read straight off the items rather than re-derived from a net difference.
+  const last = items[items.length - 1];
+
+  // No money moved in either direction over the period, so let the noData plugin take over
+  // instead of drawing two flat lines along zero.
+  if (last.accumulativeLentAmount === 0 && last.accumulativeBorrowedAmount === 0)
     return { totalLent: [], totalBorrowed: [] };
 
-  let prevLent = 0;
-  let prevBorrowed = 0;
-
-  backendData.items.forEach((b) => {
-    const diff = b.shareAmount - b.paymentAmount;
-    if (diff < 0) {
-      prevLent += Number(Math.abs(diff).toFixed(digits));
-      totalLent.push(Number(prevLent.toFixed(digits)));
-      totalBorrowed.push(Number(prevBorrowed.toFixed(digits)));
-    } else if (diff > 0) {
-      prevBorrowed += Number(diff.toFixed(digits));
-      totalBorrowed.push(Number(prevBorrowed.toFixed(digits)));
-      totalLent.push(Number(prevLent.toFixed(digits)));
-    } else {
-      totalLent.push(Number(prevLent.toFixed(digits)));
-      totalBorrowed.push(Number(prevBorrowed.toFixed(digits)));
-    }
-  });
-  return { totalLent, totalBorrowed };
+  return {
+    totalLent: items.map((x) => x.accumulativeLentAmount),
+    totalBorrowed: items.map((x) => x.accumulativeBorrowedAmount),
+  };
 };

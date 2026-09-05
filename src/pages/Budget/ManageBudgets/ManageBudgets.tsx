@@ -73,7 +73,15 @@ const noSubmissions=
           <Shimmer height="70px" />
         ) : (
           <div style={{ transition: 'opacity 0.8s ease' }}>
-            {BudgetInfoMessage(theme, false, activeBudgetData, noSubmissions)}
+            {BudgetInfoMessage(
+              theme,
+              false,
+              activeBudgetData,
+              noSubmissions,
+              undefined,
+              undefined,
+              timeZoneId
+            )}
           </div>
         )}
       </div>

@@ -14,7 +14,9 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
   flex-direction: column;
   gap: 20px;
   top: 0;
-  overflow-y: auto;
+  /* .scrollable-content is the scroller. Letting this element scroll too nests two scrollers of
+     the same height, so a flick hands off between them mid-gesture and the list stutters. */
+  overflow: hidden;
 
   .fixedHeader {
     position: sticky;
@@ -66,6 +68,8 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
 
   .scrollable-content {
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     flex: 1;
     padding-bottom: 180px;
 
@@ -130,8 +134,17 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
         }
       }
     }
+    /* The strip that used to be .dropdown's top margin. It is always there, so the spinner it
+       holds during a search appears and leaves without moving the results underneath it. */
+    .searchStatus {
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.7;
+    }
+
     .dropdown {
-      margin-top: 20px;
       .spinner {
         display: flex;
         justify-content: center;
