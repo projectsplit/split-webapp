@@ -42,7 +42,6 @@ export interface CreateBudgetState {
   isEditMode: boolean;
   budgetId: string;
 
-  // Actions
   setAmount: (amount: string) => void;
   setDescription: (description: string) => void;
   setCurrencySymbol: (symbol: string) => void;

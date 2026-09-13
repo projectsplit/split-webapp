@@ -4,6 +4,7 @@ import { AiFillDelete } from 'react-icons/ai';
 import { ManageBudgetMenuProps } from '../../../interfaces';
 import { useNavigate } from 'react-router-dom';
 import MyButton from '../../../components/MyButton/MyButton';
+import routes from '@/routes';
 
 export default function ManageBudgetMenu({ menu, selectedBudget }: ManageBudgetMenuProps) {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function ManageBudgetMenu({ menu, selectedBudget }: ManageBudgetM
 
       <MyButton 
         onClick={() => {
-          navigate('/budget/create', { state: { editBudget: selectedBudget } });
+          navigate(routes.BUDGET_CREATE, { state: { editBudget: selectedBudget } });
           menu.value = null;
         }} 
         fontSize="16"

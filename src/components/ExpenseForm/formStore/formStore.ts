@@ -1,8 +1,9 @@
-import { create } from 'zustand';
-import { ExpenseState, SplitMethod } from './formStoreTypes';
+import { createStore } from 'zustand';
+import { CategoryMap, ExpenseState, SplitMethod } from './formStoreTypes';
 import {
   EditRecurringExpenseRequest,
   ExpenseRequest,
+  PickerMember,
   FormExpense,
   Group,
   Guest,
@@ -21,13 +22,57 @@ import {
 } from '../expenseFormUtils';
 import { recalculateAmounts } from '@/components/MemberPicker/helpers/recalculateAmounts';
 import { significantDigitsFromTicker } from '@/helpers/openExchangeRates';
+import { DateTime as LuxonDateTime } from 'luxon';
+import { toLuxon, toUtcString } from '@/helpers/dateTimeAndRounding';
 
-export const useExpenseStore = create<ExpenseState>()((set, get) => ({
-  // Default / initial values
+type ByCategory = CategoryMap<PickerMember[]>;
+
+const resetSharesOnSelection = (
+  prevByCategory: ByCategory,
+  updater: ByCategory | ((prev: ByCategory) => ByCategory)
+) => {
+  const newByCategory =
+    typeof updater === 'function' ? updater(prevByCategory) : updater;
+
+  const prevShares = prevByCategory['Shares'] ?? [];
+  const newShares = newByCategory['Shares'] ?? [];
+  const sharesChanged = newShares !== prevShares;
+
+  if (!sharesChanged) {
+    return { finalByCategory: newByCategory, sharesChanged };
+  }
+
+  const prevSelectedIds = new Set(
+    prevShares.filter((m) => m.selected).map((m) => m.id)
+  );
+
+  const resetShares = newShares.map((member) => {
+    const wasJustSelected = member.selected && !prevSelectedIds.has(member.id);
+
+    if (wasJustSelected) {
+      return {
+        ...member,
+        actualAmount: '',
+        screenQuantity: '',
+        locked: false,
+      };
+    }
+    return member;
+  });
+
+  return {
+    finalByCategory: { ...newByCategory, Shares: resetShares },
+    sharesChanged,
+  };
+};
+
+export const createExpenseStore = () =>
+  createStore<ExpenseState>()((set, get) => ({
   amount: '',
   description: '',
-  currencySymbol: 'USD', // or your app default
+  currencySymbol: 'USD',
   expenseTime: new Date().toISOString(),
+  isTrackingNow: true,
   labels: [],
   location: undefined,
   userMemberId: '',
@@ -60,7 +105,6 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   participantsCategory: signal<SplitMethod>('Amounts'),
   payersCategory: signal<SplitMethod>('Amounts'),
 
-  // ── Simple setters ──────────────────────────────────────────────
   setAmount: (value: string) => set({ amount: value }),
   setDescription: (value: string) => set({ description: value }),
   setCurrencySymbol: (value: string) => {
@@ -74,6 +118,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       expenseTime:
         typeof value === 'function' ? value(state.expenseTime) : value,
     })),
+
+  setIsTrackingNow: (value: boolean) => set({ isTrackingNow: value }),
 
   setMakePersonalClicked: (value: boolean) =>
     set({ makePersonalClicked: value }),
@@ -104,48 +150,13 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     })),
   setDescriptionError: (msg: string) => set({ descriptionError: msg }),
 
-  // ── Safe complex updates ────────────────────────────────────────
   setParticipantsByCategory: (updater) =>
     set((state) => {
-      const prevByCategory = state.participantsByCategory;
-      const newByCategory =
-        typeof updater === 'function' ? updater(prevByCategory) : updater;
+      const { finalByCategory, sharesChanged } = resetSharesOnSelection(
+        state.participantsByCategory,
+        updater
+      );
 
-      // === PART 1: Detect if Shares changed ===
-      const prevShares = prevByCategory['Shares'] ?? [];
-      const newShares = newByCategory['Shares'] ?? [];
-      const sharesChanged = newShares !== prevShares;
-
-      let finalByCategory = newByCategory;
-
-      // === PART 2: If Shares changed, apply reset to newly selected members ===
-      if (sharesChanged) {
-        const prevSelectedIds = new Set(
-          prevShares.filter((m) => m.selected).map((m) => m.id)
-        );
-
-        const resetShares = newShares.map((member) => {
-          const wasJustSelected =
-            member.selected && !prevSelectedIds.has(member.id);
-
-          if (wasJustSelected) {
-            return {
-              ...member,
-              actualAmount: '',
-              screenQuantity: '',
-              locked: false,
-            };
-          }
-          return member;
-        });
-
-        finalByCategory = {
-          ...newByCategory,
-          Shares: resetShares,
-        };
-      }
-
-      // === PART 3: Clear error if Shares changed ===
       return {
         participantsByCategory: finalByCategory,
         ...(sharesChanged ? { participantsError: '' } : {}),
@@ -154,41 +165,10 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
 
   setPayersByCategory: (updater) =>
     set((state) => {
-      const prevByCategory = state.payersByCategory;
-      const newByCategory =
-        typeof updater === 'function' ? updater(prevByCategory) : updater;
-
-      const prevShares = prevByCategory['Shares'] ?? [];
-      const newShares = newByCategory['Shares'] ?? [];
-      const sharesChanged = newShares !== prevShares;
-
-      let finalByCategory = newByCategory;
-
-      if (sharesChanged) {
-        const prevSelectedIds = new Set(
-          prevShares.filter((m) => m.selected).map((m) => m.id)
-        );
-
-        const resetShares = newShares.map((member) => {
-          const wasJustSelected =
-            member.selected && !prevSelectedIds.has(member.id);
-
-          if (wasJustSelected) {
-            return {
-              ...member,
-              actualAmount: '',
-              screenQuantity: '',
-              locked: false,
-            };
-          }
-          return member;
-        });
-
-        finalByCategory = {
-          ...newByCategory,
-          Shares: resetShares,
-        };
-      }
+      const { finalByCategory, sharesChanged } = resetSharesOnSelection(
+        state.payersByCategory,
+        updater
+      );
 
       return {
         payersByCategory: finalByCategory,
@@ -196,7 +176,6 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       };
     }),
 
-  // Granular update (recommended for performance)
   updateParticipantsInCategory: (category, updater) =>
     set((state) => ({
       participantsByCategory: {
@@ -304,6 +283,7 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       description: initialDescription,
       currencySymbol: initialCurrency,
       expenseTime: initialExpenseTime,
+      isTrackingNow: isCreateExpense,
       labels: initialLabels,
       location: initialLocation,
       participantsByCategory: finalParticipants,
@@ -316,8 +296,6 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
       descriptionError: '',
       isSubmitting: false,
       userMemberId: userMemberId,
-      // The form is reused for every expense, so a cycle left over from the last one would
-      // silently attach itself to the next. Editing a template passes its own cycle back in.
       recurrenceSchedule: recurrenceSchedule ?? null,
       showRecurrencePicker: false,
     });
@@ -463,6 +441,8 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
   },
   submitExpense: (inputs: {
     groupId?: string;
+    timeZoneId: string;
+    isDatePicked: boolean;
     createExpenseMutation: (req: ExpenseRequest) => void;
     editExpenseMutation: (req: ExpenseRequest) => void;
     createRecurringExpenseMutation: (req: RecurringExpenseRequest) => void;
@@ -479,12 +459,26 @@ export const useExpenseStore = create<ExpenseState>()((set, get) => ({
     onRecurrenceRequired: () => void;
   }) => {
     const state = get();
+
+    const now = LuxonDateTime.utc().setZone(inputs.timeZoneId);
+    const expenseTimeForSubmit = !state.isTrackingNow
+      ? state.expenseTime
+      : inputs.isDatePicked
+        ? toUtcString(
+            toLuxon(state.expenseTime, inputs.timeZoneId).set({
+              hour: now.hour,
+              minute: now.minute,
+              second: now.second,
+            })
+          )
+        : toUtcString(now);
+
     submitExpenseFromState(
       {
         amount: state.amount,
         description: state.description,
         currencySymbol: state.currencySymbol,
-        expenseTime: state.expenseTime,
+        expenseTime: expenseTimeForSubmit,
         labels: state.labels,
         location: state.location,
         participantsByCategory: state.participantsByCategory,

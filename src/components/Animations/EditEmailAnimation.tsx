@@ -2,6 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import { useRef } from 'react';
 import { Signal } from '@preact/signals-react';
 import EditEmail from '../Menus/EditEmail/EditEmail';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 interface EditEmailAnimationProps {
   editEmailMenu: Signal<string | null>;
@@ -15,6 +16,7 @@ export default function EditEmailAnimation({
   emailVerified,
 }: EditEmailAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(editEmailMenu.value === 'editEmail', () => (editEmailMenu.value = null));
   return (
     <CSSTransition
       in={editEmailMenu.value === 'editEmail'}

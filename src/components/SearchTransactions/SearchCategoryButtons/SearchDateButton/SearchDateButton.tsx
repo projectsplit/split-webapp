@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { StyledSearchCategoryButton } from '../SearchCategoryButton.styled';
+import { StyledSearchFilterRow } from '../../SearchFilterRow.styled';
 import { useBeautifulMentions } from 'lexical-beautiful-mentions';
 import Pill from '../../../Pill/Pill';
 import { SearchDateButtonProps } from '../../../../interfaces';
+import { tokens } from '../../../../styles/tokens';
 
 export default function SearchDateButton({
   category,
-  type,
   submitButtonIsActive,
   showOptions,
   calendarIsOpen,
@@ -67,11 +67,11 @@ export default function SearchDateButton({
   };
 
   return (
-    <StyledSearchCategoryButton>
+    <StyledSearchFilterRow>
       <div
         className="category"
         onClick={() => {
-          insertMention({ trigger: category + ':', value: '' });
+          insertMention({ trigger: category + ':', value: '', focus: false });
           showOptions.value = false;
           calendarIsOpen.value = true;
           datePeriodClicked.value = category;
@@ -86,12 +86,14 @@ export default function SearchDateButton({
             <div key={index}>
               <Pill
                 title={showDate[0]}
-                color="#ffffff"
+                color={tokens.ink.primary}
                 closeButton={true}
                 onClose={() => removeFilter(date)}
-                $textColor="#000000c8"
                 $border={false}
-                fontSize="16px"
+                fontSize="12px"
+                $textColor={tokens.ink.primary}
+                $closeButtonColor={tokens.ink.tertiary}
+                $radius="9px"
               />
             </div>
           ))
@@ -99,6 +101,6 @@ export default function SearchDateButton({
           <div className="type">date</div>
         )}
       </div>
-    </StyledSearchCategoryButton>
+    </StyledSearchFilterRow>
   );
 }

@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo } from 'react';
+import { DateTime as LuxonDateTime } from 'luxon';
+import { toLuxon, toUtcString } from '@/helpers/dateTimeAndRounding';
 import { Signal, useComputed } from '@preact/signals-react';
 import { NavigateFunction } from 'react-router-dom';
 import {
   CreateTransferRequest,
   Member,
   Guest,
-  User,
   UserInfo,
   Group,
 } from '../../../types';
@@ -18,8 +19,6 @@ interface UseTransferFormLogicProps {
   groupId: string | undefined;
   groupMembers: Signal<(Member | Guest)[]>;
   menu: Signal<string | null>;
-  nonGroupUsers: Signal<User[]>;
-  isnonGroupTransfer: Signal<boolean> | undefined;
   nonGroupMenu:
     | Signal<{
         attribute: string;
@@ -39,6 +38,9 @@ interface UseTransferFormLogicProps {
   actions: ReturnType<
     typeof import('./useTransferFormStore').useTransferActions
   >;
+  isNonGroup: boolean;
+  showWarning: (message: string) => void;
+  isDateShowing: Signal<boolean>;
 }
 
 export const useTransferFormLogic = ({
@@ -46,8 +48,6 @@ export const useTransferFormLogic = ({
   groupId,
   groupMembers,
   menu,
-  nonGroupUsers,
-  isnonGroupTransfer,
   nonGroupMenu,
   fromHomeGroup,
   navigate,
@@ -56,6 +56,9 @@ export const useTransferFormLogic = ({
   currencyMenu,
   data,
   actions,
+  isNonGroup,
+  showWarning,
+  isDateShowing,
 }: UseTransferFormLogicProps) => {
   const handleInputBlur = useCallback(() => {
     actions.setError('showAmountError', true);
@@ -77,11 +80,13 @@ export const useTransferFormLogic = ({
 
   const { noReceiverSelected, isSamePerson } = useMemo(() => {
     return {
-      noReceiverSelected: nonGroupMenu?.value.receiverName === '',
+      noReceiverSelected: isNonGroup && nonGroupMenu?.value.receiverName === '',
       isSamePerson:
+        isNonGroup &&
         nonGroupMenu?.value.senderId === nonGroupMenu?.value.receiverId,
     };
   }, [
+    isNonGroup,
     nonGroupMenu?.value.senderId,
     nonGroupMenu?.value.receiverId,
     nonGroupMenu?.value.receiverName,
@@ -95,19 +100,20 @@ export const useTransferFormLogic = ({
     groupId,
     navigate,
     isSubmitting,
-    fromHomeGroup
+    fromHomeGroup,
+    showWarning
   );
 
   const {
     mutate: createNonGroupTransferMutation,
     isPending: isNonGroupTransferPending,
-  } = useCreateNonGroupTransfer(menu, navigate, isSubmitting);
+  } = useCreateNonGroupTransfer(menu, navigate, isSubmitting, showWarning);
 
-  const createTransferMutation = isnonGroupTransfer?.value
+  const createTransferMutation = isNonGroup
     ? createNonGroupTransferMutation
     : createGroupTransferMutation;
 
-  const isPendingCreateTransfer = isnonGroupTransfer?.value
+  const isPendingCreateTransfer = isNonGroup
     ? isNonGroupTransferPending
     : isGroupTransferPending;
 
@@ -144,13 +150,28 @@ export const useTransferFormLogic = ({
 
     if (!!data.errors.idErrorMessage) return;
 
+    const zone = userInfo?.timeZone;
+    const now = LuxonDateTime.utc().setZone(zone);
+    const occurredForSubmit =
+      !data.isTrackingNow || !zone
+        ? data.transferTime
+        : isDateShowing.value
+          ? toUtcString(
+              toLuxon(data.transferTime, zone).set({
+                hour: now.hour,
+                minute: now.minute,
+                second: now.second,
+              })
+            )
+          : toUtcString(now);
+
     let createTransferRequest: CreateTransferRequest = {
       amount: Number(data.amount),
       groupId: groupId,
       currency: data.currencySymbol,
       receiverId: data.receiverId,
       senderId: data.senderId,
-      occurred: data.transferTime,
+      occurred: occurredForSubmit,
       description: data.description,
     };
 
@@ -165,9 +186,12 @@ export const useTransferFormLogic = ({
     data.receiverId,
     data.senderId,
     data.transferTime,
+    data.isTrackingNow,
+    userInfo?.timeZone,
     data.description,
     groupId,
     createTransferMutation,
+    isDateShowing,
   ]);
 
   const sortedMembers = useComputed(() => {
@@ -183,13 +207,19 @@ export const useTransferFormLogic = ({
   });
 
   useEffect(() => {
+    if (!isNonGroup) return;
     if (nonGroupMenu?.value.senderId) {
       actions.setSenderId(nonGroupMenu.value.senderId);
     }
     if (nonGroupMenu?.value.receiverId) {
       actions.setReceiverId(nonGroupMenu.value.receiverId);
     }
-  }, [nonGroupMenu?.value.senderId, nonGroupMenu?.value.receiverId, actions]);
+  }, [
+    isNonGroup,
+    nonGroupMenu?.value.senderId,
+    nonGroupMenu?.value.receiverId,
+    actions,
+  ]);
 
   useEffect(() => {
     if (data.senderId === data.receiverId && data.senderId !== '') {
@@ -216,13 +246,7 @@ export const useTransferFormLogic = ({
       actions.setError('isSenderError', false);
       actions.setError('idErrorMessage', '');
     }
-  }, [
-    data.senderId,
-    data.receiverId,
-    isnonGroupTransfer?.value,
-    userInfo?.userId,
-    actions,
-  ]);
+  }, [data.senderId, data.receiverId, isNonGroup, userInfo?.userId, actions]);
 
   const idError = useMemo(
     () => ({

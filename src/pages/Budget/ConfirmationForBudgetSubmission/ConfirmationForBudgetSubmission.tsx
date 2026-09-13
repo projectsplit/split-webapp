@@ -4,7 +4,6 @@ import { ConfirmationForBudgetSubmissionProps } from '../../../interfaces';
 
 export default function ConfirmationForBudgetSubmission({
   submitBudget,
-  // setMenu,
   menu,
 }: ConfirmationForBudgetSubmissionProps) {
   return (

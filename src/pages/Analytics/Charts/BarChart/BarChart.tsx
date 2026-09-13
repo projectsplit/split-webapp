@@ -1,4 +1,4 @@
-import React from 'react';
+import { tokens } from '@/styles/tokens';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -57,7 +57,7 @@ export function BarChart({
 }: BarChartProps) {
   const cumulArrayData = getCumulativeShares(backendData);
 
-  const expenseDataPoints = deCumulArray(cumulArrayData); //getRandomNumbers(31, -500, 1000); // This is supposed to be the total amount spent per calendar day
+  const expenseDataPoints = deCumulArray(cumulArrayData);
 
   const allDaysInMonth = getAllDaysInMonth(
     selectedTimeCycleIndex.value + 1,
@@ -66,12 +66,17 @@ export function BarChart({
 
   const datesToNumbers = allDaysInMonth.map((day) => day.getDate());
 
+  const weekDays =
+    allWeeksPerYear[selectedTimeCycleIndex.value]?.map(
+      (day) => shortWeekdays[(day.getDay() + 6) % 7]
+    ) ?? shortWeekdays;
+
   const labelBuilder = (cycle: Frequency) => {
     switch (cycle) {
       case Frequency.Monthly:
         return createGroupedLabels(datesToNumbers);
       case Frequency.Weekly:
-        return shortWeekdays;
+        return weekDays;
       case Frequency.Annually:
         return months.map((m) => m.slice(0, 3));
       default:
@@ -80,8 +85,6 @@ export function BarChart({
   };
 
   const labels = labelBuilder(selectedCycle.value);
-
-  //useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex,selectedYear.value);
 
   useStartAndEndDatesEffect(
     selectedCycle,
@@ -130,7 +133,7 @@ export function BarChart({
       {
         label: 'cumulative spending',
         data: expenseData,
-        backgroundColor: 'rgba(153, 30, 251, 0.5)',
+        backgroundColor: tokens.chart.spentBar,
         borderWidth: 2,
       },
     ],
@@ -138,11 +141,13 @@ export function BarChart({
 
   return (
     <StyledBarChart>
-      <Bar
-        options={options}
-        data={data}
-        plugins={[noData, ChartDataLabels, horizontalLine]}
-      />
+      <div className="chartArea">
+        <Bar
+          options={options}
+          data={data}
+          plugins={[noData, ChartDataLabels, horizontalLine]}
+        />
+      </div>
       <div className="periodOptions">
         <Carousel
           carouselItems={getCarouselItemsBasedOnCycle(

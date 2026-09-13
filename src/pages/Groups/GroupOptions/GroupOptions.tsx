@@ -1,29 +1,27 @@
+import IonIcon from '@reacticons/ionicons';
+import { IoQrCode } from 'react-icons/io5';
+import { getSymbolFromCurrency } from '../../../helpers/currency-symbol-map';
 import {
   IoClose,
-  IoExit,
-  IoPersonAdd,
-  IoPersonRemove,
-  IoQrCode,
 } from 'react-icons/io5';
 import { StyledGroupOptions } from './GroupOptions.styled';
+import PropertyList, { PropertyRow } from '../../../components/ListForms/PropertyList';
+import SectionLabel from '../../../components/SectionLabel/SectionLabel';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Signal, useSignal } from '@preact/signals-react';
-import Separator from '../../../components/Separator/Separator';
 import MenuAnimationBackground from '../../../components/Animations/MenuAnimationBackground';
 import CurrencyOptionsAnimation from '../../../components/Animations/CurrencyOptionsAnimation';
-import { Currency, UserInfo } from '../../../types';
-import { currencyData } from '../../../helpers/openExchangeRates';
+import { UserInfo } from '../../../types';
 import { GroupOptionsProps } from '../../../interfaces';
-import { MdEdit } from 'react-icons/md';
-import { FaArchive } from 'react-icons/fa';
 import ConfirmArchiveGroupAnimation from '../../../components/Animations/ConfirmArchiveGroupAnimation';
 import ConfirmLeaveGroupAnimation from '../../../components/Animations/ConfirmLeaveGroupAnimation';
 import RenameGroupAnimationAnimation from '../../../components/Animations/RenameGroupAnimation';
 import { useChangeGroupCurrency } from '../../../api/auth/CommandHooks/useChangeGroupCurrency';
 import { useQueryClient } from '@tanstack/react-query';
 import RemoveUserFromGroupMenu from '../../../components/Menus/RemoveUserFromGroupMenu/RemoveUserFromGroupMenu';
-import { useEffect } from 'react';
 import AddNewUserAnimation from '../../../components/Animations/AddNewUserAnimation';
+import CurrencyFlag from '../../../components/CurrencyFlag/CurrencyFlag';
+import { useCloseOnBack } from '@/hooks/useCloseOnBack';
 
 export default function GroupOptions({ group }: GroupOptionsProps) {
   const navigate = useNavigate();
@@ -41,14 +39,7 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
   const newUserMenu = useSignal<string | null>(null);
   const renameMenu = useSignal<string | null>(null);
   const noGroupFoundError = useSignal<string>('');
-  const allCurrencies = useSignal<Currency[]>(currencyData);
   const openRemoveUserMenu = useSignal<boolean>(false);
-  const selectedCurrency = allCurrencies.value.find(
-    (c) => c.symbol === groupCurrency
-  );
-
-  const members = group?.members;
-  const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
   const updateGroupCurrency = useChangeGroupCurrency(
     group?.id,
     noGroupFoundError,
@@ -59,6 +50,9 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
     currencyMenu.value = null;
     updateGroupCurrency.mutate(curr);
   };
+
+  const memberCount =
+    (group?.members?.length ?? 0) + (group?.guests?.length ?? 0);
 
   const handleClose = async () => {
     openGroupOptionsMenu.value = false;
@@ -82,93 +76,103 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
     }
   };
 
-  useEffect(() => {
-    const handleBackNavigation = () => {
-      if (openGroupOptionsMenu.value) {
-        handleClose();
-      }
-    };
-    window.addEventListener('popstate', handleBackNavigation);
-    return () => {
-      window.removeEventListener('popstate', handleBackNavigation);
-    };
-  }, [openGroupOptionsMenu]);
+  useCloseOnBack(openGroupOptionsMenu.value, handleClose);
 
   return (
     <StyledGroupOptions>
       {' '}
-      <div className="headerWrapper">
-        <div className="header">
-          <div className="gap"></div>
-          <div className="title">{groupName}</div>
-
-          <div className="closeButtonContainer" onClick={handleClose}>
-            <IoClose className="closeButton" />
-          </div>
+      <div className="header">
+        <div className="slot" />
+        <div className="title">{groupName}</div>
+        <div className="slot closeButtonContainer" onClick={handleClose}>
+          <IoClose className="closeButton" />
         </div>
-        <Separator />
       </div>
+
       <div className="optionsContainer">
-        <div
-          className="option"
-          onClick={() => (currencyMenu.value = 'currencyOptions')}
-        >
-          <div className={selectedCurrency?.flagClass} />
-          <div className="description">Group Base Currency</div>
+        <div className="section">
+          <SectionLabel title="Group" />
+          <PropertyList>
+            <PropertyRow
+              label="Base currency"
+              onClick={() => (currencyMenu.value = 'currencyOptions')}
+            >
+              <span className="rowValue">
+                <CurrencyFlag code={groupCurrency} />
+                <span className="monoValue">
+                  {groupCurrency} {getSymbolFromCurrency(groupCurrency) ?? ''}
+                </span>
+                <IonIcon name="chevron-forward-outline" className="rowIcon" />
+              </span>
+            </PropertyRow>
+            <PropertyRow
+              label="Name"
+              onClick={() => (renameMenu.value = 'renameGroup')}
+            >
+              <span className="rowValue">
+                {groupName}
+                <IonIcon name="chevron-forward-outline" className="rowIcon" />
+              </span>
+            </PropertyRow>
+          </PropertyList>
         </div>
 
-        <div
-          className="option"
-          onClick={() => (renameMenu.value = 'renameGroup')}
-        >
-          <MdEdit className="icon" />
-          <div className="description">Edit Group Name </div>
+        <div className="section">
+          <SectionLabel title="Members" />
+          <PropertyList>
+            <PropertyRow
+              action
+              label="New user"
+              onClick={() => (newUserMenu.value = 'newUser')}
+            >
+              <IonIcon name="chevron-forward-outline" className="rowIcon" />
+            </PropertyRow>
+            <PropertyRow
+              action
+              label="Remove member"
+              onClick={() => (openRemoveUserMenu.value = true)}
+            >
+              <span className="rowValue">
+                <span className="rowCount">{memberCount}</span>
+                <IonIcon name="chevron-forward-outline" className="rowIcon" />
+              </span>
+            </PropertyRow>
+            <PropertyRow
+              action
+              label="Share group"
+              onClick={() => {
+                const searchParams = new URLSearchParams(location.search);
+                searchParams.set('in', 'true');
+                navigate(
+                  `/shared/generatecode/${group?.id}?${searchParams.toString()}`,
+                  { replace: true, state: { from: location.pathname } }
+                );
+              }}
+            >
+              <span className="rowValue">
+                <IoQrCode className="rowIcon" />
+                <IonIcon name="chevron-forward-outline" className="rowIcon" />
+              </span>
+            </PropertyRow>
+          </PropertyList>
         </div>
 
-        <div
-          className="option"
-          onClick={() => (archiveGroupMenu.value = 'archiveGroup')}
-        >
-          <FaArchive className="icon" />
-          <div className="description">Archive Group </div>
-        </div>
-
-        <div className="option" onClick={() => (newUserMenu.value = 'newUser')}>
-          <IoPersonAdd className="icon" />
-          <div className="description">New User </div>
-        </div>
-
-        <div
-          className="option"
-          onClick={() => (openRemoveUserMenu.value = true)}
-        >
-          <IoPersonRemove className="icon" />
-          <div className="description">Remove Member </div>
-        </div>
-
-        <div
-          className="option"
-          onClick={() => {
-            const searchParams = new URLSearchParams(location.search);
-            searchParams.set('in', 'true');
-            navigate(
-              `/shared/generatecode/${group?.id}?${searchParams.toString()}`,
-              {
-                replace: true,
-              }
-            );
-          }}
-        >
-          <IoQrCode className="icon" />
-          <div className="description">Share Group </div>
-        </div>
-
-        <div
-          className="option-leave"
-          onClick={() => (leaveGroupMenu.value = 'leaveGroup')}
-        >
-          <IoExit className="icon-exit" />
-          <div className="description">Leave Group </div>
+        <div className="section">
+          <SectionLabel title="This group" />
+          <PropertyList>
+            <PropertyRow
+              action
+              label="Archive group"
+              note="Keeps the history, stops new entries. Reversible."
+              onClick={() => (archiveGroupMenu.value = 'archiveGroup')}
+            />
+            <PropertyRow
+              action
+              label="Leave group"
+              note="Only possible once your balance is settled."
+              onClick={() => (leaveGroupMenu.value = 'leaveGroup')}
+            />
+          </PropertyList>
         </div>
       </div>
       <MenuAnimationBackground menu={currencyMenu} />
@@ -190,7 +194,6 @@ export default function GroupOptions({ group }: GroupOptionsProps) {
       <ConfirmLeaveGroupAnimation
         menu={leaveGroupMenu}
         groupId={group?.id}
-        memberId={userMemberId}
         openGroupOptionsMenu={openGroupOptionsMenu}
       />
       <RenameGroupAnimationAnimation

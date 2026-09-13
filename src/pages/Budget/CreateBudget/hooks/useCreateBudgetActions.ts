@@ -1,8 +1,10 @@
+import { StoreApi, useStore } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
-import { useCreateBudgetStore } from '../formStore/formStore';
+import { CreateBudgetState } from '../formStore/formStoreTypes';
 
-export const useCreateBudgetActions = () => {
-  return useCreateBudgetStore(
+export const useCreateBudgetActions = (store: StoreApi<CreateBudgetState>) => {
+  return useStore(
+    store,
     useShallow((state) => ({
       setAmount: state.setAmount,
       setDescription: state.setDescription,
@@ -19,8 +21,9 @@ export const useCreateBudgetActions = () => {
   );
 };
 
-export const useCreateBudgetData = () => {
-  return useCreateBudgetStore(
+export const useCreateBudgetData = (store: StoreApi<CreateBudgetState>) => {
+  return useStore(
+    store,
     useShallow((state) => ({
       amount: state.amount,
       description: state.description,

@@ -1,6 +1,6 @@
 import { StyledUser } from './User.styled';
 import { UserProps } from '../../../../interfaces';
-import { FaCheck } from 'react-icons/fa';
+import { getInitials } from '../../../../helpers/getInitials';
 
 export default function User({
   name,
@@ -9,17 +9,36 @@ export default function User({
   nonGroupTransferMenu,
   currentUserId,
 }: UserProps) {
-  const selectedUserId =
-    nonGroupTransferMenu.value.attribute === 'sender'
-      ? nonGroupTransferMenu.value.senderId
-      : nonGroupTransferMenu.value.receiverId;
+  const { attribute, senderId, receiverId } = nonGroupTransferMenu.value;
+  const selectedUserId = attribute === 'sender' ? senderId : receiverId;
+
+  const role =
+    userId && userId === senderId
+      ? 'From'
+      : userId && userId === receiverId
+        ? 'To'
+        : null;
+
+  const displayName = userId === currentUserId ? 'You' : name;
+
+  const takenByOtherSide =
+    attribute === 'sender' ? userId === receiverId : userId === senderId;
+
   return (
     <StyledUser $isSelected={userId === selectedUserId}>
       {' '}
-      <div className="nameAndTick" onClick={onClick}>
-        <div className="name">{userId === currentUserId ? 'You' : name}</div>
-        {userId === selectedUserId ? (
-          <FaCheck className="tick" style={{ color: '#9e9e9e' }} />
+      <div
+        className={`top-row${takenByOtherSide ? ' taken' : ''}`}
+        onClick={takenByOtherSide ? undefined : onClick}
+      >
+        <span className="avatar">{getInitials(name)}</span>
+        <div className="name">{displayName}</div>
+        {role ? (
+          <span
+            className={`sideTag${userId === selectedUserId ? ' picked' : ''}`}
+          >
+            {role}
+          </span>
         ) : null}
       </div>
     </StyledUser>

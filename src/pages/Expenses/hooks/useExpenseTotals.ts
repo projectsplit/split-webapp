@@ -14,7 +14,7 @@ export const useExpenseTotals = (
   userMemberId: string | undefined,
   expenseParsedFilters: Signal<ExpenseParsedFilters>
 ) => {
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(
+  const { data: debts, isPending: totalsArePending } = useDebts(
     mode,
     group?.id,
     expenseParsedFilters
@@ -45,13 +45,17 @@ export const useExpenseTotals = (
           : 0
         : (convertedTotalSpent[userInfo?.userId] ?? 0);
 
+    const ownId = mode === Mode.Group ? userMemberId : userInfo?.userId;
+    const hasUserTotal = !!ownId && ownId in convertedTotalSpent;
+
     return {
       groupTotalsByCurrency,
       userTotalsByCurrency,
       totalFromAllExpensesConverted,
       totalFromUserExpensesConverted,
+      hasUserTotal,
     };
   }, [debts, mode, userMemberId, group, userInfo?.currency]);
 
-  return { ...totals, totalsAreFetching };
+  return { ...totals, totalsAreFetching: totalsArePending };
 };

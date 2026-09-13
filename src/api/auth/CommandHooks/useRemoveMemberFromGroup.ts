@@ -3,6 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { apiClient } from '../../apiClients';
 import { Signal } from '@preact/signals-react';
 import { Group } from '../../../types';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useRemoveMemberFromGroup = (
   groupId: string | undefined,
@@ -23,11 +24,6 @@ export const useRemoveMemberFromGroup = (
         return Promise.reject(new Error('No member found'));
       }
       return removeMember({ memberId }, groupId);
-      // return new Promise((resolve) => {
-      //   setTimeout(() => {
-      //     resolve({ success: true, memberId, groupId }); // Simulate a successful response
-      //   }, 500); // Simulate a 500ms delay
-      // });
     },
     onSuccess: async (_, memberId: string) => {
       const previousGroup: Group | undefined = queryClient.getQueryData([
@@ -45,14 +41,7 @@ export const useRemoveMemberFromGroup = (
         queryKey: ['debts', groupId],
         exact: false,
       });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, ['shared', 'mostRecentGroup']);
       menu.value = null;
     },
   });

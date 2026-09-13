@@ -40,7 +40,8 @@ export const useCreateExpenseMutation = (
     nonGroupUsers,
     fromHomeGroup,
     groupMembers,
-    fromHome
+    fromHome,
+    onError
   );
 
   const {
@@ -60,7 +61,13 @@ export const useCreateExpenseMutation = (
   const {
     mutate: createPersonalExpenseMutation,
     isPending: isPendingCreatePersonalExpense,
-  } = useCreatePersonalExpense(menu, navigate, setIsSubmitting, makePersonalClicked);
+  } = useCreatePersonalExpense(
+    menu,
+    navigate,
+    setIsSubmitting,
+    makePersonalClicked,
+    onError
+  );
 
   const mutate = (req: ExpenseRequest) => {
     if (isPersonal?.value) {

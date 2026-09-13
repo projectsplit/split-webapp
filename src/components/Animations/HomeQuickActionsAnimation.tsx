@@ -2,6 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import { HomeQuickActionsAnimationProps } from '../../interfaces';
 import { useRef } from 'react';
 import ActionsMenu from '../Menus/ActionsMenu/ActionsMenu';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function HomeQuickActionsAnimation({
   quickActionsMenu,
@@ -11,6 +12,7 @@ export default function HomeQuickActionsAnimation({
   userInfo,
 }: HomeQuickActionsAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(quickActionsMenu.value === 'quickActions', () => (quickActionsMenu.value = null));
 
   return (
     <CSSTransition
@@ -21,6 +23,7 @@ export default function HomeQuickActionsAnimation({
       unmountOnExit
     >
       <ActionsMenu
+        onClickGroup={() => (quickActionsMenu.value = 'createGroup')}
         onClickExpense={() => {
           quickActionsMenu.value = 'newExpense';
           if (!fromHomeGroup.value?.id) {

@@ -7,7 +7,6 @@ export const isPushSupported = () =>
   'PushManager' in window &&
   'Notification' in window;
 
-// The VAPID key travels as base64url, but pushManager.subscribe wants raw bytes.
 const urlBase64ToUint8Array = (base64String: string): Uint8Array => {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -33,11 +32,6 @@ const registerSubscriptionWithServer = async (
   });
 };
 
-/**
- * Why a device could not be subscribed. Every one of these used to collapse into a bare false,
- * which the settings toggle turned into a switch that flipped itself back with no explanation —
- * indistinguishable from the feature being broken.
- */
 export type PushSubscribeFailure =
   | 'unsupported'
   | 'permission-denied'
@@ -45,19 +39,13 @@ export type PushSubscribeFailure =
   | 'not-configured'
   | 'failed';
 
-export type PushSubscribeResult =
+type PushSubscribeResult =
   | { subscribed: true }
   | { subscribed: false; failure: PushSubscribeFailure };
 
-/**
- * Requests notification permission if needed and subscribes this device. Reports why it could
- * not, so the caller can say something useful rather than silently give up.
- */
 export const subscribeToPush = async (): Promise<PushSubscribeResult> => {
   if (!isPushSupported()) return { subscribed: false, failure: 'unsupported' };
 
-  // Returns the standing answer without prompting when the user has already decided, so a
-  // previously blocked site never gets a second prompt no matter how often this is called.
   const permission = await Notification.requestPermission();
 
   if (permission !== 'granted') {
@@ -100,11 +88,13 @@ export const subscribeToPush = async (): Promise<PushSubscribeResult> => {
   }
 };
 
-/** Removes this device's push subscription, both locally and on the server. */
 export const unsubscribeFromPush = async (): Promise<void> => {
   if (!isPushSupported()) return;
 
-  const registration = await navigator.serviceWorker.ready;
+  const registration = await navigator.serviceWorker.getRegistration();
+
+  if (!registration) return;
+
   const subscription = await registration.pushManager.getSubscription();
 
   if (!subscription) return;
@@ -118,11 +108,6 @@ export const unsubscribeFromPush = async (): Promise<void> => {
   }
 };
 
-/**
- * Re-registers this device's subscription with the server. Browsers rotate push endpoints on
- * their own, and the record is per-device, so a subscription made on one device is unknown to
- * the next. Safe to call on every app start: it does nothing unless permission is already granted.
- */
 export const syncPushSubscription = async (): Promise<void> => {
   if (!isPushSupported() || Notification.permission !== 'granted') return;
 

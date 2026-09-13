@@ -18,12 +18,12 @@ export const LocationDisplay = ({
   if (locationName) {
     return (
       <StyledLocationDisplay>
-        <MdLocationOn className="locationIcon" />
         <div
-          className="locationAndClose"
+          className="chip"
           onClick={() => (isMapOpen.value = !isMapOpen.value)}
         >
-          {locationName}
+          <MdLocationOn className="chipIcon" />
+          <span className="chipLabel">{locationName}</span>
           <div className="closeButtonWrapper">
             {location !== undefined ? (
               <IoClose
@@ -44,11 +44,11 @@ export const LocationDisplay = ({
     const { latitude, longitude } = locationCoordinates;
     return (
       <StyledLocationDisplay>
-        <MdLocationOn className="locationIcon" />
         <div
-          className="locationAndClose"
+          className="chip"
           onClick={() => (isMapOpen.value = !isMapOpen.value)}
         >
+          <MdLocationOn className="chipIcon" />
           <div className="coord">{latitude}</div>
           <div className="coord">{longitude}</div>
           <div className="closeButtonWrapper">

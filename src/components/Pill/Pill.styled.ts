@@ -1,40 +1,38 @@
 import styled from 'styled-components';
+
 interface StyledPillOptions {
   color: string;
-  $textColor: string;
+  $textColor?: string;
   fontSize?: string;
   $border: boolean;
+  $radius?: string;
+  $vivid?: boolean;
 }
+
 export const StyledPill = styled.div<StyledPillOptions>`
-  font-weight: 400;
-  font-size: ${({ fontSize }) => (fontSize ? fontSize : '18px')};
-  background-color: ${(props) => props.color};
-
-  ${({ $border }) =>
-    $border !== false
-      ? `
-          border-style: solid;
-          border-width: 1px;
-          border-color: white;
-
-        `
-      : ''}
-
-  -webkit-tap-highlight-color: transparent;
-
   display: flex;
   flex-direction: row;
   align-items: center;
-
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 6px;
-  padding: 1px 8px;
-  gap: 3px;
-
+  gap: ${({ theme }) => theme.space.s3};
+  padding: ${({ theme }) => `2px ${theme.space.s8}`};
+  border-radius: ${({ theme, $radius, $vivid }) =>
+    $radius || ($vivid ? theme.radius.chip : theme.radius.pill)};
+  font-size: ${({ theme, fontSize }) => fontSize || theme.size.s11};
+  font-weight: ${({ theme }) => theme.weight.medium};
+  background-color: ${({ color, $vivid }) =>
+    $vivid
+      ? `color-mix(in oklab, ${color} 14%, transparent)`
+      : `color-mix(in oklab, ${color} 22%, transparent)`};
+  border: 1px solid
+    ${({ $border, color, $vivid }) =>
+      $vivid
+        ? 'transparent'
+        : $border !== false
+          ? `color-mix(in oklab, ${color} 40%, transparent)`
+          : 'transparent'};
+  color: ${({ color, $textColor }) => $textColor || color};
+  -webkit-tap-highlight-color: transparent;
   cursor: pointer;
-  /* box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 4px; */
-  color: ${(props) => props.color};
 
   .titleAndCloseButton {
     display: flex;
@@ -42,29 +40,33 @@ export const StyledPill = styled.div<StyledPillOptions>`
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    gap: 10px;
+    gap: ${({ theme }) => theme.space.s6};
+    cursor: pointer;
+
     .childrenAndTitle {
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
+
       .children {
         display: flex;
       }
     }
-    cursor: pointer;
+
     .title {
-      color: ${(props) => props.$textColor};
+      color: inherit;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 150px;
     }
+
     .closeSign {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: ${({ theme }) => theme.icon.sm};
     }
   }
 `;

@@ -22,9 +22,10 @@ export default function FilterCalendar({
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', (e) => closeCalendar(e));
+    const handleMouseDown = (e: MouseEvent) => closeCalendar(e);
+    document.addEventListener('mousedown', handleMouseDown);
     return () => {
-      document.removeEventListener('mousedown', (e) => closeCalendar(e));
+      document.removeEventListener('mousedown', handleMouseDown);
     };
   }, []);
 
@@ -42,6 +43,9 @@ export default function FilterCalendar({
           withLexicalContext={true}
           category={category}
         />
+      )}
+      {calendarIsOpen.value && (
+        <div className="calendarHint">Tap a day to complete the filter.</div>
       )}
     </div>
   );

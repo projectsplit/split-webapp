@@ -13,9 +13,13 @@ export const usePeople = (
   userInfo: UserInfo | undefined,
   isPersonal?: boolean
 ) => {
-  const { allUsers } = useGetAllNonGroupUsers(
-    group?.id ? Mode.Group : Mode.NonGroup
-  );
+  const mode = isPersonal
+    ? Mode.Personal
+    : group?.id
+      ? Mode.Group
+      : Mode.NonGroup;
+
+  const { allUsers } = useGetAllNonGroupUsers(mode);
 
   const { fetchedPeople, enhancedPeopleWithProps } = useMemo(() => {
     if (isPersonal) return { fetchedPeople: [], enhancedPeopleWithProps: [] };
@@ -58,7 +62,7 @@ export const usePeople = (
       );
 
     return { fetchedPeople, enhancedPeopleWithProps };
-  }, [group, allUsers, userInfo]);
+  }, [group, allUsers, userInfo, isPersonal]);
 
   return { fetchedPeople, enhancedPeopleWithProps, allUsers };
 };

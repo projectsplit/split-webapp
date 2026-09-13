@@ -1,9 +1,14 @@
 import { AxiosResponse } from 'axios';
 import { apiClient } from '../../apiClients';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  removeInvitationFromCache,
+  restoreInvitationsCache,
+} from '../helpers/invitationsCache';
 import { GetUserInvitationsResponse, Invitation } from '../../../types';
-import { NavigateFunction } from 'react-router-dom';
+import { generatePath, NavigateFunction } from 'react-router-dom';
 import { Signal } from '@preact/signals-react';
+import routes from '@/routes';
 
 export const useAcceptInvitation = (
   navigate: NavigateFunction,
@@ -24,41 +29,12 @@ export const useAcceptInvitation = (
     }
   >({
     mutationFn: (invitationId) => acceptInvitation({ invitationId }),
-    onMutate: async (invitationId) => {
-      await queryClient.cancelQueries({ queryKey: ['userInvitations'] });
-
-      const previousInvitations = queryClient.getQueryData<{
-        pages: GetUserInvitationsResponse[];
-        pageParams: any[];
-      }>(['userInvitations', 10]);
-
-      queryClient.setQueryData(
-        ['userInvitations', 10],
-        (
-          old:
-            | { pages: GetUserInvitationsResponse[]; pageParams: any[] }
-            | undefined
-        ) => {
-          if (!old) return old;
-
-          let newPages = old.pages.map((page) => ({
-            ...page,
-            invitations: page.invitations.filter(
-              (inv) => inv.id !== invitationId
-            ),
-          }));
-
-          newPages = newPages.filter((page) => page.invitations.length > 0);
-          const newPageParams = old.pageParams.slice(0, newPages.length);
-
-          return {
-            pages: newPages,
-            pageParams: newPageParams,
-          };
-        }
-      );
-      return { previousInvitations };
-    },
+    onMutate: async (invitationId) => ({
+      previousInvitations: await removeInvitationFromCache(
+        queryClient,
+        invitationId
+      ),
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['userInvitations'],
@@ -66,15 +42,13 @@ export const useAcceptInvitation = (
       });
       queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
       queryClient.invalidateQueries({ queryKey: ['shared'], exact: false });
-      navigate(`/shared/${invitation.groupId}/expenses`);
+      navigate(
+        generatePath(routes.GROUP_EXPENSES, { groupid: invitation.groupId })
+      );
       menu.value = null;
     },
-    onError: (error, invitationId, context) => {
-      // Rollback to the previous state if the mutation fails
-      queryClient.setQueryData(
-        ['userInvitations', 10],
-        context?.previousInvitations
-      );
+    onError: (error, _invitationId, context) => {
+      restoreInvitationsCache(queryClient, context?.previousInvitations);
       queryClient.invalidateQueries({
         queryKey: ['userInvitations'],
         exact: false,
@@ -82,7 +56,6 @@ export const useAcceptInvitation = (
       console.error(error);
     },
     onSettled: () => {
-      // Optionally refetch to ensure the data is fully up-to-date (runs in background)
       queryClient.refetchQueries({
         queryKey: ['userInvitations'],
         exact: false,

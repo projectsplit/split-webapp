@@ -4,6 +4,7 @@ import { StyledLocationPicker } from './LocationPicker.styled';
 import { LocationPickerProps } from '../../interfaces';
 import PlacePicker from '../PlacePicker/PlacePicker';
 import { MdLocationOn } from 'react-icons/md';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 const LocationPicker: React.FC<LocationPickerProps> = ({
   location,
@@ -13,6 +14,8 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
   isCreateExpense,
   setDescriptionError,
 }) => {
+  useCloseOnBack(isMapOpen.value, () => (isMapOpen.value = false));
+
   return (
     <APIProvider apiKey={config.googleMapsApiKey}>
       <StyledLocationPicker location={location}>
@@ -26,11 +29,11 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
             setDescriptionError={setDescriptionError}
           />
         )}
-        <div className="main">
-          <MdLocationOn
-            className="locationIcon"
-            onClick={() => (isMapOpen.value = !isMapOpen.value)}
-          />
+        <div
+          className={`main${location ? ' set' : ''}`}
+          onClick={() => (isMapOpen.value = !isMapOpen.value)}
+        >
+          <MdLocationOn className="locationIcon" />
         </div>
       </StyledLocationPicker>
     </APIProvider>

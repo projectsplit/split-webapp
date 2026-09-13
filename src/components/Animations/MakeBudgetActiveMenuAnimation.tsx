@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { MakeBudgetActiveMenuAnimationProps } from '../../interfaces';
 import MakeBudgetActiveMenu from '../Menus/MakeBudgetActiveMenu/MakeBudgetActiveMenu';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function MakeBudgetActiveMenuAnimation({
   menu,
@@ -10,6 +11,7 @@ export default function MakeBudgetActiveMenuAnimation({
   onConfirm,
 }: MakeBudgetActiveMenuAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'makeBudgetActive', () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === 'makeBudgetActive'}

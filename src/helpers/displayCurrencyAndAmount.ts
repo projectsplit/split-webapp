@@ -25,3 +25,25 @@ export const displayCurrencyAndAmount = (
 
   return `${symbol}${formatter.format(amount2decimal)}`;
 };
+
+export const displayMoneyFixed = (
+  amount: string | number | undefined,
+  currency: string
+): string => {
+  const value = Number.isFinite(parseFloat(String(amount ?? '0')))
+    ? parseFloat(String(amount ?? '0'))
+    : 0;
+  const symbol = getSymbolFromCurrency(currency) ?? currency;
+
+  if (value < 0) return `${symbol}0.00`;
+
+  const maxDigits = significantDigitsFromTicker(currency);
+  const digits = Math.min(2, maxDigits);
+
+  const formatter = new Intl.NumberFormat(getLocaleFromCurrency(currency), {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: Math.max(digits, maxDigits),
+  });
+
+  return `${symbol}${formatter.format(value)}`;
+};

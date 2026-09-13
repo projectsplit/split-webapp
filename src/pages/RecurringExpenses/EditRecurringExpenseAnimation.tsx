@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { signal, Signal } from '@preact/signals-react';
 import ExpenseForm from '@/components/ExpenseForm/ExpenseForm';
@@ -10,7 +10,8 @@ import {
   TransactionType,
   User,
 } from '@/types';
-import { buildFormExpenseFromTemplate } from './utils';
+import { buildFormExpenseFromTemplate } from './recurringExpenseHelpers';
+import { useCloseOnBack } from '@/hooks/useCloseOnBack';
 
 interface EditRecurringExpenseAnimationProps {
   menu: Signal<string | null>;
@@ -22,11 +23,6 @@ interface EditRecurringExpenseAnimationProps {
   nonGroupUsers: Signal<User[]>;
 }
 
-/**
- * The same form used to create the expense, pointed at the template instead. Submitting rewrites
- * the schedule; the expenses it has already produced are ordinary expenses and are edited from
- * their own lists.
- */
 export const EditRecurringExpenseAnimation = ({
   menu,
   template,
@@ -37,6 +33,11 @@ export const EditRecurringExpenseAnimation = ({
   nonGroupUsers,
 }: EditRecurringExpenseAnimationProps) => {
   const nodeRef = useRef(null);
+  const expense = useMemo(
+    () => buildFormExpenseFromTemplate(template),
+    [template]
+  );
+  useCloseOnBack(menu.value === 'editRecurringExpense', () => (menu.value = null));
 
   return (
     <CSSTransition
@@ -46,7 +47,7 @@ export const EditRecurringExpenseAnimation = ({
       nodeRef={nodeRef}
     >
       <ExpenseForm
-        expense={buildFormExpenseFromTemplate(template)}
+        expense={expense}
         groupId={template.groupId ?? undefined}
         menu={menu}
         timeZoneId={timeZoneId}

@@ -1,60 +1,46 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { StyledTransactionsPage } from '@/components/TransactionsPage.styled';
 
-export const StyledExpenses = styled.div`
-  min-width: 100%;
-  display: flex;
-  flex-direction: column;
-  height: 100%; /* Important: parent must have a defined height */
-  overflow: hidden; /* Stops the whole page from scrolling */
-  flex: 1;
+const draw = keyframes`
+  from { stroke-dasharray: 0 100; }
+  to   { stroke-dasharray: 100 0; }
+`;
 
-  .scroll-area {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    padding: 16px 8px; /* Moves the list padding here */
-    gap: 16px;
+const fadeOut = keyframes`
+  to { opacity: 0; }
+`;
 
-    .expense-highlight {
-      animation: highlight-fade 8s ease-out;
-      border-radius: 10px;
-    }
+export const StyledExpenses = styled(StyledTransactionsPage)`
+  .scroll-area .expense-highlight {
+    position: relative;
+    border-radius: ${({ theme }) => theme.radius.surface};
   }
 
-  .same-date-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 8px;
-    .date-only {
-      background-color: ${({ theme }) => theme.backgroundcolor};
-      align-self: center;
-      position: sticky;
-      top: 0;
-      font-size: 14px;
-      margin: 0px 0px 1px 0px;
-      padding: 0px 8px 0px 8px;
-      border-radius: 4px;
-      color: ${({ theme }) => theme.secondaryTextColor};
-      font-weight: 600;
-    }
-    .expenses {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+  .scroll-area .expense-highlight .jumpRing {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    overflow: visible;
+    pointer-events: none;
   }
-  @keyframes highlight-fade {
-    0% {
-      box-shadow:
-        0 0 0 4px #8300e7,
-        0 0 10px #8300e7;
-    }
-    100% {
-      box-shadow:
-        0 0 0 0px transparent,
-        0 0 0px transparent;
+
+  .scroll-area .expense-highlight .jumpRing rect {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 0 100;
+    animation:
+      ${draw} 420ms cubic-bezier(0.25, 1, 0.5, 1) both,
+      ${fadeOut} 400ms ease-out 1320ms both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-area .expense-highlight .jumpRing rect {
+      stroke-dasharray: 100 0;
+      animation: ${fadeOut} 500ms ease-out 1320ms both;
     }
   }
 `;

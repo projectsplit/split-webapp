@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import routes from '@/routes';
 
 const useRedirectToAnalytics = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate(`/analytics`);
-  }, []);
+    navigate(routes.ANALYTICS, { replace: true });
+  }, [navigate]);
 
   return null;
 };

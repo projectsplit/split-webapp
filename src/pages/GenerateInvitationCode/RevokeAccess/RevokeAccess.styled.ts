@@ -1,61 +1,60 @@
 import styled from 'styled-components';
 
 export const StyledRevokeAccess = styled.div`
-  display: flex;
-  padding: 16px 8px;
-  flex-direction: column;
-  overflow-y: auto;
-  height: 100%;
-  gap: 16px;
   flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 
   .scrollable-content {
-    overflow-y: auto;
     flex: 1;
-    padding-top: 1rem;
-    padding-bottom: 180px;
+    min-height: 0;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: ${({ theme }) => theme.space.s12};
+    padding: ${({ theme }) =>
+      `${theme.space.s4} ${theme.space.s20} ${theme.space.s24}`};
+
+    > * {
+      flex-shrink: 0;
+    }
   }
 
   .promptText {
-    padding: 10px;
-    font-size: 0.9rem;
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.5;
+    color: ${({ theme }) => theme.ink.tertiary};
+    text-wrap: pretty;
+  }
+
+  .emptyState {
     display: flex;
     flex-direction: column;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    text-align: center;
-  }
+    align-items: center;
+    justify-content: center;
+    gap: ${({ theme }) => theme.space.s16};
+    flex: 1;
+    padding: ${({ theme }) => `${theme.space.s24} ${theme.space.s20}`};
 
-  .textAndIcon {
-    white-space: normal;
-    text-align: center;
-    margin-top: 10rem;
-
-    .text {
-      opacity: 0.5;
-      white-space: normal;
-      overflow: visible;
-      text-overflow: clip;
+    .msg {
+      font-size: ${({ theme }) => theme.size.s13};
+      color: ${({ theme }) => theme.ink.tertiary};
       text-align: center;
-      .emoji {
-        opacity: 1;
-      }
+      text-wrap: pretty;
     }
+
     .icon {
-      font-size: 100px;
-      opacity: 0.5;
+      display: flex;
+      font-size: 56px;
+      color: ${({ theme }) => theme.surface.mark};
     }
   }
+
   .spinner {
     display: flex;
-    flex-direction: column;
     flex: 1;
     align-items: center;
     justify-content: center;
-    margin-top: 0.5rem;
-    height: 100%;
   }
 `;

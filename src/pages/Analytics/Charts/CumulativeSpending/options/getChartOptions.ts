@@ -1,12 +1,16 @@
+import { tokens } from '@/styles/tokens';
+import {
+  getAxisTickLabel,
+  getTooltipTitle,
+} from '../../options/axisAndTooltip';
 import { Context } from 'chartjs-plugin-datalabels/types/context';
 import { roundThousandsAndMillions } from '../../../../../helpers/roundThousandsAndMils';
 import { Frequency } from '../../../../../types';
 import { enhanceStringArray } from '../../../helpers/enhanceStringArray';
-import { generateYearsArray } from '../../../helpers/generateYearsArray';
+import { generateYearsArray } from '@/helpers/generateYearsArray';
 import { isCurrentPeriod } from '../../../helpers/isCurrentPeriod';
-import { swapMonthDayToDayMonth } from '../../../helpers/swapMonthDayToDayMonth';
 import { displayCurrencyAndAmount } from '../../../../../helpers/displayCurrencyAndAmount';
-import { months, shortWeekdays } from '../../../../../constants';
+import { months } from '../../../../../constants';
 import { getSymbolFromCurrency } from '../../../../../helpers/currency-symbol-map';
 
 export const getChartOptions = (
@@ -21,7 +25,8 @@ export const getChartOptions = (
   currentWeekIndex: number,
   hitRadius: number[],
   fractalFactor: number,
-  currency: string
+  currency: string,
+  weekDays: string[]
 ) => {
   const date = new Date(selectedYear, selectedTimeCycleIndex, 1);
 
@@ -29,7 +34,7 @@ export const getChartOptions = (
 
   const fullMonthName = date.toLocaleDateString('en-US', dateOptions);
 
-  const enhancedWeekDays = enhanceStringArray(shortWeekdays, fractalFactor);
+  const enhancedWeekDays = enhanceStringArray(weekDays, fractalFactor);
 
   const abbreviatedMonths = months.map((month) => month.slice(0, 3));
 
@@ -42,16 +47,13 @@ export const getChartOptions = (
 
   return {
     animation: {
-      // duration: 500,
       onProgress: function (animation: any) {
-        //clears the top left part of the canvas where animation of datalabel is not shown correctly when moving from 30 to 31 datapoints
         const chartInstance = animation.chart;
         const ctx = chartInstance.ctx;
         const width = chartInstance.width;
         const height = chartInstance.height;
         const topLeftWidth = width * 0.03;
         const topLeftHeight = height * 0.03;
-        // Clear the canvas
         ctx.clearRect(0, 0, topLeftWidth, topLeftHeight);
       },
     },
@@ -68,44 +70,33 @@ export const getChartOptions = (
         position: 'top',
         align: 'start',
         labels: {
-          usePointStyle: false, // use a square instead of a rectangle
-          boxWidth: 10, // set the width of the square
-          boxHeight: 10, // set the height of the square
-          color: '#858585', // set the color of the square
+          usePointStyle: false,
+          boxWidth: 10,
+          boxHeight: 10,
+          color: tokens.ink.secondary,
         },
       },
       title: {
-        display: false, //isSuccess && cumulArrayData?.length !== 0,
+        display: false,
         text: 'Total Spending',
-        color: '#a1a1a1',
+        color: tokens.ink.tertiary,
       },
       customCanvasBackgroundColor: {
-        color: '#27273C',
+        color: tokens.surface.page,
       },
       tooltip: {
         yAlign: 'bottom',
         displayColors: false,
         enabled: true,
         callbacks: {
-          title: (context: Context[]) => {
-            const index = context[0].dataIndex;
-            if (selectedCycle === Frequency.Monthly)
-              return (
-                labels[index] +
-                ' ' +
-                fullMonthName +
-                ' ' +
-                selectedYear.toString()
-              );
-            if (selectedCycle === Frequency.Weekly)
-              return (
-                swapMonthDayToDayMonth(labels)[index] +
-                ' ' +
-                selectedYear.toString()
-              );
-            if (selectedCycle === Frequency.Annually)
-              return labels[index] + ' ' + selectedYear.toString();
-          },
+          title: (context: Context[]) =>
+            getTooltipTitle(
+              context,
+              selectedCycle,
+              labels,
+              fullMonthName,
+              selectedYear
+            ),
           label: (context: any) => {
             const value: number = context.parsed.y;
 
@@ -158,7 +149,7 @@ export const getChartOptions = (
       },
       datalabels: {
         display: true,
-        color: 'white',
+        color: tokens.ink.primary,
         font: {
           size: 14,
           weight: 'bold',
@@ -185,10 +176,9 @@ export const getChartOptions = (
           } else {
             return 'top';
           }
-        }, // if there is a forecast value and the current value is one datapoint away, show current datapoint at bottom
+        },
         padding: 10,
         formatter: (value: number, context: Context) => {
-          // Show numeric value over graph for first, middle, and last data points
           if (
             context.dataIndex === 0 ||
             context.dataIndex === context.dataset.data.length - 1 ||
@@ -204,7 +194,6 @@ export const getChartOptions = (
             lastNumberBeforeNaN === context.dataIndex
           ) {
             if (value < 0) {
-              // If negative, format within parentheses
               return `(${currencySymbol}${roundThousandsAndMillions(value)})`;
             } else {
               return `${currencySymbol}` + roundThousandsAndMillions(value);
@@ -230,54 +219,22 @@ export const getChartOptions = (
           display: false,
         },
         ticks: {
-          color: '#DDDDDD',
+          color: tokens.ink.tertiary,
           font: {
-            weight: 'bold',
-            size: 20,
+            family: tokens.font.mono,
+            size: 11,
           },
-          callback: (index: number, value: number) => {
-            switch (selectedCycle) {
-              case Frequency.Monthly:
-                // show the x axis for the first and last date of the month
-                if (
-                  index === 0 ||
-                  index === enhancedDatesToNumbers.length - 1
-                ) {
-                  return labels[index];
-                }
-                // show x axis values for intervals of 5
-                if (
-                  parseFloat(labels[index]) % 5 === 0 &&
-                  enhancedDatesToNumbers[index + fractalFactor + 1] !== 31
-                ) {
-                  return Math.floor(parseFloat(labels[index]))
-                    .toString()
-                    .padStart(2, '0');
-                }
-
-                break;
-
-              case Frequency.Weekly:
-                if (
-                  index === 0 ||
-                  index === enhancedWeekDays.length - 1 ||
-                  index % (fractalFactor + 1) === 0
-                ) {
-                  return enhancedWeekDays[index];
-                }
-                break;
-
-              case Frequency.Annually:
-                if (
-                  index === 0 ||
-                  index === enhancedAbbreviatedMonths.length - 1 ||
-                  index % (fractalFactor + 1) === 0
-                ) {
-                  return enhancedAbbreviatedMonths[index];
-                }
-                break;
-            }
-          },
+          callback: (index: number) =>
+            getAxisTickLabel(
+              index,
+              selectedCycle,
+              labels,
+              enhancedDatesToNumbers,
+              enhancedWeekDays,
+              enhancedAbbreviatedMonths,
+              fractalFactor,
+              fractalFactor + 1
+            ),
         },
       },
       y: {

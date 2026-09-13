@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { InviteUsersToNewGroup } from '../Menus/InviteUsersToNewGroupMenu/InviteUsersToNewGroup';
 import { Signal } from '@preact/signals-react';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 interface InviteUsersToNewGroupAnimationProps {
   menu: Signal<string | null>;
@@ -12,6 +13,10 @@ export default function InviteUsersToNewGroupAnimation({
   newGroup,
 }: InviteUsersToNewGroupAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(
+    menu.value === 'inviteUsersToNewGroup',
+    () => (menu.value = null)
+  );
   return (
     <CSSTransition
       in={menu.value === 'inviteUsersToNewGroup'}

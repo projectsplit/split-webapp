@@ -2,7 +2,7 @@ import React from 'react';
 import { StyledInput, StyledInputMonetary } from './InputMonetary.styled';
 import { getSymbolFromCurrency } from '../../helpers/currency-symbol-map';
 import { InputMonetaryProps } from '../../interfaces';
-import { FaAngleDown } from 'react-icons/fa';
+import CurrencySelector from '../CurrencySelector/CurrencySelector';
 
 export default React.forwardRef(function InputMonetary(
   {
@@ -11,26 +11,20 @@ export default React.forwardRef(function InputMonetary(
     onChange,
     value,
     $inputError,
-    // setMenu,
     currencyMenu,
     selectedCurrency,
     autoFocus,
   }: InputMonetaryProps,
-  ref: React.Ref<HTMLInputElement>
+  _ref: React.Ref<HTMLInputElement>
 ) {
-
 
   return (
     <StyledInputMonetary $inputError={$inputError}>
       <div className="currencySelectorWrapper">
-        <div
-          className="currencySelector"
+        <CurrencySelector
+          code={selectedCurrency?.symbol}
           onClick={() => (currencyMenu.value = 'currencyOptions')}
-        >
-          <div className={selectedCurrency?.flagClass} />
-          <div>{selectedCurrency?.symbol}</div>
-          <FaAngleDown className="angleDown" />
-        </div>
+        />
       </div>
 
       <StyledInput

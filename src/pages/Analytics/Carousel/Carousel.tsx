@@ -3,6 +3,8 @@ import { SlArrowLeft } from 'react-icons/sl';
 import { SlArrowRight } from 'react-icons/sl';
 import { CarouselProps } from '../../../interfaces';
 import { Frequency } from '../../../types';
+import { generateYearsArray } from '@/helpers/generateYearsArray';
+import { generateAllWeeksPerYear } from '@/helpers/weeklyDataHelpers';
 
 export default function Carousel({
   carouselItems,
@@ -12,30 +14,35 @@ export default function Carousel({
   menu,
   selectedYear,
 }: CarouselProps) {
-  const nextItem = () => {
+  const moveBy = (step: 1 | -1) => {
     cyclehaschanged.value = false;
-    selectedTimeCycleIndex.value =
-      (selectedTimeCycleIndex.value + 1) % carouselItems.length;
+    const nextIndex = selectedTimeCycleIndex.value + step;
 
-    if (selectedCycle.value === Frequency.Annually)
-      selectedYear.value = parseInt(
-        carouselItems[selectedTimeCycleIndex.value] as string,
-        10
-      );
+    if (nextIndex >= 0 && nextIndex < carouselItems.length) {
+      selectedTimeCycleIndex.value = nextIndex;
+      if (selectedCycle.value === Frequency.Annually)
+        selectedYear.value = parseInt(carouselItems[nextIndex] as string, 10);
+      return;
+    }
+
+    if (selectedCycle.value === Frequency.Annually) return;
+
+    const years = generateYearsArray();
+    const nextYear = selectedYear.value + step;
+    if (nextYear < years[0] || nextYear > years[years.length - 1]) return;
+
+    const lastIndexOfNextYear =
+      selectedCycle.value === Frequency.Weekly
+        ? generateAllWeeksPerYear(nextYear).length - 1
+        : carouselItems.length - 1;
+
+    selectedYear.value = nextYear;
+    selectedTimeCycleIndex.value = step === 1 ? 0 : lastIndexOfNextYear;
   };
 
-  const prevItem = () => {
-    cyclehaschanged.value = false;
-    selectedTimeCycleIndex.value =
-      (selectedTimeCycleIndex.value - 1 + carouselItems.length) %
-      carouselItems.length;
+  const nextItem = () => moveBy(1);
 
-    if (selectedCycle.value === Frequency.Annually)
-      selectedYear.value = parseInt(
-        carouselItems[selectedTimeCycleIndex.value] as string,
-        10
-      );
-  };
+  const prevItem = () => moveBy(-1);
 
   const displayCarouselItem = (
     cycle: Frequency,

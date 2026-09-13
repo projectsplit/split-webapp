@@ -1,24 +1,23 @@
 import {
   StyledInviteUsersToNewGroup,
   HeaderContainer,
+  HeaderText,
   IconWrapper,
-  Title,
-  Subtitle,
   ScrollableContent,
   BottomContainer,
 } from './InviteUsersToNewGroup.styled';
 import { Signal, useSignal } from '@preact/signals-react';
-import Separator from '../../Separator/Separator';
 import { TiGroup } from 'react-icons/ti';
 import MyButton from '@/components/MyButton/MyButton';
 import AddNewUserAnimation from '@/components/Animations/AddNewUserAnimation';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { generatePath, useNavigate, useOutletContext } from 'react-router-dom';
 import { UserInfo } from '@/types';
-import { usePreventNavigation } from './hooks/usePreventNavigation';
+import { getInitials } from '@/helpers/getInitials';
+import routes from '@/routes';
 
 interface InviteUsersToNewGroupProps {
   menu: Signal<string | null>;
-  nodeRef: React.RefObject<HTMLDivElement>;
+  nodeRef: React.RefObject<HTMLDivElement | null>;
   newGroup: Signal<{ groupName: string; groupId: string }>;
 }
 
@@ -33,80 +32,77 @@ export const InviteUsersToNewGroup = ({
 
   const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
 
-  usePreventNavigation();
 
   return (
     <StyledInviteUsersToNewGroup>
       <HeaderContainer>
         <IconWrapper>
-          <svg width="0" height="0">
-            <defs>
-              <linearGradient
-                id="purple-fade"
-                x1="0%"
-                y1="0%"
-                x2="0%"
-                y2="100%"
-              >
-                <stop offset="0%" stopColor="#ac70c7" />
-                <stop offset="60%" stopColor="#432258" />
-                <stop offset="100%" stopColor="#0f0f0f" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <TiGroup style={{ fill: 'url(#purple-fade)', fontSize: '10rem' }} />
+          <TiGroup />
         </IconWrapper>
-        <Title>
-          Welcome to {newGroup.value.groupName}, {userInfo.username}!
-        </Title>
+        <HeaderText>
+          <div className="title">{newGroup.value.groupName} is ready</div>
+          <div className="lead">
+            Add the people you are splitting with, or start alone and add them
+            later.
+          </div>
+        </HeaderText>
       </HeaderContainer>
 
-      <Separator />
-
-      <Subtitle>Current members</Subtitle>
-
       <ScrollableContent>
-        <div className="membersContainer">
-          You
-          <div className="status">
-            Creator
-            <span className="statusDot creator" />
+        <div className="sectionLabel">Members</div>
+        <div className="membersCard">
+          <div className="memberRow">
+            <span className="memberAvatar you">
+              {getInitials(userInfo?.username)}
+            </span>
+            <span className="memberName">You</span>
+            <span className="memberStatus">Creator</span>
           </div>
-        </div>
-        {newMembers.value.map((member, index) => (
-          <div className="membersContainer" key={index}>
-            <div>{member.name}</div>
-            <div className="status">
-              {member.isUser ? 'Invited' : 'Guest'}
-              <span
-                className={`statusDot ${member.isUser ? 'invited' : 'guest'}`}
-              />
+          {newMembers.value.map((member, index) => (
+            <div className="memberRow" key={index}>
+              <span className="memberAvatar">{getInitials(member.name)}</span>
+              <span className="memberName">{member.name}</span>
+              <span className="memberStatus">
+                {member.isUser ? 'Invited' : 'Guest'}
+              </span>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <div className="membersNote">
+          An invited member joins once they accept. A guest is yours to manage
+          until a real user replaces them.
+        </div>
       </ScrollableContent>
 
       <BottomContainer>
-        <div
-          className="button"
+        <MyButton fontSize="15" onClick={() => (newUserMenu.value = 'newUser')}>
+          {accessedNewUsersInvitationsMenu.value && newMembers.value.length > 0
+            ? 'Manage members'
+            : 'Add members'}
+        </MyButton>
+        <MyButton
+          variant="secondary"
+          fontSize="15"
           onClick={() => {
             menu.value = null;
-            navigate(`/shared/${newGroup.value.groupId}/expenses`, {
-              state: { groupName: newGroup.value.groupName, isNewGroup: true },
-            });
+            navigate(
+              generatePath(routes.GROUP_EXPENSES, {
+                groupid: newGroup.value.groupId,
+              }),
+              {
+                state: {
+                  groupName: newGroup.value.groupName,
+                  isNewGroup: true,
+                },
+              }
+            );
           }}
         >
           {accessedNewUsersInvitationsMenu.value && newMembers.value.length > 0
             ? 'Done'
             : 'Skip'}
-        </div>
-
-        <MyButton onClick={() => (newUserMenu.value = 'newUser')}>
-          {accessedNewUsersInvitationsMenu.value && newMembers.value.length > 0
-            ? 'Manage Members'
-            : 'Add Members'}
         </MyButton>
-        </BottomContainer>
+      </BottomContainer>
         <AddNewUserAnimation
           menu={newUserMenu}
           newGroupId={newGroup.value.groupId}
@@ -117,6 +113,3 @@ export const InviteUsersToNewGroup = ({
   );
 };
 
-//onClick={() => (navigate(`/shared/${newGroup.value.groupId}/expenses`, {
-//   state: { groupName:newGroup.value.groupName, isNewGroup: true },
-// }))}

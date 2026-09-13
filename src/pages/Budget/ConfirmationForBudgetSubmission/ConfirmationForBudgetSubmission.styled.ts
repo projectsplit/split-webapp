@@ -7,7 +7,8 @@ export const StyledConfirmationForBudgetSubmission = styled(StyledBottomMenu)`
   }
   .prompt {
     text-align: left;
-    font-size: 13px;
-    color: rgb(193, 193, 193);
+    font-size: ${({ theme }) => theme.size.s13};
+    line-height: 1.6;
+    color: ${({ theme }) => theme.ink.secondary};
   }
 `;

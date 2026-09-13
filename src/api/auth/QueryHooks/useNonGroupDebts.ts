@@ -1,10 +1,10 @@
 import { apiClient } from '@/api/apiClients';
 import { DebtsResponse, Mode } from '@/types';
 import { Signal } from '@preact/signals-react';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { ExpenseParsedFilters, TransferParsedFilters } from '../../../types';
-import { appendNonGroupFilterToParams } from '../helpers/appendNonGroupFilterToParams';
+import { appendFilterToParams } from '../helpers/appendFilterToParams';
 
 const useNonGroupDebts = (
   mode: Mode,
@@ -25,6 +25,7 @@ const useNonGroupDebts = (
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     staleTime: 9000,
+    placeholderData: keepPreviousData,
     enabled: mode === Mode.NonGroup,
   });
 };
@@ -41,7 +42,7 @@ const getNonGroupDebts = async (
     ...base
   } = parsedFilters;
 
-  const params = appendNonGroupFilterToParams(base, {
+  const params = appendFilterToParams(base, {
     arrayMappings: [
       { key: 'participantIds', values: participantsIds },
       { key: 'payerIds', values: payersIds },

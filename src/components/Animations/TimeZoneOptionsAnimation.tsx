@@ -2,6 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import TimeZoneOptions from '../Menus/TimeZoneOptions/TimeZoneOptions';
 import { TimeZoneOptionsAnimationProps } from '../../interfaces';
 import { useRef } from 'react';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function TimeZoneOptionsAnimation({
   timeZoneMenu,
@@ -9,6 +10,7 @@ export default function TimeZoneOptionsAnimation({
   userInfo,
 }: TimeZoneOptionsAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(timeZoneMenu.value === 'timeZones', () => (timeZoneMenu.value = null));
   return (
     <CSSTransition
       in={timeZoneMenu.value === 'timeZones'}

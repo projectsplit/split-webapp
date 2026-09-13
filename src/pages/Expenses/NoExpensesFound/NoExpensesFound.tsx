@@ -54,17 +54,15 @@ export const NoExpensesFound = ({
               fetchedUserAndGroupLabels
             )}
           </div>
-          <div className="textAndIcon">
-            <span className="text">
-              No expenses found. Have a go and refine your search!
-            </span>
-            <span className="emoji">🧐</span>
+          <div className="emptyState">
+            <div className="msg">
+              No expenses found. Have a go and refine your search! 🧐
+            </div>
             <FaMagnifyingGlass className="icon" />
           </div>
-          <div />
         </div>
       ) : (
-        <div className="noData">
+        <div className="emptyState">
           <div className="msg">There are currently no expenses</div>
           <CiReceipt className="icon" />
         </div>

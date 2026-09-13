@@ -1,5 +1,5 @@
 import { BeautifulMentionsItemData } from 'lexical-beautiful-mentions';
-import { FetchedLabel, FetchedMembers } from '../../../types';
+import { EnhancedPeopleWithProps, FetchedLabel } from '../../../types';
 
 export const handleInputChange = (
   searchTerm: string,
@@ -11,7 +11,7 @@ export const handleInputChange = (
       }[]
     >
   >,
-  fetchedMembers: FetchedMembers,
+  fetchedMembers: EnhancedPeopleWithProps,
   labels: FetchedLabel[]
 ) => {
   if (!searchTerm) {

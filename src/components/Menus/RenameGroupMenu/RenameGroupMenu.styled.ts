@@ -1,81 +1,63 @@
 import styled from 'styled-components';
-import { StyledMiddleScreenMenu } from '../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
+import { inlineEditFieldStyles } from '@/styles/inlineEditField';
+import { StyledDialog } from '../Layouts/Dialog/Dialog.styled';
 
-export const StyledRenameGroupMenu = styled(StyledMiddleScreenMenu)`
+export const StyledRenameGroupMenu = styled(StyledDialog)`
   .errorMessage {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 10px;
-    text-align: start;
-    font-size: 14px;
+    gap: ${({ theme }) => theme.space.s12};
+    font-size: ${({ theme }) => theme.size.s13};
+    line-height: 1.6;
+    color: ${({ theme }) => theme.ink.secondary};
+
     .error {
       display: flex;
       justify-content: center;
+      text-align: center;
+      text-wrap: pretty;
     }
+
     .closeButton {
-      font-size: 30px;
-      color: #6f6f6f;
-      height: 17px;
-      margin-top: -15px;
-      margin-right: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       align-self: flex-end;
-      &:hover {
-        color: ${({ theme }) => theme.whiteText};
-      }
+      width: 34px;
+      height: 34px;
+      margin: ${({ theme }) => `-6px -${theme.space.s10} -6px 0`};
+      font-size: ${({ theme }) => theme.icon.md};
+      color: ${({ theme }) => theme.ink.tertiary};
+      cursor: pointer;
+
       .close {
-        cursor: pointer;
         display: block;
       }
     }
+
     .exclamation {
       display: flex;
       justify-content: center;
-      font-size: 25px;
+      font-size: ${({ theme }) => theme.icon.lg};
+      color: ${({ theme }) => theme.direction.owe};
     }
   }
-  .headerSeparator {
-    position: sticky;
-    top: 0;
+  ${inlineEditFieldStyles}
 
-    background-color: ${({ theme }) => theme.layer2};
-    .input {
-      width: 85%;
-    }
-    .separator {
-      transform: translateZ(0);
-      position: sticky;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 10px;
-      .infoLogo {
-        font-size: 30px;
-        /* color: ${({ theme }) => theme.yellow}; */
-      }
-      .closeButton {
-        font-size: 30px;
-        color: #6f6f6f;
-        height: 17px;
-        margin-top: -15px;
-        margin-right: -8px;
-        &:hover {
-          color: ${({ theme }) => theme.whiteText};
-        }
-        .close {
-          cursor: pointer;
-          display: block;
-        }
-      }
-    }
-  }
-
-  .buttons {
+  .headerSeparator .header .closeButton {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 10px;
+    flex-shrink: 0;
+    color: ${({ theme }) => theme.ink.tertiary};
+    font-size: ${({ theme }) => theme.icon.sm};
+    cursor: pointer;
+
+    &:hover {
+      color: ${({ theme }) => theme.ink.primary};
+    }
+
+    .close {
+      display: block;
+    }
   }
+
 `;

@@ -1,46 +1,34 @@
-import { styled } from 'styled-components';
+import { keyframes, styled } from 'styled-components';
+import { paddedScrollPageStyles } from '@/styles/paddedScrollPage';
+
+const settle = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 export const StyledManageBudgets = styled.div`
-  display: flex;
-  flex-direction: column;
-  color: ${({ theme }) => theme.lightColor};
-  box-sizing: border-box;
-  width: 100%;
-  height: 100dvh;
-  margin: 0;
-  padding: 14px 0; /* Vertical padding only */
-  gap: 15px;
-  overflow: hidden;
-
-  /* Header elements with horizontal padding */
-  & > *:not(.scrollContainer) {
-    padding-left: 14px;
-    padding-right: 14px;
-  }
-
-  .messageContainer {
-    flex-shrink: 0;
-  }
+  ${paddedScrollPageStyles}
 
   .scrollContainer {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
     gap: 15px;
-    padding: 0 14px; /* Internal content padding */
+    padding: 0 20px;
 
-    .activeInfo {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .flipRow {
+      will-change: transform;
+      animation: ${settle} 220ms cubic-bezier(0.2, 0, 0, 1);
     }
-    
-    .inactiveInfo {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
+
+    @media (prefers-reduced-motion: reduce) {
+      .flipRow {
+        animation: none;
+        transition: none !important;
+      }
     }
 
     .spinnerContainer {
@@ -50,13 +38,12 @@ export const StyledManageBudgets = styled.div`
       align-items: center;
     }
 
-    /* Scrollbar styles for the scrolling section */
     &::-webkit-scrollbar {
       width: 4px;
     }
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
+      background: ${({ theme }) => theme.surface.raisedHigh};
+      border-radius: ${({ theme }) => theme.space.s4};
     }
   }
 
@@ -65,6 +52,6 @@ export const StyledManageBudgets = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: auto;
-    padding: 10px 14px 14px 14px;
+    padding: 12px 20px 20px;
   }
 `;

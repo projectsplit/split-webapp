@@ -6,6 +6,11 @@ export const getActiveScopes = (
 ): string[] => {
   if (mask === undefined) return [];
 
+  const all =
+    BudgetScope.Personal | BudgetScope.NonGroup | BudgetScope.Group;
+  const allGroups = !targetGroupIds || targetGroupIds.length === 0;
+  if ((mask & all) === all && allGroups) return ['All expenses'];
+
   const scopes: string[] = [];
 
   if ((mask & BudgetScope.Personal) === BudgetScope.Personal)
@@ -18,7 +23,7 @@ export const getActiveScopes = (
     }
   }
   if ((mask & BudgetScope.NonGroup) === BudgetScope.NonGroup)
-    scopes.push('Non-Group');
+    scopes.push('Quick splits');
 
   return scopes;
 };

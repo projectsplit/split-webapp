@@ -1,12 +1,11 @@
 import { signal } from '@preact/signals-react';
 import { CreateBudgetState } from './formStoreTypes';
-import { create } from 'zustand';
+import { createStore } from 'zustand';
 import { Frequency } from '@/types';
 import { validateBudgetForm } from '../helpers/validateBudgetForm';
 import { scopeBuilder } from '../helpers/scopeBuilder';
 
-// Signals created at module level to avoid @preact/signals-react-transform
-// injecting React hooks inside the Zustand create() callback.
+export const createBudgetFormStore = () => {
 const _displayedAmount = signal<string>('');
 const _openCalendar = signal<boolean>(false);
 const _openCustomDateCalendar = signal<boolean>(false);
@@ -31,7 +30,7 @@ const _targetGroupIds = signal<string[]>([]);
 const _allGroupsSelected = signal<boolean>(true);
 const _serverErrors = signal<any[]>([]);
 
-const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
+return createStore<CreateBudgetState>()((set, get) => ({
   amount: '',
   description: '',
   currencySymbol: '',
@@ -152,7 +151,6 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
 
     get().serverErrors.value = [];
 
-    // Logic from submitBudgetFn
     const {
       amount,
       description,
@@ -366,5 +364,4 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
     });
   },
 }));
-
-export const useCreateBudgetStore = createBudgetStore;
+};

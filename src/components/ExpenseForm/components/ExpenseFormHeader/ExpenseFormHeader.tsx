@@ -1,7 +1,9 @@
+import { memo } from 'react';
 import { IoClose } from 'react-icons/io5';
-import { StyledExpenseFormHeader } from './ExpenseFormHeader.styled';
+import { StyledFormHeader } from '@/components/FormHeader/FormHeader.styled';
 import { Signal } from '@preact/signals-react';
 import { Group, Guest, Member, User } from '@/types';
+import { useCloseOnBack } from '@/hooks/useCloseOnBack';
 
 interface ExpenseFormHeaderProps {
   header: string;
@@ -14,7 +16,7 @@ interface ExpenseFormHeaderProps {
   menu: Signal<string | null>;
 }
 
-export const ExpenseFormHeader = ({
+const ExpenseFormHeaderPreMemo = ({
   header,
   isnonGroupExpense,
   fromHome,
@@ -24,29 +26,35 @@ export const ExpenseFormHeader = ({
   fromHomeGroup,
   menu,
 }: ExpenseFormHeaderProps) => {
+  const close = () => {
+    if (isnonGroupExpense && isnonGroupExpense?.value) {
+      if (fromHome) {
+        nonGroupUsers.value = [];
+        groupMembers.value = [];
+        isPersonal.value = true;
+        isnonGroupExpense.value = false;
+        if (fromHomeGroup) {
+          fromHomeGroup.value = null;
+        }
+      }
+    }
+    menu.value = null;
+  };
+
+  useCloseOnBack(!!fromHome, close);
+
   return (
-    <StyledExpenseFormHeader>
+    <StyledFormHeader>
       <div className="gap"></div>
       <div className="title">{header}</div>
       <div
         className="closeButtonContainer"
-        onClick={() => {
-          if (isnonGroupExpense && isnonGroupExpense?.value) {
-            if (fromHome) {
-              nonGroupUsers.value = [];
-              groupMembers.value = [];
-              isPersonal.value = true;
-              isnonGroupExpense.value = false;
-              if (fromHomeGroup) {
-                fromHomeGroup.value = null;
-              }
-            }
-          }
-          menu.value = null;
-        }}
+        onClick={close}
       >
         <IoClose className="closeButton" />
       </div>
-    </StyledExpenseFormHeader>
+    </StyledFormHeader>
   );
 };
+
+export const ExpenseFormHeader = memo(ExpenseFormHeaderPreMemo);

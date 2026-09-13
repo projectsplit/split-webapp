@@ -18,9 +18,14 @@ const DayPicker = (props: DayPickerProps) => {
     isDateShowing,
   } = props;
 
+  // useLexicalComposerContext throws outside a Lexical provider, so these cannot
+  // be called unconditionally. withLexicalContext is fixed per call site and never
+  // changes for a mounted instance, so hook order is stable.
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [editor] = withLexicalContext ? useLexicalComposerContext() : [null];
   const { insertMention } = withLexicalContext
-    ? useBeautifulMentions()
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useBeautifulMentions()
     : { insertMention: null };
 
   const selectedDt = LuxonDateTime.fromISO(selectedDateTime, {
@@ -107,7 +112,9 @@ const DayPicker = (props: DayPickerProps) => {
             {week.map((day, j) => {
               const isInactive = day.month !== month;
               const isToday = day.hasSame(now, 'day');
-              const isSelected = day.hasSame(selectedDt, 'day');
+              const isSelected =
+                (isDateShowing ? isDateShowing.value : true) &&
+                day.hasSame(selectedDt, 'day');
 
               return (
                 <div
@@ -136,62 +143,62 @@ const StyledDayPicker = styled.div`
   cursor: default;
 
   .names-row {
-    display: flex;
-    /* width: max-content; */
-    gap: 0.3em;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 2px;
 
     .day-name {
-      color: #88888b;
       display: flex;
-      gap: 0.3em;
-      flex-shrink: 0;
-      justify-content: center;
       align-items: center;
-      width: 2em;
-      height: 2em;
+      justify-content: center;
+      padding-bottom: 2px;
+      font-size: ${({ theme }) => theme.size.s11};
+      font-weight: ${({ theme }) => theme.weight.semibold};
+      color: ${({ theme }) => theme.ink.tertiary};
     }
   }
 
   .month-grid {
     display: flex;
     flex-direction: column;
-    gap: 0.3em;
+    gap: 2px;
 
     .week-row {
-      display: flex;
-      gap: 0.3em;
-
-      .inactive {
-        color: #555558;
-      }
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 2px;
 
       .day {
         display: flex;
-        /* flex-shrink: 0; */
-        justify-content: center;
         align-items: center;
-        width: 2em;
-        height: 2em;
-        border-radius: 4px;
+        justify-content: center;
+        height: 38px;
+        border-radius: ${({ theme }) => theme.radius.control};
+        font-family: ${({ theme }) => theme.font.mono};
+        font-size: ${({ theme }) => theme.size.s13};
+        color: ${({ theme }) => theme.ink.primary};
         cursor: pointer;
 
         @media (hover: hover) {
           &:hover {
-            background-color: #34383c;
+            background-color: ${({ theme }) => theme.surface.raised};
           }
         }
       }
 
-      .selected {
-        background-color: ${({ theme }) => theme.highlightColor};
-
-        &:hover {
-          background-color: ${({ theme }) => theme.highlightColor};
-        }
+      .inactive {
+        color: ${({ theme }) => theme.ink.tertiary};
       }
 
       .today {
-        border: 1px solid #34383c;
+        box-shadow: ${({ theme }) => `inset 0 0 0 1px ${theme.surface.outline}`};
+      }
+
+      .selected,
+      .selected:hover {
+        background-color: ${({ theme }) => theme.ink.primary};
+        color: ${({ theme }) => theme.surface.page};
+        font-weight: ${({ theme }) => theme.weight.medium};
       }
     }
   }

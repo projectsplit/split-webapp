@@ -16,8 +16,6 @@ export const split = (
   const baseCents = Math.floor(totalCents / splits);
   const remainderCents = totalCents - baseCents * splits;
 
-  // console.log(multiplier,totalCents, baseCents, remainderCents, splits);
-
   const result = Array(splits).fill(baseCents);
 
   for (let i = 0; i < remainderCents; i++) {

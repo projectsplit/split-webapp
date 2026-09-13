@@ -2,16 +2,14 @@ import { CSSTransition } from 'react-transition-group';
 import NotificationsMenu from '../Menus/NotificationsMenu/NotificationsMenu';
 import { useRef } from 'react';
 import { NotificationsMenuAnimationProps } from '../../interfaces';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function NotificationsMenuAnimation({
   menu,
-  // fetchNextPage,
-  // hasNextPage,
-  // isFetchingNextPage,
-  // userInvitations,
   userInfo,
 }: NotificationsMenuAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'notifications', () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === 'notifications'}
@@ -20,14 +18,7 @@ export default function NotificationsMenuAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <NotificationsMenu
-        menu={menu}
-        // fetchNextPage={fetchNextPage}
-        // hasNextPage={hasNextPage}
-        // isFetchingNextPage={isFetchingNextPage}
-        // userInvitations={userInvitations}
-        userInfo={userInfo}
-      />
+      <NotificationsMenu menu={menu} userInfo={userInfo} />
     </CSSTransition>
   );
 }

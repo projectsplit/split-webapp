@@ -1,28 +1,32 @@
+import IonIcon from '@reacticons/ionicons';
 import { StyledSelectionButton } from './SelectionButton.styled';
-import OptionsContainer from '../../../components/OptionsContainer/OptionsContainer';
 import { SelectionButtonProps } from '../../../interfaces';
 
 export default function SelectionButton({
   children,
   name,
-  description,
+  meta,
+  footer,
   onClick,
-  hasArrow,
 }: SelectionButtonProps) {
+  const row = (
+    <>
+      <span className="destinationIcon">{children}</span>
+      <div className="destinationBody">
+        <div className="destinationName">{name}</div>
+        {meta ? <div className="destinationMeta">{meta}</div> : null}
+      </div>
+      <IonIcon
+        name="chevron-forward-outline"
+        className="destinationChevron"
+      />
+    </>
+  );
+
   return (
     <StyledSelectionButton onClick={onClick}>
-      <OptionsContainer
-        hasOption={hasArrow}
-        optionname="chevron-forward-outline"
-      >
-        <div className="main">
-          {children}
-          <div className="confing">
-            <div className="name">{name}</div>
-            <div className="descr">{description}</div>
-          </div>
-        </div>
-      </OptionsContainer>
+      {footer ? <div className="destinationRow">{row}</div> : row}
+      {footer}
     </StyledSelectionButton>
   );
 }

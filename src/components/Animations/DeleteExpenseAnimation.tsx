@@ -2,6 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import { useRef } from 'react';
 import DeleteExpenseConfirmation from '../Menus/Confirmations/DeleteExpenseConfirmation';
 import { DeleteExpenseAnimationProps } from '../../interfaces';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function DeleteExpenseAnimation({
   menu,
@@ -10,6 +11,7 @@ export default function DeleteExpenseAnimation({
   errorMessage,
 }: DeleteExpenseAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'deleteExpense', () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === 'deleteExpense'}

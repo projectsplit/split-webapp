@@ -41,7 +41,7 @@ const Sentinel: React.FC<SentinelProps> = ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        marginBottom: isTop ? '0px' : '20px',
+        marginBottom: isTop ? '-1px' : '20px',
       }}
     >
       <div ref={sentinelRef} style={{ height: '1px' }} data-sentinel-id={id} />

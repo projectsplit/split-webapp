@@ -1,5 +1,5 @@
 import { useEffect} from 'react';
-import { StyledHomepage } from './Home.Styled';
+import { StyledHomepage } from './Home.styled';
 import { useNavigate } from 'react-router-dom';
 import {
   Group,
@@ -13,7 +13,8 @@ import { useOutletContext } from 'react-router-dom';
 import {  Signal, useSignal } from '@preact/signals-react';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
 import { HomeSkeleton } from '../../components/HomeSkeleton/HomeSkeleton';
-import { AiFillThunderbolt } from 'react-icons/ai';
+import { FaPlus } from 'react-icons/fa';
+import CreateGroupAnimation from '../../components/Animations/CreateGroupAnimation';
 import HomeQuickActionsAnimation from '../../components/Animations/HomeQuickActionsAnimation';
 import CreateExpenseForm from '../../components/CreateExpenseForm/CreateExpenseForm';
 import TransferForm from '../../components/TransferForm/TransferForm';
@@ -22,13 +23,13 @@ import NonGroupTransferAnimation from '../../components/Animations/NonGroupTrans
 import { useGetMostRecentGroups } from '@/api/auth/QueryHooks/useGetMostRecentGroups';
 import { useTotalUserBalance } from './hooks/useTotalUserBalance';
 import ScrollableMenuButtons from './ScrollableMenuButtons/ScrollableMenuButtons';
+import { useCloseOnBack } from '@/hooks/useCloseOnBack';
 
 export default function Home() {
   const navigate = useNavigate();
 
   const isPersonal = useSignal<boolean>(true);
   const isNonGroupExpense = useSignal<boolean>(false);
-  const isNonGroupTransfer = useSignal<boolean>(true);
 
   const nonGroupUsers = useSignal<User[]>([]);
   const fromHomeGroup = useSignal<Group | null>(null);
@@ -56,13 +57,13 @@ export default function Home() {
   });
 
   const quickActionsMenu = useSignal<string | null>(null);
+  const currencyMenu = useSignal<string | null>(null);
   const recentContextId = userInfo?.recentContextId;
 
   const {
-    totalBalances,
-    isLoading,
+    groupBalances,
+    nonGroupBalances,
     isFetching,
-    groupsData,
     nonGroupGroupedTransactions,
   } = useTotalUserBalance(userInfo?.userId || '');
 
@@ -75,7 +76,7 @@ export default function Home() {
 
   useEffect(() => {
     topMenuTitle.value = '';
-    const saved = localStorage.getItem('submittedFromHomePersistData');
+    const saved = sessionStorage.getItem('submittedFromHomePersistData');
     if (saved) {
       const {
         nonGroupUsers: u,
@@ -94,17 +95,17 @@ export default function Home() {
 
   const isGlowing = quickActionsMenu.value === 'quickActions';
 
+  useCloseOnBack(
+    quickActionsMenu.value === 'newTransfer',
+    () => (quickActionsMenu.value = null)
+  );
+
   return (
     <StyledHomepage>
       {isFetching || !userInfo?.username ? (
         <HomeSkeleton />
       ) : (
         <div className="fadeIn">
-          <div className="fixedTop">
-            <div className="welcomeStripe">
-              Welcome, <strong>{userInfo?.username}</strong>
-            </div>
-          </div>
           <ScrollableMenuButtons
             mostRecentGroupDataIsFetching={mostRecentGroupDataIsFetching}
             mostRecentGroupData={mostRecentGroupData}
@@ -112,25 +113,25 @@ export default function Home() {
             nonGroupGroupedTransactions={nonGroupGroupedTransactions}
             userInfo={userInfo}
             navigate={navigate}
-            isLoading={isLoading}
-            isFetching={isFetching}
-            groupsData={groupsData}
-            totalBalances={totalBalances}
+            groupBalances={groupBalances}
+            nonGroupBalances={nonGroupBalances}
             topMenuTitle={topMenuTitle}
             activeBudgetData={activeBudgetData}
             showBudgetInfo={userInfo.showBudgetInfo}
           />
-          <div
-            className={`actions ${isGlowing ? 'glow' : ''}`}
-            onClick={() =>
-              (quickActionsMenu.value =
-                quickActionsMenu.value === 'quickActions'
-                  ? null
-                  : 'quickActions')
-            }
-          >
-            <AiFillThunderbolt className="thunder" />
-          </div>
+          {quickActionsMenu.value !== 'createGroup' && (
+            <div
+              className={`actions ${isGlowing ? 'glow' : ''}`}
+              onClick={() =>
+                (quickActionsMenu.value =
+                  quickActionsMenu.value === 'quickActions'
+                    ? null
+                    : 'quickActions')
+              }
+            >
+              <FaPlus className="thunder" />
+            </div>
+          )}
         </div>
       )}
       <MenuAnimationBackground menu={quickActionsMenu} />
@@ -159,10 +160,8 @@ export default function Home() {
           groupId={fromHomeGroup.value?.id}
           timeZoneId={userInfo.timeZone}
           menu={quickActionsMenu}
-          isnonGroupTransfer={isNonGroupTransfer}
           groupMembers={groupMembers}
           currency={userInfo.currency}
-          nonGroupUsers={nonGroupUsers}
           fromHomeGroup={fromHomeGroup}
           nonGroupMenu={nonGroupTransferMenu}
           fromHome={true}
@@ -185,11 +184,11 @@ export default function Home() {
         isNonGroupExpense={isNonGroupExpense}
         fromNonGroup={false}
       />
+      <CreateGroupAnimation menu={quickActionsMenu} currencyMenu={currencyMenu} />
       <NonGroupTransferAnimation
         nonGroupTransferMenu={nonGroupTransferMenu}
         fromHomeGroup={fromHomeGroup}
         groupMembers={groupMembers}
-        isNonGroupTransfer={isNonGroupTransfer}
       />
     </StyledHomepage>
   );

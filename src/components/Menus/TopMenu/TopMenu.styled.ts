@@ -1,65 +1,75 @@
 import styled from 'styled-components';
 
-export const StyledTopMenu = styled.div<{ title: string }>`
+export const StyledTopMenu = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  padding-left: 14px;
-  padding-right: 14px;
-  padding-bottom: 25px;
-  padding-top: 20px;
-  padding-top: calc(20px + env(safe-area-inset-top));
-  .useOptionsContainer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 20px;
-  }
-  .bellAndCog {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
+  gap: ${({ theme }) => theme.space.s10};
+  flex-shrink: 0;
+  padding: ${({ theme }) => `${theme.space.s20} ${theme.space.s20} ${theme.space.s14}`};
+  padding-top: calc(${({ theme }) => theme.space.s20} + env(safe-area-inset-top));
 
-    .cog {
-      font-size: 1.5rem;
-      position: relative;
-      cursor: pointer;
+  .slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+  }
+
+  .slot.right {
+    justify-content: flex-end;
+  }
+
+  .iconButton {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    font-size: ${({ theme }) => theme.icon.md};
+    color: ${({ theme }) => theme.ink.secondary};
+    cursor: pointer;
+  }
+
+  .iconButton .unarchive {
+    color: ${({ theme }) => theme.state.locked};
+  }
+
+  .titleStripe {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+
+    .title {
+      font-size: ${({ theme }) => theme.size.s17};
+      font-weight: ${({ theme }) => theme.weight.semibold};
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .arrow {
-      font-size: 1.5rem;
-      position: relative;
-      cursor: pointer;
-      color: ${({ theme }) => theme.orange};
+
+    .title.archived {
+      color: ${({ theme }) => theme.state.locked};
     }
   }
 
   .bellIconAndNumberOfNotifications {
-    position: relative;
+    font-size: ${({ theme }) => theme.icon.lg};
+
     .notification {
-      font-size: 12px;
-      font-weight: 800;
       position: absolute;
-      background-color: red;
-      border-radius: 50%;
-      width: 0.5rem;
-      height: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      bottom: 5px;
-      left: 5px;
-    }
-  }
-
-  .titleStripe {
-    display: flex;
-    flex-direction: row;
-
-    .title {
-      font-size: ${({ title }) => (title === 'Shared' ? 24 : 18)}px;
-      font-weight: 600;
+      top: 5px;
+      right: 6px;
+      width: 7px;
+      height: 7px;
+      border-radius: ${({ theme }) => theme.radius.pill};
+      background-color: ${({ theme }) => theme.accent.you.ink};
+      border: 2px solid ${({ theme }) => theme.surface.page};
     }
   }
 `;

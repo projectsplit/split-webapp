@@ -1,50 +1,40 @@
 import styled from 'styled-components';
-import { StyledMiddleScreenMenu } from '../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
+import { inlineEditFieldStyles } from '@/styles/inlineEditField';
+import { StyledDialog } from '../Layouts/Dialog/Dialog.styled';
 
-export const StyledEditUsername = styled(StyledMiddleScreenMenu)`
+export const StyledEditUsername = styled(StyledDialog)`
   .username-status {
     display: flex;
     flex-direction: column;
-    font-size: 14px;
-    color: ${({ theme }) => theme.redish};
+    font-size: ${({ theme }) => theme.size.s12};
+    color: ${({ theme }) => theme.direction.owe};
   }
 
-  .headerSeparator {
-    position: sticky;
-    top: 0;
-    background-color: ${({ theme }) => theme.layer2};
+  ${inlineEditFieldStyles}
 
-    .input {
-      width: 85%;
+  .headerSeparator .header {
+    .checkmark {
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.icon.sm};
+      color: ${({ theme }) => theme.direction.owed};
     }
 
-    .separator {
-      transform: translateZ(0);
-      position: sticky;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 10px;
-      .checkmark {
-        font-size: 25px;
-        bottom: 0px;
-        color: ${({ theme }) => theme.green};
-      }
-      .warning {
-        font-size: 25px;
-        bottom: 0px;
-        color: ${({ theme }) => theme.redish};
-      }
+    .warning {
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.icon.sm};
+      color: ${({ theme }) => theme.direction.owe};
     }
   }
 
-  .buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 10px;
+  .headerSeparator .input::placeholder {
+    color: ${({ theme }) => theme.ink.tertiary};
+    opacity: 1;
   }
+
+  .fieldNote {
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.5;
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
+
 `;
