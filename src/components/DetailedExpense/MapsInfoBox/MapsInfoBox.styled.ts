@@ -3,56 +3,68 @@ import styled from 'styled-components';
 export const StyledMapsInfoBox = styled.div`
   position: relative;
   flex-shrink: 0;
-  .topStripe {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    .locationAndPin {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 10px;
-      .locationName {
-        text-decoration: underline;
-        cursor: pointer;
-      }
-    }
-    .info {
-      font-weight: 600;
-      font-style: italic;
-    }
-    .hideDetalailsButton {
-      color: ${({ theme }) => theme.grey};
-      font-style: italic;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-  }
 
-  .locationIcon {
-    font-size: 18px;
-    color: ${({ theme }) => theme.yellow};
-  }
-  .map {
-    height: 450px;
-    margin-top: 1rem;
-    position: relative;
-    z-index: 1;
-  }
-  .noLocation {
+  .locationRow {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    background-color: #000;
-    padding: 16px;
-    color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    gap: ${({ theme }) => theme.space.s10};
+  }
+
+  .locationIcon {
+    display: flex;
+    flex-shrink: 0;
+    font-size: ${({ theme }) => theme.icon.sm};
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  .locationLink {
+    flex: 1;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .locationName {
+    display: block;
+    font-size: ${({ theme }) => theme.size.s13};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    color: ${({ theme }) => theme.ink.primary};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mapToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    margin-right: -2px;
+    flex-shrink: 0;
+    font-size: ${({ theme }) => theme.icon.sm};
+    color: ${({ theme }) => theme.surface.mark};
+    cursor: pointer;
+  }
+
+  .locationRow.empty {
+    .locationIcon {
+      color: ${({ theme }) => theme.surface.mark};
+    }
 
     .noMapInfo {
-      color: ${({ theme }) => theme.layer6};
+      font-size: ${({ theme }) => theme.size.s13};
+      color: ${({ theme }) => theme.ink.tertiary};
     }
+  }
+
+  .map {
+    height: 200px;
+    margin-top: ${({ theme }) => theme.space.s12};
+    border-radius: ${({ theme }) => theme.radius.iconButton};
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
   }
 `;

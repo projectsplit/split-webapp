@@ -1,7 +1,8 @@
-import { CSSProperties, MouseEventHandler } from 'react';
+import { CSSProperties, JSX, MouseEventHandler } from 'react';
 import {
   Coordinates,
   Debt,
+  Details,
   ExpenseResponseItem,
   FetchedLabel,
   FormExpense,
@@ -22,7 +23,6 @@ import {
   CreateExpenseFilterRequest,
   ExpenseParsedFilters,
   TransferParsedFilters,
-  BudgetInfoResponse,
   GetJoinCodesResponse,
   SpendingChartsResponse,
   Member,
@@ -56,8 +56,9 @@ import { AxiosError } from 'axios';
 
 export interface ExpenseProps {
   timeZoneId: string;
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  onLongPress?: () => void;
+  expense: ExpenseResponseItem;
+  onClick: (expense: ExpenseResponseItem) => void;
+  onLongPress?: (expense: ExpenseResponseItem) => void;
   amount: number;
   currency: string;
   occurred: string;
@@ -72,10 +73,6 @@ export interface MapsInfoBoxProps {
   location: GeoLocation | undefined;
   googleMapsUrl: string;
 }
-export interface LabelProps {
-  backgroundColor: string;
-}
-
 export interface MembersInfoBoxProps {
   transactions: GroupTransaction[] | NonGroupTransaction[] | undefined;
   areShares: boolean;
@@ -132,7 +129,7 @@ export interface DetailedTransferProps {
 export interface TransferProps {
   transfer: TransferItem;
   timeZoneId: string;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onLongPress?: () => void;
 }
 
@@ -140,7 +137,7 @@ export interface DateTimePickerProps {
   selectedDateTime: string;
   setSelectedDateTime: (value: string | ((prev: string) => string)) => void;
   realtimeUpdate?: boolean;
-  setRealtimeUpdate?: React.Dispatch<React.SetStateAction<boolean>>;
+  setRealtimeUpdate?: (value: boolean) => void;
   showTimeControls: boolean;
   timeZoneId: string;
   datePeriodClicked?: Signal<string>;
@@ -161,6 +158,8 @@ export interface DateTimeProps {
   isDateShowing: Signal<boolean>;
   setShowPicker: (value: boolean) => void;
   showPicker: boolean;
+  realtimeUpdate?: boolean;
+  setRealtimeUpdate?: (value: boolean) => void;
 }
 
 export interface DateDisplayProps {
@@ -177,7 +176,6 @@ export interface MemberPickerProps {
   setMemberAmounts: (newParticipants: PickerMember[]) => void;
   description: 'Participants' | 'Payers';
   error?: string;
-  // group: Group;
   selectedCurrency: string;
   category: Signal<SplitMethod>;
   userMemberId: string | undefined;
@@ -222,35 +220,8 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   backgroundcolor?: string;
 }
 
-export interface LoadingSpinnerProps {
-  name: string;
-  fontSize: number;
-}
-
-export interface OptionsContainerProps {
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  children: any;
-  hasOption: boolean;
-  optionname?: any;
-  iconfontsize?: number;
-  right?: number;
-  onIconClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  $optionColor?: string;
-}
 export interface GroupOptionsProps {
   group: Group | undefined;
-}
-
-export interface TreeAdjustedContainerProps {
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  children: any;
-  hasOption: boolean;
-  optionname?: any;
-  items: (string | JSX.Element)[];
-  iconfontsize?: number;
-  right?: number;
-  onIconClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  $optionColor?: string;
 }
 
 export interface NotificationsBellProps {
@@ -270,7 +241,6 @@ export interface RecommendationMessageProps {
 export interface BottomMainMenuProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   group?: Group;
-  isLoading?: boolean;
   menu?: Signal<string | null>;
   onGroupSearchClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   bottomBarRef?: React.RefObject<HTMLDivElement>;
@@ -308,14 +278,13 @@ export interface ReceivedMoreThanSpentMessageProps extends OnTrackMessageProps {
 export interface SelectionButtonProps {
   children: any;
   name: string;
-  description: string;
+  meta?: React.ReactNode;
+  footer?: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  hasArrow: boolean;
 }
 export interface OptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   username?: string | undefined;
-  children?: any;
 }
 
 export interface TreeProps {
@@ -328,9 +297,6 @@ export interface StyledOnTrackMessageProps {
 
 export interface StyledRecommendationProps {
   style?: React.CSSProperties;
-}
-export interface NewButtonProps {
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 export interface StyledBottomMenuProps {
   height?: string;
@@ -372,7 +338,6 @@ export interface PlacePickerProps {
   setDescriptionError: (error: string) => void;
 }
 
-export interface PlacePickerAnimationProps extends PlacePickerProps {}
 export interface TimeZoneOptionsAnimationProps {
   clickHandler: (curr: string) => void;
   timeZoneMenu: Signal<string | null>;
@@ -397,11 +362,6 @@ export interface LabelMenuProps {
   userId?: string;
 }
 
-export interface BottomMenuProps {
-  children: any;
-  height?: string;
-}
-
 export interface CategoryButtonProps {
   to?: string;
   children: any;
@@ -409,7 +369,7 @@ export interface CategoryButtonProps {
   onClick?: React.MouseEventHandler<HTMLElement>;
   backgroundcoloronselect?: string;
   style?: CSSProperties;
-  key?: any;
+  variant?: 'tab' | 'pill' | 'segment' | 'segmentCompact';
 }
 
 export interface CategorySelectorProps {
@@ -417,7 +377,7 @@ export interface CategorySelectorProps {
   activeCat: string;
   navLinkUse: boolean;
   activeCatAsState?: Signal<string>;
-  // onCategoryChange: React.Dispatch<React.SetStateAction<string>>;
+  variant?: 'tab' | 'segmented' | 'segmentedCompact';
 }
 
 export interface MenuProps {
@@ -428,8 +388,6 @@ export interface MenuAnimationBackgroundProps extends MenuProps {}
 export interface SettingsMenuAnimationProps extends MenuProps {
   userInfo: UserInfo | undefined;
 }
-export interface LogoStripeProps extends MenuProps {}
-
 export interface CreateGroupAnimationProps extends MenuProps {
   currencyMenu: Signal<string | null>;
 }
@@ -487,10 +445,8 @@ export interface NewTransferAnimationProps {
   timeZoneId: string;
   menu: Signal<string | null>;
   groupMembers: Signal<(Member | Guest)[]>;
-  nonGroupUsers: Signal<User[]>;
   currency: string;
   groupId?: string;
-  isnonGroupTransfer?: Signal<boolean>;
   nonGroupMenu?: Signal<{
     attribute: string;
     menu: string | null;
@@ -507,7 +463,7 @@ export interface ExpenseFormProps {
   groupMembers: Signal<(Member | Guest)[]>;
   nonGroupUsers: Signal<User[]>;
   groupId?: string;
-  expense: FormExpense | null; //make this signal, and then make null when toggling a lock so it does not use prev expense any more
+  expense: FormExpense | null;
   timeZoneId: string;
   menu: Signal<string | null>;
   timeZoneCoordinates: Coordinates;
@@ -521,10 +477,6 @@ export interface ExpenseFormProps {
   fromHomeGroup?: Signal<Group | null>;
   fromHome?: boolean;
   fromPersonal?: Signal<boolean>;
-  /**
-   * Set when the form is editing a recurring template rather than an expense. Submitting then
-   * rewrites the schedule and leaves every expense it has already produced alone.
-   */
   recurringExpenseId?: string;
   initialRecurrenceSchedule?: RecurrenceSchedule | null;
 }
@@ -534,15 +486,12 @@ export interface EditExpenseFormProps extends ExpenseFormProps {
 }
 
 export interface TransferFormProps {
-  // group: Group;
   groupMembers: Signal<(Member | Guest)[]>;
-  nonGroupUsers: Signal<User[]>;
   currency: string;
   timeZoneId: string;
   menu: Signal<string | null>;
   fromHomeGroup?: Signal<Group | null>;
   groupId?: string;
-  isnonGroupTransfer?: Signal<boolean>;
   nonGroupMenu?: Signal<{
     attribute: string;
     menu: string | null;
@@ -589,7 +538,6 @@ export interface NonGroupTransferAnimationProps {
   }>;
   fromHomeGroup: Signal<Group | null>;
   groupMembers: Signal<(Guest | Member)[]>;
-  isNonGroupTransfer: Signal<boolean>;
 }
 
 export interface NonGroupTransferMenuProps {
@@ -603,7 +551,6 @@ export interface NonGroupTransferMenuProps {
   }>;
   fromHomeGroup: Signal<Group | null>;
   groupMembers: Signal<(Guest | Member)[]>;
-  isNonGroupTransfer: Signal<boolean>;
 }
 
 export interface NonGroupUsersProps extends MenuProps {
@@ -613,10 +560,6 @@ export interface NonGroupUsersProps extends MenuProps {
   fromHomeGroup: Signal<Group | null>;
   isNonGroupExpense: Signal<boolean>;
   fromNonGroup: boolean;
-}
-export interface LocationPickerAnimationProps extends MenuProps {
-  location: GeoLocation | undefined;
-  setLocation: React.Dispatch<React.SetStateAction<GeoLocation | undefined>>;
 }
 export interface UserItemProps {
   name: string;
@@ -638,10 +581,10 @@ export interface UserProps {
   currentUserId: string;
 }
 
-export interface GroupQuickActionsMenuprops extends MenuProps {}
 export interface ActionsMenuprops {
   onClickTransfer: React.MouseEventHandler<HTMLDivElement> | undefined;
   onClickExpense: React.MouseEventHandler<HTMLDivElement> | undefined;
+  onClickGroup?: React.MouseEventHandler<HTMLDivElement>;
   bottom?: string | number;
 }
 export interface DeleteExpenseAnimationProps extends MenuProps {
@@ -664,22 +607,60 @@ export interface DeleteTransferConfirmationProps extends MenuProps {
   errorMessage: Signal<string>;
 }
 
+export type SummaryRelation = 'part-of' | 'independent';
+
+export interface SegmentedControlProps {
+  options: { value: string; label: React.ReactNode }[];
+  value: string;
+  onChange: (value: string) => void;
+  className?: string;
+}
+
+export interface SectionLabelProps {
+  title: React.ReactNode;
+  aside?: React.ReactNode;
+}
+
+export interface BalanceMetaProps {
+  details: Details | undefined;
+}
+
+export interface ItemCardProps {
+  children: React.ReactNode;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  className?: string;
+}
+
+export interface PropertyListProps {
+  children: React.ReactNode;
+}
+
+export interface PropertyRowProps {
+  label: React.ReactNode;
+  children?: React.ReactNode;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  className?: string;
+  action?: boolean;
+  note?: React.ReactNode;
+}
+
+export interface ProportionBarProps {
+  variant: 'stacked' | 'overlay' | 'rail' | 'split';
+  part: number;
+  whole: number;
+  partColor: string;
+  wholeColor: string;
+}
+
 export interface BarsWithLegendsProps {
   bar1Total: number;
   bar2Total: number;
   currency: string;
   bar1Legend: string;
   bar2Legend: string;
-  bar1Color: string;
-  bar2Color: string;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   mode?: Mode;
-}
-
-export interface TransfersProps {
-  group: Group;
-  memberId: string;
-  timeZoneId: string;
+  relation?: SummaryRelation;
 }
 
 export interface MemberProps {
@@ -687,7 +668,7 @@ export interface MemberProps {
   groupedTransactions: GroupedTransaction[];
   id: string;
   name: string;
-  isLogedUser: boolean;
+  isLoggedUser: boolean;
   menu: Signal<string | null>;
   idSelectedToSettleUp: Signal<string>;
   participants: TruncatedMember[];
@@ -698,67 +679,10 @@ export interface MemberProps {
   userOrMemberId: string;
 }
 
-export interface RenderScenariosProps {
-  memberTransactions: GroupedTransaction[];
-  pendingTransactions: Debt[];
-  isLogedUser: boolean;
-  id: string;
-  name: string;
-  showTree: boolean;
-  treeItems: React.JSX.Element[];
-  participants: TruncatedMember[];
-  userOrMemberId: string;
-  mode: Mode;
-}
-export interface RenderSettledProps {
-  name: string;
-  isLogedUser: boolean;
-}
-
-export interface RenderBothScenariosProps {
-  memberTransactions: GroupedTransaction[];
-  pendingTransactions: Debt[];
-  isLogedUser: boolean;
-  id: string;
-  name: string;
-  doNotshowTreeWhenMemberIsOwed: boolean;
-  doNotshowTreeWhenMemberOwes: boolean;
-  memberIsOwedItems: React.JSX.Element[];
-  memberOwesItems: React.JSX.Element[];
-  participants: TruncatedMember[];
-  userOrMemberId: string;
-  mode: Mode;
-}
-
-export interface MemberDetailedDescriptionProps {
-  pendingTransactions: Debt[];
-  memberTransactions: GroupedTransaction[];
-  id: string;
-  isLogedUser: boolean;
-  isOwed: boolean;
-  name: string;
-  participants: TruncatedMember[];
-  userOrMemberId: string;
-  mode: Mode;
-}
-
-export interface DescriptionAndTreeProps {
-  memberTransactions: GroupedTransaction[];
-  pendingTransactions: Debt[];
-  isLogedUser: boolean;
-  id: string;
-  name: string;
-  isOwed: boolean;
-  showTree: boolean;
-  treeItems: React.JSX.Element[];
-  participants: TruncatedMember[];
-  userOrMemberId: string;
-  mode: Mode;
-}
-
 export interface SettleUpButtonProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
+  primary?: boolean;
 }
 
 export interface SettleUpAnimationProps {
@@ -778,13 +702,15 @@ export interface SettleUpOptionsProps {
 export interface PillProps {
   title: string;
   color: string;
-  $textColor: string;
+  $textColor?: string;
   closeButton: boolean;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onClose?: (event: React.MouseEvent<HTMLDivElement>) => void;
   fontSize?: string;
   $border: boolean;
   $closeButtonColor?: string;
+  $radius?: string;
+  $vivid?: boolean;
   children?: React.ReactNode;
 }
 export interface AddNewUserAnimationProps extends MenuProps {
@@ -800,35 +726,10 @@ export interface SearchUsersToInviteProps extends MenuProps {
   newMembers?: Signal<{ name: string; isUser: boolean }[]>;
   accessedNewUsersInvitationsMenu?: Signal<boolean>;
 }
-export interface DetailedExpenseAnimationProps extends DetailedExpenseProps {}
-
 export interface NotificationsMenuProps extends MenuProps {
-  // fetchNextPage: (
-  //   options?: FetchNextPageOptions
-  // ) => Promise<
-  //   InfiniteQueryObserverResult<
-  //     InfiniteData<GetUserInvitationsResponse, unknown>,
-  //     Error
-  //   >
-  // >;
-  // isFetchingNextPage: boolean;
-  // hasNextPage: boolean;
-  // userInvitations: GetUserInvitationsResponseItem[] | undefined;
   userInfo: UserInfo | undefined;
 }
 export interface NotificationsMenuAnimationProps extends MenuProps {
-  // fetchNextPage: (
-  //   options?: FetchNextPageOptions
-  // ) => Promise<
-  //   InfiniteQueryObserverResult<
-  //     InfiniteData<GetUserInvitationsResponse, unknown>,
-  //     Error
-  //   >
-  // >;
-  // isFetchingNextPage: boolean;
-  // hasNextPage: boolean;
-  // userInvitations: GetUserInvitationsResponseItem[] | undefined;
-  hasNewerNotifications: boolean;
   userInfo: UserInfo | undefined;
 }
 export interface MemberItemProps {
@@ -845,29 +746,21 @@ export interface MemberItemProps {
   newMembers?: Signal<{ name: string; isUser: boolean }[]>;
 }
 
-export interface MiddleScreenMenuProps {
-  children: any;
-  height?: string;
-}
-
 export interface EditorContentHandle {
   clearEditor: () => void;
 }
 
 export interface ErrorMenuAnimationProps extends MenuProps {
-  message: string;
   type: string;
 }
 
 export interface ErrorMenuProps extends MenuProps {
-  children: any;
   type: string;
 }
 
 export interface InputMonetaryProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 
-  backgroundColor?: string;
   value?: string;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
@@ -882,6 +775,7 @@ export interface ConfirmationProps {
   isLoading: boolean;
   onClick: ((event: React.MouseEvent<HTMLButtonElement>) => void) | undefined;
   header: string;
+  confirmLabel?: string;
 }
 
 export interface ConfirmArchiveGroupAnimationProps extends MenuProps {
@@ -892,7 +786,6 @@ export interface ConfirmArchiveGroupAnimationProps extends MenuProps {
 
 export interface ConfirmLeaveGroupAnimationProps extends MenuProps {
   groupId: string | undefined;
-  memberId: string | undefined;
   openGroupOptionsMenu: Signal<boolean>;
 }
 
@@ -904,7 +797,6 @@ export interface ConfirmArchiveGroupProps extends MenuProps {
 
 export interface ConfirmLeaveGroupProps extends MenuProps {
   groupId: string | undefined;
-  memberId: string | undefined;
   openGroupOptionsMenu: Signal<boolean>;
 }
 export interface RemoveWarningProps extends MenuProps {
@@ -954,22 +846,20 @@ export interface RemoveUserFromGroupMenuProps {
 }
 
 export interface GroupTotalsByCurrencyAnimationProps extends MenuProps {
-  bar1Color: string;
-  bar2Color: string;
   bar1Legend: string;
   bar2Legend: string;
   groupTotalsByCurrency: Record<string, number>;
   userTotalsByCurrency: Record<string, number>;
   mode?: Mode;
+  relation?: SummaryRelation;
 }
 export interface GroupTotalExpensesByCurrencyProps extends MenuProps {
-  bar1Color: string;
-  bar2Color: string;
   bar1Legend: string;
   bar2Legend: string;
   groupTotalsByCurrency: Record<string, number>;
   userTotalsByCurrency: Record<string, number>;
   mode?: Mode;
+  relation?: SummaryRelation;
 }
 
 export interface BarsAndAmountsProps {
@@ -977,9 +867,10 @@ export interface BarsAndAmountsProps {
   currency: string;
   bar1Total: number;
   bar2Total: number;
-  bar1Color: string;
-  bar2Color: string;
+  bar1Legend?: string;
+  bar2Legend?: string;
   mode?: Mode;
+  relation?: SummaryRelation;
 }
 
 export interface EditUsernameProps {
@@ -1023,13 +914,6 @@ export interface EditorContentHandle {
   clearEditor: () => void;
 }
 
-export type EnhancedMembersWithProps = {
-  value: string;
-  memberId: string;
-  isUser: boolean;
-  prop: string;
-}[];
-
 export interface LexicalEditorProps {
   enhancedPeopleWithProps: EnhancedPeopleWithProps;
   submitButtonIsActive: Signal<boolean>;
@@ -1056,51 +940,19 @@ export interface FilterCalendarProps {
   category: Signal<string>;
 }
 
-export interface CustomDateCalendarProps {
-  calendarIsOpen: Signal<boolean>;
-  datePeriodClicked: Signal<string>;
-  timeZoneId: string;
-  startDate: Signal<string>;
-  endDate: Signal<string>;
-  pickingTarget: Signal<'start' | 'end' | null>;
-  setError: (
-    key:
-      | 'amountError'
-      | 'descriptionError'
-      | 'spendingCycleError'
-      | 'scopeError'
-      | 'showAmountError'
-      | 'showDescriptionError'
-      | 'showSpendingCycleError'
-      | 'showScopeError'
-      | 'commencementDayError'
-      | 'showCommencementDayError',
-    value: string | boolean
-  ) => void;
-  excludeRefs?: React.RefObject<HTMLElement>[];
-}
 export interface SearchMenuProps {
-  $contentEditableHeight: number;
+  container: HTMLElement | null;
 }
 export interface CombinedMenuProps
-  extends SearchMenuProps, BeautifulMentionsMenuProps {
-  fetchNextPage?: () => void;
-  hasNextPage?: boolean;
-  isFetchingNextPage?: boolean;
-}
+  extends SearchMenuProps, BeautifulMentionsMenuProps {}
 
-export interface StyledMenuItemProps {
-  selected?: boolean;
-}
 export interface SearchCategoryButtonProps {
   category: string;
   type: string;
   submitButtonIsActive: Signal<boolean>;
-  // onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 export interface SearchDateButtonProps extends SearchCategoryButtonProps {
-  dates: any;
   showOptions: Signal<boolean>;
   calendarIsOpen: Signal<boolean>;
   datePeriodClicked: Signal<string>;
@@ -1139,7 +991,6 @@ export interface SearchPeopleButtonProps extends SearchCategoryButtonProps {
   transferFilterState: Signal<CreateTransferFilterRequest>;
   cancelled: Signal<boolean>;
   removedFilter: Signal<boolean>;
-  isPersonal?: boolean;
 }
 
 export interface SearchLabelButtonProps extends SearchCategoryButtonProps {
@@ -1166,13 +1017,10 @@ export interface OptionsToolbarProps {
       }[]
     >
   >;
-  submitButtonIsActive: Signal<boolean>;
 }
 
 export interface MentionsToolbarProps {
   showOptions: Signal<boolean>;
-  ref?: React.Ref<HTMLDivElement>;
-  // filteredMembers:Members;
   submitButtonIsActive: Signal<boolean>;
   expenseFilterState: Signal<CreateExpenseFilterRequest>;
   transferFilterState: Signal<CreateTransferFilterRequest>;
@@ -1194,7 +1042,6 @@ export interface SearchTransactionsProps {
   expenseParsedFilters: Signal<ExpenseParsedFilters>;
   transferParsedFilters: Signal<TransferParsedFilters>;
   isPersonal?: boolean;
-  //nonGroupUsers?: Signal<User[]>;
 }
 export interface SearchTransactionAnimationProps {
   menu: Signal<string | null>;
@@ -1204,7 +1051,6 @@ export interface SearchTransactionAnimationProps {
   expenseParsedFilters: Signal<ExpenseParsedFilters>;
   transferParsedFilters: Signal<TransferParsedFilters>;
   isPersonal?: boolean;
-  // nonGroupUsers?: Signal<User[]>;
 }
 
 export interface CycleSelectionProps {
@@ -1214,17 +1060,14 @@ export interface CycleSelectionProps {
 
 export interface AnalyticsSelectionAnimationProps {
   menu: Signal<string | null>;
+  menuKey: string;
   header: string;
   children: any;
 }
 
-export interface AnalyticsYearSelectionAnimationProps extends AnalyticsSelectionAnimationProps {}
-
-export interface AnalyticsTimePeriodSelectionAnimationProps extends AnalyticsSelectionAnimationProps {}
-
 export interface TopBarWithBackButtonProps {
   header: string;
-  onClick: MouseEventHandler<SVGElement>;
+  onClick: MouseEventHandler<HTMLDivElement>;
 }
 
 export interface CarouselProps {
@@ -1246,6 +1089,8 @@ export interface YearOptionProps {
   selectedYear: Signal<number>;
   menu: Signal<React.SetStateAction<string | null>>;
   selectedTimeCycleIndex: Signal<number>;
+  selectedCycle: Signal<Frequency>;
+  currentWeekIndex: number;
 }
 
 export interface CumulativeSpendingProps {
@@ -1285,13 +1130,6 @@ export interface SpendingCycleInfoProps {
   menu: Signal<React.SetStateAction<string | null>>;
 }
 
-export interface ProgressBarProps {
-  data: BudgetInfoResponse | undefined;
-  isOn: boolean;
-  setIsOn: React.Dispatch<React.SetStateAction<boolean>>;
-  menu: Signal<string | null>;
-  timeZoneId: string;
-}
 export interface ManageBudgetMenuProps {
   menu: Signal<string | null>;
   selectedBudget: any;
@@ -1336,13 +1174,6 @@ export interface CalendarProps {
       | 'showCommencementDayError',
     value: string | boolean
   ) => void;
-}
-
-export interface CalendarOptionsButtonProps {
-  isactive: boolean;
-}
-export interface StyledCalendarOptionsButtonProps {
-  $isactive: boolean;
 }
 
 export interface ConfirmationForBudgetSubmissionProps {
@@ -1400,7 +1231,7 @@ export interface CreateBudgetConfirmationAnimationProps {
 export interface ShareGroupProps {
   groupName: string;
   isPending: boolean;
-  qrRef: React.RefObject<HTMLDivElement>;
+  qrRef: React.RefObject<HTMLDivElement | null>;
   invitationCode: string | null;
   mutate: UseMutateFunction<
     any,
@@ -1412,6 +1243,7 @@ export interface ShareGroupProps {
   >;
   groupId: string;
   setInvitationCode: React.Dispatch<React.SetStateAction<string | null>>;
+  onCopied: (copied: boolean) => void;
   expires: string;
 }
 export interface RevokeAccessProps {
@@ -1432,6 +1264,7 @@ export interface RevokeAccessProps {
 
   invitationCode: string | null;
   mostRecentCodeHasBeenRevoked: Signal<boolean>;
+  onCopied: (copied: boolean) => void;
 }
 
 export interface RevokeAccessItemProps {
@@ -1443,6 +1276,7 @@ export interface RevokeAccessItemProps {
   groupId: string;
   invitationCode: string | null;
   mostRecentCodeHasBeenRevoked: Signal<boolean>;
+  onCopied: (copied: boolean) => void;
 }
 
 export interface LabelsDisplayProps {
@@ -1463,8 +1297,7 @@ export interface SendMenuWrapperInterface {
   sortedMembers: ReadonlySignal<(Member | Guest)[]>;
   id: string;
   userMemberId: string | undefined;
-  setId: (id: string) => void;
-  setShowIdError: (val: boolean) => void;
+  onOpen: () => void;
 }
 
 export interface DetailedSharedExpenseTextProps {
@@ -1504,13 +1337,5 @@ export interface CalendarAndErrorsWrapperProps {
   openCustomDateCalendar: Signal<boolean>;
   pickingTarget: Signal<'start' | 'end' | null>;
   $inputError: boolean;
-  selectorRef?: React.RefObject<HTMLButtonElement>;
-}
-
-export interface CreateBudgetErrors {
-  amountError: string;
-  descriptionError: string;
-  spendingCycleError: string;
-  scopeError: string;
-  commencementDayError: string;
+  selectorRef?: React.RefObject<HTMLButtonElement | null>;
 }

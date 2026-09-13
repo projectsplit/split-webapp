@@ -10,7 +10,8 @@ import {
 import { useMemo } from 'react';
 
 interface UseTotalUserBalanceResult {
-  totalBalances: Details;
+  groupBalances: Details;
+  nonGroupBalances: Details;
   isLoading: boolean;
   isFetching: boolean;
   groupsData?: GroupsAllBalancesResponse;
@@ -27,32 +28,18 @@ export function useTotalUserBalance(userId: string): UseTotalUserBalanceResult {
   const { groupedTransactions, isFetchingDebts, isLoadingDebts } =
     useFetchAndGroupNonGroupDebts(userId, Mode.NonGroup);
 
-  const totalBalances = useMemo<Details>(() => {
-    if (!userId) return {};
-
-    const nonGroupBalances = computeNetPerCurrency(groupedTransactions, userId);
-    const groupBalances = groupsData?.balances ?? {};
-
-    const result: Details = {};
-
-    // Add non-group → group amounts
-    for (const [currency, amount] of Object.entries(nonGroupBalances)) {
-      result[currency] = (result[currency] ?? 0) + amount;
-    }
-
-    // Add group amounts (preserving already added non-group values)
-    for (const [currency, amount] of Object.entries(groupBalances)) {
-      result[currency] = (result[currency] ?? 0) + amount;
-    }
-
-    return result;
-  }, [groupedTransactions, groupsData?.balances, userId]);
+  const nonGroupBalances = useMemo<Details>(
+    () => (userId ? computeNetPerCurrency(groupedTransactions, userId) : {}),
+    [groupedTransactions, userId]
+  );
+  const groupBalances = groupsData?.balances ?? {};
 
   const isLoading = isLoadingGroups || isLoadingDebts;
   const isFetching = isFetchingGroups || isFetchingDebts;
   const nonGroupGroupedTransactions = groupedTransactions;
   return {
-    totalBalances,
+    groupBalances,
+    nonGroupBalances,
     isLoading,
     isFetching,
     groupsData,

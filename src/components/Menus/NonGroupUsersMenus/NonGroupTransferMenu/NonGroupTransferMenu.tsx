@@ -1,7 +1,6 @@
 import { StyledNonGroupTransferUsersMenu } from './NonGroupTransferMenu.styled';
 import { NonGroupTransferMenuProps } from '../../../../interfaces';
-import { BiArrowBack } from 'react-icons/bi';
-import MyButton from '../../../MyButton/MyButton';
+import BackButton from '../../../BackButton/BackButton';
 import AutoWidthInput from '../../../AutoWidthInput';
 import Sentinel from '../../../Sentinel';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -10,7 +9,7 @@ import { useOutletContext } from 'react-router-dom';
 import { UserInfo } from '../../../../types';
 import User from '../User/User';
 import { useSearchGroupsByName } from '../../../../api/auth/QueryHooks/useSearchGroupsByName';
-import Item from '../Item/Item';
+import UserItem from '../UserItem/UserItem';
 import { SelectedGroup } from '../SelectionLists/SelectedGroup';
 import Spinner from '../../../Spinner/Spinner';
 import { useSearchUsers } from '@/api/auth/QueryHooks/useSearchUsers';
@@ -25,11 +24,9 @@ export default function NonGroupTransferMenu({
   nonGroupTransferMenu,
   fromHomeGroup,
   groupMembers,
-  isNonGroupTransfer,
 }: NonGroupTransferMenuProps) {
   const pageSize = 10;
   const [keyword, setKeyword] = useState<string>('');
-  // const [selectedUser, setSelectedUser] = useState<string>('')
   const [debouncedKeyword, isDebouncing] = useDebounce(
     keyword.length > 1 ? keyword : '',
     300
@@ -57,44 +54,39 @@ export default function NonGroupTransferMenu({
     const menu = nonGroupTransferMenu.value;
     const isSenderMode = menu.attribute === 'sender';
 
-    if (isSelf) {
-      if (isSenderMode) {
-        nonGroupTransferMenu.value = {
-          ...menu,
-          receiverId: userInfo.userId,
-          receiverName: 'You',
+    const onOtherSide = isSenderMode
+      ? userId === menu.receiverId
+      : userId === menu.senderId;
 
-          senderId: menu.senderId,
-          senderName: menu.senderName,
-        };
-      } else {
-        nonGroupTransferMenu.value = {
-          ...menu,
-          senderId: userInfo.userId,
-          senderName: 'You',
-
-          receiverId: menu.receiverId,
-          receiverName: menu.receiverName,
-        };
-      }
+    if (onOtherSide) {
+      nonGroupTransferMenu.value = {
+        ...menu,
+        menu: null,
+        senderId: menu.receiverId,
+        senderName: menu.receiverName,
+        receiverId: menu.senderId,
+        receiverName: menu.senderName,
+      };
       return;
     }
 
     if (isSenderMode) {
       nonGroupTransferMenu.value = {
         ...menu,
+        menu: null,
         senderId: userId,
         senderName: displayName,
-        receiverId: userInfo.userId,
-        receiverName: 'You',
+        ...(isSelf
+          ? {}
+          : { receiverId: userInfo.userId, receiverName: 'You' }),
       };
     } else {
       nonGroupTransferMenu.value = {
         ...menu,
+        menu: null,
         receiverId: userId,
         receiverName: displayName,
-        senderId: userInfo.userId,
-        senderName: 'You',
+        ...(isSelf ? {} : { senderId: userInfo.userId, senderName: 'You' }),
       };
     }
   };
@@ -161,7 +153,6 @@ export default function NonGroupTransferMenu({
         .find((x) => x.id === groupId);
 
       if (!existingGroup) return;
-      isNonGroupTransfer.value = false;
       ((fromHomeGroup.value = {
         id: existingGroup.id,
         name: existingGroup.name,
@@ -178,6 +169,10 @@ export default function NonGroupTransferMenu({
           ...existingGroup.members,
           ...existingGroup.guests,
         ]));
+      nonGroupTransferMenu.value = {
+        ...nonGroupTransferMenu.value,
+        menu: null,
+      };
     },
     [userGroups]
   );
@@ -185,7 +180,6 @@ export default function NonGroupTransferMenu({
   const handleSelectedGroupCick = () => {
     fromHomeGroup.value = null;
     groupMembers.value = [];
-    isNonGroupTransfer.value = true;
   };
 
   const isPickingUser =
@@ -193,21 +187,14 @@ export default function NonGroupTransferMenu({
     nonGroupTransferMenu.value.attribute === 'receiver';
   const showUsers = isPickingUser && users.length > 0;
 
-  // useDebounce reports itself busy for its first 300ms even on mount, when the value never
-  // changed — without the length gate that blinks a spinner over cached results on every open.
   const isTypingKeyword = isDebouncing && keyword.length > 1;
 
-  // The spinner only stands in for an empty list. Showing it for every fetch swapped the loaded
-  // names out while the next page was in flight, which also pulled the sentinel back into view and
-  // made it request yet another page — two spinners at once and a list that kept blanking.
   const showSpinner = showUsers
     ? false
     : isPickingUser
       ? usersAreLoading || isTypingKeyword
       : groupsAreLoading;
 
-  // Results for the previous keyword stay up while the new ones are on their way, so the typing
-  // needs its own spinner above them — otherwise a search reads as having done nothing at all.
   const showSearchingSpinner =
     isPickingUser && showUsers && (isTypingKeyword || usersAreStale);
 
@@ -215,17 +202,14 @@ export default function NonGroupTransferMenu({
     <StyledNonGroupTransferUsersMenu>
       <div className="fixedHeader">
         <div className="header">
-          <div className="closeButtonContainer">
-            <BiArrowBack
-              className="backButton"
-              onClick={() => {
-                nonGroupTransferMenu.value = {
-                  ...nonGroupTransferMenu.value,
-                  menu: null,
-                };
-              }}
-            />
-          </div>
+          <BackButton
+            onClick={() => {
+              nonGroupTransferMenu.value = {
+                ...nonGroupTransferMenu.value,
+                menu: null,
+              };
+            }}
+          />
           <div className="title">
             {nonGroupTransferMenu.value.attribute === 'sender'
               ? 'Select sender'
@@ -241,7 +225,6 @@ export default function NonGroupTransferMenu({
           <div
             className="main"
             onFocus={() => handleFocus()}
-            // onBlur={handleBlur}
             ref={mainRef}
             tabIndex={0}
           >
@@ -276,10 +259,6 @@ export default function NonGroupTransferMenu({
               const isSelf = user.userId === userInfo.userId;
               const status = statusByUserId.get(user.userId)?.status;
 
-              // Yourself is always a valid side of a transfer, and anyone connected keeps the
-              // normal row with its selected tick. Everyone else gets the request row instead.
-              // An unknown status keeps the normal row too, so a slow or failed statuses call
-              // leaves the picker working rather than showing rows that do nothing.
               return isSelf ||
                 status === 'connected' ||
                 status === undefined ? (
@@ -343,7 +322,7 @@ export default function NonGroupTransferMenu({
             })
           ) : (
             remainingSuggestedGroups.map((group) => (
-              <Item
+              <UserItem
                 key={group.id}
                 name={group.name}
                 onClick={(e) => {
@@ -361,18 +340,6 @@ export default function NonGroupTransferMenu({
             isFetchingPage={isFetchingNextPage}
           />
         )}
-      </div>
-      <div className="doneButton">
-        <MyButton
-          onClick={() => {
-            nonGroupTransferMenu.value = {
-              ...nonGroupTransferMenu.value,
-              menu: null,
-            };
-          }}
-        >
-          Done
-        </MyButton>
       </div>
       {connectTarget && (
         <ConnectRequestConfirm

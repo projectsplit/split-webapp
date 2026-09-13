@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import {
   DebtsResponse,
   ExpenseParsedFilters,
@@ -7,7 +7,7 @@ import {
 import { apiClient } from '../../apiClients';
 import { AxiosResponse } from 'axios';
 import { Signal } from '@preact/signals-react';
-import { appendGroupFilterToParams } from '../helpers/appendGroupFilterToParams';
+import { appendFilterToParams } from '../helpers/appendFilterToParams';
 
 const useGroupDebts = (
   groupId: string | undefined,
@@ -31,6 +31,7 @@ const useGroupDebts = (
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     staleTime: 9000,
+    placeholderData: keepPreviousData,
     enabled: !!groupId,
   });
 };
@@ -48,7 +49,8 @@ const getGroupDebts = async (
     ...base
   } = parsedFilters;
 
-  const params = appendGroupFilterToParams(groupId, base, {
+  const params = appendFilterToParams(base, {
+    groupId,
     arrayMappings: [
       { key: 'participantIds', values: participantsIds },
       { key: 'payerIds', values: payersIds },

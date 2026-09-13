@@ -1,37 +1,25 @@
 import styled from 'styled-components';
 
-export const StyledSharedContainer = styled.div<{ $groupState: string }>`
+export const StyledSharedContainer = styled.div`
   overflow: hidden;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.backgroundcolor};
+  background-color: ${({ theme }) => theme.surface.page};
   position: relative;
-  .optionButtonsAndGroups {
+
+  .segmentedWrapper {
+    flex-shrink: 0;
+    padding: ${({ theme }) => `0 ${theme.space.s20} ${theme.space.s16}`};
+  }
+
+  .groupsPane {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex: 1;
     min-height: 0;
-
-    .groups {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      .noData {
-        .msg {
-          text-wrap: wrap;
-          text-align: center;
-        }
-      }
-      .searchWrapper {
-        overflow: hidden;
-        margin-top: 8px;
-      }
-    }
   }
 
   .bottom-bar {

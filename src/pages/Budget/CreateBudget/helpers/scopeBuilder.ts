@@ -19,13 +19,13 @@ export const scopeBuilder = (
     if (allGroupsSelected.value) {
       text = 'All expenses';
     } else {
-      text = `(${targetGroupIds.value.length}) groups, non-group and personal expenses`;
+      text = `(${targetGroupIds.value.length}) groups, quick splits and personal expenses`;
     }
   } else if (group && nonGroup) {
     if (allGroupsSelected.value) {
-      text = 'Groups and non-group expenses';
+      text = 'Groups and quick splits';
     } else {
-      text = `(${targetGroupIds.value.length}) groups and non-group expenses`;
+      text = `(${targetGroupIds.value.length}) groups and quick splits`;
     }
   } else if (group && personal) {
     if (allGroupsSelected.value) {
@@ -34,7 +34,7 @@ export const scopeBuilder = (
       text = `(${targetGroupIds.value.length}) groups and personal expenses`;
     }
   } else if (nonGroup && personal) {
-    text = 'Non-group and personal expenses';
+    text = 'Quick splits and personal expenses';
   } else if (group) {
     if (allGroupsSelected.value) {
       text = 'All group expenses';
@@ -42,7 +42,7 @@ export const scopeBuilder = (
       text = `(${targetGroupIds.value.length}) group expenses`;
     }
   } else if (nonGroup) {
-    text = 'Non-group expenses';
+    text = 'Quick splits';
   } else if (personal) {
     text = 'Personal expenses';
   }

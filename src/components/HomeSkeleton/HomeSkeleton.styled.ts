@@ -16,47 +16,29 @@ export const StyledHomeSkeleton = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 65%;
+  gap: ${({ theme }) => theme.space.s24};
+  padding: ${({ theme }) => `${theme.space.s8} ${theme.space.s20} 110px`};
 
-  .welcomeShimmer {
-    padding: 1rem 0;
-    padding-left: 14px;
-    padding-right: 14px;
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    align-items: center;
-  }
-
-  .menuShimmer {
-    padding: 14px;
+  .section {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    flex-grow: 1;
-    min-height: 0;
+    gap: ${({ theme }) => theme.space.s10};
   }
 
-  .bone {
-    background-color: ${({ theme }) => theme.layer2};
-    border-radius: 10px;
-    animation: ${pulse} 1.5s ease-in-out infinite;
-    flex: 1;
-  }
-
-  .boneLine {
-    background-color: ${({ theme }) => theme.layer2};
-    animation: ${pulse} 1.5s ease-in-out infinite;
+  .rows {
+    display: flex;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.space.s8};
   }
 
   .fabShimmer {
     position: fixed;
-    bottom: 40px;
-    right: 25px;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
-    background-color: ${({ theme }) => theme.layer2};
+    bottom: 28px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: ${({ theme }) => theme.radius.pill};
+    background-color: ${({ theme }) => theme.surface.card};
     animation: ${pulse} 1.5s ease-in-out infinite;
   }
 `;

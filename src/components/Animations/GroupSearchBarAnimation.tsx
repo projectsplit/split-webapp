@@ -1,6 +1,7 @@
 import { CSSTransition } from 'react-transition-group';
 import { GroupSearchBarAnimationProps } from '../../interfaces';
 import GroupSearchBar from '../../pages/Groups/GroupSearchBar/GroupSearchBar';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function GroupSearchBarAnimation({
   showSearchBar,
@@ -8,6 +9,7 @@ export default function GroupSearchBarAnimation({
   keyword,
   setKeyword,
 }: GroupSearchBarAnimationProps) {
+  useCloseOnBack(showSearchBar.value, () => (showSearchBar.value = false));
   return (
     <CSSTransition
       in={showSearchBar.value}

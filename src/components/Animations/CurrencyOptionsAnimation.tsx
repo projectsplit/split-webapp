@@ -3,6 +3,7 @@ import { CurrencyOptionsAnimationProps } from '../../interfaces';
 import CurrencyOptions from '../Menus/CurrencyOptions/CurrencyOptions';
 import '../../styles/freakflags/freakflags.css';
 import { useRef } from 'react';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function CurrencyOptionsAnimation({
   currencyMenu,
@@ -10,6 +11,7 @@ export default function CurrencyOptionsAnimation({
   selectedCurrency,
 }: CurrencyOptionsAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(currencyMenu.value === 'currencyOptions', () => (currencyMenu.value = null));
   return (
     <CSSTransition
       nodeRef={nodeRef}

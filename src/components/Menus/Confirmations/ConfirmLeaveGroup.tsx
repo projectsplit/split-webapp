@@ -36,14 +36,12 @@ export default function ConfirmLeaveGroup({
       menu={menu}
       isLoading={isPending}
       onClick={handleConfirm}
-      header={groupError.value === '' ? 'Confirmation' : 'Info'}
+      header={groupError.value === '' ? 'Leave this group?' : 'Info'}
+      confirmLabel={groupError.value === '' ? 'Leave group' : undefined}
     >
       <div className="leaveGroupText">
         {groupError.value === '' && noMemberError.value === '' ? (
-          <span>
-            Are you sure you want to leave this group?{' '}
-            <span style={{ fontSize: '20px' }}>🤔</span>
-          </span>
+          <span>Only possible once your balance is settled.</span>
         ) : groupError.value !== '' ? (
           <span>{groupError.value}</span>
         ) : (

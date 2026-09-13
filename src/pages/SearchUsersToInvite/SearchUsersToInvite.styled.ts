@@ -1,14 +1,15 @@
 import styled from 'styled-components';
+import { sheetHeaderStyles } from '@/styles/sheetHeader';
 
 export const StyledSearchUsersToInvite = styled.div`
   position: fixed;
-  font-size: 1.125rem;
+  font-size: ${({ theme }) => theme.size.s15};
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   box-sizing: border-box;
-  background-color: ${({ theme }) => theme.layer2};
+  background-color: ${({ theme }) => theme.surface.page};
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -18,125 +19,84 @@ export const StyledSearchUsersToInvite = styled.div`
     position: sticky;
     top: 0;
     z-index: 4;
-    background-color: ${({ theme }) => theme.layer2};
+    background-color: ${({ theme }) => theme.surface.page};
   }
 
-  .header {
-    padding: 0.875rem;
+  ${sheetHeaderStyles}
+
+  .sheetControls {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.space.s14};
+    padding: ${({ theme }) => `0 ${theme.space.s20} ${theme.space.s16}`};
     flex-shrink: 0;
-
-    .closeButtonContainer {
-      position: relative;
-      cursor: pointer;
-      display: inline-block;
-    }
-
-    .closeButton {
-      cursor: pointer;
-      display: block;
-      font-size: 1.875rem;
-    }
-
-    .closeButtonContainer:hover::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background-color: rgba(128, 128, 128, 0.3);
-      pointer-events: none;
-    }
-
-    .title {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      font-weight: 600;
-    }
-    .gap {
-      margin-right: 0.9375rem;
-    }
   }
 
   .scrollable-content {
+    display: flex;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.space.s8};
     overflow-y: auto;
     flex: 1;
-    padding-top: 1rem;
-    padding-bottom: 180px;
+    min-height: 0;
+    padding: ${({ theme }) => `0 ${theme.space.s20} ${theme.space.s20}`};
 
     .members {
       display: flex;
       flex-direction: column;
-      padding: 0.875rem;
-      font-size: 15px;
-
-      .memberWithButton {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 19px;
-        .guestWrap {
-          display: flex;
-          flex-direction: column;
-          .guest {
-            color: ${({ theme }) => theme.textInactiveColor};
-            font-size: 11px;
-          }
-        }
-      }
+      gap: ${({ theme }) => theme.space.s10};
     }
   }
 
   .inputField {
     display: flex;
     flex-direction: row;
-    padding-left: 10px;
-    padding-right: 10px;
+    align-items: stretch;
+    gap: ${({ theme }) => theme.space.s8};
 
     .search-input {
       flex: 1;
-      padding-top: 7px;
-      padding-bottom: 7px;
-      font-size: 16px;
+      min-width: 0;
+      padding: ${({ theme }) => `${theme.space.s12} 15px`};
+      border-radius: ${({ theme }) => theme.radius.iconButton};
+      font-size: ${({ theme }) => theme.size.s15};
     }
+
     .createButton {
-      margin-left: 10px;
-    }
-  }
-
-  .search-result {
-    margin-top: 0.625rem;
-    margin-bottom: 0.625rem;
-    display: flex;
-    flex-direction: column;
-    padding: 0 0.875rem;
-
-    .top-row {
+      flex-shrink: 0;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
 
-      .action-button {
-        border: none;
-        border-radius: 4px;
-        user-select: none;
-        color: ${({ theme, color }) => (color ? color : theme.text)};
-        display: flex;
+      button {
+        height: 100%;
+        padding: ${({ theme }) => `0 ${theme.space.s20}`};
+        font-size: ${({ theme }) => theme.size.s14};
       }
     }
-
-    .bottom-row {
-      display: flex;
-      color: ${({ theme }) => theme.secondaryTextColor};
-      font-size: 14px;
-    }
   }
+
+  .sheetNote {
+    padding: 0;
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.55;
+    text-wrap: pretty;
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
+
+  .sheetFootnote {
+    padding: ${({ theme }) => `${theme.space.s12} 0 0`};
+    text-wrap: pretty;
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.55;
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
+
+  .sectionLabel {
+    padding: ${({ theme }) => `${theme.space.s16} 0 ${theme.space.s10}`};
+    font-size: ${({ theme }) => theme.size.s11};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
+
 `;

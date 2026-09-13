@@ -1,4 +1,5 @@
-import { StyledTotalLentBorrowed } from './TotalLentBorrowe.styled';
+import { tokens } from '@/styles/tokens';
+import { StyledTotalLentBorrowed } from './TotalLentBorrowed.styled';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -19,13 +20,12 @@ import { TotalLentBorrowedProps } from '../../../../interfaces';
 import { getAllDaysInMonth } from '../../../../helpers/monthlyDataHelpers';
 import { enhanceNumberArray } from '../../../../helpers/enhanceNumberArray';
 import { getChartOptions } from './options/getChartOptions';
-import { getData } from './data/getData';
+import { getLentBorrowedDatasets } from './data/getLentBorrowedDatasets';
 import { useStartAndEndDatesEffect } from '../../hooks/useStartEndDatesEffect';
 import { buildLabels } from '../../helpers/buildLabels';
-import { months } from '../../../../constants';
+import { months, shortWeekdays } from '../../../../constants';
 import { getTotalLentBorrowed } from '../../helpers/getTotalLentBorrowed';
 
-//TODO fast click to the left by choosing weekly. Legends are flashing
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -67,6 +67,11 @@ export function TotalLentBorrowed({
     fractalFactor
   );
 
+  const weekDays =
+    allWeeksPerYear[selectedTimeCycleIndex.value]?.map(
+      (day) => shortWeekdays[(day.getDay() + 6) % 7]
+    ) ?? shortWeekdays;
+
   const labels = buildLabels(
     selectedCycle.value,
     selectedTimeCycleIndex.value,
@@ -103,29 +108,27 @@ export function TotalLentBorrowed({
   ).filter((element) => element !== undefined);
 
   const pointRadius: number[] = [];
-  const hitRadius: number[] = []; //determines which cicles will be highlited on hover.
+  const hitRadius: number[] = [];
   const pointBackgroundColorTotalLent: string[] = [];
   const pointBackgroundColorTotalLentTotalBorrowed: string[] = [];
 
-  // Both lines mark the same points, so one pass builds all four arrays together. Chart.js reads
-  // one entry per data point, and the two lines share pointRadius and hitRadius, so filling them
-  // once per line left them twice as long as the data with the second half never read.
   totalLentExt.forEach((_, indx) => {
     const isEdge = indx === 0 || indx === totalLentExt.length - 1;
-    const isMiddleOfMonth = enhancedDatesToNumbers[indx] === 15; //createConditionForMiddlePoint(totalLentExt.length, indx)
+    const isMiddleOfMonth = enhancedDatesToNumbers[indx] === 15;
     const lastPointSitsBesideTheMiddle =
       enhancedDatesToNumbers[totalLentExt.length - 1] === 14 ||
       enhancedDatesToNumbers[totalLentExt.length - 1] === 16;
 
-    //condition to not show 15th and 16th consecutive data points
     const show =
       (isEdge || isMiddleOfMonth) &&
       !(isMiddleOfMonth && lastPointSitsBesideTheMiddle);
 
     pointRadius.push(show ? 2 : 0);
-    pointBackgroundColorTotalLent.push(show ? '#317E24' : 'transparent');
+    pointBackgroundColorTotalLent.push(
+      show ? tokens.direction.owed : 'transparent'
+    );
     pointBackgroundColorTotalLentTotalBorrowed.push(
-      show ? '#FF3D3D' : 'transparent'
+      show ? tokens.direction.owe : 'transparent'
     );
 
     hitRadius.push(enhancedDatesToNumbers[indx] % 1 === 0 ? 10 : 0);
@@ -143,10 +146,11 @@ export function TotalLentBorrowed({
     currentWeekIndex,
     hitRadius,
     fractalFactor,
-    currency
+    currency,
+    weekDays
   );
 
-  const data = getData(
+  const data = getLentBorrowedDatasets(
     totalLentExt,
     totalBorrowedExt,
     labels,
@@ -157,7 +161,9 @@ export function TotalLentBorrowed({
 
   return (
     <StyledTotalLentBorrowed>
-      <Line options={options} data={data} plugins={[noData, ChartDataLabels]} />
+      <div className="chartArea">
+        <Line options={options} data={data} plugins={[noData, ChartDataLabels]} />
+      </div>
       <div className="periodOptions">
         <Carousel
           carouselItems={getCarouselItemsBasedOnCycle(

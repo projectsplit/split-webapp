@@ -4,8 +4,8 @@ export const StyledInputAndErrorsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   .errorMsg {
-    font-size: 12px;
-    color: ${({ theme }) => theme.errorColor};
+    font-size: ${({ theme }) => theme.size.s12};
+    color: ${({ theme }) => theme.direction.owe};
     display: flex;
     justify-content: end;
   }

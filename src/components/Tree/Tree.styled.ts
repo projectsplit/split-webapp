@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
 export const StyledTree = styled.div`
-  border-radius: 7px;
+  border-radius: ${({ theme }) => theme.radius.control};
   li {
-    font-size: 15px;
+    font-size: ${({ theme }) => theme.size.s15};
   }
   ul,
   li {
@@ -12,8 +12,8 @@ export const StyledTree = styled.div`
 
   ul {
     list-style: none;
-    padding-left: 20px; /*moved whole element right/left*/
-    margin-top: 0px; /*moved whole element up/down*/
+    padding-left: 20px;
+    margin-top: 0px;
   }
   li {
     display: flex;
@@ -23,24 +23,22 @@ export const StyledTree = styled.div`
   li::after {
     content: '';
     position: absolute;
-    left: -12px; /*moves tree left or right*/
+    left: -12px;
   }
 
   li::before {
-    border-top: 2.5px solid rgb(148, 146, 146);
+    border-top: 2.5px solid ${({ theme }) => theme.surface.outline};
     top: 9px;
-    /*increase - moves horizontal lines up or down*/
     width: 8px;
     height: 0;
     border-bottom-left-radius: 15px;
   }
 
   li::after {
-    border-left: 2.5px solid rgb(148, 146, 146);
-    height: 130%; /*connects vertical lines to form one main line*/
+    border-left: 2.5px solid ${({ theme }) => theme.surface.outline};
+    height: 130%;
     width: 0px;
     top: -5px;
-    /*increase - decrease horizontal line length*/
   }
 
   ul > li:last-child::after {
@@ -49,6 +47,5 @@ export const StyledTree = styled.div`
 
   li:not(:last-child) {
     margin-bottom: 5px;
-    /*increase - decrease distance between li items 13*/
   }
 `;

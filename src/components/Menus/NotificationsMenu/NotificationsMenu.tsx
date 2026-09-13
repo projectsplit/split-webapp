@@ -1,10 +1,10 @@
 import IonIcon from '@reacticons/ionicons';
+import { DateTime } from 'luxon';
 import { NotificationsMenuProps } from '../../../interfaces';
 import { StyledNotificationsMenu } from './NotificationsMenu.styled';
 import { IoIosNotificationsOff } from 'react-icons/io';
 import Sentinel from '../../Sentinel';
 import Invitation from '../../Invitation/Invitation';
-import Separator from '../../Separator/Separator';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLastViewedNotification } from '../../../api/auth/CommandHooks/useLastViewedNotification';
@@ -18,11 +18,7 @@ const formatNotificationDate = (
   isoDate: string,
   timeZoneId: string | undefined
 ) =>
-  new Date(isoDate).toLocaleString(undefined, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: timeZoneId,
-  });
+  DateTime.fromISO(isoDate, { zone: timeZoneId }).toFormat('d LLL, HH:mm');
 
 export default function NotificationsMenu({
   menu,
@@ -71,9 +67,6 @@ export default function NotificationsMenu({
   const newestConnectionRequest =
     connectionRequestsData?.pages[0]?.connectionRequests[0]?.created;
 
-  // The bell's unread dot compares one timestamp against all three feeds, so it has to be advanced
-  // to whichever is newest. Recording only the newest invitation would leave the dot lit forever
-  // once an activity notification or a connection request arrived after it.
   useEffect(() => {
     if (!invitationsLoaded || !notificationsLoaded || !connectionRequestsLoaded)
       return;
@@ -109,15 +102,10 @@ export default function NotificationsMenu({
     <StyledNotificationsMenu>
       <div className="headerSeparator">
         <div className="header">
-          <div className="info">
-            <strong>Notifications</strong>
-          </div>
+          <div className="info">Notifications</div>
           <div className="closeButton" onClick={() => (menu.value = null)}>
             <IonIcon name="close-outline" className="close" />
           </div>
-        </div>
-        <div className="separator">
-          <Separator />
         </div>
       </div>
 
@@ -189,10 +177,20 @@ export default function NotificationsMenu({
                       navigate(x.url);
                     }}
                   >
-                    <div className="activityTitle">{x.title}</div>
-                    <div className="activityBody">{x.body}</div>
-                    <div className="activityDate">
-                      {formatNotificationDate(x.created, timeZoneId)}
+                    <div className="activityMain">
+                      <div className="activityText">
+                        <div className="activityTitle">{x.title}</div>
+                        <div className="activityBody">{x.body}</div>
+                        <div className="activityDate">
+                          {formatNotificationDate(x.created, timeZoneId)}
+                        </div>
+                      </div>
+                      {x.url ? (
+                        <IonIcon
+                          name="chevron-forward-outline"
+                          className="activityChevron"
+                        />
+                      ) : null}
                     </div>
                   </div>
                 ))}

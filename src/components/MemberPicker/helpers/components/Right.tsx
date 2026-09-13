@@ -1,5 +1,5 @@
-import { HiLockClosed, HiLockOpen } from 'react-icons/hi';
 import { getSymbolFromCurrency } from '../../../../helpers/currency-symbol-map';
+import { HiLockClosed, HiLockOpen } from 'react-icons/hi';
 import { memo } from 'react';
 import AutoWidthInput from '../../../AutoWidthInput';
 import { Signal } from '@preact/signals-react';
@@ -44,102 +44,63 @@ const Right: React.FC<RightProps> = ({
           .toFixed(2)
           .replace(/\.?0+$/, '');
 
-  switch (category.value) {
-    case 'Amounts':
-      return (
-        <div className="right">
-          <div className="inputField">
+  if (
+    category.value !== 'Amounts' &&
+    category.value !== 'Shares' &&
+    category.value !== 'Percentages'
+  ) {
+    return null;
+  }
+
+  const isShares = category.value === 'Shares';
+
+  return (
+    <div className="right">
+      <div className={`inputField ${locked ? 'locked' : ''}`}>
+        {category.value === 'Amounts' ? (
+          <span className="fieldCurrency">
             {getSymbolFromCurrency(selectedCurrency)}
-            <AutoWidthInput
-              className="amount-input"
-              inputMode="decimal"
-              value={screenQuantity}
-              onBlur={() => handleInputBlur(id)}
-              onChange={(e) => changeAmount(id, e)}
-              onClick={(e) => e.stopPropagation()}
-              category={category.value}
-              ref={inputRef}
-            />
-          </div>
-          <div onClick={(e) => toggleLock(e, id)}>
-            {locked ? (
-              <HiLockClosed className="locked-icon" />
-            ) : (
-              <HiLockOpen className="unlocked-icon" />
-            )}
-          </div>
-        </div>
-      );
-    case 'Shares':
-      return (
-        <div className="right">
-          <div className="inputField">
-            <AutoWidthInput
-              className="amount-input"
-              inputMode="decimal"
-              value={screenQuantity}
-              onBlur={() => handleInputBlur(id)}
-              onChange={(e) => changeAmount(id, e)}
-              onClick={(e) => e.stopPropagation()}
-              category={category.value}
-              ref={inputRef}
-            />
-            <div className="shares">
-              <div className="fraction">
-                <div className="nominatorDenominator">
-                  {screenQuantity === formattedTotalShares ? (
-                    ''
-                  ) : (
-                    <>
-                      {screenQuantity === '' || screenQuantity === '0' ? (
-                        <span className="numerator"></span>
-                      ) : screenQuantity === formattedTotalShares ? (
-                        <span className="numerator">1</span>
-                      ) : (
-                        <>
-                          <span className="numerator">{screenQuantity}</span>/
-                          <span className="denominator">
-                            {formattedTotalShares}
-                          </span>
-                        </>
-                      )}
-                    </>
-                  )}
-                </div>
-                <span className="shares-label">shares</span>
+          </span>
+        ) : null}
+        {category.value === 'Percentages' ? '%' : null}
+        <AutoWidthInput
+          className="amount-input"
+          inputMode="decimal"
+          value={screenQuantity}
+          onBlur={() => handleInputBlur(id)}
+          onChange={(e) => changeAmount(id, e)}
+          onClick={(e) => e.stopPropagation()}
+          category={category.value}
+          ref={inputRef}
+        />
+        {isShares ? (
+          <div className="shares">
+            <div className="fraction">
+              <div className="nominatorDenominator">
+                {screenQuantity === formattedTotalShares ||
+                screenQuantity === '' ||
+                screenQuantity === '0' ? (
+                  ''
+                ) : (
+                  <span className="denominator">/{formattedTotalShares}</span>
+                )}
               </div>
+              <span className="shares-label">shares</span>
             </div>
           </div>
+        ) : null}
+      </div>
+      {isShares ? null : (
+        <div className="lockToggle" onClick={(e) => toggleLock(e, id)}>
+          {locked ? (
+            <HiLockClosed className="locked-icon" />
+          ) : (
+            <HiLockOpen className="unlocked-icon" />
+          )}
         </div>
-      );
-    case 'Percentages':
-      return (
-        <div className="right">
-          <div className="inputField">
-            %
-            <AutoWidthInput
-              className="amount-input"
-              inputMode="decimal"
-              value={screenQuantity}
-              onBlur={() => handleInputBlur(id)}
-              onChange={(e) => changeAmount(id, e)}
-              onClick={(e) => e.stopPropagation()}
-              category={category.value}
-              ref={inputRef}
-            />
-          </div>
-          <div onClick={(e) => toggleLock(e, id)}>
-            {locked ? (
-              <HiLockClosed className="locked-icon" />
-            ) : (
-              <HiLockOpen className="unlocked-icon" />
-            )}
-          </div>
-        </div>
-      );
-    default:
-      return null;
-  }
+      )}
+    </div>
+  );
 };
 
 export default memo(Right);

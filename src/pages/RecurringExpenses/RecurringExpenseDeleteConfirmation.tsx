@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Signal } from '@preact/signals-react';
 import Confirmation from '@/components/Menus/Confirmations/Confirmation';
+import { useCloseOnBack } from '@/hooks/useCloseOnBack';
 
 interface RecurringExpenseDeleteConfirmationProps {
   menu: Signal<string | null>;
@@ -17,6 +18,7 @@ export const RecurringExpenseDeleteConfirmation = ({
   isLoading,
 }: RecurringExpenseDeleteConfirmationProps) => {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'deleteRecurringExpense', () => (menu.value = null));
 
   return (
     <CSSTransition
@@ -32,8 +34,6 @@ export const RecurringExpenseDeleteConfirmation = ({
         isLoading={isLoading}
         header="Delete recurring expense"
       >
-        {/* Spelled out because "delete" on a series could easily be read as deleting everything it
-            has ever created. */}
         <div>
           {`"${description}" will stop repeating. Expenses it has already created stay where they are. Proceed?`}
         </div>

@@ -3,6 +3,7 @@ export interface TransferState {
   description: string;
   currencySymbol: string;
   transferTime: string;
+  isTrackingNow: boolean;
   senderId: string;
   receiverId: string;
   showPicker: boolean;
@@ -18,15 +19,16 @@ export interface TransferState {
     showSamePersonError: boolean;
   };
 
-  // Actions
   setAmount: (amount: string) => void;
   setDescription: (description: string) => void;
   setCurrencySymbol: (symbol: string) => void;
   setTransferTime: (value: string | ((prev: string) => string)) => void;
+  setIsTrackingNow: (value: boolean) => void;
   setSenderId: (id: string) => void;
   setReceiverId: (id: string) => void;
   toggleSenderId: (id: string) => void;
   toggleReceiverId: (id: string) => void;
+  swapParties: () => void;
   setShowPicker: (show: boolean) => void;
 
   setError: (

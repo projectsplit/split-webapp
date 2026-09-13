@@ -12,6 +12,7 @@ import Home from './pages/Home/Home';
 import RedirectToExpenses from './routes/RedirectToExpenses';
 import RedirectToAnalytics from './routes/RedirectToAnalytics';
 import RedirectToBudget from './routes/RedirectToBudget';
+import { BudgetOverview } from './pages/Budget/BudgetOverview/BudgetOverview';
 import RedirectToNonGroupExpenses from './routes/RedirectToNonGroupExpenses';
 import Protected from './pages/Protected/Protected';
 import CreateAccount from './pages/CreateAccount/CreateAccount';
@@ -30,7 +31,6 @@ import {
   Shared,
   GenerateInvitationCode,
   Personal,
-  BudgetActions,
   ManageBudgets,
   RecurringExpenses,
 } from './lazyRoutes';
@@ -41,7 +41,7 @@ const SuspenseFallback = () => (
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      height: '100vh',
+      height: '100dvh',
       width: '100%',
     }}
   >
@@ -62,13 +62,13 @@ const App = () => {
             <Route element={<Protected />}>
               <Route path={routes.ROOT} element={<Home />} />
               <Route path={routes.JOIN} element={<Home />} />
-              <Route path="/shared" element={<Shared />} />
+              <Route path={routes.GROUPS} element={<Shared />} />
               <Route
-                path="/shared/generatecode/:groupid"
+                path={routes.GENERATE_CODE}
                 element={<GenerateInvitationCode />}
               />
 
-              <Route path="/shared/:groupid" element={<Group />}>
+              <Route path={routes.GROUP} element={<Group />}>
                 <Route index element={<RedirectToExpenses />} />
                 <Route path="expenses" element={<Expenses />} />
                 <Route path="transfers" element={<Transfers />} />
@@ -76,7 +76,7 @@ const App = () => {
                 <Route path="*" element={<RedirectToExpenses />} />
               </Route>
 
-              <Route path="/shared/nongroup" element={<NonGroup />}>
+              <Route path={routes.NON_GROUP} element={<NonGroup />}>
                 <Route index element={<RedirectToNonGroupExpenses />} />
                 <Route path="expenses" element={<Expenses />} />
                 <Route path="transfers" element={<Transfers />} />
@@ -84,27 +84,29 @@ const App = () => {
                 <Route path="*" element={<RedirectToNonGroupExpenses />} />
               </Route>
 
-              <Route path="/personal" element={<Personal />}>
+              <Route path={routes.PERSONAL} element={<Personal />}>
                 <Route index element={<Expenses />} />
               </Route>
 
               <Route
-                path="/recurring-expenses"
+                path={routes.RECURRING_EXPENSES}
                 element={<RecurringExpenses />}
               />
 
-              <Route path="/analytics/*" element={<RedirectToAnalytics />} />
-              <Route path="/analytics" element={<Analytics />} />
+              <Route
+                path={`${routes.ANALYTICS}/*`}
+                element={<RedirectToAnalytics />}
+              />
+              <Route path={routes.ANALYTICS} element={<Analytics />} />
 
-              <Route path="/budget" element={<Budget />}>
-                <Route index element={<RedirectToBudget />} />
+              <Route path={routes.BUDGET} element={<Budget />}>
+                <Route index element={<BudgetOverview />} />
                 <Route path="create" element={<CreateBudget />} />
-                <Route path="actions" element={<BudgetActions />} />
                 <Route path="manage" element={<ManageBudgets />} />
                 <Route path="*" element={<RedirectToBudget />} />
               </Route>
 
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<Navigate to={routes.ROOT} replace />} />
             </Route>
             <Route path="*" element={<h1>Lost ?</h1>} />
           </Routes>

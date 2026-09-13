@@ -1,37 +1,40 @@
 import styled from 'styled-components';
 
-export const StyledSpendingCycle = styled.div<{$calendarIsOpen:boolean}>`
+export const StyledSpendingCycle = styled.div<{ $calendarIsOpen: boolean }>`
   display: flex;
   flex-direction: column;
-  font-size: 16px;
+  gap: ${({ theme }) => theme.space.s20};
 
-  .errorMsg {
-    font-size: 12px;
-    color: ${({ theme }) => theme.errorColor};
-    display: flex;
-    justify-content: start;
-    padding: 0px 4px;
-  }
-  .calendarAndErrorsWrapper,
-  .inputAndErrorsWrapper {
-    display: flex;
-    flex-direction: column;
-  }
-  .spendingCycleHeader {
+  .cycleSegments {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 10px;
+    gap: 3px;
+    padding: 3px;
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.iconButton};
 
-    .information {
+    .segment {
+      flex: 1;
+      text-align: center;
+      padding: 7px 0;
+      border-radius: ${({ theme }) => theme.radius.control};
+      font-size: ${({ theme }) => theme.size.s13};
+      font-weight: ${({ theme }) => theme.weight.medium};
+      color: ${({ theme }) => theme.ink.secondary};
       cursor: pointer;
-      font-size: 23px;
-      font-weight: bold;
-      color: ${({ theme }) => theme.yellow};
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .segment.active {
+      background-color: ${({ theme }) => theme.surface.hairline};
+      color: ${({ theme }) => theme.ink.primary};
+      font-weight: ${({ theme }) => theme.weight.semibold};
     }
   }
-  .categoryButtons{
-    margin:${({$calendarIsOpen})=> $calendarIsOpen ? '10px' : '0px'} ;
+
+  .commencesSection {
+    display: flex;
+    flex-direction: column;
   }
 `;

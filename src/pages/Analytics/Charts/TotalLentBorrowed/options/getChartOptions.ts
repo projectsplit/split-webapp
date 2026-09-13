@@ -1,10 +1,14 @@
+import { tokens } from '@/styles/tokens';
+import {
+  getAxisTickLabel,
+  getTooltipTitle,
+} from '../../options/axisAndTooltip';
 import { Context } from 'chartjs-plugin-datalabels/types/context';
 import { roundThousandsAndMillions } from '../../../../../helpers/roundThousandsAndMils';
 import { Frequency } from '../../../../../types';
 import { enhanceStringArray } from '../../../helpers/enhanceStringArray';
-import { swapMonthDayToDayMonth } from '../../../helpers/swapMonthDayToDayMonth';
 import { displayCurrencyAndAmount } from '../../../../../helpers/displayCurrencyAndAmount';
-import { months, shortWeekdays } from '../../../../../constants';
+import { months } from '../../../../../constants';
 import { getSymbolFromCurrency } from '../../../../../helpers/currency-symbol-map';
 
 export const getChartOptions = (
@@ -16,10 +20,11 @@ export const getChartOptions = (
   enhancedDatesToNumbers: number[],
   selectedYear: number,
   selectedTimeCycleIndex: number,
-  currentWeekIndex: number,
+  _currentWeekIndex: number,
   hitRadius: number[],
   fractalFactor: number,
-  currency: string
+  currency: string,
+  weekDays: string[]
 ) => {
   const date = new Date(selectedYear, selectedTimeCycleIndex, 1);
 
@@ -27,7 +32,7 @@ export const getChartOptions = (
 
   const fullMonthName = date.toLocaleDateString('en-US', dateOptions);
 
-  const enhancedWeekDays = enhanceStringArray(shortWeekdays, fractalFactor);
+  const enhancedWeekDays = enhanceStringArray(weekDays, fractalFactor);
 
   const abbreviatedMonths = months.map((month) => month.slice(0, 3));
 
@@ -69,10 +74,10 @@ export const getChartOptions = (
         position: 'top',
         align: 'start',
         labels: {
-          usePointStyle: false, // use a square instead of a rectangle
-          boxWidth: 10, // set the width of the square
-          boxHeight: 10, // set the height of the square
-          color: '#DDDDDD', // set the color of the square
+          usePointStyle: false,
+          boxWidth: 10,
+          boxHeight: 10,
+          color: tokens.ink.secondary,
         },
         onHover: (event: any) => {
           event.chart.canvas.style.cursor = 'pointer';
@@ -91,25 +96,14 @@ export const getChartOptions = (
         displayColors: false,
         enabled: true,
         callbacks: {
-          title: (context: Context[]) => {
-            const index = context[0].dataIndex;
-            if (selectedCycle === Frequency.Monthly)
-              return (
-                labels[index] +
-                ' ' +
-                fullMonthName +
-                ' ' +
-                selectedYear.toString()
-              );
-            if (selectedCycle === Frequency.Weekly)
-              return (
-                swapMonthDayToDayMonth(labels)[index] +
-                ' ' +
-                selectedYear.toString()
-              );
-            if (selectedCycle === Frequency.Annually)
-              return labels[index] + ' ' + selectedYear.toString();
-          },
+          title: (context: Context[]) =>
+            getTooltipTitle(
+              context,
+              selectedCycle,
+              labels,
+              fullMonthName,
+              selectedYear
+            ),
           label: (context: any) => {
             const value = context.parsed.y;
             if (context.dataset.label === 'Total Lent') {
@@ -130,16 +124,15 @@ export const getChartOptions = (
       },
       datalabels: {
         display: true,
-        // color: "white",
         font: {
           size: 14,
           weight: 'bold',
         },
         color: (context: Context) => {
           if (context.dataset.label === 'Total Lent') {
-            return '#317E24';
+            return tokens.direction.owed;
           } else {
-            return '#FF3D3D';
+            return tokens.direction.owe;
           }
         },
 
@@ -168,7 +161,6 @@ export const getChartOptions = (
         },
         padding: 5,
         formatter: (value: number, context: Context) => {
-          // Show price label for first, middle, and last data points
           if (
             context.dataIndex === 0 ||
             context.dataIndex === context.dataset.data.length - 1 ||
@@ -177,7 +169,7 @@ export const getChartOptions = (
             if (
               enhancedDatesToNumbers[context.dataIndex] === 15 &&
               (enhancedDatesToNumbers[context.dataset.data.length - 1] === 14 ||
-                enhancedDatesToNumbers[context.dataset.data.length - 1] === 16) //condition to not show 15th and 16th consecutive data points
+                enhancedDatesToNumbers[context.dataset.data.length - 1] === 16)
             )
               return '';
             return `${currencySymbol}` + roundThousandsAndMillions(value);
@@ -201,54 +193,22 @@ export const getChartOptions = (
           display: false,
         },
         ticks: {
-          color: '#DDDDDD',
+          color: tokens.ink.tertiary,
           font: {
             weight: 'bold',
             size: 20,
           },
-          callback: (index: number, value: number) => {
-            switch (selectedCycle) {
-              case Frequency.Monthly:
-                // show x axis values for the first and last date of the month
-                if (
-                  index === 0 ||
-                  index === enhancedDatesToNumbers.length - 1
-                ) {
-                  return labels[index];
-                }
-                // show x axis values for intervals of 5
-
-                if (
-                  parseFloat(labels[index]) % 5 === 0 &&
-                  enhancedDatesToNumbers[index + fractalFactor + 1] !== 31
-                ) {
-                  return Math.floor(parseFloat(labels[index]))
-                    .toString()
-                    .padStart(2, '0');
-                }
-                // hide all other x axis values
-                break;
-              case Frequency.Weekly:
-                if (
-                  index === 0 ||
-                  index === enhancedWeekDays.length - 1 ||
-                  index % 5 === 0
-                ) {
-                  return enhancedWeekDays[index];
-                }
-                break;
-
-              case Frequency.Annually:
-                if (
-                  index === 0 ||
-                  index === enhancedAbbreviatedMonths.length - 1 ||
-                  index % (fractalFactor + 1) === 0
-                ) {
-                  return enhancedAbbreviatedMonths[index];
-                }
-                break;
-            }
-          },
+          callback: (index: number) =>
+            getAxisTickLabel(
+              index,
+              selectedCycle,
+              labels,
+              enhancedDatesToNumbers,
+              enhancedWeekDays,
+              enhancedAbbreviatedMonths,
+              fractalFactor,
+              5
+            ),
         },
       },
       y: {

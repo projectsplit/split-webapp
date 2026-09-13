@@ -1,22 +1,44 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
-import checker from 'vite-plugin-checker';
 import { VitePWA } from 'vite-plugin-pwa';
-// import * as fs from 'node:fs';
-// import path from 'path';
+import { execSync } from 'node:child_process';
 
-export default defineConfig({
-  // server: {
-  //   https: {
-  //     key: fs.readFileSync(path.resolve(__dirname, 'localhost+1-key.pem')),
-  //     cert: fs.readFileSync(path.resolve(__dirname, 'localhost+1.pem')),
-  //   },
-  //   host: 'localhost',
-  //   port: 5173,
-  // },
+const commitHash = (() => {
+  const fromCi = process.env.VITE_COMMIT_HASH ?? process.env.GITHUB_SHA;
+  if (fromCi) return fromCi.slice(0, 7);
+
+  try {
+    return execSync('git rev-parse --short HEAD').toString().trim();
+  } catch {
+    return '';
+  }
+})();
+
+const renderProbe = (): Plugin => ({
+  name: 'render-probe',
+  apply: 'serve',
+  transformIndexHtml(html) {
+    if (process.env.VITE_RENDER_PROBE !== '1') return html;
+    return {
+      html,
+      tags: [
+        {
+          tag: 'script',
+          attrs: { type: 'module', src: '/src/devtools/renderProbe.ts' },
+          injectTo: 'head-prepend',
+        },
+      ],
+    };
+  },
+});
+
+export default defineConfig(({ mode }) => {
+  const appName = mode === 'test' ? 'Buqs Test' : 'Buqs';
+
+  return {
   plugins: [
+    renderProbe(),
     react({
-      // Add the Babel transform here
       babel: {
         plugins: [
           ["module:@preact/signals-react-transform"]
@@ -24,9 +46,6 @@ export default defineConfig({
       }
     }),
     VitePWA({
-      // injectManifest rather than the default generateSW: a generated service worker cannot carry
-      // the push/notificationclick listeners, so src/sw.ts is our own worker and Workbox only
-      // injects the precache manifest into it.
       strategies: 'injectManifest',
       srcDir: 'src',
       filename: 'sw.ts',
@@ -35,8 +54,8 @@ export default defineConfig({
       manifest: {
         id: '/',
         start_url: '/',
-        name: 'Buqs',
-        short_name: 'Buqs',
+        name: appName,
+        short_name: appName,
         description: 'Buqs Web App',
         theme_color: '#000000',
         background_color: '#000000',
@@ -61,13 +80,13 @@ export default defineConfig({
       },
       devOptions: {
         enabled: true,
-        // A TypeScript worker is served as an ES module in dev; without this the browser
-        // refuses to register it.
         type: 'module'
       }
     }),
-    // checker({ typescript: true }),
   ],
+  define: {
+    __COMMIT_HASH__: JSON.stringify(commitHash),
+  },
   resolve: {
     alias: {
       '@': '/src',
@@ -94,4 +113,5 @@ export default defineConfig({
       },
     },
   },
+  };
 });

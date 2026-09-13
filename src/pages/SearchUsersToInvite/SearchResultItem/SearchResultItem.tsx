@@ -2,6 +2,8 @@ import { Signal } from '@preact/signals-react';
 import { useRevokeInvitation } from '../../../api/auth/CommandHooks/useRevokeInvitation';
 import { useSendInvitation } from '../../../api/auth/CommandHooks/useSendInvitation';
 import MyButton from '../../../components/MyButton/MyButton';
+import { getInitials } from '../../../helpers/getInitials';
+import { StyledSearchResultItem } from './SearchResultItem.styled';
 
 export const SearchResultItem: React.FC<{
   userId: string;
@@ -40,12 +42,11 @@ export const SearchResultItem: React.FC<{
 
   if (isGroupMember) {
     return (
-      <div className="search-result">
-        <div className="top-row">
-          <div>{username}</div>
-        </div>
-        <div className="bottom-row">already a member</div>
-      </div>
+      <StyledSearchResultItem>
+        <span className="avatar">{getInitials(username)}</span>
+        <div className="resultName muted">{username}</div>
+        <span className="chip">In group</span>
+      </StyledSearchResultItem>
     );
   }
 
@@ -68,18 +69,18 @@ export const SearchResultItem: React.FC<{
   };
 
   return (
-    <div className="search-result">
-      <div className="top-row">
-        <div>{username}</div>
-        <MyButton
-          isLoading={isPending}
-          variant={isAlreadyInvited ? 'secondary' : 'primary'}
-          onClick={isPending ? undefined : onClick}
-          hasFailed={isError}
-        >
-          {isAlreadyInvited ? 'Uninvite' : 'Invite'}
-        </MyButton>
-      </div>
-    </div>
+    <StyledSearchResultItem>
+      <span className="avatar">{getInitials(username)}</span>
+      <div className="resultName">{username}</div>
+      <MyButton
+        isLoading={isPending}
+        size="compact"
+        variant={isAlreadyInvited ? 'secondary' : 'primary'}
+        onClick={isPending ? undefined : onClick}
+        hasFailed={isError}
+      >
+        {isAlreadyInvited ? 'Cancel' : 'Invite'}
+      </MyButton>
+    </StyledSearchResultItem>
   );
 };

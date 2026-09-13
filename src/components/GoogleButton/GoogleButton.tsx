@@ -48,4 +48,4 @@ const GoogleButton: React.FC = () => {
   );
 };
 
-export default GoogleButton;
+export default React.memo(GoogleButton);

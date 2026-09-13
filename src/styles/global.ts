@@ -1,12 +1,13 @@
 import { createGlobalStyle } from 'styled-components';
+import { tokens } from './tokens';
 
 const GlobalStyles = createGlobalStyle`
   html, body, #root {
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: 'Inter', sans-serif;
-    background-color: #000000;
+    font-family: ${tokens.font.sans};
+    background-color: ${tokens.surface.page};
     color: white;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
@@ -21,7 +22,6 @@ const GlobalStyles = createGlobalStyle`
     min-height: 100dvh;
   }
 
-  /* Force perfect centering on desktop */
   @media (min-width: 769px) {
     html, body, #root {
       padding-left: 0 !important;
@@ -32,15 +32,15 @@ const GlobalStyles = createGlobalStyle`
     }
 
     html, body {
-      background-color: #000000;
+      background-color: ${tokens.surface.page};
     }
 
     #root {
       max-width: 768px;
       width: 100%;
       margin: 0 auto;
-      border-left: 1px solid #333;
-      border-right: 1px solid #333;
+      border-left: 1px solid ${tokens.surface.hairline};
+      border-right: 1px solid ${tokens.surface.hairline};
       position: relative;
       overflow-x: hidden;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -58,7 +58,46 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
 
-  /* Scrollbar styles */
+  .pac-container {
+    margin-top: 6px;
+    padding: 4px;
+    background-color: ${tokens.surface.card};
+    border: 1px solid ${tokens.surface.hairline};
+    border-radius: ${tokens.radius.iconButton};
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.6);
+    font-family: ${tokens.font.sans};
+    z-index: 1000;
+  }
+
+  .pac-item {
+    padding: 9px 10px;
+    border: none;
+    border-radius: ${tokens.radius.control};
+    font-size: ${tokens.size.s13};
+    line-height: 1.4;
+    color: ${tokens.ink.secondary};
+    cursor: pointer;
+  }
+
+  .pac-item:hover,
+  .pac-item-selected {
+    background-color: ${tokens.surface.raised};
+  }
+
+  .pac-item-query {
+    font-size: ${tokens.size.s14};
+    color: ${tokens.ink.primary};
+  }
+
+  .pac-matched {
+    font-weight: ${tokens.weight.semibold};
+    color: ${tokens.ink.primary};
+  }
+
+  .pac-icon {
+    display: none;
+  }
+
   *::-webkit-scrollbar {
     width: 4px;
     height: 4px;
@@ -72,7 +111,6 @@ const GlobalStyles = createGlobalStyle`
     background-color: rgba(192, 192, 192, 0.6);
   }
 
-  /* Rest of your original styles (unchanged) */
   input[type="number"] {
     -moz-appearance: textfield;
     appearance: textfield;
@@ -90,7 +128,6 @@ const GlobalStyles = createGlobalStyle`
 
   input { all: unset; cursor: text; }
 
-  /* Your animations */
   .bottomslide-enter { transform: translateY(100%); }
   .bottomslide-enter.bottomslide-enter-active {
     transform: translateY(0);

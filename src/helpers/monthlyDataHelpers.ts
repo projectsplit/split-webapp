@@ -4,17 +4,7 @@ export const getAllDaysInMonth = (month: number, year: number) =>
     (_, i) => new Date(year, month - 1, i + 1)
   );
 
-export const getNameForCurrentMonth = (
-  year: number,
-  monthIndex: number,
-  date?: number | undefined
-) => {
-  const currDate = new Date(year, monthIndex, date);
-  const dateOptions: Intl.DateTimeFormatOptions = { month: 'long' };
-  return currDate.toLocaleDateString('en-US', dateOptions);
-};
-
-export const monthMap: { [key: string]: string } = {
+const monthMap: { [key: string]: string } = {
   Jan: 'January',
   Feb: 'February',
   Mar: 'March',

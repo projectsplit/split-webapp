@@ -2,20 +2,31 @@ import { css, keyframes, styled } from 'styled-components';
 
 export const StyledMyButton = styled.button.withConfig({
   shouldForwardProp: (prop) =>
-    !['variant', 'isLoading', 'hasFailed'].includes(prop),
+    !['variant', 'isLoading', 'hasFailed', 'size'].includes(prop),
 })<StyledMyButtonProps>`
-  font-family: 'Roboto';
-  padding: 0.5em 1em;
-  font-weight: 400;
-  border: none;
-  border-radius: 10px;
-  font-size: ${({ fontSize }) => (fontSize ? `${fontSize}px` : '14px')};
+  padding: ${({ size }) => (size === 'compact' ? '7px 14px' : '13px 20px')};
+  font-weight: ${({ theme, size, variant }) =>
+    size === 'compact' && variant === 'secondary'
+      ? theme.weight.medium
+      : theme.weight.semibold};
+  border: 1px solid transparent;
+  border-radius: ${({ theme, size }) =>
+    size === 'compact' ? theme.radius.buttonSmall : theme.radius.button};
+  font-size: ${({ theme, fontSize, size }) =>
+    fontSize
+      ? `${fontSize}px`
+      : size === 'compact'
+        ? theme.size.s13
+        : theme.size.s15};
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   position: relative;
-  /* z-index: 5; */
-  background-color: ${({ variant }) => buttonVariants[variant].background};
-  color: ${({ variant }) => buttonVariants[variant].color};
+  background-color: ${({ theme, variant }) =>
+    variant === 'primary' ? theme.ink.primary : 'transparent'};
+  border-color: ${({ theme, variant }) =>
+    variant === 'primary' ? 'transparent' : theme.surface.outline};
+  color: ${({ theme, variant }) =>
+    variant === 'primary' ? theme.surface.page : theme.ink.primary};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,52 +51,33 @@ export const StyledMyButton = styled.button.withConfig({
       animation-fill-mode: forwards;
     `}
 
-  &:hover {
-    ${({ disabled, isLoading, variant }) =>
-      !disabled &&
-      !isLoading &&
-      css`
-        background-color: ${buttonVariants[variant].hover};
-      `}
-  }
-
+  &:hover,
   &:active {
-    ${({ disabled, isLoading, variant }) =>
+    ${({ disabled, isLoading, variant, theme }) =>
       !disabled &&
       !isLoading &&
       css`
-        background-color: ${buttonVariants[variant].active};
+        background-color: ${variant === 'primary'
+          ? theme.ink.secondary
+          : theme.surface.raised};
       `}
   }
 `;
 
 const shake = keyframes`
   0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); background-color: #ff5c63; }
-  50% { transform: translateX(4px); background-color: #ff5c63; }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
   75% { transform: translateX(-4px); }
   100% { transform: translateX(0); }
 `;
 
-const buttonVariants = {
-  primary: {
-    background: '#f0f0f0',
-    color: '#2d2d2d',
-    hover: '#a3a3a3',
-    active: '#a3a3a3',
-  },
-  secondary: {
-    background: '#2d2d2d',
-    color: '#f0f0f0',
-    hover: '#1a1b1d',
-    active: '#1a1b1d',
-  },
-} as const;
+export type MyButtonVariant = 'primary' | 'secondary';
+export type MyButtonSize = 'default' | 'compact';
 
-export type MyButtonVariant = keyof typeof buttonVariants;
-
-export interface StyledMyButtonProps {
+interface StyledMyButtonProps {
   variant: MyButtonVariant;
+  size?: MyButtonSize;
   disabled?: boolean;
   isLoading?: boolean;
   hasFailed?: boolean;

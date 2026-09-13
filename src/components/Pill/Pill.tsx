@@ -12,6 +12,8 @@ export default function Pill({
   $textColor,
   $border,
   $closeButtonColor,
+  $radius,
+  $vivid,
   children,
 }: PillProps & { children?: React.ReactNode }) {
   return (
@@ -20,6 +22,8 @@ export default function Pill({
       fontSize={fontSize}
       $textColor={$textColor}
       $border={$border}
+      $radius={$radius}
+      $vivid={$vivid}
     >
       <div className="titleAndCloseButton" onClick={onClick}>
         <div className="childrenAndTitle">
@@ -40,7 +44,7 @@ export default function Pill({
           >
             <IoClose
               fontSize={fontSize}
-              color={$closeButtonColor ? $closeButtonColor : 'black'}
+              color={$closeButtonColor ? $closeButtonColor : 'currentColor'}
             />
           </div>
         ) : (

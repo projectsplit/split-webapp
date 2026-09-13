@@ -1,44 +1,37 @@
 import styled from 'styled-components';
 
 export const StyledOptionsToolbar = styled.div`
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-
-  font-size: 20px;
   display: flex;
-  flex-direction: column; /* Change to column to stack category and types */
-  margin-top: 15px;
-  margin-bottom: 15px;
+  flex-direction: column;
+  margin-top: 18px;
+
+  & + & {
+    margin-top: ${({ theme }) => theme.space.s12};
+  }
 
   .categoryAndTypesWrapper {
     display: flex;
-    flex-direction: column; /* Stack category and types vertically */
-    gap: 10px;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.space.s10};
+  }
 
-    .category {
-      flex-shrink: 0; /* Ensure category does not resize */
-    }
+  .category {
+    font-size: ${({ theme }) => theme.size.s11};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
 
-    .types {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      overflow-x: auto; /* Horizontal scrolling for overflowing content */
-      scrollbar-width: thin; /* Applies a thinner scrollbar */
-      padding-bottom: 5px; /* Add space for scrollbar */
-
-      /* Optional styling for scrollbar (works on modern browsers) */
-      &::-webkit-scrollbar {
-        height: 8px;
-      }
-      &::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 4px;
-      }
-      &::-webkit-scrollbar-thumb:hover {
-        background: #a7a7a7;
-      }
-    }
+  .types {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s6};
+    padding: ${({ theme }) => `${theme.space.s12} ${theme.space.s16}`};
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
   }
 `;

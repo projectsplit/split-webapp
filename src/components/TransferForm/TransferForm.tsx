@@ -1,6 +1,6 @@
 import { TransferFormProps } from '../../interfaces';
 import { StyledTransferForm } from './TransferForm.styled';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { signal, useSignal } from '@preact/signals-react';
 import { DateTime } from '../DateTime';
 import MyButton from '../MyButton/MyButton';
@@ -14,21 +14,21 @@ import {
   useTransferActions,
   useTransferData,
 } from './hooks/useTransferFormStore';
+import { createTransferStore } from './formStore/formStore';
 import { Header } from './Header/Header';
 import { InputAndErrorsWrapper } from './InputAndErrorsWrapper/InputAndErrorsWrapper';
 import { NonGroupMenu } from './NonGroupMenu/NonGroupMenu';
 import { GroupMenu } from './GroupMenu/GroupMenu';
 import { useTransferFormLogic } from './hooks/useTransferFormLogic';
+import GeneralWarningMenuAnimation from '../Animations/GeneralWarningMenuAnimation';
 
 export default function TransferForm({
   groupMembers,
-  nonGroupUsers,
   currency,
   timeZoneId,
   menu,
   fromHomeGroup,
   groupId,
-  isnonGroupTransfer,
   nonGroupMenu,
   fromHome,
 }: TransferFormProps) {
@@ -38,15 +38,33 @@ export default function TransferForm({
   const displayedAmount = useSignal<string>('');
   const currencyMenu = useSignal<string | null>(null);
   const isDateShowing = useSignal<boolean>(false);
+  const warningMenu = useSignal<string | null>(null);
+  const warningMessage = useSignal<string>('');
 
-  const data = useTransferData();
-  const actions = useTransferActions();
+  const showWarning = (message: string) => {
+    warningMessage.value = message;
+    warningMenu.value = 'generalWarning';
+  };
+
+  const [transferStore] = useState(createTransferStore);
+  const data = useTransferData(transferStore);
+  const actions = useTransferActions(transferStore);
+
+  const isNonGroup = !groupId;
 
   useEffect(() => {
     if (userInfo?.userId) {
-      actions.initForm(currency, userInfo.userId, !!isnonGroupTransfer?.value);
+      actions.initForm(currency, userInfo.userId, isNonGroup);
+      displayedAmount.value = '';
     }
-  }, [userInfo?.userId, currency, isnonGroupTransfer?.value, actions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo?.userId, currency, actions, displayedAmount]);
+
+  useEffect(() => {
+    if (!userInfo?.userId) return;
+    actions.setSenderId(isNonGroup ? userInfo.userId : '');
+    actions.setReceiverId('');
+  }, [isNonGroup, userInfo?.userId, actions]);
 
   const {
     handleInputBlur,
@@ -62,8 +80,6 @@ export default function TransferForm({
     groupId,
     groupMembers,
     menu,
-    nonGroupUsers,
-    isnonGroupTransfer,
     nonGroupMenu,
     fromHomeGroup,
     navigate,
@@ -72,6 +88,9 @@ export default function TransferForm({
     currencyMenu,
     data,
     actions,
+    isNonGroup,
+    showWarning,
+    isDateShowing,
   });
 
   return (
@@ -82,6 +101,7 @@ export default function TransferForm({
     >
       {' '}
       <Header menu={menu} />
+      <div className="formScroll">
       <InputAndErrorsWrapper
         currencyMenu={currencyMenu}
         displayedAmount={displayedAmount}
@@ -89,10 +109,7 @@ export default function TransferForm({
         actions={actions}
         handleInputBlur={handleInputBlur}
       />
-      {isnonGroupTransfer &&
-      isnonGroupTransfer.value &&
-      nonGroupMenu &&
-      fromHomeGroup?.value === null ? (
+      {isNonGroup && nonGroupMenu ? (
         <NonGroupMenu
           $noReceiverSelected={noReceiverSelected}
           $isSamePersonError={data.errors.showSamePersonError}
@@ -100,11 +117,11 @@ export default function TransferForm({
           actions={actions}
           fromHome={fromHome}
           nonGroupMenu={nonGroupMenu}
+          currentUserName={userInfo?.username}
         />
       ) : (
         <GroupMenu
           fromHomeGroup={fromHomeGroup}
-          isnonGroupTransfer={isnonGroupTransfer}
           idError={idError}
           data={data}
           actions={actions}
@@ -127,7 +144,7 @@ export default function TransferForm({
           setShowPicker={actions.setShowPicker}
         />
       )}
-      <div className="spacer"></div>
+      </div>
       <div className="bottomButtons">
         <div className="submitButton">
           <MyButton
@@ -148,13 +165,20 @@ export default function TransferForm({
           isDateShowing={isDateShowing}
           showPicker={data.showPicker}
           setShowPicker={actions.setShowPicker}
+          realtimeUpdate={data.isTrackingNow}
+          setRealtimeUpdate={actions.setIsTrackingNow}
         />
       </div>
       <MenuAnimationBackground menu={currencyMenu} />
+      <MenuAnimationBackground menu={warningMenu} />
       <CurrencyOptionsAnimation
         currencyMenu={currencyMenu}
         clickHandler={handleCurrencyOptionsClick}
         selectedCurrency={data.currencySymbol}
+      />
+      <GeneralWarningMenuAnimation
+        menu={warningMenu}
+        message={warningMessage.value}
       />
     </StyledTransferForm>
   );

@@ -20,83 +20,85 @@ export const Overlay = styled.div`
   justify-content: center;
   padding: 16px;
   z-index: 9999;
-  pointer-events: none; /* Allows clicking through the overlay itself */
+  pointer-events: none;
 `;
 
 export const PromptContainer = styled.div`
-  background: ${({ theme }) => theme.layer2};
-  border: 1px solid ${({ theme }) => theme.lightBorder};
-  border-radius: 16px;
-  padding: 16px;
+  background: ${({ theme }) => theme.surface.card};
+  border: 1px solid ${({ theme }) => theme.surface.hairline};
+  border-radius: ${({ theme }) => theme.radius.dialog};
+  padding: ${({ theme }) => theme.space.s16};
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  pointer-events: auto; /* Re-enable pointer events for the banner */
+  box-shadow: ${({ theme }) => theme.shadow.banner};
+  pointer-events: auto;
   animation: ${slideUp} 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: ${({ theme }) => theme.space.s16};
 `;
 
 export const Header = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: ${({ theme }) => theme.space.s12};
 `;
 
 export const Icon = styled.img`
   width: 48px;
   height: 48px;
-  border-radius: 12px;
+  border-radius: ${({ theme }) => theme.radius.iconButton};
   object-fit: contain;
-  background: ${({ theme }) => theme.layer1};
+  background: ${({ theme }) => theme.surface.hairline};
 `;
 
 export const Title = styled.h3`
   margin: 0;
-  color: ${({ theme }) => theme.primaryTextColor};
-  font-size: 16px;
-  font-weight: 600;
+  color: ${({ theme }) => theme.ink.primary};
+  font-size: ${({ theme }) => theme.size.s15};
+  font-weight: ${({ theme }) => theme.weight.semibold};
+  letter-spacing: -0.01em;
 `;
 
 export const Description = styled.p`
-  margin: 4px 0 0 0;
-  color: ${({ theme }) => theme.secondaryTextColor};
-  font-size: 13px;
+  margin: ${({ theme }) => `${theme.space.s4} 0 0 0`};
+  color: ${({ theme }) => theme.ink.secondary};
+  font-size: ${({ theme }) => theme.size.s13};
+  line-height: 1.5;
 `;
 
 export const ButtonGroup = styled.div`
   display: flex;
-  gap: 12px;
+  gap: ${({ theme }) => theme.space.s10};
   justify-content: flex-end;
 `;
 
-export const ButtonBase = styled.button`
-  border: none;
+const ButtonBase = styled.button`
+  border: 1px solid transparent;
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 8px;
-  padding: 8px 16px;
+  font-size: ${({ theme }) => theme.size.s13};
+  font-weight: ${({ theme }) => theme.weight.semibold};
+  border-radius: ${({ theme }) => theme.radius.pill};
+  padding: ${({ theme }) => `7px ${theme.space.s14}`};
   cursor: pointer;
   transition: all 0.2s;
 `;
 
 export const DismissButton = styled(ButtonBase)`
   background: transparent;
-  color: ${({ theme }) => theme.secondaryTextColor};
-  
+  border-color: ${({ theme }) => theme.surface.outline};
+  color: ${({ theme }) => theme.ink.primary};
+
   &:hover {
-    color: ${({ theme }) => theme.primaryTextColor};
-    background: ${({ theme }) => theme.layer1};
+    background: ${({ theme }) => theme.surface.raised};
   }
 `;
 
 export const InstallButton = styled(ButtonBase)`
-  background: ${({ theme }) => theme.highlightColor};
-  color: #ffffff;
-  
+  background: ${({ theme }) => theme.ink.primary};
+  color: ${({ theme }) => theme.surface.page};
+
   &:hover {
-    filter: brightness(1.1);
+    background: ${({ theme }) => theme.ink.secondary};
   }
 `;

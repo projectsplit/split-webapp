@@ -1,46 +1,49 @@
 import styled from 'styled-components';
+import { sheetHeaderStyles } from '@/styles/sheetHeader';
 
 export const StyledCreateGroup = styled.div`
   position: fixed;
-  font-size: 1.125rem;
   top: 0;
   width: 100%;
   height: 100dvh;
   overflow: auto;
   box-sizing: border-box;
-  background-color: black;
+  background-color: ${({ theme }) => theme.surface.page};
   z-index: 3;
   display: flex;
   flex-direction: column;
 
+  .fieldLabel {
+    font-size: ${({ theme }) => theme.size.s11};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: ${({ theme }) => theme.ink.tertiary};
+    margin-bottom: ${({ theme }) => theme.space.s10};
+  }
+
+  .currencyNote {
+    padding: ${({ theme }) => `${theme.space.s12} ${theme.space.s20} 0`};
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.6;
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
+
   .inputAndCurrWrapper {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: ${({ theme }) => theme.space.s16};
     .formInputWrapper {
-      margin-top: 0.6rem;
-      padding: 0 0.875rem;
+      margin-top: ${({ theme }) => theme.space.s8};
+      padding: ${({ theme }) => `0 ${theme.space.s20}`};
     }
 
     .currencySelectorWrapper {
-      padding: 0 0.875rem;
+      padding: ${({ theme }) => `0 ${theme.space.s20}`};
+      display: flex;
+      flex-direction: column;
       .currencySelector {
-        display: flex;
-        flex-direction: row;
-        gap: 0.5rem;
-        background-color: ${({ theme }) => theme.layer2};
-        border: 1px solid ${({ theme }) => theme.lineColor};
-        border-radius: 10px;
-        padding: 0.5rem;
-        font-size: 1.125rem;
-        width: 140px;
-        align-items: center;
-        justify-content: space-between;
-        cursor: pointer;
-
-        .angleDown {
-          font-size: 1.5rem;
-        }
+        align-self: flex-start;
       }
     }
   }
@@ -49,48 +52,9 @@ export const StyledCreateGroup = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: auto;
-    margin-bottom: 0.875rem;
-    padding: 0 0.875rem;
+    padding: ${({ theme }) =>
+      `${theme.space.s12} ${theme.space.s20} ${theme.space.s20}`};
   }
 
-  .header {
-    padding: 0.875rem;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-
-    .closeButtonContainer {
-      position: relative;
-      cursor: pointer;
-      display: inline-block;
-    }
-
-    .closeButton {
-      cursor: pointer;
-      display: block;
-      font-size: 1.875rem;
-    }
-
-    .closeButtonContainer:hover::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background-color: rgba(128, 128, 128, 0.3);
-      pointer-events: none;
-    }
-
-    .title {
-      font-weight: 600;
-    }
-    .gap {
-      margin-right: 0.9375rem;
-    }
-  }
+  ${sheetHeaderStyles}
 `;

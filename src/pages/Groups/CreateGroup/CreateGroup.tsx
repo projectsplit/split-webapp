@@ -3,7 +3,6 @@ import { StyledCreateGroup } from './CreateGroup.styled';
 import { IoClose } from 'react-icons/io5';
 import { CreateGroupProps } from '../../../interfaces';
 import { Currency, UserInfo } from '../../../types';
-import { FaAngleDown } from 'react-icons/fa';
 import MenuAnimationBackground from '../../../components/Animations/MenuAnimationBackground';
 import { useSignal } from '@preact/signals-react';
 import { currencyData } from '../../../helpers/openExchangeRates';
@@ -14,13 +13,14 @@ import FormInput from '../../../components/FormInput/FormInput';
 import { useCreateGroup } from '@/api/auth/CommandHooks/useCreateGroup';
 import InviteUsersToNewGroupAnimation from '@/components/Animations/InviteUsersToNewGroupAnimation';
 import { useMostRecentContext } from '@/api/auth/CommandHooks/useMostRecentContext';
+import CurrencySelector from '../../../components/CurrencySelector/CurrencySelector';
 
 export default function CreateGroup({
   menu,
   currencyMenu,
   nodeRef,
 }: CreateGroupProps) {
-  const inviteUsersMenu = useSignal<string | null>(null); //CHANGE HERE
+  const inviteUsersMenu = useSignal<string | null>(null);
   const [groupName, setGroupName] = useState<string>('');
   const { userInfo } = useOutletContext<{
     userInfo: UserInfo;
@@ -61,8 +61,8 @@ export default function CreateGroup({
   return (
     <StyledCreateGroup ref={nodeRef}>
       <div className="header">
-        <div className="gap"></div>
-        <div className="title">Create New Group</div>
+        <div className="headerSpacer"></div>
+        <div className="sheetTitle">New group</div>
 
         <div
           className="closeButtonContainer"
@@ -73,6 +73,7 @@ export default function CreateGroup({
       </div>
       <div className="inputAndCurrWrapper">
         <div className="formInputWrapper">
+          <div className="fieldLabel">Name</div>
           <FormInput
             placeholder="Group Name"
             value={groupName}
@@ -82,24 +83,25 @@ export default function CreateGroup({
           />
         </div>
         <div className="currencySelectorWrapper">
-          <div
-            className="currencySelector"
+          <div className="fieldLabel">Base currency</div>
+          <CurrencySelector
+            code={selectedCurrency?.symbol}
             onClick={() => (currencyMenu.value = 'currencyOptions')}
-          >
-            <div className={selectedCurrency?.flagClass} />
-            <div>{selectedCurrency?.symbol}</div>
-            <FaAngleDown className="angleDown" />
-          </div>
+          />
         </div>
+      </div>
+      <div className="currencyNote">
+        Every balance in this group is reported in its base currency.
+        Individual expenses can still be entered in any currency.
       </div>
       <div className="submitButton">
         <MyButton
           disabled={groupName.trim() === '' ? true : false}
           onClick={onClickHandler}
           isLoading={isPending}
-          fontSize="16"
+          fontSize="15"
         >
-          Create Group
+          Create group
         </MyButton>
       </div>
 

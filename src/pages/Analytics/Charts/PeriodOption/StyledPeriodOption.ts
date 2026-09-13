@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { StyledCycleOption } from '../../CycleOption/CycleOption.styled';
 
 export const StyledPeriodOption = styled(StyledCycleOption)`
-  overflow: auto; /* or overflow: scroll; or overflow: hidden; */
+  overflow: auto;
   height: 30vh;
 
   .height {

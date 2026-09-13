@@ -27,13 +27,6 @@ export const DateOnly = (eventTimeUtc: string, timeZone: string): string => {
   return eventDateTime.setZone(timeZone).toFormat('d LLL yyyy');
 };
 
-export const YearOnly = (eventTimeUtc: string, timeZone: string): string => {
-  const eventDateTime = DateTime.fromISO(eventTimeUtc, { zone: 'utc' }).setZone(
-    timeZone
-  );
-  return eventDateTime.toFormat('yyyy');
-};
-
 export const FormatDateTime = (
   eventTimeUtc: string,
   timeZone: string
@@ -44,8 +37,8 @@ export const FormatDateTime = (
   );
 
   if (eventDateTime.hasSame(now, 'day')) {
-    return `Today @${eventDateTime.toFormat('HH:mm:ss')}`;
+    return `Today, ${eventDateTime.toFormat('HH:mm')}`;
   }
 
-  return eventDateTime.toFormat('dd/MM/yyyy @HH:mm:ss');
+  return eventDateTime.toFormat('d MMM, HH:mm');
 };

@@ -8,7 +8,6 @@ export function getAllCurrencyTotals(
 
   Object.values(totalSpent).forEach((userCurrencies) => {
     Object.entries(userCurrencies).forEach(([currencyCode, amount]) => {
-      //const precision = currencyCode === "JPY" ? 0 : 2;
       totals[currencyCode] = (totals[currencyCode] ?? currency(0)).add(amount);
     });
   });

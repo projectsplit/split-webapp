@@ -1,4 +1,6 @@
+import { tokens } from '@/styles/tokens';
 import { displayCurrencyAndAmount } from './displayCurrencyAndAmount';
+import { JSX } from 'react';
 
 export const joinAmounts = (entries: [string, number][]): JSX.Element => {
   const amounts = entries.map(([currency, amount]) =>
@@ -10,7 +12,12 @@ export const joinAmounts = (entries: [string, number][]): JSX.Element => {
     return (
       <>
         {amounts[0]}
-        <span style={{ color: '#a3a3a3' }}> and </span>
+        <span
+          style={{ color: tokens.ink.tertiary, fontFamily: tokens.font.sans }}
+        >
+          {' '}
+          and{' '}
+        </span>
         {amounts[1]}
       </>
     );
@@ -19,14 +26,20 @@ export const joinAmounts = (entries: [string, number][]): JSX.Element => {
     for (let i = 0; i < amounts.length; i++) {
       if (i > 0 && i < amounts.length - 1) {
         result.push(
-          <span style={{ color: '#a3a3a3' }} key={`comma-${i}`}>
+          <span
+            style={{ color: tokens.ink.tertiary, fontFamily: tokens.font.sans }}
+            key={`comma-${i}`}
+          >
             {', '}
           </span>
         );
       }
       if (i === amounts.length - 1) {
         result.push(
-          <span style={{ color: '#a3a3a3' }} key={`and-${i}`}>
+          <span
+            style={{ color: tokens.ink.tertiary, fontFamily: tokens.font.sans }}
+            key={`and-${i}`}
+          >
             {' and '}
           </span>
         );

@@ -1,35 +1,39 @@
 import styled from 'styled-components';
+import { StyledUserListRow } from '../UserListRow.styled';
 
 interface StyledUserProps {
   $isSelected: boolean;
 }
-/* Row geometry is shared with ConnectableUserItem: both kinds of row sit in the same list and a
-   user has no idea that "already connected" is why one of them renders differently, so any
-   difference in indent or height reads as the list being broken. Keep these three values in sync
-   with ConnectableUserItem.styled.ts. */
-export const StyledUser = styled.div<StyledUserProps>`
-  display: flex;
-  flex-direction: column;
-  padding: 0 1rem;
 
-  cursor: pointer;
+export const StyledUser = styled(StyledUserListRow)<StyledUserProps>`
+  .top-row {
+    background-color: ${({ $isSelected, theme }) =>
+      $isSelected ? theme.surface.raised : 'transparent'};
 
-  .nameAndTick {
-    background-color: ${(props) =>
-      props.$isSelected ? props.theme.inputGrey : 'transparent'};
-    border-radius: 8px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    min-height: 3rem;
-    .name {
-      flex: 1;
+    .sideTag {
+      flex-shrink: 0;
+      padding: ${({ theme }) => `${theme.space.s3} ${theme.space.s8}`};
+      border-radius: ${({ theme }) => theme.radius.pill};
+      background-color: ${({ theme }) => theme.surface.raised};
+      color: ${({ theme }) => theme.ink.tertiary};
+      font-size: ${({ theme }) => theme.size.s10};
+      font-weight: ${({ theme }) => theme.weight.semibold};
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
-    .tick {
-      font-size: 20px;
+
+    .sideTag.picked {
+      background-color: ${({ theme }) => theme.surface.mark};
+      color: ${({ theme }) => theme.ink.primary};
+    }
+  }
+
+  .top-row.taken {
+    cursor: default;
+
+    .avatar,
+    .name {
+      opacity: 0.45;
     }
   }
 `;

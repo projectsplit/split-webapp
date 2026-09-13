@@ -26,7 +26,7 @@ export const useSetShowBudgetInfo = () => {
       return { previousUserInfo };
     },
 
-    onError: (err, newSetting, context) => {
+    onError: (err, _newSetting, context) => {
       if (context?.previousUserInfo) {
         queryClient.setQueryData(queryKey, context.previousUserInfo);
       }

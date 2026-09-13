@@ -11,42 +11,49 @@ export const StyledLongPressMenu = styled.div`
   .backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(2px);
+    background: ${({ theme }) => theme.scrim.sheet};
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     animation: fadeIn 0.2s ease;
   }
 
   .sheet {
     position: relative;
-    background: ${({ theme }) => theme.layer2};
-    border-radius: 20px 20px 0 0;
-    padding: 12px 16px 32px;
+    box-sizing: border-box;
+    background: ${({ theme }) => theme.surface.card};
+    border-top: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) =>
+      `${theme.radius.sheet} ${theme.radius.sheet} 0 0`};
+    padding: ${({ theme }) =>
+      `${theme.space.s10} ${theme.space.s20} ${theme.space.s20}`};
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: ${({ theme }) => theme.space.s8};
     animation: slideUp 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.25);
+    box-shadow: ${({ theme }) => theme.shadow.sheet};
 
     .handle {
-      width: 40px;
+      width: 36px;
       height: 4px;
-      border-radius: 2px;
-      background: ${({ theme }) => theme.lightBorder};
+      border-radius: ${({ theme }) => theme.radius.pill};
+      background: ${({ theme }) => theme.surface.dot};
       align-self: center;
-      margin-bottom: 12px;
+      margin-bottom: ${({ theme }) => theme.space.s8};
     }
 
     .option {
+      box-sizing: border-box;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: ${({ theme }) => theme.space.s12};
       width: 100%;
-      padding: 16px 18px;
+      padding: ${({ theme }) => `${theme.space.s14} ${theme.space.s16}`};
       border: none;
-      border-radius: 12px;
+      border-radius: ${({ theme }) => theme.radius.iconButton};
       cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
+      font-family: ${({ theme }) => theme.font.sans};
+      font-size: ${({ theme }) => theme.size.s15};
+      font-weight: ${({ theme }) => theme.weight.medium};
       transition: opacity 0.15s ease, transform 0.1s ease;
 
       &:active {
@@ -55,19 +62,22 @@ export const StyledLongPressMenu = styled.div`
       }
 
       .icon {
-        font-size: 1.3rem;
+        display: flex;
+        font-size: ${({ theme }) => theme.icon.md};
         flex-shrink: 0;
       }
     }
 
     .option.edit {
-      background: ${({ theme }) => theme.layer3 ?? 'rgba(81,131,238,0.12)'};
-      color: ${({ theme }) => theme.primaryTextColor};
+      background: ${({ theme }) => theme.surface.raised};
+      color: ${({ theme }) => theme.ink.primary};
     }
 
     .option.delete {
-      background: rgba(220, 53, 69, 0.12);
-      color: #dc3545;
+      background: ${({ theme }) =>
+        `color-mix(in oklab, ${theme.direction.owe} 14%, transparent)`};
+      color: ${({ theme }) =>
+        `color-mix(in oklab, ${theme.direction.owe} 82%, white)`};
     }
   }
 

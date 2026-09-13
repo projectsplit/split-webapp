@@ -8,7 +8,6 @@ export function distributeRemainderCentsForShares(
   const multiplier = Math.pow(10, decimalDigits);
   const totalCents = Math.round(totalAmount * multiplier);
 
-  // Calculate total shares and initial amounts in cents with member IDs
   const totalShares = synchronizedFormMembers.reduce(
     (sum, member) =>
       sum +
@@ -21,7 +20,6 @@ export function distributeRemainderCentsForShares(
     return { adjustedToOriginalAmount: [] };
   }
 
-  // Calculate initial amounts based on shares for selected members
   const totalEqualShares = totalAmount / totalShares;
   const splitAmountsInCents = synchronizedFormMembers
     .map((m) => {
@@ -37,14 +35,12 @@ export function distributeRemainderCentsForShares(
     })
     .filter((item): item is { id: string; amount: number } => item !== null);
 
-  // Calculate remainder
   const totalSplitCents = splitAmountsInCents.reduce(
     (sum, item) => sum + item.amount,
     0
   );
   const remainderCents = totalCents - totalSplitCents;
 
-  // Adjust amounts to account for remainder
   const adjustArray = (
     arr: { id: string; amount: number }[],
     remainder: number
@@ -53,13 +49,11 @@ export function distributeRemainderCentsForShares(
     const absRemainder = Math.abs(remainder);
     const isNegative = remainder < 0;
 
-    // Sort indices by amount (descending) to adjust largest amounts first
     const indices = arr
       .map((item, index) => ({ amount: item.amount, index }))
       .sort((a, b) => b.amount - a.amount)
       .map(({ index }) => index);
 
-    // Distribute remainder across the largest values
     for (let i = 0; i < absRemainder; i++) {
       const index = indices[i % indices.length];
       adjusted[index].amount += isNegative ? -1 : 1;
@@ -73,7 +67,6 @@ export function distributeRemainderCentsForShares(
     adjustedAmounts = adjustArray(splitAmountsInCents, remainderCents);
   }
 
-  // Verify the new total
   const newTotal = adjustedAmounts.reduce((sum, item) => sum + item.amount, 0);
   if (newTotal !== totalCents) {
     console.warn(
@@ -81,7 +74,6 @@ export function distributeRemainderCentsForShares(
     );
   }
 
-  // Convert back to original amounts with ID
   const adjustedToOriginalAmount = adjustedAmounts.map((item) => ({
     id: item.id,
     amount: (item.amount / multiplier).toFixed(decimalDigits),

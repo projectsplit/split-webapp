@@ -18,6 +18,11 @@ import Sentinel from '../../components/Sentinel';
 import { SearchResultItem } from './SearchResultItem/SearchResultItem';
 import useDebounce from '../../hooks/useDebounce';
 
+const INVITE_CATEGORIES = {
+  cat1: 'Invite User',
+  cat2: 'Create Guest',
+};
+
 const SearchUsersToInvite = ({
   menu,
   guestToBeReplaced,
@@ -42,8 +47,9 @@ const SearchUsersToInvite = ({
   );
 
   useEffect(() => {
-    if (accessedNewUsersInvitationsMenu) accessedNewUsersInvitationsMenu.value = true;
-  }, []);
+    if (accessedNewUsersInvitationsMenu)
+      accessedNewUsersInvitationsMenu.value = true;
+  }, [accessedNewUsersInvitationsMenu]);
 
   const {
     data,
@@ -73,22 +79,8 @@ const SearchUsersToInvite = ({
     <StyledSearchUsersToInvite>
       <div className="fixed-header-container">
         <div className="header">
-          <div className="gap"></div>
-          {guestToBeReplaced?.guestId && guestToBeReplaced?.guestId != '' ? (
-            ''
-          ) : (
-            <div className="title">
-              <CategorySelector
-                activeCat={'Invite User'}
-                categories={{
-                  cat1: 'Invite User',
-                  cat2: 'Create Guest',
-                }}
-                navLinkUse={false}
-                activeCatAsState={category}
-              />
-            </div>
-          )}
+          <div className="headerSpacer" />
+          <div className="sheetTitle">Invite</div>
           <div
             className="closeButtonContainer"
             onClick={() => {
@@ -106,19 +98,68 @@ const SearchUsersToInvite = ({
             <IoClose className="closeButton" />
           </div>
         </div>
+        <div className="sheetControls">
+          {guestToBeReplaced?.guestId &&
+          guestToBeReplaced?.guestId != '' ? null : (
+            <CategorySelector
+              variant="segmented"
+              activeCat={'Invite User'}
+              categories={INVITE_CATEGORIES}
+              navLinkUse={false}
+              activeCatAsState={category}
+            />
+          )}
+
+          {category.value === 'Invite User' ? (
+            <div className="inputField">
+              <Input
+                className="search-input"
+                placeholder="Search"
+                onChange={(e) => setKeyword(e.target.value)}
+                value={keyword || ''}
+              />
+            </div>
+          ) : (
+            <>
+              <div className="sheetNote">
+                A guest has no account. You record their share, and they can be
+                replaced by a real user later.
+              </div>
+              <div className="inputField">
+                <Input
+                  className="search-input"
+                  placeholder="guest's name"
+                  onChange={(e) => setGuestName(e.target.value)}
+                  value={guestName || ''}
+                  autoFocus={true}
+                />
+                <div className="createButton">
+                  <MyButton
+                    isLoading={isPendingCreateGuest}
+                    disabled={!guestName}
+                    onClick={() =>
+                      createGuestExpenseMutation(undefined, {
+                        onSuccess: () => {
+                          if (newMembers) {
+                            newMembers.value = [
+                              ...newMembers.value,
+                              { name: guestName, isUser: false },
+                            ];
+                          }
+                        },
+                      })
+                    }
+                  >
+                    Create
+                  </MyButton>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
       {category.value === 'Invite User' ? (
         <div className="scrollable-content">
-          <div className="inputField">
-            <Input
-              className="search-input"
-              placeholder="Search"
-              backgroundcolor="#2d2d2d"
-              onChange={(e) => setKeyword(e.target.value)}
-              value={keyword || ''}
-            />
-          </div>
-
           {data?.pages.flatMap((x) =>
             x.users.map((user) => (
               <SearchResultItem
@@ -159,56 +200,32 @@ const SearchUsersToInvite = ({
         </div>
       ) : (
         <div className="scrollable-content">
-          <div className="inputField">
-            <Input
-              className="search-input"
-              placeholder="guest's name"
-              backgroundcolor="#2d2d2d"
-              onChange={(e) => setGuestName(e.target.value)}
-              value={guestName || ''}
-              autoFocus={true}
-            />
-            <div className="createButton">
-              <MyButton
-                isLoading={isPendingCreateGuest}
-                disabled={!guestName}
-                onClick={() =>
-                  createGuestExpenseMutation(undefined, {
-                    onSuccess: () => {
-                      if (newMembers) {
-                        newMembers.value = [
-                          ...newMembers.value,
-                          {
-                            name: guestName,
-                            isUser: false,
-                          },
-                        ];
-                      }
-                    },
-                  })
-                }
-              >
-                Create
-              </MyButton>
-            </div>
-          </div>
-          <div className="members">
-            {groupGuests.map((member) => (
-              <MemberItem
-                key={member.id}
-                groupId={group?.id}
-                member={member}
-                noGroupError={noGroupError}
-                noMemberError={noMemberError}
-                isGuest={true}
-                canBeRemoved={
-                  'canBeRemoved' in member ? member.canBeRemoved : true
-                }
-                onCannotRemoveClick={handleCannotRemoveClick}
-                newMembers={newMembers}
-              />
-            ))}
-          </div>
+          {groupGuests.length > 0 ? (
+            <>
+              <div className="sectionLabel">Guests in this group</div>
+              <div className="members">
+                {groupGuests.map((member) => (
+                  <MemberItem
+                    key={member.id}
+                    groupId={group?.id}
+                    member={member}
+                    noGroupError={noGroupError}
+                    noMemberError={noMemberError}
+                    isGuest={true}
+                    canBeRemoved={
+                      'canBeRemoved' in member ? member.canBeRemoved : true
+                    }
+                    onCannotRemoveClick={handleCannotRemoveClick}
+                    newMembers={newMembers}
+                  />
+                ))}
+              </div>
+              <div className="sheetFootnote">
+                A guest involved in expenses or transfers cannot be removed — it
+                would break the group’s history.
+              </div>
+            </>
+          ) : null}
         </div>
       )}
       <MenuAnimationBackground menu={cannotBeRemovedClickedWarning} />

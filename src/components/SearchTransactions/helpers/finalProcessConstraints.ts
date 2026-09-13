@@ -1,6 +1,7 @@
 import { DateConstraint } from '../../../types';
 import { deduplicateFromEndofArr } from './deduplicateFromEndofArr';
-import { getDateIntersection } from './getDateIntersection';
+import { duringDay, getDateIntersection } from './getDateIntersection';
+import { parseDate } from './parseDate';
 
 export const finalProcessConstraints = (array: DateConstraint[]) => {
   const dedupedArray = deduplicateFromEndofArr(array);
@@ -17,32 +18,21 @@ export const finalProcessConstraints = (array: DateConstraint[]) => {
     return getDateIntersection(dedupedArray[0], dedupedArray[1]);
   }
   if (dedupedArray.length === 3) {
-    const firstTwoArgsResult = getDateIntersection(
-      dedupedArray[0],
-      dedupedArray[1]
+    const during = dedupedArray.find((c) => c.trigger === 'during:')!;
+    const [first, second] = dedupedArray.filter(
+      (c) => c.trigger !== 'during:'
     );
+    const range = getDateIntersection(first, second);
 
-    if (firstTwoArgsResult.length === 1) {
-      return getDateIntersection(firstTwoArgsResult[0], dedupedArray[2]);
+    if (range.length === 1) {
+      return getDateIntersection(range[0], during);
     }
-    if (firstTwoArgsResult.length === 2) {
-      const deduplicatedResult = deduplicateFromEndofArr([
-        firstTwoArgsResult[0],
-        firstTwoArgsResult[1],
-        dedupedArray[2],
-      ]);
-      return getDateIntersection(deduplicatedResult[0], dedupedArray[2]);
-    }
+
+    const day = parseDate(during.value);
+    const after = parseDate(range.find((c) => c.trigger === 'after:')!.value);
+    const before = parseDate(
+      range.find((c) => c.trigger === 'before:')!.value
+    );
+    return day >= after && day < before ? duringDay(during.value) : range;
   }
 };
-
-//finalProcessConstraints:
-
-// input will be an array {trigger:string, value:string}[]
-// we need to use deduplicateFromEndOfArr and getDateIntersection.
-// if array length is one then check if trigger is during. In that case return before and after the date
-// if array length is 2 then calculate using getDateIntersection
-// if array length is 3
-// a) Take first two arguments and intersect. If result is length one then intersect with third
-// b) Take first two arguments and intersect. If length===2 then deduplicate with current order.
-// This will bring it down to 2. Then intersect.

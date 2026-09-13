@@ -1,6 +1,6 @@
 import { StyledDateDisplay } from './DateDisplay.styled';
 import { DateDisplayProps } from '../../../../interfaces';
-import { toLuxon } from '../../../../utils';
+import { toLuxon } from '../../../../helpers/dateTimeAndRounding';
 import { FaCalendar } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 
@@ -14,8 +14,8 @@ export default function DateDisplay({
   return (
     <StyledDateDisplay>
       {' '}
-      <FaCalendar className="calendarIcon" />
-      <div className="dateAndClose" onClick={() => setShowPicker(true)}>
+      <div className="chip" onClick={() => setShowPicker(true)}>
+        <FaCalendar className="chipIcon" />
         {toLuxon(selectedDateTime, timeZoneId).toFormat(
           'ccc, dd MMM yyyy HH:mm'
         )}

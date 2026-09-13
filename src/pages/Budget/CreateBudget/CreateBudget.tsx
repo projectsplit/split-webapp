@@ -21,6 +21,7 @@ import {
   useCreateBudgetActions,
   useCreateBudgetData,
 } from './hooks/useCreateBudgetActions';
+import { createBudgetFormStore } from './formStore/formStore';
 import { SecondPage } from './SecondPage/SecondPage';
 import { BackAndForthAnimation } from '@/components/Animations/BackAndForthAnimation/BackAndForthAnimation';
 import { FirstPage } from './FirstPage/FirstPage';
@@ -29,10 +30,12 @@ import MakeBudgetActiveMenuAnimation from '@/components/Animations/MakeBudgetAct
 import useBudgetInfo from '@/api/auth/QueryHooks/useBudgetInfo';
 import useGetInactiveBudgetInfo from '@/api/auth/QueryHooks/useGetInactiveBudgetInfo';
 import { useEditBudget } from '@/api/auth/CommandHooks/useEditBudget';
+import routes from '@/routes';
 
 export default function CreateBudget() {
-  const data = useCreateBudgetData();
-  const actions = useCreateBudgetActions();
+  const [budgetStore] = useState(createBudgetFormStore);
+  const data = useCreateBudgetData(budgetStore);
+  const actions = useCreateBudgetActions(budgetStore);
   const menu = useSignal<string | null>(null);
   const makeBudgetActiveMenu = useSignal<string | null>(null);
   const scopeMenu = useSignal<string | null>(null);
@@ -154,30 +157,28 @@ export default function CreateBudget() {
             handleBack();
           } else {
             actions.resetForm();
-            if (data.isEditMode) {
-              navigate('/budget/manage');
-            } else {
-              navigate('/budget/actions');
-            }
+            navigate(routes.BUDGET_MANAGE);
           }
         }}
       />
-      <BackAndForthAnimation
-        firstChild={
-          <FirstPage
-            data={data}
-            actions={actions}
-            menu={menu}
-            handleInputChangeCallback={handleInputChangeCallback}
-            timeZoneId={timeZoneId}
-          />
-        }
-        secondChild={
-          <SecondPage data={data} actions={actions} scopeMenu={scopeMenu} />
-        }
-        currentStep={data.currentStep}
-        animDirection={animDirection}
-      ></BackAndForthAnimation>
+      <div className="stepScroll">
+        <BackAndForthAnimation
+          firstChild={
+            <FirstPage
+              data={data}
+              actions={actions}
+              menu={menu}
+              handleInputChangeCallback={handleInputChangeCallback}
+              timeZoneId={timeZoneId}
+            />
+          }
+          secondChild={
+            <SecondPage data={data} actions={actions} scopeMenu={scopeMenu} />
+          }
+          currentStep={data.currentStep}
+          animDirection={animDirection}
+        ></BackAndForthAnimation>
+      </div>
       <div className="submitButton">
         <MyButton
           fontSize="16"

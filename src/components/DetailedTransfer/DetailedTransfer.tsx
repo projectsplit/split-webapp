@@ -1,14 +1,14 @@
 import IonIcon from '@reacticons/ionicons';
 import { DetailedTransferProps } from '../../interfaces';
+import { StyledDetailedBackdrop } from '../DetailSheet.styled';
 import { StyledDetailedTransfer } from './DetailedTransfer.styled';
 import MyButton from '../MyButton/MyButton';
-import { AiFillDelete } from 'react-icons/ai';
 import { useSignal } from '@preact/signals-react';
-import { DateOnly, TimeOnly, YearOnly } from '../../helpers/timeHelpers';
 import { displayCurrencyAndAmount } from '../../helpers/displayCurrencyAndAmount';
-import { HeadingNode } from '@lexical/rich-text';
 import MenuAnimationBackground from '../Animations/MenuAnimationBackground';
 import DeleteTransferAnimation from '../Animations/DeleteTransferAnimation';
+import SectionLabel from '../SectionLabel/SectionLabel';
+import { DateTime } from 'luxon';
 
 export default function DetailedTransfer({
   selectedTransfer,
@@ -26,30 +26,6 @@ export default function DetailedTransfer({
 }: DetailedTransferProps) {
   const menu = useSignal<string | null>(null);
 
-  const onError = (error: Error): void => {
-    console.error(error);
-  };
-  const theme = {
-    text: {
-      bold: 'editor-bold',
-    },
-  };
-  const initialConfig = {
-    namespace: 'MyEditor',
-    theme,
-    onError,
-    nodes: [HeadingNode],
-  };
-
-  const outlineColor =
-    selectedTransfer.value?.senderId === userMemberId ||
-    selectedTransfer.value?.senderId === userId
-      ? '#0CA0A0'
-      : selectedTransfer.value?.receiverId === userMemberId ||
-          selectedTransfer.value?.receiverId === userId
-        ? '#D79244'
-        : 'rgb(54,54,54)';
-
   const sender = members.find((x) => x.id === selectedTransfer.value?.senderId);
   const receiver = members.find(
     (x) => x.id === selectedTransfer.value?.receiverId
@@ -59,88 +35,104 @@ export default function DetailedTransfer({
   const isUserReceiver =
     receiver?.id === userMemberId || receiver?.id === userId;
 
+  const direction = isUserSender
+    ? 'sent'
+    : isUserReceiver
+      ? 'received'
+      : 'other';
+
+  const cardLabel = isUserSender
+    ? 'You sent'
+    : isUserReceiver
+      ? 'You received'
+      : 'Transfer';
+
+  const stamp = (eventTimeUtc: string) =>
+    DateTime.fromISO(eventTimeUtc, { zone: 'utc' })
+      .setZone(timeZoneId)
+      .toFormat('EEE, d LLL yyyy HH:mm');
+
   return (
-    <StyledDetailedTransfer $outlineColor={outlineColor}>
-      <div className="headlineAndClose">
-        <div className="head"></div>
-        <div
-          className="closeButton"
-          onClick={() => (selectedTransfer.value = null)}
-        >
-          <IonIcon name="close-outline" className="close" />
-        </div>
-      </div>
-
-      <div className="total">
-        <strong>{displayCurrencyAndAmount(amount.toString(), currency)}</strong>
-      </div>
-      <div className="transfer">
-        <div className="sentFrom">
-          <span>Sent from</span>&nbsp;
-          <span className="name">{isUserSender ? 'You' : sender?.name}</span>
-        </div>
-        <span className="to">to</span>
-        <div className="sentTo">{isUserReceiver ? 'You' : receiver?.name}</div>
-        <div className="descr">
-          {selectedTransfer.value?.description
-            ? `“ ${selectedTransfer.value?.description} ”`
-            : ''}
-        </div>
-      </div>
-
-      {!groupIsArchived ? (
-        <div className="deleteButton">
-          <MyButton onClick={() => (menu.value = 'deleteTransfer')}>
-            <div className="buttonChildren">
-              <AiFillDelete className="icon" />
-              <span>Delete</span>
-            </div>
-          </MyButton>
-        </div>
-      ) : null}
-
-      <div className="createdBy">
-        Created by {members.find((x) => x.id === creator)?.name}{' '}
-        {DateOnly(occurred, timeZoneId) === 'Today' ||
-        DateOnly(occurred, timeZoneId) === 'Yesterday'
-          ? DateOnly(created, timeZoneId)
-          : 'on' +
-            ' ' +
-            DateOnly(occurred, timeZoneId) +
-            ' ' +
-            YearOnly(occurred, timeZoneId)}{' '}
-        at {TimeOnly(created, timeZoneId)}
-      </div>
-      <div className="date">
-        Occurred{' '}
-        {DateOnly(occurred, timeZoneId) === 'Today' ||
-        DateOnly(occurred, timeZoneId) === 'Yesterday'
-          ? DateOnly(occurred, timeZoneId)
-          : 'on' +
-            ' ' +
-            DateOnly(occurred, timeZoneId) +
-            ' ' +
-            YearOnly(occurred, timeZoneId)}{' '}
-        at {TimeOnly(occurred, timeZoneId)}
-      </div>
-      <div className="commentSection">
-        <div className="comments">
-          {/* <Comment />
-          <Comment /> */}
-        </div>
-        {/* {!groupIsArchived ?
-        <div>
-          <LexicalComposer initialConfig={initialConfig}>
-            <EditorContent />
-          </LexicalComposer>
-        </div>:null} */}
-      </div>
-      <MenuAnimationBackground menu={menu} />
-      <DeleteTransferAnimation
-        menu={menu}
-        selectedTransfer={selectedTransfer}
-        errorMessage={errorMessage}
+    <>
+      <StyledDetailedBackdrop
+        onClick={() => (selectedTransfer.value = null)}
       />
-    </StyledDetailedTransfer>
+      <StyledDetailedTransfer>
+        <div className="header">
+          <div className="slot" />
+          <div className="title">
+            {selectedTransfer.value?.description
+              ? selectedTransfer.value.description
+              : 'Transfer'}
+          </div>
+          <div
+            className="slot closeButtonContainer"
+            onClick={() => (selectedTransfer.value = null)}
+          >
+            <IonIcon name="close-outline" className="closeButton" />
+          </div>
+        </div>
+
+        <div className="detailsScroll">
+          <div className="summary">
+            <div className={`amount ${direction}`}>
+              {displayCurrencyAndAmount(amount.toString(), currency)}
+            </div>
+          </div>
+
+          <div className="partiesCard">
+            <SectionLabel title={cardLabel} />
+
+            <div className="partyLines">
+              {isUserSender ? null : (
+                <div className="partyLine">
+                  <span className="partyRole">From</span>
+                  <span className="partyName">{sender?.name}</span>
+                </div>
+              )}
+              {isUserReceiver ? null : (
+                <div className="partyLine">
+                  <span className="partyRole">To</span>
+                  <span className="partyName">{receiver?.name}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="meta">
+            <span className="metaLine">
+              <span className="metaLabel">Occurred</span>
+              <span className="metaSep">&middot;</span>
+              <span className="metaStamp">{stamp(occurred)}</span>
+            </span>
+            <span className="metaLine">
+              <span className="metaLabel">
+                {`Created by ${members.find((x) => x.id === creator)?.name}`}
+              </span>
+              <span className="metaSep">&middot;</span>
+              <span className="metaStamp">{stamp(created)}</span>
+            </span>
+          </div>
+        </div>
+
+        {!groupIsArchived ? (
+          <div className="footer">
+            <MyButton
+              onClick={() => (menu.value = 'deleteTransfer')}
+              variant="secondary"
+            >
+              Delete
+            </MyButton>
+          </div>
+        ) : null}
+
+        <MenuAnimationBackground menu={menu} />
+        <DeleteTransferAnimation
+          menu={menu}
+          selectedTransfer={selectedTransfer}
+          errorMessage={errorMessage}
+        />
+      </StyledDetailedTransfer>
+    </>
   );
 }

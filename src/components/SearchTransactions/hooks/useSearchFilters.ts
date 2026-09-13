@@ -73,10 +73,10 @@ export const useSearchFilters = (
 
   const { expenseFilter, transferFilter } = useMemo(() => {
     return localStorageStringParser(
-      localStorage.getItem(
+      sessionStorage.getItem(
         getFilterStorageKey('expense', group?.id, isPersonal)
       ),
-      localStorage.getItem(getFilterStorageKey('transfer', group?.id))
+      sessionStorage.getItem(getFilterStorageKey('transfer', group?.id))
     );
   }, [group?.id]);
 

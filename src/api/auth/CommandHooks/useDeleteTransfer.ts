@@ -3,6 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { apiClient } from '../../apiClients';
 import { DeleteTransferRequest, TransferResponseItem } from '../../../types';
 import { Signal } from '@preact/signals-react';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useDeleteTransfer = (
   menu: Signal<string | null>,
@@ -12,23 +13,19 @@ export const useDeleteTransfer = (
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, string>({
+    meta: { errorHandled: true },
     mutationFn: (transferId) => deleteTransfer({ transferId }),
     onSuccess: async () => {
+      const groupId = selectedTransfer.value?.groupId;
+      await invalidateQueryKeys(queryClient, [
+        'debts',
+        'groupTransfers',
+        'home',
+        'shared',
+        'mostRecentGroup',
+      ]);
       await queryClient.invalidateQueries({
-        queryKey: ['debts'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['groupTransfers'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
+        queryKey: [groupId],
         exact: false,
       });
       selectedTransfer.value = null;

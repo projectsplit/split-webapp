@@ -22,7 +22,7 @@ export const ScopeSelector = ({
 
   return (
     <StyledScopeSelector $inputError={$inputError}>
-      <div className="spendingCycleHeader">
+      <div className="sectionHeader">
         <div className="prompt">Scope</div>
         <IonIcon
           onClick={() => (menu.value = 'infoBox')}
@@ -31,7 +31,8 @@ export const ScopeSelector = ({
         />
       </div>
       <button className="scopeSelector" onClick={onClick}>
-        {scopeDetails.text}
+        <span className="scopeText">{scopeDetails.text}</span>
+        <IonIcon name="chevron-forward-outline" className="scopeChevron" />
       </button>
       <MenuAnimationBackground menu={menu} />
       <InfoBoxAnimation menu={menu}>

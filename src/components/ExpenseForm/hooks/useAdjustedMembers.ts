@@ -42,7 +42,7 @@ export function useAdjustedMembers({
         ? userInfo?.userId
         : userMemberId;
     return participants.map((m) =>
-      m.id === userIdToCheck ? { ...m, name: 'you' } : m
+      m.id === userIdToCheck ? { ...m, name: 'you', avatarName: m.avatarName ?? m.name } : m
     );
   }, [
     participants,
@@ -59,7 +59,7 @@ export function useAdjustedMembers({
         ? userInfo?.userId
         : userMemberId;
     return payers.map((m) =>
-      m.id === userIdToCheck ? { ...m, name: 'you' } : m
+      m.id === userIdToCheck ? { ...m, name: 'you', avatarName: m.avatarName ?? m.name } : m
     );
   }, [
     payers,

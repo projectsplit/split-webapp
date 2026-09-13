@@ -1,6 +1,7 @@
 import { FormExpense, Guest, Member, PickerMember, User } from '../../../types';
 import { isNonGroupExpense } from './isNonGroupExpense';
 import { isGroupExpense } from './isGroupExpense';
+import { getScreenQuantity } from './getScreenQuantity';
 
 export const createPayerPickerArray = (
   groupMembers: (Member | Guest)[],
@@ -21,21 +22,12 @@ export const createPayerPickerArray = (
         ? expense.payers.find((p) => p.userId === user.userId)
         : undefined;
       const actualAmount = payer?.paymentAmount ?? '';
-      const isPercentageType = type === 'Percentages';
-      const isSharesType = type === 'Shares';
-      const expenseAmount = Number(expense?.amount);
-      const paymentAmount = Number(payer?.paymentAmount);
-
-      const screenQuantity =
-        isPercentageType &&
-        expense?.amount &&
-        payer?.paymentAmount &&
-        !isNaN(expenseAmount) &&
-        expenseAmount !== 0
-          ? ((paymentAmount / expenseAmount) * 100).toFixed(1)
-          : isSharesType && !isCreateExpense
-            ? ''
-            : actualAmount;
+      const screenQuantity = getScreenQuantity(
+        type,
+        expense?.amount,
+        payer?.paymentAmount,
+        isCreateExpense
+      );
 
       return {
         id: user.userId,
@@ -60,21 +52,12 @@ export const createPayerPickerArray = (
           ? expense.payers.find((p) => p.memberId === member.id)
           : undefined;
       const actualAmount = payer?.paymentAmount ?? '';
-      const isPercentageType = type === 'Percentages';
-      const isSharesType = type === 'Shares';
-      const expenseAmount = Number(expense?.amount);
-      const paymentAmount = Number(payer?.paymentAmount);
-
-      const screenQuantity =
-        isPercentageType &&
-        expense?.amount &&
-        payer?.paymentAmount &&
-        !isNaN(expenseAmount) &&
-        expenseAmount !== 0
-          ? ((paymentAmount / expenseAmount) * 100).toFixed(1)
-          : isSharesType && !isCreateExpense
-            ? ''
-            : actualAmount;
+      const screenQuantity = getScreenQuantity(
+        type,
+        expense?.amount,
+        payer?.paymentAmount,
+        isCreateExpense
+      );
 
       return {
         id: member.id,
@@ -92,7 +75,6 @@ export const createPayerPickerArray = (
     });
   }
 
-  // Auto-select the current user as payer for new expense
   if (isCreateExpense) {
     const selectedId =
       isnonGroupExpense && nonGroupUsers.length > 0 ? userId : userMemberId;

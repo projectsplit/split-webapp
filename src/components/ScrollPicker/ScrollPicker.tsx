@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { closestMultiple } from '../../utils';
+import { closestMultiple } from '../../helpers/dateTimeAndRounding';
 import StyledScrollPicker from './ScrollPicker.styled';
 import { ScrollPickerProps } from '../../interfaces';
 

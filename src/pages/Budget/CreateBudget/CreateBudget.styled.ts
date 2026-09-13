@@ -3,129 +3,93 @@ import styled from 'styled-components';
 export const StyledCreateBudget = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.lightColor};
+  color: ${({ theme }) => theme.ink.primary};
   box-sizing: border-box;
   width: 100%;
-  height: 100%;
-  left: 0;
-  right: 0;
+  height: 100dvh;
   margin: 0;
-  padding: 14px;
-  gap: 20px;
-  position: relative;
-  overflow-x: hidden;
+  overflow: hidden;
+
+  .stepScroll {
+    margin-top: 15px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: ${({ theme }) => `${theme.space.s4} ${theme.space.s20} ${theme.space.s20}`};
+  }
 
   .errorsWrapper {
     display: flex;
     flex-direction: column;
+
     .errorMsg {
-      font-size: 12px;
-      color: ${({ theme }) => theme.errorColor};
-      display: flex;
-      justify-content: start;
-      padding: 0px 4px;
+      padding: ${({ theme }) => `${theme.space.s6} ${theme.space.s2} 0`};
+      font-size: ${({ theme }) => theme.size.s12};
+      line-height: 1.5;
+      color: ${({ theme }) => theme.direction.owe};
     }
   }
 
-  .backButtonContainer {
-    position: relative;
-    cursor: pointer;
-    display: inline-block;
+  .prompt {
+    font-size: ${({ theme }) => theme.size.s11};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: ${({ theme }) => theme.ink.tertiary};
   }
 
-  .backButton {
-    cursor: pointer;
-    display: block;
-    font-size: 30px;
-  }
-
-  .backButtonContainer:hover::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: rgba(128, 128, 128, 0.3);
-    pointer-events: none;
-  }
-
-  .topBar {
+  .sectionHeader {
     display: flex;
     flex-direction: row;
     align-items: center;
-    font-size: 20px;
-    justify-content: space-between;
-    margin-right: 30px;
-  }
-  .descr {
-    flex: 1;
-    text-align: center;
+    gap: 7px;
+    margin-bottom: ${({ theme }) => theme.space.s10};
+
+    .information {
+      display: flex;
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.icon.xs};
+      color: ${({ theme }) => theme.ink.tertiary};
+      cursor: pointer;
+    }
   }
 
-  .promptSpendingCycle {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    .errorMsg {
-      font-size: 12px;
-      color: ${({ theme }) => theme.errorColor};
-      display: flex;
-      justify-content: start;
-      padding: 0px 4px;
-    }
-    .calendarAndErrorsWrapper,
-    .inputAndErrorsWrapper {
-      display: flex;
-      flex-direction: column;
-    }
-    .spendingCycleHeader {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 5px;
-      .information {
-        cursor: pointer;
-        font-size: 23px;
-        font-weight: bold;
-        color: ${({ theme }) => theme.yellow};
-      }
-    }
+  .sectionNote {
+    padding: ${({ theme }) => `${theme.space.s10} ${theme.space.s2} 0`};
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.6;
+    color: ${({ theme }) => theme.ink.tertiary};
+    text-wrap: pretty;
   }
 
   .spentInfo {
-    color: ${({ theme }) => theme.layer6};
+    font-size: ${({ theme }) => theme.size.s13};
+    color: ${({ theme }) => theme.ink.secondary};
     animation: fadeIn 0.5s;
-    font-size: 14px;
-  }
 
-  .categoryButtons {
-    gap: 10px;
-    display: flex;
-    flex-direction: row;
-  }
-
-  .submitButton {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
+    .amount {
+      font-family: ${({ theme }) => theme.font.mono};
+      color: ${({ theme }) => theme.ink.primary};
+    }
   }
 
   .monthlyPropmt {
     display: flex;
     flex-direction: row;
+
     .sup {
       margin-top: -3px;
     }
   }
 
-  .step-container {
+  .submitButton {
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    width: 100%;
+    padding: ${({ theme }) =>
+      `${theme.space.s12} ${theme.space.s20} ${theme.space.s20}`};
+    background: ${({ theme }) =>
+      `linear-gradient(to top, ${theme.surface.page} 60%, transparent)`};
   }
-
 `;

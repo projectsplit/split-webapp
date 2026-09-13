@@ -3,6 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { DeleteExpenseRequest, ExpenseResponseItem } from '../../../types';
 import { apiClient } from '../../apiClients';
 import { Signal } from '@preact/signals-react';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useDeleteExpense = (
   menu: Signal<string | null>,
@@ -12,31 +13,22 @@ export const useDeleteExpense = (
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, string>({
+    meta: { errorHandled: true },
     mutationFn: (expenseId) => deleteExpense({ expenseId }),
     onSuccess: async () => {
+      const groupId = selectedExpense.value?.groupId;
+      await invalidateQueryKeys(queryClient, [
+        'debts',
+        'groupExpenses',
+        'personalExpenses',
+        'userTotals',
+        'home',
+        'shared',
+        'mostRecentGroup',
+        'cumulativeArray',
+      ]);
       await queryClient.invalidateQueries({
-        queryKey: ['debts'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['groupExpenses'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['personalExpenses'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['cumulativeArray'],
+        queryKey: [groupId],
         exact: false,
       });
       selectedExpense.value = null;

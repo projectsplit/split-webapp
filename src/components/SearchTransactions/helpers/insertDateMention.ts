@@ -1,5 +1,6 @@
 import { useBeautifulMentions } from 'lexical-beautiful-mentions';
 import { removeWordFromEditor } from './removeWordFromEditor';
+import { appendSpaceAfterMention } from './appendSpaceAfterMention';
 import { Signal } from '@preact/signals-react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { DateTime } from 'luxon';
@@ -57,6 +58,8 @@ export const insertDateMention = (
       console.warn('Unknown period:', datePeriodClicked.value);
       break;
   }
+
+  queueMicrotask(() => appendSpaceAfterMention(editor));
 
   calendarIsOpen.value = false;
   showOptions.value = true;

@@ -35,7 +35,9 @@ export const StyledBottomDatePickerOverlay = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: ${({ theme }) => theme.scrim.sheet};
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     animation: ${fadeIn} 0.2s ease-out;
   }
 
@@ -45,21 +47,26 @@ export const StyledBottomDatePickerOverlay = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
-    background-color: ${({ theme }) => theme.backgroundcolor};
-    border-radius: 14px;
-    padding: 14px 16px 20px;
+    box-sizing: border-box;
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.dialog};
+    padding: ${({ theme }) =>
+      `${theme.space.s16} ${theme.space.s16} ${theme.space.s20}`};
+    box-shadow: ${({ theme }) => theme.shadow.dialog};
     animation: ${scaleIn} 0.2s ease-out;
 
     .sheet-header {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding-bottom: 10px;
+      padding-bottom: ${({ theme }) => theme.space.s12};
 
       .sheet-title {
-        font-size: 16px;
-        font-weight: 600;
-        color: ${({ theme }) => theme.activeTabButtonTextColor};
+        font-size: ${({ theme }) => theme.size.s17};
+        font-weight: ${({ theme }) => theme.weight.semibold};
+        letter-spacing: -0.01em;
+        color: ${({ theme }) => theme.ink.primary};
       }
     }
 

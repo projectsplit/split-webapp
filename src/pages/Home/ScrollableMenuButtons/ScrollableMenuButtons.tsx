@@ -2,24 +2,25 @@ import {
   BudgetInfoResponse,
   Details,
   GroupedTransaction,
-  GroupsAllBalancesResponse,
   MostRecentGroupDetailsResponse,
   UserInfo,
 } from '@/types';
 import { StyledScrollableMenuButtons } from './ScrollableMenuButtons.styled';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { NavigateFunction } from 'react-router-dom';
 import MostRecentSection from '../MostRecentSection/MostRecentSection';
-import TreeAdjustedContainer from '@/components/TreeAdjustedContainer/TreeAdjustedContainer';
-import { TreeItemBuilderForHomeAndGroups } from '@/components/TreeItemBuilderForHomeAndGroups';
+import BalanceMeta from '@/components/BalanceMeta/BalanceMeta';
+import SectionLabel from '@/components/SectionLabel/SectionLabel';
 import { TiGroup } from 'react-icons/ti';
-import OptionButton from '../SelectionButton/SelectionButton';
+import SelectionButton from '../SelectionButton/SelectionButton';
 import { BsBarChartFill } from 'react-icons/bs';
 import { BsFillPiggyBankFill } from 'react-icons/bs';
-import { BsFillPersonFill } from 'react-icons/bs';
-import { Signal, useSignal } from '@preact/signals-react';
-import { BudgetCarousel } from './BudgetCarousel/BudgetCarousel';
-import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
-import { useState } from 'react';
+import { BsFillPersonFill, BsPeopleFill } from 'react-icons/bs';
+import { useMostRecentContext } from '@/api/auth/CommandHooks/useMostRecentContext';
+import { Signal } from '@preact/signals-react';
+import { BudgetBars } from '@/components/BudgetBars/BudgetBars';
+import { elapsedPercent } from '@/helpers/budgetProgress';
+import { Frequency } from '@/types';
+import routes from '@/routes';
 
 export default function ScrollableMenuButtons({
   mostRecentGroupDataIsFetching,
@@ -28,10 +29,8 @@ export default function ScrollableMenuButtons({
   nonGroupGroupedTransactions,
   userInfo,
   navigate,
-  isLoading,
-  isFetching,
-  groupsData,
-  totalBalances,
+  groupBalances,
+  nonGroupBalances,
   topMenuTitle,
   activeBudgetData,
   showBudgetInfo,
@@ -42,46 +41,53 @@ export default function ScrollableMenuButtons({
   nonGroupGroupedTransactions: GroupedTransaction[];
   userInfo: UserInfo;
   navigate: NavigateFunction;
-  isLoading: boolean;
-  isFetching: boolean;
-  groupsData: GroupsAllBalancesResponse | undefined;
-  totalBalances: Details;
+  groupBalances: Details;
+  nonGroupBalances: Details;
   topMenuTitle: Signal<string>;
   activeBudgetData: BudgetInfoResponse | undefined;
   showBudgetInfo: boolean;
 }) {
-  const { mutateAsync: setShowBudgetInfo } = useSetShowBudgetInfo();
-  const [showButton, setShowButton] = useState(false);
+  const updateMostRecentContextId = useMostRecentContext();
+  const hasBalance = (details: Details) =>
+    Object.values(details).some((amount) => amount !== 0);
+  const showBudget = !!(showBudgetInfo && activeBudgetData);
 
-  // Balances cover groups and non group transactions alike, so a user with no groups
-  // but with outstanding non group debts still has a total worth showing.
-  const hasBalanceToShow = Object.values(totalBalances).some(
-    (amount) => amount !== 0
+  const budgetSpent =
+    parseFloat(activeBudgetData?.totalAmountSpent ?? '0') || 0;
+  const budgetCap = parseFloat(activeBudgetData?.goal ?? '0') || 0;
+  const budgetCycleElapsed = elapsedPercent(
+    activeBudgetData?.startDate,
+    activeBudgetData?.endDate
+  );
+  const budgetDays = Math.max(
+    0,
+    Math.ceil(parseFloat(activeBudgetData?.remainingDays ?? '0') || 0)
+  );
+
+  const budgetMeta = (
+    <div className="budgetBlock">
+      <div className="budgetMetaLine">
+        <span>
+          {activeBudgetData?.frequency !== undefined
+            ? Frequency[activeBudgetData.frequency]
+            : ''}
+        </span>
+        <span>
+          {budgetDays} {budgetDays === 1 ? 'day' : 'days'} left
+        </span>
+      </div>
+      <BudgetBars
+        spent={budgetSpent}
+        cap={budgetCap}
+        currency={activeBudgetData?.currency ?? ''}
+        cycleElapsed={budgetCycleElapsed}
+        compact
+      />
+    </div>
   );
 
   return (
     <StyledScrollableMenuButtons>
-      {showBudgetInfo && activeBudgetData && (
-        <BudgetCarousel
-          activeBudgetData={activeBudgetData}
-          setShowBudgetInfo={setShowBudgetInfo}
-          setShowButton={setShowButton}
-          onClick={() => navigate('/budget/manage', { state: { fromHome: true } })}
-          timeZoneId={userInfo?.timeZone}
-        />
-      )}
-      {activeBudgetData && !showBudgetInfo && showButton && (
-        <div className="undoButton">
-          <span
-            className="text"
-            onClick={() => {
-              setShowBudgetInfo(true);
-            }}
-          >
-            undo
-          </span>
-        </div>
-      )}
       <MostRecentSection
         mostRecentGroupDataIsFetching={mostRecentGroupDataIsFetching}
         mostRecentGroupData={mostRecentGroupData}
@@ -91,61 +97,62 @@ export default function ScrollableMenuButtons({
         navigate={navigate}
       />
 
-      {!isLoading &&
-      !isFetching &&
-      groupsData?.groupCount === 0 &&
-      !hasBalanceToShow ? (
-        <OptionButton
-          onClick={() => navigate('/shared')}
-          name="Shared"
-          description="Keep track of your shared finances"
-          hasArrow={false}
-        >
-          <TiGroup className="groupIcon" />
-        </OptionButton>
-      ) : (
-        <TreeAdjustedContainer
-          hasOption={false}
-          optionname="chevron-forward-outline"
-          onClick={() => navigate('/shared')}
-          items={TreeItemBuilderForHomeAndGroups(totalBalances)}
-        >
-          <div className="groups">
-            <div className="groupIconAndNumberOfGroups">
-              <TiGroup className="groupIcon" />
-              {/* <span className="groupCount">{data?.groupCount}</span> */}
-            </div>
-            <div className="groupName">Shared</div>
-          </div>
-        </TreeAdjustedContainer>
-      )}
-      <OptionButton
-        name="Personal"
-        description="Your personal expense tracker"
-        hasArrow={false}
-        onClick={() => {
-          topMenuTitle.value = 'Your Expenses';
-          navigate('/personal');
-        }}
-      >
-        <BsFillPersonFill className="personalIcon" />
-      </OptionButton>
-      <OptionButton
-        name="Analytics"
-        description="View your spending trends"
-        onClick={() => navigate('/analytics')}
-        hasArrow={false}
-      >
-        <BsBarChartFill className="analyticsIcon" />
-      </OptionButton>
-      <OptionButton
-        name="Budgeting"
-        description="Set up budgets, spending caps and savings goals"
-        onClick={() => navigate('/budget')}
-        hasArrow={false}
-      >
-        <BsFillPiggyBankFill className="budgetIcon" />
-      </OptionButton>
+      <div className="destinations">
+        <SectionLabel title="Go to" />
+        <div className="destinationList">
+          <SelectionButton
+            name="Groups"
+            onClick={() => navigate(routes.GROUPS)}
+            meta={
+              hasBalance(groupBalances) ? (
+                <BalanceMeta details={groupBalances} />
+              ) : undefined
+            }
+          >
+            <TiGroup />
+          </SelectionButton>
+
+          <SelectionButton
+            name="Quick splits"
+            onClick={() => {
+              navigate(routes.NON_GROUP_EXPENSES);
+              updateMostRecentContextId.mutate('NON_GROUP');
+            }}
+            meta={
+              hasBalance(nonGroupBalances) ? (
+                <BalanceMeta details={nonGroupBalances} />
+              ) : undefined
+            }
+          >
+            <BsPeopleFill />
+          </SelectionButton>
+
+          <SelectionButton
+            name="Personal"
+            onClick={() => {
+              topMenuTitle.value = 'Your Expenses';
+              navigate(routes.PERSONAL);
+            }}
+          >
+            <BsFillPersonFill />
+          </SelectionButton>
+
+          <SelectionButton
+            name="Analytics"
+            onClick={() => navigate(routes.ANALYTICS)}
+          >
+            <BsBarChartFill />
+          </SelectionButton>
+
+          <SelectionButton
+            name="Budgeting"
+            onClick={() => navigate(routes.BUDGET)}
+            footer={showBudget ? budgetMeta : undefined}
+          >
+            <BsFillPiggyBankFill />
+          </SelectionButton>
+        </div>
+      </div>
     </StyledScrollableMenuButtons>
   );
 }

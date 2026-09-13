@@ -3,6 +3,7 @@ import { apiClient } from '../../apiClients';
 import { NavigateFunction } from 'react-router-dom';
 import { Signal } from '@preact/signals-react';
 import { CreateBudgetRequest } from '../../../types';
+import routes from '@/routes';
 
 export const useCreateBudget = (
   navigate: NavigateFunction,
@@ -13,6 +14,7 @@ export const useCreateBudget = (
 
   return useMutation<any, any, CreateBudgetRequest>({
     mutationKey: ['budgets', 'create'],
+    meta: { errorHandled: true },
     mutationFn: createBudget,
     onError: (error) => {
       const errorData = error.response?.data;
@@ -22,7 +24,7 @@ export const useCreateBudget = (
       queryClient.invalidateQueries({ queryKey: ['budgets'] });
 
       menu.value = null;
-      navigate('/budget/manage', { replace: true });
+      navigate(routes.BUDGET_MANAGE, { replace: true });
     },
   });
 };

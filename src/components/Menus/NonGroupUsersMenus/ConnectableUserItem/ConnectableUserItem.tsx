@@ -2,6 +2,7 @@ import React from 'react';
 import { StyledConnectableUserItem } from './ConnectableUserItem.styled';
 import { ConnectionStatus } from '../../../../types';
 import MyButton from '../../../MyButton/MyButton';
+import { getInitials } from '../../../../helpers/getInitials';
 
 type ConnectableUserItemProps = {
   name: string;
@@ -14,17 +15,6 @@ type ConnectableUserItemProps = {
   onRevoke: (e: React.MouseEvent) => void;
 };
 
-/**
- * A user row in the non-group pickers. Users you have never split with cannot be picked directly:
- * their row offers a connection request instead, and only turns into a normal selectable row once
- * the other side accepts. A request you sent stays revocable from the same row — the picker is
- * where you notice you asked the wrong person, so it is where taking it back has to live.
- *
- * An unknown status means the statuses have not arrived yet or the call for them failed. The row
- * stays selectable in that case rather than going inert: the server rejects a split with someone
- * you are not connected with anyway, so guessing wrong here costs an error message, while a dead
- * row would leave the picker unusable with nothing on screen explaining why.
- */
 export default React.memo(function ConnectableUserItem({
   name,
   status,
@@ -45,10 +35,16 @@ export default React.memo(function ConnectableUserItem({
   return (
     <StyledConnectableUserItem>
       <div className="top-row" onClick={handleRowClick}>
+        <span className="avatar">{getInitials(name)}</span>
         <div className="name">{name}</div>
-        {status === 'none' && <MyButton onClick={onRequest}>Request</MyButton>}
+        {status === 'none' && (
+          <MyButton size="compact" variant="secondary" onClick={onRequest}>
+            Request
+          </MyButton>
+        )}
         {status === 'pending_sent' && (
           <MyButton
+            size="compact"
             variant="secondary"
             onClick={onRevoke}
             isLoading={isRevokePending}
@@ -57,7 +53,11 @@ export default React.memo(function ConnectableUserItem({
           </MyButton>
         )}
         {status === 'pending_received' && (
-          <MyButton onClick={onAccept} isLoading={isAcceptPending}>
+          <MyButton
+            size="compact"
+            onClick={onAccept}
+            isLoading={isAcceptPending}
+          >
             Accept
           </MyButton>
         )}

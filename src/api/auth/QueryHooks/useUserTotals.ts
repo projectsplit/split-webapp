@@ -1,10 +1,10 @@
 import { apiClient } from '@/api/apiClients';
 import { DebtsResponse, Mode } from '@/types';
 import { Signal } from '@preact/signals-react';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { ExpenseParsedFilters } from '../../../types';
-import { appendNonGroupFilterToParams } from '../helpers/appendNonGroupFilterToParams';
+import { appendFilterToParams } from '../helpers/appendFilterToParams';
 import { hasActiveExpenseFilters } from '@/helpers/hasActiveExpenseFilters';
 
 const useUserTotals = (
@@ -20,6 +20,7 @@ const useUserTotals = (
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     staleTime: 9000,
+    placeholderData: keepPreviousData,
     enabled:
       mode === Mode.Personal &&
       (expenseParsedFilters?.value
@@ -33,7 +34,7 @@ const getUserTotals = async (
 ): Promise<DebtsResponse> => {
   const { labels = [], ...base } = parsedFilters;
 
-  const params = appendNonGroupFilterToParams(base, {
+  const params = appendFilterToParams(base, {
     arrayMappings: [{ key: 'labelIds', values: labels }],
   });
 

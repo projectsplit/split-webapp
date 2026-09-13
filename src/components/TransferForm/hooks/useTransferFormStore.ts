@@ -1,17 +1,21 @@
+import { StoreApi, useStore } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
-import { useTransferStore } from '../formStore/formStore';
+import { TransferState } from '../formStore/formStoreTypes';
 
-export const useTransferActions = () => {
-  return useTransferStore(
+export const useTransferActions = (store: StoreApi<TransferState>) => {
+  return useStore(
+    store,
     useShallow((state) => ({
       setAmount: state.setAmount,
       setDescription: state.setDescription,
       setCurrencySymbol: state.setCurrencySymbol,
       setTransferTime: state.setTransferTime,
+      setIsTrackingNow: state.setIsTrackingNow,
       setSenderId: state.setSenderId,
       setReceiverId: state.setReceiverId,
       toggleSenderId: state.toggleSenderId,
       toggleReceiverId: state.toggleReceiverId,
+      swapParties: state.swapParties,
       setShowPicker: state.setShowPicker,
       setError: state.setError,
       resetForm: state.resetForm,
@@ -20,13 +24,15 @@ export const useTransferActions = () => {
   );
 };
 
-export const useTransferData = () => {
-  return useTransferStore(
+export const useTransferData = (store: StoreApi<TransferState>) => {
+  return useStore(
+    store,
     useShallow((state) => ({
       amount: state.amount,
       description: state.description,
       currencySymbol: state.currencySymbol,
       transferTime: state.transferTime,
+      isTrackingNow: state.isTrackingNow,
       senderId: state.senderId,
       receiverId: state.receiverId,
       showPicker: state.showPicker,

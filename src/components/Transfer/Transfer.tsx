@@ -1,9 +1,9 @@
 import React from 'react';
-import { DateTime } from 'luxon';
 import { TransferProps } from '../../interfaces';
 import { StyledTransfer } from './Transfer.styled';
 import { displayCurrencyAndAmount } from '../../helpers/displayCurrencyAndAmount';
 import { useLongPress } from '../../hooks/useLongPress';
+import { TimeOnly } from '../../helpers/timeHelpers';
 
 const Transfer: React.FC<TransferProps> = ({
   transfer,
@@ -12,74 +12,45 @@ const Transfer: React.FC<TransferProps> = ({
   onLongPress,
 }) => {
   const longPressHandlers = useLongPress(onLongPress ?? (() => {}));
-  const outlineColor =
-    transfer.senderName === 'You'
-      ? '#0CA0A0'
-      : transfer.receiverName === 'You'
-        ? '#D79244'
-        : 'rgb(54,54,54)';
+
+  const isSent = transfer.senderName === 'You';
+  const isReceived = transfer.receiverName === 'You';
+
+  const title = isSent
+    ? `Sent to ${transfer.receiverName}`
+    : isReceived
+      ? `Received from ${transfer.senderName}`
+      : `${transfer.senderName} sent to ${transfer.receiverName}`;
+
+  const direction = isSent ? 'sent' : isReceived ? 'received' : 'other';
 
   return (
-    <StyledTransfer $outlineColor={outlineColor} onClick={onClick} {...longPressHandlers}>
-      <div className="main">
-        <div className="mainMsg">
-          {transfer.senderName === 'You' ? (
-            <>
-              <div className="msg1">
-                <div className="msg">
-                  {' '}
-                  You sent{' '}
-                  {displayCurrencyAndAmount(
-                    Math.abs(transfer.amount).toString(),
-                    transfer.currency
-                  )}
-                </div>
-
-                <div className="emoji">💸</div>
-              </div>
-              <div className="msg2">to {transfer.receiverName}</div>
-            </>
-          ) : transfer.receiverName === 'You' ? (
-            <>
-              <div className="msg1">
-                <div className="msg">
-                  You received{' '}
-                  {displayCurrencyAndAmount(
-                    Math.abs(transfer.amount).toString(),
-                    transfer.currency
-                  )}
-                </div>
-                <div className="emoji">🤑</div>
-              </div>
-              <div className="msg2">from {transfer.senderName}</div>
-            </>
-          ) : (
-            <>
-              <div className="msg1" style={{ color: '#a3a3a3' }}>
-                {transfer.senderName} sent{' '}
-                {displayCurrencyAndAmount(
-                  Math.abs(transfer.amount).toString(),
-                  transfer.currency
-                )}
-              </div>
-              <div className="msg2">to {transfer.receiverName}</div>
-            </>
-          )}
-        </div>
-        <div className="time">{TimeOnly(transfer.date, timeZoneId)}</div>
+    <StyledTransfer onClick={onClick} {...longPressHandlers}>
+      <div className="head">
+        {isSent || isReceived ? (
+          <span className="emoji">{isSent ? '💸' : '🤑'}</span>
+        ) : null}
+        <span className="title">{title}</span>
       </div>
-      {transfer.description ? (
-        <div className="descr">“ {transfer.description} ”</div>
-      ) : null}
+
+      <span className={`amount ${direction}`}>
+        {displayCurrencyAndAmount(
+          Math.abs(transfer.amount).toString(),
+          transfer.currency
+        )}
+      </span>
+
+      <div className="meta">
+        <span className="time">{TimeOnly(transfer.date, timeZoneId)}</span>
+        {transfer.description ? (
+          <>
+            <span className="dot">&middot;</span>
+            <span className="descr">{transfer.description}</span>
+          </>
+        ) : null}
+      </div>
     </StyledTransfer>
   );
 };
 
 export default Transfer;
-
-const TimeOnly = (eventTimeUtc: string, timeZone: string): string => {
-  const eventDateTime = DateTime.fromISO(eventTimeUtc, { zone: 'utc' }).setZone(
-    timeZone
-  );
-  return eventDateTime.setZone(timeZone).toFormat('HH:mm');
-};

@@ -31,7 +31,8 @@ export const useEditExpenseMutation = (
     groupMembers,
     makePersonalClicked,
     isNonGroupExpense,
-    selectedExpense
+    selectedExpense,
+    onError
   );
 
   const nonGroup = useEditNonGroupExpense(
@@ -54,7 +55,8 @@ export const useEditExpenseMutation = (
     groupMembers,
     makePersonalClicked,
     isNonGroupExpense,
-    selectedExpense
+    selectedExpense,
+    onError
   );
 
   if (selectedExpense?.value?.transactionType === TransactionType.Group) {

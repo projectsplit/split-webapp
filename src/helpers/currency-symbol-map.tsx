@@ -1,9 +1,9 @@
 const currencySymbolMap: Record<string, string> = {
-  AED: 'د.إ', // adjusted from "د.إ." to match sample output
+  AED: 'د.إ',
   AFN: '؋',
   ALL: 'L',
   AMD: '֏',
-  ANG: 'ƒ', // adjusted from "NAf." to match sample output
+  ANG: 'ƒ',
   AOA: 'Kz',
   ARS: '$',
   AUD: '$',

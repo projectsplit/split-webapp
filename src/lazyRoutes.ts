@@ -14,10 +14,6 @@ const loaders = {
     import('@/pages/GenerateInvitationCode/GenerateInvitationCode'),
   Personal: () =>
     import('@/pages/Personal/Personal').then((m) => ({ default: m.Personal })),
-  BudgetActions: () =>
-    import('@/pages/Budget/BudgetActions/BudgetActions').then((m) => ({
-      default: m.BudgetActions,
-    })),
   ManageBudgets: () =>
     import('@/pages/Budget/ManageBudgets/ManageBudgets').then((m) => ({
       default: m.ManageBudgets,
@@ -39,7 +35,6 @@ export const CreateBudget = lazy(loaders.CreateBudget);
 export const Shared = lazy(loaders.Shared);
 export const GenerateInvitationCode = lazy(loaders.GenerateInvitationCode);
 export const Personal = lazy(loaders.Personal);
-export const BudgetActions = lazy(loaders.BudgetActions);
 export const ManageBudgets = lazy(loaders.ManageBudgets);
 export const RecurringExpenses = lazy(loaders.RecurringExpenses);
 

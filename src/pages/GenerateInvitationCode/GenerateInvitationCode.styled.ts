@@ -1,54 +1,66 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { sheetHeaderStyles } from '@/styles/sheetHeader';
+
+const toastIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+`;
 
 export const StyledGenerateInvitationCode = styled.div`
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background-color: ${({ theme }) => theme.surface.page};
+
   .fixed-header-container {
-    position: sticky;
-    top: 0;
-    z-index: 4;
-    background-color: ${({ theme }) => theme.backgroundcolor};
+    flex-shrink: 0;
+    background-color: ${({ theme }) => theme.surface.page};
   }
 
-  .header {
-    padding: 0.875rem;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+  ${sheetHeaderStyles}
+
+  .sheetControls {
+    padding: ${({ theme }) => `0 ${theme.space.s20} ${theme.space.s16}`};
     flex-shrink: 0;
+  }
 
-    .closeButtonContainer {
-      position: relative;
-      cursor: pointer;
-      display: inline-block;
-    }
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 96px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s8};
+    max-width: calc(100vw - 40px);
+    padding: ${({ theme }) => `10px ${theme.space.s16}`};
+    background-color: ${({ theme }) => theme.surface.raisedHigh};
+    border: 1px solid ${({ theme }) => theme.surface.outline};
+    border-radius: ${({ theme }) => theme.radius.pill};
+    box-shadow: ${({ theme }) => theme.shadow.dialog};
+    font-size: ${({ theme }) => theme.size.s13};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    color: ${({ theme }) => theme.ink.primary};
+    white-space: nowrap;
+    animation: ${toastIn} 0.18s ease-out;
 
-    .closeButton {
-      cursor: pointer;
-      display: block;
-      font-size: 1.875rem;
-    }
-
-    .closeButtonContainer:hover::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background-color: rgba(128, 128, 128, 0.3);
-      pointer-events: none;
-    }
-
-    .title {
+    .toastIcon {
       display: flex;
-      flex-direction: row;
-      gap: 10px;
-      font-weight: 600;
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.icon.sm};
+      color: ${({ theme }) => theme.direction.owed};
     }
-    .gap {
-      margin-right: 0.9375rem;
+
+    &.failed .toastIcon {
+      color: ${({ theme }) => theme.direction.owe};
     }
   }
 `;

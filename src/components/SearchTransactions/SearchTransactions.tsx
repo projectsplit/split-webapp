@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { StyledSearchTransactions } from './SearchTransactions.styled';
 import { IoClose } from 'react-icons/io5';
 import { EditorState } from 'lexical';
@@ -6,7 +6,7 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { useQueryClient } from '@tanstack/react-query';
 import { EditorContent } from './EditorContent/EditorContent';
 import { handleSubmitButton } from './helpers/handleSubmitButton';
-import { handleCancelClick } from './helpers/handleCancelClick';
+import { handleClearAllClick } from './helpers/handleClearAllClick';
 import { initialConfig } from './utils/lexicalThemeConfiguration';
 import { EditorContentHandle, SearchTransactionsProps } from '../../interfaces';
 import { FetchedLabel } from '../../types';
@@ -17,6 +17,11 @@ import { usePeople } from './hooks/usePeople';
 import { useSearchFilters } from './hooks/useSearchFilters';
 import { useLabels } from '@/api/auth/QueryHooks/useGetLabels';
 
+const SEARCH_CATEGORIES = {
+  cat1: 'Expenses',
+  cat2: 'Transfers',
+};
+
 export default function SearchTransactions({
   menu,
   group,
@@ -25,7 +30,6 @@ export default function SearchTransactions({
   expenseParsedFilters,
   transferParsedFilters,
   isPersonal,
-  // nonGroupUsers
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
   const queryClient = useQueryClient();
@@ -56,18 +60,6 @@ export default function SearchTransactions({
 
   const editorContentRef = useRef<EditorContentHandle | null>(null);
 
-  useEffect(() => {
-    const handleBackNavigation = () => {
-      if (menu.value) {
-        menu.value = null;
-      }
-    };
-    window.addEventListener('popstate', handleBackNavigation);
-    return () => {
-      window.removeEventListener('popstate', handleBackNavigation);
-    };
-  }, [menu]);
-
   const fetchedLabels: FetchedLabel[] = group
     ? group?.labels.map((l) => ({
         id: l.id,
@@ -87,16 +79,16 @@ export default function SearchTransactions({
     <StyledSearchTransactions>
       <>
         <div className="header">
-          <div className="gap"></div>
+          <div className="headerSpacer" />
           <div className="searchingIn">
-            Searching In:&nbsp;
-            <span className="groupName">
+            <div className="searchingInLabel">Searching in</div>
+            <div className="groupName">
               {isPersonal
                 ? 'Personal'
                 : group?.name
                   ? group?.name
-                  : 'Non Group'}
-            </span>
+                  : 'Quick splits'}
+            </div>
           </div>
           <div className="closeSign" onClick={() => (menu.value = null)}>
             <IoClose name="close-outline" className="close" />
@@ -105,11 +97,9 @@ export default function SearchTransactions({
         {!isPersonal && (
           <div className="catSelector">
             <CategorySelector
+              variant="segmented"
               activeCat={path}
-              categories={{
-                cat1: 'Expenses',
-                cat2: 'Transfers',
-              }}
+              categories={SEARCH_CATEGORIES}
               navLinkUse={true}
               activeCatAsState={category}
             />
@@ -140,7 +130,7 @@ export default function SearchTransactions({
         </div>
         <div className="submitButtons">
           <MyButton
-            fontSize="16"
+            fontSize="15"
             onClick={() =>
               handleSubmitButton(
                 editorState,
@@ -155,18 +145,30 @@ export default function SearchTransactions({
               )
             }
             disabled={!submitButtonIsActive.value}
-            variant={submitButtonIsActive.value ? 'primary' : 'secondary'}
           >
             Apply
           </MyButton>
-          {submitButtonIsActive.value ? (
-            <MyButton
-              onClick={() => handleCancelClick(editorContentRef)}
-              fontSize="16"
-            >
-              Cancel
-            </MyButton>
-          ) : null}
+          <MyButton
+            variant="secondary"
+            fontSize="15"
+            onClick={() =>
+              handleClearAllClick(
+                editorContentRef,
+                expenseFilterState,
+                transferFilterState,
+                filteredPeople,
+                filteredLabels,
+                submitButtonIsActive,
+                menu,
+                queryClient,
+                expenseParsedFilters,
+                transferParsedFilters,
+                isPersonal
+              )
+            }
+          >
+            Clear all
+          </MyButton>
         </div>
       </>
     </StyledSearchTransactions>

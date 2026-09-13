@@ -6,37 +6,17 @@ interface StyledLocationPickerProps {
 }
 export const StyledLocationPicker = styled.div<StyledLocationPickerProps>`
   .main {
-    .locationIcon {
-      font-size: 30px;
-    }
     cursor: pointer;
-    .locationPicker {
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
     .closeButtonWrapper {
       display: flex;
       align-items: center;
       .closeButton {
-        font-size: 1.4rem;
+        font-size: ${({ theme }) => theme.icon.md};
         color: ${({ location, theme }) =>
-          !!location ? theme.textActiveColor : ''};
+          !!location ? theme.ink.primary : ''};
       }
     }
     .icon {
-      /* vertical-align: middle; */
-    }
-
-    .selected-location {
-      display: flex;
-      gap: 8px;
-      color: ${({ theme }) => theme.textActiveColor};
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .coord {

@@ -1,8 +1,6 @@
 import { Details, GroupedTransaction } from '@/types';
 import currency from 'currency.js';
 
-//type NetByCurrency = Record<string, number>;
-
 export const computeNetPerCurrency = (
   groupedTransactions: GroupedTransaction[],
   userId: string

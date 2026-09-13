@@ -1,7 +1,10 @@
 import { TiGroup } from 'react-icons/ti';
 import { StyledNonGroupMenu } from './NonGroupMenu.styled';
+import { StyledSendMenu } from '../SendMenuWrapper/SendMenuWrapper.styled';
 import { TransferState } from '../formStore/formStoreTypes';
 import { Signal } from '@preact/signals-react';
+import IonIcon from '@reacticons/ionicons';
+import { getInitials } from '@/helpers/getInitials';
 
 interface NonGroupMenuProps {
   $noReceiverSelected?: boolean;
@@ -9,6 +12,7 @@ interface NonGroupMenuProps {
   data: Pick<TransferState, 'currencySymbol' | 'errors'>;
   actions: Pick<TransferState, 'setError'>;
   fromHome: boolean | undefined;
+  currentUserName: string | undefined;
   nonGroupMenu: Signal<{
     attribute: string;
     menu: string | null;
@@ -26,77 +30,108 @@ export const NonGroupMenu = ({
   actions,
   fromHome,
   nonGroupMenu,
+  currentUserName,
 }: NonGroupMenuProps) => {
+  const clearErrors = () => {
+    actions.setError('showSamePersonError', false);
+    actions.setError('isSameUserError', '');
+    actions.setError('showIdError', false);
+  };
+
+  const openPicker = (attribute: 'sender' | 'receiver' | 'groups') => {
+    nonGroupMenu.value = {
+      ...nonGroupMenu.value,
+      attribute,
+      menu: 'nonGroupTransfer',
+    };
+    clearErrors();
+  };
+
+  const canSwap =
+    !!nonGroupMenu.value.senderName && !!nonGroupMenu.value.receiverName;
+
+  const swap = () => {
+    const { senderId, receiverId, senderName, receiverName } =
+      nonGroupMenu.value;
+    if (!canSwap) return;
+    nonGroupMenu.value = {
+      ...nonGroupMenu.value,
+      senderId: receiverId,
+      receiverId: senderId,
+      senderName: receiverName,
+      receiverName: senderName,
+    };
+    clearErrors();
+  };
+
+  const errorMessage =
+    (data.errors.showAmountError && data.errors.isSameUserError) ||
+    (data.errors.showIdError && data.errors.idErrorMessage) ||
+    '';
+
+  const row = (
+    label: 'From' | 'To',
+    name: string,
+    onOpen: () => void,
+    hasError: boolean
+  ) => (
+    <StyledSendMenu $inputError={hasError}>
+      <div className="sendRow" onClick={onOpen}>
+        <span className="rowLabel">{label}</span>
+        <span className="rowValue">
+          {name ? (
+            <>
+              <span className="avatar">
+                {getInitials(name === 'You' ? currentUserName : name)}
+              </span>
+              <span className="name">{name}</span>
+            </>
+          ) : (
+            <span className="placeholder">Choose</span>
+          )}
+          <IonIcon name="chevron-forward-outline" className="rowIcon" />
+        </span>
+      </div>
+    </StyledSendMenu>
+  );
+
   return (
     <StyledNonGroupMenu
       $noReceiverSelected={$noReceiverSelected}
       $isSamePersonError={$isSamePersonError}
+      $inputError={!!errorMessage}
     >
-      <div className="nonGroupMenu">
-        <div className="textAndButton">
-          <div className="text"> Sent from </div>
+      <div className="directionCard">
+        {row(
+          'From',
+          nonGroupMenu.value.senderName,
+          () => openPicker('sender'),
+          $isSamePersonError
+        )}
+
+        <div className="divider">
           <div
-            className="button senderButton"
-            onClick={() => {
-              nonGroupMenu.value = {
-                ...nonGroupMenu.value,
-                attribute: 'sender',
-                menu: 'nonGroupTransfer',
-              };
-              actions.setError('showSamePersonError', false);
-              actions.setError('isSameUserError', '');
-              actions.setError('showIdError', false);
-            }}
+            className={`swap${canSwap ? '' : ' disabled'}`}
+            onClick={canSwap ? swap : undefined}
           >
-            {nonGroupMenu.value.senderName}
-          </div>{' '}
-        </div>
-        <div className="textAndButton">
-          <div className="text"> and received by </div>
-          <div
-            className="button receiverButton"
-            onClick={() => {
-              nonGroupMenu.value = {
-                ...nonGroupMenu.value,
-                attribute: 'receiver',
-                menu: 'nonGroupTransfer',
-              };
-              actions.setError('showSamePersonError', false);
-              actions.setError('isSameUserError', '');
-              actions.setError('showIdError', false);
-            }}
-          >
-            {nonGroupMenu.value.receiverName === ''
-              ? 'select user'
-              : nonGroupMenu.value.receiverName}
+            <IonIcon name="swap-vertical-outline" />
           </div>
         </div>
+
+        {row(
+          'To',
+          nonGroupMenu.value.receiverName,
+          () => openPicker('receiver'),
+          $isSamePersonError || (!!errorMessage && !!$noReceiverSelected)
+        )}
       </div>
-      <span className="errorMsg">
-        {data.errors.showAmountError && data.errors.isSameUserError
-          ? data.errors.isSameUserError
-          : ''}
-        {data.errors.showIdError && data.errors.idErrorMessage
-          ? data.errors.idErrorMessage
-          : ''}
-      </span>
+
+      {errorMessage ? <span className="errorMsg">{errorMessage}</span> : null}
+
       {fromHome && (
-        <div className="buttonWrapper">
-          <div
-            className="groupButton"
-            onClick={() => {
-              actions.setError('showAmountError', false);
-              actions.setError('showIdError', false);
-              nonGroupMenu.value = {
-                ...nonGroupMenu.value,
-                attribute: 'groups',
-                menu: 'nonGroupTransfer',
-              };
-            }}
-          >
-            <TiGroup className="groupIcon" />
-            <span className="descr">Groups</span>
-          </div>
+        <div className="groupButton" onClick={() => openPicker('groups')}>
+          <TiGroup className="groupIcon" />
+          <span className="descr">Groups</span>
         </div>
       )}
     </StyledNonGroupMenu>

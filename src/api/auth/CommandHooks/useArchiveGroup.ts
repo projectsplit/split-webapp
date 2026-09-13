@@ -19,7 +19,6 @@ export const useArchiveGroup = (
       return archiveGroup({ isArchived }, groupId);
     },
     onSuccess: async () => {
-      //await queryClient.invalidateQueries({ queryKey:["groups"], exact:false});
       await queryClient.invalidateQueries({ queryKey: ['shared', 'active'] });
       await queryClient.invalidateQueries({ queryKey: ['shared', 'archived'] });
       await queryClient.invalidateQueries({

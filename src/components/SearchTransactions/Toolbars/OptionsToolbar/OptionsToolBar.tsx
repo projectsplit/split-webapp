@@ -6,6 +6,8 @@ import { StyledOptionsToolbar } from './OptionsToolbar.styled';
 import Pill from '../../../Pill/Pill';
 import { FilteredResultItem, GroupedItem } from '../../../../types';
 import labelColors from '../../../../labelColors';
+import { tokens } from '../../../../styles/tokens';
+import { appendSpaceAfterMention } from '../../helpers/appendSpaceAfterMention';
 
 const OptionsToolBar = ({
   editorStateString,
@@ -36,14 +38,14 @@ const OptionsToolBar = ({
                   {results.map((result, index) => (
                     <Pill
                       key={index}
-                      $textColor={'#000000c8'}
                       color={
                         prop === 'category'
                           ? labelColors[result?.color]
-                          : '#ffffff'
+                          : tokens.ink.primary
                       }
                       title={result.value}
                       closeButton={false}
+                      $vivid={prop === 'category'}
                       $border={prop === 'category' ? false : true}
                       onClick={() => {
                         editor.update(() => {
@@ -67,7 +69,6 @@ const OptionsToolBar = ({
                               data: { id: result.id },
                             });
                           } else {
-                            //else is going to be a member
                             insertMention({
                               trigger: result.prop + ':',
                               value: result.value,
@@ -77,6 +78,7 @@ const OptionsToolBar = ({
 
                           setFilteredResults([]);
                         });
+                        queueMicrotask(() => appendSpaceAfterMention(editor));
                       }}
                     />
                   ))}

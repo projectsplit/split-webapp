@@ -46,7 +46,6 @@ export const onChangeEditorContent = (
     return root.getTextContent();
   });
 
-  // Extract the query following any mention trigger (e.g., "j" from "payer:j")
   const triggerMatch = searchTerm.match(
     new RegExp(`(?:${excludedTerms.join('|')})([^\\s]*)`, 'i')
   );
@@ -59,12 +58,9 @@ export const onChangeEditorContent = (
     showOptions.value = true;
   }
 
-  const matchesTimeTerm = timeTerms.some(
-    (term) => new RegExp(`\\b${term}(\\s|$)`).test(searchTerm) //checks whether there is anything following the timeTerm
+  const matchesTimeTerm = timeTerms.some((term) =>
+    new RegExp(`\\b${term}(\\s|$)`).test(searchTerm)
   );
-
-  // const mentionRegex = /(\S*)(payer|receiver|sender|participant|before|after):\S+/g;
-  // const cleanedInput = searchTerm.replace(mentionRegex, "").trim();
 
   if (matchesTimeTerm) {
     calendarIsOpen.value = true;

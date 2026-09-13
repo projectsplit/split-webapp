@@ -8,6 +8,7 @@ export const useToggleRecurringExpenseStatus = (
   const queryClient = useQueryClient();
 
   return useMutation<void, AxiosError, string>({
+    meta: { errorHandled: true },
     mutationFn: (recurringExpenseId) =>
       toggleRecurringExpenseStatus(recurringExpenseId),
     onSuccess: async () => {

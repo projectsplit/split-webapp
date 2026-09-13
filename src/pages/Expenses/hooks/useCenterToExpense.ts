@@ -1,9 +1,9 @@
 import { Signal } from '@preact/signals-react';
 import { ExpenseResponseItem } from '@/types';
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 export const useCenterToExpense = (
-  scrollAreaRef: React.RefObject<HTMLDivElement>,
+  scrollAreaRef: React.RefObject<HTMLDivElement | null>,
   isScrolled: Signal<boolean>,
   expenses: ExpenseResponseItem[] | undefined,
   jumpToken?: string,
@@ -11,6 +11,7 @@ export const useCenterToExpense = (
 ) => {
   const savedScrollHeight = useRef<number>(0);
   const jumpToProcessed = useRef<string | null>(null);
+  const [highlightedId, setHighlightedId] = useState<string | null>(null);
 
   useEffect(() => {
     const el = scrollAreaRef.current;
@@ -20,17 +21,13 @@ export const useCenterToExpense = (
     };
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
-  }, [isScrolled, expenses]);
-  // Before fetching the previous page, save the current scrollHeight so we can
-  // restore the visual position after new items are prepended to the list.
+  }, [isScrolled, expenses, scrollAreaRef]);
   useLayoutEffect(() => {
     if (isFetchingPreviousPage && scrollAreaRef.current) {
       savedScrollHeight.current = scrollAreaRef.current.scrollHeight;
     }
-  }, [isFetchingPreviousPage]);
+  }, [isFetchingPreviousPage, scrollAreaRef]);
 
-  // After the previous page has been fetched and the DOM has updated, adjust
-  // scrollTop so the user's viewport position appears unchanged.
   useLayoutEffect(() => {
     if (
       !isFetchingPreviousPage &&
@@ -42,7 +39,7 @@ export const useCenterToExpense = (
         newScrollHeight - savedScrollHeight.current;
       savedScrollHeight.current = 0;
     }
-  }, [isFetchingPreviousPage, expenses?.length]);
+  }, [isFetchingPreviousPage, expenses?.length, scrollAreaRef]);
 
   useLayoutEffect(() => {
     if (
@@ -66,11 +63,7 @@ export const useCenterToExpense = (
           if (element) {
             element.scrollIntoView({ block: 'center' });
 
-            element.classList.add('expense-highlight');
-
-            // setTimeout(() => {
-            //   element.classList.remove("expense-highlight");
-            // }, 100000000);
+            setHighlightedId(targetExpense.id);
 
             jumpToProcessed.current = jumpToken;
           }
@@ -80,4 +73,6 @@ export const useCenterToExpense = (
       }
     }
   }, [jumpToken, expenses]);
+
+  return highlightedId;
 };

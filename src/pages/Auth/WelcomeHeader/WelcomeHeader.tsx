@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { Logo, StyledWelcomeHeader } from './WelcomeHeader.styled';
 import logo from '../../../styles/logo/logo2.png';
 
-export default function WelcomeHeader() {
+function WelcomeHeader() {
   return (
     <StyledWelcomeHeader>
       <div className="appName">
@@ -11,3 +12,5 @@ export default function WelcomeHeader() {
     </StyledWelcomeHeader>
   );
 }
+
+export default memo(WelcomeHeader);

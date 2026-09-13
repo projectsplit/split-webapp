@@ -29,3 +29,6 @@ dev-dist/
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+.DS_Store
+design/*
+.claude/*

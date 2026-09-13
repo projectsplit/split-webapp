@@ -1,9 +1,8 @@
 import { CSSTransition } from 'react-transition-group';
 import CreateExpenseForm from '../CreateExpenseForm/CreateExpenseForm';
 import { NewExpenseAnimationProps } from '../../interfaces';
-// import { ExpenseResponseItem } from "../../../types";
-// import { useSignal } from "@preact/signals-react";
 import { useRef } from 'react';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function NewExpenseAnimation({
   groupId,
@@ -20,6 +19,7 @@ export default function NewExpenseAnimation({
   fromPersonal,
 }: NewExpenseAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'newExpense', () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === 'newExpense'}

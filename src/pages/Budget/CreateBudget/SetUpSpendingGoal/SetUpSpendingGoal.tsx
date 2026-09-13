@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyledSetUpSpendingGoal } from './SetUpSpendingGoal.styled';
 
 import { SetUpSpendingGoalProps } from '../../../../interfaces';

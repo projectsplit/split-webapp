@@ -5,6 +5,7 @@ import { Signal } from '@preact/signals-react';
 
 export const useJoinWithCode = (errorMessage: Signal<string>) => {
   return useMutation<any, Error, { code: string; onSuccess: () => void }>({
+    meta: { errorHandled: true },
     mutationFn: ({ code }) => joinWithCode({ code }),
     onSuccess: (_, variables) => {
       variables.onSuccess();

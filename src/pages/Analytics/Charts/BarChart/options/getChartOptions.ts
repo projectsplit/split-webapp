@@ -1,3 +1,4 @@
+import { tokens } from '@/styles/tokens';
 import { Context } from 'chartjs-plugin-datalabels/types/context';
 import { roundThousandsAndMillions } from '../../../../../helpers/roundThousandsAndMils';
 import { Frequency } from '../../../../../types';
@@ -39,7 +40,6 @@ export const getChartOptions = (
       },
       tooltip: {
         yAlign: (ctx: any) => {
-          // Adjust yAlign based on data value
           if (ctx.tooltip.dataPoints[0].raw > 0) return 'top';
           return 'bottom';
         },
@@ -79,9 +79,9 @@ export const getChartOptions = (
       },
       datalabels: {
         display: true,
-        color: 'white',
+        color: tokens.ink.primary,
         font: {
-          size: 12, //TODO adjust based on screen size
+          size: 12,
           weight: 'bold',
         },
         anchor: (context: any) => {
@@ -106,11 +106,9 @@ export const getChartOptions = (
         padding: -10,
         formatter: (value: number) => {
           if (value < 0) {
-            // If negative, format within parentheses
             return `(${currencySymbol}${roundThousandsAndMillions(value)})`;
           }
           if (value > 0) {
-            // If non-negative, format normally
             return `${currencySymbol}` + roundThousandsAndMillions(value);
           }
           if (value === 0) return '';
@@ -131,12 +129,12 @@ export const getChartOptions = (
           display: false,
         },
         ticks: {
-          color: '#DDDDDD',
+          color: tokens.ink.tertiary,
           font: {
             weight: 'bold',
-            size: 20, //TODO adjust based on screen size
+            size: 20,
           },
-          callback: (index: number, value: number) => {
+          callback: (index: number) => {
             return labels[index];
           },
         },

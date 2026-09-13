@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { recalculateAmounts } from '../recalculateAmounts';
 import { Guest, Member, PickerMember, User } from '../../../../types';
 import { Signal } from '@preact/signals-react';

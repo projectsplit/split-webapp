@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Outlet, useOutletContext } from 'react-router-dom';
-import { StyledPersonal } from './Personal.styled';
+import { StyledTransactionsShell } from '../TransactionsWrappers/TransactionsShell.styled';
 import {
   ExpenseParsedFilters,
   ExpenseResponseItem,
@@ -31,7 +31,7 @@ export const Personal = () => {
   const fromPersonal = useSignal<boolean>(true);
 
   const { expenseFilter } = localStorageStringParser(
-    localStorage.getItem(getFilterStorageKey('expense', undefined, true)),
+    sessionStorage.getItem(getFilterStorageKey('expense', undefined, true)),
     null
   );
 
@@ -39,31 +39,30 @@ export const Personal = () => {
 
   useEffect(() => {
     topMenuTitle.value = 'Your Expenses';
-  }, []);
+  }, [topMenuTitle]);
+
+  const outletContext = useMemo(
+    () => ({
+      userInfo,
+      topMenuTitle,
+      showBottomBar,
+      expenseParsedFilters,
+      transferParsedFilters,
+      mode: Mode.Personal,
+      group: null,
+    }),
+    [
+      userInfo,
+      topMenuTitle,
+      showBottomBar,
+      expenseParsedFilters,
+      transferParsedFilters,
+    ]
+  );
 
   return (
-    <StyledPersonal>
-      <Outlet
-        context={{
-          userInfo,
-          topMenuTitle,
-          showBottomBar,
-          expenseParsedFilters,
-          transferParsedFilters,
-          mode: Mode.Personal,
-          group: null,
-        }}
-      />
-      <SearchTransactionsAnimation
-        menu={menu}
-        group={null}
-        userInfo={userInfo}
-        timeZoneId={timeZoneId}
-        expenseParsedFilters={expenseParsedFilters}
-        transferParsedFilters={transferParsedFilters}
-        isPersonal={true}
-        // nonGroupUsers={nonGroupUsers}
-      />
+    <StyledTransactionsShell>
+      <Outlet context={outletContext} />
       <div className="bottomMenu">
         {' '}
         <BottomMainMenu
@@ -75,6 +74,15 @@ export const Personal = () => {
       </div>
 
       <MenuAnimationBackground menu={menu} />
+      <SearchTransactionsAnimation
+        menu={menu}
+        group={null}
+        userInfo={userInfo}
+        timeZoneId={timeZoneId}
+        expenseParsedFilters={expenseParsedFilters}
+        transferParsedFilters={transferParsedFilters}
+        isPersonal={true}
+      />
       <NewExpenseAnimation
         expense={null}
         timeZoneId={timeZoneId}
@@ -88,6 +96,6 @@ export const Personal = () => {
         nonGroupUsers={signal([])}
         fromPersonal={fromPersonal}
       />
-    </StyledPersonal>
+    </StyledTransactionsShell>
   );
 };

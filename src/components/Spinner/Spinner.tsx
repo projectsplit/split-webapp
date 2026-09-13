@@ -17,9 +17,7 @@ const Spinner = styled(CgSpinner)<SpinnerProps>`
   align-self: center;
   animation: spin-animation 0.8s linear infinite;
   font-size: ${({ fontSize }) => fontSize || '25px'};
-  color: ${({ theme }) => theme.labelColor6};
-  /* margin-top: 10px;
-    margin-bottom: 10px; */
+  color: ${({ theme }) => theme.accent.you.ink};
 `;
 
 export default Spinner;

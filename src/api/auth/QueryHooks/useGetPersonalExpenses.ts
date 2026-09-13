@@ -1,9 +1,9 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
 import { ExpenseParsedFilters, GetExpensesResponse } from '../../../types';
 import { apiClient } from '../../apiClients';
 import { AxiosResponse } from 'axios';
 import { Signal } from '@preact/signals-react';
-import { appendPersonalFilterToParams } from '../helpers/appendPersonalFilterToParams';
+import { appendFilterToParams } from '../helpers/appendFilterToParams';
 
 type PageParam = { next?: string; previous?: string };
 
@@ -37,8 +37,8 @@ export const useGetPersonalExpenses = (
       lastPage?.next ? { next: lastPage.next } : undefined,
     getPreviousPageParam: (firstPage): PageParam | undefined =>
       firstPage?.previous ? { previous: firstPage.previous } : undefined,
-    // A jump token is just a starting cursor that asks the server to centre on that expense.
     initialPageParam: { next: jumpToken || '' } as PageParam,
+    placeholderData: keepPreviousData,
     enabled,
   });
 
@@ -53,7 +53,7 @@ const getPersonalExpenses = async (
 ): Promise<GetExpensesResponse> => {
   const { labels = [], ...base } = parsedFilters;
 
-  const params = appendPersonalFilterToParams(base, {
+  const params = appendFilterToParams(base, {
     pageSize,
     next,
     previous,

@@ -10,7 +10,7 @@ import config from '../../../config';
 import { MapsInfoBoxProps } from '../../../interfaces';
 import { MdLocationOn, MdOutlineLocationOff } from 'react-icons/md';
 import { useState } from 'react';
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import IonIcon from '@reacticons/ionicons';
 
 export default function MapsInfoBox({
   location,
@@ -23,67 +23,66 @@ export default function MapsInfoBox({
   return (
     <APIProvider apiKey={config.googleMapsApiKey}>
       <StyledMapsInfoBox>
-        {location ? (
-          <InfoBox>
-            <div className="topStripe">
-              <div className="locationAndPin">
+        <InfoBox>
+          {location ? (
+            <>
+              <div className="locationRow">
                 <MdLocationOn className="locationIcon" />
                 <a
+                  className="locationLink"
                   href={googleMapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <div className="locationName">
-                    {location.google?.name}
-                  </div>{' '}
+                  <span className="locationName">{location.google?.name}</span>
                 </a>
+                <span
+                  className="mapToggle"
+                  onClick={() => setHide((hide) => !hide)}
+                >
+                  <IonIcon
+                    name={hide ? 'chevron-down-outline' : 'chevron-up-outline'}
+                  />
+                </span>
               </div>
-              {!hide ? <div /> : null}
-              <div
-                className="hideDetalailsButton"
-                onClick={() => setHide((hide) => !hide)}
-              >
-                {hide ? <IoIosArrowDown /> : <IoIosArrowUp />}
-              </div>
-            </div>{' '}
-            {!hide && (
-              <Map
-                className="map"
-                mapId={mapId}
-                defaultCenter={{
-                  lat: location.coordinates.latitude,
-                  lng: location.coordinates.longitude,
-                }}
-                defaultZoom={defaultZoom}
-                renderingType="VECTOR"
-                // onClick={handleMapClick}
-                gestureHandling="greedy"
-                disableDefaultUI
-                keyboardShortcuts={false}
-              >
-                <AdvancedMarker
-                  position={{
+
+              {!hide && (
+                <Map
+                  className="map"
+                  mapId={mapId}
+                  defaultCenter={{
                     lat: location.coordinates.latitude,
                     lng: location.coordinates.longitude,
                   }}
+                  defaultZoom={defaultZoom}
+                  renderingType="VECTOR"
+                  gestureHandling="greedy"
+                  disableDefaultUI
+                  keyboardShortcuts={false}
                 >
-                  <Pin
-                    background={'#FFEE34'}
-                    borderColor={'#1f234e'}
-                    glyphColor={'#1f234e'}
-                    scale={1.2}
-                  />
-                </AdvancedMarker>
-              </Map>
-            )}
-          </InfoBox>
-        ) : (
-          <div className="noLocation">
-            <MdOutlineLocationOff className="locationIcon" />
-            <span className="noMapInfo">No location set</span>
-            <div />
-          </div>
-        )}
+                  <AdvancedMarker
+                    position={{
+                      lat: location.coordinates.latitude,
+                      lng: location.coordinates.longitude,
+                    }}
+                  >
+                    <Pin
+                      background={'#FFEE34'}
+                      borderColor={'#1f234e'}
+                      glyphColor={'#1f234e'}
+                      scale={1.2}
+                    />
+                  </AdvancedMarker>
+                </Map>
+              )}
+            </>
+          ) : (
+            <div className="locationRow empty">
+              <MdOutlineLocationOff className="locationIcon" />
+              <span className="noMapInfo">No location set</span>
+            </div>
+          )}
+        </InfoBox>
       </StyledMapsInfoBox>
     </APIProvider>
   );

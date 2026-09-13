@@ -1,11 +1,11 @@
 import { Frequency } from '../../../types';
-import { generateYearsArray } from './generateYearsArray';
+import { generateYearsArray } from '@/helpers/generateYearsArray';
 
 export const isCurrentPeriod = (
   cycle: Frequency,
   selectedTimeCycleIndex: number,
   isSuccess: boolean,
-  cumulArrayData: number[],
+  cumulArrayData: unknown[],
   currentWeekIndex: number,
   selectedYear: number
 ) => {
@@ -23,7 +23,8 @@ export const isCurrentPeriod = (
       return (
         selectedTimeCycleIndex === currentWeekIndex &&
         isSuccess &&
-        cumulArrayData?.length !== 0
+        cumulArrayData?.length !== 0 &&
+        currentYear === selectedYear
       );
 
     case Frequency.Annually:

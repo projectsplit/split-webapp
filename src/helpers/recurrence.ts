@@ -22,7 +22,6 @@ export const recurrenceFrequencyLabel = (
   frequency: RecurrenceFrequency
 ): string => labels[frequency] ?? '';
 
-/** Sunday first, to line up with System.DayOfWeek on the server. */
 export const weekDayShortNames = [
   'Su',
   'Mo',
@@ -33,7 +32,7 @@ export const weekDayShortNames = [
   'Sa',
 ] as const;
 
-export const weekDayNames = [
+const weekDayNames = [
   'Sunday',
   'Monday',
   'Tuesday',
@@ -59,7 +58,6 @@ export const monthShortNames = [
 ] as const;
 
 export const daysInMonthForPicker = (month?: number | null): number =>
-  // A leap year, so 29 February stays selectable; the server clamps it in the years that lack it.
   month ? DateTime.local(2024, month, 1).daysInMonth ?? 31 : 31;
 
 export const requiresDayOfWeek = (frequency: RecurrenceFrequency): boolean =>
@@ -73,10 +71,6 @@ export const requiresDayOfMonth = (frequency: RecurrenceFrequency): boolean =>
 export const requiresMonth = (frequency: RecurrenceFrequency): boolean =>
   frequency === RecurrenceFrequency.Annually;
 
-/**
- * Seeds a schedule from the current moment in the user's zone, so switching cycle never leaves the
- * form in a state that cannot be submitted. The user changes what they care about from there.
- */
 export const defaultScheduleFor = (
   frequency: RecurrenceFrequency,
   timeZoneId: string,
@@ -105,7 +99,6 @@ const ordinal = (day: number): string => `${day}${getOrdinalSuffix(String(day))}
 export const scheduleTimeLabel = (schedule: RecurrenceSchedule): string =>
   `${pad(schedule.hour)}:${pad(schedule.minute)}`;
 
-/** The row description in the manage list, and the confirmation under the cycle picker. */
 export const scheduleSentence = (schedule: RecurrenceSchedule): string => {
   const time = scheduleTimeLabel(schedule);
 
@@ -130,12 +123,7 @@ export const scheduleSentence = (schedule: RecurrenceSchedule): string => {
   }
 };
 
-/**
- * Mirrors the server's first-occurrence rule so the form can promise a date before anything is
- * saved. Strictly after now, matching RecurrenceCalculator.GetFirstOccurrence — a schedule set up
- * at exactly its own slot waits for the next one rather than firing immediately.
- */
-export const nextOccurrenceFor = (
+const nextOccurrenceFor = (
   schedule: RecurrenceSchedule,
   timeZoneId: string
 ): DateTime => {
@@ -163,7 +151,6 @@ export const nextOccurrenceFor = (
 
     case RecurrenceFrequency.Weekly:
     case RecurrenceFrequency.Biweekly: {
-      // Luxon weekday is 1=Monday..7=Sunday; the schedule uses 0=Sunday.
       const target = schedule.dayOfWeek ?? 0;
       const current = now.weekday % 7;
       const candidate = atTime(now.plus({ days: (target - current + 7) % 7 }));

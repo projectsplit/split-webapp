@@ -70,7 +70,6 @@ export default function BottomDatePicker({
 
     setSelectedDateTime(finalValue);
 
-    // Navigation clicks (month/year arrows) should not close
     if (lastClickRef.current?.closest('.top-menu')) {
       return;
     }

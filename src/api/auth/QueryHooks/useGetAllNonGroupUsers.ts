@@ -3,10 +3,9 @@ import { useGetNonGroupExpensesUsers } from './useGetNonGroupExpensesUsers';
 import { useGetNonGroupTransferUsers } from './useGetNonGroupTransfersUsers';
 import { Mode, User } from '../../../types';
 
+const NO_USERS: User[] = [];
+
 export const useGetAllNonGroupUsers = (mode: Mode) => {
-  if (mode === Mode.Personal) {
-    return { allUsers: [], isLoading: false, isError: false };
-  }
   const expenseUsers = useGetNonGroupExpensesUsers(mode);
   const transferUsers = useGetNonGroupTransferUsers(mode);
 
@@ -16,7 +15,6 @@ export const useGetAllNonGroupUsers = (mode: Mode) => {
       ...(transferUsers.data?.data.users || []),
     ];
 
-    // Deduplicate by userId
     const uniqueUsersMap = new Map<string, User>();
     combinedUsers.forEach((user) => {
       if (user.userId) {
@@ -29,6 +27,10 @@ export const useGetAllNonGroupUsers = (mode: Mode) => {
 
   const isLoading = expenseUsers.isLoading || transferUsers.isLoading;
   const isError = expenseUsers.isError || transferUsers.isError;
+
+  if (mode === Mode.Personal) {
+    return { allUsers: NO_USERS, isLoading: false, isError: false };
+  }
 
   return { allUsers, isLoading, isError };
 };

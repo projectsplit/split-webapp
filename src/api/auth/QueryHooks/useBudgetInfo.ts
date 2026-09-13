@@ -10,6 +10,7 @@ const useBudgetInfo = () => {
     refetchOnMount: true,
     staleTime: 9000,
     enabled: true,
+    retry: false,
   });
 };
 

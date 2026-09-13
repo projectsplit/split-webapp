@@ -3,6 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import { RemoveWarningAnimationProps } from '../../interfaces';
 
 import RemoveWarning from '../Menus/RemoveWarning/RemoveWarning';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function RemoveWarningAnimation({
   menu,
@@ -13,6 +14,7 @@ export default function RemoveWarningAnimation({
   isLoading,
 }: RemoveWarningAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === menuValue, () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === menuValue}

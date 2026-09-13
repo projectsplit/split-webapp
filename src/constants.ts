@@ -1,3 +1,9 @@
+export const transactionCategories = {
+  cat1: 'Expenses',
+  cat2: 'Transfers',
+  cat3: 'Debts',
+};
+
 export const months = [
   'January',
   'February',
@@ -11,16 +17,6 @@ export const months = [
   'October',
   'November',
   'December',
-];
-
-export const weekDays = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
 ];
 
 export const shortWeekdays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];

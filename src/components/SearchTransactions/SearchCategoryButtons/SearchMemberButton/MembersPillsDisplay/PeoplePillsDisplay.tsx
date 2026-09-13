@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { PeoplePillsDisplayProps } from '../../../../../interfaces';
-import { StyledPeoplePillsDisplay } from './PeoplePillsDisplay.styled';
+import { StyledSearchFilterRow } from '../../../SearchFilterRow.styled';
 import { useBeautifulMentions } from 'lexical-beautiful-mentions';
 import { FetchedPeople } from '../../../../../types';
 import Pill from '../../../../Pill/Pill';
+import { tokens } from '../../../../../styles/tokens';
 
 export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
   category,
@@ -97,7 +98,6 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
         }
         break;
       default:
-        // No action needed for unexpected categories
         break;
     }
 
@@ -105,12 +105,11 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
   };
 
   return (
-    <StyledPeoplePillsDisplay>
+    <StyledSearchFilterRow>
       <div
         className="category"
         onClick={() => {
           insertMention({ trigger: category + ':', value: '' });
-          //openMentionMenu({trigger:category + ":"})
           showOptions.value = false;
           submitButtonIsActive.value = true;
         }}
@@ -124,12 +123,14 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
             <div key={person.value}>
               <Pill
                 title={person.value}
-                color="#ffffff"
+                color={tokens.ink.primary}
                 closeButton={true}
                 onClose={() => removeFilter(person.id)}
-                $textColor="#000000c8"
                 $border={false}
-                fontSize="16px"
+                fontSize="12px"
+                $textColor={tokens.ink.primary}
+                $closeButtonColor={tokens.ink.tertiary}
+                $radius="9px"
               />
             </div>
           ))
@@ -137,6 +138,6 @@ export const PeoplePillsDisplay: React.FC<PeoplePillsDisplayProps> = ({
           <div className="type">{type}</div>
         )}
       </div>
-    </StyledPeoplePillsDisplay>
+    </StyledSearchFilterRow>
   );
 };

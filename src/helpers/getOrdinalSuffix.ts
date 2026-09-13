@@ -5,7 +5,7 @@ export const getOrdinalSuffix = (x: string | undefined): string => {
   const lastTwoDigits = number % 100;
 
   if (lastTwoDigits >= 11 && lastTwoDigits <= 13) {
-    return 'th'; // 11th, 12th, and 13th are exceptions
+    return 'th';
   }
 
   switch (lastDigit) {

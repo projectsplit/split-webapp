@@ -32,10 +32,10 @@ export const useCreateGuest = (
       ]);
       if (previousGroup) {
         const guestToAdd: Guest = {
-          id: newGuest.id || `temp-${Date.now()}`, // Fallback ID
-          name: newGuest.name || guestName, // Use guestName if API doesn't return name
-          canBeRemoved: newGuest.canBeRemoved ?? true, // Default to true
-          joined: newGuest?.joined || new Date().toISOString(), // Convert to Date
+          id: newGuest.id || `temp-${Date.now()}`,
+          name: newGuest.name || guestName,
+          canBeRemoved: newGuest.canBeRemoved ?? true,
+          joined: newGuest?.joined || new Date().toISOString(),
         };
 
         queryClient.setQueryData([groupId], {

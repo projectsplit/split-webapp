@@ -2,6 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import SearchTransactions from '../SearchTransactions/SearchTransactions';
 import { SearchTransactionAnimationProps } from '../../interfaces';
 import { useRef } from 'react';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function SearchTransactionsAnimation({
   menu,
@@ -11,9 +12,9 @@ export default function SearchTransactionsAnimation({
   expenseParsedFilters,
   transferParsedFilters,
   isPersonal,
-  // nonGroupUsers
 }: SearchTransactionAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'search', () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === 'search'}
@@ -30,7 +31,6 @@ export default function SearchTransactionsAnimation({
           expenseParsedFilters={expenseParsedFilters}
           transferParsedFilters={transferParsedFilters}
           isPersonal={isPersonal}
-          // nonGroupUsers={nonGroupUsers}
         />
       </div>
     </CSSTransition>

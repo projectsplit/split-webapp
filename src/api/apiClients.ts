@@ -8,6 +8,12 @@ import { Mutex } from 'async-mutex';
 
 const mutex = new Mutex();
 
+const redirectToAuth = () => {
+  if (window.location.pathname !== routes.AUTH) {
+    window.location.href = routes.AUTH;
+  }
+};
+
 const isAccessTokenValid = (token: string | null): boolean => {
   if (!token) return false;
 
@@ -19,9 +25,6 @@ const isAccessTokenValid = (token: string | null): boolean => {
 
 export const apiClient = axios.create({
   baseURL: `${config.serverUrl}`,
-  // headers: {
-  //   "ngrok-skip-browser-warning": "ngrok",
-  // },
 });
 
 apiClient.interceptors.request.use(
@@ -38,7 +41,7 @@ apiClient.interceptors.request.use(
           await logOut();
           clearAccessToken();
           clearSubmittedFromHomePersistData();
-          window.location.href = routes.AUTH;
+          redirectToAuth();
           throw new axios.Cancel('Session expired, logging out.');
         } finally {
           release();
@@ -63,7 +66,7 @@ apiClient.interceptors.response.use(
       await logOut();
       clearAccessToken();
       clearSubmittedFromHomePersistData();
-      window.location.href = routes.AUTH;
+      redirectToAuth();
     }
     return Promise.reject(error);
   }
@@ -72,9 +75,6 @@ apiClient.interceptors.response.use(
 export const authApiClient = axios.create({
   baseURL: config.serverUrl,
   withCredentials: true,
-  // headers: {
-  //   "ngrok-skip-browser-warning": "ngrok",
-  // },
 });
 
 function clearAccessToken() {
@@ -90,5 +90,5 @@ function getAccessToken() {
 }
 
 function clearSubmittedFromHomePersistData() {
-  localStorage.removeItem('submittedFromHomePersistData');
+  sessionStorage.removeItem('submittedFromHomePersistData');
 }

@@ -18,7 +18,6 @@ export const buildLabels = (
         monthsAndDaysArrays,
         selectedTimeCycleIndex
       );
-      //convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex];
       return enhanceStringArray(toFullMonthNames, fractalFactor);
     case Frequency.Annually:
       return enhanceStringArray(

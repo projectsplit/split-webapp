@@ -3,9 +3,15 @@ import { StyledDateTimePicker } from './DateTimePicker.styled';
 import DayPicker from './DayPicker/DayPicker';
 import { RxChevronLeft, RxChevronRight } from 'react-icons/rx';
 import ScrollPicker from '../ScrollPicker/ScrollPicker';
-import { isNow, round, toLuxon, toUtcString } from '../../utils';
+import {
+  isNow,
+  round,
+  toLuxon,
+  toUtcString,
+} from '../../helpers/dateTimeAndRounding';
 import { DateTime as LuxonDateTime } from 'luxon';
 import { DateTimePickerProps } from '../../interfaces';
+import { useRealtimeClock } from '../../hooks/useRealtimeClock';
 
 const DateTimePicker = ({
   selectedDateTime,
@@ -66,30 +72,11 @@ const DateTimePicker = ({
       }
     : null;
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (realtimeUpdate && showTimeControls && setRealtimeUpdate) {
-      interval = setInterval(() => {
-        setSelectedDateTime((prev) => {
-          const now = LuxonDateTime.utc().setZone(timeZoneId);
-          const updatedDateTime = toLuxon(prev, timeZoneId).set({
-            hour: now.hour,
-            minute: now.minute,
-            second: now.second,
-          });
-
-          return toUtcString(updatedDateTime);
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [realtimeUpdate]);
+  useRealtimeClock(
+    !!(realtimeUpdate && showTimeControls && setRealtimeUpdate),
+    timeZoneId,
+    setSelectedDateTime
+  );
 
   useEffect(() => {
     if (!realtimeUpdate && showTimeControls && setRealtimeUpdate)

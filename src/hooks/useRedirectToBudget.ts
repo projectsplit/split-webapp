@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { BudgetInfoResponse } from '../types';
 import { useEffect } from 'react';
+import routes from '@/routes';
 
 export const useRedirectToBudget = (
   data: BudgetInfoResponse | undefined,
@@ -11,19 +12,21 @@ export const useRedirectToBudget = (
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const validPaths = ['/budget/actions', '/budget/manage', '/budget/create'];
+    const validPaths = [
+      routes.BUDGET,
+      routes.BUDGET_MANAGE,
+      routes.BUDGET_CREATE,
+    ];
     if (validPaths.includes(pathname)) return;
 
-    if (pathname.includes('/actions')) {
-      navigate(`/budget/actions`, { replace: true });
-    } else if (pathname.includes('/manage')) {
-      navigate(`/budget/manage`, { replace: true });
+    if (pathname.includes('/manage')) {
+      navigate(routes.BUDGET_MANAGE, { replace: true });
     } else if (pathname.includes('/create')) {
-      navigate(`/budget/create`, { replace: true });
+      navigate(routes.BUDGET_CREATE, { replace: true });
     } else {
-      navigate(`/budget/actions`, { replace: true });
+      navigate(routes.BUDGET, { replace: true });
     }
-  }, [isLoading, data, hasUserInfo, pathname]);
+  }, [isLoading, data, hasUserInfo, pathname, navigate]);
 
   return null;
 };

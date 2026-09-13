@@ -8,8 +8,7 @@ import {
 } from '@vis.gl/react-google-maps';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useGeolocation from '../../hooks/useGeoLocation';
-import { SiGooglemaps } from 'react-icons/si';
-import Button from '../Button';
+import { MdLocationOn } from 'react-icons/md';
 import { Coordinates, GeoLocation } from '../../types';
 import config from '../../config';
 import { IoClose } from 'react-icons/io5';
@@ -172,16 +171,23 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
       }
     );
 
-    const centerChangeListener = map.addListener('center_changed', () => {
-      const mapCenter = map.getCenter();
-      if (!mapCenter) return;
+    const applyViewportBias = () => {
+      const bounds = map.getBounds();
+      if (!bounds) return;
 
-      autocomplete.setBounds(map.getBounds());
-    });
+      autocomplete.setBounds(bounds);
+    };
+
+    applyViewportBias();
+
+    const boundsChangeListener = map.addListener(
+      'bounds_changed',
+      applyViewportBias
+    );
 
     return () => {
       autocompleteListener.remove();
-      centerChangeListener.remove();
+      boundsChangeListener.remove();
     };
   }, [autocomplete, map]);
 
@@ -265,19 +271,21 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
 
   return (
     <StyledPlacePicker>
-      <div className="map-container">
-        <div className="searchAndClose">
-          <input
-            ref={autocompleteInputRef}
-            placeholder="Search for a location"
-            className="searchBar"
-          />
-          <IoClose
-            className="closeButton"
-            onClick={() => (isMapOpen.value = false)}
-          />
+      <div className="pickerHeader">
+        <input
+          ref={autocompleteInputRef}
+          placeholder="Search for a place"
+          className="searchBar"
+        />
+        <div
+          className="closeButton"
+          onClick={() => (isMapOpen.value = false)}
+        >
+          <IoClose />
         </div>
+      </div>
 
+      <div className="mapArea">
         <Map
           className="map"
           mapId={mapId}
@@ -307,28 +315,31 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
           </AdvancedMarker>
         </Map>
       </div>
-      <div className="position-name-container">
-        <a href={selectedLocation.google?.url}>
-          <Button className="view-in-maps-button">
-            <SiGooglemaps className="pin" />
-          </Button>
-        </a>
-        {selectedLocation.google?.name && (
-          <div className="place-name">{selectedLocation.google?.name}</div>
-        )}
-        {!selectedLocation.google?.name && (
-          <div className="coordinates">
-            <div className="coord">{selectedLocation.coordinates.latitude}</div>
-            <div className="coord">
+
+      <div className="footer">
+        <div className="selection">
+          <MdLocationOn className="selectionIcon" />
+          {selectedLocation.google?.name ? (
+            <div className="selectionName">{selectedLocation.google.name}</div>
+          ) : (
+            <div className="selectionName">
+              {selectedLocation.coordinates.latitude},{' '}
               {selectedLocation.coordinates.longitude}
             </div>
-          </div>
-        )}
-      </div>
-      <div className="buttons-container">
-        <MyButton fontSize="16" onClick={submitLocation}>
-          Select
-        </MyButton>
+          )}
+          {selectedLocation.google?.url && (
+            <a
+              className="mapsLink"
+              href={selectedLocation.google.url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open in Maps
+            </a>
+          )}
+        </div>
+
+        <MyButton onClick={submitLocation}>Select</MyButton>
       </div>
     </StyledPlacePicker>
   );

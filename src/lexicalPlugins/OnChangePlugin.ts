@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 export function OnChangePlugin(props: {
   onChange: (editorState: EditorState) => void;
 }): null {
-  // Access the editor through the LexicalComposerContext
   const [editor] = useLexicalComposerContext();
   const { onChange } = props;
 

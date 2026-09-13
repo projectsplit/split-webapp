@@ -8,20 +8,11 @@ import {
   unsubscribeFromPush,
 } from '../../../helpers/pushNotifications';
 
-export type SetPushNotificationsResult = {
+type SetPushNotificationsResult = {
   enabled: boolean;
-  /** Null when the toggle did what was asked. Set when enabling could not go through. */
   failure: PushSubscribeFailure | null;
 };
 
-/**
- * Toggles push notifications for the account and keeps this device's subscription in step.
- *
- * Enabling needs a working device subscription first: without one the server preference would be
- * on while nothing could ever be delivered. When that cannot be arranged the preference is left
- * untouched and the reason is handed back, so the caller can explain the switch snapping off
- * instead of leaving the user to guess.
- */
 export const useSetPushNotificationsEnabled = () => {
   const queryClient = useQueryClient();
   const queryKey = ['getMe'];
@@ -32,6 +23,7 @@ export const useSetPushNotificationsEnabled = () => {
     boolean,
     { previousUserInfo: UserInfo | undefined }
   >({
+    meta: { errorHandled: true },
     mutationFn: async (enabled) => {
       if (enabled) {
         const result = await subscribeToPush();
@@ -67,8 +59,6 @@ export const useSetPushNotificationsEnabled = () => {
     },
 
     onSuccess: (result) => {
-      // A denied permission prompt is not an error, but the optimistic update above already
-      // flipped the switch on, so put it back.
       const current = queryClient.getQueryData<UserInfo>(queryKey);
 
       if (current) {

@@ -1,168 +1,90 @@
 import styled from 'styled-components';
+import { StyledFullScreenMenu } from '../Layouts/FullScreenMenu/FullScreenMenu.styled';
 
-export const StyledScopeSelectionMenu = styled.div`
-  position: fixed;
-  font-size: 1.125rem;
-  left: 0;
-  right: 0;
-  margin: 0;
-  top: 0;
-  width: 100%;
-  height: 100dvh;
-  overflow: auto;
-  box-sizing: border-box;
-  background-color: ${({ theme }) => theme.layer2};
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  .fixed-header-container {
-    position: sticky;
-    top: 0;
-    z-index: 0;
-    background-color: ${({ theme }) => theme.layer2};
+export const StyledScopeSelectionMenu = styled(StyledFullScreenMenu)`
+  .scrollable-content {
+    gap: ${({ theme }) => theme.space.s12};
+    padding: ${({ theme }) =>
+      `${theme.space.s4} ${theme.space.s20} ${theme.space.s24}`};
   }
-  .header {
-    padding: 0.875rem;
+
+  .hint {
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.5;
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
+
+  .scopeCard {
+    display: flex;
+    flex-direction: column;
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
+    overflow: hidden;
+
+    > * {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    > * + *::before {
+      content: '';
+      position: absolute;
+      left: 58px;
+      right: 0;
+      top: 0;
+      height: 1px;
+      background-color: ${({ theme }) => theme.surface.raisedHigh};
+    }
+  }
+
+  .scopeRow {
+    box-sizing: border-box;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
+    gap: ${({ theme }) => theme.space.s12};
+    min-height: 56px;
+    padding: ${({ theme }) => `${theme.space.s10} ${theme.space.s16}`};
 
-    .closeButtonContainer {
-      position: relative;
-      cursor: pointer;
-      display: inline-block;
-    }
-
-    .closeButton {
-      cursor: pointer;
-      display: block;
-      font-size: 1.875rem;
-    }
-
-    .closeButtonContainer:hover::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background-color: rgba(128, 128, 128, 0.3);
-      pointer-events: none;
-    }
-
-    .title {
-      font-weight: 600;
-    }
-    .gap {
-      margin-right: 0.9375rem;
-    }
-  }
-  .scopeOptions {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    gap: 1.5rem;
-    padding: 1.5rem;
-
-    .wrapperAndPill {
+    .scopeIcon {
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      .pill {
-        border-color: ${({ theme }) => theme.greyOutline};
-        background-color: ${({ theme }) => theme.greyOutline};
-        border-width: 2px;
-        border-style: solid;
-        border-radius: 12px;
-        padding: 0.3rem;
-        font-size: 13px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        margin-top: 15px;
-        cursor: pointer;
-        &:hover {
-          box-shadow: 0 0 3px rgba(212, 212, 212, 0.3);
-        }
-      }
-      .pill.open {
-        box-shadow: 0 0 3px rgba(212, 212, 212, 0.3);
-      }
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+      border-radius: ${({ theme }) => theme.radius.pill};
+      background-color: ${({ theme }) => theme.surface.raised};
+      color: ${({ theme }) => theme.ink.secondary};
+      font-size: ${({ theme }) => theme.icon.sm};
     }
 
-    .buttonWrapper,
-    .groupsButtonWrapper {
-      position: relative;
-      height: 100px;
-      width: 100px;
-
-      .checkIcon {
-        position: absolute;
-        top: -8px;
-        right: -8px;
-        font-size: 22px;
-        color: ${({ theme }) => theme.checkmarkGreen};
-        background-color: ${({ theme }) => theme.layer2};
-        border-radius: 50%;
-        z-index: 2;
-      }
-
-      .button {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: ${({ theme }) => theme.greyOutline};
-        cursor: pointer;
-        border-radius: 12px;
-        padding: 0.5rem;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-
-        &:hover {
-          box-shadow: 0 0 3px rgba(212, 212, 212, 0.3);
-        }
-
-        .groupIcon {
-          color: ${({ theme }) => theme.whiteText};
-          font-size: 30px;
-          margin-bottom: 6px; /* Spacing below the icon */
-        }
-
-        .text-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: auto;
-          width: 100%;
-        }
-
-        .descr {
-          font-size: 14px;
-          line-height: 1.2;
-          text-align: center;
-          color: ${({ theme }) => theme.whiteText};
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-        }
-      }
-      .button.active {
-        box-shadow: 0 0 6px ${({ theme }) => theme.checkmarkGreen};
-      }
+    .scopeName {
+      flex: 1;
+      min-width: 0;
+      font-size: ${({ theme }) => theme.size.s14};
+      font-weight: ${({ theme }) => theme.weight.medium};
+      color: ${({ theme }) => theme.ink.primary};
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
-  .footer{
-    display:flex ;
-    flex:1;
+
+  .doneButton {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding: ${({ theme }) => `${theme.space.s14} ${theme.space.s20} 22px`};
+    background-color: ${({ theme }) => theme.surface.footer};
+    border-top: 1px solid ${({ theme }) => theme.surface.raisedHigh};
+
+    button {
+      width: 100%;
+      padding: ${({ theme }) => `${theme.space.s14} 0`};
+      border-radius: ${({ theme }) => theme.radius.iconButton};
+      font-size: ${({ theme }) => theme.size.s15};
+    }
   }
 `;

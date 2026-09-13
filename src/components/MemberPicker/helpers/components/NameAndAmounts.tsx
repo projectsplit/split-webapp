@@ -1,7 +1,7 @@
 import { FaCheck } from 'react-icons/fa';
 import { NameAndAmountsProps } from '../../../../interfaces';
 import { displayCurrencyAndAmount } from '../../../../helpers/displayCurrencyAndAmount';
-import { HiLockClosed } from 'react-icons/hi';
+import { getInitials } from '../../../../helpers/getInitials';
 
 export const NameAndAmounts = ({
   category,
@@ -9,32 +9,31 @@ export const NameAndAmounts = ({
   onClick,
   currency,
 }: NameAndAmountsProps) => {
+  const showsSecondaryAmount =
+    category.value === 'Shares' || category.value === 'Percentages';
+
   return (
-    <>
-      {category.value === 'Shares' || category.value === 'Percentages' ? (
-        <div className="textAndCheck">
-          <div className="tick-cube" onClick={onClick}>
-            <FaCheck className="checkmark" />
+    <div className="textAndCheck">
+      <div className="tick-cube" onClick={onClick}>
+        <FaCheck className="checkmark" />
+      </div>
+      <span
+        className={`memberAvatar ${m.name === 'You' || m.name === 'you' ? 'you' : ''}`}
+      >
+        {getInitials(m.avatarName ?? m.name)}
+      </span>
+      <div className="nameAndAmount">
+        <div className="name">{m.name}</div>
+        {showsSecondaryAmount ? (
+          <div className="amount">
+            {displayCurrencyAndAmount(
+              m.actualAmount === '' ? '0' : m.actualAmount,
+              currency
+            )}
           </div>
-          <div className="nameAndAmount">
-            <div className="name"> {m.name}</div>
-            <div className="amount">
-              {displayCurrencyAndAmount(
-                m.actualAmount === '' ? '0' : m.actualAmount,
-                currency
-              )}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="textAndCheck">
-          <div className="tick-cube" onClick={onClick}>
-            <FaCheck className="checkmark" />
-          </div>
-          {m.name}
-        </div>
-      )}
-    </>
+        ) : null}
+      </div>
+    </div>
   );
 };
 

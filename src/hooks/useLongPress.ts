@@ -7,7 +7,6 @@ export function useLongPress(onLongPress: () => void) {
   const startPos = useRef<{ x: number; y: number } | null>(null);
   const firedRef = useRef(false);
 
-  // Clean up timer on unmount
   useEffect(() => {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -47,8 +46,6 @@ export function useLongPress(onLongPress: () => void) {
     [cancel]
   );
 
-  // Swallow the click that the browser synthesises after touchend
-  // when a long press was detected
   const handleClick = useCallback((e: React.MouseEvent) => {
     if (firedRef.current) {
       e.preventDefault();

@@ -2,6 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import { AddNewUserAnimationProps } from '../../interfaces';
 import SearchUsersToInvite from '../../pages/SearchUsersToInvite';
 import { useRef } from 'react';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function AddNewUserAnimation({
   menu,
@@ -11,6 +12,7 @@ export default function AddNewUserAnimation({
   accessedNewUsersInvitationsMenu,
 }: AddNewUserAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'newUser', () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === 'newUser'}

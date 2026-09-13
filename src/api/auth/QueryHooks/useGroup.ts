@@ -3,6 +3,7 @@ import { Group } from '../../../types';
 import { apiClient } from '../../apiClients';
 import { AxiosError, AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import routes from '@/routes';
 
 const useGroup = (groupId: string | undefined) => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const getGroup = async (
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 400) {
-      navigate('/shared');
+      navigate(routes.GROUPS);
     }
     throw error;
   }

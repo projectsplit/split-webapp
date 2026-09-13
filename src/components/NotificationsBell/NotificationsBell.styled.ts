@@ -5,7 +5,7 @@ export const StyledNotificationsBell = styled.div<NotificationsBellProps>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 14px;
+  gap: ${({ theme }) => theme.space.s14};
   cursor: pointer;
-  font-size: 1.8rem;
+  font-size: ${({ theme }) => theme.icon.lg};
 `;

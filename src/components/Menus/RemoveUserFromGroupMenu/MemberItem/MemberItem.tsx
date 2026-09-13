@@ -1,7 +1,8 @@
 import MyButton from '../../../MyButton/MyButton';
-import { useRemoveMemberFromGroup } from '../../../../api/auth/CommandHooks/useRemoveMemberFromGroup';
 import { useRemoveGuestFromGroup } from '../../../../api/auth/CommandHooks/useRemoveGuestFromGroup';
 import { MemberItemProps } from '../../../../interfaces';
+import { getInitials } from '../../../../helpers/getInitials';
+import { StyledMemberItem } from './MemberItem.styled';
 
 export default function MemberItem({
   member,
@@ -16,6 +17,8 @@ export default function MemberItem({
   const { mutate: removeGuest, isPending: isPendingGuest } =
     useRemoveGuestFromGroup(groupId, noGroupError, noMemberError);
 
+  const locked = isGuest && !canBeRemoved;
+
   const handleClick = () => {
     if (!canBeRemoved) {
       onCannotRemoveClick();
@@ -28,23 +31,34 @@ export default function MemberItem({
   };
 
   return (
-    <div className="memberWithButton">
-      {isGuest ? (
-        <div className="guestWrap">
-          <span className="name">{member.name}*</span>
-          <span className="guest">guest*</span>
-        </div>
-      ) : (
-        <span className="name">{member.name}</span>
-      )}
+    <StyledMemberItem>
+      <span className="avatar">{getInitials(member.name)}</span>
 
-      <MyButton
-        variant="secondary"
-        isLoading={isPendingGuest}
-        onClick={handleClick}
-      >
-        Remove
-      </MyButton>
-    </div>
+      <div className="memberIdentity">
+        <div className="memberName">{member.name}</div>
+        {isGuest ? (
+          <div className="memberMeta">
+            {canBeRemoved
+              ? 'No recorded spending'
+              : 'Involved in expenses or transfers'}
+          </div>
+        ) : null}
+      </div>
+
+      {locked ? (
+        <span className="chip" onClick={onCannotRemoveClick}>
+          Locked
+        </span>
+      ) : (
+        <MyButton
+          variant="secondary"
+          size="compact"
+          isLoading={isPendingGuest}
+          onClick={handleClick}
+        >
+          Remove
+        </MyButton>
+      )}
+    </StyledMemberItem>
   );
 }

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { GoHomeFill } from 'react-icons/go';
 import { FaPlus } from 'react-icons/fa';
 import { IoMdSearch } from 'react-icons/io';
@@ -5,8 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { StyledBottomMainMenu } from './BottomMainMenu.styled';
 import { BottomMainMenuProps } from '../../../interfaces';
 import { RiProhibited2Line } from 'react-icons/ri';
+import routes from '@/routes';
 
-export default function BottomMainMenu({
+function BottomMainMenu({
   onClick,
   group,
   menu,
@@ -20,7 +22,7 @@ export default function BottomMainMenu({
       $groupIsArchived={group && group.isArchived}
     >
       <div className="bottomMainBar">
-        <div className="home" onClick={() => navigate('/')}>
+        <div className="home" onClick={() => navigate(routes.ROOT)}>
           <GoHomeFill />
         </div>
         {group && group.isArchived ? (
@@ -45,3 +47,5 @@ export default function BottomMainMenu({
     </StyledBottomMainMenu>
   );
 }
+
+export default memo(BottomMainMenu);

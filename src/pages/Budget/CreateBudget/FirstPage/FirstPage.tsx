@@ -21,11 +21,6 @@ export const FirstPage = ({
     data.currencySymbol,
   ];
 
-  // const { data, isFetching, isStale } = useSpendingInfo(
-  //   budgetFrequency.value,
-  //   currencySymbol
-  // );
-
   const info = {
     budgetSubmitted: false,
     totalAmountSpent: '0',
@@ -114,10 +109,12 @@ export const FirstPage = ({
           <div className="spentInfo">
             <div>
               You have spent{' '}
-              {displayCurrencyAndAmount(
-                info?.totalAmountSpent,
-                querydata?.currency
-              )}{' '}
+              <span className="amount">
+                {displayCurrencyAndAmount(
+                  info?.totalAmountSpent,
+                  querydata?.currency
+                )}
+              </span>{' '}
               this {data.budgetFrequency.value === 1 ? 'month' : 'week'}
             </div>
           </div>

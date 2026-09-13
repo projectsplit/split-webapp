@@ -17,7 +17,7 @@ export default React.forwardRef(function Input(
     backgroundcolor,
     inputMode,
   }: InputProps,
-  ref: React.Ref<HTMLInputElement>
+  _ref: React.Ref<HTMLInputElement>
 ) {
   return (
     <StyledInput

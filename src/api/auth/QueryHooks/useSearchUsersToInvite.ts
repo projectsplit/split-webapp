@@ -18,11 +18,9 @@ export const useSearchUsersToInvite = (
       searchUsersToinvite(groupId, keyword, pageSize, next),
     getNextPageParam: (lastPage) => lastPage?.next || undefined,
     initialPageParam: '',
-    // enabled:!!keyword && keyword.length > 1
   });
 
   const updateUserInvitationStatus = (userId: string, isInvited: boolean) => {
-    // Update cache for all query keys.
     const queryKeys = queryClient
       .getQueryCache()
       .getAll()

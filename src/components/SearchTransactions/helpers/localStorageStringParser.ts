@@ -1,4 +1,4 @@
-import { ExpenseFilter, Mode, TransferFilter } from '../../../types';
+import { ExpenseFilter, TransferFilter } from '../../../types';
 
 export const getFilterStorageKey = (
   type: 'expense' | 'transfer',
@@ -36,8 +36,8 @@ export const localStorageStringParser = (
   };
 
   const sanitizeExpense = (f: any): ExpenseFilter => ({
-    ...expenseFilterDefault, //this is the safe base
-    ...f, //brings in user's values
+    ...expenseFilterDefault,
+    ...f,
     participantsIds: Array.isArray(f.participantsIds)
       ? f.participantsIds.filter((id: any) => typeof id === 'string')
       : [],

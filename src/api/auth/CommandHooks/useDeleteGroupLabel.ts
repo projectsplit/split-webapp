@@ -15,6 +15,7 @@ export const useDeleteGroupLabel = (
     AxiosError,
     { groupId: string | undefined; labelId: string }
   >({
+    meta: { errorHandled: true },
     mutationFn: ({ groupId, labelId }) => removeLabel(groupId, labelId),
     onSuccess: (_, { groupId, labelId }) => {
       queryClient.setQueryData(

@@ -77,7 +77,6 @@ export function submitExpenseFromState(
       state.payersCategory.value as keyof typeof state.payersByCategory
     ];
 
-  // Deselect participants with zero amount in Shares mode
   if (state.participantsCategory.value === 'Shares') {
     participants.forEach((p) => {
       if (p.actualAmount === '0.00') {
@@ -86,7 +85,6 @@ export function submitExpenseFromState(
     });
   }
 
-  // Deselect payers with zero amount in Shares mode
   if (state.payersCategory.value === 'Shares') {
     payers.forEach((p) => {
       if (p.actualAmount === '0.00') {
@@ -95,9 +93,6 @@ export function submitExpenseFromState(
     });
   }
 
-  // A non group expense must involve the user submitting it. Checked here, after the
-  // zero amount deselection above, so it holds for exactly what gets sent rather than
-  // for what was selected in the picker.
   if (!fromPersonal && isnonGroupExpense?.value) {
     const userIsPayer = payers.some((p) => p.selected && p.id === userId);
     const userIsParticipant = participants.some(
@@ -181,8 +176,6 @@ export function submitExpenseFromState(
 
   state.setIsSubmitting(true);
 
-  // Editing the template itself: the schedule is rewritten and every expense it already produced
-  // stays exactly as submitted.
   if (recurringExpenseId) {
     if (state.recurrenceSchedule === null) {
       state.setIsSubmitting(false);
@@ -204,9 +197,6 @@ export function submitExpenseFromState(
     return;
   }
 
-  // A schedule only ever applies to a new expense. Editing one already submitted leaves it a
-  // one-off — the series is edited from the manage screen instead, where the scope of the change
-  // is clear.
   if (isCreateExpense && state.recurrenceSchedule !== null) {
     createRecurringExpenseMutation(
       buildRecurringRequest(
@@ -229,10 +219,6 @@ export function submitExpenseFromState(
   }
 }
 
-/**
- * The recurring endpoint takes one payload for all three scopes, so group and non-group splits ride
- * in separate fields rather than the shared payments/shares the per-scope endpoints use.
- */
 function buildRecurringRequest(
   state: {
     amount: string;
@@ -248,8 +234,6 @@ function buildRecurringRequest(
   isNonGroup: boolean,
   groupId: string | undefined
 ): RecurringExpenseRequest {
-  // No occurred: the schedule decides when each expense is dated, not the moment the form was
-  // filled in.
   const base = {
     amount: Number(state.amount),
     currency: state.currencySymbol,

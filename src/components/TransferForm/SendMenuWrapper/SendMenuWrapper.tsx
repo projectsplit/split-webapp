@@ -1,5 +1,7 @@
 import { SendMenuWrapperInterface } from '../../../interfaces';
-import { StyledSendMenu } from './SendMenu.styled';
+import { StyledSendMenu } from './SendMenuWrapper.styled';
+import IonIcon from '@reacticons/ionicons';
+import { getInitials } from '../../../helpers/getInitials';
 
 const SendMenuWrapper = ({
   title,
@@ -8,43 +10,36 @@ const SendMenuWrapper = ({
   sortedMembers,
   id,
   userMemberId,
-  setId,
-  setShowIdError,
+  onOpen,
 }: SendMenuWrapperInterface) => {
   const errorCondition =
     title === 'Sender'
       ? idError.isSenderError && showIdError
       : idError.isReceiverError && showIdError;
 
+  const selected = sortedMembers.value.find((m) => m.id === id);
+  const selectedName = selected
+    ? selected.id === userMemberId
+      ? 'You'
+      : selected.name
+    : '';
+
   return (
-    <StyledSendMenu $inputError={showIdError}>
-      <div
-        className="sendMenu"
-        style={{
-          borderColor: errorCondition ? '#ba5d5d' : '#000000',
-        }}
-      >
-        <div className="title">{title}</div>
-        <div className="options">
-          {sortedMembers.value.map((m, i) => (
-            <div
-              key={i}
-              className="name"
-              style={{
-                backgroundColor: id === m.id ? 'white' : '',
-                color: id === m.id ? '#26272B' : '',
-              }}
-              onClick={() => {
-                setId(m.id);
-                setShowIdError(false);
-              }}
-            >
-              {m.id === userMemberId ? 'You' : m.name}
-            </div>
-          ))}
-        </div>
+    <StyledSendMenu $inputError={errorCondition}>
+      <div className="sendRow" onClick={onOpen}>
+        <span className="rowLabel">{title === 'Sender' ? 'From' : 'To'}</span>
+        <span className="rowValue">
+          {selected ? (
+            <>
+              <span className="avatar">{getInitials(selected.name)}</span>
+              <span className="name">{selectedName}</span>
+            </>
+          ) : (
+            <span className="placeholder">Choose</span>
+          )}
+          <IonIcon name="chevron-forward-outline" className="rowIcon" />
+        </span>
       </div>
-      <span className="errorMsg">{errorCondition ? idError.error : ''}</span>
     </StyledSendMenu>
   );
 };

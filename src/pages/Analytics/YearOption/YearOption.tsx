@@ -1,36 +1,50 @@
-import React from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { StyledYearOption } from './YearOption.styled';
 
-import { useTheme } from 'styled-components';
-import { generateYearsArray } from '../helpers/generateYearsArray';
-import { CategoryButton } from '../../../components/CategoryButton/CategoryButton';
+import { generateYearsArray } from '@/helpers/generateYearsArray';
 import { YearOptionProps } from '../../../interfaces';
+import { centerSelectedOption } from '@/helpers/centerSelectedOption';
+import { initialiseSelectedTimeCycle } from '@/helpers/initialiseSelectedTimeCycle';
 
-export default function YearOption({ selectedYear, menu }: YearOptionProps) {
-  const theme = useTheme();
-
+export default function YearOption({
+  selectedYear,
+  menu,
+  selectedTimeCycleIndex,
+  selectedCycle,
+  currentWeekIndex,
+}: YearOptionProps) {
   const allYears: number[] = generateYearsArray().reverse();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const selectedRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    centerSelectedOption(containerRef.current, selectedRef.current);
+  }, []);
 
   return (
-    <StyledYearOption>
-      {allYears.map((year: number, index: number) => (
-        <CategoryButton
-          selected={year === selectedYear.value}
-          onClick={() => {
-            selectedYear.value = year;
-            // selectedTimeCycleIndex.value = allYears.reverse().indexOf(year)
-            menu.value = null;
-          }}
-          backgroundcoloronselect={theme?.clicked}
-          key={index}
-        >
-          <div className="wrapper">
-            <div key={index} className="height"></div>
-            <span>{year}</span>
-            <div className="height"></div>
+    <StyledYearOption ref={containerRef}>
+      {allYears.map((year: number) => {
+        const isSelected = year === selectedYear.value;
+
+        return (
+          <div
+            key={year}
+            ref={isSelected ? selectedRef : undefined}
+            className={`item ${isSelected ? 'clicked' : ''}`}
+            onClick={() => {
+              selectedYear.value = year;
+              selectedTimeCycleIndex.value = initialiseSelectedTimeCycle(
+                selectedCycle.value,
+                currentWeekIndex,
+                year
+              );
+              menu.value = null;
+            }}
+          >
+            {year}
           </div>
-        </CategoryButton>
-      ))}
+        );
+      })}
     </StyledYearOption>
   );
 }

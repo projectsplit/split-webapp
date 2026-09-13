@@ -37,13 +37,11 @@ export function distributeRemainderCents(
     const absRemainder = Math.abs(remainder);
     const isNegative = remainder < 0;
 
-    // Sort indices by value (descending) to adjust largest amounts first
     const indices = arr
       .map((value, index) => ({ value, index }))
       .sort((a, b) => b.value - a.value)
       .map(({ index }) => index);
 
-    // Distribute remainder across the largest values
     for (let i = 0; i < absRemainder; i++) {
       const index = indices[i % indices.length];
       adjusted[index] += isNegative ? -1 : 1;

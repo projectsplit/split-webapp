@@ -1,3 +1,4 @@
+import { tokens } from '../../../../styles/tokens';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,14 +19,14 @@ import { noData } from '../plugins/noData';
 import { getAllDaysInMonth } from '../../../../helpers/monthlyDataHelpers';
 import { getCarouselItemsBasedOnCycle } from '../../helpers/getCarouselItemsBasedOnCycle';
 import { getChartOptions } from './options/getChartOptions';
-import { getData } from './data/getData';
+import { getCumulativeSpendingDatasets } from './data/getCumulativeSpendingDatasets';
 import { buildLabels } from '../../helpers/buildLabels';
 import { useStartAndEndDatesEffect } from '../../hooks/useStartEndDatesEffect';
 import { Frequency } from '../../../../types';
 import { deCumulArray } from '../../helpers/deCumulArray';
 import { enhanceNumberArray } from '../../../../helpers/enhanceNumberArray';
 import { isCurrentPeriod } from '../../helpers/isCurrentPeriod';
-import { months } from '../../../../constants';
+import { months, shortWeekdays } from '../../../../constants';
 import { significantDigitsFromTicker } from '../../../../helpers/openExchangeRates';
 import { getCumulativeShares } from '../../helpers/getCumulativeArray';
 
@@ -80,6 +81,11 @@ export function CumulativeSpending({
     fractalFactor
   );
 
+  const weekDays =
+    allWeeksPerYear[selectedTimeCycleIndex.value]?.map(
+      (day) => shortWeekdays[(day.getDay() + 6) % 7]
+    ) ?? shortWeekdays;
+
   const labels = buildLabels(
     selectedCycle.value,
     selectedTimeCycleIndex.value,
@@ -98,13 +104,12 @@ export function CumulativeSpending({
 
     const enhancedCumulArray = [...cumulArrayData];
     let upLimit = 0;
-    //const now = new Date();
     if (cycle === Frequency.Monthly)
       upLimit = getAllDaysInMonth(
         selectedTimeCycleIndex.value + 1,
         selectedYear.value
       ).length;
-    if (cycle === Frequency.Weekly) upLimit = 7;
+    if (cycle === Frequency.Weekly) upLimit = weekDays.length;
     if (cycle === Frequency.Annually) upLimit = 12;
 
     let enhancedCumulArrayLength = enhancedCumulArray?.length;
@@ -176,7 +181,7 @@ export function CumulativeSpending({
   const pointBackgroundColorProjection: string[] = [];
   const hitRadius: number[] = [];
 
-  projectedArray.map((dp, indx) => {
+  projectedArray.map((_dp, indx) => {
     if (
       indx === 0 ||
       indx === projectedArray.length - 1 ||
@@ -188,11 +193,11 @@ export function CumulativeSpending({
           expensePoints,
           currentWeekIndex,
           selectedYear.value
-        )) || //does not affect annual or weekly as they are 12 and 7 rsptctvly
+        )) ||
       indx === lastNumberBeforeNaN
     ) {
       pointRadiusProjection.push(2);
-      pointBackgroundColorProjection.push('#A12BFF');
+      pointBackgroundColorProjection.push(tokens.accent.you.ink);
     } else {
       pointRadiusProjection.push(0);
       pointBackgroundColorProjection.push('transparent');
@@ -204,7 +209,7 @@ export function CumulativeSpending({
     }
   });
 
-  pointBackgroundColorProjection[projectedArray.length - 1] = 'grey';
+  pointBackgroundColorProjection[projectedArray.length - 1] = tokens.ink.tertiary;
 
   const options = getChartOptions(
     isSuccess,
@@ -218,10 +223,11 @@ export function CumulativeSpending({
     currentWeekIndex,
     hitRadius,
     fractalFactor,
-    currency
+    currency,
+    weekDays
   );
 
-  const data = getData(
+  const data = getCumulativeSpendingDatasets(
     labels,
     selectedCycle,
     selectedTimeCycleIndex,
@@ -238,7 +244,9 @@ export function CumulativeSpending({
 
   return (
     <StyledCumulativeSpending>
-      <Line options={options} data={data} plugins={[noData, ChartDataLabels]} />
+      <div className="chartArea">
+        <Line options={options} data={data} plugins={[noData, ChartDataLabels]} />
+      </div>
       <div className="periodOptions">
         <Carousel
           carouselItems={getCarouselItemsBasedOnCycle(

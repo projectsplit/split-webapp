@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import AutoWidthInput from '../AutoWidthInput';
 import { IoClose } from 'react-icons/io5';
+import { FaTags } from 'react-icons/fa';
 import { StyledLabelPicker } from './LabelPicker.styled';
 import { LabelPickerProps } from '../../interfaces';
 import { useGetGroupLabels } from '../../api/auth/QueryHooks/useGetGroupLabels';
@@ -113,7 +114,7 @@ const LabelPicker = ({
     setDeleteClicked(true);
   };
 
-  const handleInpuTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newText = e.currentTarget.value;
     const trimmedText = newText.trim();
 
@@ -130,7 +131,9 @@ const LabelPicker = ({
     setText(trimmedText);
   };
 
-  const isLabelsLoading = !!groupId ? isGroupLabelsPending : isUserLabelsPending;
+  const isLabelsLoading = !!groupId
+    ? isGroupLabelsPending
+    : isUserLabelsPending;
 
   const remainingSuggestedLabels = !!groupId
     ? groupLabels.filter((x) => !labels.map((x) => x.text).includes(x.text))
@@ -140,53 +143,59 @@ const LabelPicker = ({
 
   return (
     <StyledLabelPicker $deleteClicked={$deleteClicked}>
-      <div
-        className="main"
-        onFocus={() => handleFocus()}
-        onBlur={handleBlur}
-        ref={mainRef}
-        tabIndex={0}
-      >
-        {labels.map((x) => {
-          return (
-            <span
-              key={x.id}
-              style={{
-                backgroundColor: labelColors[x.color],
-                color: '#000000c8',
-              }}
-              onClick={() => handleSelectedLabelClick(x.id)}
-              className="selected-label"
-            >
-              {x.text}
-              <IoClose />
-            </span>
-          );
-        })}
-        <AutoWidthInput
-          className="input"
-          inputMode="text"
-          autoComplete="off"
-          autoCorrect="off"
-          spellCheck={false}
-          value={text}
-          onChange={handleInpuTextChange}
-          ref={inputRef}
-          isText={true}
-        />
-        {isEmpty && (
-          <div style={{ position: 'absolute', flex: 1 }}>
-            Select or create label
-          </div>
-        )}
+      <div className="inputField">
+        <div
+          className="main"
+          onFocus={() => handleFocus()}
+          onBlur={handleBlur}
+          ref={mainRef}
+          tabIndex={0}
+        >
+          <FaTags className="tagIcon" />
+          {labels.map((x) => {
+            return (
+              <span
+                key={x.id}
+                style={{
+                  backgroundColor: `color-mix(in oklab, ${labelColors[x.color]} 14%, transparent)`,
+                  color: labelColors[x.color],
+                }}
+                onClick={() => handleSelectedLabelClick(x.id)}
+                className="selected-label"
+              >
+                {x.text}
+                <IoClose />
+              </span>
+            );
+          })}
+          <AutoWidthInput
+            className="input"
+            inputMode="text"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            value={text}
+            onChange={handleInputTextChange}
+            ref={inputRef}
+            isText={true}
+          />
+          {isEmpty && (
+            <div className="search-annotation">Select or create label</div>
+          )}
+        </div>
+        <div className="hint">
+          Type to add a new label (press space to confirm) or pick an existing
+          one.
+        </div>
       </div>
-      {
+
+      {isLabelsLoading ? (
+        <div className="loading-container">
+          <Spinner variant="secondary" />
+        </div>
+      ) : remainingSuggestedLabels.length > 0 ? (
         <div className="dropdown" ref={dropdownRef}>
-          {isLabelsLoading ? (
-            <div className="loading-container">
-              <Spinner variant="secondary" />
-            </div>
-          ) : remainingSuggestedLabels.map((x) => (
+          {remainingSuggestedLabels.map((x) => (
             <div
               onClick={() => handleSuggestedLabelClick(x)}
               key={x.id}
@@ -195,8 +204,8 @@ const LabelPicker = ({
               <div
                 className="suggested-label-text"
                 style={{
-                  backgroundColor: labelColors[x.color],
-                  color: '#000000c8',
+                  backgroundColor: `color-mix(in oklab, ${labelColors[x.color]} 14%, transparent)`,
+                  color: labelColors[x.color],
                 }}
               >
                 {x.text}
@@ -207,7 +216,7 @@ const LabelPicker = ({
                   <Spinner variant="secondary" />
                 ) : (
                   <AiFillDelete
-                    style={{ color: 'gray', cursor: 'pointer' }}
+                    className="trash"
                     onClick={(e) => removeLabel(e, x.id)}
                   />
                 )}
@@ -215,7 +224,7 @@ const LabelPicker = ({
             </div>
           ))}
         </div>
-      }
+      ) : null}
     </StyledLabelPicker>
   );
 };

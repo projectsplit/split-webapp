@@ -3,10 +3,6 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { apiClient } from '../../apiClients';
 import { EditRecurringExpenseRequest } from '../../../types';
 
-/**
- * Edits the schedule only. Expenses it already produced are untouched, so nothing in the expense
- * lists or the debts derived from them changes here.
- */
 export const useEditRecurringExpense = (
   onSuccess?: () => void,
   onError?: (message: string) => void
@@ -14,6 +10,7 @@ export const useEditRecurringExpense = (
   const queryClient = useQueryClient();
 
   return useMutation<void, AxiosError, EditRecurringExpenseRequest>({
+    meta: { errorHandled: true },
     mutationFn: (req) => editRecurringExpense(req),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['recurringExpenses'] });

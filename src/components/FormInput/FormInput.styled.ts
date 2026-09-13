@@ -5,19 +5,19 @@ export const StyledInput = styled.div<{ $hasError?: boolean }>`
   flex-direction: column;
 
   .input-container {
-    padding: 0.8rem;
-    background-color: ${({ theme }) => theme.layer2};
-    border-radius: 8px;
-    border-radius: 8px;
+    padding: 13px 15px;
+    font-size: ${({ theme }) => theme.size.s16};
+    background-color: ${({ theme }) => theme.surface.card};
+    border-radius: ${({ theme }) => theme.radius.iconButton};
     border: 1px solid
       ${({ theme, $hasError }) =>
-        $hasError ? theme.errorColor : theme.lineColor};
+        $hasError ? theme.direction.owe : theme.surface.hairline};
 
     transition: border-color 0.15s;
 
     &:focus-within {
       border-color: ${({ theme, $hasError }) =>
-        $hasError ? theme.errorColor : theme.highlightColor};
+        $hasError ? theme.direction.owe : theme.accent.you.ink};
     }
 
     input {
@@ -30,7 +30,7 @@ export const StyledInput = styled.div<{ $hasError?: boolean }>`
       padding: 0;
 
       &::placeholder {
-        color: ${({ theme }) => theme.secondaryTextColor};
+        color: ${({ theme }) => theme.ink.secondary};
         opacity: 1;
       }
     }
@@ -39,17 +39,17 @@ export const StyledInput = styled.div<{ $hasError?: boolean }>`
   .meta {
     display: flex;
     justify-content: space-between;
-    padding: 0px 4px;
-    font-size: 12px;
-    background-color: ${({ theme }) => theme.backgroundcolor};
+    padding: ${({ theme }) => `${theme.space.s4} ${theme.space.s4} 0`};
+    font-size: ${({ theme }) => theme.size.s12};
+    background-color: ${({ theme }) => theme.surface.page};
 
     .description {
-      color: ${({ theme }) => theme.secondaryTextColor};
+      color: ${({ theme }) => theme.ink.secondary};
     }
 
     .error {
-      color: ${({ theme }) => theme.errorColor};
-      font-weight: 400;
+      color: ${({ theme }) => theme.direction.owe};
+      font-weight: ${({ theme }) => theme.weight.regular};
     }
   }
 `;

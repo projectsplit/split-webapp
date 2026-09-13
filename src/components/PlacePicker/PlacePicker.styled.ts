@@ -1,96 +1,139 @@
 import { styled } from 'styled-components';
 
 export const StyledPlacePicker = styled.div`
-  height: 100dvh;
+  position: fixed;
+  inset: 0;
   width: 100%;
-  padding: 1rem;
-  border: 1px solid ${({ theme }) => theme.lineColor};
-  border-radius: 10px;
+  height: 100dvh;
+  box-sizing: border-box;
+  z-index: 999;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  background-color: ${({ theme }) => theme.backgroundcolor};
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9999;
-  .map-container {
-    height: 100%;
+  background-color: ${({ theme }) => theme.surface.page};
+  color: ${({ theme }) => theme.ink.primary};
+
+  .pickerHeader {
+    flex-shrink: 0;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s10};
+    padding: ${({ theme }) =>
+      `${theme.space.s16} ${theme.space.s20} ${theme.space.s12}`};
 
-    .searchAndClose {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+    .searchBar {
+      box-sizing: border-box;
+      flex: 1;
+      min-width: 0;
+      height: 47px;
+      padding: ${({ theme }) => `0 ${theme.space.s14}`};
+      background-color: ${({ theme }) => theme.surface.card};
+      border: 1px solid ${({ theme }) => theme.surface.hairline};
+      border-radius: ${({ theme }) => theme.radius.iconButton};
+      outline: none;
+      font-family: ${({ theme }) => theme.font.sans};
+      font-size: ${({ theme }) => theme.size.s15};
+      color: ${({ theme }) => theme.ink.primary};
+      transition: border-color 0.15s;
 
-      .searchBar {
-        flex: 1;
-        border-radius: 10px;
-        padding: 0.5rem;
-        outline: none;
-        font-size: 16px;
-        border: none;
-        color: white;
-        background-color: ${({ theme }) => theme.inputGrey};
-
-        margin-bottom: 8px;
+      &::placeholder {
+        color: ${({ theme }) => theme.ink.tertiary};
       }
-      .closeButton {
-        cursor: pointer;
-        font-size: 1.875rem;
-        margin-left: 0.8rem;
-        color: ${({ theme }) => theme.textActiveColor};
+
+      &:focus {
+        border-color: ${({ theme }) => theme.accent.you.ink};
       }
     }
 
+    .closeButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      margin-right: -6px;
+      color: ${({ theme }) => theme.ink.secondary};
+      font-size: ${({ theme }) => theme.icon.lg};
+      cursor: pointer;
+    }
+  }
+
+  .mapArea {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    margin: ${({ theme }) => `0 ${theme.space.s20} ${theme.space.s16}`};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
+    overflow: hidden;
+
     .map {
+      width: 100%;
       height: 100%;
     }
   }
 
-  .position-name-container {
+  .footer {
+    flex-shrink: 0;
     display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    color: ${({ theme }) => theme.textActiveColor};
-    .view-in-maps-button {
-      padding: 0.5em;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.space.s12};
+    padding: ${({ theme }) => `${theme.space.s14} ${theme.space.s20} 22px`};
+    background-color: ${({ theme }) => theme.surface.footer};
+    border-top: 1px solid ${({ theme }) => theme.surface.raisedHigh};
+
+    .selection {
       display: flex;
-      .pin {
-        color: ${({ theme }) => theme.yellow};
+      flex-direction: row;
+      align-items: center;
+      gap: ${({ theme }) => theme.space.s10};
+      min-width: 0;
+      min-height: 34px;
+
+      .selectionIcon {
+        display: flex;
+        flex-shrink: 0;
+        font-size: ${({ theme }) => theme.icon.sm};
+        color: ${({ theme }) => theme.ink.secondary};
+      }
+
+      .selectionName {
+        flex: 1;
+        min-width: 0;
+        font-size: ${({ theme }) => theme.size.s14};
+        font-weight: ${({ theme }) => theme.weight.medium};
+        line-height: 1.4;
+        color: ${({ theme }) => theme.ink.primary};
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .mapsLink {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        padding: ${({ theme }) => `7px ${theme.space.s14}`};
+        border: 1px solid ${({ theme }) => theme.surface.outline};
+        border-radius: ${({ theme }) => theme.radius.pill};
+        background-color: transparent;
+        font-size: ${({ theme }) => theme.size.s13};
+        font-weight: ${({ theme }) => theme.weight.medium};
+        line-height: 1.4;
+        color: ${({ theme }) => theme.ink.primary};
+        white-space: nowrap;
+        text-decoration: none;
+        cursor: pointer;
       }
     }
 
-    .coordinates {
-      display: flex;
-      gap: 8px;
-      overflow: hidden;
-    }
-
-    .coord {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 6em;
-    }
-
-    .place-name {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-
-  .buttons-container {
-    display: flex;
     button {
       width: 100%;
-    }
-    .select {
-      border-color: ${({ theme }) => theme.highlightColor};
+      padding: ${({ theme }) => `${theme.space.s14} 0`};
+      border-radius: ${({ theme }) => theme.radius.iconButton};
+      font-size: ${({ theme }) => theme.size.s15};
     }
   }
 `;

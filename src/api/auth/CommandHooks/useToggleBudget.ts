@@ -12,7 +12,7 @@ export const useToggleBudget = () => {
       console.log(errorData);
     },
     onSuccess: () => {
-      queryClient.removeQueries({ queryKey: ['budgets', 'active'], exact: true });
+      queryClient.resetQueries({ queryKey: ['budgets', 'active'], exact: true });
       queryClient.invalidateQueries({ queryKey: ['budgets'] });
     },
   });

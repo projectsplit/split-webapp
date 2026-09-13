@@ -10,6 +10,8 @@ import {
 } from '../../../types';
 import { Signal } from '@preact/signals-react';
 import { NavigateFunction } from 'react-router-dom';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
+import routes from '@/routes';
 
 export const useCreateNonGroupExpense = (
   menu: Signal<string | null>,
@@ -24,43 +26,25 @@ export const useCreateNonGroupExpense = (
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, NonGroupExpenseRequest>({
+    meta: { errorHandled: true },
     mutationFn: (expense) => createNonGroupExpense(expense),
     onSuccess: async () => {
       menu.value = null;
-      navigate(`/shared/nongroup/expenses`);
+      if (window.location.pathname !== routes.NON_GROUP_EXPENSES) {
+        navigate(routes.NON_GROUP_EXPENSES);
+      }
 
-      await queryClient.invalidateQueries({
-        queryKey: ['nonGroupDebts'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['nonGroupExpenses'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['home'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['non-group-expense-users'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['cumulativeArray'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['personalExpenses'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'nonGroupDebts',
+        'nonGroupExpenses',
+        'shared',
+        'mostRecentGroup',
+        'home',
+        'non-group-expense-users',
+        'cumulativeArray',
+        'personalExpenses',
+        'userTotals',
+      ]);
       const data = {
         nonGroupUsers: nonGroupUsers.value,
         fromHomeGroup: fromHomeGroup?.value,
@@ -71,13 +55,13 @@ export const useCreateNonGroupExpense = (
         nonGroupUsers.value.length > 0 ||
         fromHomeGroup?.value
       ) {
-        localStorage.setItem(
+        sessionStorage.setItem(
           'submittedFromHomePersistData',
           JSON.stringify(data)
         );
       }
       if (makePersonalClicked) {
-        localStorage.removeItem('submittedFromHomePersistData');
+        sessionStorage.removeItem('submittedFromHomePersistData');
       }
     },
     onError: (err) => {

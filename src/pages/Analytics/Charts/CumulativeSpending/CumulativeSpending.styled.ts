@@ -2,32 +2,27 @@ import styled from 'styled-components';
 
 export const StyledCumulativeSpending = styled.div`
   width: 100%;
-  height: 330px;
+  display: flex;
+  flex-direction: column;
+
+  .chartArea {
+    position: relative;
+    width: 100%;
+    height: 330px;
+    flex-shrink: 0;
+  }
 
   .periodOptions {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    color: #dddddd;
-    font-weight: bold;
-    font-size: 1.7em;
-    margin-top: 20px;
+    color: ${({ theme }) => theme.ink.primary};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    font-size: ${({ theme }) => theme.figure.card};
+    letter-spacing: -0.02em;
+    margin-top: ${({ theme }) => theme.space.s20};
     .period {
       align-self: center;
-    }
-    .rightArrow,
-    .leftArrow {
-      .arrow {
-        font-size: 20px;
-      }
-      display: flex;
-      display: row;
-      justify-content: center;
-      align-items: center;
-      .futurePeriod,
-      .pastPeriod {
-        font-size: 15px;
-      }
     }
   }
 `;

@@ -5,12 +5,14 @@ import { groupTransactions } from '../../helpers/groupTransactions';
 import { Group, Mode, UserInfo } from '../../types';
 import { Signal, useSignal } from '@preact/signals-react';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
-import MemberFC from './Member/MemberFC';
+import MemberDebtCard from './MemberDebtCard/MemberDebtCard';
 import SettleUpAnimation from '../../components/Animations/SettleUpAnimation';
 import Spinner from '../../components/Spinner/Spinner';
 import AddNewUserAnimation from '../../components/Animations/AddNewUserAnimation';
 import getAllDebtsParticipants from '@/helpers/getAllDebtsParticipants';
 import { useDebts } from '@/api/auth/QueryHooks/useDebts';
+
+const EMPTY_DEBTS = { debts: [], totalSpent: {} };
 
 export default function Members() {
   const idSelectedToSettleUp = useSignal<string>('');
@@ -29,13 +31,16 @@ export default function Members() {
   }>();
 
   const { data, isFetching } = useDebts(mode, groupid);
-  const { debts, totalSpent } = data ?? { debts: [], totalSpent: {} };
+  const { debts, totalSpent } = data ?? EMPTY_DEBTS;
 
   const members = group?.members;
   const guests = group?.guests;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
 
-  const allParticipants = getAllDebtsParticipants(debts, mode, members, guests);
+  const allParticipants = useMemo(
+    () => getAllDebtsParticipants(debts, mode, members, guests),
+    [debts, mode, members, guests]
+  );
 
   const { groupedTransactions } = useMemo(() => {
     const groupedTransactions =
@@ -51,11 +56,27 @@ export default function Members() {
             userInfo?.userId || ''
           );
     return { groupedTransactions };
-  }, [debts]);
+  }, [debts, allParticipants, mode, userMemberId, userInfo?.userId]);
+
+  const sortedParticipants = useMemo(
+    () =>
+      mode === Mode.Group
+        ? [...allParticipants].sort((a, b) => {
+            if (a.id === userMemberId) return -1;
+            if (b.id === userMemberId) return 1;
+            return 0;
+          })
+        : [...allParticipants].sort((a, b) => {
+            if (a.id === userInfo?.userId) return -1;
+            if (b.id === userInfo?.userId) return 1;
+            return 0;
+          }),
+    [allParticipants, mode, userMemberId, userInfo?.userId]
+  );
 
   useEffect(() => {
     isFetching ? (showBottomBar.value = false) : (showBottomBar.value = true);
-  }, [isFetching]);
+  }, [isFetching, showBottomBar]);
 
   if (!userInfo) {
     return (
@@ -65,34 +86,19 @@ export default function Members() {
     );
   }
 
-  const sortedParticipants =
-    mode === Mode.Group
-      ? [...allParticipants].sort((a, b) => {
-          if (a.id === userMemberId) return -1;
-          if (b.id === userMemberId) return 1;
-          return 0;
-        })
-      : [...allParticipants].sort((a, b) => {
-          if (a.id === userInfo?.userId) return -1;
-          if (b.id === userInfo?.userId) return 1;
-          return 0;
-        });
-
   return (
     <StyledMembers>
       {isFetching ? (
         <Spinner />
       ) : mode === Mode.NonGroup ? (
-        // Every non group debt is pairwise between the logged in user and someone else,
-        // so a single card for the logged in user covers all of them.
-        <MemberFC
+        <MemberDebtCard
           group={group}
           key={userInfo.userId}
           pendingTransactions={debts ?? []}
           groupedTransactions={groupedTransactions}
           id={userInfo.userId}
           name={userInfo.username}
-          isLogedUser={true}
+          isLoggedUser={true}
           isGuest={false}
           menu={menu}
           idSelectedToSettleUp={idSelectedToSettleUp}
@@ -107,14 +113,14 @@ export default function Members() {
         />
       ) : (
         sortedParticipants?.map((p) => (
-          <MemberFC
+          <MemberDebtCard
             group={group}
             key={p.id}
             pendingTransactions={debts ?? []}
             groupedTransactions={groupedTransactions}
             id={p.id}
             name={p.name}
-            isLogedUser={p.id === userMemberId || p.id === userInfo.userId}
+            isLoggedUser={p.id === userMemberId || p.id === userInfo.userId}
             isGuest={guests?.some((g) => g.id === p.id) ?? false}
             menu={menu}
             idSelectedToSettleUp={idSelectedToSettleUp}

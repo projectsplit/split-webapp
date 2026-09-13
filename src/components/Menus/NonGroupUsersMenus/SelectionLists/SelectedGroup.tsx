@@ -3,6 +3,7 @@ import { Group } from '../../../../types';
 import { TiGroup } from 'react-icons/ti';
 import { IoClose } from 'react-icons/io5';
 import styled from 'styled-components';
+import { tokens } from '../../../../styles/tokens';
 
 export const SelectedGroup = React.memo(
   ({ group, onRemove }: { group: Group | null; onRemove: () => void }) => {
@@ -12,7 +13,10 @@ export const SelectedGroup = React.memo(
       <StyledSelectedGroup
         key={group.id}
         className="selected-label"
-        style={{ backgroundColor: '#696e80', color: 'white' }}
+        style={{
+          backgroundColor: tokens.surface.raised,
+          color: tokens.ink.primary,
+        }}
         onClick={onRemove}
       >
         <div className="info">

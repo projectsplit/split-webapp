@@ -41,7 +41,6 @@ export const recalculateAmounts = (
     .reduce((total, a) => total + a, 0);
 
   let screenArray: number[] = [];
-  let actualAmountsArray: number[] = [];
   let actualPercentageSplit: number[] = [];
 
   switch (category.value) {
@@ -52,16 +51,13 @@ export const recalculateAmounts = (
         decimalDigits
       );
 
-      actualAmountsArray = [...screenArray];
       return synchronizedFormMembers.map((m) => {
         if (m.selected && !m.locked) {
           const screenValue = screenArray.shift()?.toFixed(decimalDigits) || '';
           return {
             ...m,
             screenQuantity: formatCurrency(screenValue, ticker),
-            //screenQuantity:screenValue,
             actualAmount: screenValue,
-            // actualAmountsArray.shift()?.toFixed(decimalDigits) || "",
           };
         }
         return m;
@@ -107,7 +103,6 @@ export const recalculateAmounts = (
             lockedIndex: lockedIndex++,
           };
         }
-        // Reset unselected members
         return {
           ...m,
           actualAmount: '',

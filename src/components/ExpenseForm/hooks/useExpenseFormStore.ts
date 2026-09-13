@@ -1,8 +1,10 @@
-import { useExpenseStore } from '@/components/ExpenseForm/formStore/formStore';
+import { StoreApi, useStore } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
+import { ExpenseState } from '@/components/ExpenseForm/formStore/formStoreTypes';
 
-export const useExpenseFormStore = () =>
-  useExpenseStore(
+export const useExpenseFormStore = (store: StoreApi<ExpenseState>) =>
+  useStore(
+    store,
     useShallow((state) => ({
       amount: state.amount,
       description: state.description,
@@ -37,6 +39,8 @@ export const useExpenseFormStore = () =>
       setDescription: state.setDescription,
       setCurrencySymbol: state.setCurrencySymbol,
       setExpenseTime: state.setExpenseTime,
+      isTrackingNow: state.isTrackingNow,
+      setIsTrackingNow: state.setIsTrackingNow,
       setLabels: state.setLabels,
       setLocation: state.setLocation,
       setAmountError: state.setAmountError,

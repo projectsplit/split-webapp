@@ -1,21 +1,18 @@
 import IonIcon from '@reacticons/ionicons';
 import { ErrorMenuProps } from '../../../interfaces';
 import { StyledErrorMenu } from './ErrorMenu.styled';
-import Separator from '../../Separator/Separator';
 
-export default function ErrorMenu({ menu, children, type }: ErrorMenuProps) {
+export default function ErrorMenu({ menu, type }: ErrorMenuProps) {
   return (
     <StyledErrorMenu>
-      <div className="headerSeparator">
-        <div className="header">
-          <IonIcon name="information-circle-outline" className="infoLogo" />
-          <span>Error</span>
-          <div className="closeButton" onClick={() => (menu.value = null)}>
-            <IonIcon name="close-outline" className="close" />
-          </div>
-        </div>
-        <div className="separator">
-          <Separator />
+      <div className="dialogHeader">
+        <IonIcon
+          name="information-circle-outline"
+          className="dialogIcon danger"
+        />
+        <div className="dialogTitle">Error</div>
+        <div className="closeButton" onClick={() => (menu.value = null)}>
+          <IonIcon name="close-outline" />
         </div>
       </div>
       <div className="info">

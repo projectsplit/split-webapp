@@ -18,7 +18,7 @@ export const useHandlers = (
   setPayersError: (msg: string) => void,
   isInitialRender: React.MutableRefObject<boolean>,
   validateForm: (options: { showErrors: boolean }) => void,
-  isCreateExpense: boolean,
+  _isCreateExpense: boolean,
   setDescription: (value: string) => void,
   setDescriptionError: (msg: string) => void,
   currencySymbol: string
@@ -57,7 +57,6 @@ export const useHandlers = (
   const handleDescriptionChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setDescription(e.target.value);
-      if (!isCreateExpense) return;
       setDescriptionError('');
     },
     []

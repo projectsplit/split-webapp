@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import Input from '../../components/Input/Input';
 import WelcomeHeader from '../Auth/WelcomeHeader/WelcomeHeader';
-import { StyledCreateAccount } from './CreateAccount.styled';
+import { StyledAuthFormPage } from '../Auth/AuthFormPage.styled';
 import { useNavigate } from 'react-router-dom';
 import MyButton from '../../components/MyButton/MyButton';
+import BackButton from '../../components/BackButton/BackButton';
 import { useMutation } from '@tanstack/react-query';
 import { createPasswordCredentials } from '../../api/auth/api';
 import { PasswordSignUpRequest, PasswordSignUpResponse } from '../../types';
@@ -11,8 +12,6 @@ import routes from '../../routes';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// The server reports sign-up failures as a plain message, so map it back to the
-// field it belongs to instead of always blaming the username.
 const resolveErrorField = (message: string): 'username' | 'email' | 'form' => {
   const normalized = message.toLowerCase();
   if (normalized.includes('username')) return 'username';
@@ -25,9 +24,9 @@ export default function CreateAccount() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState<string>('');
-  const [usernameError, setUsernameError] = useState<string>('');
-  const [emailError, setEmailError] = useState<string>('');
-  const [passwordError, setPasswordError] = useState<string>('');
+  const [errorField, setErrorField] = useState<
+    'username' | 'email' | 'password' | 'form'
+  >('form');
   const navigate = useNavigate();
 
   const redirect =
@@ -38,28 +37,41 @@ export default function CreateAccount() {
     any,
     PasswordSignUpRequest
   >({
+    meta: { errorHandled: true },
     mutationFn: createPasswordCredentials,
   });
 
+  const showError = (
+    field: 'username' | 'email' | 'password' | 'form',
+    message: string
+  ) => {
+    setErrorField(field);
+    setFormError(message);
+  };
+
   const handleSignUp = () => {
-    if (!username) return;
+    setFormError('');
+
+    if (!username) {
+      showError('username', 'Enter a username');
+      return;
+    }
     if (!email) {
-      setEmailError('Email is required');
+      showError('email', 'Email is required');
       return;
     }
     if (!EMAIL_REGEX.test(email)) {
-      setEmailError('Please enter a valid email address');
+      showError('email', 'Please enter a valid email address');
+      return;
+    }
+    if (!password) {
+      showError('password', 'Enter a password');
       return;
     }
     if (password.length < 9) {
-      setPasswordError('Password should contain at least 10 characters');
+      showError('password', 'Password should contain at least 10 characters');
       return;
     }
-    if (!password) return;
-    setFormError('');
-    setUsernameError('');
-    setEmailError('');
-    setPasswordError('');
 
     signUpWithCredentialsMutation(
       { username, password, email },
@@ -70,18 +82,17 @@ export default function CreateAccount() {
         },
         onError: (error) => {
           if (error.code === 'ERR_NETWORK') {
-            setFormError(error.message + ': Check your internet connection');
+            showError(
+              'form',
+              error.message + ': Check your internet connection'
+            );
           } else {
             const message = error.response?.data;
 
             if (typeof message !== 'string' || !message) {
-              setFormError('Sign-up failed. Please try again.');
+              showError('form', 'Sign-up failed. Please try again.');
             } else {
-              const field = resolveErrorField(message);
-
-              if (field === 'username') setUsernameError(message);
-              else if (field === 'email') setEmailError(message);
-              else setFormError(message);
+              showError(resolveErrorField(message), message);
             }
           }
 
@@ -92,7 +103,8 @@ export default function CreateAccount() {
   };
 
   return (
-    <StyledCreateAccount>
+    <StyledAuthFormPage>
+      <BackButton className="backToSignIn" onClick={() => navigate(routes.AUTH)} />
       <WelcomeHeader />
       <div className="loginBox">
         <div className="promptMsg">Create a new account</div>
@@ -101,61 +113,47 @@ export default function CreateAccount() {
             <Input
               inputMode="text"
               value={username}
-              error={usernameError ? true : false}
+              error={!!formError && errorField === 'username'}
               placeholder="New Username"
               onChange={(e) => {
-                setUsernameError('');
+                setFormError('');
                 setUsername(e.target.value);
               }}
             />
-            {usernameError ? (
-              <div className="errormsg">{usernameError}&nbsp;</div>
-            ) : (
-              ''
-            )}
           </div>
           <div className="inputBox">
             <Input
               type="email"
               inputMode="email"
               value={email}
-              error={emailError ? true : false}
+              error={!!formError && errorField === 'email'}
               placeholder="Email"
               onChange={(e) => {
-                setEmailError('');
+                setFormError('');
                 setEmail(e.target.value);
               }}
             />
-            {emailError ? (
-              <div className="errormsg">{emailError}&nbsp;</div>
-            ) : (
-              ''
-            )}
           </div>
           <div className="inputBox">
             <Input
               type="password"
               value={password}
-              error={passwordError ? true : false}
+              error={!!formError && errorField === 'password'}
               placeholder="New Password"
               onChange={(e) => {
-                setPasswordError('');
+                setFormError('');
                 setPassword(e.target.value);
               }}
             />
-            {passwordError ? (
-              <div className="errormsg">{passwordError}&nbsp;</div>
-            ) : (
-              ''
-            )}
           </div>
 
-          <MyButton fontSize="18" onClick={handleSignUp} isLoading={isPending}>
+          <div className="formError">{formError}</div>
+
+          <MyButton onClick={handleSignUp} isLoading={isPending}>
             Sign Up
           </MyButton>
-          <div className="errormsg">{formError}</div>
         </div>
       </div>
-    </StyledCreateAccount>
+    </StyledAuthFormPage>
   );
 }

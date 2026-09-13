@@ -17,7 +17,7 @@ export const useRevokeInvitationCode = (
       const url = new URL(window.location.href);
       if (code === invitationCode) {
         url.searchParams.delete('invitationcode');
-        window.history.replaceState({}, '', url);
+        window.history.replaceState(window.history.state, '', url);
         mostRecentCodeHasBeenRevoked.value = true;
       }
       queryClient.setQueryData(

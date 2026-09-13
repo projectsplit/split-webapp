@@ -2,23 +2,23 @@ import styled from 'styled-components';
 import { SubmitButtonProps } from '../../interfaces';
 
 export const StyledSubmitButton = styled.button<SubmitButtonProps>`
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 4px;
   border: none;
-  border-radius: 10px;
+  border-radius: ${({ theme }) => theme.radius.button};
   user-select: none;
-  padding: 12px 16px;
+  padding: 13px 20px;
+  font-weight: ${({ theme }) => theme.weight.semibold};
   cursor: ${({ disabled }) => (disabled === true ? 'not-allowed' : 'pointer')};
-  color: ${({ theme, color }) => (color ? color : theme.text)};
+  color: ${({ theme, color }) => (color ? color : theme.surface.page)};
   background-color: ${({ backgroundColor, theme, disabled }) =>
     backgroundColor
       ? backgroundColor
       : disabled !== true
-        ? theme.buttonActive
-        : theme.buttonNotActive};
+        ? theme.ink.primary
+        : theme.surface.page};
   display: flex;
   justify-content: center;
   position: relative;
-  font-size: 18px;
+  font-size: ${({ theme }) => theme.size.s15};
 
   &:hover {
     opacity: ${({ disabled }) => (disabled === true ? 1 : 0.75)};

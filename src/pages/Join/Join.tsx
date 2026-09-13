@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { StyledJoin } from './Join.styled';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { useJoinWithCode } from '../../api/auth/CommandHooks/useJoinWithCode';
@@ -6,7 +6,7 @@ import MyButton from '../../components/MyButton/MyButton';
 import { useGetJoinCode } from '../../api/auth/QueryHooks/useGetJoinCode';
 import routes from '../../routes';
 import Spinner from '../../components/Spinner/Spinner';
-import Separator from '../../components/Separator/Separator';
+import IonIcon from '@reacticons/ionicons';
 import { useSignal } from '@preact/signals-react';
 
 const Join: React.FC = () => {
@@ -14,43 +14,52 @@ const Join: React.FC = () => {
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
 
-  if (!code) {
-    navigate(routes.ROOT, { replace: true });
-    return null;
-  }
-
-  const { data, isPending: getJoinCodeLoading, isError } = useGetJoinCode(code);
+  const {
+    data,
+    isPending: getJoinCodeLoading,
+    isError,
+  } = useGetJoinCode(code ?? '');
   const { mutate, isPending } = useJoinWithCode(errorMessage);
 
-  const navigateToGroup = (groupId: string) =>
-    navigate(generatePath(routes.GROUP, { groupid: groupId }), {
-      replace: true,
-    });
+  const navigateToGroup = useCallback(
+    (groupId: string) =>
+      navigate(generatePath(routes.GROUP, { groupid: groupId }), {
+        replace: true,
+      }),
+    [navigate]
+  );
+
+  useEffect(() => {
+    if (!code) {
+      navigate(routes.ROOT, { replace: true });
+    }
+  }, [code, navigate]);
 
   useEffect(() => {
     if (data?.isAlreadyMember) {
       navigateToGroup(data.groupId);
     }
-  }, [data, navigate]);
+  }, [data, navigateToGroup]);
+
+  if (!code) return null;
 
   if (isError) {
     return (
       <StyledJoin>
-        <div className="errors">
-          <div className="text">
-            <div>
-              Ah Snap! 😵 This invitation has either expired or has been
-              revoked.
-            </div>
-          </div>
-          <div className="buttons">
-            <MyButton
-              variant="secondary"
-              onClick={() => navigate(routes.ROOT, { replace: true })}
-            >
-              Close
-            </MyButton>
-          </div>
+        <div className="dialogHeader">
+          <IonIcon name="warning-outline" className="dialogIcon danger" />
+          <div className="dialogTitle">Ah snap 😵</div>
+        </div>
+        <div className="info">
+          This invitation has either expired or has been revoked.
+        </div>
+        <div className="buttons">
+          <MyButton
+            variant="secondary"
+            onClick={() => navigate(routes.ROOT, { replace: true })}
+          >
+            Close
+          </MyButton>
         </div>
       </StyledJoin>
     );
@@ -72,21 +81,13 @@ const Join: React.FC = () => {
 
   return (
     <StyledJoin>
-      <div className="headerSeparator">
-        <div className="header">
-          <div className="info">
-            <strong>Invitation</strong>
-          </div>
-        </div>
-        <div className="separator">
-          <Separator />
-        </div>
+      <div className="dialogHeader">
+        <IonIcon name="people-outline" className="dialogIcon" />
+        <div className="dialogTitle">Invitation</div>
       </div>
       {errorMessage.value.length > 0 ? (
-        <div className="errors">
-          <div className="text">
-            <div>{errorMessage.value} 😖</div>
-          </div>
+        <>
+          <div className="info">{errorMessage.value} 😖</div>
           <div className="buttons">
             <MyButton
               variant="secondary"
@@ -95,13 +96,11 @@ const Join: React.FC = () => {
               Decline
             </MyButton>
           </div>
-        </div>
+        </>
       ) : (
-        <div className="NoErrors">
-          <div className="text">
-            <div>
-              You have been invited to join <strong>{data.groupName}</strong>
-            </div>
+        <>
+          <div className="info">
+            You have been invited to join <strong>{data.groupName}</strong>
           </div>
           <div className="buttons">
             <MyButton
@@ -113,8 +112,7 @@ const Join: React.FC = () => {
                 })
               }
             >
-              {' '}
-              Accept{' '}
+              Accept
             </MyButton>
             <MyButton
               variant="secondary"
@@ -123,7 +121,7 @@ const Join: React.FC = () => {
               Decline
             </MyButton>
           </div>
-        </div>
+        </>
       )}
     </StyledJoin>
   );

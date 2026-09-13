@@ -11,7 +11,12 @@ export const useChangeGroupCurrency = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, AxiosError, string>({
+  return useMutation<
+    any,
+    AxiosError,
+    string,
+    { previousGroup: Group | undefined }
+  >({
     mutationFn: (currency) => {
       if (!groupId) {
         noGroupFoundError.value = 'No group found';
@@ -27,12 +32,16 @@ export const useChangeGroupCurrency = (
           currency: currency,
         });
       }
+      return { previousGroup: currentGroup };
     },
 
     onSuccess: () => {
       refetchQueries.value = true;
     },
-    onError: (error) => {
+    onError: (error, _currency, context) => {
+      if (context?.previousGroup) {
+        queryClient.setQueryData([groupId], context.previousGroup);
+      }
       console.log(error);
     },
   });
