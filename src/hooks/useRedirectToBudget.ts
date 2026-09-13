@@ -11,19 +11,21 @@ export const useRedirectToBudget = (
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const validPaths = ['/budget/actions', '/budget/manage', '/budget/create'];
+    const validPaths = [
+      '/budget',
+      '/budget/manage',
+      '/budget/create',
+    ];
     if (validPaths.includes(pathname)) return;
 
-    if (pathname.includes('/actions')) {
-      navigate(`/budget/actions`, { replace: true });
-    } else if (pathname.includes('/manage')) {
+    if (pathname.includes('/manage')) {
       navigate(`/budget/manage`, { replace: true });
     } else if (pathname.includes('/create')) {
       navigate(`/budget/create`, { replace: true });
     } else {
-      navigate(`/budget/actions`, { replace: true });
+      navigate(`/budget`, { replace: true });
     }
-  }, [isLoading, data, hasUserInfo, pathname]);
+  }, [isLoading, data, hasUserInfo, pathname, navigate]);
 
   return null;
 };

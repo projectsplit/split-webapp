@@ -1,5 +1,5 @@
 import React from 'react';
-import { BiArrowBack } from 'react-icons/bi';
+import BackButton from '../BackButton/BackButton';
 import { StyledTopBarWithBackButton } from './TopBarWithBackButton.styled';
 import { TopBarWithBackButtonProps } from '../../interfaces';
 
@@ -9,9 +9,7 @@ export default function TopBarWithBackButton({
 }: TopBarWithBackButtonProps) {
   return (
     <StyledTopBarWithBackButton>
-      <div className="backButtonContainer">
-        <BiArrowBack className="backButton" onClick={onClick} />
-      </div>
+      <BackButton onClick={onClick} />
       <div className="descr">{header}</div>
     </StyledTopBarWithBackButton>
   );

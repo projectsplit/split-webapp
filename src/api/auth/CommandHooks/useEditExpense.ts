@@ -10,6 +10,7 @@ import {
   User,
 } from '../../../types';
 import { Signal } from '@preact/signals-react';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useEditExpense = (
   menu: Signal<string | null>,
@@ -20,42 +21,30 @@ export const useEditExpense = (
   groupMembers: Signal<(Member | Guest)[]>,
   makePersonalClicked: boolean,
   isNonGroupExpense: Signal<boolean> | undefined,
-  selectedExpense?: Signal<ExpenseResponseItem | null>
+  selectedExpense?: Signal<ExpenseResponseItem | null>,
+  onError?: (message: string) => void
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, GroupExpenseRequest>({
+    meta: { errorHandled: true },
     mutationFn: (expense) => editExpense(expense),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['debts'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['groupExpenses'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'debts',
+        'groupExpenses',
+        'home',
+        'shared',
+        'mostRecentGroup',
+      ]);
       await queryClient.invalidateQueries({
         queryKey: [groupId],
         exact: false,
       });
-      await queryClient.invalidateQueries({
-        queryKey: ['cumulativeArray'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['personalExpenses'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'cumulativeArray',
+        'personalExpenses',
+      ]);
       if (selectedExpense) {
         selectedExpense.value = null;
       }
@@ -70,15 +59,23 @@ export const useEditExpense = (
           nonGroupUsers.value.length > 0 ||
           fromHomeGroup?.value
         )
-          localStorage.setItem(
+          sessionStorage.setItem(
             'submittedFromHomePersistData',
             JSON.stringify(data)
           );
       }
       if (makePersonalClicked) {
-        localStorage.removeItem('submittedFromHomePersistData');
+        sessionStorage.removeItem('submittedFromHomePersistData');
       }
       menu.value = null;
+    },
+    onError: (err) => {
+      const error = err as AxiosError;
+      onError?.(
+        error.response?.data
+          ? String(error.response.data)
+          : 'Could not save the expense. Please try again.'
+      );
     },
     onSettled: () => {
       setIsSubmitting(false);

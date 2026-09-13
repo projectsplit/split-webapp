@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyledConnectionRequest } from './ConnectionRequest.styled';
+import { StyledNotificationCard } from '../NotificationCard/NotificationCard.styled';
 import { useAcceptConnectionRequest } from '../../api/auth/CommandHooks/useAcceptConnectionRequest';
 import { useDeclineConnectionRequest } from '../../api/auth/CommandHooks/useDeclineConnectionRequest';
 import MyButton from '../MyButton/MyButton';
+import { getInitials } from '../../helpers/getInitials';
 import { ConnectionRequestItem } from '../../types';
 
 type ConnectionRequestProps = {
@@ -16,11 +17,16 @@ const ConnectionRequest: React.FC<ConnectionRequestProps> = ({
   const decline = useDeclineConnectionRequest();
 
   return (
-    <StyledConnectionRequest>
+    <StyledNotificationCard>
       <div className="mainMsg">
-        <div className="message">
+        <span className="avatar">
+          {getInitials(connectionRequest.senderUsername)}
+        </span>
+        <div className="msgText">
+          <div className="message">
           <strong>{connectionRequest.senderUsername}</strong> wants to split
           expenses with you
+        </div>
         </div>
       </div>
       <div className="actions">
@@ -40,7 +46,7 @@ const ConnectionRequest: React.FC<ConnectionRequestProps> = ({
           Decline
         </MyButton>
       </div>
-    </StyledConnectionRequest>
+    </StyledNotificationCard>
   );
 };
 

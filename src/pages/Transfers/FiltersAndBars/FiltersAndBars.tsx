@@ -1,4 +1,4 @@
-import { StyledFiltersAndBars } from './FiltersAndBars.styled';
+import { StyledFiltersAndBars } from '@/components/FiltersAndBars/FiltersAndBars.styled';
 import { FiltersAndBarsSkeleton } from '@/components/FiltersAndBarsSkeleton/FiltersAndBarsSkeleton';
 import { renderTransferFilterPills } from '@/helpers/renderTransferFilterPills';
 import BarsWithLegends from '@/components/BarsWithLegends/BarsWithLegends';
@@ -50,8 +50,7 @@ export const FiltersAndBars = ({
             bar1Total={userConvertedTotalSent || 0}
             bar2Total={userConvertedTotalReceived || 0}
             currency={currency}
-            bar1Color="#0CA0A0"
-            bar2Color="#D79244"
+            relation="independent"
             onClick={() => {
               menu.value = 'epensesByCurrency';
             }}

@@ -1,6 +1,6 @@
 import { Signal } from '@preact/signals-react';
 import IonIcon from '@reacticons/ionicons';
-import { StyledScopeInfo } from './ScopeInfo.styled';
+import { StyledInfoDialog } from '../../../InfoDialog.styled';
 
 export default function ScopeInfo({
   menu,
@@ -8,7 +8,7 @@ export default function ScopeInfo({
   menu: Signal<React.SetStateAction<string | null>>;
 }) {
   return (
-    <StyledScopeInfo>
+    <StyledInfoDialog>
       <div className="header">
         <div className="info">
           <IonIcon name="information-circle-outline" className="infoLogo" />
@@ -24,6 +24,6 @@ export default function ScopeInfo({
           setting: All expenses (including group, non-group, and personal).
         </span>
       </div>
-    </StyledScopeInfo>
+    </StyledInfoDialog>
   );
 }

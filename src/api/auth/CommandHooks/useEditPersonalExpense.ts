@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { apiClient } from '../../apiClients';
 import {
-  NonGroupExpenseRequest,
   ExpenseResponseItem,
   Group,
   Guest,
@@ -11,6 +10,7 @@ import {
   BaseExpenseRequest,
 } from '../../../types';
 import { Signal } from '@preact/signals-react';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useEditPersonalExpense = (
   menu: Signal<string | null>,
@@ -20,21 +20,19 @@ export const useEditPersonalExpense = (
   groupMembers: Signal<(Member | Guest)[]>,
   makePersonalClicked: boolean,
   isNonGroupExpense: Signal<boolean> | undefined,
-  selectedExpense?: Signal<ExpenseResponseItem | null>
+  selectedExpense?: Signal<ExpenseResponseItem | null>,
+  onError?: (message: string) => void
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, BaseExpenseRequest>({
+    meta: { errorHandled: true },
     mutationFn: (expense) => editExpense(expense),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['personalExpenses'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['cumulativeArray'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'personalExpenses',
+        'cumulativeArray',
+      ]);
       if (selectedExpense) {
         selectedExpense.value = null;
       }
@@ -49,15 +47,23 @@ export const useEditPersonalExpense = (
           nonGroupUsers.value.length > 0 ||
           fromHomeGroup?.value
         )
-          localStorage.setItem(
+          sessionStorage.setItem(
             'submittedFromHomePersistData',
             JSON.stringify(data)
           );
       }
       if (makePersonalClicked) {
-        localStorage.removeItem('submittedFromHomePersistData');
+        sessionStorage.removeItem('submittedFromHomePersistData');
       }
       menu.value = null;
+    },
+    onError: (err) => {
+      const error = err as AxiosError;
+      onError?.(
+        error.response?.data
+          ? String(error.response.data)
+          : 'Could not save the expense. Please try again.'
+      );
     },
     onSettled: () => {
       setIsSubmitting(false);

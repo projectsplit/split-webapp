@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import IonIcon from '@reacticons/ionicons';
 import { StyledCurrencyOptions } from './CurrencyOptions.styled';
 import { Currency } from '../../../types';
 import { currencyData } from '../../../helpers/openExchangeRates';
 import { CurrencyOptionProps } from '../../../interfaces';
+import CurrencyFlag from '../../CurrencyFlag/CurrencyFlag';
 
 export default function CurrencyOptions({
   clickHandler,
@@ -12,7 +14,7 @@ export default function CurrencyOptions({
   const [filteredCurrencies, setFilteredCurrencies] =
     useState<Currency[]>(currencyData);
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value;
     setSearchItem(searchTerm);
 
@@ -28,10 +30,8 @@ export default function CurrencyOptions({
   return (
     <StyledCurrencyOptions height="75vh">
       <div className="headerAndSearchbar">
-        <div className="header">
-          {' '}
-          <strong>Select Currency</strong>
-        </div>
+        <div className="sheetHandle" />
+        <div className="header">Select currency</div>
         <input
           className="searchBar"
           placeholder="Search"
@@ -39,30 +39,37 @@ export default function CurrencyOptions({
           value={searchItem}
         />
       </div>
-      {filteredCurrencies.length === 0 && (
-        <div className="noResults">No results found</div>
-      )}
 
-      {filteredCurrencies.map((currency, index) => (
-        <div
-          key={index}
-          className={`currencyOption ${
-            (!selectedCurrency && currency.symbol === 'USD') ||
-            selectedCurrency === currency.symbol
-              ? 'clicked'
-              : ''
-          }`}
-          onClick={() => clickHandler(currency.symbol)}
-        >
-          <div className={currency.flagClass} />
-          <div className="currency">
-            <div className="currencyTicker">
-              <strong>{currency.symbol}</strong>
-            </div>
-            <div className="currencyDescr">{currency.name}</div>
-          </div>
+      {filteredCurrencies.length === 0 ? (
+        <div className="noResults">No results found</div>
+      ) : (
+        <div className="currencyList">
+          {filteredCurrencies.map((currency) => {
+            const isSelected =
+              (!selectedCurrency && currency.symbol === 'USD') ||
+              selectedCurrency === currency.symbol;
+
+            return (
+              <div
+                key={currency.symbol}
+                className={`currencyOption ${isSelected ? 'clicked' : ''}`}
+                onClick={() => clickHandler(currency.symbol)}
+              >
+                <CurrencyFlag code={currency.symbol} />
+                <div className="currency">
+                  <div className="currencyTicker">{currency.symbol}</div>
+                  <div className="currencyDescr">
+                    <span className="currencyName">{currency.name}</span>
+                  </div>
+                </div>
+                {isSelected && (
+                  <IonIcon name="checkmark-outline" className="currencyCheck" />
+                )}
+              </div>
+            );
+          })}
         </div>
-      ))}
+      )}
     </StyledCurrencyOptions>
   );
 }

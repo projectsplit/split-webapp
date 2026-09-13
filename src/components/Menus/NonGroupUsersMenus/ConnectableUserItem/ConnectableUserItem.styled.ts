@@ -1,22 +1,12 @@
 import styled from 'styled-components';
+import { StyledUserListRow } from '../UserListRow.styled';
 
-/* Keep the row geometry in sync with User.styled.ts — see the note there. */
-export const StyledConnectableUserItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0 1rem;
-  cursor: pointer;
-
+export const StyledConnectableUserItem = styled(StyledUserListRow)`
   .top-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    min-height: 3rem;
+    position: relative;
 
-    .name {
-      flex: 1;
+    button {
+      flex-shrink: 0;
     }
   }
 `;

@@ -32,8 +32,6 @@ export const RecurringExpenseDeleteConfirmation = ({
         isLoading={isLoading}
         header="Delete recurring expense"
       >
-        {/* Spelled out because "delete" on a series could easily be read as deleting everything it
-            has ever created. */}
         <div>
           {`"${description}" will stop repeating. Expenses it has already created stay where they are. Proceed?`}
         </div>

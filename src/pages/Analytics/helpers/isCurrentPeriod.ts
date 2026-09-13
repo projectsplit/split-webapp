@@ -1,11 +1,11 @@
 import { Frequency } from '../../../types';
-import { generateYearsArray } from './generateYearsArray';
+import { generateYearsArray } from '@/helpers/generateYearsArray';
 
 export const isCurrentPeriod = (
   cycle: Frequency,
   selectedTimeCycleIndex: number,
   isSuccess: boolean,
-  cumulArrayData: number[],
+  cumulArrayData: unknown[],
   currentWeekIndex: number,
   selectedYear: number
 ) => {

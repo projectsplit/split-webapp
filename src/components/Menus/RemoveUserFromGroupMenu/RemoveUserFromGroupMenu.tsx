@@ -1,10 +1,10 @@
-import { StyledRemoveUserFromGroup } from './RemoveUserFromGroup.styled';
+import { StyledRemoveUserFromGroup } from './RemoveUserFromGroupMenu.styled';
 import { RemoveUserFromGroupMenuProps } from '../../../interfaces';
-import Separator from '../../Separator/Separator';
 import Input from '../../Input/Input';
-import { FaAngleLeft, FaUsersSlash } from 'react-icons/fa';
+import { FaUsersSlash } from 'react-icons/fa';
 import { useSignal } from '@preact/signals-react';
 import MemberItem from './MemberItem/MemberItem';
+import BackButton from '../../BackButton/BackButton';
 import MenuAnimationBackground from '../../Animations/MenuAnimationBackground';
 import useGroup from '../../../api/auth/QueryHooks/useGroup';
 import { useQueryClient } from '@tanstack/react-query';
@@ -90,23 +90,21 @@ export default function RemoveUserFromGroupMenu({
     <StyledRemoveUserFromGroup>
       <div className="fixed-header-container">
         <div className="header">
-          <div className="closeButtonContainer" onClick={handleCloseButton}>
-            <FaAngleLeft className="closeButton" />
-          </div>
-          <div className="title">Select members to remove</div>
-          <div className="gap"></div>
+          <BackButton onClick={handleCloseButton} />
+          <div className="sheetTitle">Select members to remove</div>
+          <div className="headerSpacer" />
         </div>
-        <Separator />
+        <div className="sheetControls">
+          <div className="inputField">
+            <Input
+              className="search-input"
+              placeholder="Search"
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
       </div>
       <div className="scrollable-content">
-        <div className="inputField">
-          <Input
-            className="search-input"
-            placeholder="Search"
-            backgroundcolor="#2d2d2d"
-            onChange={handleInputChange}
-          />
-        </div>
         <div className="members">
           {filteredMembers.map((member) => (
             <MemberItem
@@ -115,7 +113,7 @@ export default function RemoveUserFromGroupMenu({
               member={member}
               noGroupError={noGroupError}
               noMemberError={noMemberError}
-              isGuest={'canBeRemoved' in member} // effectively checks if it is a guest
+              isGuest={'canBeRemoved' in member}
               canBeRemoved={
                 'canBeRemoved' in member ? member.canBeRemoved : false
               }

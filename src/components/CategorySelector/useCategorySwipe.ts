@@ -52,7 +52,6 @@ export const useCategorySwipe = ({
     touchStartX.current = null;
     touchStartY.current = null;
 
-    // Ignore mostly-vertical swipes so we don't interfere with page scrolling
     if (Math.abs(distanceX) < Math.abs(distanceY)) return;
     if (Math.abs(distanceX) < 50) return;
 
@@ -60,10 +59,8 @@ export const useCategorySwipe = ({
     if (currentIndex === -1) return;
 
     if (distanceX > 0 && currentIndex < categoryKeys.length - 1) {
-      // Swipe left -> next category
       selectCategory(categoryKeys[currentIndex + 1]);
     } else if (distanceX < 0 && currentIndex > 0) {
-      // Swipe right -> previous category
       selectCategory(categoryKeys[currentIndex - 1]);
     }
   };

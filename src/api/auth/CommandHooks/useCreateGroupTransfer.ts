@@ -4,36 +4,29 @@ import { apiClient } from '../../apiClients';
 import { CreateTransferRequest, Group } from '../../../types';
 import { Signal } from '@preact/signals-react';
 import { NavigateFunction } from 'react-router-dom';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useCreateGroupTransfer = (
   menu: Signal<string | null>,
   groupId: string | undefined,
   navigate: NavigateFunction,
   isSubmitting: Signal<boolean>,
-  fromHomeGroup?: Signal<Group | null>
+  fromHomeGroup?: Signal<Group | null>,
+  onError?: (message: string) => void
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, CreateTransferRequest>({
+    meta: { errorHandled: true },
     mutationFn: (transfer) => submitTransfer(transfer),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['debts'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['groupTransfers'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'debts',
+        'groupTransfers',
+        'home',
+        'shared',
+        'mostRecentGroup',
+      ]);
       await queryClient.invalidateQueries({
         queryKey: [groupId],
         exact: false,
@@ -43,6 +36,14 @@ export const useCreateGroupTransfer = (
       if (fromHomeGroup?.value) {
         navigate(`/shared/${groupId}/transfers`);
       }
+    },
+    onError: (err) => {
+      isSubmitting.value = false;
+      onError?.(
+        err.response?.data
+          ? String(err.response.data)
+          : 'Could not create the transfer. Please try again.'
+      );
     },
   });
 };

@@ -3,35 +3,37 @@ import styled from 'styled-components';
 export const ScrollableContainer = styled.div<{
   $contentEditableHeight: number;
 }>`
-  margin-top: 1rem;
-  height: calc(100vh - 18rem);
-  overflow-y: auto;
-  overflow-x: hidden;
   position: fixed;
-  scrollbar-width: thin;
-  width: 100%;
-  left: 0;
+  margin-top: ${({ $contentEditableHeight }) =>
+    `${Math.max(8, $contentEditableHeight - 31)}px`};
+  left: ${({ theme }) => theme.space.s20};
+  right: ${({ theme }) => theme.space.s20};
+  width: auto;
+  max-height: calc(100dvh - 22rem);
+  display: flex;
+  flex-direction: column;
 
   .items {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 3rem 1rem;
-    margin-left: 14px;
+    align-items: stretch;
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+
+  .menuHint {
+    flex-shrink: 0;
+    padding: ${({ theme }) => `${theme.space.s10} 2px 0`};
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.5;
+    color: ${({ theme }) => theme.ink.tertiary};
+    text-wrap: pretty;
   }
 
   @media (min-width: 769px) {
-    max-width: 768px;
-    width: 100%;
     left: 50%;
+    right: auto;
+    width: calc(768px - 40px);
     transform: translateX(-50%);
-    border-left: 1px solid #333;
-    border-right: 1px solid #333;
-
-    .items {
-      margin-left: 0;
-      padding: 3rem 1rem;
-    }
   }
 `;

@@ -13,6 +13,9 @@ export const Menu = React.forwardRef<HTMLDivElement, CombinedMenuProps>(
             $contentEditableHeight={contentEditableHeight}
             {...other}
           />
+          <div className="menuHint">
+            Tap a name to complete the filter. Keep typing to narrow the list.
+          </div>
         </div>
       </ScrollableContainer>
     );

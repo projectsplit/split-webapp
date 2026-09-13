@@ -7,7 +7,7 @@ import {
 import { apiClient } from '../../apiClients';
 import { AxiosResponse } from 'axios';
 import { Signal } from '@preact/signals-react';
-import { appendGroupFilterToParams } from '../helpers/appendGroupFilterToParams';
+import { appendFilterToParams } from '../helpers/appendFilterToParams';
 
 const useGetGroupTransfers = (
   group: Group,
@@ -48,7 +48,8 @@ const getGroupTransfers = async (
 ): Promise<GetGroupTransfersResponse> => {
   const { sendersIds = [], receiversIds = [], ...base } = parsedFilters;
 
-  const params = appendGroupFilterToParams(groupId, base, {
+  const params = appendFilterToParams(base, {
+    groupId,
     pageSize,
     next,
     arrayMappings: [

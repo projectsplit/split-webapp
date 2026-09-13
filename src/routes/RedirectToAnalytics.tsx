@@ -6,7 +6,7 @@ const useRedirectToAnalytics = () => {
 
   useEffect(() => {
     navigate(`/analytics`);
-  }, []);
+  }, [navigate]);
 
   return null;
 };

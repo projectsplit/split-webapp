@@ -6,6 +6,7 @@ const initialState = {
   description: '',
   currencySymbol: '',
   transferTime: '',
+  isTrackingNow: true,
   senderId: '',
   receiverId: '',
   showPicker: false,
@@ -21,7 +22,7 @@ const initialState = {
   },
 };
 
-export const useTransferStore = create<TransferState>()((set, get) => ({
+export const useTransferStore = create<TransferState>()((set) => ({
   ...initialState,
 
   setAmount: (amount: string) => set({ amount }),
@@ -34,15 +35,40 @@ export const useTransferStore = create<TransferState>()((set, get) => ({
           ? valueOrFn(state.transferTime)
           : valueOrFn,
     })),
-  setSenderId: (id) => set({ senderId: id }),
-  setReceiverId: (id) => set({ receiverId: id }),
+
+  setIsTrackingNow: (value: boolean) => set({ isTrackingNow: value }),
+  setSenderId: (id) =>
+    set((state) =>
+      id !== '' && state.receiverId === id
+        ? { senderId: id, receiverId: state.senderId }
+        : { senderId: id }
+    ),
+  setReceiverId: (id) =>
+    set((state) =>
+      id !== '' && state.senderId === id
+        ? { receiverId: id, senderId: state.receiverId }
+        : { receiverId: id }
+    ),
   toggleSenderId: (id) =>
-    set((state) => ({
-      senderId: state.senderId === id ? '' : id,
-    })),
+    set((state) =>
+      state.senderId === id
+        ? { senderId: '' }
+        : id !== '' && state.receiverId === id
+          ? { senderId: id, receiverId: state.senderId }
+          : { senderId: id }
+    ),
   toggleReceiverId: (id) =>
+    set((state) =>
+      state.receiverId === id
+        ? { receiverId: '' }
+        : id !== '' && state.senderId === id
+          ? { receiverId: id, senderId: state.receiverId }
+          : { receiverId: id }
+    ),
+  swapParties: () =>
     set((state) => ({
-      receiverId: state.receiverId === id ? '' : id,
+      senderId: state.receiverId,
+      receiverId: state.senderId,
     })),
   setShowPicker: (show: boolean) => set({ showPicker: show }),
 
@@ -74,10 +100,11 @@ export const useTransferStore = create<TransferState>()((set, get) => ({
       },
     }),
   initForm: (currency, userId, isNonGroup) =>
-    set((state) => ({
+    set(() => ({
       ...initialState,
       currencySymbol: currency,
       senderId: isNonGroup && userId ? userId : '',
       transferTime: new Date().toISOString(),
+      isTrackingNow: true,
     })),
 }));

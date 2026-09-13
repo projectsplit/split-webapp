@@ -6,7 +6,6 @@ interface LongPressMenuProps {
   onEdit?: () => void;
   onDelete: () => void;
   onClose: () => void;
-  /** Actions beyond edit and delete, for menus that need them — pausing a recurring expense. */
   extraOptions?: {
     label: string;
     icon: ReactNode;

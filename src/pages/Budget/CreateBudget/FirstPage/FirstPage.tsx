@@ -21,11 +21,6 @@ export const FirstPage = ({
     data.currencySymbol,
   ];
 
-  // const { data, isFetching, isStale } = useSpendingInfo(
-  //   budgetFrequency.value,
-  //   currencySymbol
-  // );
-
   const info = {
     budgetSubmitted: false,
     totalAmountSpent: '0',

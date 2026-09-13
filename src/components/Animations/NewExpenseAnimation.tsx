@@ -1,8 +1,6 @@
 import { CSSTransition } from 'react-transition-group';
 import CreateExpenseForm from '../CreateExpenseForm/CreateExpenseForm';
 import { NewExpenseAnimationProps } from '../../interfaces';
-// import { ExpenseResponseItem } from "../../../types";
-// import { useSignal } from "@preact/signals-react";
 import { useRef } from 'react';
 
 export default function NewExpenseAnimation({

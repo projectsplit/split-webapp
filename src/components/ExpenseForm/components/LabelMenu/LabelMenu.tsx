@@ -1,5 +1,5 @@
-import { BiArrowBack } from 'react-icons/bi';
 import { StyledLabelMenu } from './LabelMenu.styled';
+import BackButton from '../../../BackButton/BackButton';
 import { LabelMenuProps } from '../../../../interfaces';
 import LabelPicker from '../../../LabelPicker/LabelPicker';
 import MyButton from '../../../MyButton/MyButton';
@@ -20,22 +20,15 @@ export const LabelMenu = ({
 
   return (
     <StyledLabelMenu>
-      <div className="header">
-        <div className="closeButtonContainer">
-          {' '}
-          <BiArrowBack
-            className="backButton"
-            onClick={() => (labelMenuIsOpen.value = false)}
-          />
+      <div className="fixedHeader">
+        <div className="header">
+          <BackButton onClick={() => (labelMenuIsOpen.value = false)} />
+          <div className="title">Tag expense</div>
+          <div className="gap"></div>
         </div>
-        <div className="title">Tag expense</div>
-        <div className="gap"></div>
       </div>
-      <div className="info">
-        Type to add a new label (press space to confirm) or pick an existing
-        one.
-      </div>
-      <div className="label-picker-wrapper">
+
+      <div className="scrollable-content">
         <LabelPicker
           labels={labels}
           setLabels={setLabels}
@@ -46,9 +39,12 @@ export const LabelMenu = ({
           menu={menu}
         />
       </div>
-      <MyButton fontSize="16" onClick={() => (labelMenuIsOpen.value = false)}>
-        Done
-      </MyButton>
+
+      <div className="doneButton">
+        <MyButton onClick={() => (labelMenuIsOpen.value = false)}>
+          Done
+        </MyButton>
+      </div>
 
       <MenuAnimationBackground menu={menu} />
       <GeneralWarningMenuAnimation message={errorMessage.value} menu={menu} />

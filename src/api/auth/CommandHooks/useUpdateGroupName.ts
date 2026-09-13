@@ -3,6 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { apiClient } from '../../apiClients';
 import { UpdateGroupNameRequest } from '../../../types';
 import { Signal } from '@preact/signals-react';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useUpdateGroupName = (
   groupId: string | undefined,
@@ -12,6 +13,7 @@ export const useUpdateGroupName = (
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, string>({
+    meta: { errorHandled: true },
     mutationFn: (name) => {
       if (!groupId) {
         changeNameError.value = 'No group found';
@@ -25,14 +27,7 @@ export const useUpdateGroupName = (
         queryKey: [groupId],
         exact: false,
       });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, ['shared', 'mostRecentGroup']);
       menu.value = null;
     },
     onError: (err) => {

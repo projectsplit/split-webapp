@@ -4,12 +4,10 @@ import ReceivedMoreThanSpentMessage from './ReceivedMoreThanSpentMessage/Receive
 import Recommendation from './Recommendation/Recommendation';
 import SimpleOnTrackMessage from './SimpleOnTrackMessage/SimpleOnTrackMessage';
 import { BudgetInfoResponse } from '../../types';
-import { DefaultTheme } from 'styled-components';
 import { NoBudgetSubmittedMessage } from './NoBudgetSubmittedMessage/NoBudgetSubmittedMessage';
 import { dateIsInPast } from '../../helpers/dateIsInPast';
 
 export const BudgetInfoMessage = (
-  theme: DefaultTheme | undefined,
   closeButton: boolean,
   data: BudgetInfoResponse | undefined,
   noSubmissions?: boolean,
@@ -28,23 +26,13 @@ export const BudgetInfoMessage = (
         timeZoneId={timeZoneId}
         onClick={onclick}
         closeButton={closeButton}
-        style={
-          style || {
-            backgroundColor: theme?.layer2,
-            borderColor: theme?.layer2,
-            borderStyle: 'solid',
-            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-            borderRadius: '6px',
-            padding: '0.4rem',
-          }
-        }
+        style={style}
       />
     );
   }
 
   const totalAmountSpent = parseFloat(data?.totalAmountSpent);
 
-  // Check if remainingDays, goal, and averageSpentPerDay are provided
   if (
     data?.remainingDays !== undefined &&
     data?.goal !== undefined &&
@@ -64,16 +52,7 @@ export const BudgetInfoMessage = (
           timeZoneId={timeZoneId}
           onClick={onclick}
           closeButton={closeButton}
-          style={
-            style || {
-              backgroundColor: theme?.layer2,
-              borderColor: theme?.layer2,
-              borderStyle: 'solid',
-              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-              borderRadius: '6px',
-              padding: '0.4rem',
-            }
-          }
+          style={style}
         />
       );
 
@@ -85,16 +64,7 @@ export const BudgetInfoMessage = (
           currency={data.currency}
           closeButton={closeButton}
           budgetFrequency={data.frequency}
-          style={
-            style || {
-              backgroundColor: theme?.layer2,
-              borderColor: theme?.layer2,
-              borderStyle: 'solid',
-              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-              borderRadius: '6px',
-              padding: '0.4rem',
-            }
-          }
+          style={style}
         />
       );
     if (totalAmountSpent >= goal) {
@@ -109,16 +79,7 @@ export const BudgetInfoMessage = (
           currency={data.currency}
           closeButton={closeButton}
           budgetFrequency={data.frequency}
-          style={
-            style || {
-              backgroundColor: theme?.layer2,
-              borderColor: theme?.layer2,
-              borderStyle: 'solid',
-              // boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-              borderRadius: '6px',
-              padding: '0.4rem',
-            }
-          }
+          style={style}
         />
       );
     } else {
@@ -144,16 +105,7 @@ export const BudgetInfoMessage = (
             currency={data.currency}
             closeButton={closeButton}
             budgetFrequency={data.frequency}
-            style={
-              style || {
-                backgroundColor: theme?.layer2,
-                borderColor: theme?.layer2,
-                borderStyle: 'solid',
-                //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                borderRadius: '6px',
-                padding: '0.4rem',
-              }
-            }
+            style={style}
           />
         );
       } else {
@@ -165,16 +117,7 @@ export const BudgetInfoMessage = (
             currency={data.currency}
             closeButton={closeButton}
             budgetFrequency={data.frequency}
-            style={
-              style || {
-                backgroundColor: theme?.layer2,
-                borderColor: theme?.layer2,
-                borderStyle: 'solid',
-                //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                borderRadius: '6px',
-                padding: '0.4rem',
-              }
-            }
+            style={style}
           />
         );
       }

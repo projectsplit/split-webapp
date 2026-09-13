@@ -1,132 +1,141 @@
 import styled from 'styled-components';
+import { optionsListStyles } from '@/styles/optionsList';
 
 export const StyledSettingsMenu = styled.div`
   position: fixed;
-  font-size: 1.125rem;
   top: 0;
   width: 100%;
   height: 100dvh;
-  overflow-y: auto;
+  overflow: hidden;
   box-sizing: border-box;
-  background-color: ${({ theme }) => theme.layer2};
+  background-color: ${({ theme }) => theme.surface.page};
   z-index: 4;
   display: flex;
   flex-direction: column;
 
-  .headerWrapper {
-    position: sticky;
-    top: 0;
-    z-index: 0;
-    background-color: ${({ theme }) => theme.layer2};
-    .header {
-      position: sticky;
-      z-index: 0;
-      padding: 0.875rem;
+  .header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s12};
+    padding: ${({ theme }) =>
+      `${theme.space.s20} ${theme.space.s20} ${theme.space.s16}`};
+    flex-shrink: 0;
+
+    .name {
+      flex: 1;
+      min-width: 0;
+      font-size: ${({ theme }) => theme.size.s17};
+      font-weight: ${({ theme }) => theme.weight.semibold};
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .closeButtonContainer {
       display: flex;
-      flex-direction: row;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
       flex-shrink: 0;
+      cursor: pointer;
+      color: ${({ theme }) => theme.ink.secondary};
+    }
 
-      .closeButtonContainer {
-        position: relative;
-        cursor: pointer;
-        display: inline-block;
-      }
-
-      .closeButton {
-        cursor: pointer;
-        display: block;
-        font-size: 1.875rem;
-      }
-
-      .closeButtonContainer:hover::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 50%;
-        background-color: rgba(128, 128, 128, 0.3);
-        pointer-events: none;
-      }
-
-      .name {
-        font-weight: 600;
-      }
+    .closeButton {
+      cursor: pointer;
+      display: block;
+      font-size: ${({ theme }) => theme.icon.lg};
     }
   }
 
-  .optionsContainer {
-    overflow-y: auto;
-    flex: 1;
-    padding: 0 0.875rem;
-    margin-top: 1rem;
+  ${optionsListStyles}
+  .rowValue {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+  }
 
-    .option {
-      margin-top: 1rem;
-      font-weight: 600;
+  .rowText {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .rowText.mono {
+    font-family: ${({ theme }) => theme.font.mono};
+  }
+
+  .rowCount {
+    flex-shrink: 0;
+    font-size: ${({ theme }) => theme.size.s12};
+    font-weight: ${({ theme }) => theme.weight.regular};
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  .rowChevron {
+    display: flex;
+    flex-shrink: 0;
+    font-size: ${({ theme }) => theme.size.s15};
+    color: ${({ theme }) => theme.surface.mark};
+  }
+
+  .toggleRow {
+    padding: ${({ theme }) => `${theme.space.s10} ${theme.space.s16}`};
+
+    .propertyValue {
       display: flex;
-      flex-direction: row;
       align-items: center;
-      gap: 15px;
-      padding: 1rem;
-      background-color: #2d2d2d;
-      border-radius: 10px;
-      cursor: pointer;
-      .description {
-        font-size: 1rem;
-      }
-      .emailDescription {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 0.35rem;
-      }
-      .icon {
-        font-size: 1.5rem;
-      }
-    }
-    .toggleOption {
-      margin-top: 1rem;
-      font-weight: 600;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 15px;
-      padding: 1rem;
-      background-color: #2d2d2d;
-      border-radius: 10px;
-      justify-content: space-between;
-      cursor: pointer;
-      .description {
-        flex: 1;
-        font-size: 1rem;
-      }
-      .icon {
-        font-size: 1.5rem;
-      }
-    }
-    .optionNote {
-      margin-top: 0.5rem;
-      padding: 0 1rem;
-      font-size: 0.8125rem;
-      line-height: 1.35;
-      color: #ff5c63;
     }
   }
-  .info {
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: ${({ theme }) => theme.size.s12};
+  }
+
+  .status.ok {
+    color: ${({ theme }) => theme.direction.owed};
+  }
+
+  .status.pending {
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
+
+  .optionNote {
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.45;
+    color: ${({ theme }) => theme.direction.owe};
+  }
+
+  .logOut {
     display: flex;
     flex-direction: column;
+
+    button {
+      font-weight: ${({ theme }) => theme.weight.medium};
+    }
+  }
+
+  .info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
-    color: grey;
-    font-size: 0.8rem;
-    .appName,
+    gap: ${({ theme }) => theme.space.s8};
+    color: ${({ theme }) => theme.ink.tertiary};
+    font-size: ${({ theme }) => theme.size.s12};
+    margin-top: auto;
+    padding-top: ${({ theme }) => theme.space.s4};
+
     .version {
-      display: flex;
-      justify-content: center;
+      font-family: ${({ theme }) => theme.font.mono};
     }
   }
 `;

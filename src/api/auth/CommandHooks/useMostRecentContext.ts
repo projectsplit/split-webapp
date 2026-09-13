@@ -2,26 +2,21 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { UpdateMostRecentContextRequest } from '../../../types';
 import { apiClient } from '../../apiClients';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useMostRecentContext = () => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, string>({
+    meta: { errorHandled: true },
     mutationFn: (contextId) => updateMostRecentContext({ contextId }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['getMe'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'getMe',
+        'mostRecentGroup',
+        'home',
+        'shared',
+      ]);
     },
     onError: (error) => {
       console.log(error);

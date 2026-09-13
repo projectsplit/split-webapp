@@ -37,6 +37,8 @@ export const useExpenseFormStore = () =>
       setDescription: state.setDescription,
       setCurrencySymbol: state.setCurrencySymbol,
       setExpenseTime: state.setExpenseTime,
+      isTrackingNow: state.isTrackingNow,
+      setIsTrackingNow: state.setIsTrackingNow,
       setLabels: state.setLabels,
       setLocation: state.setLocation,
       setAmountError: state.setAmountError,

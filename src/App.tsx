@@ -12,6 +12,7 @@ import Home from './pages/Home/Home';
 import RedirectToExpenses from './routes/RedirectToExpenses';
 import RedirectToAnalytics from './routes/RedirectToAnalytics';
 import RedirectToBudget from './routes/RedirectToBudget';
+import { BudgetOverview } from './pages/Budget/BudgetOverview/BudgetOverview';
 import RedirectToNonGroupExpenses from './routes/RedirectToNonGroupExpenses';
 import Protected from './pages/Protected/Protected';
 import CreateAccount from './pages/CreateAccount/CreateAccount';
@@ -30,7 +31,6 @@ import {
   Shared,
   GenerateInvitationCode,
   Personal,
-  BudgetActions,
   ManageBudgets,
   RecurringExpenses,
 } from './lazyRoutes';
@@ -41,7 +41,7 @@ const SuspenseFallback = () => (
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      height: '100vh',
+      height: '100dvh',
       width: '100%',
     }}
   >
@@ -97,9 +97,8 @@ const App = () => {
               <Route path="/analytics" element={<Analytics />} />
 
               <Route path="/budget" element={<Budget />}>
-                <Route index element={<RedirectToBudget />} />
+                <Route index element={<BudgetOverview />} />
                 <Route path="create" element={<CreateBudget />} />
-                <Route path="actions" element={<BudgetActions />} />
                 <Route path="manage" element={<ManageBudgets />} />
                 <Route path="*" element={<RedirectToBudget />} />
               </Route>

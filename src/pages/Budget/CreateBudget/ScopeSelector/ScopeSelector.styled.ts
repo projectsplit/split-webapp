@@ -1,42 +1,38 @@
 import styled from 'styled-components';
 
 export const StyledScopeSelector = styled.div<{ $inputError: boolean }>`
-  .spendingCycleHeader {
+  .scopeSelector {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 5px;
-    margin-bottom: 10px;
-    .information {
-      cursor: pointer;
-      font-size: 23px;
-      font-weight: bold;
-      color: ${({ theme }) => theme.yellow};
-    }
-  }
-  .scopeSelector {
+    justify-content: space-between;
+    gap: ${({ theme }) => theme.space.s12};
+    width: 100%;
+    padding: ${({ theme }) => `${theme.space.s14} ${theme.space.s16}`};
     border: 1px solid
       ${({ theme, $inputError }) =>
-        $inputError ? theme.errorColor : theme.lineColor};
-
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    width: 100%;
-    justify-content: space-evenly;
-    /* border-style: ${({ $inputError }) => ($inputError ? 'solid' : 'none')};
-    border-width: ${({ $inputError }) => ($inputError ? '1px' : '0')};
-    border-color: ${({ theme, $inputError }) =>
-      $inputError ? theme.pink : 'transparent'}; */
-
-    border-radius: 8px;
-    padding: 0.8rem;
+        $inputError ? theme.direction.owe : theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
     outline: none;
-    color: ${({ theme }) => theme.whiteText};
-    background-color: ${({ theme }) => theme.layer2};
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    font-size: 16px;
-    cursor: pointer;
+    background-color: ${({ theme }) => theme.surface.card};
+    color: ${({ theme }) => theme.ink.primary};
+    font-size: ${({ theme }) => theme.size.s15};
+    font-weight: ${({ theme }) => theme.weight.medium};
     text-align: left;
+    cursor: pointer;
+  }
+
+  .scopeText {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .scopeChevron {
+    display: flex;
+    flex-shrink: 0;
+    font-size: ${({ theme }) => theme.size.s16};
+    color: ${({ theme }) => theme.surface.mark};
   }
 `;

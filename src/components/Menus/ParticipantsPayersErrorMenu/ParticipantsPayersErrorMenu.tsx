@@ -1,6 +1,5 @@
 import IonIcon from '@reacticons/ionicons';
 import { ParticipantsPayersErrorMenuProps } from '../../../interfaces';
-import Separator from '../../Separator/Separator';
 import { StyledRemoveGuestWarning } from './ParticipantsPayersErrorMenu.styled';
 
 export default function ParticipantsPayersErrorMenu({
@@ -9,22 +8,14 @@ export default function ParticipantsPayersErrorMenu({
 }: ParticipantsPayersErrorMenuProps) {
   return (
     <StyledRemoveGuestWarning>
-      <div className="headerSeparator">
-        <div className="header">
-          <IonIcon name="warning-outline" className="infoLogo" />
-          <span>Hmm... 🤔</span>
-          <div className="closeButton" onClick={() => (menu.value = null)}>
-            <IonIcon name="close-outline" className="close" />
-          </div>
-        </div>
-        <div className="separator">
-          <Separator />
+      <div className="dialogHeader">
+        <IonIcon name="warning-outline" className="dialogIcon danger" />
+        <div className="dialogTitle">Hmm... 🤔</div>
+        <div className="closeButton" onClick={() => (menu.value = null)}>
+          <IonIcon name="close-outline" />
         </div>
       </div>
-      <div className="info">
-        {error}
-        <div />
-      </div>
+      <div className="info">{error}</div>
     </StyledRemoveGuestWarning>
   );
 }

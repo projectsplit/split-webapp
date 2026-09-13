@@ -1,14 +1,11 @@
 import styled, { keyframes } from 'styled-components';
 
-const pulse = keyframes`
+const sweep = keyframes`
   0% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
+    background-position: 200% 0;
   }
   100% {
-    opacity: 0.6;
+    background-position: -200% 0;
   }
 `;
 
@@ -20,6 +17,9 @@ export const StyledShimmer = styled.div<{
   width: ${({ $width }) => $width || '100%'};
   height: ${({ $height }) => $height || '20px'};
   border-radius: ${({ $borderRadius }) => $borderRadius || '4px'};
-  background-color: ${({ theme }) => theme.layer2};
-  animation: ${pulse} 1.5s ease-in-out infinite;
+  background-color: ${({ theme }) => theme.surface.card};
+  background-image: ${({ theme }) =>
+    `linear-gradient(90deg, ${theme.surface.card} 0%, ${theme.surface.outline} 50%, ${theme.surface.card} 100%)`};
+  background-size: 200% 100%;
+  animation: ${sweep} 1.6s linear infinite;
 `;

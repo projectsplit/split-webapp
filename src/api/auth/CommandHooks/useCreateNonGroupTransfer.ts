@@ -1,53 +1,42 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { apiClient } from '../../apiClients';
-import { CreateTransferRequest, Group } from '../../../types';
+import { CreateTransferRequest } from '../../../types';
 import { Signal } from '@preact/signals-react';
 import { NavigateFunction } from 'react-router-dom';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useCreateNonGroupTransfer = (
   menu: Signal<string | null>,
   navigate: NavigateFunction,
-  isSubmitting: Signal<boolean>
+  isSubmitting: Signal<boolean>,
+  onError?: (message: string) => void
 ) => {
   const queryClient = useQueryClient();
   return useMutation<any, AxiosError, CreateTransferRequest>({
+    meta: { errorHandled: true },
     mutationFn: (transfer) => submitTransfer(transfer),
     onSuccess: async () => {
       menu.value = null;
       navigate(`/shared/nongroup/transfers`);
-      await queryClient.invalidateQueries({
-        queryKey: ['nonGroupDebts'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['nonGroupTransfers'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['home'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['non-group-transfer-users'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'nonGroupDebts',
+        'nonGroupTransfers',
+        'home',
+        'shared',
+        'home',
+        'mostRecentGroup',
+        'non-group-transfer-users',
+      ]);
       isSubmitting.value = false;
     },
-    // The server can refuse a transfer with someone the user is not connected with, which the
-    // picker normally prevents but a stale menu can still reach. Without this the button would
-    // spin forever on any rejection.
-    onError: () => {
+    onError: (err) => {
       isSubmitting.value = false;
+      onError?.(
+        err.response?.data
+          ? String(err.response.data)
+          : 'Could not create the transfer. Please try again.'
+      );
     },
   });
 };

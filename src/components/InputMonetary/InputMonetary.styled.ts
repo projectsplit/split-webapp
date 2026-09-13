@@ -6,42 +6,38 @@ interface StyledInputMonetary {
 }
 export const StyledInputMonetary = styled.div<StyledInputMonetary>`
   display: flex;
-  flex-direction: column;
-  position: relative;
-  justify-content: space-evenly;
+  flex-direction: row;
+  align-items: center;
+  gap: ${({ theme }) => theme.space.s8};
   border: 1px solid
     ${({ theme, $inputError }) =>
-      $inputError ? theme.errorColor : theme.lineColor};
-  background-color: ${({ theme }) => theme.layer2};
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
+      $inputError ? theme.direction.owe : theme.surface.hairline};
+  background-color: ${({ theme }) => theme.surface.card};
+  border-radius: ${({ theme }) => theme.radius.surface};
+  padding: ${({ theme }) => `${theme.space.s20} 18px`};
   &:focus-within {
     border-color: ${({ theme, $inputError }) =>
-      $inputError ? theme.errorColor : theme.highlightColor};
+      $inputError ? theme.direction.owe : theme.accent.you.ink};
   }
   transition: border-color 0.15s;
   .currencySelectorWrapper {
-    position: absolute;
-
-    .currencySelector {
-      display: flex;
-      flex-direction: row;
-      gap: 0.5rem;
-      border-radius: 10px;
-      padding: 0.5rem;
-      font-size: 1.125rem;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-
-      .angleDown {
-        font-size: 1.5rem;
-      }
-    }
+    flex-shrink: 0;
   }
 `;
 
 export const StyledInput = styled(Input)`
+  flex: 1;
+  min-width: 0;
   text-align: right;
-  margin-left: 70px;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  font-family: ${({ theme }) => theme.font.mono};
+  font-size: ${({ theme }) => theme.figure.input};
+  font-weight: ${({ theme }) => theme.weight.medium};
+  letter-spacing: -0.02em;
+
+  &:focus {
+    border: none;
+  }
 `;

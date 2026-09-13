@@ -26,6 +26,7 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
 
   return (
     <>
+      {showOptions.value && <div className="addFilterLabel">Add a filter</div>}
       {showOptions.value && (
         <div className="categoryButtons">
           {expenseFilterState.value.freeText !== '' &&
@@ -88,7 +89,6 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
               <SearchDateButton
                 category={'before'}
                 type={'date'}
-                dates={''}
                 submitButtonIsActive={submitButtonIsActive}
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}
@@ -100,7 +100,6 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
               <SearchDateButton
                 category={'during'}
                 type={'date'}
-                dates={''}
                 submitButtonIsActive={submitButtonIsActive}
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}
@@ -112,7 +111,6 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
               <SearchDateButton
                 category={'after'}
                 type={'date'}
-                dates={''}
                 submitButtonIsActive={submitButtonIsActive}
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}
@@ -160,7 +158,6 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
               <SearchDateButton
                 category={'before'}
                 type={'date'}
-                dates={''}
                 submitButtonIsActive={submitButtonIsActive}
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}
@@ -172,7 +169,6 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
               <SearchDateButton
                 category={'during'}
                 type={'date'}
-                dates={''}
                 submitButtonIsActive={submitButtonIsActive}
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}
@@ -184,7 +180,6 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
               <SearchDateButton
                 category={'after'}
                 type={'date'}
-                dates={''}
                 submitButtonIsActive={submitButtonIsActive}
                 showOptions={showOptions}
                 calendarIsOpen={calendarIsOpen}

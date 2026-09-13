@@ -1,3 +1,4 @@
+import { tokens } from '../../../../styles/tokens';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,7 +19,7 @@ import { noData } from '../plugins/noData';
 import { getAllDaysInMonth } from '../../../../helpers/monthlyDataHelpers';
 import { getCarouselItemsBasedOnCycle } from '../../helpers/getCarouselItemsBasedOnCycle';
 import { getChartOptions } from './options/getChartOptions';
-import { getData } from './data/getData';
+import { getCumulativeSpendingDatasets } from './data/getCumulativeSpendingDatasets';
 import { buildLabels } from '../../helpers/buildLabels';
 import { useStartAndEndDatesEffect } from '../../hooks/useStartEndDatesEffect';
 import { Frequency } from '../../../../types';
@@ -98,7 +99,6 @@ export function CumulativeSpending({
 
     const enhancedCumulArray = [...cumulArrayData];
     let upLimit = 0;
-    //const now = new Date();
     if (cycle === Frequency.Monthly)
       upLimit = getAllDaysInMonth(
         selectedTimeCycleIndex.value + 1,
@@ -188,11 +188,11 @@ export function CumulativeSpending({
           expensePoints,
           currentWeekIndex,
           selectedYear.value
-        )) || //does not affect annual or weekly as they are 12 and 7 rsptctvly
+        )) ||
       indx === lastNumberBeforeNaN
     ) {
       pointRadiusProjection.push(2);
-      pointBackgroundColorProjection.push('#A12BFF');
+      pointBackgroundColorProjection.push(tokens.accent.you.ink);
     } else {
       pointRadiusProjection.push(0);
       pointBackgroundColorProjection.push('transparent');
@@ -204,7 +204,7 @@ export function CumulativeSpending({
     }
   });
 
-  pointBackgroundColorProjection[projectedArray.length - 1] = 'grey';
+  pointBackgroundColorProjection[projectedArray.length - 1] = tokens.ink.tertiary;
 
   const options = getChartOptions(
     isSuccess,
@@ -221,7 +221,7 @@ export function CumulativeSpending({
     currency
   );
 
-  const data = getData(
+  const data = getCumulativeSpendingDatasets(
     labels,
     selectedCycle,
     selectedTimeCycleIndex,
@@ -238,7 +238,9 @@ export function CumulativeSpending({
 
   return (
     <StyledCumulativeSpending>
-      <Line options={options} data={data} plugins={[noData, ChartDataLabels]} />
+      <div className="chartArea">
+        <Line options={options} data={data} plugins={[noData, ChartDataLabels]} />
+      </div>
       <div className="periodOptions">
         <Carousel
           carouselItems={getCarouselItemsBasedOnCycle(

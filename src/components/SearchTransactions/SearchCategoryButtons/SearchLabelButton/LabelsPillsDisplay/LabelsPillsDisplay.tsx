@@ -1,10 +1,13 @@
 import { useBeautifulMentions } from 'lexical-beautiful-mentions';
 import { LabelsPillsDisplayProps } from '../../../../../interfaces';
-import { StyledLabelsPillsDisplay } from './LabelsPillsDisplay.styled';
+import { StyledSearchFilterRow } from '../../../SearchFilterRow.styled';
 import Pill from '../../../../Pill/Pill';
 import { useEffect, useState } from 'react';
 import { FetchedLabel } from '../../../../../types';
-import labelColors from '../../../../../labelColors';
+import {
+  labelChipInk,
+  resolveLabelColor,
+} from '../../../../../helpers/labelChip';
 import { MdGroup } from 'react-icons/md';
 
 export default function LabelsPillsDisplay({
@@ -28,7 +31,7 @@ export default function LabelsPillsDisplay({
     if (cancelled.value) {
       cancelled.value = false;
     }
-  }, [filteredLabels.value, cancelled.value]);
+  }, [filteredLabels.value, cancelled.value, cancelled]);
 
   const removeFilter = (filterId: string) => {
     removedFilter.value = true;
@@ -45,7 +48,7 @@ export default function LabelsPillsDisplay({
   };
 
   return (
-    <StyledLabelsPillsDisplay>
+    <StyledSearchFilterRow>
       <div
         className="category"
         onClick={() => {
@@ -64,12 +67,13 @@ export default function LabelsPillsDisplay({
               <Pill
                 key={label?.id}
                 title={label?.value}
-                color={labelColors[label?.color]}
+                color={resolveLabelColor(label?.color)}
                 closeButton={true}
                 onClose={() => removeFilter(label?.id)}
-                $textColor="#000000c8"
                 $border={false}
-                fontSize="16px"
+                $textColor={labelChipInk(resolveLabelColor(label?.color))}
+                fontSize="12px"
+                $closeButtonColor={labelChipInk(resolveLabelColor(label?.color))}
               >
                 {isPersonal && !label.id.includes('_') && (
                   <MdGroup style={{ marginRight: '4px' }} />
@@ -81,6 +85,6 @@ export default function LabelsPillsDisplay({
           <div className="type">label</div>
         )}
       </div>
-    </StyledLabelsPillsDisplay>
+    </StyledSearchFilterRow>
   );
 }

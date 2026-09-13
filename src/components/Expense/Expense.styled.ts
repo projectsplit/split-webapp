@@ -1,109 +1,69 @@
 import styled from 'styled-components';
+import { StyledTransactionCard } from '../TransactionCard.styled';
 
-export const StyledExpense = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'userAmount',
-})<{
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  userAmount: number;
-}>`
-  display: flex;
-  flex-direction: column;
-  border-radius: 10px;
-  width: 100%;
-  padding: 10px;
-  background-color: ${({ theme }) => theme.layer2};
-  gap: 1rem;
-  box-shadow: ${({ theme, userAmount }) =>
-    `0 0 0 1px ${userAmount === 0 ? theme.lightBorder : theme.lightBorder}`};
+export const StyledExpense = styled(StyledTransactionCard)`
+  .descr {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: ${({ theme }) => theme.size.s15};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    line-height: 1.4;
+  }
 
-  .topRow {
+  .userShare {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s16};
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+    color: ${({ theme }) => theme.accent.you.inkRow};
+  }
+
+  .groupTotal {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s11};
+    color: ${({ theme }) => theme.accent.group.ink};
+  }
+
+  .locationIcon {
+    display: block;
+    flex-shrink: 0;
+    font-size: ${({ theme }) => theme.size.s12};
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  .labels {
+    flex: 1 1 0;
+    overflow: hidden;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-
-    .icons {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      align-items: center;
-      overflow: auto;
-      .locationIcon {
-        font-size: 18px;
-        color: ${({ theme }) => theme.yellow};
-      }
-
-      .labels {
-        display: flex;
-        flex-direction: row;
-        overflow-x: auto;
-        white-space: nowrap;
-        gap: 10px;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-
-      .labels::-webkit-scrollbar {
-        display: none;
-      }
-    }
-
-    .time {
-      font-size: 14px;
-      color: ${({ theme }) => theme.secondaryTextColor};
-      font-weight: 800;
-      margin-left: 5px;
-    }
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s4};
   }
 
-  .descrAndAmounts {
-    display: flex;
-    flex-direction: row;
-    gap: 1.5rem;
-    justify-content: space-between;
-
-    .descr {
-      font-size: 1.1em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .amounts {
-      .groupTotal {
-        display: flex;
-        font-size: 14px;
-        flex-direction: row;
-        gap: 5px;
-        margin-bottom: 6px;
-        font-weight: 600;
-        color: ${({ theme }) => theme.grey};
-      }
-
-      .userShare {
-        display: flex;
-        font-size: 14px;
-        flex-direction: row;
-        gap: 5px;
-        margin-bottom: 6px;
-        font-weight: 600;
-      }
-    }
+  .labels > * {
+    flex-shrink: 0;
   }
 
-  .legendUser,
-  .legendGroup {
-    font-size: 18px;
-    width: 1rem;
-    height: 1rem;
-
-    border-radius: 5px;
+  .labels .title {
+    max-width: 112px;
   }
 
-  .legendUser {
-    background-color: ${({ theme }) => theme.pink};
-  }
-
-  .legendGroup {
-    background-color: ${({ theme }) => theme.ciel};
+  .moreLabels {
+    flex-shrink: 0;
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s12};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    color: ${({ theme }) => theme.ink.tertiary};
   }
 `;

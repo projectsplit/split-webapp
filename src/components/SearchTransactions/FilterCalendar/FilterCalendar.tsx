@@ -43,6 +43,9 @@ export default function FilterCalendar({
           category={category}
         />
       )}
+      {calendarIsOpen.value && (
+        <div className="calendarHint">Tap a day to complete the filter.</div>
+      )}
     </div>
   );
 }

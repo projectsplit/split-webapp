@@ -22,7 +22,7 @@ import { useDeleteRecurringExpense } from '@/api/auth/CommandHooks/useDeleteRecu
 import { useToggleRecurringExpenseStatus } from '@/api/auth/CommandHooks/useToggleRecurringExpenseStatus';
 import { useGetAllNonGroupUsers } from '@/api/auth/QueryHooks/useGetAllNonGroupUsers';
 import useGroup from '@/api/auth/QueryHooks/useGroup';
-import { displayCurrencyAndAmount } from '@/helpers/displayCurrencyAndAmount';
+import { displayMoneyFixed } from '@/helpers/displayCurrencyAndAmount';
 import { FormatDateTime } from '@/helpers/timeHelpers';
 import { scheduleSentence } from '@/helpers/recurrence';
 import {
@@ -36,11 +36,10 @@ import {
   StyledRecurringExpenses,
 } from './RecurringExpenses.styled';
 import {
-  buildFormExpenseFromTemplate,
   buildJumpPath,
   clearFiltersForJump,
   scopeLabel,
-} from './utils';
+} from './recurringExpenseHelpers';
 import { RecurringExpenseDeleteConfirmation } from './RecurringExpenseDeleteConfirmation';
 import { EditRecurringExpenseAnimation } from './EditRecurringExpenseAnimation';
 
@@ -49,8 +48,6 @@ export const RecurringExpenses = () => {
   const { userInfo } = useOutletContext<{ userInfo: UserInfo }>();
   const timeZoneId = userInfo?.timeZone;
 
-  // Two signals rather than one: the long-press sheet brings its own backdrop, so sharing a signal
-  // with MenuAnimationBackground would stack a second one behind it.
   const menu = useSignal<string | null>(null);
   const rowMenu = useSignal<string | null>(null);
   const errorMessage = useSignal<string>('');
@@ -70,10 +67,6 @@ export const RecurringExpenses = () => {
 
   const { mutate: toggleStatus } = useToggleRecurringExpenseStatus(showError);
 
-  // The form needs the same member context the expense lists give it. Called with a fixed mode
-  // because useGetAllNonGroupUsers returns early before its own hooks for Mode.Personal — deriving
-  // the mode from the selected row would change the hook count as the selection moves between
-  // scopes. The query is cached and shared, so asking for it unconditionally costs one request.
   const { allUsers } = useGetAllNonGroupUsers(Mode.NonGroup);
 
   const { data: selectedGroup } = useGroup(
@@ -119,9 +112,6 @@ export const RecurringExpenses = () => {
               key={template.id}
               template={template}
               timeZoneId={timeZoneId}
-              // Opening the actions rather than jumping. A schedule usually has no expense yet —
-              // a new one has none until its first slot, and the expense it did create can be
-              // deleted like any other — so jumping cannot be the thing a tap does.
               onOpen={() => {
                 setSelected(template);
                 rowMenu.value = 'options';
@@ -132,7 +122,12 @@ export const RecurringExpenses = () => {
       )}
 
       <div className="submitButton">
-        <MyButton fontSize="16" onClick={() => navigate('/')} isLoading={false}>
+        <MyButton
+          variant="secondary"
+          fontSize="15"
+          onClick={() => navigate('/')}
+          isLoading={false}
+        >
           Done
         </MyButton>
       </div>
@@ -143,8 +138,6 @@ export const RecurringExpenses = () => {
           onDelete={() => (rowMenu.value = 'deleteRecurringExpense')}
           onClose={() => (rowMenu.value = null)}
           extraOptions={[
-            // Pausing a row that cannot run either way is meaningless, and resuming one is
-            // refused by the server. Edit and delete are the only moves that make sense there.
             ...(selected.schedule
               ? [
                   {
@@ -154,9 +147,6 @@ export const RecurringExpenses = () => {
                   },
                 ]
               : []),
-            // Offered only when there is one to open. Deleting the expense a series produced
-            // leaves the schedule intact and this option simply goes away, rather than becoming
-            // a button that fails.
             ...(selected.lastExpenseId
               ? [
                   {
@@ -170,15 +160,11 @@ export const RecurringExpenses = () => {
         />
       )}
 
-      {/* The confirmation is a floating card with no backdrop of its own. */}
       {rowMenu.value === 'deleteRecurringExpense' && (
         <MenuAnimationBackground menu={rowMenu} />
       )}
       <MenuAnimationBackground menu={menu} />
 
-      {/* GeneralWarningMenu rather than ErrorMenu: ErrorMenu ignores what it is given and prints
-          one of two fixed strings about a missing expense or transfer, neither of which describes
-          a schedule that could not be paused or deleted. */}
       <GeneralWarningMenuAnimation menu={menu} message={errorMessage.value} />
 
       <RecurringExpenseDeleteConfirmation
@@ -219,7 +205,7 @@ const RecurringExpenseRow = ({
   onOpen,
 }: RecurringExpenseRowProps) => {
   return (
-    <StyledRecurringExpenseRow $isPaused={template.isPaused} onClick={onOpen}>
+    <StyledRecurringExpenseRow onClick={onOpen}>
       <div className="topRow">
         <div className="scope">
           {template.transactionType === TransactionType.Group && <MdGroup />}
@@ -227,10 +213,7 @@ const RecurringExpenseRow = ({
           <span className="scopeName">{scopeLabel(template)}</span>
         </div>
         <div className="amount">
-          {displayCurrencyAndAmount(
-            template.amount.toString(),
-            template.currency
-          )}
+          {displayMoneyFixed(template.amount.toString(), template.currency)}
         </div>
       </div>
 
@@ -243,12 +226,12 @@ const RecurringExpenseRow = ({
           {template.labels.map((label) => (
             <Pill
               key={label.text}
-              $textColor={'#000000c8'}
               title={label.text}
               color={label.color === '' ? 'white' : labelColors[label.color]}
               closeButton={false}
               $border={false}
-              fontSize="14px"
+              $vivid
+              fontSize="11px"
             />
           ))}
         </div>
@@ -257,9 +240,6 @@ const RecurringExpenseRow = ({
       <div className="bottomRow">
         <div className="cycle">
           <FaRepeat />
-          {/* A stored template can come back without a readable schedule. The row still has to
-              render — it is the only way to reach the edit that repairs it or the delete that
-              removes it — so it says so rather than dereferencing nothing. */}
           <span>
             {template.schedule
               ? scheduleSentence(template.schedule)
@@ -269,17 +249,13 @@ const RecurringExpenseRow = ({
         {!template.schedule ? null : template.isPaused ? (
           <span className="paused">Paused</span>
         ) : (
-          <span>
-            {/* "First" until one has actually been created, so a schedule that has not fired yet
-                does not look like one that has. */}
+          <span className="nextRun">
             {template.lastExpenseId ? 'Next' : 'First'}{' '}
             {FormatDateTime(template.nextOccurrence, timeZoneId)}
           </span>
         )}
       </div>
 
-      {/* Surfaced rather than logged: the series stopped because something outside it changed, and
-          the user is the only one who can put it right. */}
       {template.lastError && (
         <div className="error">Paused after an error: {template.lastError}</div>
       )}

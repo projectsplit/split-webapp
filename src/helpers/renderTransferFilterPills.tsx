@@ -1,8 +1,8 @@
 import { Signal } from '@preact/signals-react';
-import Pill from '../components/Pill/Pill';
 import { Group, TransferParsedFilters, TruncatedMember } from '../types';
 import { QueryClient } from '@tanstack/react-query';
 import { getFilterStorageKey } from '../components/SearchTransactions/helpers/localStorageStringParser';
+import { filterPill } from './filterPill';
 
 const updateFiltersAndSave = (
   transferParsedFilters: Signal<TransferParsedFilters>,
@@ -14,7 +14,7 @@ const updateFiltersAndSave = (
     ...transferParsedFilters.value,
     ...updatedFilters,
   };
-  localStorage.setItem(
+  sessionStorage.setItem(
     getFilterStorageKey('transfer', groupId),
     JSON.stringify(transferParsedFilters.value)
   );
@@ -37,112 +37,75 @@ export const renderTransferFilterPills = (
   const pills = [];
   if (freeText && freeText != '') {
     pills.push(
-      <Pill
-        key="freeText"
-        title={`search term: ${freeText}`}
-        color="#e0e0e0"
-        closeButton={true}
-        fontSize="14px"
-        $textColor="black"
-        $border={false}
-        $closeButtonColor="black"
-        onClose={() =>
+      filterPill(
+        'freeText',
+        `search term: ${freeText}`,
+        () =>
           updateFiltersAndSave(
             transferParsedFilters,
             { freeText: '' },
             queryClient,
             group?.id
           )
-        }
-      />
+      )
     );
   }
   if (before && after && before === after) {
     pills.push(
-      <Pill
-        key="during"
-        title={`during: ${before}`}
-        color="#e0e0e0"
-        closeButton={true}
-        fontSize="14px"
-        $textColor="black"
-        $border={false}
-        $closeButtonColor="black"
-        onClose={() =>
+      filterPill(
+        'during',
+        `during: ${before}`,
+        () =>
           updateFiltersAndSave(
             transferParsedFilters,
             { before: null, after: null },
             queryClient,
             group?.id
           )
-        }
-      />
+      )
     );
   }
-  // Handle before
   if (before && before !== after) {
     pills.push(
-      <Pill
-        key="before"
-        title={`before: ${before}`}
-        color="#e0e0e0"
-        closeButton={true}
-        fontSize="14px"
-        $textColor="black"
-        $border={false}
-        $closeButtonColor="black"
-        onClose={() =>
+      filterPill(
+        'before',
+        `before: ${before}`,
+        () =>
           updateFiltersAndSave(
             transferParsedFilters,
             { before: null },
             queryClient,
             group?.id
           )
-        }
-      />
+      )
     );
   }
 
-  // Handle after
   if (after && before !== after) {
     pills.push(
-      <Pill
-        key="after"
-        title={`after: ${after}`}
-        color="#e0e0e0"
-        closeButton={true}
-        fontSize="14px"
-        $textColor="black"
-        $border={false}
-        $closeButtonColor="black"
-        onClose={() =>
+      filterPill(
+        'after',
+        `after: ${after}`,
+        () =>
           updateFiltersAndSave(
             transferParsedFilters,
             { after: null },
             queryClient,
             group?.id
           )
-        }
-      />
+      )
     );
   }
 
-  // Handle participantsIds
   if (sendersIds && sendersIds?.length > 0) {
     sendersIds?.forEach((id, index) => {
       const participant = allParticipants.find((p) => p.id === id);
       const participantName = participant?.name || id;
       pills.push(
-        <Pill
-          key={`sender-${index}`}
-          title={`sender: ${participantName}`}
-          color="#e0e0e0"
-          closeButton={true}
-          fontSize="14px"
-          $textColor="black"
-          $border={false}
-          $closeButtonColor="black"
-          onClose={() =>
+        filterPill(
+        `sender-${index}`,
+        `sender: ${participantName}`,
+        () =>
             updateFiltersAndSave(
               transferParsedFilters,
               {
@@ -151,28 +114,20 @@ export const renderTransferFilterPills = (
               queryClient,
               group?.id
             )
-          }
-        />
+      )
       );
     });
   }
 
-  // Handle payersIds
   if (receiversIds && receiversIds?.length > 0) {
     receiversIds?.forEach((id, index) => {
       const payer = allParticipants.find((p) => p.id === id);
       const payerName = payer?.name || id;
       pills.push(
-        <Pill
-          key={`receiver-${index}`}
-          title={`receiver: ${payerName}`}
-          color="#e0e0e0"
-          closeButton={true}
-          fontSize="14px"
-          $textColor="black"
-          $border={false}
-          $closeButtonColor="black"
-          onClose={() =>
+        filterPill(
+        `receiver-${index}`,
+        `receiver: ${payerName}`,
+        () =>
             updateFiltersAndSave(
               transferParsedFilters,
               {
@@ -181,8 +136,7 @@ export const renderTransferFilterPills = (
               queryClient,
               group?.id
             )
-          }
-        />
+      )
       );
     });
   }

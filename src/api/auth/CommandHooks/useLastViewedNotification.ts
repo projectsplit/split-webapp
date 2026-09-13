@@ -7,9 +7,10 @@ export const useLastViewedNotification = () => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, string | undefined>({
+    meta: { errorHandled: true },
     mutationFn: (timestamp) => {
       if (!timestamp) {
-        return Promise.resolve(null); // or simply return null
+        return Promise.resolve(null);
       }
       return updateLastViewedNotification({ timestamp });
     },

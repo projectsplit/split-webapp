@@ -2,21 +2,20 @@ import {
   BudgetInfoResponse,
   Details,
   GroupedTransaction,
-  GroupsAllBalancesResponse,
   MostRecentGroupDetailsResponse,
   UserInfo,
 } from '@/types';
 import { StyledScrollableMenuButtons } from './ScrollableMenuButtons.styled';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { NavigateFunction } from 'react-router-dom';
 import MostRecentSection from '../MostRecentSection/MostRecentSection';
-import TreeAdjustedContainer from '@/components/TreeAdjustedContainer/TreeAdjustedContainer';
-import { TreeItemBuilderForHomeAndGroups } from '@/components/TreeItemBuilderForHomeAndGroups';
+import BalanceMeta from '@/components/BalanceMeta/BalanceMeta';
+import SectionLabel from '@/components/SectionLabel/SectionLabel';
 import { TiGroup } from 'react-icons/ti';
-import OptionButton from '../SelectionButton/SelectionButton';
+import SelectionButton from '../SelectionButton/SelectionButton';
 import { BsBarChartFill } from 'react-icons/bs';
 import { BsFillPiggyBankFill } from 'react-icons/bs';
 import { BsFillPersonFill } from 'react-icons/bs';
-import { Signal, useSignal } from '@preact/signals-react';
+import { Signal } from '@preact/signals-react';
 import { BudgetCarousel } from './BudgetCarousel/BudgetCarousel';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
 import { useState } from 'react';
@@ -28,9 +27,6 @@ export default function ScrollableMenuButtons({
   nonGroupGroupedTransactions,
   userInfo,
   navigate,
-  isLoading,
-  isFetching,
-  groupsData,
   totalBalances,
   topMenuTitle,
   activeBudgetData,
@@ -42,9 +38,6 @@ export default function ScrollableMenuButtons({
   nonGroupGroupedTransactions: GroupedTransaction[];
   userInfo: UserInfo;
   navigate: NavigateFunction;
-  isLoading: boolean;
-  isFetching: boolean;
-  groupsData: GroupsAllBalancesResponse | undefined;
   totalBalances: Details;
   topMenuTitle: Signal<string>;
   activeBudgetData: BudgetInfoResponse | undefined;
@@ -53,8 +46,6 @@ export default function ScrollableMenuButtons({
   const { mutateAsync: setShowBudgetInfo } = useSetShowBudgetInfo();
   const [showButton, setShowButton] = useState(false);
 
-  // Balances cover groups and non group transactions alike, so a user with no groups
-  // but with outstanding non group debts still has a total worth showing.
   const hasBalanceToShow = Object.values(totalBalances).some(
     (amount) => amount !== 0
   );
@@ -66,7 +57,9 @@ export default function ScrollableMenuButtons({
           activeBudgetData={activeBudgetData}
           setShowBudgetInfo={setShowBudgetInfo}
           setShowButton={setShowButton}
-          onClick={() => navigate('/budget/manage', { state: { fromHome: true } })}
+          onClick={() =>
+            navigate('/budget/manage', { state: { fromHome: true } })
+          }
           timeZoneId={userInfo?.timeZone}
         />
       )}
@@ -82,6 +75,7 @@ export default function ScrollableMenuButtons({
           </span>
         </div>
       )}
+
       <MostRecentSection
         mostRecentGroupDataIsFetching={mostRecentGroupDataIsFetching}
         mostRecentGroupData={mostRecentGroupData}
@@ -91,61 +85,46 @@ export default function ScrollableMenuButtons({
         navigate={navigate}
       />
 
-      {!isLoading &&
-      !isFetching &&
-      groupsData?.groupCount === 0 &&
-      !hasBalanceToShow ? (
-        <OptionButton
-          onClick={() => navigate('/shared')}
-          name="Shared"
-          description="Keep track of your shared finances"
-          hasArrow={false}
-        >
-          <TiGroup className="groupIcon" />
-        </OptionButton>
-      ) : (
-        <TreeAdjustedContainer
-          hasOption={false}
-          optionname="chevron-forward-outline"
-          onClick={() => navigate('/shared')}
-          items={TreeItemBuilderForHomeAndGroups(totalBalances)}
-        >
-          <div className="groups">
-            <div className="groupIconAndNumberOfGroups">
-              <TiGroup className="groupIcon" />
-              {/* <span className="groupCount">{data?.groupCount}</span> */}
-            </div>
-            <div className="groupName">Shared</div>
-          </div>
-        </TreeAdjustedContainer>
-      )}
-      <OptionButton
-        name="Personal"
-        description="Your personal expense tracker"
-        hasArrow={false}
-        onClick={() => {
-          topMenuTitle.value = 'Your Expenses';
-          navigate('/personal');
-        }}
-      >
-        <BsFillPersonFill className="personalIcon" />
-      </OptionButton>
-      <OptionButton
-        name="Analytics"
-        description="View your spending trends"
-        onClick={() => navigate('/analytics')}
-        hasArrow={false}
-      >
-        <BsBarChartFill className="analyticsIcon" />
-      </OptionButton>
-      <OptionButton
-        name="Budgeting"
-        description="Set up budgets, spending caps and savings goals"
-        onClick={() => navigate('/budget')}
-        hasArrow={false}
-      >
-        <BsFillPiggyBankFill className="budgetIcon" />
-      </OptionButton>
+      <div className="destinations">
+        <SectionLabel title="Go to" />
+        <div className="destinationList">
+          <SelectionButton
+            name="Shared"
+            onClick={() => navigate('/shared')}
+            meta={
+              hasBalanceToShow ? (
+                <BalanceMeta details={totalBalances} />
+              ) : undefined
+            }
+          >
+            <TiGroup />
+          </SelectionButton>
+
+          <SelectionButton
+            name="Personal"
+            onClick={() => {
+              topMenuTitle.value = 'Your Expenses';
+              navigate('/personal');
+            }}
+          >
+            <BsFillPersonFill />
+          </SelectionButton>
+
+          <SelectionButton
+            name="Analytics"
+            onClick={() => navigate('/analytics')}
+          >
+            <BsBarChartFill />
+          </SelectionButton>
+
+          <SelectionButton
+            name="Budgeting"
+            onClick={() => navigate('/budget')}
+          >
+            <BsFillPiggyBankFill />
+          </SelectionButton>
+        </div>
+      </div>
     </StyledScrollableMenuButtons>
   );
 }

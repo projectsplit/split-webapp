@@ -45,7 +45,7 @@ const AutoWidthInput = forwardRef<HTMLInputElement, AutoWidthInputProps>(
         return;
       }
 
-      let inputValue = e.target.value.replace(/[,]/g, '.'); // Replace comma with dot
+      let inputValue = e.target.value.replace(/[,]/g, '.');
       const isValid = /^-?\d*\.?\d*$/.test(inputValue);
       if (!isValid && inputValue !== '') return;
 

@@ -1,114 +1,74 @@
 import styled from 'styled-components';
+import { StyledFullScreenMenu } from '../../Layouts/FullScreenMenu/FullScreenMenu.styled';
 
-// Styled Component (replace relevant parts)
-
-export const StyledNonGroupExpenseUsersMenu = styled.div`
-  position: fixed;
-  color: ${({ theme }) => theme.textActiveColor};
-  background-color: ${({ theme }) => theme.layer2};
-  width: 100%;
-  height: 100dvh;
-  left: 0;
-  right: 0;
-  margin: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  top: 0;
-
+export const StyledNonGroupExpenseUsersMenu = styled(StyledFullScreenMenu)`
   .fixedHeader {
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    background-color: ${({ theme }) => theme.layer2};
 
-    .header {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-      padding: 12px 16px;
-
-      .closeButtonContainer {
-        position: relative;
-        cursor: pointer;
-        display: inline-block;
-      }
-
-      .backButton {
-        cursor: pointer;
-        display: block;
-        font-size: 1.875rem;
-      }
-
-      .closeButtonContainer:hover::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 50%;
-        background-color: rgba(128, 128, 128, 0.3);
-        pointer-events: none;
-      }
-
-      .title {
-        font-weight: 600;
-      }
-
-      .gap {
-        margin-right: 0.9375rem;
-      }
-    }
-
-    .categories {
-      margin-top: 7px;
+    > .categories {
+      padding: ${({ theme }) => `0 ${theme.space.s20} ${theme.space.s4}`};
     }
   }
 
   .scrollable-content {
-    overflow-y: auto;
-    flex: 1;
-    padding-top: 1rem;
-    padding-bottom: 180px;
+    gap: ${({ theme }) => theme.space.s12};
+    padding: ${({ theme }) =>
+      `${theme.space.s16} ${theme.space.s20} ${theme.space.s24}`};
 
     .inputField {
       .main {
+        box-sizing: border-box;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        min-height: 35px;
-        padding-left: 5px;
-        padding-right: 5px;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        gap: 5px;
-        background-color: ${({ theme }) => theme.inputGrey};
-        border-radius: 10px;
-        margin-left: 10px;
-        margin-right: 10px;
+        min-height: 47px;
+        gap: ${({ theme }) => theme.space.s6};
+        padding: ${({ theme }) => `9px ${theme.space.s14}`};
+        background-color: ${({ theme }) => theme.surface.card};
+        border: 1px solid ${({ theme }) => theme.surface.hairline};
+        border-radius: ${({ theme }) => theme.radius.iconButton};
         cursor: text;
         position: relative;
+
         .input {
-    
           flex: 1;
           min-width: 60px;
-          text-indent: 5px;
+          font-size: ${({ theme }) => theme.size.s15};
         }
 
         .search-annotation {
           position: absolute;
-          margin-left: 5px;
-          left: 5px; /* aligns with input start */
+          left: ${({ theme }) => theme.space.s14};
           top: 50%;
           transform: translateY(-50%);
           pointer-events: none;
           white-space: nowrap;
-          color: ${({ theme }) => theme.textInactiveColor};
+          font-size: ${({ theme }) => theme.size.s15};
+          color: ${({ theme }) => theme.ink.tertiary};
         }
+      }
+    }
+
+    .dropdown {
+      display: flex;
+      flex-direction: column;
+      background-color: ${({ theme }) => theme.surface.card};
+      border: 1px solid ${({ theme }) => theme.surface.hairline};
+      border-radius: ${({ theme }) => theme.radius.surface};
+      overflow: hidden;
+
+      > * + *::before {
+        content: '';
+        position: absolute;
+        left: 58px;
+        right: 0;
+        top: 0;
+        height: 1px;
+        background-color: ${({ theme }) => theme.surface.raisedHigh};
+      }
+
+      > * {
+        position: relative;
+        flex-shrink: 0;
       }
     }
   }
@@ -118,34 +78,37 @@ export const StyledNonGroupExpenseUsersMenu = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: ${({ theme }) => theme.space.s16};
     flex: 1;
-    margin-top: 100px;
+    padding: ${({ theme }) => `${theme.space.s24} 0`};
+
     .msg {
-      opacity: 0.5;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: ${({ theme }) => theme.size.s13};
+      color: ${({ theme }) => theme.ink.tertiary};
+      text-align: center;
+      text-wrap: pretty;
     }
+
     .icon {
       display: flex;
-      font-size: 100px;
-      opacity: 0.5;
-      margin-top: 20px;
+      font-size: 56px;
+      color: ${({ theme }) => theme.surface.mark};
     }
   }
 
   .doneButton {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 16px;
+    flex-shrink: 0;
     display: flex;
-    justify-content: stretch;
-    z-index: 5;
+    flex-direction: column;
+    padding: ${({ theme }) => `${theme.space.s14} ${theme.space.s20} 22px`};
+    background-color: ${({ theme }) => theme.surface.footer};
+    border-top: 1px solid ${({ theme }) => theme.surface.raisedHigh};
 
-    & > * {
-      flex: 1;
+    button {
+      width: 100%;
+      padding: ${({ theme }) => `${theme.space.s14} 0`};
+      border-radius: ${({ theme }) => theme.radius.iconButton};
+      font-size: ${({ theme }) => theme.size.s15};
     }
   }
 `;

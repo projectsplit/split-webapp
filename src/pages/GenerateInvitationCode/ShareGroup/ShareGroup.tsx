@@ -1,16 +1,17 @@
 import { StyledShareGroup } from './ShareGroup.styled';
 import Spinner from '../../../components/Spinner/Spinner';
 import { ShareGroupProps } from '../../../interfaces';
-import { IoCopy } from 'react-icons/io5';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import QRCodeStyling from 'qr-code-styling';
 import logo from '../../../styles/logo/logoRounded.png';
 import MyButton from '../../../components/MyButton/MyButton';
 import { copyToClipboard } from '../../../helpers/copyToClipboars';
 import { useQueryClient } from '@tanstack/react-query';
 import { IoIosWarning } from 'react-icons/io';
-import ShimerPlaceholder from '../ShimerPlaceholder/ShimerPlaceholder';
+import { TbQrcodeOff } from 'react-icons/tb';
+import ShimmerPlaceholder from '../ShimmerPlaceholder/ShimmerPlaceholder';
 import config from '../../../config';
+import { useTimeLeft } from '@/hooks/useTimeLeft';
 
 export default function ShareGroup({
   groupName,
@@ -21,41 +22,18 @@ export default function ShareGroup({
   groupId,
   setInvitationCode,
   expires,
+  onCopied,
 }: ShareGroupProps) {
   const pageSize = 10;
   const queryClient = useQueryClient();
-  const [timeLeft, setTimeLeft] = useState('');
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const expiry = new Date(expires);
-      const diff = expiry.getTime() - now.getTime();
-      if (diff < 0) {
-        setTimeLeft('Expired');
-        clearInterval(interval);
-      } else {
-        // const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        // setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
-        if (isNaN(minutes) || isNaN(seconds)) {
-          setTimeLeft('NaN');
-        } else if (minutes === 0) {
-          setTimeLeft(`${seconds}s`);
-        } else {
-          setTimeLeft(`${minutes}m ${seconds}s`);
-        }
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [expires]);
+  const timeLeft = useTimeLeft(expires);
 
   useEffect(() => {
     if (invitationCode && qrRef.current) {
       const qrCode = new QRCodeStyling({
-        width: 250,
-        height: 250,
+        type: 'svg',
+        width: 520,
+        height: 520,
         data: `${config.clientUrl}/j/${invitationCode}`,
         dotsOptions: {
           color: '#000000',
@@ -71,7 +49,7 @@ export default function ShareGroup({
         image: logo,
         imageOptions: {
           crossOrigin: 'anonymous',
-          margin: 10,
+          margin: 20,
           imageSize: 0.4,
         },
       });
@@ -83,80 +61,89 @@ export default function ShareGroup({
         }
       };
     }
-  }, [invitationCode, isPending]);
+  }, [invitationCode, isPending, qrRef]);
+
+  const isExpired = timeLeft === 'Expired';
 
   return (
     <StyledShareGroup>
-      {invitationCode && !isPending ? (
-        <div>
-          {groupName.length > 0 ? (
-            <div className="promptMessage">
-              Scan this QR code with another device to join{' '}
-              <strong className="groupName">{groupName}</strong>
-            </div>
-          ) : (
-            <div className="promptMessage">
-              Scan this QR code with another device
-            </div>
-          )}
-          <div className="qrCodeContainer">
-            <div className="qrCode" ref={qrRef} />
+      <div className="shareScroll">
+        {isPending ? (
+          <div className="spinnerBox">
+            <Spinner />
           </div>
-        </div>
-      ) : isPending ? (
-        <div className="qrCodeContainer">
-          <Spinner />
-        </div>
-      ) : (
-        <div className="text">Invitation code does not exist</div>
-      )}
-      <div className="codentext">
-        {invitationCode && !isPending ? (
+        ) : invitationCode ? (
           <>
-            <div className="text">Alternatively, share this code:</div>
-            <div className="code">
-              <strong>{invitationCode}</strong>
-              <div
-                className="copy"
-                onClick={() =>
-                  copyToClipboard(invitationCode, `${config.clientUrl}/j/`)
+            <div className="promptMessage">
+              {groupName.length > 0 ? (
+                <>
+                  Scan this QR code with another device to join{' '}
+                  <span className="groupName">{groupName}</span>
+                </>
+              ) : (
+                'Scan this QR code with another device'
+              )}
+            </div>
+
+            <div className="qrCodeContainer">
+              <div className="qrCode" ref={qrRef} />
+            </div>
+
+            <div className="codeCard">
+              <div className="cardLabel">Or share this code</div>
+              <div className="code">{invitationCode}</div>
+              <div className={`expires${isExpired ? ' expired' : ''}`}>
+                {!timeLeft.length || timeLeft === 'NaN' ? (
+                  <ShimmerPlaceholder />
+                ) : isExpired ? (
+                  <>
+                    <IoIosWarning className="warning" /> Expired
+                  </>
+                ) : (
+                  <>Expires in {timeLeft}</>
+                )}
+              </div>
+              <MyButton
+                variant="secondary"
+                onClick={async () =>
+                  onCopied(
+                    await copyToClipboard(
+                      invitationCode,
+                      `${config.clientUrl}/j/`
+                    )
+                  )
                 }
               >
-                <IoCopy />
-              </div>
-            </div>
-            <div className="expires">
-              {!timeLeft.length || timeLeft === 'NaN' ? (
-                <ShimerPlaceholder />
-              ) : timeLeft && timeLeft === 'Expired' ? (
-                <span className="text">
-                  <IoIosWarning /> Expired
-                </span>
-              ) : timeLeft && timeLeft.length > 0 ? (
-                <span>Expires in: {timeLeft}</span>
-              ) : null}
+                Copy invite link
+              </MyButton>
             </div>
           </>
-        ) : null}
-        <div className="buttonContainer">
-          <MyButton
-            onClick={() =>
-              mutate(
-                { groupId: groupId },
-                {
-                  onSuccess: (code: string) => {
-                    queryClient.invalidateQueries({
-                      queryKey: ['getGroupJoinCodes', groupId, pageSize],
-                    });
-                    setInvitationCode(code);
-                  },
-                }
-              )
-            }
-          >
-            Generate New Code
-          </MyButton>
-        </div>
+        ) : (
+          <div className="emptyState">
+            <div className="msg">This invitation code no longer exists.</div>
+            <TbQrcodeOff className="icon" />
+          </div>
+        )}
+      </div>
+
+      <div className="footer">
+        <MyButton
+          onClick={() =>
+            mutate(
+              { groupId: groupId },
+              {
+                onSuccess: (code: string) => {
+                  queryClient.invalidateQueries({
+                    queryKey: ['getGroupJoinCodes', groupId, pageSize],
+                  });
+                  setInvitationCode(code);
+                },
+              }
+            )
+          }
+        >
+          Generate new code
+        </MyButton>
       </div>
     </StyledShareGroup>
   );

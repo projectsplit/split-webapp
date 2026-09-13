@@ -5,23 +5,23 @@ const StyledScrollPicker = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-sizing: content-box;
   user-select: none;
-  border: 1px solid #222227;
-  border-radius: 5px;
+  border: 1px solid ${({ theme }) => theme.surface.hairline};
+  border-radius: ${({ theme }) => theme.radius.control};
   width: 100%;
   cursor: grab;
 
   .item {
-    box-sizing: inherit;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #77777b;
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s14};
+    color: ${({ theme }) => theme.ink.tertiary};
 
     &.selected {
-      color: ${({ theme }) => theme.whiteText};
-      background-color: ${({ theme }) => theme.highlightColor};
+      color: ${({ theme }) => theme.ink.primary};
+      background-color: ${({ theme }) => theme.surface.raised};
     }
   }
 `;

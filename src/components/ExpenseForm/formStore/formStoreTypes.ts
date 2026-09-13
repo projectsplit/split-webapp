@@ -47,15 +47,15 @@ export interface ExpenseState {
   payersCategory: Signal<SplitMethod>;
   makePersonalClicked: boolean;
   showPicker: boolean;
-  /** null means the expense is a one-off. */
   recurrenceSchedule: RecurrenceSchedule | null;
   showRecurrencePicker: boolean;
-  // ── Actions
 
   setAmount: (value: string) => void;
   setDescription: (value: string) => void;
   setCurrencySymbol: (value: string) => void;
   setExpenseTime: (value: string | ((prev: string) => string)) => void;
+  isTrackingNow: boolean;
+  setIsTrackingNow: (value: boolean) => void;
   setLabels: (labels: Label[]) => void;
   setLocation: (location: GeoLocation | undefined) => void;
 
@@ -104,7 +104,6 @@ export interface ExpenseState {
     userInfo: UserInfo;
     userMemberId?: string;
     isnonGroupExpense?: Signal<boolean>;
-    /** Seeded here rather than by a follow-up effect, so a re-initialize cannot clear it. */
     recurrenceSchedule?: RecurrenceSchedule | null;
   }) => void;
 
@@ -128,6 +127,7 @@ export interface ExpenseState {
   resetForm: () => void;
   submitExpense: (inputs: {
     groupId?: string;
+    timeZoneId: string;
     createExpenseMutation: (req: ExpenseRequest) => void;
     editExpenseMutation: (req: ExpenseRequest) => void;
     createRecurringExpenseMutation: (req: RecurringExpenseRequest) => void;

@@ -6,7 +6,7 @@ export default function RedirectToNonGroupExpenses() {
 
   useEffect(() => {
     navigate(`/shared/nongroup/expenses`);
-  }, []);
+  }, [navigate]);
 
   return null;
 }

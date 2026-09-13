@@ -1,3 +1,4 @@
+import { tokens } from '@/styles/tokens';
 import React from 'react';
 import {
   Chart as ChartJS,
@@ -57,7 +58,7 @@ export function BarChart({
 }: BarChartProps) {
   const cumulArrayData = getCumulativeShares(backendData);
 
-  const expenseDataPoints = deCumulArray(cumulArrayData); //getRandomNumbers(31, -500, 1000); // This is supposed to be the total amount spent per calendar day
+  const expenseDataPoints = deCumulArray(cumulArrayData);
 
   const allDaysInMonth = getAllDaysInMonth(
     selectedTimeCycleIndex.value + 1,
@@ -80,8 +81,6 @@ export function BarChart({
   };
 
   const labels = labelBuilder(selectedCycle.value);
-
-  //useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex,selectedYear.value);
 
   useStartAndEndDatesEffect(
     selectedCycle,
@@ -130,7 +129,7 @@ export function BarChart({
       {
         label: 'cumulative spending',
         data: expenseData,
-        backgroundColor: 'rgba(153, 30, 251, 0.5)',
+        backgroundColor: tokens.chart.spentBar,
         borderWidth: 2,
       },
     ],
@@ -138,11 +137,13 @@ export function BarChart({
 
   return (
     <StyledBarChart>
-      <Bar
-        options={options}
-        data={data}
-        plugins={[noData, ChartDataLabels, horizontalLine]}
-      />
+      <div className="chartArea">
+        <Bar
+          options={options}
+          data={data}
+          plugins={[noData, ChartDataLabels, horizontalLine]}
+        />
+      </div>
       <div className="periodOptions">
         <Carousel
           carouselItems={getCarouselItemsBasedOnCycle(

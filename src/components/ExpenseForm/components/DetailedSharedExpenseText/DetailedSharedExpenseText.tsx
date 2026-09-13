@@ -1,7 +1,6 @@
 import { StyledDetailedSharedExpenseText } from './DetailedSharedExpenseText.styled';
-import MemberPicker2 from '@/components/MemberPicker/MemberPicker2';
-import { TiGroup } from 'react-icons/ti';
-import { FaRegEdit } from 'react-icons/fa';
+import MemberPicker from '@/components/MemberPicker/MemberPicker';
+import IonIcon from '@reacticons/ionicons';
 
 import { DetailedSharedExpenseTextProps } from '@/interfaces';
 
@@ -35,25 +34,49 @@ export default function DetailedSharedExpenseText({
     !!amountNumber &&
     !isPersonal.value;
 
+  const group = fromHomeGroup?.value;
+  const canChangePeople = isCreateExpense && !!nonGroupMenu;
+
+  const otherNames = (nonGroupUsers?.value ?? [])
+    .filter((x) => x.userId !== userInfo.userId)
+    .map((x) => x.username);
+
+  const peopleLabel = group
+    ? group.name
+    : otherNames.length === 1
+      ? `You and ${otherNames[0]}`
+      : otherNames.length === 2
+        ? `You, ${otherNames[0]} and ${otherNames[1]}`
+        : `You and ${otherNames.length} others`;
+
+  const showPeople = !!group || otherNames.length > 0;
+
   return (
     <>
       {' '}
       {showDetailedSharedExpenseText ? (
         <StyledDetailedSharedExpenseText>
-          <div className="textStyleInfo">
-            {fromHomeGroup && fromHomeGroup.value ? (
-              <div className="definition">
-                <span className="labelStyle">
-                  <div className="info">
-                    {' '}
-                    <TiGroup />
-                    {fromHomeGroup.value.name}
-                  </div>
-                </span>
-                :
+          <div className="splitCard">
+            {showPeople ? (
+              <div
+                className={`peopleRow${canChangePeople ? '' : ' static'}`}
+                onClick={
+                  canChangePeople && nonGroupMenu
+                    ? () => (nonGroupMenu.value = 'nonGroupExpenseUsers')
+                    : undefined
+                }
+              >
+                <div className="rowLabel">People</div>
+                <div className="rowValue">{peopleLabel}</div>
+                {canChangePeople ? (
+                  <IonIcon
+                    name="chevron-forward-outline"
+                    className="rowChevron"
+                  />
+                ) : null}
               </div>
             ) : null}
-            <MemberPicker2
+            <MemberPicker
               isLoading={
                 isCreateExpense ? isPendingCreateExpense : isPendingEditExpense
               }
@@ -62,7 +85,6 @@ export default function DetailedSharedExpenseText({
               memberAmounts={adjustParticipants}
               error={participantsError}
               setMemberAmounts={setParticipants}
-              // group={group}
               selectedCurrency={currencySymbol}
               category={participantsCategory}
               userMemberId={userMemberId}
@@ -73,7 +95,7 @@ export default function DetailedSharedExpenseText({
               nonGroupUsers={nonGroupUsers}
               isCreateExpense={isCreateExpense}
             />
-            <MemberPicker2
+            <MemberPicker
               isLoading={
                 isCreateExpense ? isPendingCreateExpense : isPendingEditExpense
               }
@@ -82,7 +104,6 @@ export default function DetailedSharedExpenseText({
               memberAmounts={adjustPayers}
               error={payersError}
               setMemberAmounts={setPayers}
-              // group={group}
               selectedCurrency={currencySymbol}
               category={payersCategory}
               userMemberId={userMemberId}
@@ -93,14 +114,6 @@ export default function DetailedSharedExpenseText({
               nonGroupUsers={nonGroupUsers}
               isCreateExpense={isCreateExpense}
             />
-            {isCreateExpense && nonGroupMenu ? (
-              <div
-                className="editButton"
-                onClick={() => (nonGroupMenu.value = 'nonGroupExpenseUsers')}
-              >
-                <FaRegEdit />
-              </div>
-            ) : null}
           </div>
           <div className="errors">
             {' '}

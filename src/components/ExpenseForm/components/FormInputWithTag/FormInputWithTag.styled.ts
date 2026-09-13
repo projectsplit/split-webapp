@@ -3,64 +3,61 @@ import { styled } from 'styled-components';
 export const StyledFormInputWithTag = styled.div<{ $hasError?: boolean }>`
   display: flex;
   flex-direction: column;
+  gap: ${({ theme }) => theme.space.s6};
 
   .labelIconAndInputField {
     display: flex;
     flex-direction: row;
+    align-items: stretch;
+    gap: ${({ theme }) => theme.space.s10};
 
     &:focus-within {
-      .labelSelectorWrapper,
       .input-container {
         border-color: ${({ theme, $hasError }) =>
-          $hasError ? theme.errorColor : theme.highlightColor};
+          $hasError ? theme.direction.owe : theme.accent.you.ink};
       }
     }
 
     .labelSelectorWrapper {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 0 12px;
-      background-color: ${({ theme }) => theme.layer2};
-      border-top: 1px solid
-        ${({ theme, $hasError }) =>
-          $hasError ? theme.errorColor : theme.lineColor};
-      border-bottom: 1px solid
-        ${({ theme, $hasError }) =>
-          $hasError ? theme.errorColor : theme.lineColor};
-      border-right: 1px solid
-        ${({ theme, $hasError }) =>
-          $hasError ? theme.errorColor : theme.lineColor};
-      border-top-right-radius: 8px;
-      border-bottom-right-radius: 8px;
-      transition: border-color 0.15s;
+      flex-shrink: 0;
+    }
 
-      .labelSelector {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 0.5rem;
-        background-color: rgba(131, 130, 130, 0.2);
-        border-radius: 15px;
-        padding: 6px 14px;
-        cursor: pointer;
-        font-size: 14px;
-        white-space: nowrap;
-        height: fit-content;
-      }
+    .labelSelector {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: ${({ theme }) => theme.space.s8};
+      height: 100%;
+      padding: ${({ theme }) => `0 ${theme.space.s14}`};
+      background-color: ${({ theme }) => theme.surface.card};
+      border: 1px solid ${({ theme }) => theme.surface.hairline};
+      border-radius: ${({ theme }) => theme.radius.surface};
+      color: ${({ theme }) => theme.ink.secondary};
+      font-size: ${({ theme }) => theme.size.s13};
+      font-weight: ${({ theme }) => theme.weight.medium};
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .tagIcon {
+      display: block;
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.icon.xs};
     }
   }
 
   .meta {
     display: flex;
     justify-content: space-between;
-    padding: 0px 4px;
-    font-size: 12px;
-    background-color: ${({ theme }) => theme.backgroundcolor};
+    padding: ${({ theme }) => `0 ${theme.space.s4}`};
+    font-size: ${({ theme }) => theme.size.s12};
 
     .error {
-      color: ${({ theme }) => theme.errorColor};
-      font-weight: 400;
+      color: ${({ theme }) => theme.direction.owe};
+      font-weight: ${({ theme }) => theme.weight.regular};
     }
   }
 `;
@@ -68,34 +65,30 @@ export const StyledFormInputWithTag = styled.div<{ $hasError?: boolean }>`
 export const StyledInput = styled.div<{ $hasError?: boolean }>`
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex: 1;
+  min-width: 0;
 
   .input-container {
-    background-color: ${({ theme }) => theme.layer2};
-    border-top: 1px solid
+    box-sizing: border-box;
+    padding: ${({ theme }) => `${theme.space.s14} ${theme.space.s16}`};
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid
       ${({ theme, $hasError }) =>
-        $hasError ? theme.errorColor : theme.lineColor};
-    border-bottom: 1px solid
-      ${({ theme, $hasError }) =>
-        $hasError ? theme.errorColor : theme.lineColor};
-    border-left: 1px solid
-      ${({ theme, $hasError }) =>
-        $hasError ? theme.errorColor : theme.lineColor};
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-    padding: 0.5em 1em;
+        $hasError ? theme.direction.owe : theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
     transition: border-color 0.15s;
-    padding: 0.8rem;
+
     input {
       border: none;
       background: transparent;
       color: inherit;
-      font: inherit;
+      font-family: inherit;
+      font-size: ${({ theme }) => theme.size.s15};
       width: 100%;
       outline: none;
 
       &::placeholder {
-        color: ${({ theme }) => theme.secondaryTextColor};
+        color: ${({ theme }) => theme.ink.tertiary};
         opacity: 1;
       }
     }

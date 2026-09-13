@@ -3,8 +3,8 @@ import styled from 'styled-components';
 export const ToggleLabel = styled.label`
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 52px;
+  height: 30px;
   flex-shrink: 0;
 `;
 
@@ -15,11 +15,12 @@ export const Checkbox = styled.input.attrs({ type: 'checkbox' })`
   margin: 0;
 
   &:checked + span {
-    background-color: ${({ theme }) => theme.green};
+    background-color: ${({ theme }) => theme.direction.owed};
   }
 
   &:checked + span:before {
-    transform: translateX(26px);
+    background-color: ${({ theme }) => theme.ink.primary};
+    transform: translateX(22px);
   }
 `;
 
@@ -30,20 +31,19 @@ export const Slider = styled.span`
   left: 0;
   right: 0;
   bottom: 0;
-
   transition: 0.4s;
-  border-radius: 34px;
-  background-color: ${({ theme }) => theme.redish};
+  border-radius: ${({ theme }) => theme.radius.pill};
+  background-color: ${({ theme }) => theme.surface.dot};
 
   &:before {
     position: absolute;
     content: '';
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: #fff;
+    height: 24px;
+    width: 24px;
+    left: 3px;
+    bottom: 3px;
+    background-color: ${({ theme }) => theme.ink.secondary};
     transition: 0.4s;
-    border-radius: 50%;
+    border-radius: ${({ theme }) => theme.radius.pill};
   }
 `;

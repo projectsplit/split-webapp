@@ -4,7 +4,7 @@ import { Signal } from '@preact/signals-react';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { ExpenseParsedFilters, TransferParsedFilters } from '../../../types';
-import { appendNonGroupFilterToParams } from '../helpers/appendNonGroupFilterToParams';
+import { appendFilterToParams } from '../helpers/appendFilterToParams';
 
 const useNonGroupDebts = (
   mode: Mode,
@@ -41,7 +41,7 @@ const getNonGroupDebts = async (
     ...base
   } = parsedFilters;
 
-  const params = appendNonGroupFilterToParams(base, {
+  const params = appendFilterToParams(base, {
     arrayMappings: [
       { key: 'participantIds', values: participantsIds },
       { key: 'payerIds', values: payersIds },

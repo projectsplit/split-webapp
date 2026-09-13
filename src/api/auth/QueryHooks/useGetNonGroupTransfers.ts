@@ -6,7 +6,7 @@ import {
 import { apiClient } from '../../apiClients';
 import { AxiosResponse } from 'axios';
 import { Signal } from '@preact/signals-react';
-import { appendNonGroupFilterToParams } from '../helpers/appendNonGroupFilterToParams';
+import { appendFilterToParams } from '../helpers/appendFilterToParams';
 
 const useGetNonGroupTransfers = (
   transferParsedFilters: Signal<TransferParsedFilters>,
@@ -40,7 +40,7 @@ const getNonGroupTransfers = async (
 ): Promise<GetGroupTransfersResponse> => {
   const { sendersIds = [], receiversIds = [], ...base } = parsedFilters;
 
-  const params = appendNonGroupFilterToParams(base, {
+  const params = appendFilterToParams(base, {
     pageSize,
     next,
     arrayMappings: [

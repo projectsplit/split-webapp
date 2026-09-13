@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyledSpendingCycleInfo } from './SpendingCycleInfo.styled';
+import { StyledInfoDialog } from '../InfoDialog.styled';
 import { SpendingCycleInfoProps } from '../../../interfaces';
 import IonIcon from '@reacticons/ionicons';
 
 export default function SpendingCycleInfo({ menu }: SpendingCycleInfoProps) {
   return (
-    <StyledSpendingCycleInfo>
+    <StyledInfoDialog>
       <div className="header">
         <div className="info">
           <IonIcon name="information-circle-outline" className="infoLogo" />
@@ -46,6 +46,6 @@ export default function SpendingCycleInfo({ menu }: SpendingCycleInfoProps) {
           of the next month.
         </span>
       </div>
-    </StyledSpendingCycleInfo>
+    </StyledInfoDialog>
   );
 }

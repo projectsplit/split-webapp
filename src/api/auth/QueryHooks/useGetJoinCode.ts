@@ -6,6 +6,7 @@ export const useGetJoinCode = (code: string) => {
   return useQuery<any, Error, GetJoinCodeResponse>({
     queryKey: ['joinCode', code],
     queryFn: () => getJoinCode(code),
+    enabled: !!code,
   });
 };
 

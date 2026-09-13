@@ -1,6 +1,5 @@
 export const roundThousandsAndMillions = (value: number | undefined) => {
   if (value !== undefined) {
-    // const value = parseFloat(x)
     if (value < 0) value = -value;
 
     if (value >= 1000000) {

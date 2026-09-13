@@ -13,33 +13,32 @@ export const FiltersAndBarsSkeleton = ({
 
   return (
     <StyledFiltersAndBarsSkeleton>
-
-
       <div className="barsShimmer">
-        {showGroupBars && (
-          <div className="legendsShimmer">
-            <div className="groupingShimmer">
-              <Shimmer width="1rem" height="1rem" borderRadius="5px" />
-              <Shimmer width="70px" height="14px" borderRadius="4px" />
+        {showGroupBars ? (
+          <>
+            <div className="rowShimmer">
+              <Shimmer width="6px" height="6px" borderRadius="2px" />
+              <Shimmer width="64px" height="10px" borderRadius="3px" />
+              <Shimmer width="112px" height="16px" borderRadius="4px" />
             </div>
-            <div className="groupingShimmer">
-              <Shimmer width="1rem" height="1rem" borderRadius="5px" />
-              <Shimmer width="60px" height="14px" borderRadius="4px" />
+
+            <div className="bandShimmer">
+              <Shimmer height="5px" borderRadius="999px" />
             </div>
+
+            <div className="rowShimmer below">
+              <Shimmer width="6px" height="6px" borderRadius="2px" />
+              <Shimmer width="72px" height="10px" borderRadius="3px" />
+              <Shimmer width="96px" height="14px" borderRadius="4px" />
+            </div>
+          </>
+        ) : (
+          <div className="rowShimmer">
+            <Shimmer width="6px" height="6px" borderRadius="2px" />
+            <Shimmer width="44px" height="10px" borderRadius="3px" />
+            <Shimmer width="88px" height="16px" borderRadius="4px" />
           </div>
         )}
-
-        {showGroupBars && (
-          <div className="barRowShimmer">
-            <Shimmer width="60%" height="0.5rem" borderRadius="10px" />
-            <Shimmer width="60px" height="14px" borderRadius="4px" />
-          </div>
-        )}
-
-        <div className="barRowShimmer">
-          <Shimmer width="40%" height="0.5rem" borderRadius="10px" />
-          <Shimmer width="50px" height="14px" borderRadius="4px" />
-        </div>
       </div>
     </StyledFiltersAndBarsSkeleton>
   );

@@ -1,7 +1,7 @@
 import { Frequency } from '../../../types';
 import { formatDateIntoYMD } from './formatDateIntoYMD';
 import { getAllDaysInMonth } from '../../../helpers/monthlyDataHelpers';
-import { getWeekDates } from './weeklyDataHelpers';
+import { getWeekDates } from '@/helpers/weeklyDataHelpers';
 
 export const buildStartAndEndDates = (
   cycle: Frequency,

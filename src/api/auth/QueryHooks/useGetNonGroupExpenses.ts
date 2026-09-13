@@ -3,7 +3,7 @@ import { ExpenseParsedFilters, GetExpensesResponse } from '../../../types';
 import { apiClient } from '../../apiClients';
 import { AxiosResponse } from 'axios';
 import { Signal } from '@preact/signals-react';
-import { appendNonGroupFilterToParams } from '../helpers/appendNonGroupFilterToParams';
+import { appendFilterToParams } from '../helpers/appendFilterToParams';
 
 type PageParam = { next?: string; previous?: string };
 
@@ -57,7 +57,7 @@ const getNonGroupExpenses = async (
     ...base
   } = parsedFilters;
 
-  const params = appendNonGroupFilterToParams(base, {
+  const params = appendFilterToParams(base, {
     pageSize,
     next,
     previous,

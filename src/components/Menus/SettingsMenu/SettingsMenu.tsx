@@ -1,36 +1,30 @@
 import { useState } from 'react';
 import { StyledSettingsMenu } from './SettingsMenu.styled';
+import PropertyList, { PropertyRow } from '../../ListForms/PropertyList';
+import SectionLabel from '../../SectionLabel/SectionLabel';
+import { useGetRecurringExpenses } from '@/api/auth/QueryHooks/useGetRecurringExpenses';
 import { SettingsMenuProps } from '../../../interfaces';
-import {
-  IoClose,
-  IoInformationCircleOutline,
-  IoNotificationsOutline,
-} from 'react-icons/io5';
+import { IoClose } from 'react-icons/io5';
+import IonIcon from '@reacticons/ionicons';
+import MyButton from '../../MyButton/MyButton';
 import { StyledUserOptionsButton } from '../../UserOptionsButton/UserOptionsButton.styled';
 import { useNavigate } from 'react-router-dom';
-import { Currency } from '../../../types';
-import Separator from '../../Separator/Separator';
-import { TbLogout2 } from 'react-icons/tb';
 import packackageJson from '../../../../package.json';
-import { FaCoins } from 'react-icons/fa';
 import MenuAnimationBackground from '../../Animations/MenuAnimationBackground';
 import CurrencyOptionsAnimation from '../../Animations/CurrencyOptionsAnimation';
 import { useSignal } from '@preact/signals-react';
-import { currencyData } from '../../../helpers/openExchangeRates';
+import { getSymbolFromCurrency } from '../../../helpers/currency-symbol-map';
 import ToggleSwitch from '../../ToggleSwitch/ToggleSwitch';
 import { logOut } from '../../../api/auth/api';
 import routes from '../../../routes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSelectedCurrency } from '../../../api/auth/CommandHooks/useSelectedCurrency';
-import { RiTimeZoneLine } from 'react-icons/ri';
 import TimeZoneOptionsAnimation from '../../Animations/TimeZoneOptionsAnimation';
 import { useTimeZone } from '../../../api/auth/CommandHooks/useTimeZone';
 import { getInitials } from '../../../helpers/getInitials';
 import { timeZones } from '../../../helpers/timeZones';
 import EditUsernameAnimation from '../../Animations/EditUsernameAnimation';
 import EditEmailAnimation from '../../Animations/EditEmailAnimation';
-import { FaRepeat, FaUserPen } from 'react-icons/fa6';
-import { MdOutlineEmail } from 'react-icons/md';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
 import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPushNotificationsEnabled';
 import {
@@ -39,6 +33,7 @@ import {
   unsubscribeFromPush,
 } from '../../../helpers/pushNotifications';
 import Spinner from '../../Spinner/Spinner';
+import CurrencyFlag from '../../CurrencyFlag/CurrencyFlag';
 
 const pushFailureMessages: Record<PushSubscribeFailure, string> = {
   unsupported: 'This browser cannot receive push notifications.',
@@ -83,10 +78,11 @@ export default function SettingsMenu({
   const navigate = useNavigate();
 
   const logOutMutation = useMutation<any, Error, void>({
+    meta: { errorHandled: true },
     mutationFn: logOut,
     onSuccess: () => {
       localStorage.removeItem('accessToken');
-      localStorage.removeItem('submittedFromHomePersistData');
+      sessionStorage.removeItem('submittedFromHomePersistData');
       queryClient.invalidateQueries();
       queryClient.removeQueries();
       navigate(routes.AUTH);
@@ -97,9 +93,6 @@ export default function SettingsMenu({
   });
 
   const handleLogout = async () => {
-    // Detach this device before the session goes away: the call needs the current token, and a row
-    // left behind stays bound to this account while the browser passes to whoever signs in next,
-    // delivering this account's notifications to them. Never block logout if it fails.
     try {
       await unsubscribeFromPush();
     } catch (error) {
@@ -112,11 +105,6 @@ export default function SettingsMenu({
 
   const {mutateAsync:setShowBudgetInfo} = useSetShowBudgetInfo();
 
-  const allCurrencies = useSignal<Currency[]>(currencyData);
-
-  const selectedCurrency = allCurrencies.value.find(
-    (c) => c.symbol === userCurrency
-  );
   const selectedTimeZone = allTimeZones.find((t: string) => t === timeZone);
 
   const handleToggle = () => {
@@ -127,6 +115,9 @@ export default function SettingsMenu({
     useSetPushNotificationsEnabled();
 
   const [pushError, setPushError] = useState<string | null>(null);
+
+  const { data: recurringData } = useGetRecurringExpenses();
+  const recurringCount = recurringData?.recurringExpenses?.length ?? 0;
 
   const handlePushToggle = () => {
     setPushError(null);
@@ -143,122 +134,136 @@ export default function SettingsMenu({
 
   return (
     <StyledSettingsMenu ref={nodeRef}>
-      {' '}
-      <div className="headerWrapper">
-        <div className="header">
-          <StyledUserOptionsButton>
-            {getInitials(userInfo?.username)}
-          </StyledUserOptionsButton>
-          <div className="name">{userInfo?.username}</div>
-          <div
-            className="closeButtonContainer"
-            onClick={() => (menu.value = null)}
-          >
-            <IoClose className="closeButton" />
-          </div>
+      <div className="header">
+        <StyledUserOptionsButton onClick={() => (menu.value = null)}>
+          {getInitials(userInfo?.username)}
+        </StyledUserOptionsButton>
+        <div className="name">{userInfo?.username}</div>
+        <div
+          className="closeButtonContainer"
+          onClick={() => (menu.value = null)}
+        >
+          <IoClose className="closeButton" />
         </div>
-        <Separator />
       </div>
+
       <div className="optionsContainer">
-        <div
-          className="option"
-          onClick={() => (currencyMenu.value = 'currencyOptions')}
-        >
-          <div className={selectedCurrency?.flagClass} />
-          <div className="description">Preferred Currency</div>
-        </div>
-        <div
-          className="option"
-          onClick={() => (timeZoneMenu.value = 'timeZones')}
-        >
-          <RiTimeZoneLine className="icon" />
-          <div className="description">TimeZone ({selectedTimeZone})</div>
-        </div>
-
-        {/* <div className="toggleOption">
-          <FaCoins />
-          <div className="description">Single currency display</div>
-          <ToggleSwitch isOn={isOn} onToggle={handleToggle} />
-        </div> */}
-
-        <div className="toggleOption">
-          <IoInformationCircleOutline className="icon" />
-          <div className="description">Show budget info</div>
-          <ToggleSwitch isOn={userInfo?.showBudgetInfo} onToggle={handleToggle} />
-        </div>
-
-        {/* Hidden rather than disabled where the browser has no push support at all —
-            an inert switch reads as a bug. */}
-        {isPushSupported() && (
-          <>
-            <div className="toggleOption">
-              <IoNotificationsOutline className="icon" />
-              <div className="description">Push notifications</div>
-              <ToggleSwitch
-                isOn={userInfo?.pushNotificationsEnabled}
-                onToggle={isPushPending ? () => {} : handlePushToggle}
-              />
-            </div>
-            {pushError && <div className="optionNote">{pushError}</div>}
-          </>
-        )}
-
-        {/* Always listed. Hiding it when there is nothing to manage made the entry appear and
-            disappear as a side effect of unrelated actions, and left no way in to a list that is
-            about to have something in it. The page states when it is empty instead. */}
-        <div
-          className="option"
-          onClick={() => {
-            menu.value = null;
-            navigate('/recurring-expenses');
-          }}
-        >
-          <FaRepeat className="icon" />
-          <div className="description">Manage recurring expenses</div>
-        </div>
-
-        <div
-          className="option"
-          onClick={() => (editUsernameMenu.value = 'editUsername')}
-        >
-          <FaUserPen className="icon" />
-          <div className="description">Change username</div>
-        </div>
-
-        <div
-          className="option"
-          onClick={() => (editEmailMenu.value = 'editEmail')}
-        >
-          <MdOutlineEmail className="icon" />
-          <div className="description emailDescription">
-            <span>Email</span>
-            {/* Only while there is genuinely nothing to show. Keying this off any in-flight
-                getMe made the status blink to a spinner on every background refetch — the 60s
-                poll, and every unrelated setting that invalidates the query, the push toggle
-                included. */}
-            {!userInfo ? (
-              <Spinner fontSize="1rem" />
-            ) : (
-              <span>
-                {userInfo.email
-                  ? userInfo.emailVerified
-                    ? '(Verified)'
-                    : '(Unverified)'
-                  : '(Not set)'}
+        <div className="section">
+          <SectionLabel title="Account" />
+          <PropertyList>
+            <PropertyRow
+              label="Username"
+              onClick={() => (editUsernameMenu.value = 'editUsername')}
+            >
+              <span className="rowValue">
+                <span className="rowText">{userInfo?.username}</span>
+                <IonIcon name="chevron-forward-outline" className="rowChevron" />
               </span>
-            )}
-          </div>
+            </PropertyRow>
+            <PropertyRow
+              label="Email"
+              onClick={() => (editEmailMenu.value = 'editEmail')}
+            >
+              <span className="rowValue">
+                <span className="rowText">{userInfo?.email ?? 'Not set'}</span>
+                <IonIcon name="chevron-forward-outline" className="rowChevron" />
+              </span>
+            </PropertyRow>
+            <PropertyRow label="Verification">
+              {!userInfo ? (
+                <Spinner fontSize="1rem" />
+              ) : (
+                <span
+                  className={`status ${
+                    userInfo.email && userInfo.emailVerified ? 'ok' : 'pending'
+                  }`}
+                >
+                  {userInfo.email && userInfo.emailVerified ? (
+                    <IonIcon name="checkmark-outline" />
+                  ) : null}
+                  {userInfo.email
+                    ? userInfo.emailVerified
+                      ? 'Verified'
+                      : 'Unverified'
+                    : 'Not set'}
+                </span>
+              )}
+            </PropertyRow>
+          </PropertyList>
         </div>
 
-        <div className="option" onClick={handleLogout}>
-          <TbLogout2 className="icon" />
-          <div className="description">Log out</div>
+        <div className="section">
+          <SectionLabel title="Preferences" />
+          <PropertyList>
+            <PropertyRow
+              label="Preferred currency"
+              onClick={() => (currencyMenu.value = 'currencyOptions')}
+            >
+              <span className="rowValue">
+                <CurrencyFlag code={userCurrency} />
+                <span className="rowText mono">
+                  {userCurrency} {getSymbolFromCurrency(userCurrency ?? '')}
+                </span>
+                <IonIcon name="chevron-forward-outline" className="rowChevron" />
+              </span>
+            </PropertyRow>
+            <PropertyRow
+              label="Time zone"
+              onClick={() => (timeZoneMenu.value = 'timeZones')}
+            >
+              <span className="rowValue">
+                <span className="rowText">{selectedTimeZone}</span>
+                <IonIcon name="chevron-forward-outline" className="rowChevron" />
+              </span>
+            </PropertyRow>
+            <PropertyRow className="toggleRow" label="Show budget info">
+              <ToggleSwitch
+                isOn={userInfo?.showBudgetInfo}
+                onToggle={handleToggle}
+              />
+            </PropertyRow>
+            {isPushSupported() ? (
+              <PropertyRow className="toggleRow" label="Push notifications">
+                <ToggleSwitch
+                  isOn={userInfo?.pushNotificationsEnabled}
+                  onToggle={isPushPending ? () => {} : handlePushToggle}
+                />
+              </PropertyRow>
+            ) : null}
+          </PropertyList>
+          {pushError ? <div className="optionNote">{pushError}</div> : null}
+        </div>
+
+        <div className="section">
+          <PropertyList>
+            <PropertyRow
+              action
+              label="Recurring expenses"
+              onClick={() => {
+                menu.value = null;
+                navigate('/recurring-expenses');
+              }}
+            >
+              <span className="rowValue">
+                <span className="rowCount">{recurringCount}</span>
+                <IonIcon name="chevron-forward-outline" className="rowChevron" />
+              </span>
+            </PropertyRow>
+          </PropertyList>
+        </div>
+
+        <div className="logOut">
+          <MyButton variant="secondary" fontSize="15" onClick={handleLogout}>
+            Log out
+          </MyButton>
+        </div>
+
+        <div className="info">
+          <div className="appName">Buqs</div>
+          <div className="version">{version}</div>
         </div>
       </div>
-      <div className="info">
-        <div className="appName">Buqs</div>
-        <div className="version">{version}</div>
-      </div>
+
       <MenuAnimationBackground menu={currencyMenu} />
       <MenuAnimationBackground menu={timeZoneMenu} />
       <MenuAnimationBackground menu={editUsernameMenu} />

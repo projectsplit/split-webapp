@@ -1,54 +1,107 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const StyledBudgetCarousel = styled.div``
-
-export const CarouselItemWrapper = styled.div`
-  background-color: ${({ theme }) => theme.layer2};
-  border: 1px solid ${({ theme }) => theme.layer2};
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 6px;
-  padding: 0.4rem;
-  height:120px;
+export const StyledBudgetCarousel = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
-  width: 100%;
-  font-size:14px;
-  cursor:pointer;
-   .closeButton {
-      position: absolute;
-      top: 0rem;
-      right: 0rem;
-      font-size: 30px;
-      color: #6f6f6f;
-      display: inline-block;
-      cursor: pointer;
-      &:hover {
-        color: ${({ theme }) => theme.whiteText};
-      }
-    }
-`;
+  gap: ${({ theme }) => theme.space.s10};
 
-export const DotsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 10px;
-`;
+  .budgetHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+  }
 
-export const Dot = styled.div<{ $active: boolean }>`
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: ${({ theme, $active }) =>
-    $active ? theme.whiteText : theme.layer2};
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  border: 1px solid ${({ theme }) => theme.layer2};
+  .budgetLabel {
+    font-size: ${({ theme }) => theme.size.s11};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
 
-  &:hover {
-    background-color: ${({ theme, $active }) =>
-      $active ? theme.whiteText : '#6f6f6f'};
+  .budgetAside {
+    font-size: ${({ theme }) => theme.size.s11};
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
+
+  .budgetCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.space.s12};
+    padding: ${({ theme }) => theme.space.s16};
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
+    cursor: pointer;
+  }
+
+  .budgetFigures {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: ${({ theme }) => theme.space.s12};
+  }
+
+  .budgetSpent {
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.figure.card};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    letter-spacing: -0.02em;
+    color: ${({ theme }) => theme.accent.you.ink};
+  }
+
+  .budgetCap {
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s13};
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  .budgetTrack {
+    position: relative;
+    height: ${({ theme }) => theme.space.s8};
+    border-radius: ${({ theme }) => theme.radius.pill};
+    background-color: ${({ theme }) => theme.surface.raised};
+    overflow: hidden;
+    display: flex;
+  }
+
+  .budgetFill {
+    height: 100%;
+    border-radius: ${({ theme }) => theme.radius.pill};
+    background-color: ${({ theme }) => theme.accent.you.fill};
+    transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .budgetMarker {
+    position: absolute;
+    top: -3px;
+    width: 1px;
+    height: 14px;
+    background-color: ${({ theme }) => theme.ink.tertiary};
+  }
+
+  .budgetCaptions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-size: ${({ theme }) => theme.size.s11};
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  .budgetClose {
+    position: absolute;
+    top: ${({ theme }) => theme.space.s6};
+    right: ${({ theme }) => theme.space.s6};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: ${({ theme }) => theme.surface.mark};
+    cursor: pointer;
   }
 `;

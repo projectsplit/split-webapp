@@ -3,38 +3,32 @@ import styled from 'styled-components';
 export const StyledFiltersAndBarsSkeleton = styled.div`
   display: flex;
   flex-direction: column;
-
-  .pillsShimmer {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    overflow: hidden;
-  }
+  padding-top: ${({ theme }) => theme.space.s12};
 
   .barsShimmer {
-    padding: 0.7rem;
     display: flex;
     flex-direction: column;
-
-    .legendsShimmer {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-
-      .groupingShimmer {
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-        align-items: center;
-      }
-    }
-
-    .barRowShimmer {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 10px;
-    }
+    gap: ${({ theme }) => theme.space.s4};
+    padding: ${({ theme }) => `${theme.space.s10} ${theme.space.s20}`};
   }
+
+  .rowShimmer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s6};
+    height: 21px;
+  }
+
+  .rowShimmer.below {
+    justify-content: flex-end;
+    height: 18.5px;
+  }
+
+  .bandShimmer {
+    display: flex;
+    align-items: center;
+    height: 11px;
+  }
+
 `;

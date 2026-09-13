@@ -35,12 +35,10 @@ export function useTotalUserBalance(userId: string): UseTotalUserBalanceResult {
 
     const result: Details = {};
 
-    // Add non-group → group amounts
     for (const [currency, amount] of Object.entries(nonGroupBalances)) {
       result[currency] = (result[currency] ?? 0) + amount;
     }
 
-    // Add group amounts (preserving already added non-group values)
     for (const [currency, amount] of Object.entries(groupBalances)) {
       result[currency] = (result[currency] ?? 0) + amount;
     }

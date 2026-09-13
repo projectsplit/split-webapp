@@ -31,13 +31,13 @@ import { OnChangePlugin } from '../../../lexicalPlugins/OnChangePlugin';
 import { ClearEditorPlugin } from '../../../lexicalPlugins/LexicalClearEditorPlugin';
 import { EditorContentHandle, LexicalEditorProps } from '../../../interfaces';
 import { updateFiltersMentions } from '../helpers/updateFiltersMentions';
+import { appendSpaceAfterMention } from '../helpers/appendSpaceAfterMention';
 
 export const EditorContent = forwardRef<
   EditorContentHandle,
   LexicalEditorProps
 >((props, ref) => {
   const {
-    // contentEditableHeight,
     enhancedPeopleWithProps,
     submitButtonIsActive,
     expenseFilterState,
@@ -68,6 +68,22 @@ export const EditorContent = forwardRef<
   const removedFilter = useSignal<boolean>(false);
   const datePeriodClicked = useSignal<string>('');
   const showFreeTextPill = useSignal<boolean>(true);
+  const peopleForCategory = useMemo(
+    () =>
+      enhancedPeopleWithProps.filter((person) =>
+        (category.value === 'transfers'
+          ? ['sender', 'receiver']
+          : ['participant', 'payer']
+        ).includes(person.prop)
+      ),
+    [enhancedPeopleWithProps, category.value]
+  );
+
+  const labelsForCategory = useMemo(
+    () => (category.value === 'transfers' ? [] : labels),
+    [labels, category.value]
+  );
+
   const mentionItems = useMemo(() => {
     const items: Record<string, BeautifulMentionsItem[]> = {
       'payer:': [],
@@ -135,14 +151,14 @@ export const EditorContent = forwardRef<
             setEditorState,
             showOptions,
             setFilteredResults,
-            enhancedPeopleWithProps,
+            peopleForCategory,
             submitButtonIsActive,
             removedFilter,
             setEditorStateString,
             setIsEmpty,
             calendarIsOpen,
             datePeriodClicked,
-            labels,
+            labelsForCategory,
             searchKeyword
           )
         }
@@ -155,6 +171,7 @@ export const EditorContent = forwardRef<
         menuItemComponent={MenuItem}
         onMenuItemSelect={() => {
           showOptions.value = true;
+          queueMicrotask(() => appendSpaceAfterMention(editor));
         }}
         insertOnBlur={false}
         menuItemLimit={false}
@@ -189,7 +206,6 @@ export const EditorContent = forwardRef<
           editorStateString={editorStateString}
           filteredResults={filteredResults}
           setFilteredResults={setFilteredResults}
-          submitButtonIsActive={submitButtonIsActive}
         />
       )}
       <AutoFocusPlugin />

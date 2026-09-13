@@ -1,6 +1,7 @@
 import { BeautifulMentionsTheme } from 'lexical-beautiful-mentions';
 import { HeadingNode } from '@lexical/rich-text';
-import { BeautifulMentionNode } from 'lexical-beautiful-mentions';
+import { createBeautifulMentionNode } from 'lexical-beautiful-mentions';
+import { FilterMention } from '../FilterMention/FilterMention';
 
 const beautifulMentionsTheme: BeautifulMentionsTheme = {
   'payer:': {
@@ -68,5 +69,5 @@ export const initialConfig = {
   namespace: 'MyEditor',
   theme,
   onError,
-  nodes: [HeadingNode, BeautifulMentionNode],
+  nodes: [HeadingNode, ...createBeautifulMentionNode(FilterMention)],
 };

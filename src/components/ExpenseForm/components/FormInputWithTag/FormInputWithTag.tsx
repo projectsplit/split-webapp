@@ -1,25 +1,11 @@
-import { forwardRef, useRef } from 'react';
+import { forwardRef } from 'react';
+import { caretToEndOnFocus } from '@/helpers/caretToEndOnFocus';
 import { StyledFormInputWithTag, StyledInput } from './FormInputWithTag.styled';
 import { FaTags } from 'react-icons/fa';
 import { Signal } from '@preact/signals-react';
 
-const FormInput = forwardRef<HTMLInputElement, InputProps>(
+const FormInputWithTag = forwardRef<HTMLInputElement, InputProps>(
   ({ description, labelMenuIsOpen, error, ...props }, ref) => {
-    const inputRef = useRef<HTMLInputElement>();
-
-    if (ref && typeof ref === 'object' && ref.current) {
-      inputRef.current = ref.current;
-    }
-
-    const handleFocus = () => {
-      if (ref && typeof ref === 'object' && ref.current) {
-        setTimeout(() => {
-          const length = ref.current?.value.length || 0;
-          ref.current?.setSelectionRange(length, length);
-        }, 0);
-      }
-    };
-
     return (
       <StyledFormInputWithTag $hasError={!!error}>
         <div className="labelIconAndInputField">
@@ -29,7 +15,7 @@ const FormInput = forwardRef<HTMLInputElement, InputProps>(
                 className="input"
                 {...props}
                 ref={ref}
-                onFocus={handleFocus}
+                onFocus={caretToEndOnFocus(ref)}
                 defaultValue={props.defaultValue}
               />
             </div>
@@ -52,7 +38,7 @@ const FormInput = forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-export default FormInput;
+export default FormInputWithTag;
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   description?: string;

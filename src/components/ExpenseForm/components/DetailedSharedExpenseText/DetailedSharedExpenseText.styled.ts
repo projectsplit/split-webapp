@@ -3,57 +3,78 @@ import styled from 'styled-components';
 export const StyledDetailedSharedExpenseText = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  .textStyleInfo {
-    text-align: center;
+  gap: ${({ theme }) => theme.space.s6};
+
+  .splitCard {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 5px;
-    justify-content: center;
-    /* @media (max-width: 400px) {
-      flex-direction: column;
-      align-items: center;
-    } */
-    .editButton {
-      display: flex;
-      align-self: center;
-      font-size: 25px;
-      margin-left: 20px;
-      cursor: pointer;
+    flex-direction: column;
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
+    overflow: hidden;
+
+    > * {
+      position: relative;
+      flex-shrink: 0;
     }
-    .definition {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 5px;
-      .labelStyle {
-        background-color: #696e80;
-        color: white;
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        border-radius: 5px;
-        padding: 2px 8px;
-        font-size: 14px;
-        font-weight: 700;
-        .info {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          gap: 5px;
-        }
-      }
+
+    > * + *::before {
+      content: '';
+      position: absolute;
+      left: ${({ theme }) => theme.space.s14};
+      right: 0;
+      top: 0;
+      height: 1px;
+      background-color: ${({ theme }) => theme.surface.raisedHigh};
     }
   }
+
+  .peopleRow {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s12};
+    min-height: 48px;
+    padding: ${({ theme }) => `0 ${theme.space.s14}`};
+    cursor: pointer;
+
+    &.static {
+      cursor: default;
+    }
+
+    .rowLabel {
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.size.s14};
+      color: ${({ theme }) => theme.ink.secondary};
+    }
+
+    .rowValue {
+      flex: 1;
+      min-width: 0;
+      text-align: right;
+      font-size: ${({ theme }) => theme.size.s14};
+      font-weight: ${({ theme }) => theme.weight.medium};
+      color: ${({ theme }) => theme.ink.primary};
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rowChevron {
+      display: flex;
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.icon.sm};
+      color: ${({ theme }) => theme.surface.mark};
+    }
+  }
+
   .errors {
     .errorMsg {
-      display: flex;
-      justify-content: center;
+      padding: ${({ theme }) => `0 ${theme.space.s2}`};
       word-wrap: break-word;
-      font-size: 12px;
-      color: ${({ theme }) => theme.errorColor};
-      font-weight: 400;
+      font-size: ${({ theme }) => theme.size.s12};
+      color: ${({ theme }) => theme.direction.owe};
     }
   }
 `;

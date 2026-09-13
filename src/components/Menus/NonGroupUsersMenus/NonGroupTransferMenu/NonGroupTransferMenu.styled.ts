@@ -1,150 +1,98 @@
 import styled from 'styled-components';
+import { StyledFullScreenMenu } from '../../Layouts/FullScreenMenu/FullScreenMenu.styled';
 
-export const StyledNonGroupTransferUsersMenu = styled.div`
-  position: fixed;
-  color: ${({ theme }) => theme.textActiveColor};
-  background-color: ${({ theme }) => theme.layer2};
-  width: 100%;
-  height: 100dvh;
-  left: 0;
-  right: 0;
-  margin: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  top: 0;
-  /* .scrollable-content is the scroller. Letting this element scroll too nests two scrollers of
-     the same height, so a flick hands off between them mid-gesture and the list stutters. */
-  overflow: hidden;
-
-  .fixedHeader {
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    background-color: ${({ theme }) => theme.layer2};
-
-    .header {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-      padding: 12px 16px;
-
-      .closeButtonContainer {
-        position: relative;
-        cursor: pointer;
-        display: inline-block;
-      }
-
-      .backButton {
-        cursor: pointer;
-        display: block;
-        font-size: 1.875rem;
-      }
-
-      .closeButtonContainer:hover::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 50%;
-        background-color: rgba(128, 128, 128, 0.3);
-        pointer-events: none;
-      }
-
-      .title {
-        font-weight: 600;
-      }
-      .gap {
-        margin-right: 0.9375rem;
-      }
-    }
-  }
-
+export const StyledNonGroupTransferUsersMenu = styled(StyledFullScreenMenu)`
   .scrollable-content {
-    overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
-    flex: 1;
-    padding-bottom: 180px;
+    gap: ${({ theme }) => theme.space.s12};
+    padding: ${({ theme }) => `0 ${theme.space.s20} ${theme.space.s24}`};
 
-    .members {
-      display: flex;
-      flex-direction: column;
-      padding: 0.875rem;
-      font-size: 15px;
-
-      .memberWithButton {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 19px;
-      }
-    }
     .inputField {
       display: flex;
       flex-direction: row;
-      padding-left: 10px;
-      padding-right: 10px;
 
       .search-input {
         width: 100%;
         flex: 1;
-        font-size: 16px;
+        font-size: ${({ theme }) => theme.size.s15};
       }
+
       .main {
+        box-sizing: border-box;
         width: 100%;
-        transition: border-color 0.15s;
-        background-color: ${({ theme }) => theme.inputGrey};
         display: flex;
-        gap: 4px;
-        border-radius: 8px;
-        padding: 8px 16px;
         flex-wrap: wrap;
+        align-items: center;
+        gap: ${({ theme }) => theme.space.s6};
+        min-height: 47px;
+        padding: ${({ theme }) => `9px ${theme.space.s14}`};
+        background-color: ${({ theme }) => theme.surface.card};
+        border: 1px solid ${({ theme }) => theme.surface.hairline};
+        border-radius: ${({ theme }) => theme.radius.iconButton};
+        transition: border-color 0.15s;
         position: relative;
 
         .search-annotation {
           position: absolute;
           flex: 1;
-          color: grey;
+          font-size: ${({ theme }) => theme.size.s15};
+          color: ${({ theme }) => theme.ink.tertiary};
           cursor: text;
         }
+
         .selected-label {
-          color: #000000a2;
           display: flex;
-          gap: 8px;
           align-items: center;
-          border-radius: 5px;
-          padding: 2px 8px;
+          gap: ${({ theme }) => theme.space.s6};
+          padding: ${({ theme }) => `5px ${theme.space.s10}`};
+          border-radius: ${({ theme }) => theme.radius.pill};
+          font-size: ${({ theme }) => theme.size.s12};
+          font-weight: ${({ theme }) => theme.weight.medium};
           cursor: pointer;
-          font-size: 14px;
-          font-weight: 700;
+
           .info {
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 5px;
+            gap: ${({ theme }) => theme.space.s6};
           }
         }
       }
     }
-    /* The strip that used to be .dropdown's top margin. It is always there, so the spinner it
-       holds during a search appears and leaves without moving the results underneath it. */
+
     .searchStatus {
       height: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 0.7;
+      font-size: ${({ theme }) => theme.size.s12};
+      color: ${({ theme }) => theme.ink.tertiary};
     }
 
     .dropdown {
+      display: flex;
+      flex-direction: column;
+      background-color: ${({ theme }) => theme.surface.card};
+      border: 1px solid ${({ theme }) => theme.surface.hairline};
+      border-radius: ${({ theme }) => theme.radius.surface};
+      overflow: hidden;
+
+      > * {
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      > * + *::before {
+        content: '';
+        position: absolute;
+        left: 58px;
+        right: 0;
+        top: 0;
+        height: 1px;
+        background-color: ${({ theme }) => theme.surface.raisedHigh};
+      }
+
       .spinner {
         display: flex;
         justify-content: center;
@@ -153,26 +101,18 @@ export const StyledNonGroupTransferUsersMenu = styled.div`
   }
 
   .doneButton {
-    position: fixed;
-    bottom: 40px;
-    width: 100%;
+    flex-shrink: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
-    cursor: pointer;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 5;
-    padding: 16px;
-    display: flex;
-    justify-content: stretch;
-    cursor: pointer;
-    & > * {
-      flex: 1;
+    flex-direction: column;
+    padding: ${({ theme }) => `${theme.space.s14} ${theme.space.s20} 22px`};
+    background-color: ${({ theme }) => theme.surface.footer};
+    border-top: 1px solid ${({ theme }) => theme.surface.raisedHigh};
+
+    button {
+      width: 100%;
+      padding: ${({ theme }) => `${theme.space.s14} 0`};
+      border-radius: ${({ theme }) => theme.radius.iconButton};
+      font-size: ${({ theme }) => theme.size.s15};
     }
   }
 `;

@@ -1,138 +1,78 @@
-import { useTheme } from 'styled-components';
-import {
-  CarouselItemWrapper,
-  Dot,
-  DotsContainer,
-  StyledBudgetCarousel,
-} from './BudgetCarousel.styled';
-import { BudgetInfoResponse } from '@/types';
-import { BackAndForthAnimation } from '@/components/Animations/BackAndForthAnimation/BackAndForthAnimation';
-import { BudgetInfoMessage } from '@/components/BudgetMessages/BudgetInfoMessage';
-import { Bar } from '@/pages/Budget/ProgressBar/Bar/Bar';
-import { progressBarColor } from '@/pages/Budget/ProgressBar/utils/progressBarColor';
-import { useEffect, useState } from 'react';
+import React from 'react';
 import IonIcon from '@reacticons/ionicons';
 import { UseMutateAsyncFunction } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { BudgetInfoResponse, Frequency } from '@/types';
+import { displayMoneyFixed } from '@/helpers/displayCurrencyAndAmount';
+import { StyledBudgetCarousel } from './BudgetCarousel.styled';
+import { elapsedPercent, pct } from '@/helpers/budgetProgress';
 
 export const BudgetCarousel = ({
   activeBudgetData,
   setShowBudgetInfo,
   setShowButton,
   onClick,
-  timeZoneId,
 }: BudgetCarouselProps) => {
-  const theme = useTheme();
-  const [currentStep, setCurrentStep] = useState<number>(1);
-  const [animDirection, setAnimDirection] = useState<
-    'forward' | 'back' | 'none'
-  >('forward');
-  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const spent = parseFloat(activeBudgetData?.totalAmountSpent ?? '0') || 0;
+  const cap = parseFloat(activeBudgetData?.goal ?? '0') || 0;
+  const currency = activeBudgetData?.currency ?? '';
 
-  const handleAnimDirection = (targetStep: number) => {
-    if (targetStep === 1) {
-      setAnimDirection('back');
-    } else {
-      setAnimDirection('forward');
-    }
-  };
+  const capUsed = pct(spent, cap);
+  const cycleElapsed = elapsedPercent(
+    activeBudgetData?.startDate,
+    activeBudgetData?.endDate
+  );
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const nextStep = currentStep === 1 ? 2 : 1;
-      handleAnimDirection(nextStep);
-      setCurrentStep(nextStep);
-    }, 12000);
-    return () => clearInterval(interval);
-  }, [currentStep]);
+  const days = Math.max(
+    0,
+    Math.ceil(parseFloat(activeBudgetData?.remainingDays ?? '0') || 0)
+  );
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (!touchStart) return;
-    const touchEnd = e.changedTouches[0].clientX;
-    const distance = touchStart - touchEnd;
-
-    if (distance > 50) {
-      // Swipe left
-      if (currentStep === 1) {
-        setAnimDirection('forward');
-        setCurrentStep(2);
-      }
-    } else if (distance < -50) {
-      // Swipe right
-      if (currentStep === 2) {
-        setAnimDirection('back');
-        setCurrentStep(1);
-      }
-    }
-    setTouchStart(null);
-  };
-
-  const onDotClick = (step: number) => {
-    if (step === currentStep) return;
-    handleAnimDirection(step);
-    setCurrentStep(step);
-  };
+  const frequencyLabel =
+    activeBudgetData?.frequency !== undefined
+      ? Frequency[activeBudgetData.frequency]
+      : '';
 
   return (
-    <StyledBudgetCarousel onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-      <BackAndForthAnimation
-        firstChild={
-          <CarouselItemWrapper onClick={onClick}>
-            <div
-              className="closeButton"
-              onClick={(e: React.MouseEvent) => {
-                e.stopPropagation();
-                setShowBudgetInfo(false);
-                setShowButton(true);
-              }}
-            >
-              <IonIcon name="close-outline" className="close" />
-            </div>
-            {BudgetInfoMessage(
-              theme,
-              false,
-              activeBudgetData,
-              undefined,
-              undefined,
-              {
-                backgroundColor: 'transparent',
-                boxShadow: 'none',
-                border: 'none',
-                padding: 0,
-              },
-              timeZoneId
-            )}
-          </CarouselItemWrapper>
-        }
-        secondChild={
-          <CarouselItemWrapper onClick={onClick}>
-            <div
-              className="closeButton"
-              onClick={(e: React.MouseEvent) => {
-                e.stopPropagation();
-                setShowBudgetInfo(false);
-                setShowButton(true);
-              }}
-            >
-              <IonIcon name="close-outline" className="close" />
-            </div>
-            <Bar
-              color={progressBarColor(activeBudgetData, theme)}
-              data={activeBudgetData}
-            />
-          </CarouselItemWrapper>
-        }
-        currentStep={currentStep}
-        animDirection={animDirection}
-      />
-      <DotsContainer>
-        <Dot $active={currentStep === 1} onClick={() => onDotClick(1)} />
-        <Dot $active={currentStep === 2} onClick={() => onDotClick(2)} />
-      </DotsContainer>
+    <StyledBudgetCarousel>
+      <div className="budgetHeader">
+        <div className="budgetLabel">{frequencyLabel} budget</div>
+        <div className="budgetAside">
+          {days} {days === 1 ? 'day' : 'days'} left
+        </div>
+      </div>
+
+      <div className="budgetCard" onClick={onClick}>
+        <div
+          className="budgetClose"
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            setShowBudgetInfo(false);
+            setShowButton(true);
+          }}
+        >
+          <IonIcon name="close-outline" />
+        </div>
+
+        <div className="budgetFigures">
+          <div className="budgetSpent">
+            {displayMoneyFixed(spent.toString(), currency)}
+          </div>
+          <div className="budgetCap">
+            of {displayMoneyFixed(cap.toString(), currency)}
+          </div>
+        </div>
+
+        <div className="budgetTrack">
+          <div className="budgetFill" style={{ width: `${capUsed}%` }} />
+          <div className="budgetMarker" style={{ left: `${cycleElapsed}%` }} />
+        </div>
+
+        <div className="budgetCaptions">
+          <span>{Math.round(capUsed)}% of cap used</span>
+          <span>{Math.round(cycleElapsed)}% of cycle elapsed</span>
+        </div>
+      </div>
     </StyledBudgetCarousel>
   );
 };

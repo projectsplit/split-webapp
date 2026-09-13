@@ -1,4 +1,4 @@
-import { StyledSearchCategoryButton } from '../SearchCategoryButton.styled';
+import { StyledSearchFilterRow } from '../../SearchFilterRow.styled';
 import { SearchLabelButtonProps } from '../../../../interfaces';
 import LabelsPillsDisplay from './LabelsPillsDisplay/LabelsPillsDisplay';
 
@@ -13,7 +13,7 @@ export default function SearchLabelButton({
   isPersonal,
 }: SearchLabelButtonProps) {
   return (
-    <StyledSearchCategoryButton>
+    <StyledSearchFilterRow>
       <LabelsPillsDisplay
         category={category}
         filteredLabels={filteredLabels}
@@ -24,6 +24,6 @@ export default function SearchLabelButton({
         removedFilter={removedFilter}
         isPersonal={isPersonal}
       />
-    </StyledSearchCategoryButton>
+    </StyledSearchFilterRow>
   );
 }

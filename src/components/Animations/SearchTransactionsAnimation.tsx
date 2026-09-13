@@ -11,7 +11,6 @@ export default function SearchTransactionsAnimation({
   expenseParsedFilters,
   transferParsedFilters,
   isPersonal,
-  // nonGroupUsers
 }: SearchTransactionAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -30,7 +29,6 @@ export default function SearchTransactionsAnimation({
           expenseParsedFilters={expenseParsedFilters}
           transferParsedFilters={transferParsedFilters}
           isPersonal={isPersonal}
-          // nonGroupUsers={nonGroupUsers}
         />
       </div>
     </CSSTransition>

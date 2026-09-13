@@ -154,30 +154,28 @@ export default function CreateBudget() {
             handleBack();
           } else {
             actions.resetForm();
-            if (data.isEditMode) {
-              navigate('/budget/manage');
-            } else {
-              navigate('/budget/actions');
-            }
+            navigate('/budget/manage');
           }
         }}
       />
-      <BackAndForthAnimation
-        firstChild={
-          <FirstPage
-            data={data}
-            actions={actions}
-            menu={menu}
-            handleInputChangeCallback={handleInputChangeCallback}
-            timeZoneId={timeZoneId}
-          />
-        }
-        secondChild={
-          <SecondPage data={data} actions={actions} scopeMenu={scopeMenu} />
-        }
-        currentStep={data.currentStep}
-        animDirection={animDirection}
-      ></BackAndForthAnimation>
+      <div className="stepScroll">
+        <BackAndForthAnimation
+          firstChild={
+            <FirstPage
+              data={data}
+              actions={actions}
+              menu={menu}
+              handleInputChangeCallback={handleInputChangeCallback}
+              timeZoneId={timeZoneId}
+            />
+          }
+          secondChild={
+            <SecondPage data={data} actions={actions} scopeMenu={scopeMenu} />
+          }
+          currentStep={data.currentStep}
+          animDirection={animDirection}
+        ></BackAndForthAnimation>
+      </div>
       <div className="submitButton">
         <MyButton
           fontSize="16"

@@ -12,12 +12,6 @@ import {
   User,
 } from '../../../types';
 
-/**
- * Creates the schedule. No expense exists yet — the first one lands on the slot the user picked —
- * so this lands them on the recurring list rather than an expense list where nothing would have
- * changed. Expense caches are still invalidated: the scope is only known at submit time, and the
- * flag on getMe decides whether the settings entry appears at all.
- */
 export const useCreateRecurringExpense = (
   menu: Signal<string | null>,
   groupId: string | undefined,
@@ -39,6 +33,7 @@ export const useCreateRecurringExpense = (
     AxiosError,
     RecurringExpenseRequest
   >({
+    meta: { errorHandled: true },
     mutationFn: (recurringExpense) => createRecurringExpense(recurringExpense),
     onSuccess: async () => {
       menu.value = null;
@@ -59,8 +54,6 @@ export const useCreateRecurringExpense = (
           'shared',
           'mostRecentGroup',
           'cumulativeArray',
-          // Where the template itself surfaces: the manage screen, and getMe, whose flag decides
-          // whether the settings entry exists at all.
           'recurringExpenses',
           'getMe',
           ...(targetGroupId ? [targetGroupId] : []),
@@ -69,7 +62,6 @@ export const useCreateRecurringExpense = (
         )
       );
 
-      // Same hand-off the one-off create hooks use to repopulate the home form after a submit.
       if (fromHome || isnonGroupExpense?.value) {
         const data = {
           nonGroupUsers: nonGroupUsers.value,
@@ -82,7 +74,7 @@ export const useCreateRecurringExpense = (
           nonGroupUsers.value.length > 0 ||
           fromHomeGroup?.value
         ) {
-          localStorage.setItem(
+          sessionStorage.setItem(
             'submittedFromHomePersistData',
             JSON.stringify(data)
           );
@@ -90,7 +82,7 @@ export const useCreateRecurringExpense = (
       }
 
       if (makePersonalClicked) {
-        localStorage.removeItem('submittedFromHomePersistData');
+        sessionStorage.removeItem('submittedFromHomePersistData');
       }
     },
     onError: (error) => {

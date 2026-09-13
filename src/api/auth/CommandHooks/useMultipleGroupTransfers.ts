@@ -3,27 +3,32 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { apiClient } from '../../apiClients';
 import { CreateTransfersRequest } from '../../../types';
 import { Signal } from '@preact/signals-react';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
-export const useMultipleGroupTransfers = (menu: Signal<string | null>) => {
+export const useMultipleGroupTransfers = (
+  menu: Signal<string | null>,
+  onError?: (message: string) => void
+) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, CreateTransfersRequest>({
+    meta: { errorHandled: true },
     mutationFn: (transfers) => submitMultipleGroupTransfers(transfers),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['debts'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['groupTransfers'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'debts',
+        'groupTransfers',
+        'home',
+        'shared',
+      ]);
       menu.value = null;
+    },
+    onError: (err) => {
+      onError?.(
+        err.response?.data
+          ? String(err.response.data)
+          : 'Could not record the transfers. Please try again.'
+      );
     },
   });
 };
