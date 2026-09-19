@@ -3,6 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { apiClient } from '../../apiClients';
 import { Signal } from '@preact/signals-react';
 import { Group } from '../../../types';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useRemoveGuestFromGroup = (
   groupId: string | undefined,
@@ -12,6 +13,7 @@ export const useRemoveGuestFromGroup = (
   const queryClient = useQueryClient();
 
   return useMutation<void, AxiosError, string>({
+    meta: { errorHandled: true },
     mutationFn: (guestId) => {
       if (!groupId) {
         noGroupError.value = 'No group found';
@@ -39,14 +41,7 @@ export const useRemoveGuestFromGroup = (
         queryKey: ['debts', groupId],
         exact: false,
       });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, ['shared', 'mostRecentGroup']);
     },
     onError: (error) => {
       console.error('Failed to remove guest:', error.message);

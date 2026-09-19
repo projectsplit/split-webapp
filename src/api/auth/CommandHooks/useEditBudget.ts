@@ -13,6 +13,7 @@ export const useEditBudget = (
 
   return useMutation<any, any, EditBudgetRequest>({
     mutationKey: ['budgets', 'update'],
+    meta: { errorHandled: true },
     mutationFn: editBudget,
     onError: (error) => {
       const errorData = error.response?.data;

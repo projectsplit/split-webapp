@@ -5,13 +5,12 @@ import { GroupTotalsByCurrency } from '../../pages/TransactionsWrappers/GroupTot
 
 export default function GroupTotalsByCurrencyAnimation({
   menu,
-  bar1Color,
-  bar2Color,
   bar1Legend,
   bar2Legend,
   groupTotalsByCurrency,
   userTotalsByCurrency,
   mode,
+  relation,
 }: GroupTotalsByCurrencyAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -24,13 +23,12 @@ export default function GroupTotalsByCurrencyAnimation({
     >
       <GroupTotalsByCurrency
         menu={menu}
-        bar1Color={bar1Color}
-        bar2Color={bar2Color}
         bar1Legend={bar1Legend}
         bar2Legend={bar2Legend}
         groupTotalsByCurrency={groupTotalsByCurrency}
         userTotalsByCurrency={userTotalsByCurrency}
         mode={mode}
+        relation={relation}
       />
     </CSSTransition>
   );

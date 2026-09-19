@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { tokens } from '../../styles/tokens';
 import Expense from '../../components/Expense/Expense';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -31,12 +32,12 @@ import { NoExpensesFound } from './NoExpensesFound/NoExpensesFound';
 import { FiltersAndBars } from './FiltersAndBars/FiltersAndBars';
 import { useExpenseTotals } from './hooks/useExpenseTotals';
 import { useCenterToExpense } from './hooks/useCenterToExpense';
-import { hasActiveExpenseFilters } from '../../helpers/hasActiveExpenseFilters';
+import { hasActiveExpenseFilters } from '@/helpers/hasActiveExpenseFilters';
 import { useGetUserAndGroupsLabels } from '@/api/auth/QueryHooks/useGetUserAndGroupsLabels';
 import LongPressMenu from '../../components/LongPressMenu/LongPressMenu';
 import DeleteExpenseAnimation from '../../components/Animations/DeleteExpenseAnimation';
 import EditExpenseAnimation from '../../components/Animations/EditExpenseAnimation';
-import { buildFormExpense, toUser } from '../../components/DetailedExpense/utils';
+import { buildFormExpense, toUser } from '../../components/DetailedExpense/buildFormExpense';
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -63,7 +64,7 @@ const Expenses = () => {
   const pageSize = 10;
   const userMemberId = group?.members?.find(
     (m) => m.userId === userInfo?.userId
-  )?.id; //group specific
+  )?.id;
 
   const {
     data,
@@ -84,32 +85,36 @@ const Expenses = () => {
   );
   const { allUsers } = useGetAllNonGroupUsers(mode);
 
-  // Deduplicate expenses by id to avoid React key conflicts when pages overlap
-  const rawExpenses = data?.pages.flatMap((p) => p.expenses);
+  const expenses = useMemo(() => {
+    const rawExpenses = data?.pages.flatMap((p) => p.expenses);
+    return rawExpenses
+      ? Array.from(new Map(rawExpenses.map((e) => [e.id, e])).values())
+      : undefined;
+  }, [data]);
 
-  const expenses = rawExpenses
-    ? Array.from(new Map(rawExpenses.map((e) => [e.id, e])).values())
-    : undefined;
-
-  const allParticipants =
-    mode === Mode.Personal
-      ? []
-      : getAllExpenseParticipants(
-          expenses,
-          mode,
-          group?.members || [],
-          group?.guests || [],
-          allUsers.map((u) => ({
-            id: u.userId,
-            name: u.username,
-          }))
-        );
+  const allParticipants = useMemo(
+    () =>
+      mode === Mode.Personal
+        ? []
+        : getAllExpenseParticipants(
+            expenses,
+            mode,
+            group?.members || [],
+            group?.guests || [],
+            allUsers.map((u) => ({
+              id: u.userId,
+              name: u.username,
+            }))
+          ),
+    [expenses, mode, group?.members, group?.guests, allUsers]
+  );
 
   const {
     groupTotalsByCurrency,
     userTotalsByCurrency,
     totalFromAllExpensesConverted,
     totalFromUserExpensesConverted,
+    hasUserTotal,
     totalsAreFetching,
   } = useExpenseTotals(
     group,
@@ -127,7 +132,7 @@ const Expenses = () => {
     }
   }, [isFetching, isFetchingNextPage, showBottomBar]);
 
-  useCenterToExpense(
+  const highlightedId = useCenterToExpense(
     scrollAreaRef,
     isScrolled,
     expenses,
@@ -143,6 +148,25 @@ const Expenses = () => {
   useEffect(() => {
     menu.value = errorMessage.value ? 'error' : menu.value;
   }, [errorMessage.value, menu]);
+
+  const handleFetchPreviousPage = useCallback(() => {
+    fetchPreviousPage();
+  }, [fetchPreviousPage]);
+
+  const handleExpenseClick = useCallback(
+    (e: ExpenseResponseItem) => {
+      selectedExpense.value = e;
+    },
+    [selectedExpense]
+  );
+
+  const handleExpenseLongPress = useCallback(
+    (e: ExpenseResponseItem) => {
+      longPressExpense.value = e;
+      longPressMenu.value = 'options';
+    },
+    [longPressExpense, longPressMenu]
+  );
 
   if (isFetching && !isFetchingNextPage && !isFetchingPreviousPage) {
     return (
@@ -184,6 +208,7 @@ const Expenses = () => {
               totalsAreFetching={totalsAreFetching}
               totalExpense={totalFromAllExpensesConverted}
               userExpense={totalFromUserExpensesConverted}
+              hasUserTotal={hasUserTotal}
               currency={userInfo?.currency}
               fetchedUserAndGroupLabels={fetchedUserAndGroupLabels}
             />
@@ -200,7 +225,7 @@ const Expenses = () => {
         ) : (
           <>
             <Sentinel
-              fetchPage={() => fetchPreviousPage()}
+              fetchPage={handleFetchPreviousPage}
               hasMore={hasPreviousPage}
               isFetchingPage={isFetchingPreviousPage}
               id="sentinel-top"
@@ -211,21 +236,34 @@ const Expenses = () => {
             ).map(([date, items]) => (
               <div key={date} className="same-date-container">
                 <div className="date-only">{date}</div>
-                <div className="expenses">
+                <div className="rows">
                   {items.map((e) => (
-                    <div className="expense" key={e.id} id={`expense-${e.id}`}>
+                    <div
+                      className={`expense${e.id === highlightedId ? ' expense-highlight' : ''}`}
+                      key={e.id}
+                      id={`expense-${e.id}`}
+                    >
+                      {e.id === highlightedId ? (
+                        <svg className="jumpRing" aria-hidden="true">
+                          <rect
+                            width="100%"
+                            height="100%"
+                            rx="13"
+                            ry="13"
+                            pathLength="100"
+                          />
+                        </svg>
+                      ) : null}
                       <Expense
+                        expense={e}
                         amount={e.amount}
                         currency={e.currency}
                         occurred={e.occurred}
                         description={e.description}
                         location={e.location}
                         timeZoneId={timeZoneId}
-                        onClick={() => (selectedExpense.value = e)}
-                        onLongPress={() => {
-                          longPressExpense.value = e;
-                          longPressMenu.value = 'options';
-                        }}
+                        onClick={handleExpenseClick}
+                        onLongPress={handleExpenseLongPress}
                         userAmount={getUserAmount(e)}
                         labels={e.labels}
                         mode={mode}
@@ -283,8 +321,9 @@ const Expenses = () => {
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0, 0, 0, 0.45)',
-            backdropFilter: 'blur(2px)',
+            background: tokens.scrim.sheet,
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
             zIndex: 998,
           }}
           onClick={() => (longPressMenu.value = null)}
@@ -316,15 +355,12 @@ const Expenses = () => {
       <MenuAnimationBackground menu={menu} />
       <ErrorMenuAnimation
         menu={menu}
-        message={errorMessage.value}
         type="expense"
       />
       <GroupTotalsByCurrencyAnimation
         menu={menu}
         bar1Legend="Group Total"
         bar2Legend={mode === Mode.Personal ? 'Your Total' : 'Your Share'}
-        bar2Color="#e151ee"
-        bar1Color="#5183ee"
         groupTotalsByCurrency={groupTotalsByCurrency}
         userTotalsByCurrency={userTotalsByCurrency}
         mode={mode}

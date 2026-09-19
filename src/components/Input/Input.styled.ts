@@ -2,16 +2,28 @@ import styled from 'styled-components';
 import { InputProps } from '../../interfaces';
 
 export const StyledInput = styled.input.withConfig({
-  shouldForwardProp: (prop) => prop !== 'backgroundcolor',
+  shouldForwardProp: (prop) =>
+    !['backgroundcolor', 'error', 'width'].includes(prop),
 })<InputProps>`
-  border-radius: 10px;
-  padding: 0.8rem;
+  padding: 13px 15px;
+  border-radius: ${({ theme }) => theme.radius.iconButton};
   outline: none;
-  color: white;
+  color: ${({ theme }) => theme.ink.primary};
   background-color: ${({ theme, backgroundcolor }) =>
-    backgroundcolor || theme.layer2};
-  border-style: none;
-  font-size: 18px;
-  border: ${({ error, theme }) =>
-    error ? `1px solid  ${theme.redish}` : 'none'};
+    backgroundcolor || theme.surface.card};
+  font-size: ${({ theme }) => theme.size.s16};
+  border: 1px solid
+    ${({ error, theme }) =>
+      error ? theme.direction.owe : theme.surface.hairline};
+  transition: border-color 0.15s;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.ink.tertiary};
+    opacity: 1;
+  }
+
+  &:focus {
+    border-color: ${({ error, theme }) =>
+      error ? theme.direction.owe : theme.accent.you.ink};
+  }
 `;

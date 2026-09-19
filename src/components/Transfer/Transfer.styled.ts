@@ -1,61 +1,68 @@
 import styled from 'styled-components';
+import { StyledTransactionCard } from '../TransactionCard.styled';
 
-export const StyledTransfer = styled.div<{
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  $outlineColor?: string;
-}>`
-  display: flex;
-  flex-direction: column;
-  border-radius: 10px;
-  width: 100%;
-  padding-left: 10px;
-  padding-right: 10px;
-  font-size: 14px;
-  background-color: ${({ theme }) => theme.layer2};
-  ${({ $outlineColor }) =>
-    $outlineColor && `border: 1px solid ${$outlineColor};`}
-
-  .main {
+export const StyledTransfer = styled(StyledTransactionCard)`
+  .head {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    .mainMsg {
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-      gap: 10px;
-      .msg1 {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        font-weight: 600;
-        gap: 10px;
-        .emoji {
-          font-size: 25px;
-        }
-      }
-      .msg2 {
-        font-size: 15px;
-        font-weight: 600;
-        color: ${({ theme }) => theme.layer6};
-      }
-    }
-    .time {
-      padding-top: 10px;
-      font-size: 14px;
-      font-weight: 800;
-      color: ${({ theme }) => theme.secondaryTextColor};
-    }
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s8};
   }
 
-  .descr {
-    display: flex;
-    justify-content: center;
-    color: ${({ theme }) => theme.layer6};
-    font-style: italic;
+  .emoji {
+    flex-shrink: 0;
+    font-size: ${({ theme }) => theme.size.s15};
+    line-height: 1.4;
+  }
+
+  .title {
+    min-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-bottom: 5px;
+    font-size: ${({ theme }) => theme.size.s15};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    line-height: 1.4;
+  }
+
+  .amount {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    justify-self: end;
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s16};
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+  }
+
+  .amount.sent {
+    color: ${({ theme }) => theme.transfer.out};
+  }
+
+  .amount.received {
+    color: ${({ theme }) => theme.transfer.in};
+  }
+
+  .amount.other {
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  .meta {
+    line-height: 16px;
+  }
+
+  .dot {
+    color: ${({ theme }) => theme.surface.dot};
+    flex-shrink: 0;
+  }
+
+  .descr {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;

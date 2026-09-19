@@ -1,3 +1,4 @@
+import { tokens } from '../../../../styles/tokens';
 import React from 'react';
 import { User } from '../../../../types';
 import { BsFillPersonFill } from 'react-icons/bs';
@@ -19,8 +20,8 @@ export const SelectedUsers = React.memo(
         <StyledSelectedUser
           key={user.userId}
           style={{
-            backgroundColor: 'white',
-            color: '#000000c8',
+            backgroundColor: tokens.surface.raised,
+            color: tokens.ink.primary,
           }}
           onClick={() => onRemove(user.userId)}
           className="selected-label"

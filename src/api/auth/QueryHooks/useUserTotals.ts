@@ -4,7 +4,7 @@ import { Signal } from '@preact/signals-react';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { ExpenseParsedFilters } from '../../../types';
-import { appendNonGroupFilterToParams } from '../helpers/appendNonGroupFilterToParams';
+import { appendFilterToParams } from '../helpers/appendFilterToParams';
 import { hasActiveExpenseFilters } from '@/helpers/hasActiveExpenseFilters';
 
 const useUserTotals = (
@@ -33,7 +33,7 @@ const getUserTotals = async (
 ): Promise<DebtsResponse> => {
   const { labels = [], ...base } = parsedFilters;
 
-  const params = appendNonGroupFilterToParams(base, {
+  const params = appendFilterToParams(base, {
     arrayMappings: [{ key: 'labelIds', values: labels }],
   });
 

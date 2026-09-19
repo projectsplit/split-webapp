@@ -7,7 +7,7 @@ export default function RedirectToExpenses() {
 
   useEffect(() => {
     navigate(`/shared/${groupid}/expenses`);
-  }, [groupid]);
+  }, [groupid, navigate]);
 
   return null;
 }

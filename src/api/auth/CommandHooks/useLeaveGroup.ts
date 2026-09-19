@@ -3,6 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { apiClient } from '../../apiClients';
 import { Signal } from '@preact/signals-react';
 import { NavigateFunction } from 'react-router-dom';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useLeaveGroup = (
   menu: Signal<string | null>,
@@ -14,6 +15,7 @@ export const useLeaveGroup = (
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError>({
+    meta: { errorHandled: true },
     mutationFn: () => {
       if (!groupId) {
         groupError.value = 'Could not find your group. Please try again.';
@@ -22,23 +24,17 @@ export const useLeaveGroup = (
       return leaveGroup(groupId);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'home',
+        'shared',
+        'mostRecentGroup',
+      ]);
       menu.value = null;
       openGroupOptionsMenu.value = false;
       navigate('/shared');
     },
     onError: (error: AxiosError) => {
-      // console.log("Error response data:", error.response?.data);
       if (error.response?.status === 400) {
-        // console.log( typeof error.response.data === "string", error.response.data)
         groupError.value =
           typeof error.response.data === 'string'
             ? (groupError.value = error.response.data)

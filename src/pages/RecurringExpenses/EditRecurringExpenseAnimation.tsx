@@ -10,7 +10,7 @@ import {
   TransactionType,
   User,
 } from '@/types';
-import { buildFormExpenseFromTemplate } from './utils';
+import { buildFormExpenseFromTemplate } from './recurringExpenseHelpers';
 
 interface EditRecurringExpenseAnimationProps {
   menu: Signal<string | null>;
@@ -22,11 +22,6 @@ interface EditRecurringExpenseAnimationProps {
   nonGroupUsers: Signal<User[]>;
 }
 
-/**
- * The same form used to create the expense, pointed at the template instead. Submitting rewrites
- * the schedule; the expenses it has already produced are ordinary expenses and are edited from
- * their own lists.
- */
 export const EditRecurringExpenseAnimation = ({
   menu,
   template,

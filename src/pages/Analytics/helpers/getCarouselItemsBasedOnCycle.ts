@@ -1,5 +1,5 @@
 import { Frequency } from '../../../types';
-import { generateYearsArray } from './generateYearsArray';
+import { generateYearsArray } from '@/helpers/generateYearsArray';
 
 export const getCarouselItemsBasedOnCycle = (
   cycle: Frequency,

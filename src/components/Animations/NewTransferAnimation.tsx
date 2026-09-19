@@ -7,9 +7,7 @@ export default function NewTransferAnimation({
   timeZoneId,
   menu,
   groupMembers,
-  nonGroupUsers,
   currency,
-  isnonGroupTransfer,
   groupId,
   nonGroupMenu,
   fromHomeGroup,
@@ -28,9 +26,7 @@ export default function NewTransferAnimation({
         timeZoneId={timeZoneId}
         menu={menu}
         groupMembers={groupMembers}
-        nonGroupUsers={nonGroupUsers}
         currency={currency}
-        isnonGroupTransfer={isnonGroupTransfer}
         nonGroupMenu={nonGroupMenu}
         fromHomeGroup={fromHomeGroup}
         fromHome={fromHome}

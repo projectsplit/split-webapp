@@ -1,6 +1,10 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { MyButtonVariant, StyledMyButton } from './StyledMyButton';
+import {
+  MyButtonSize,
+  MyButtonVariant,
+  StyledMyButton,
+} from './StyledMyButton';
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }
@@ -16,7 +20,8 @@ export const Spinner = styled.span.withConfig({
   width: 1em;
   height: 1em;
   border: 2px solid
-    ${({ variant }) => (variant === 'secondary' ? '#8594E0' : '#26272B')};
+    ${({ theme, variant }) =>
+      variant === 'secondary' ? theme.ink.secondary : theme.surface.raised};
   border-radius: 50%;
   border-top-color: transparent;
   animation: ${spin} 1s linear infinite;
@@ -27,6 +32,7 @@ export const Spinner = styled.span.withConfig({
 const MyButton = ({
   children,
   variant = 'primary',
+  size = 'default',
   disabled,
   isLoading,
   hasFailed,
@@ -37,6 +43,7 @@ const MyButton = ({
   return (
     <StyledMyButton
       variant={variant}
+      size={size}
       disabled={disabled}
       isLoading={isLoading}
       hasFailed={hasFailed}
@@ -54,6 +61,7 @@ export default MyButton;
 
 interface MyButtonProps {
   variant?: MyButtonVariant;
+  size?: MyButtonSize;
   disabled?: boolean;
   isLoading?: boolean;
   hasFailed?: boolean;

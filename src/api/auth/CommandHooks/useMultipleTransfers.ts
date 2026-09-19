@@ -4,10 +4,11 @@ import { Signal } from '@preact/signals-react';
 
 export const useMultipleTransfers = (
   menu: Signal<string | null>,
-  groupId?: string
+  groupId?: string,
+  onError?: (message: string) => void
 ) => {
-  const groupTransfer = useMultipleGroupTransfers(menu);
-  const nonGroupTransfer = useMultipleNonGroupTransfers(menu);
+  const groupTransfer = useMultipleGroupTransfers(menu, onError);
+  const nonGroupTransfer = useMultipleNonGroupTransfers(menu, onError);
 
   return !!groupId ? groupTransfer : nonGroupTransfer;
 };

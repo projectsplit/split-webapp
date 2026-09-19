@@ -1,58 +1,40 @@
 import styled from 'styled-components';
 import { StyledOnTrackMessageProps } from '../../../interfaces';
+import { StyledBudgetMessageCard } from '../BudgetMessageCard.styled';
 
-export const StyledOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
-  .main {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+export const StyledOnTrackMessage = styled(
+  StyledBudgetMessageCard
+)<StyledOnTrackMessageProps>`
+  .main .signParagraphWrap {
+    .information {
+      color: ${({ theme }) => theme.direction.owed};
+    }
 
-    .signParagraphWrap {
+    .paragraphs {
       display: flex;
-      flex-direction: row;
-      /* align-items: center; */
-      .sign {
-        display: flex;
-        justify-self: center;
-        align-self: center;
-        margin-right: 10px;
+      flex-direction: column;
+      gap: ${({ theme }) => theme.space.s8};
+      min-width: 0;
+
+      .firstParagraph {
+        font-size: ${({ theme }) => theme.size.s13};
+        line-height: 1.6;
+        text-wrap: pretty;
+        color: ${({ theme }) => theme.ink.primary};
       }
-      .paragraphs {
-        font-size: 15px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        font-size: 15px;
-        .amount {
-          color: ${({ theme }) => theme.green};
-        }
+
+      .secondParagraph {
+        font-size: ${({ theme }) => theme.size.s13};
+        line-height: 1.6;
+        text-wrap: pretty;
+        color: ${({ theme }) => theme.ink.secondary};
       }
-      .information {
-        font-size: 40px;
-        color: ${({ theme }) => theme.green};
+
+      .amount {
+        font-family: ${({ theme }) => theme.font.mono};
+        font-weight: ${({ theme }) => theme.weight.medium};
+        color: ${({ theme }) => theme.direction.owed};
       }
     }
-
-    .closeButton {
-      position: absolute;
-      top: -0.65rem;
-      right: -0.65rem;
-      font-size: 30px;
-      color: #6f6f6f;
-      display: inline-block;
-      &:hover {
-        color: ${({ theme }) => theme.whiteText};
-      }
-    }
-
-    .close {
-      cursor: pointer;
-      display: block;
-    }
-
-    ${(props) => `
-    ${props.style}
-  `}
   }
 `;

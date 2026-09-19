@@ -49,10 +49,6 @@ export type SendGoogleCodeRequest = {
   code: string;
 };
 
-export type SendGoogleAccessTokenResponse = {
-  accessToken: string;
-};
-
 export type UserInfo = {
   userId: string;
   username: string;
@@ -86,17 +82,6 @@ export type GetNotificationsResponse = {
 
 export type SetPushNotificationsEnabledRequest = {
   enabled: boolean;
-};
-
-export type ExpenseItem = {
-  id: string;
-  date: string;
-  description: string;
-  amount: number;
-  currency: string;
-  shareAmount: number;
-  location: GeoLocation | undefined;
-  labels: string[];
 };
 
 export type TransferItem = {
@@ -148,12 +133,6 @@ export type FormNonGroupExpense = FormExpense & {
   participants: NonGroupParticipant[];
 };
 
-export type FormPersonalExpense = FormExpense & {
-  groupId?: never;
-  payments?: never;
-  shares?: never;
-};
-
 export type GroupTransaction = {
   memberId: string;
   amount: number;
@@ -175,7 +154,6 @@ export type ExpenseResponseItem = {
   currency: string;
   location?: GeoLocation;
   groupId?: string;
-  /** Set when a recurring template produced this expense. */
   recurringExpenseId?: string | null;
   payments?: GroupPayment[] | Payment[];
   shares?: GroupShare[] | Share[];
@@ -207,13 +185,6 @@ export type GroupExpenseResponseItem = ExpenseResponseItem & {
 export type NonGroupExpenseResponseItem = ExpenseResponseItem & {
   payments: Payment[];
   shares: Share[];
-  next: string | null;
-};
-
-export type PersonalExpenseResponseItem = ExpenseResponseItem & {
-  groupId?: never;
-  payments?: never;
-  shares?: never;
   next: string | null;
 };
 
@@ -257,8 +228,6 @@ export type GetGroupsResponse = {
   groups: Group[];
   next: string | null;
 };
-
-export type GetGroupsResponseItem = Group;
 
 export type SearchUserToInviteResponse = {
   users: SearchUserToInviteResponseItem[];
@@ -334,6 +303,7 @@ export type GroupMember = Member | Guest;
 export type PickerMember = {
   id: string;
   name: string;
+  avatarName?: string;
   screenQuantity: string;
   actualAmount: string;
   selected: boolean;
@@ -350,41 +320,6 @@ export type Label = {
 export type GetLabelsResponse = {
   labels: (Label & { count?: number })[];
 };
-
-// export type CreateExpenseRequest = {
-//   amount: number;
-//   currency: string;
-//   description: string;
-//   location: GeoLocation | null;
-//   occurred: string;
-//   labels: {
-//     text: string;
-//     color: string;
-//   }[];
-// };
-
-// export type CreateGroupExpenseRequest = CreateExpenseRequest & {
-//   groupId: string;
-//   payments: {
-//     memberId: string;
-//     amount: number;
-//   }[];
-//   shares: {
-//     memberId: string;
-//     amount: number;
-//   }[];
-// };
-
-// export type CreateNonGroupExpenseRequest = CreateExpenseRequest & {
-//   payments: {
-//     userId: string;
-//     amount: number;
-//   }[];
-//   shares: {
-//     userId: string;
-//     amount: number;
-//   }[];
-// };
 
 export type BaseExpenseRequest = {
   expenseId?: string;
@@ -429,8 +364,6 @@ export type ExpenseRequest =
   | NonGroupExpenseRequest
   | PersonalExpenseRequest;
 
-// Mirrors SplitServer's RecurrenceFrequency. Kept separate from Frequency, which is the budget
-// spending cycle and has a Custom member that means nothing for a repeating expense.
 export enum RecurrenceFrequency {
   Daily = 0,
   Weekly = 1,
@@ -439,19 +372,12 @@ export enum RecurrenceFrequency {
   Annually = 4,
 }
 
-/**
- * When a recurring expense fires, read in the user's own time zone. Day fields are per frequency:
- * daily needs none, weekly and biweekly need dayOfWeek, monthly needs dayOfMonth, annually needs
- * both month and dayOfMonth.
- */
 export type RecurrenceSchedule = {
   frequency: RecurrenceFrequency;
   hour: number;
   minute: number;
-  /** 0 = Sunday, matching System.DayOfWeek on the server. */
   dayOfWeek?: number | null;
   dayOfMonth?: number | null;
-  /** 1-12. */
   month?: number | null;
 };
 
@@ -506,7 +432,6 @@ export type RecurringExpenseResponseItem = {
     text: string;
     color: string;
   }[];
-  /** Null when the stored template has no readable schedule; the row is then unrunnable. */
   schedule: RecurrenceSchedule | null;
   anchorDate: string;
   nextOccurrence: string;
@@ -527,14 +452,8 @@ export type GetRecurringExpensesResponse = {
 
 export type CreateRecurringExpenseResponse = {
   recurringExpenseId: string;
-  /** No expense exists yet — this is when the first one will be created. */
   firstOccurrence: string;
 };
-
-export type ExpenseRequestWithType =
-  | (GroupExpenseRequest & { type?: 'group' })
-  | (NonGroupExpenseRequest & { type?: 'non-group' })
-  | (PersonalExpenseRequest & { type?: 'personal' });
 
 export type GeoLocation = {
   coordinates: Coordinates;
@@ -591,22 +510,8 @@ export type InactiveBudgetsInfoResponse = {
   budgets: InactiveBudgetsInfoResponseItem[];
 };
 
-export type UserPendingTransaction = {
-  userIsSender: boolean;
-  userIsReceiver: boolean;
-  amount: number;
-  currency: string;
-};
-
 export type Details = { [currency: string]: number };
 
-export type GroupWithDetails = {
-  details: Details;
-  id: string;
-  name: string;
-  currency: string;
-  isArchived: boolean;
-};
 export type GroupsWithDetails = {
   details: Details;
   id: string;
@@ -618,12 +523,6 @@ export type GroupsWithDetails = {
 export type GroupsTotalAmountsResponse = {
   groups: GroupsWithDetails;
   next: string;
-};
-
-export type GroupsTotalSummary = {
-  numberOfGroups: number;
-  userIsOwedAmounts: { [currency: string]: number };
-  userOwesAmounts: { [currency: string]: number };
 };
 
 export type GroupsAllBalancesResponse = {
@@ -754,7 +653,6 @@ export type GetUserInvitationsResponseItem = {
   guestId: string | null;
   guestName: string | null;
 };
-export type SplitCategory = 'Participants' | 'Payers';
 export type DeleteExpenseRequest = {
   expenseId: string;
 };
@@ -788,29 +686,6 @@ export type UpdateGroupNameRequest = {
 export type ArchiveGroupRequest = {
   isArchived: boolean;
 };
-export type WithCreated = {
-  created: string;
-};
-
-export type ExpenseFormState = {
-  amount: string;
-  displayedAmount: string;
-  currencySymbol: string;
-  description: string;
-  labels: Label[];
-  expenseTime: string;
-  participants: PickerMember[];
-  payers: PickerMember[];
-  showErrors: boolean;
-  errors: {
-    showAmount: string;
-    amount: string;
-    participants: string;
-    payers: string;
-    description: string;
-  };
-};
-
 export type FetchedPerson = {
   id: string;
   value: string;
@@ -844,18 +719,17 @@ export type FetchedLabel = {
 };
 
 export type FilteredResultItem = {
-  [key: string]: BeautifulMentionsItemData; // Dynamic properties
-  value: string; // `value` is explicitly required
-  prop: string; // `prop` should also be explicitly defined
+  [key: string]: BeautifulMentionsItemData;
+  value: string;
+  prop: string;
   color: string;
 };
 
 export type GroupedItem = {
-  [key: string]: FilteredResultItem[]; // Groups items under keys by `prop`
+  [key: string]: FilteredResultItem[];
 };
 
 export type CreateExpenseFilterRequest = {
-  //Do not change
   groupId: string;
   participantsIds: string[];
   payersIds: string[];
@@ -878,7 +752,6 @@ export type ExpenseFilter = {
 };
 
 export type CreateTransferFilterRequest = {
-  //Do not change
   groupId: string;
   receiversIds: string[];
   sendersIds: string[];
@@ -904,49 +777,18 @@ export type SerializedLexicalNode = {
 };
 
 export type SerializedBeautifulMentionNode = SerializedLexicalNode & {
-  type: 'beautifulMention';
+  type: 'beautifulMention' | 'custom-beautifulMention';
   trigger: string;
   value: string;
   data: {
     category: string;
-    [key: string]: any; // Allow additional properties in data if needed
+    [key: string]: any;
   };
   version: number;
 };
 
 export type SerializedElementNode = SerializedLexicalNode & {
   children: SerializedLexicalNode[];
-};
-
-// export type FilterResponse = {
-//   payers: FetchedMembers;
-//   participants: FetchedMembers;
-//   senders: FetchedMembers;
-//   receivers: FetchedMembers;
-//   before: DateTime[];
-//   during: DateTime[];
-//   after: DateTime[];
-//   description: string;
-//   labels: FetchedLabel[];
-// };
-
-export type ExpenseFilterResponse = {
-  payers: FetchedPeople;
-  participants: FetchedPeople;
-  before: string[];
-  during: string[];
-  after: string[];
-  freeText: string;
-  labels: FetchedLabel[];
-};
-
-export type TransferFilterResponse = {
-  senders: FetchedPeople;
-  receivers: FetchedPeople;
-  before: string[];
-  during: string[];
-  after: string[];
-  freeText: string;
 };
 
 export type ExpenseParsedFilters = {
@@ -1026,8 +868,6 @@ export type SpendingChartsResponseItem = {
   from: Date;
   to: Date;
 };
-
-export type Variant = 'non' | 'active' | 'archived';
 
 export enum TransactionType {
   Personal = 0,

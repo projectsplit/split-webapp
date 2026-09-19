@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import Input from '../../components/Input/Input';
 import WelcomeHeader from '../Auth/WelcomeHeader/WelcomeHeader';
-import { StyledCreateAccount } from './CreateAccount.styled';
+import { StyledAuthFormPage } from '../Auth/AuthFormPage.styled';
 import { useNavigate } from 'react-router-dom';
 import MyButton from '../../components/MyButton/MyButton';
+import BackButton from '../../components/BackButton/BackButton';
 import { useMutation } from '@tanstack/react-query';
 import { createPasswordCredentials } from '../../api/auth/api';
 import { PasswordSignUpRequest, PasswordSignUpResponse } from '../../types';
@@ -11,8 +12,6 @@ import routes from '../../routes';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// The server reports sign-up failures as a plain message, so map it back to the
-// field it belongs to instead of always blaming the username.
 const resolveErrorField = (message: string): 'username' | 'email' | 'form' => {
   const normalized = message.toLowerCase();
   if (normalized.includes('username')) return 'username';
@@ -38,6 +37,7 @@ export default function CreateAccount() {
     any,
     PasswordSignUpRequest
   >({
+    meta: { errorHandled: true },
     mutationFn: createPasswordCredentials,
   });
 
@@ -92,7 +92,8 @@ export default function CreateAccount() {
   };
 
   return (
-    <StyledCreateAccount>
+    <StyledAuthFormPage>
+      <BackButton className="backToSignIn" onClick={() => navigate(routes.AUTH)} />
       <WelcomeHeader />
       <div className="loginBox">
         <div className="promptMsg">Create a new account</div>
@@ -150,12 +151,12 @@ export default function CreateAccount() {
             )}
           </div>
 
-          <MyButton fontSize="18" onClick={handleSignUp} isLoading={isPending}>
+          <MyButton onClick={handleSignUp} isLoading={isPending}>
             Sign Up
           </MyButton>
           <div className="errormsg">{formError}</div>
         </div>
       </div>
-    </StyledCreateAccount>
+    </StyledAuthFormPage>
   );
 }

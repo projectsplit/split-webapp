@@ -4,37 +4,23 @@ export const StyledTopBarWithBackButton = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-
   justify-content: space-between;
+  gap: ${({ theme }) => theme.space.s10};
+  flex-shrink: 0;
+  padding: ${({ theme }) =>
+    `${theme.space.s16} ${theme.space.s20} ${theme.space.s8}`};
+  padding-top: calc(${({ theme }) => theme.space.s16} + env(safe-area-inset-top));
 
-  .backButtonContainer {
-    position: relative;
-    cursor: pointer;
-    display: inline-block;
-  }
-
-  .backButton {
-    cursor: pointer;
-    display: block;
-    font-size: 1.875rem;
-  }
-
-  .backButtonContainer:hover::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: rgba(128, 128, 128, 0.3);
-    pointer-events: none;
-  }
   .descr {
     flex: 1;
+    min-width: 0;
     text-align: center;
-    margin-right: 30px;
-    font-weight: bold;
+    margin-right: 34px;
+    font-size: ${({ theme }) => theme.size.s17};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;

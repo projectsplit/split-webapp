@@ -1,4 +1,4 @@
-import { $getRoot, EditorState } from 'lexical';
+import { EditorState } from 'lexical';
 import { isBeautifulMentionNode, isElementNode } from './isElementNode';
 import { Signal } from '@preact/signals-react';
 import {
@@ -13,6 +13,11 @@ import { addExistingTriggerElement } from './addExistingTriggerElement';
 import { finalProcessConstraints } from './finalProcessConstraints';
 import { getFilterStorageKey } from './localStorageStringParser';
 
+const isDateTrigger = (
+  trigger: string
+): trigger is DateConstraint['trigger'] =>
+  trigger === 'before:' || trigger === 'during:' || trigger === 'after:';
+
 export const handleSubmitButton = (
   editorState: EditorState | null,
   expenseFilterState: Signal<CreateExpenseFilterRequest>,
@@ -26,19 +31,8 @@ export const handleSubmitButton = (
 ) => {
   if (editorState === null) return;
 
-  const searchTerm = editorState.read(() => {
-    const root = $getRoot();
-    return root.getTextContent();
-  });
-
   const mentionRegex =
     /(\S*)(payer|receiver|sender|participant|before|after|category|during):\S+/g;
-
-  const cleanedInput = (
-    searchTerm.replace(mentionRegex, '').trim() +
-    ' ' +
-    (expenseFilterState.value.freeText || '')
-  ).trim();
 
   const jsonObject = editorState.toJSON().root.children;
   const expensesDateTriggerOrder: DateConstraint[] = [];
@@ -47,26 +41,34 @@ export const handleSubmitButton = (
   if (isElementNode(jsonObject[0])) {
     const children = jsonObject[0].children;
 
+    const typedText = children
+      .filter((c: any) => c.type === 'text')
+      .map((c: any) => c.text as string)
+      .join(' ');
+
+    const cleanedInput = (
+      typedText.replace(mentionRegex, '').trim() +
+      ' ' +
+      (expenseFilterState.value.freeText || '')
+    ).trim();
+
     children.map((c: any) => {
       const actualId = c.id || c.data?.id || c.data?.memberId;
 
       if (
-        c.type === 'beautifulMention' &&
-        ['before:', 'during:', 'after:'].includes(c.trigger) &&
+        isBeautifulMentionNode(c) &&
+        isDateTrigger(c.trigger) &&
         c.data.category === 'expenses'
       ) {
-        // Record the trigger in the order it appears
         expensesDateTriggerOrder.push({ trigger: c.trigger, value: c.value });
       }
       if (
-        c.type === 'beautifulMention' &&
-        ['before:', 'during:', 'after:'].includes(c.trigger) &&
+        isBeautifulMentionNode(c) &&
+        isDateTrigger(c.trigger) &&
         c.data.category === 'transfers'
       ) {
-        // Record the trigger in the order it appears
         transfersDateTriggerOrder.push({ trigger: c.trigger, value: c.value });
       }
-      // Deduplicate
       if (
         c.trigger === 'payer:' &&
         actualId &&
@@ -147,7 +149,6 @@ export const handleSubmitButton = (
           transferFilterState.value.after.push(c.value);
         }
       }
-      // Deduplicate labels
       if (
         c.trigger === 'category:' &&
         actualId &&
@@ -197,11 +198,11 @@ export const handleSubmitButton = (
         null,
     };
 
-    localStorage.setItem(
+    sessionStorage.setItem(
       getFilterStorageKey('expense', expenseFilter.groupId, isPersonal),
       JSON.stringify(expenseFilter)
     );
-    localStorage.setItem(
+    sessionStorage.setItem(
       getFilterStorageKey('transfer', transferFilter.groupId),
       JSON.stringify(transferFilter)
     );

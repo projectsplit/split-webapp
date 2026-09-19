@@ -8,7 +8,6 @@ export default function NonGroupTransferAnimation({
   nonGroupTransferMenu,
   fromHomeGroup,
   groupMembers,
-  isNonGroupTransfer,
 }: NonGroupTransferAnimationProps) {
   const nodeRef = useRef(null);
   return (
@@ -22,7 +21,6 @@ export default function NonGroupTransferAnimation({
         nonGroupTransferMenu={nonGroupTransferMenu}
         fromHomeGroup={fromHomeGroup}
         groupMembers={groupMembers}
-        isNonGroupTransfer={isNonGroupTransfer}
       />
     </CSSTransition>
   );

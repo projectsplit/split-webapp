@@ -9,13 +9,16 @@ export const StyledRecurrencePicker = styled.div`
   }
 `;
 
-/**
- * Same card the calendar drops down as, so the two buttons sitting next to each other in the footer
- * open into something the user recognises rather than two unrelated surfaces. The day grids below
- * reuse the budget calendar's circle-on-selection treatment for the same reason.
- */
+export const StyledRecurrenceBackdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  background-color: ${({ theme }) => theme.scrim.sheet};
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+`;
+
 export const StyledRecurrenceMenu = styled(StyledDateTimePicker)`
-  width: 17em;
   max-height: 80dvh;
   overflow-y: auto;
 
@@ -24,79 +27,82 @@ export const StyledRecurrenceMenu = styled(StyledDateTimePicker)`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    color: ${({ theme }) => theme.activeTabButtonTextColor};
+    font-size: ${({ theme }) => theme.size.s15};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: -0.01em;
+    color: ${({ theme }) => theme.ink.primary};
   }
 
   .cycles {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 0.4em;
+    gap: ${({ theme }) => theme.space.s6};
   }
 
   .cycle {
+    box-sizing: border-box;
     flex: 1 1 auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: ${({ theme }) => theme.inactiveTabButtonTextColor};
-    padding: 0px 0.7em;
-    height: 2.2em;
-    border: 1px solid ${({ theme }) => theme.lineColor};
-    border-radius: 5px;
-    cursor: pointer;
+    height: 40px;
+    padding: ${({ theme }) => `0 ${theme.space.s12}`};
+    background-color: ${({ theme }) => theme.surface.page};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.control};
+    color: ${({ theme }) => theme.ink.secondary};
+    font-size: ${({ theme }) => theme.size.s13};
+    font-weight: ${({ theme }) => theme.weight.medium};
     white-space: nowrap;
+    cursor: pointer;
 
     &.active {
-      color: ${({ theme }) => theme.activeTabButtonTextColor};
-      background-color: ${({ theme }) => theme.highlightColor};
+      background-color: ${({ theme }) => theme.surface.raised};
+      border-color: ${({ theme }) => theme.surface.outline};
+      color: ${({ theme }) => theme.ink.primary};
+      font-weight: ${({ theme }) => theme.weight.semibold};
     }
   }
 
   .sectionLabel {
-    color: ${({ theme }) => theme.inactiveTabButtonTextColor};
-    font-size: 0.8em;
+    font-size: ${({ theme }) => theme.size.s11};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: ${({ theme }) => theme.ink.tertiary};
   }
 
   .grid {
     display: flex;
     flex-direction: column;
-    padding: 0.6rem 0.5rem;
-    border-radius: 6px;
-    gap: 8px;
-    background-color: ${({ theme }) => theme.layer2};
+    padding: ${({ theme }) => theme.space.s8};
+    border-radius: ${({ theme }) => theme.radius.control};
+    gap: ${({ theme }) => theme.space.s4};
+    background-color: ${({ theme }) => theme.surface.page};
   }
 
   .grid-row {
     display: flex;
+    gap: ${({ theme }) => theme.space.s2};
   }
 
   .grid-cell {
     flex: 1;
-    border-radius: 6px;
-    padding: 0.1rem;
-    text-align: center;
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    border-radius: ${({ theme }) => theme.radius.control};
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s13};
+    color: ${({ theme }) => theme.ink.primary};
     cursor: pointer;
-    z-index: 0;
-    font-size: 0.9em;
 
     &.selected {
-      color: black;
-      font-weight: bold;
-    }
-
-    &.selected:before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 26px;
-      height: 26px;
-      background-color: ${({ theme }) => theme.whiteText};
-      border-radius: 50%;
-      z-index: -1;
+      background-color: ${({ theme }) => theme.ink.primary};
+      color: ${({ theme }) => theme.surface.page};
+      font-weight: ${({ theme }) => theme.weight.medium};
     }
 
     &.empty {
@@ -109,29 +115,38 @@ export const StyledRecurrenceMenu = styled(StyledDateTimePicker)`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    gap: ${({ theme }) => theme.space.s10};
   }
 
   .time {
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s15};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    color: ${({ theme }) => theme.ink.primary};
     cursor: pointer;
-    color: ${({ theme }) => theme.activeTabButtonTextColor};
   }
 
   .timezone {
-    color: ${({ theme }) => theme.inactiveTabButtonTextColor};
-    font-size: 0.8em;
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s12};
+    color: ${({ theme }) => theme.ink.tertiary};
   }
 
   .time-picker {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 0.5em;
+    gap: ${({ theme }) => theme.space.s8};
     height: 8em;
+    position: static;
+    padding: 0;
   }
 
   .footnote {
-    color: ${({ theme }) => theme.inactiveTabButtonTextColor};
-    font-size: 0.8em;
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.5;
+    color: ${({ theme }) => theme.ink.tertiary};
     text-align: center;
+    text-wrap: pretty;
   }
 `;

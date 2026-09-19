@@ -6,7 +6,7 @@ export const deCumulArray = (cumulArr: number[] | undefined) => {
     if (adjIndex !== 0)
       deCumuledArr.push(
         Number((cumulArr[adjIndex] - cumulArr[adjIndex - 1]).toFixed(2))
-      ); //TODO: Use currency.js
+      );
     if (adjIndex === 0)
       deCumuledArr.push(Number(cumulArr[adjIndex].toFixed(2)));
   });

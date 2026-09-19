@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { StyledRenameGroupMenu } from './RenameGroupMenu.styled';
 import { RenameGroupMenuProps } from '../../../interfaces';
 import MyButton from '../../MyButton/MyButton';
-import Separator from '../../Separator/Separator';
 import IonIcon from '@reacticons/ionicons';
 import { useUpdateGroupName } from '../../../api/auth/CommandHooks/useUpdateGroupName';
 import { useSignal } from '@preact/signals-react';
@@ -38,6 +37,7 @@ export default function RenameGroupMenu({
         </div>
       ) : (
         <>
+          <div className="dialogTitle">Rename group</div>
           <div className="headerSeparator">
             <div className="header">
               <input
@@ -49,9 +49,6 @@ export default function RenameGroupMenu({
               <div className="closeButton" onClick={() => (menu.value = null)}>
                 <IonIcon name="close-outline" className="close" />
               </div>
-            </div>
-            <div className="separator">
-              <Separator />
             </div>
           </div>
           <div className="buttons">

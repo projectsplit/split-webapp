@@ -6,8 +6,9 @@ import { ResetPasswordRequest } from '../../types';
 import routes from '../../routes';
 import Input from '../../components/Input/Input';
 import MyButton from '../../components/MyButton/MyButton';
+import BackButton from '../../components/BackButton/BackButton';
 import WelcomeHeader from '../Auth/WelcomeHeader/WelcomeHeader';
-import { StyledResetPassword } from './ResetPassword.styled';
+import { StyledAuthFormPage } from '../Auth/AuthFormPage.styled';
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -30,6 +31,7 @@ export default function ResetPassword() {
     any,
     ResetPasswordRequest
   >({
+    meta: { errorHandled: true },
     mutationFn: resetPassword,
   });
 
@@ -66,7 +68,8 @@ export default function ResetPassword() {
   if (!token) return null;
 
   return (
-    <StyledResetPassword>
+    <StyledAuthFormPage>
+      <BackButton className="backToSignIn" onClick={() => navigate(routes.AUTH)} />
       <WelcomeHeader />
       <div className="loginBox">
         <div className="promptMsg">Reset your password</div>
@@ -99,7 +102,7 @@ export default function ResetPassword() {
             {error ? <div className="errormsg">{error}</div> : ''}
           </div>
 
-          <MyButton fontSize="18" onClick={handleSubmit} isLoading={isPending}>
+          <MyButton onClick={handleSubmit} isLoading={isPending}>
             Reset Password
           </MyButton>
           {requestError ? (
@@ -109,6 +112,6 @@ export default function ResetPassword() {
           )}
         </div>
       </div>
-    </StyledResetPassword>
+    </StyledAuthFormPage>
   );
 }

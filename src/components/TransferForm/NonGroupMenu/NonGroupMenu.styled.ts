@@ -1,85 +1,34 @@
 import styled from 'styled-components';
+import { StyledDirectionCard } from '../DirectionCard/DirectionCard.styled';
 
 interface StyledNonGroupMenuProps {
   $noReceiverSelected?: boolean;
   $isSamePersonError: boolean;
 }
 
-export const StyledNonGroupMenu = styled.div<StyledNonGroupMenuProps>`
-  .nonGroupMenu {
+export const StyledNonGroupMenu = styled(
+  StyledDirectionCard
+)<StyledNonGroupMenuProps>`
+  .groupButton {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: row;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: ${({ theme }) => theme.space.s8};
+    padding: ${({ theme }) => `13px ${theme.space.s12}`};
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.iconButton};
+    color: ${({ theme }) => theme.ink.primary};
+    font-size: ${({ theme }) => theme.size.s14};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    cursor: pointer;
 
-    .textAndButton {
+    .groupIcon {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
       flex-shrink: 0;
-
-      .button {
-        font-weight: bold;
-        border: 1px solid;
-        border-radius: 5px;
-        padding: 4px 8px;
-        cursor: pointer;
-        flex-shrink: 0;
-        &.receiverButton {
-          border-color: ${(props) =>
-            props.$noReceiverSelected || props.$isSamePersonError
-              ? props.theme.redish
-              : props.theme.highlightColor};
-        }
-
-        /* Sender button never red from this condition */
-        &.senderButton {
-          border-color: ${({ theme, $isSamePersonError }) =>
-            $isSamePersonError ? theme.redish : theme.highlightColor};
-        }
-      }
-
-      @media (max-width: 275px) {
-        flex-direction: column;
-        gap: 4px;
-        white-space: normal;
-
-        .text {
-          text-align: center;
-        }
-      }
+      font-size: ${({ theme }) => theme.icon.sm};
+      color: ${({ theme }) => theme.ink.secondary};
     }
-  }
-  .buttonWrapper {
-    display: flex;
-    justify-content: center;
-    .groupButton {
-      margin-top: 20px;
-      width: 60px;
-      background-color: ${({ theme }) => theme.layer2};
-      cursor: pointer;
-      border-radius: 10px;
-      padding: 0.5rem;
-      .groupIcon {
-        display: flex;
-        justify-self: center;
-        color: ${({ theme }) => theme.deepPurple};
-        font-size: 30px;
-      }
-      .descr {
-        display: flex;
-        justify-self: center;
-        font-size: 10px;
-        margin-top: 3px;
-      }
-    }
-  }
-  .errorMsg {
-    font-size: 12px;
-    color: ${({ theme }) => theme.errorColor};
-    display: flex;
-    justify-content: center;
   }
 `;

@@ -5,8 +5,6 @@ import { Frequency } from '@/types';
 import { validateBudgetForm } from '../helpers/validateBudgetForm';
 import { scopeBuilder } from '../helpers/scopeBuilder';
 
-// Signals created at module level to avoid @preact/signals-react-transform
-// injecting React hooks inside the Zustand create() callback.
 const _displayedAmount = signal<string>('');
 const _openCalendar = signal<boolean>(false);
 const _openCustomDateCalendar = signal<boolean>(false);
@@ -152,7 +150,6 @@ const createBudgetStore = create<CreateBudgetState>()((set, get) => ({
 
     get().serverErrors.value = [];
 
-    // Logic from submitBudgetFn
     const {
       amount,
       description,

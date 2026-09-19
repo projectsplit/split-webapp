@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 
-// Define the type for the BeforeInstallPromptEvent
-// This is not standard in lib.dom.d.ts yet, so we have to define it
-export interface BeforeInstallPromptEvent extends Event {
+interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
   readonly userChoice: Promise<{
     outcome: 'accepted' | 'dismissed';
@@ -11,7 +9,6 @@ export interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
-// Capture the event at module level so it persists across component mounts/unmounts
 let deferredPromptEvent: BeforeInstallPromptEvent | null = null;
 
 window.addEventListener('beforeinstallprompt', (e: Event) => {
@@ -24,12 +21,10 @@ export function usePwaInstall() {
   const [isAppInstalled, setIsAppInstalled] = useState(false);
 
   useEffect(() => {
-    // Check if the app is already installed
     if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true) {
       setIsAppInstalled(true);
     }
 
-    // If the event already fired before this component mounted, pick it up
     if (deferredPromptEvent && !installPromptEvent) {
       setInstallPromptEvent(deferredPromptEvent);
     }

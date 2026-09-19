@@ -1,122 +1,155 @@
 import { styled } from 'styled-components';
-import { StyledMiddleScreenMenu } from '../Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
 
-export const StyledNotificationsMenu = styled(StyledMiddleScreenMenu)`
-  /* transform: translateZ(0); */
+export const StyledNotificationsMenu = styled.div`
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  box-sizing: border-box;
+  z-index: 999;
   display: flex;
   flex-direction: column;
-  overflow: auto;
-  box-sizing: border-box;
-  max-height: 50%;
-  padding: 0;
+  overflow: hidden;
+  background-color: ${({ theme }) => theme.surface.page};
 
   .headerSeparator {
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    background-color: ${({ theme }) => theme.layer2};
-    padding-left: 1rem;
-    padding-right: 1rem;
-    padding-top: 1rem;
-    .separator {
-      transform: translateZ(0);
-      position: sticky;
-    }
+    flex-shrink: 0;
+    background-color: ${({ theme }) => theme.surface.page};
+    padding: ${({ theme }) =>
+      `${theme.space.s20} ${theme.space.s20} ${theme.space.s16}`};
+
     .header {
       display: flex;
-      justify-content: space-between;
+      flex-direction: row;
       align-items: center;
-      padding-bottom: 10px;
+      gap: ${({ theme }) => theme.space.s10};
+    }
 
-      .info {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-      }
-      .closeButton {
-        font-size: 30px;
-        color: #6f6f6f;
-        height: 17px;
-        margin-top: -15px;
-        margin-right: -8px;
-        &:hover {
-          color: ${({ theme }) => theme.whiteText};
-        }
-        .close {
-          cursor: pointer;
-          display: block;
-        }
+    .info {
+      flex: 1;
+      min-width: 0;
+      text-align: center;
+      padding-left: 34px;
+      font-size: ${({ theme }) => theme.size.s17};
+      font-weight: ${({ theme }) => theme.weight.semibold};
+      letter-spacing: -0.01em;
+    }
+
+    .closeButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      cursor: pointer;
+      color: ${({ theme }) => theme.ink.secondary};
+
+      .close {
+        display: block;
+        font-size: ${({ theme }) => theme.icon.lg};
       }
     }
   }
 
   .notifications {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
+    padding: ${({ theme }) => `0 ${theme.space.s20} ${theme.space.s24}`};
+  }
+
+  .data {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sectionTitle {
+    font-size: ${({ theme }) => theme.size.s11};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: ${({ theme }) => theme.ink.tertiary};
+    padding-top: ${({ theme }) => theme.space.s20};
+    padding-bottom: ${({ theme }) => theme.space.s6};
+  }
+
+  .item,
+  .activityItem {
+    display: flex;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.space.s3};
+    padding: ${({ theme }) => theme.space.s16};
+    margin-top: ${({ theme }) => theme.space.s8};
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
+  }
+
+  .activityMain {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: ${({ theme }) => theme.space.s10};
+  }
+
+  .unreadDot {
+    width: 7px;
+    height: 7px;
+    margin-top: 6px;
+    flex-shrink: 0;
+    border-radius: ${({ theme }) => theme.radius.pill};
+    background-color: ${({ theme }) => theme.accent.you.ink};
+  }
+
+  .activityText {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.space.s3};
+    min-width: 0;
+  }
+
+  .activityTitle {
+    font-size: ${({ theme }) => theme.size.s14};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    color: ${({ theme }) => theme.ink.primary};
+  }
+
+  .activityBody {
+    font-size: ${({ theme }) => theme.size.s13};
+    line-height: 1.5;
+    color: ${({ theme }) => theme.ink.secondary};
+    white-space: initial;
+  }
+
+  .activityDate {
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s12};
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
+
+  .activityChevron {
+    flex-shrink: 0;
+    align-self: center;
+    font-size: ${({ theme }) => theme.icon.sm};
+    color: ${({ theme }) => theme.surface.mark};
+  }
+
+  .noData {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    padding-bottom: 1rem;
-    .data {
-      .item {
-        padding-top: 16px;
-      }
-    }
+    flex: 1;
+    gap: ${({ theme }) => theme.space.s10};
+    color: ${({ theme }) => theme.ink.tertiary};
 
-    .sectionTitle {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      opacity: 0.5;
-      padding-top: 16px;
-    }
-
-    .activityItem {
-      padding-top: 16px;
-
-      .activityTitle {
-        font-size: 14px;
-        font-weight: 600;
-      }
-
-      .activityBody {
-        font-size: 13px;
-        opacity: 0.8;
-        white-space: initial;
-      }
-
-      .activityDate {
-        font-size: 11px;
-        opacity: 0.5;
-        padding-top: 2px;
-      }
-    }
-
-    .clickable {
-      cursor: pointer;
-    }
-
-    .noData {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      padding-top: 1rem;
-      .msg {
-        font-size: 14px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        opacity: 0.5;
-      }
-
-      .icon {
-        display: flex;
-        font-size: 100px;
-        opacity: 0.5;
-      }
+    .icon {
+      font-size: 56px;
+      color: ${({ theme }) => theme.surface.raisedHigh};
     }
   }
 `;

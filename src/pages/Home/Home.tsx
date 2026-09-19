@@ -1,5 +1,5 @@
 import { useEffect} from 'react';
-import { StyledHomepage } from './Home.Styled';
+import { StyledHomepage } from './Home.styled';
 import { useNavigate } from 'react-router-dom';
 import {
   Group,
@@ -28,7 +28,6 @@ export default function Home() {
 
   const isPersonal = useSignal<boolean>(true);
   const isNonGroupExpense = useSignal<boolean>(false);
-  const isNonGroupTransfer = useSignal<boolean>(true);
 
   const nonGroupUsers = useSignal<User[]>([]);
   const fromHomeGroup = useSignal<Group | null>(null);
@@ -58,13 +57,8 @@ export default function Home() {
   const quickActionsMenu = useSignal<string | null>(null);
   const recentContextId = userInfo?.recentContextId;
 
-  const {
-    totalBalances,
-    isLoading,
-    isFetching,
-    groupsData,
-    nonGroupGroupedTransactions,
-  } = useTotalUserBalance(userInfo?.userId || '');
+  const { totalBalances, isFetching, nonGroupGroupedTransactions } =
+    useTotalUserBalance(userInfo?.userId || '');
 
   const {
     data: mostRecentGroupData,
@@ -75,7 +69,7 @@ export default function Home() {
 
   useEffect(() => {
     topMenuTitle.value = '';
-    const saved = localStorage.getItem('submittedFromHomePersistData');
+    const saved = sessionStorage.getItem('submittedFromHomePersistData');
     if (saved) {
       const {
         nonGroupUsers: u,
@@ -100,11 +94,6 @@ export default function Home() {
         <HomeSkeleton />
       ) : (
         <div className="fadeIn">
-          <div className="fixedTop">
-            <div className="welcomeStripe">
-              Welcome, <strong>{userInfo?.username}</strong>
-            </div>
-          </div>
           <ScrollableMenuButtons
             mostRecentGroupDataIsFetching={mostRecentGroupDataIsFetching}
             mostRecentGroupData={mostRecentGroupData}
@@ -112,9 +101,6 @@ export default function Home() {
             nonGroupGroupedTransactions={nonGroupGroupedTransactions}
             userInfo={userInfo}
             navigate={navigate}
-            isLoading={isLoading}
-            isFetching={isFetching}
-            groupsData={groupsData}
             totalBalances={totalBalances}
             topMenuTitle={topMenuTitle}
             activeBudgetData={activeBudgetData}
@@ -159,10 +145,8 @@ export default function Home() {
           groupId={fromHomeGroup.value?.id}
           timeZoneId={userInfo.timeZone}
           menu={quickActionsMenu}
-          isnonGroupTransfer={isNonGroupTransfer}
           groupMembers={groupMembers}
           currency={userInfo.currency}
-          nonGroupUsers={nonGroupUsers}
           fromHomeGroup={fromHomeGroup}
           nonGroupMenu={nonGroupTransferMenu}
           fromHome={true}
@@ -189,7 +173,6 @@ export default function Home() {
         nonGroupTransferMenu={nonGroupTransferMenu}
         fromHomeGroup={fromHomeGroup}
         groupMembers={groupMembers}
-        isNonGroupTransfer={isNonGroupTransfer}
       />
     </StyledHomepage>
   );

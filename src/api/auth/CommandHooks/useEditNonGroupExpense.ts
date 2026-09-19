@@ -10,6 +10,7 @@ import {
   User,
 } from '../../../types';
 import { Signal } from '@preact/signals-react';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useEditNonGroupExpense = (
   menu: Signal<string | null>,
@@ -25,33 +26,18 @@ export const useEditNonGroupExpense = (
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, NonGroupExpenseRequest>({
+    meta: { errorHandled: true },
     mutationFn: (expense) => editExpense(expense),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['nonGroupDebts'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['nonGroupExpenses'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({ queryKey: ['home'], exact: false });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['cumulativeArray'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['personalExpenses'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'nonGroupDebts',
+        'nonGroupExpenses',
+        'home',
+        'shared',
+        'mostRecentGroup',
+        'cumulativeArray',
+        'personalExpenses',
+      ]);
       if (selectedExpense) {
         selectedExpense.value = null;
       }
@@ -66,13 +52,13 @@ export const useEditNonGroupExpense = (
           nonGroupUsers.value.length > 0 ||
           fromHomeGroup?.value
         )
-          localStorage.setItem(
+          sessionStorage.setItem(
             'submittedFromHomePersistData',
             JSON.stringify(data)
           );
       }
       if (makePersonalClicked) {
-        localStorage.removeItem('submittedFromHomePersistData');
+        sessionStorage.removeItem('submittedFromHomePersistData');
       }
       menu.value = null;
     },

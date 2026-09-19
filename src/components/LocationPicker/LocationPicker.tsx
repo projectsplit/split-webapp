@@ -26,11 +26,11 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
             setDescriptionError={setDescriptionError}
           />
         )}
-        <div className="main">
-          <MdLocationOn
-            className="locationIcon"
-            onClick={() => (isMapOpen.value = !isMapOpen.value)}
-          />
+        <div
+          className={`main${location ? ' set' : ''}`}
+          onClick={() => (isMapOpen.value = !isMapOpen.value)}
+        >
+          <MdLocationOn className="locationIcon" />
         </div>
       </StyledLocationPicker>
     </APIProvider>

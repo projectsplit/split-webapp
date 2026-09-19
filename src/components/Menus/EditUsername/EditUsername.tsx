@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { StyledEditUsername } from './EditUsername.styled';
 import MyButton from '../../MyButton/MyButton';
-import Separator from '../../Separator/Separator';
 import { useGetUsernameStatus } from '../../../api/auth/QueryHooks/useGetUsernameStatus';
 import { EditUsernameProps } from '../../../interfaces';
 import { useEditUsername } from '../../../api/auth/CommandHooks/useEditUsername';
@@ -58,6 +57,7 @@ export default function EditUsername({
 
   return (
     <StyledEditUsername>
+      <div className="dialogTitle">Change username</div>
       <div className="headerSeparator">
         <div className="header">
           <input
@@ -70,21 +70,21 @@ export default function EditUsername({
           {username &&
             username.length > 0 &&
             (!usernameStatus.isSuccess ? (
-              <Spinner fontSize={'25px'} />
+              <Spinner fontSize={'16px'} />
             ) : !errorMessage ? (
               <GrFormCheckmark className="checkmark" />
             ) : (
               <FiAlertTriangle className="warning" />
             ))}
         </div>
-        <div className="separator">
-          <Separator />
-        </div>
+      </div>
+      <div className="fieldNote">
+        Others see this name in every group you share. 3–20 characters.
       </div>
       <div className="username-status">{errorMessage ?? '\xa0'}</div>
       <div className="buttons">
         <MyButton isLoading={isPending} onClick={handleConfirm}>
-          Confirm
+          Save
         </MyButton>
         <MyButton
           variant="secondary"

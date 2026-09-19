@@ -2,10 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { apiClient } from '../../apiClients';
 
-/**
- * Stops the schedule. Expenses already submitted stay where they are, so only the template lists
- * need refreshing — plus getMe, since deleting the last one takes the settings entry away.
- */
 export const useDeleteRecurringExpense = (
   onSuccess?: () => void,
   onError?: (message: string) => void
@@ -13,6 +9,7 @@ export const useDeleteRecurringExpense = (
   const queryClient = useQueryClient();
 
   return useMutation<void, AxiosError, string>({
+    meta: { errorHandled: true },
     mutationFn: (recurringExpenseId) =>
       deleteRecurringExpense(recurringExpenseId),
     onSuccess: async () => {

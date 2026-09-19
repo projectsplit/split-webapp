@@ -19,6 +19,7 @@ import {
 import {
   StyledRecurrenceMenu,
   StyledRecurrencePicker,
+  StyledRecurrenceBackdrop,
 } from './RecurrencePicker.styled';
 
 interface RecurrencePickerProps {
@@ -27,7 +28,6 @@ interface RecurrencePickerProps {
   showPicker: boolean;
   setShowPicker: (value: boolean) => void;
   timeZoneId: string;
-  /** True while editing a series that is already running, where "first" would be untrue. */
   isExistingSeries: boolean;
 }
 
@@ -69,8 +69,6 @@ export const RecurrencePicker = ({
   };
 
   const selectFrequency = (frequency: RecurrenceFrequency) => {
-    // Carries the time and any day already chosen across a cycle change, so switching weekly to
-    // monthly to compare them does not throw away what was set.
     setSchedule(defaultScheduleFor(frequency, timeZoneId, schedule));
     setShowTimePicker(false);
   };
@@ -92,12 +90,19 @@ export const RecurrencePicker = ({
       </div>
 
       {showPicker && (
+        <StyledRecurrenceBackdrop
+          onClick={() => {
+            setShowPicker(false);
+            setShowTimePicker(false);
+          }}
+        />
+      )}
+
+      {showPicker && (
         <StyledRecurrenceMenu>
           <div className="header">Repeat</div>
 
           <div className="cycles">
-            {/* "Never" is an option rather than a separate clear control: turning the recurrence
-                off is the same kind of choice as picking a cycle, and reads that way here. */}
             <div
               className={`cycle ${schedule === null ? 'active' : ''}`}
               onClick={() => {
@@ -133,7 +138,6 @@ export const RecurrencePicker = ({
                             onClick={() =>
                               update({
                                 month,
-                                // A shorter month can invalidate the day already chosen.
                                 dayOfMonth: Math.min(
                                   schedule.dayOfMonth ?? 1,
                                   daysInMonthForPicker(month)
@@ -224,9 +228,6 @@ export const RecurrencePicker = ({
                 </div>
               )}
 
-              {/* Said out loud rather than left to surprise someone in February. The server
-                  clamps the day down in months that are too short and returns to the chosen day
-                  after, but nothing on screen would otherwise hint at that. */}
               {schedule.frequency === RecurrenceFrequency.Monthly &&
                 (schedule.dayOfMonth ?? 1) > 28 && (
                   <div className="footnote">
@@ -234,8 +235,6 @@ export const RecurrencePicker = ({
                   </div>
                 )}
 
-              {/* Confirms the choice while the picker is still open; the form keeps showing it
-                  afterwards on the schedule chip. */}
               <div className="footnote">
                 {isExistingSeries ? 'Next' : 'First'} on{' '}
                 {firstOccurrenceLabel(schedule, timeZoneId)}
@@ -254,7 +253,6 @@ const buildMonthRows = (): number[][] => [
   [9, 10, 11, 12],
 ];
 
-/** Seven per row like the budget calendar, padded so the last row keeps the same cell widths. */
 const buildMonthDayRows = (daysInMonth: number): (number | '')[][] => {
   const rows: (number | '')[][] = [];
 

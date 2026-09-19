@@ -1,31 +1,12 @@
 import styled from 'styled-components';
+import { StyledFormChip } from '../FormChip.styled';
 
-export const StyledDateDisplay = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  .calendarIcon {
-    color: ${({ theme }) => theme.highlightColor};
-    margin-right: 10px;
-    font-size: 30px;
+export const StyledDateDisplay = styled(StyledFormChip)`
+  .chip {
+    font-family: ${({ theme }) => theme.font.mono};
   }
-  .dateAndClose {
-    cursor: pointer;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border: 1px solid #2f3139;
-    border-radius: 10px;
-    padding: 8px;
-  }
-  .closeButtonWrapper {
-    display: flex;
-    align-items: center;
-    .closeButton {
-      margin-left: 10px;
-      cursor: pointer;
-      font-size: 1.4rem;
-      color: ${({ theme }) => theme.textActiveColor};
-    }
+
+  .chipIcon {
+    font-size: ${({ theme }) => theme.size.s12};
   }
 `;

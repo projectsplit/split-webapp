@@ -5,7 +5,6 @@ import { ErrorMenuAnimationProps } from '../../interfaces';
 
 export default function ErrorMenuAnimation({
   menu,
-  message,
   type,
 }: ErrorMenuAnimationProps) {
   const nodeRef = useRef(null);
@@ -17,9 +16,7 @@ export default function ErrorMenuAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <ErrorMenu menu={menu} type={type}>
-        {message}
-      </ErrorMenu>
+      <ErrorMenu menu={menu} type={type} />
     </CSSTransition>
   );
 }

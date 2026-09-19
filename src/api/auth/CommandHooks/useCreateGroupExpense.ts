@@ -10,6 +10,7 @@ import {
 } from '../../../types';
 import { Signal } from '@preact/signals-react';
 import { NavigateFunction } from 'react-router-dom';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useCreateGroupExpense = (
   menu: Signal<string | null>,
@@ -20,45 +21,28 @@ export const useCreateGroupExpense = (
   nonGroupUsers: Signal<User[]>,
   fromHomeGroup: Signal<Group | null> | undefined,
   groupMembers: Signal<(Member | Guest)[]>,
-  fromHome: boolean | undefined
+  fromHome: boolean | undefined,
+  onError?: (message: string) => void
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, GroupExpenseRequest>({
+    meta: { errorHandled: true },
     mutationFn: (expense) => createGroupExpense(expense),
     onSuccess: async () => {
       menu.value = null;
       if (groupId) {
         navigate(`/shared/${groupId}/expenses`);
       }
-      await queryClient.invalidateQueries({
-        queryKey: ['debts'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['groupExpenses'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['home'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['shared'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['mostRecentGroup'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['cumulativeArray'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['personalExpenses'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'debts',
+        'groupExpenses',
+        'home',
+        'shared',
+        'mostRecentGroup',
+        'cumulativeArray',
+        'personalExpenses',
+      ]);
       await queryClient.invalidateQueries({
         queryKey: [groupId],
         exact: false,
@@ -75,15 +59,23 @@ export const useCreateGroupExpense = (
           nonGroupUsers.value.length > 0 ||
           fromHomeGroup?.value
         )
-          localStorage.setItem(
+          sessionStorage.setItem(
             'submittedFromHomePersistData',
             JSON.stringify(data)
           );
       }
 
       if (makePersonalClicked) {
-        localStorage.removeItem('submittedFromHomePersistData');
+        sessionStorage.removeItem('submittedFromHomePersistData');
       }
+    },
+    onError: (err) => {
+      const error = err as AxiosError;
+      onError?.(
+        error.response?.data
+          ? String(error.response.data)
+          : 'Could not create the expense. Please try again.'
+      );
     },
     onSettled: () => {
       setIsSubmitting(false);

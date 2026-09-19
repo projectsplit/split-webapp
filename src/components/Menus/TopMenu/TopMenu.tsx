@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import { TopMenuProps } from '../../../interfaces';
 import NotificationsBell from '../../NotificationsBell/NotificationsBell';
 import UserOptionsButton from '../../UserOptionsButton/UserOptionsButton';
@@ -15,103 +14,61 @@ export default function TopMenu({
   groupIsArchived,
   confirmUnarchiveMenu,
 }: TopMenuProps) {
-  const navigate = useNavigate();
-
   const [visuallyShowNotification, setVisuallyShowNotification] =
     useState<boolean>(true);
 
-  const handleNavigate = (title: string) => {
-    if (title !== '' && title !== 'Shared' && title !== 'Your Expenses') {
-      navigate('/shared');
-    }
-  };
-  const isInSharedAndNotInNonGroup =
+  const isInGroup =
     title !== '' &&
     title !== 'Shared' &&
     title !== 'Non Group Transactions' &&
     title !== 'Your Expenses';
 
   return (
-    <StyledTopMenu title={title}>
-      <div className="useOptionsContainer">
+    <StyledTopMenu>
+      <div className="slot left">
         {username ? (
           <UserOptionsButton
             username={username}
             onClick={() => (menu.value = 'settings')}
           />
         ) : null}
-
-        {isInSharedAndNotInNonGroup ? (
-          <div className="titleStripe">
-            <div
-              className="title"
-              onClick={() => handleNavigate(title)}
-              style={{
-                cursor:
-                  title !== 'Shared' && title !== 'Your Expenses'
-                    ? 'pointer'
-                    : '',
-              }}
-            >
-              {title}
-            </div>
-          </div>
-        ) : null}
       </div>
 
-      {!isInSharedAndNotInNonGroup ? (
-        <div className="titleStripe">
-          <div
-            className="title"
-            onClick={() => handleNavigate(title)}
-            style={{
-              cursor:
-                title !== 'Shared' && title !== 'Your Expenses'
-                  ? 'pointer'
-                  : '',
-            }}
-          >
-            {title}
-          </div>
-        </div>
-      ) : null}
+      <div className="titleStripe">
+        <div className="title">{title}</div>
+      </div>
 
-      <div className="bellAndCog">
-        {' '}
-        {isInSharedAndNotInNonGroup ? (
+      <div className="slot right">
+        {isInGroup ? (
           groupIsArchived ? (
             <div
-              className="cogContainer"
+              className="iconButton"
               onClick={() => (confirmUnarchiveMenu.value = 'unarchiveGroup')}
             >
-              {' '}
-              <IonIcon name="arrow-undo-outline" className="arrow" />
+              <IonIcon name="arrow-undo-outline" className="unarchive" />
             </div>
           ) : (
             <div
-              className="cogContainer"
+              className="iconButton"
               onClick={() => (openGroupOptionsMenu.value = true)}
             >
-              {' '}
-              <IonIcon name="settings-outline" className="cog" />
+              <IonIcon name="settings-outline" />
             </div>
           )
-        ) : null}
-        <div
-          className="bellIconAndNumberOfNotifications"
-          onClick={() => {
-            menu.value = 'notifications';
-            setVisuallyShowNotification(false);
-          }}
-        >
-          {username ? <NotificationsBell /> : null}
-
-          {hasNewerNotifications && visuallyShowNotification ? (
-            <span className="notification" />
-          ) : (
-            ''
-          )}
-        </div>
+        ) : (
+          <div
+            className="iconButton bellIconAndNumberOfNotifications"
+            onClick={() => {
+              menu.value = 'notifications';
+              setVisuallyShowNotification(false);
+            }}
+          >
+            {username ? <NotificationsBell /> : null}
+            {hasNewerNotifications && visuallyShowNotification ? (
+              <span className="notification" />
+            ) : null}
+          </div>
+        )}
       </div>
     </StyledTopMenu>
   );

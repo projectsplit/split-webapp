@@ -1,5 +1,8 @@
-import React from 'react';
-import { StyledConnectRequestConfirm } from './ConnectRequestConfirm.styled';
+import IonIcon from '@reacticons/ionicons';
+import {
+  StyledConnectRequestBackdrop,
+  StyledConnectRequestConfirm,
+} from './ConnectRequestConfirm.styled';
 import MyButton from '../../../MyButton/MyButton';
 
 type ConnectRequestConfirmProps = {
@@ -9,11 +12,6 @@ type ConnectRequestConfirmProps = {
   onCancel: () => void;
 };
 
-/**
- * Confirmation before asking to split with someone you have never split with. Names them, because
- * usernames in a search result are easy to mistake for one another and the request is visible to
- * whoever ends up receiving it.
- */
 export default function ConnectRequestConfirm({
   username,
   isLoading,
@@ -21,13 +19,17 @@ export default function ConnectRequestConfirm({
   onCancel,
 }: ConnectRequestConfirmProps) {
   return (
-    <StyledConnectRequestConfirm onClick={onCancel}>
-      <div
-        className="card"
-        onClick={(e: React.MouseEvent) => e.stopPropagation()}
-      >
-        <div className="title">Do you know {username}?</div>
-        <div className="message">
+    <>
+      <StyledConnectRequestBackdrop onClick={onCancel} />
+      <StyledConnectRequestConfirm>
+        <div className="dialogHeader">
+          <IonIcon name="person-add-outline" className="dialogIcon" />
+          <div className="dialogTitle">Do you know {username}?</div>
+          <div className="closeButton" onClick={onCancel}>
+            <IonIcon name="close-outline" />
+          </div>
+        </div>
+        <div className="info">
           You have not split expenses with <strong>{username}</strong> before.
           Send them a request. Once they accept, you will be able to add each
           other to shared expenses.
@@ -40,7 +42,7 @@ export default function ConnectRequestConfirm({
             Cancel
           </MyButton>
         </div>
-      </div>
-    </StyledConnectRequestConfirm>
+      </StyledConnectRequestConfirm>
+    </>
   );
 }

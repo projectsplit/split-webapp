@@ -1,95 +1,108 @@
 import styled from 'styled-components';
 
-export const StyledBudgetScopeGroupsMenu = styled.div<{ $maxHeight?: string }>`
-  overflow: auto;
-  padding: 0;
-  margin-left: 10px;
-  margin-right: 10px;
-  background-color: ${({ theme }) => theme.greyOutline};
-  border-radius: 12px 12px 12px 12px;
-  max-height: ${(props) => props.$maxHeight || '49vh'};
+export const StyledBudgetScopeGroupsMenu = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.space.s12};
 
-  .headerAndSearchbar {
+  .searchBar {
+    box-sizing: border-box;
+    width: 100%;
+    height: 47px;
+    padding: ${({ theme }) => `0 ${theme.space.s14}`};
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.iconButton};
+    outline: none;
+    font-size: ${({ theme }) => theme.size.s15};
+    color: ${({ theme }) => theme.ink.primary};
+
+    &::placeholder {
+      color: ${({ theme }) => theme.ink.tertiary};
+    }
+  }
+
+  .groupList {
     display: flex;
     flex-direction: column;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: ${({ theme }) => theme.greyOutline};
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
+    overflow: hidden;
 
-    .searchBar {
-      border-radius: 10px;
-      padding: 0.5rem;
-      outline: none;
-      font-size: 16px;
-      border: none;
-      color: white;
-      background-color: ${({ theme }) => theme.layer2};
-      margin-top: 8px;
-      margin-left: 5px;
-      margin-right: 5px;
+    > * {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    > * + *::before {
+      content: '';
+      position: absolute;
+      left: 58px;
+      right: 0;
+      top: 0;
+      height: 1px;
+      background-color: ${({ theme }) => theme.surface.raisedHigh};
     }
   }
-  .selectAll {
+
+  .groupRow {
+    box-sizing: border-box;
     display: flex;
-    width: 35px;
-    padding: 5px;
-    margin: 10px;
-    margin-left: 14px;
-    cursor: pointer;
-    border-color: black;
-    border: solid;
-    border-width: 1px;
-    border-radius: 16px;
-    border-color: grey;
-  }
-  .selectAll.selected {
-    background-color: ${({ theme }) => theme.checkmarkGreen};
-    color: black;
-    border-color: black;
-  }
-  .groupSection {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    .groups {
-      cursor: pointer;
-      border-radius: 10px;
-      padding: 5px;
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      margin-left: 10px;
-      margin-right: 10px;
-      align-items: center;
-      padding-bottom: 10px;
-      .groupNameAndArchivedStatus {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        .archived {
-          margin-top: 3px;
-          margin-left:4px;
-          display: flex;
-          color: ${({ theme }) => theme.archivedActive};
-        }
-      }
-    }
-    .groups.selected {
-      background-color: transparent;
-    }
-    .checkIcon {
-      margin-left: auto;
-      color: ${({ theme }) => theme.checkmarkGreen};
-      font-size: 20px;
-    }
-  }
-  .noResults {
-    font-size: 14px;
-    justify-content: center;
+    flex-direction: row;
     align-items: center;
+    gap: ${({ theme }) => theme.space.s12};
+    min-height: 56px;
+    padding: ${({ theme }) => `${theme.space.s10} ${theme.space.s16}`};
+    cursor: pointer;
+
+    .groupIcon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+      border-radius: ${({ theme }) => theme.radius.pill};
+      background-color: ${({ theme }) => theme.surface.raised};
+      color: ${({ theme }) => theme.ink.secondary};
+      font-size: ${({ theme }) => theme.icon.sm};
+    }
+
+    .groupName {
+      flex: 1;
+      min-width: 0;
+      font-size: ${({ theme }) => theme.size.s14};
+      font-weight: ${({ theme }) => theme.weight.medium};
+      color: ${({ theme }) => theme.ink.secondary};
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .archived {
+      display: flex;
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.icon.xs};
+      color: ${({ theme }) => theme.ink.tertiary};
+    }
+
+    .check {
+      display: flex;
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.icon.sm};
+      color: ${({ theme }) => theme.ink.primary};
+    }
+
+    &.selected .groupName {
+      color: ${({ theme }) => theme.ink.primary};
+    }
+  }
+
+  .noResults {
+    padding: ${({ theme }) => `${theme.space.s16} 0`};
     text-align: center;
-    margin-top: 15px;
+    font-size: ${({ theme }) => theme.size.s13};
+    color: ${({ theme }) => theme.ink.tertiary};
   }
 `;

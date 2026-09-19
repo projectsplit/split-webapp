@@ -4,7 +4,7 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
   box-sizing: border-box;
   top: 0;
   position: fixed;
-  background-color: ${({ theme }) => theme.layer2};
+  background-color: ${({ theme }) => theme.surface.page};
   width: 100%;
   height: 100dvh;
   z-index: 3;
@@ -13,53 +13,75 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
   flex-direction: column;
 
   .catSelector {
+    padding: ${({ theme }) => `0 ${theme.space.s20} ${theme.space.s16}`};
+    flex-shrink: 0;
   }
   p {
     margin: 3px;
   }
 
   .header {
-    padding: 14px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    gap: ${({ theme }) => theme.space.s10};
+    padding: ${({ theme }) =>
+      `${theme.space.s20} ${theme.space.s20} ${theme.space.s16}`};
     flex-shrink: 0;
 
-    .closeSign {
-      font-size: 30px;
-      color: #6f6f6f;
-      height: 17px;
-      margin-top: -10px;
-      margin-right: -1px;
-      &:hover {
-        color: ${({ theme }) => theme.whiteText};
-      }
-      .close {
-        cursor: pointer;
-        display: block;
-      }
+    .headerSpacer {
+      width: 34px;
+      flex-shrink: 0;
+    }
+
+    .searchingIn {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: ${({ theme }) => theme.space.s3};
+      text-align: center;
+    }
+
+    .searchingInLabel {
+      font-size: ${({ theme }) => theme.size.s11};
+      font-weight: ${({ theme }) => theme.weight.semibold};
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: ${({ theme }) => theme.ink.tertiary};
     }
 
     .groupName {
-      font-weight: 600;
-    }
-    .gap {
-      margin-right: 15px;
-    }
-    .searchingIn {
-      font-size: 18px;
-      font-weight: 400;
+      font-size: ${({ theme }) => theme.size.s15};
+      font-weight: ${({ theme }) => theme.weight.semibold};
+      letter-spacing: -0.01em;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
-      color: ${({ theme }) => theme.whiteText};
+    }
+
+    .closeSign {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      color: ${({ theme }) => theme.ink.secondary};
+      cursor: pointer;
+
+      .close {
+        display: block;
+        font-size: ${({ theme }) => theme.icon.lg};
+      }
     }
   }
 
   .searchBarAndCategories {
     flex: 1;
-    padding: 14px;
+    min-height: 0;
+    padding: ${({ theme }) => `0 ${theme.space.s20} ${theme.space.s20}`};
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -72,68 +94,117 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
 
       .contentEditable {
         position: relative;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        padding: 0.5rem;
-        color: white;
-        background-color: ${({ theme }) => theme.inputGrey};
-        border-style: none;
-        font-size: 16px;
+        line-height: 30px;
+        padding: ${({ theme }) => `${theme.space.s8} ${theme.space.s12}`};
+        border: 1px solid ${({ theme }) => theme.surface.outline};
+        border-radius: ${({ theme }) => theme.radius.surface};
+        background-color: ${({ theme }) => theme.surface.card};
+        color: ${({ theme }) => theme.ink.primary};
+        caret-color: ${({ theme }) => theme.accent.you.ink};
+        font-family: ${({ theme }) => theme.font.mono};
+        font-size: ${({ theme }) => theme.size.s14};
         outline: none;
-        min-height: 20px;
-        line-height: 1.6em;
+
+        p {
+          margin: 0;
+        }
       }
       .contentEditablePlaceholder {
         position: absolute;
-        top: 14px;
-        left: 10px;
-        padding: 0 1px;
-        color: ${({ theme }) => theme.grey};
+        top: 15px;
+        left: ${({ theme }) => theme.space.s12};
+        font-size: ${({ theme }) => theme.size.s14};
+        color: ${({ theme }) => theme.ink.tertiary};
         pointer-events: none;
       }
-      .editor-bold {
+      .calendarHint {
+        padding: ${({ theme }) => `${theme.space.s10} 2px 0`};
+        font-size: ${({ theme }) => theme.size.s12};
+        line-height: 1.5;
+        color: ${({ theme }) => theme.ink.tertiary};
+        text-wrap: pretty;
+      }
+
+      .addFilterLabel {
+        margin-top: 18px;
+        margin-bottom: ${({ theme }) => theme.space.s10};
+        font-size: ${({ theme }) => theme.size.s11};
+        font-weight: ${({ theme }) => theme.weight.semibold};
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: ${({ theme }) => theme.ink.tertiary};
+      }
+
+      .categoryButtons {
+        display: flex;
+        flex-direction: column;
+        background-color: ${({ theme }) => theme.surface.card};
+        border: 1px solid ${({ theme }) => theme.surface.hairline};
+        border-radius: ${({ theme }) => theme.radius.surface};
+        overflow: hidden;
+      }
+
+      .categoryButtons > * {
+        position: relative;
+        margin: 0;
+        padding: ${({ theme }) => `${theme.space.s12} ${theme.space.s16}`};
+      }
+
+      .categoryButtons > * + *::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: ${({ theme }) => theme.space.s16};
+        right: 0;
+        height: 1px;
+        background-color: ${({ theme }) => theme.surface.raisedHigh};
       }
 
       .trigger {
-        border-radius: 5px;
-        background-color: ${({ theme }) => theme.grey};
-        padding: 2px;
+        font-family: ${({ theme }) => theme.font.mono};
+        color: ${({ theme }) => theme.ink.tertiary};
+        background-color: transparent;
+        padding: 0;
       }
       .value {
       }
 
-      .container {
-        background-color: ${({ theme }) =>
-          theme.grey}; // configured by the beautifulMentionsTheme
-        border-radius: 5px;
-        padding: 2px;
+      .container,
+      .containerFocused {
+        display: inline-flex;
+        align-items: center;
+        gap: ${({ theme }) => theme.space.s6};
+        font-size: ${({ theme }) => theme.size.s12};
+        padding: ${({ theme }) => `${theme.space.s4} ${theme.space.s10}`};
+        border-radius: ${({ theme }) => theme.radius.pill};
+        background-color: ${({ theme }) => theme.surface.raised};
+        border: 1px solid ${({ theme }) => theme.surface.mark};
       }
 
       .containerFocused {
-        background-color: ${({ $bgColor, theme }) =>
-          $bgColor ? $bgColor : theme.grey};
-        border-radius: 5px;
-        padding: 2px;
+        border-color: ${({ theme }) => theme.accent.you.tintBorder};
+      }
+
+      .value {
+        font-weight: ${({ theme }) => theme.weight.medium};
       }
     }
   }
 
   .submitButtons {
     z-index: 4;
+    flex-shrink: 0;
     display: flex;
-    flex-direction: column;
-    position: sticky;
-    bottom: 20px;
-    width: calc(100% - 28px);
-    left: 14px;
-    gap: 10px;
-  }
-`;
+    flex-direction: row;
+    gap: ${({ theme }) => theme.space.s8};
+    padding: ${({ theme }) =>
+      `${theme.space.s12} ${theme.space.s20} ${theme.space.s20}`};
+    background: ${({ theme }) =>
+      `linear-gradient(to top, ${theme.surface.page} 60%, transparent)`};
 
-export const SpinnerContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  z-index: 4;
+    button {
+      flex: 1;
+      padding: ${({ theme }) => `${theme.space.s12} 0`};
+    }
+  }
 `;

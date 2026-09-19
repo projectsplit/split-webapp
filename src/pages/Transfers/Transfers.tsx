@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { tokens } from '../../styles/tokens';
 import { useQueryClient } from '@tanstack/react-query';
 import Transfer from '../../components/Transfer/Transfer';
 import LongPressMenu from '../../components/LongPressMenu/LongPressMenu';
@@ -10,7 +11,7 @@ import {
   TransferResponseItem,
   UserInfo,
 } from '../../types';
-import { StyledTransfers } from './Transfers.styled';
+import { StyledTransactionsPage } from '@/components/TransactionsPage.styled';
 import { useOutletContext } from 'react-router-dom';
 import { Signal, useSignal } from '@preact/signals-react';
 import { DateOnly } from '../../helpers/timeHelpers';
@@ -101,7 +102,7 @@ const Transfers: React.FC = () => {
   }
 
   return (
-    <StyledTransfers>
+    <StyledTransactionsPage>
       <div className="scroll-area" ref={scrollAreaRef}>
         {transfers && transfers.length > 0 && !hasPreviousPage && (
           <FiltersAndBars
@@ -130,7 +131,7 @@ const Transfers: React.FC = () => {
             ).map(([date, transfers]) => (
               <div key={date} className="same-date-container">
                 <div className="date-only">{date}</div>
-                <div className="transfers">
+                <div className="rows">
                   {transfers.map((t) => (
                     <Transfer
                       onClick={() => (selectedTransfer.value = t)}
@@ -202,8 +203,9 @@ const Transfers: React.FC = () => {
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0, 0, 0, 0.45)',
-            backdropFilter: 'blur(2px)',
+            background: tokens.scrim.sheet,
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
             zIndex: 998,
           }}
           onClick={() => (longPressMenu.value = null)}
@@ -217,19 +219,17 @@ const Transfers: React.FC = () => {
       <MenuAnimationBackground menu={menu} />
       <ErrorMenuAnimation
         menu={menu}
-        message={errorMessage.value}
         type="transfer"
       />
       <GroupTotalsByCurrencyAnimation
         menu={menu}
         bar1Legend="You Sent"
         bar2Legend="You Received"
-        bar1Color="#0CA0A0"
-        bar2Color="#D79244"
         groupTotalsByCurrency={userTotalSentByCurr}
         userTotalsByCurrency={userTotalReceivedByCurr}
+        relation="independent"
       />
-    </StyledTransfers>
+    </StyledTransactionsPage>
   );
 };
 

@@ -1,5 +1,6 @@
+import { memo } from 'react';
 import { IoClose } from 'react-icons/io5';
-import { StyledExpenseFormHeader } from './ExpenseFormHeader.styled';
+import { StyledFormHeader } from '@/components/FormHeader/FormHeader.styled';
 import { Signal } from '@preact/signals-react';
 import { Group, Guest, Member, User } from '@/types';
 
@@ -14,7 +15,7 @@ interface ExpenseFormHeaderProps {
   menu: Signal<string | null>;
 }
 
-export const ExpenseFormHeader = ({
+const ExpenseFormHeaderPreMemo = ({
   header,
   isnonGroupExpense,
   fromHome,
@@ -25,7 +26,7 @@ export const ExpenseFormHeader = ({
   menu,
 }: ExpenseFormHeaderProps) => {
   return (
-    <StyledExpenseFormHeader>
+    <StyledFormHeader>
       <div className="gap"></div>
       <div className="title">{header}</div>
       <div
@@ -47,6 +48,8 @@ export const ExpenseFormHeader = ({
       >
         <IoClose className="closeButton" />
       </div>
-    </StyledExpenseFormHeader>
+    </StyledFormHeader>
   );
 };
+
+export const ExpenseFormHeader = memo(ExpenseFormHeaderPreMemo);

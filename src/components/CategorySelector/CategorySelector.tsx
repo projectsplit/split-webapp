@@ -1,6 +1,11 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { CategoryButton } from '../CategoryButton/CategoryButton';
-import Separator from '../Separator/Separator';
 import { CategorySelectorProps } from '../../interfaces';
 import { StyledCategorySelector } from './CategorySelector.styled';
 import { useCategorySwipe } from './useCategorySwipe';
@@ -10,8 +15,10 @@ export const CategorySelector = ({
   activeCat,
   navLinkUse,
   activeCatAsState,
+  variant,
 }: CategorySelectorProps) => {
-  //activeCat which is "Active" "Archived" should now change with state. This is what changes with link now
+  const isCompact = variant === 'segmentedCompact';
+  const isSegmented = variant === 'segmented' || isCompact;
 
   const isFirstRender = useRef(true);
   const categoryKeys = Object.keys(categories);
@@ -47,46 +54,50 @@ export const CategorySelector = ({
   const [indicatorPosition, setIndicatorPosition] = useState({
     left: '0px',
     width: '0px',
-    transition: 'none', //Start without transition
+    transition: 'none',
   });
 
-  const categoryRefs: Record<string, React.RefObject<HTMLButtonElement>> = {};
-  categoryKeys.forEach((key) => {
-    categoryRefs[key] = useRef<HTMLButtonElement>(null);
-  });
+  const categoryRefStore = useRef<
+    Record<string, React.RefObject<HTMLButtonElement>>
+  >({});
+  for (const key of categoryKeys) {
+    if (!categoryRefStore.current[key]) {
+      categoryRefStore.current[key] = { current: null };
+    }
+  }
+  const categoryRefs = categoryRefStore.current;
 
   useLayoutEffect(() => {
-    // Ensure we update the position before the first paint
     const activeButton = categoryRefs[activeCategory]?.current;
 
     if (activeButton) {
       const { offsetLeft, clientWidth } = activeButton;
-      const reducedWidth = clientWidth * 0.5;
+      const reducedWidth = clientWidth;
 
       setIndicatorPosition({
         left: `${offsetLeft + clientWidth / 2}px`,
         width: `${reducedWidth}px`,
-        transition: 'none', // No transition on first render
+        transition: 'none',
       });
     }
 
     isFirstRender.current = false;
-  }, []); // Runs only once before paint. So after first render useLayOutEffect has updated the left and width of the indicator.
+  }, []);
 
   useEffect(() => {
-    if (isFirstRender.current) return; // Avoid transition on first render. Will probably never run because useLayOutEffect will have already set that to false as it runs before the useEffect
+    if (isFirstRender.current) return;
 
     const updateIndicator = () => {
       const activeButton = categoryRefs[activeCategory]?.current;
 
       if (activeButton) {
         const { offsetLeft, clientWidth } = activeButton;
-        const reducedWidth = clientWidth * 0.5;
+        const reducedWidth = clientWidth;
 
         setIndicatorPosition({
           left: `${offsetLeft + clientWidth / 2}px`,
           width: `${reducedWidth}px`,
-          transition: 'left 0.15s ease-in-out', //Apply transition only after first render
+          transition: 'left 0.15s ease-in-out',
         });
       }
     };
@@ -96,16 +107,32 @@ export const CategorySelector = ({
     return () => window.removeEventListener('resize', updateIndicator);
   }, [activeCategory, activeCatAsState?.value, activeCat]);
 
-  const isSmallScreen = window.matchMedia('(max-width: 400px)').matches;
+  const isSmallScreen = window.matchMedia('(max-width: 360px)').matches;
   const getCategoryLabel = (label: string) => {
-    if (label === 'Percentages' && isSmallScreen) {
-      return '%ages';
+    if (label === 'Percentages') {
+      return isSmallScreen ? '%' : 'Percent';
     }
     return label;
   };
 
+  const categoryClickHandlers = useMemo(() => {
+    const handlers: Record<string, () => void> = {};
+    for (const key of Object.keys(categories)) {
+      handlers[key] = () => {
+        setActiveCategory(key);
+        if (!navLinkUse && activeCatAsState) {
+          activeCatAsState.value =
+            categories[key as keyof typeof categories]!;
+        }
+      };
+    }
+    return handlers;
+  }, [categories, navLinkUse, activeCatAsState]);
+
   return (
     <StyledCategorySelector
+      $segmented={isSegmented}
+      $compact={isCompact}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
@@ -121,14 +148,11 @@ export const CategorySelector = ({
                   ]?.toLocaleLowerCase()
                 : undefined
             }
-            onClick={() => {
-              setActiveCategory(key);
-              if (!navLinkUse && activeCatAsState) {
-                activeCatAsState.value =
-                  categories[key as keyof typeof categories]!;
-              }
-            }}
+            onClick={categoryClickHandlers[key]}
             selected={activeCategory === key}
+            variant={
+              isCompact ? 'segmentCompact' : isSegmented ? 'segment' : 'tab'
+            }
           >
             {getCategoryLabel(label)}
           </CategoryButton>
@@ -142,9 +166,6 @@ export const CategorySelector = ({
             transition: indicatorPosition.transition,
           }}
         />
-      </div>
-      <div className="separator">
-        <Separator />
       </div>
     </StyledCategorySelector>
   );

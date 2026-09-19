@@ -20,7 +20,6 @@ export default function getAllExpenseParticipants(
 
   const userMap = new Map<string, string>();
 
-  // Initialize with known non-group users
   nonGroupUsers.forEach((u) => userMap.set(u.id, u.name));
 
   if (expenses) {

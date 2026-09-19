@@ -18,43 +18,29 @@ const Text = memo(
   }: TextProps) {
     const firstSelectedName = selectedMembers[0]?.name;
 
-    const splitLabel = isEquallySplit ? 'equally' : 'unequally';
+    const splitLabel = isEquallySplit ? 'Equally' : 'Unequally';
 
     const conjunction = selectedCount === 2 ? 'between' : 'among';
 
-    return (
-      <StyledText $error={error}>
-        {description === 'Participants' ? (
-          selectedCount === 0 ? (
-            ''
-          ) : selectedCount === 1 ? (
-            <>
-              Billed to <div className="button">{firstSelectedName} </div> and
-            </>
-          ) : (
-            <>
-              Split <div className="button">{splitLabel} </div> {conjunction}{' '}
-              {selectedCount} and
-            </>
-          )
-        ) : description === 'Payers' ? (
-          selectedCount === 0 ? (
-            ''
-          ) : selectedCount === 1 ? (
-            <>
-              paid by <div className="button">{firstSelectedName} </div>
-            </>
-          ) : (
-            <>
-              paid <div className="button">{splitLabel} </div> by{' '}
-              {selectedCount}
-            </>
-          )
-        ) : null}
-      </StyledText>
-    );
+    const displayName = (name?: string) => (name === 'you' ? 'You' : (name ?? ''));
+
+    const value =
+      description === 'Participants'
+        ? selectedCount === 0
+          ? 'None'
+          : selectedCount === 1
+            ? `All to ${displayName(firstSelectedName)}`
+            : `${splitLabel} ${conjunction} ${selectedCount}`
+        : description === 'Payers'
+          ? selectedCount === 0
+            ? 'None'
+            : selectedCount === 1
+              ? displayName(firstSelectedName)
+              : `${splitLabel} by ${selectedCount}`
+          : '';
+
+    return <StyledText $error={error}>{value}</StyledText>;
   },
-  // Dependency comparison function (optional, but safe)
   (prevProps, nextProps) => {
     return (
       prevProps.description === nextProps.description &&

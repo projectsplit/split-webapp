@@ -4,7 +4,7 @@ import { PasswordSignInRequest, PasswordSignInResponse } from '../../types';
 import GoogleButton from '../../components/GoogleButton/GoogleButton';
 import { useLocation, useNavigate } from 'react-router-dom';
 import routes from '../../routes';
-import { StyledAuthPage } from './Auth.styled';
+import { StyledAuthPage } from './AuthPage.styled';
 import WelcomeHeader from './WelcomeHeader/WelcomeHeader';
 import Input from '../../components/Input/Input';
 import { sendPasswordCredentials } from '../../api/auth/api';
@@ -32,6 +32,7 @@ const AuthPage: React.FC = () => {
     any,
     PasswordSignInRequest
   >({
+    meta: { errorHandled: true },
     mutationFn: sendPasswordCredentials,
   });
 
@@ -74,7 +75,6 @@ const AuthPage: React.FC = () => {
             <Input
               inputMode="text"
               value={username}
-              //error={signInError ? true : false}
               placeholder="Username"
               onChange={(e) => {
                 setUsername(e.target.value);
@@ -91,14 +91,12 @@ const AuthPage: React.FC = () => {
             <Input
               type="password"
               value={password}
-              //error={signInError ? true : false}
               placeholder="Password"
               onChange={(e) => {
                 setPassword(e.target.value);
                 setRequestError('');
               }}
             />
-            {/* <div className="mailmsg">{signInError}&nbsp;</div> */}
           </div>
 
           <StyledForgotLinks>
@@ -119,14 +117,10 @@ const AuthPage: React.FC = () => {
           </StyledForgotLinks>
 
           <div className="createAccountSignIn">
-            <MyButton
-              onClick={handleSignIn}
-              fontSize="18"
-              isLoading={isPending}
-            >
+            <MyButton onClick={handleSignIn} isLoading={isPending}>
               Sign In
             </MyButton>
-            <MyButton onClick={() => navigate('/entry')} fontSize="18">
+            <MyButton variant="secondary" onClick={() => navigate('/entry')}>
               Create Account
             </MyButton>
           </div>

@@ -45,11 +45,15 @@ export const useExpenseTotals = (
           : 0
         : (convertedTotalSpent[userInfo?.userId] ?? 0);
 
+    const ownId = mode === Mode.Group ? userMemberId : userInfo?.userId;
+    const hasUserTotal = !!ownId && ownId in convertedTotalSpent;
+
     return {
       groupTotalsByCurrency,
       userTotalsByCurrency,
       totalFromAllExpensesConverted,
       totalFromUserExpensesConverted,
+      hasUserTotal,
     };
   }, [debts, mode, userMemberId, group, userInfo?.currency]);
 

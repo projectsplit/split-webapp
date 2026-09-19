@@ -19,33 +19,32 @@ export const StyledHomeSkeleton = styled.div`
   height: 65%;
 
   .welcomeShimmer {
-    padding: 1rem 0;
-    padding-left: 14px;
-    padding-right: 14px;
+    padding: ${({ theme }) => `${theme.space.s16} ${theme.space.s20}`};
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: ${({ theme }) => theme.space.s8};
     align-items: center;
   }
 
   .menuShimmer {
-    padding: 14px;
+    padding: ${({ theme }) => `0 ${theme.space.s20}`};
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: ${({ theme }) => theme.space.s12};
     flex-grow: 1;
     min-height: 0;
   }
 
   .bone {
-    background-color: ${({ theme }) => theme.layer2};
-    border-radius: 10px;
+    background-color: ${({ theme }) => theme.surface.card};
+    border-radius: ${({ theme }) => theme.radius.surface};
     animation: ${pulse} 1.5s ease-in-out infinite;
     flex: 1;
   }
 
   .boneLine {
-    background-color: ${({ theme }) => theme.layer2};
+    background-color: ${({ theme }) => theme.surface.card};
+    border-radius: ${({ theme }) => theme.space.s4};
     animation: ${pulse} 1.5s ease-in-out infinite;
   }
 
@@ -53,10 +52,10 @@ export const StyledHomeSkeleton = styled.div`
     position: fixed;
     bottom: 40px;
     right: 25px;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
-    background-color: ${({ theme }) => theme.layer2};
+    width: 52px;
+    height: 52px;
+    border-radius: ${({ theme }) => theme.radius.pill};
+    background-color: ${({ theme }) => theme.surface.card};
     animation: ${pulse} 1.5s ease-in-out infinite;
   }
 `;

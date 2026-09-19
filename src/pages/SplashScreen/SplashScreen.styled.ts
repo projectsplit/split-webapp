@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import { tokens } from '../../styles/tokens';
 
 export const StyledSplashScreen = styled.div`
   display: flex;
@@ -6,8 +7,8 @@ export const StyledSplashScreen = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100vh;
-  background-color: #000;
+  height: 100dvh;
+  background-color: ${tokens.surface.page};
 `;
 
 export const Logo = styled.img`

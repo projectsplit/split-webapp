@@ -1,4 +1,5 @@
 import { keyframes, styled } from 'styled-components';
+
 const fadeIn = keyframes`
   0% {
     opacity: 0;
@@ -11,96 +12,121 @@ const fadeIn = keyframes`
 export const StyledLabelPicker = styled.div<{
   $hasError?: boolean;
   $deleteClicked: boolean;
-  // $isOpen?: boolean;
 }>`
-  color: ${({ theme }) => theme.secondaryTextColor};
   display: flex;
   flex-direction: column;
-  position: relative;
-  cursor: text;
-  flex: 1;
-  min-height: 0;
+  gap: ${({ theme }) => theme.space.s12};
+  color: ${({ theme }) => theme.ink.primary};
 
-  .main {
-    &:focus-within {
-      border-color: ${({ theme, $hasError, $deleteClicked }) =>
-        $hasError
-          ? theme.errorColor
-          : $deleteClicked
-            ? ''
-            : theme.highlightColor};
-    }
-    transition: border-color 0.15s;
-    background-color: ${({ theme }) => theme.layer2};
+  .inputField {
     display: flex;
-    gap: 4px;
-    align-items: center;
-    border: 1px solid
-      ${({ theme, $hasError }) =>
-        $hasError ? theme.errorColor : theme.lineColor};
-    border-radius: 8px;
-    padding: 8px 16px;
-    flex-wrap: wrap;
-    position: relative;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.space.s8};
 
-    .selected-label {
-      color: #000000a2;
+    .main {
+      box-sizing: border-box;
       display: flex;
-      gap: 8px;
+      flex-wrap: wrap;
       align-items: center;
-      border-radius: 2px;
-      padding: 2px 8px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 700;
+      min-height: 47px;
+      gap: ${({ theme }) => theme.space.s6};
+      padding: ${({ theme }) => `9px ${theme.space.s14}`};
+      background-color: ${({ theme }) => theme.surface.card};
+      border: 1px solid
+        ${({ theme, $hasError }) =>
+          $hasError ? theme.direction.owe : theme.surface.hairline};
+      border-radius: ${({ theme }) => theme.radius.iconButton};
+      transition: border-color 0.15s;
+      cursor: text;
+      position: relative;
+
+      &:focus-within {
+        border-color: ${({ theme, $hasError, $deleteClicked }) =>
+          $hasError
+            ? theme.direction.owe
+            : $deleteClicked
+              ? theme.surface.hairline
+              : theme.accent.you.ink};
+      }
+
+      .input {
+        flex: 1;
+        min-width: 60px;
+        font-size: ${({ theme }) => theme.size.s15};
+      }
+
+      .search-annotation {
+        position: absolute;
+        left: 35px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        white-space: nowrap;
+        font-size: ${({ theme }) => theme.size.s15};
+        color: ${({ theme }) => theme.ink.tertiary};
+      }
     }
 
-    .input {
-      flex: 1;
-    }
-
-    .icon {
-      display: flex;
-      font-size: 1.4rem;
-      margin-left: auto; /* Pushes the button to the right */
-      cursor: pointer;
+    .hint {
+      font-size: ${({ theme }) => theme.size.s12};
+      line-height: 1.5;
+      color: ${({ theme }) => theme.ink.tertiary};
     }
   }
 
-  .meta {
-    background-color: ${({ theme }) => theme.backgroundcolor};
+  .tagIcon {
+    display: block;
+    flex-shrink: 0;
+    align-self: center;
+    margin-right: ${({ theme }) => theme.space.s2};
+    font-size: ${({ theme }) => theme.size.s13};
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  .selected-label {
     display: flex;
-    justify-content: space-between;
-    padding: 0px 4px;
-    font-size: 12px;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s6};
+    padding: ${({ theme }) => `5px ${theme.space.s10}`};
+    border-radius: ${({ theme }) => theme.radius.chip};
+    font-size: ${({ theme }) => theme.size.s13};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    cursor: pointer;
 
-    .description {
-      color: ${({ theme }) => theme.inactiveTabButtonTextColor};
+    svg {
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.icon.xs};
+      opacity: 0.6;
     }
+  }
 
-    .error {
-      color: ${({ theme }) => theme.errorColor};
-      font-weight: 400;
-    }
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    padding: ${({ theme }) => theme.space.s16};
   }
 
   .dropdown {
     display: flex;
     flex-direction: column;
-    /* position: absolute; */
-    z-index: 3;
-    width: 100%;
-    /* box-sizing: border-box; */
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    top: calc(100% + 10px);
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
+    overflow: hidden;
 
+    > * {
+      position: relative;
+      flex-shrink: 0;
+    }
 
-    .loading-container {
-      display: flex;
-      justify-content: center;
-      padding: 16px;
+    > * + *::before {
+      content: '';
+      position: absolute;
+      left: ${({ theme }) => theme.space.s14};
+      right: 0;
+      top: 0;
+      height: 1px;
+      background-color: ${({ theme }) => theme.surface.raisedHigh};
     }
 
     .suggested-label-container {
@@ -109,28 +135,39 @@ export const StyledLabelPicker = styled.div<{
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 14px;
-      box-sizing: content-box;
+      gap: ${({ theme }) => theme.space.s12};
+      min-height: 52px;
+      padding: ${({ theme }) => `8px ${theme.space.s14}`};
+      box-sizing: border-box;
+      cursor: pointer;
+
+      .suggested-label-text {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        padding: ${({ theme }) => `5px ${theme.space.s10}`};
+        border-radius: ${({ theme }) => theme.radius.chip};
+        font-size: ${({ theme }) => theme.size.s13};
+        font-weight: ${({ theme }) => theme.weight.medium};
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
       .spinnerAndTrash {
         display: flex;
         align-items: center;
         justify-content: center;
-        align-self: center;
-        margin-right: ${({ $deleteClicked }) =>
-          !$deleteClicked ? '0px' : '10px'};
-        width: 20px;
-        height: 20px;
-      }
+        flex-shrink: 0;
+        width: 34px;
+        height: 34px;
+        margin-right: -6px;
 
-      .suggested-label-text {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        border-radius: 2px;
-        padding: 2px 8px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 700;
+        .trash {
+          font-size: ${({ theme }) => theme.icon.sm};
+          color: ${({ theme }) => theme.surface.mark};
+          cursor: pointer;
+        }
       }
     }
   }
