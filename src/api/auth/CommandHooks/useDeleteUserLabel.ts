@@ -10,7 +10,12 @@ export const useDeleteUserLabel = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, AxiosError, { labelId: string }>({
+  return useMutation<
+    any,
+    AxiosError,
+    { groupId: string | undefined; labelId: string }
+  >({
+    meta: { errorHandled: true },
     mutationFn: ({ labelId }) => deleteUserLabel({ labelId }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({

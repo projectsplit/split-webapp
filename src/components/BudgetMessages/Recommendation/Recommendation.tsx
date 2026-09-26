@@ -22,7 +22,6 @@ export default function Recommendation({
   return (
     <StyledRecommendation style={style}>
       <div className="main">
-        {/* <div className="header">Recommendation</div> */}
         <div className="signParagraphWrap">
           <div className="sign">
             <IonIcon name="warning-outline" className="warning" />

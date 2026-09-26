@@ -22,20 +22,15 @@ interface ExpenseFormFooterProps {
   isDateShowing: Signal<boolean>;
   showPicker: boolean;
   setShowPicker: (value: boolean) => void;
+  isTrackingNow: boolean;
+  setIsTrackingNow: (value: boolean) => void;
   recurrenceSchedule: RecurrenceSchedule | null;
   setRecurrenceSchedule: (schedule: RecurrenceSchedule | null) => void;
   showRecurrencePicker: boolean;
   setShowRecurrencePicker: (value: boolean) => void;
-  /** The zone the chosen day and time are read in. */
   timeZoneIdForSchedule: string;
-  /** True while editing a series that is already running. */
   isExistingSeries: boolean;
-  /** Editing an existing one-off expense cannot turn it into a series after the fact. */
   canRecur: boolean;
-  /**
-   * A template's date is the anchor its whole schedule was derived from, not something an edit can
-   * move. Offering the picker there would be a control that silently does nothing.
-   */
   canPickDate: boolean;
 }
 
@@ -55,6 +50,8 @@ export const ExpenseFormFooter = ({
   isDateShowing,
   showPicker,
   setShowPicker,
+  isTrackingNow,
+  setIsTrackingNow,
   recurrenceSchedule,
   setRecurrenceSchedule,
   showRecurrencePicker,
@@ -95,6 +92,8 @@ export const ExpenseFormFooter = ({
           isDateShowing={isDateShowing}
           showPicker={showPicker}
           setShowPicker={setShowPicker}
+          realtimeUpdate={isTrackingNow}
+          setRealtimeUpdate={setIsTrackingNow}
         />
       )}
       {canRecur && (

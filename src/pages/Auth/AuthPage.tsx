@@ -2,21 +2,21 @@ import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { PasswordSignInRequest, PasswordSignInResponse } from '../../types';
 import GoogleButton from '../../components/GoogleButton/GoogleButton';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import routes from '../../routes';
-import { StyledAuthPage } from './Auth.styled';
+import { StyledAuthPage } from './AuthPage.styled';
 import WelcomeHeader from './WelcomeHeader/WelcomeHeader';
 import Input from '../../components/Input/Input';
 import { sendPasswordCredentials } from '../../api/auth/api';
 import MyButton from '../../components/MyButton/MyButton';
 import ForgotCredentials from '../../components/Menus/ForgotCredentials/ForgotCredentials';
 import { StyledForgotLinks } from '../../components/Menus/ForgotCredentials/ForgotCredentials.styled';
+import { isUserAuthenticated } from '../../helpers/isUserAuthenticated';
 
 const AuthPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [networkError, setNetworkError] = useState<string>('');
-  const [requestError, setRequestError] = useState<string>('');
+  const [formError, setFormError] = useState<string>('');
   const [forgotMode, setForgotMode] = useState<'password' | 'username' | null>(
     null
   );
@@ -32,13 +32,25 @@ const AuthPage: React.FC = () => {
     any,
     PasswordSignInRequest
   >({
+    meta: { errorHandled: true },
     mutationFn: sendPasswordCredentials,
   });
 
   const handleSignIn = () => {
-    if (!username || !password) return;
-    setNetworkError('');
-    setRequestError('');
+    setFormError('');
+
+    if (!username && !password) {
+      setFormError('Enter your username and password');
+      return;
+    }
+    if (!username) {
+      setFormError('Enter your username');
+      return;
+    }
+    if (!password) {
+      setFormError('Enter your password');
+      return;
+    }
 
     signInWithCredentialsMutation(
       { username, password },
@@ -49,16 +61,24 @@ const AuthPage: React.FC = () => {
         },
         onError: (error) => {
           if (error.code === 'ERR_NETWORK') {
-            setNetworkError(error.message + ': Check your internet connection');
-          }
-          if ((error.code = 'ERR_BAD_REQUEST')) {
-            setRequestError(error.response.data);
+            setFormError(error.message + ': Check your internet connection');
+          } else {
+            const message = error.response?.data;
+            setFormError(
+              typeof message === 'string' && message
+                ? message
+                : 'Sign-in failed. Please try again.'
+            );
           }
           console.error('Sign-in failed', error.message);
         },
       }
     );
   };
+
+  if (isUserAuthenticated()) {
+    return <Navigate to={redirect} replace />;
+  }
 
   return (
     <StyledAuthPage>
@@ -74,31 +94,23 @@ const AuthPage: React.FC = () => {
             <Input
               inputMode="text"
               value={username}
-              //error={signInError ? true : false}
               placeholder="Username"
               onChange={(e) => {
                 setUsername(e.target.value);
-                setRequestError('');
+                setFormError('');
               }}
             />
-            {requestError ? (
-              <div className="errormsg">{requestError}&nbsp;</div>
-            ) : (
-              ''
-            )}
           </div>
           <div className="inputBox">
             <Input
               type="password"
               value={password}
-              //error={signInError ? true : false}
               placeholder="Password"
               onChange={(e) => {
                 setPassword(e.target.value);
-                setRequestError('');
+                setFormError('');
               }}
             />
-            {/* <div className="mailmsg">{signInError}&nbsp;</div> */}
           </div>
 
           <StyledForgotLinks>
@@ -118,23 +130,22 @@ const AuthPage: React.FC = () => {
             </button>
           </StyledForgotLinks>
 
+          <div className="formError">{formError}</div>
+
           <div className="createAccountSignIn">
-            <MyButton
-              onClick={handleSignIn}
-              fontSize="18"
-              isLoading={isPending}
-            >
+            <MyButton onClick={handleSignIn} isLoading={isPending}>
               Sign In
             </MyButton>
-            <MyButton onClick={() => navigate('/entry')} fontSize="18">
+            <MyButton
+              variant="secondary"
+              onClick={() => navigate(routes.CREATE)}
+            >
               Create Account
             </MyButton>
           </div>
 
-          <div className="errormsg">{networkError}</div>
           <div className="or ">OR</div>
           <GoogleButton />
-          <div className="errormsg">{networkError}</div>
         </div>
       </div>
       {forgotMode && (

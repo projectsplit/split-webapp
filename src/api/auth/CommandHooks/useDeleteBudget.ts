@@ -10,6 +10,7 @@ export const useDeleteBudget = (
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, string>({
+    meta: { errorHandled: true },
     mutationFn: (budgetId) => deleteBudget({ budgetId }),
     onSuccess: async () => {
       queryClient.removeQueries({ queryKey: ['budgets', 'active'], exact: true });

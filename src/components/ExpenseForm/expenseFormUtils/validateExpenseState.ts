@@ -16,7 +16,6 @@ export const validateExpenseState = (
   let payersErr = '';
   let showAmountErr = false;
 
-  // Category skip
   if (participantsCategory === 'Shares' && payersCategory === 'Shares') {
     return {
       isValid: true,
@@ -39,7 +38,7 @@ export const validateExpenseState = (
   if (isAmountEmptyOrZero) {
     return {
       isValid: false,
-      errors: {}, // or define logic for empty amount
+      errors: {},
       showAmountErr: false,
       amountErr: '',
       participantsErr: '',
@@ -49,7 +48,6 @@ export const validateExpenseState = (
 
   const currentAmount = Number(amount);
 
-  // Show amount error
   const activeParticipants = participantsByCategory[participantsCategory] ?? [];
   const selectedParticipants = activeParticipants.filter((p) => p.selected);
   const activePayers = payersByCategory[payersCategory] ?? [];
@@ -59,7 +57,6 @@ export const validateExpenseState = (
     showAmountErr = true;
   }
 
-  // Participants validation
   const areParticipantsValid = selectedParticipants.every(
     (p) => p.actualAmount !== 'NaN' && Number(p.actualAmount) > 0
   );
@@ -87,7 +84,6 @@ export const validateExpenseState = (
       ? 'Participation amounts must add up to total'
       : '';
 
-  // Payers validation
   const arePayersValid = selectedPayers.every(
     (p) => p.actualAmount !== 'NaN' && Number(p.actualAmount) > 0
   );
@@ -123,7 +119,6 @@ export const validateExpenseState = (
       participants: participantsErr,
       payers: payersErr,
     },
-    // Return individual error strings too for granular updates
     amountErr,
     participantsErr,
     payersErr,

@@ -13,5 +13,9 @@ export function isElementNode(
 export function isBeautifulMentionNode(
   node: SerializedLexicalNode
 ): node is SerializedBeautifulMentionNode {
-  return node.type === 'beautifulMention' && 'data' in node;
+  return (
+    (node.type === 'beautifulMention' ||
+      node.type === 'custom-beautifulMention') &&
+    'data' in node
+  );
 }

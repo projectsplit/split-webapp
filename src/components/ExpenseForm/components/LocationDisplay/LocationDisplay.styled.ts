@@ -1,35 +1,18 @@
 import styled from 'styled-components';
+import { StyledFormChip } from '../FormChip.styled';
 
-export const StyledLocationDisplay = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+export const StyledLocationDisplay = styled(StyledFormChip)`
+  .chip {
+    overflow: hidden;
+  }
 
-  .locationIcon {
-    font-size: 30px;
-    margin-right: 10px;
-    color: ${({ theme }) => theme.yellow};
+  .chipLabel {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .locationAndClose {
-    cursor: pointer;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border: 1px solid #2f3139;
-    border-radius: 10px;
-    padding: 8px;
-    .coord {
-      margin-right: 10px;
-    }
-  }
-  .closeButtonWrapper {
-    display: flex;
-    align-items: center;
-    .closeButton {
-      margin-left: 10px;
-      cursor: pointer;
-      font-size: 1.4rem;
-      color: ${({ theme }) => theme.textActiveColor};
-    }
+
+  .coord {
+    font-family: ${({ theme }) => theme.font.mono};
   }
 `;

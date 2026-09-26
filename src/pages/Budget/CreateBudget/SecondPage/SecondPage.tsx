@@ -19,6 +19,9 @@ export const SecondPage = ({ data, actions, scopeMenu }: SecondPageProps) => {
           allGroupsSelected={data.allGroupsSelected}
           $inputError={data.errors.showScopeError && !!data.errors.scopeError}
         />
+        <div className="sectionNote">
+          Which transactions count against this cap.
+        </div>
         <span className="errorMsg">
           {data.errors.showScopeError && data.errors.scopeError
             ? data.errors.scopeError
@@ -26,6 +29,9 @@ export const SecondPage = ({ data, actions, scopeMenu }: SecondPageProps) => {
         </span>
       </div>
       <div className="errorsWrapper">
+        <div className="sectionHeader">
+          <div className="prompt">Description</div>
+        </div>
         <FormInput
           description=""
           placeholder="Description"

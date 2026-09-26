@@ -2,6 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import { NewExpenseAnimationProps } from '../../interfaces';
 import EditExpenseForm from '../EditExpenseForm/EditExpenseForm';
 import { useRef } from 'react';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function EditExpenseAnimation({
   groupId,
@@ -17,6 +18,7 @@ export default function EditExpenseAnimation({
   nonGroupUsers,
 }: NewExpenseAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'editExpense', () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === 'editExpense'}

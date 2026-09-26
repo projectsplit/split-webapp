@@ -1,37 +1,18 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
+import { StyledBudgetMessageCard } from '../BudgetMessageCard.styled';
 
-export const StyledNoBudgetSubmittedMessage = styled.div`
-  background-color: ${({ theme }) => theme.layer2};
-  border-radius: 6px;
-  padding: 0.4rem;
-  .main {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
-    .signParagraphWrap {
+export const StyledNoBudgetSubmittedMessage = styled(StyledBudgetMessageCard)`
+  .main .signParagraphWrap {
+    .paragraph {
       display: flex;
-      flex-direction: row;
-      /* align-items: center; */
-      .sign {
-        display: flex;
-        justify-self: center;
-        align-self: center;
-        margin-right: 10px;
-      }
-      .paragraph {
-        font-size: 14px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-
-        justify-content: center;
-      }
-      .information {
-        font-size: 40px;
-        color: ${({ theme }) => theme.grey};
-      }
+      flex-direction: column;
+      justify-content: center;
+      gap: ${({ theme }) => theme.space.s8};
+      min-width: 0;
+      font-size: ${({ theme }) => theme.size.s13};
+      line-height: 1.6;
+      text-wrap: pretty;
+      color: ${({ theme }) => theme.ink.secondary};
     }
   }
 `;

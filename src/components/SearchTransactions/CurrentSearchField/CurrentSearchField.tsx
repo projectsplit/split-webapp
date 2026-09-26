@@ -1,6 +1,7 @@
-import { StyledCurrentSearchField } from './StyledCurrentSearchField';
+import { StyledSearchFilterRow } from '../SearchFilterRow.styled';
 import Pill from '../../Pill/Pill';
 import { CurrentSearchFieldProps } from '../../../interfaces';
+import { tokens } from '../../../styles/tokens';
 
 export default function CurrentSearchField({
   currentSearch,
@@ -17,20 +18,22 @@ export default function CurrentSearchField({
   };
 
   return (
-    <StyledCurrentSearchField>
+    <StyledSearchFilterRow>
       <div className="category">search term:</div>
       &nbsp;
       <div className="pills">
         <Pill
           title={currentSearch}
-          color="#ffffff"
+          color={tokens.ink.primary}
           closeButton={true}
           onClose={() => removeFilter()}
-          $textColor="#000000c8"
           $border={false}
-          fontSize="16px"
+          fontSize="12px"
+          $textColor={tokens.ink.primary}
+          $closeButtonColor={tokens.ink.tertiary}
+          $radius="9px"
         />
       </div>
-    </StyledCurrentSearchField>
+    </StyledSearchFilterRow>
   );
 }

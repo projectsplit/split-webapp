@@ -9,7 +9,6 @@ export function groupTransactions(
   const groupedMap = new Map<string, GroupedTransaction>();
 
   for (const transaction of transactions) {
-    // Group by receiverId
     const receiverKey = `receiver-${transaction.currency}-${transaction.creditor}`;
 
     if (!groupedMap.has(receiverKey)) {
@@ -28,7 +27,6 @@ export function groupTransactions(
       groupedMap.get(receiverKey)!.totalAmount
     ).add(transaction.amount);
 
-    // Group by senderId
     const senderKey = `sender-${transaction.currency}-${transaction.debtor}`;
 
     if (!groupedMap.has(senderKey)) {

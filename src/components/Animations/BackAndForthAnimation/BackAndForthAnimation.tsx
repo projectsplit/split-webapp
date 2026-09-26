@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 import { StyledBackAndForthAnimation } from './BackAndForthAnimation.styled';
 
 interface BackAndForthAnimationProps {
@@ -30,7 +31,7 @@ export const BackAndForthAnimation = ({
       <TransitionGroup
         component="div"
         className="transition-group"
-        childFactory={(child) =>
+        childFactory={(child: React.ReactElement<CSSTransitionProps>) =>
           React.cloneElement(child, {
             classNames:
               animDirection === 'forward'

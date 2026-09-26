@@ -1,36 +1,19 @@
 import { styled } from 'styled-components';
+import { paddedScrollPageStyles } from '@/styles/paddedScrollPage';
 
 export const StyledRecurringExpenses = styled.div`
-  display: flex;
-  flex-direction: column;
-  color: ${({ theme }) => theme.lightColor};
-  box-sizing: border-box;
-  width: 100%;
-  height: 100dvh;
-  margin: 0;
-  padding: 14px 0;
-  gap: 15px;
-  overflow: hidden;
-
-  & > *:not(.scrollContainer) {
-    padding-left: 14px;
-    padding-right: 14px;
-  }
+  ${paddedScrollPageStyles}
 
   .scrollContainer {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 0 14px;
+    gap: ${({ theme }) => theme.space.s10};
+    padding: ${({ theme }) => `0 ${theme.space.s20}`};
 
     &::-webkit-scrollbar {
       width: 4px;
     }
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
+      background: ${({ theme }) => theme.surface.raisedHigh};
+      border-radius: ${({ theme }) => theme.space.s4};
     }
   }
 
@@ -41,25 +24,27 @@ export const StyledRecurringExpenses = styled.div`
     justify-content: center;
     align-items: center;
     flex: 1;
-    color: ${({ theme }) => theme.secondaryTextColor};
+    color: ${({ theme }) => theme.ink.secondary};
     text-align: center;
-    padding: 0 24px;
-    gap: 10px;
+    padding: ${({ theme }) => `0 ${theme.space.s24}`};
+    gap: ${({ theme }) => theme.space.s10};
   }
 
   .empty {
     .emptyIcon {
-      font-size: 40px;
-      color: ${({ theme }) => theme.lineColor};
+      font-size: 56px;
+      color: ${({ theme }) => theme.surface.mark};
     }
 
     .emptyTitle {
-      color: ${({ theme }) => theme.whiteText};
-      font-size: 16px;
+      color: ${({ theme }) => theme.ink.primary};
+      font-size: ${({ theme }) => theme.size.s15};
+      font-weight: ${({ theme }) => theme.weight.semibold};
     }
 
     .emptyHint {
-      font-size: 14px;
+      font-size: ${({ theme }) => theme.size.s13};
+      line-height: 1.5;
       max-width: 260px;
     }
   }
@@ -69,41 +54,44 @@ export const StyledRecurringExpenses = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: auto;
-    padding: 10px 14px 14px 14px;
+    padding: 12px 20px 20px;
+    background: ${({ theme }) =>
+      `linear-gradient(to top, ${theme.surface.page} 60%, transparent)`};
   }
 `;
 
-export const StyledRecurringExpenseRow = styled.div<{ $isPaused: boolean }>`
+export const StyledRecurringExpenseRow = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  background-color: ${({ theme }) => theme.layer2};
-  border: 1px solid ${({ theme }) => theme.lineColor};
-  border-radius: 8px;
-  padding: 12px;
+  gap: ${({ theme }) => theme.space.s8};
+  background-color: ${({ theme }) => theme.surface.card};
+  border: 1px solid ${({ theme }) => theme.surface.hairline};
+  border-radius: ${({ theme }) => theme.radius.surface};
+  padding: ${({ theme }) => theme.space.s14};
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-
-  /* Paused rows stay legible but visibly inert, so a stopped series is never mistaken for a
-     running one at a glance. */
-  opacity: ${({ $isPaused }) => ($isPaused ? 0.55 : 1)};
 
   .topRow {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: ${({ theme }) => theme.space.s10};
   }
 
   .scope {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 6px;
-    color: ${({ theme }) => theme.secondaryTextColor};
-    font-size: 13px;
+    gap: ${({ theme }) => theme.space.s6};
     min-width: 0;
+    font-size: ${({ theme }) => theme.size.s12};
+    color: ${({ theme }) => theme.ink.tertiary};
+
+    svg {
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.icon.xs};
+    }
 
     .scopeName {
       white-space: nowrap;
@@ -113,14 +101,26 @@ export const StyledRecurringExpenseRow = styled.div<{ $isPaused: boolean }>`
   }
 
   .amount {
-    font-weight: 600;
+    flex-shrink: 0;
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s15};
+    font-weight: ${({ theme }) => theme.weight.medium};
     white-space: nowrap;
   }
 
   .descr {
+    font-size: ${({ theme }) => theme.size.s15};
+    font-weight: ${({ theme }) => theme.weight.medium};
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .labels {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: ${({ theme }) => theme.space.s6};
   }
 
   .bottomRow {
@@ -128,31 +128,50 @@ export const StyledRecurringExpenseRow = styled.div<{ $isPaused: boolean }>`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    color: ${({ theme }) => theme.secondaryTextColor};
+    gap: ${({ theme }) => theme.space.s10};
+    font-size: ${({ theme }) => theme.size.s12};
+    color: ${({ theme }) => theme.ink.tertiary};
   }
 
   .cycle {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 6px;
+    gap: ${({ theme }) => theme.space.s6};
+    min-width: 0;
+
+    svg {
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.size.s12};
+    }
+
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .nextRun {
+    flex-shrink: 0;
   }
 
   .paused {
-    color: ${({ theme }) => theme.orange};
+    flex-shrink: 0;
+    padding: ${({ theme }) => `${theme.space.s3} ${theme.space.s8}`};
+    border-radius: ${({ theme }) => theme.radius.pill};
+    background-color: ${({ theme }) => theme.surface.raised};
+    color: ${({ theme }) => theme.ink.secondary};
+    font-size: ${({ theme }) => theme.size.s10};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .error {
-    color: ${({ theme }) => theme.errorColor};
-    font-size: 13px;
-  }
-
-  .labels {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 4px;
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.5;
+    color: ${({ theme }) => theme.direction.owe};
+    text-wrap: pretty;
   }
 `;

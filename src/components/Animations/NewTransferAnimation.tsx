@@ -2,20 +2,20 @@ import { CSSTransition } from 'react-transition-group';
 import { NewTransferAnimationProps } from '../../interfaces';
 import TransferForm from '../TransferForm/TransferForm';
 import { useRef } from 'react';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function NewTransferAnimation({
   timeZoneId,
   menu,
   groupMembers,
-  nonGroupUsers,
   currency,
-  isnonGroupTransfer,
   groupId,
   nonGroupMenu,
   fromHomeGroup,
   fromHome,
 }: NewTransferAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'newTransfer', () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === 'newTransfer'}
@@ -28,9 +28,7 @@ export default function NewTransferAnimation({
         timeZoneId={timeZoneId}
         menu={menu}
         groupMembers={groupMembers}
-        nonGroupUsers={nonGroupUsers}
         currency={currency}
-        isnonGroupTransfer={isnonGroupTransfer}
         nonGroupMenu={nonGroupMenu}
         fromHomeGroup={fromHomeGroup}
         fromHome={fromHome}

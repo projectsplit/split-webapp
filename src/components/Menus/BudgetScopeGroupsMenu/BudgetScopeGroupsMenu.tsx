@@ -3,8 +3,8 @@ import { StyledBudgetScopeGroupsMenu } from './BudgetScopeGroupsMenu.styled';
 import { Signal } from '@preact/signals-react';
 import { TiGroup } from 'react-icons/ti';
 import { Group } from '@/types';
-import { FaCheckCircle } from 'react-icons/fa';
 import { IoIosArchive } from 'react-icons/io';
+import IonIcon from '@reacticons/ionicons';
 
 interface BudgetScopeGroupsMenuProps {
   targetGroupIds: Signal<string[]>;
@@ -52,56 +52,57 @@ export const BudgetScopeGroupsMenu = ({
     [targetGroupIds]
   );
 
+  const isSelected = (groupId: string) =>
+    targetGroupIds.value.includes(groupId) || allGroupsSelected.value;
+
   return (
-    <StyledBudgetScopeGroupsMenu $maxHeight="49vh">
-      <div className="headerAndSearchbar">
-        <input
-          className="searchBar"
-          placeholder="Search"
-          onChange={handleInputChange}
-          value={keyword}
-        />
-        {flattenedGroups?.length !== 0 && (
+    <StyledBudgetScopeGroupsMenu>
+      <input
+        className="searchBar"
+        placeholder="Search groups"
+        onChange={handleInputChange}
+        value={keyword}
+      />
+
+      {flattenedGroups?.length === 0 ? (
+        <div className="noResults">No groups found</div>
+      ) : (
+        <div className="groupList">
           <div
-            className={`selectAll ${allGroupsSelected.value ? 'selected' : ''}`}
+            className={`groupRow ${allGroupsSelected.value ? 'selected' : ''}`}
             onClick={() => {
               setKeyword('');
               allGroupsSelected.value = !allGroupsSelected.value;
               targetGroupIds.value = [];
             }}
           >
-            {' '}
-            <span className="text">All</span>
-          </div>
-        )}
-      </div>{' '}
-      {flattenedGroups?.length === 0 && (
-        <div className="noResults">No groups found</div>
-      )}
-      <div className="groupSection">
-        {flattenedGroups?.map((group, index) => (
-          <div
-            key={index}
-            className={`groups ${targetGroupIds.value.includes(group.id) || allGroupsSelected.value ? 'selected' : ''}`}
-            onClick={() => handleSuggestedGroupClick(group.id)}
-          >
-            <TiGroup className="groupIcon" />
-            <div className="groupNameAndArchivedStatus">
-              <span>{group.name} </span>
-              {group.isArchived && (
-                <div className="archivedText">
-                  {' '}
-                  <IoIosArchive className="archived" />
-                </div>
-              )}
-            </div>
-            {(targetGroupIds.value.includes(group.id) ||
-              allGroupsSelected.value) && (
-              <FaCheckCircle className="checkIcon" />
+            <span className="groupIcon">
+              <TiGroup />
+            </span>
+            <div className="groupName">All groups</div>
+            {allGroupsSelected.value && (
+              <IonIcon name="checkmark-outline" className="check" />
             )}
           </div>
-        ))}{' '}
-      </div>
+
+          {flattenedGroups?.map((group) => (
+            <div
+              key={group.id}
+              className={`groupRow ${isSelected(group.id) ? 'selected' : ''}`}
+              onClick={() => handleSuggestedGroupClick(group.id)}
+            >
+              <span className="groupIcon">
+                <TiGroup />
+              </span>
+              <div className="groupName">{group.name}</div>
+              {group.isArchived && <IoIosArchive className="archived" />}
+              {isSelected(group.id) && (
+                <IonIcon name="checkmark-outline" className="check" />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </StyledBudgetScopeGroupsMenu>
   );
 };

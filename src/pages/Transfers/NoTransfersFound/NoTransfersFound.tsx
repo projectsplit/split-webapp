@@ -41,17 +41,15 @@ export const NoTransfersFound = ({
               queryClient
             )}
           </div>
-          <div className="textAndIcon">
-            <span className="text">
-              No transfers found. Have a go and refine your search!
-            </span>
-            <span className="emoji">🧐</span>
+          <div className="emptyState">
+            <div className="msg">
+              No transfers found. Have a go and refine your search! 🧐
+            </div>
             <FaMagnifyingGlass className="icon" />
           </div>
-          <div />
         </div>
       ) : (
-        <div className="noData">
+        <div className="emptyState">
           <div className="msg">There are currently no transfers</div>
           <BiTransfer className="icon" />
         </div>

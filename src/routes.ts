@@ -7,7 +7,20 @@ const routes = {
   RESET_PASSWORD: '/reset-password',
   USER_INVITATIONS: '/invitations',
   JOIN: '/j/:code',
+  GROUPS: '/shared',
   GROUP: '/shared/:groupid',
+  GROUP_EXPENSES: '/shared/:groupid/expenses',
+  GROUP_TRANSFERS: '/shared/:groupid/transfers',
+  GENERATE_CODE: '/shared/generatecode/:groupid',
+  NON_GROUP: '/shared/nongroup',
+  NON_GROUP_EXPENSES: '/shared/nongroup/expenses',
+  NON_GROUP_TRANSFERS: '/shared/nongroup/transfers',
+  PERSONAL: '/personal',
+  RECURRING_EXPENSES: '/recurring-expenses',
+  ANALYTICS: '/analytics',
+  BUDGET: '/budget',
+  BUDGET_CREATE: '/budget/create',
+  BUDGET_MANAGE: '/budget/manage',
 };
 
 export default routes;

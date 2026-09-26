@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export interface IGeolocationPositionError {
+interface IGeolocationPositionError {
   readonly code: number;
   readonly message: string;
   readonly PERMISSION_DENIED: number;
@@ -8,7 +8,7 @@ export interface IGeolocationPositionError {
   readonly TIMEOUT: number;
 }
 
-export interface GeoLocationSensorState {
+interface GeoLocationSensorState {
   loading: boolean;
   accuracy: number | null;
   altitude: number | null;

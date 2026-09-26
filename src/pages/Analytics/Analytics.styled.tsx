@@ -3,69 +3,143 @@ import { styled } from 'styled-components';
 export const StyledAnalytics = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.lightColor};
+  color: ${({ theme }) => theme.ink.primary};
   box-sizing: border-box;
-  /* background-color: ${({ theme }) => theme.layer2}; */
   width: 100%;
   height: 100%;
-  padding: 14px;
-  gap: 20px;
+  padding: ${({ theme }) => `0 ${theme.space.s20}`};
+  gap: 15px;
   position: relative;
+  overflow: hidden;
+  background-color: ${({ theme }) => theme.surface.page};
 
-  .buttons {
-    margin-top: 0px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  & > * {
+    flex-shrink: 0;
   }
-  .groupCategories {
+
+  .scrollArea {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 4px;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.space.s20};
+    padding-bottom: 32px;
+
+    /* the scroller is also the column: without this the rows shrink to fit
+       instead of overflowing, so there is nothing to scroll to */
+    & > * {
+      flex-shrink: 0;
+    }
   }
 
   .buttonChart {
-    font-size: 40px;
-    color: ${({ theme }) => theme.deepPurple};
-  }
-  .calendar {
-    font-size: 25px;
-    color: ${({ theme }) => theme.layer6};
-    border-top: 15px;
+    font-size: ${({ theme }) => theme.icon.md};
   }
 
-  .dashed {
-    width: 40px;
-    fill: ${({ theme }) => theme.deepPurple};
+  .dateOptions {
+    display: flex;
+    flex-direction: row;
+    gap: ${({ theme }) => theme.space.s8};
+    align-items: center;
+
+    .height {
+      display: none;
+    }
   }
 
   .charts {
     .chartWrapper {
       display: flex;
       flex-direction: column;
+
       .chart {
         width: 600px;
         align-self: center;
       }
     }
   }
-  .dateOptions {
-    display: flex;
-    flex-direction: row;
-    gap: 4px;
-    align-items: center;
-    .height {
-      height: 13px;
-    }
+
+  .calendar {
+    font-size: ${({ theme }) => theme.icon.lg};
+    color: ${({ theme }) => theme.ink.secondary};
   }
+
+  .dashed {
+    width: 40px;
+    fill: ${({ theme }) => theme.accent.you.ink};
+  }
+
   .spinner {
     display: flex;
     flex-direction: column;
     flex: 1;
     align-items: center;
     justify-content: center;
-
     height: 100%;
   }
+  .headline {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: ${({ theme }) => theme.space.s6};
+  }
+
+  .headlineSide {
+    display: flex;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.space.s6};
+  }
+
+  .headlineFigure {
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.figure.page};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    letter-spacing: -0.02em;
+    color: ${({ theme }) => theme.accent.you.ink};
+  }
+
+  .headlineForecast {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: ${({ theme }) => theme.space.s8};
+  }
+
+  .shimmerText {
+    position: relative;
+    display: inline-block;
+  }
+
+  .shimmerText > div {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .headlineForecastValue {
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s13};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  .monoValue {
+    font-family: ${({ theme }) => theme.font.mono};
+  }
+
+  .monoValue.up {
+    color: ${({ theme }) => theme.direction.owe};
+  }
+
+  .monoValue.down {
+    color: ${({ theme }) => theme.direction.owed};
+  }
+
+  .dot {
+    color: ${({ theme }) => theme.surface.dot};
+  }
+
 `;

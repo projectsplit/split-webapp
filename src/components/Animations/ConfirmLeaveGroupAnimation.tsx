@@ -2,14 +2,15 @@ import { CSSTransition } from 'react-transition-group';
 import { useRef } from 'react';
 import { ConfirmLeaveGroupAnimationProps } from '../../interfaces';
 import ConfirmLeaveGroup from '../Menus/Confirmations/ConfirmLeaveGroup';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function ConfirmLeaveGroupAnimation({
   menu,
   groupId,
-  memberId,
   openGroupOptionsMenu,
 }: ConfirmLeaveGroupAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'leaveGroup', () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === 'leaveGroup'}
@@ -21,7 +22,6 @@ export default function ConfirmLeaveGroupAnimation({
       <ConfirmLeaveGroup
         menu={menu}
         groupId={groupId}
-        memberId={memberId}
         openGroupOptionsMenu={openGroupOptionsMenu}
       />
     </CSSTransition>

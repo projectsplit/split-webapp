@@ -20,7 +20,6 @@ const openExchangeCurrencies = [
   { symbol: 'AFN', name: 'Afghan Afghani', significantDecimalDigits: 2 },
   { symbol: 'ALL', name: 'Albanian Lek', significantDecimalDigits: 0 },
   { symbol: 'AMD', name: 'Armenian Dram', significantDecimalDigits: 2 },
-  // { symbol: "ANG", name: "Netherlands Antillean Guilder" },
   { symbol: 'AOA', name: 'Angolan Kwanza', significantDecimalDigits: 2 },
   { symbol: 'ARS', name: 'Argentine Peso', significantDecimalDigits: 2 },
   { symbol: 'AUD', name: 'Australian Dollar', significantDecimalDigits: 2 },
@@ -41,11 +40,9 @@ const openExchangeCurrencies = [
   { symbol: 'BOB', name: 'Bolivian Boliviano', significantDecimalDigits: 2 },
   { symbol: 'BRL', name: 'Brazilian Real', significantDecimalDigits: 2 },
   { symbol: 'BSD', name: 'Bahamian Dollar', significantDecimalDigits: 2 },
-  // { symbol: "BTC", name: "Bitcoin" },
   { symbol: 'BTN', name: 'Bhutanese Ngultrum', significantDecimalDigits: 2 },
   { symbol: 'BWP', name: 'Botswanan Pula', significantDecimalDigits: 2 },
   { symbol: 'BYN', name: 'Belarusian Ruble', significantDecimalDigits: 2 },
-  // { symbol: "BYR", name: "Belarusian Ruble (pre-2016)" },
   { symbol: 'BZD', name: 'Belize Dollar', significantDecimalDigits: 2 },
   { symbol: 'CAD', name: 'Canadian Dollar', significantDecimalDigits: 2 },
   { symbol: 'CDF', name: 'Congolese Franc', significantDecimalDigits: 2 },
@@ -56,10 +53,9 @@ const openExchangeCurrencies = [
     significantDecimalDigits: 4,
   },
   { symbol: 'CLP', name: 'Chilean Peso', significantDecimalDigits: 0 },
-  // { symbol: "CNH", name: "Chinese Yuan (Offshore)" },
   { symbol: 'COP', name: 'Colombian Peso', significantDecimalDigits: 2 },
   { symbol: 'CRC', name: 'Costa Rican Colón', significantDecimalDigits: 2 },
-  { symbol: 'CUC', name: 'Cuban Convertible Peso' }, // Not available in JSON
+  { symbol: 'CUC', name: 'Cuban Convertible Peso' },
   { symbol: 'CUP', name: 'Cuban Peso', significantDecimalDigits: 2 },
   { symbol: 'CVE', name: 'Cape Verdean Escudo', significantDecimalDigits: 2 },
   { symbol: 'CZK', name: 'Czech Republic Koruna', significantDecimalDigits: 2 },
@@ -67,7 +63,6 @@ const openExchangeCurrencies = [
   { symbol: 'DKK', name: 'Danish Krone', significantDecimalDigits: 2 },
   { symbol: 'DOP', name: 'Dominican Peso', significantDecimalDigits: 2 },
   { symbol: 'DZD', name: 'Algerian Dinar', significantDecimalDigits: 2 },
-  // { symbol: "EEK", name: "Estonian Kroon" },
   { symbol: 'EGP', name: 'Egyptian Pound', significantDecimalDigits: 2 },
   { symbol: 'ERN', name: 'Eritrean Nakfa', significantDecimalDigits: 2 },
   { symbol: 'ETB', name: 'Ethiopian Birr', significantDecimalDigits: 2 },
@@ -78,7 +73,6 @@ const openExchangeCurrencies = [
     significantDecimalDigits: 2,
   },
   { symbol: 'GEL', name: 'Georgian Lari', significantDecimalDigits: 2 },
-  // { symbol: "GGP", name: "Guernsey Pound" },
   { symbol: 'GHS', name: 'Ghanaian Cedi', significantDecimalDigits: 2 },
   { symbol: 'GIP', name: 'Gibraltar Pound', significantDecimalDigits: 2 },
   { symbol: 'GMD', name: 'Gambian Dalasi', significantDecimalDigits: 2 },
@@ -87,16 +81,14 @@ const openExchangeCurrencies = [
   { symbol: 'GYD', name: 'Guyanaese Dollar', significantDecimalDigits: 2 },
   { symbol: 'HKD', name: 'Hong Kong Dollar', significantDecimalDigits: 2 },
   { symbol: 'HNL', name: 'Honduran Lempira', significantDecimalDigits: 2 },
-  { symbol: 'HRK', name: 'Croatian Kuna' }, // Not available in JSON
+  { symbol: 'HRK', name: 'Croatian Kuna' },
   { symbol: 'HTG', name: 'Haitian Gourde', significantDecimalDigits: 2 },
   { symbol: 'HUF', name: 'Hungarian Forint', significantDecimalDigits: 2 },
   { symbol: 'IDR', name: 'Indonesian Rupiah', significantDecimalDigits: 2 },
   { symbol: 'ILS', name: 'Israeli New Sheqel', significantDecimalDigits: 2 },
-  // { symbol: "IMP", name: "Manx pound" },
   { symbol: 'IQD', name: 'Iraqi Dinar', significantDecimalDigits: 3 },
   { symbol: 'IRR', name: 'Iranian Rial', significantDecimalDigits: 2 },
   { symbol: 'ISK', name: 'Icelandic Króna', significantDecimalDigits: 0 },
-  // { symbol: "JEP", name: "Jersey Pound" },
   { symbol: 'JMD', name: 'Jamaican Dollar', significantDecimalDigits: 2 },
   { symbol: 'JOD', name: 'Jordanian Dinar', significantDecimalDigits: 3 },
   { symbol: 'KES', name: 'Kenyan Shilling', significantDecimalDigits: 2 },
@@ -121,9 +113,7 @@ const openExchangeCurrencies = [
   { symbol: 'MMK', name: 'Myanma Kyat', significantDecimalDigits: 0 },
   { symbol: 'MNT', name: 'Mongolian Tugrik', significantDecimalDigits: 2 },
   { symbol: 'MOP', name: 'Macanese Pataca', significantDecimalDigits: 2 },
-  // { symbol: "MRO", name: "Mauritanian Ouguiya (pre-2018)" },
   { symbol: 'MRU', name: 'Mauritanian Ouguiya', significantDecimalDigits: 2 },
-  // { symbol: "MTL", name: "Maltese Lira" },
   { symbol: 'MUR', name: 'Mauritian Rupee', significantDecimalDigits: 2 },
   { symbol: 'MVR', name: 'Maldivian Rufiyaa', significantDecimalDigits: 2 },
   { symbol: 'MWK', name: 'Malawian Kwacha', significantDecimalDigits: 2 },
@@ -164,17 +154,16 @@ const openExchangeCurrencies = [
   { symbol: 'SEK', name: 'Swedish Krona', significantDecimalDigits: 2 },
   { symbol: 'SGD', name: 'Singapore Dollar', significantDecimalDigits: 2 },
   { symbol: 'SHP', name: 'Saint Helena Pound', significantDecimalDigits: 2 },
-  { symbol: 'SLL', name: 'Sierra Leonean Leone' }, // No matching data (JSON uses "SLE")
+  { symbol: 'SLL', name: 'Sierra Leonean Leone' },
   { symbol: 'SOS', name: 'Somali Shilling', significantDecimalDigits: 2 },
   { symbol: 'SRD', name: 'Surinamese Dollar', significantDecimalDigits: 2 },
   { symbol: 'SSP', name: 'South Sudanese Pound', significantDecimalDigits: 2 },
-  // { symbol: "STD", name: "São Tomé and Príncipe Dobra (pre-2018)" },
   {
     symbol: 'STN',
     name: 'São Tomé and Príncipe Dobra',
     significantDecimalDigits: 2,
   },
-  { symbol: 'SVC', name: 'Salvadoran Colón' }, // Not available in JSON
+  { symbol: 'SVC', name: 'Salvadoran Colón' },
   { symbol: 'SYP', name: 'Syrian Pound', significantDecimalDigits: 2 },
   { symbol: 'SZL', name: 'Swazi Lilangeni', significantDecimalDigits: 2 },
   { symbol: 'THB', name: 'Thai Baht', significantDecimalDigits: 2 },
@@ -204,9 +193,7 @@ const openExchangeCurrencies = [
   { symbol: 'WST', name: 'Samoan Tala', significantDecimalDigits: 2 },
   { symbol: 'YER', name: 'Yemeni Rial', significantDecimalDigits: 2 },
   { symbol: 'ZAR', name: 'South African Rand', significantDecimalDigits: 2 },
-  // { symbol: "ZMK", name: "Zambian Kwacha (pre-2013)" },
   { symbol: 'ZMW', name: 'Zambian Kwacha', significantDecimalDigits: 2 },
-  // { symbol: "ZWL", name: "Zimbabwean Dollar" },
 ];
 
 export const currencyData = openExchangeCurrencies.map((currency) => {
@@ -215,11 +202,10 @@ export const currencyData = openExchangeCurrencies.map((currency) => {
     2
   )} ff-xl ff-round`;
 
-  // Check for specific cases where symbols start with 'BT' and handle them differently
   if (currency.symbol === 'BTN') {
-    flagClass = 'fflag fflag-BT ff-xl ff-round'; // Change the class for BTN
+    flagClass = 'fflag fflag-BT ff-xl ff-round';
   } else if (currency.symbol === 'BTC') {
-    flagClass = 'btcflag ff-xl ff-round'; // Change the class for BTC
+    flagClass = 'btcflag ff-xl ff-round';
   }
 
   return {

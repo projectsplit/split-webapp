@@ -6,7 +6,12 @@ import { UpdateSelectedCurrencyRequest, UserInfo } from '../../../types';
 export const useSelectedCurrency = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, AxiosError, string>({
+  return useMutation<
+    any,
+    AxiosError,
+    string,
+    { previousUserInfo: UserInfo | undefined }
+  >({
     mutationFn: (currency) => updateSelectedCurrency({ currency }),
     onMutate: (currency) => {
       const currentUserInfo = queryClient.getQueryData<UserInfo>(['getMe']);
@@ -16,6 +21,7 @@ export const useSelectedCurrency = () => {
           currency: currency,
         });
       }
+      return { previousUserInfo: currentUserInfo };
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({
@@ -35,7 +41,10 @@ export const useSelectedCurrency = () => {
         exact: false,
       });
     },
-    onError: (error) => {
+    onError: (error, _currency, context) => {
+      if (context?.previousUserInfo) {
+        queryClient.setQueryData(['getMe'], context.previousUserInfo);
+      }
       console.log(error);
     },
   });

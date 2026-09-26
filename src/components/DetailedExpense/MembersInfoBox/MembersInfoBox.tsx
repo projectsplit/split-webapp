@@ -1,15 +1,13 @@
-import React from 'react';
-import { StyledMembersInfoBox } from './MembersInfoBox.Styled';
-import InfoBox from '../InfoBox/InfoBox';
+import { StyledMembersInfoBox } from './MembersInfoBox.styled';
 import { MembersInfoBoxProps } from '../../../interfaces';
 import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount';
 import Currency from 'currency.js';
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import {
   GroupTransaction,
   NonGroupTransaction,
   TransactionType,
 } from '../../../types';
+import SectionLabel from '../../SectionLabel/SectionLabel';
 
 export default function MembersInfoBox({
   transactions,
@@ -20,8 +18,6 @@ export default function MembersInfoBox({
   userId,
   expenseType,
 }: MembersInfoBoxProps) {
-  const [hide, setHide] = React.useState<boolean>(false);
-
   const getId = (t: GroupTransaction | NonGroupTransaction) => {
     if ('memberId' in t) {
       return t.memberId;
@@ -50,99 +46,55 @@ export default function MembersInfoBox({
     Currency(0)
   );
 
-  return (
-    <StyledMembersInfoBox onClick={() => setHide((hide) => !hide)}>
-      <InfoBox>
-        <div className="topStripe">
-          {areShares ? (
-            <div className="info">
-              {sortedTransactions?.length === 1 ? (
-                <span>
-                  billed to {sortedTransactions?.length}{' '}
-                  {expenseType === TransactionType.Group ? 'member' : 'user'}
-                </span>
-              ) : sortedTransactions?.length === 2 ? (
-                <span>
-                  Split between {sortedTransactions?.length}{' '}
-                  {expenseType === TransactionType.Group ? 'members' : 'users'}
-                </span>
-              ) : (
-                <span>
-                  {' '}
-                  Split among {sortedTransactions?.length}{' '}
-                  {expenseType === TransactionType.Group ? 'members' : 'users'}
-                </span>
-              )}
-            </div>
-          ) : (
-            <div className="info">
-              {sortedTransactions?.length === 1 ? (
-                <span>
-                  Paid by {sortedTransactions?.length}{' '}
-                  {expenseType === TransactionType.Group ? 'member' : 'user'}
-                </span>
-              ) : (
-                <span>
-                  Paid by {sortedTransactions?.length}{' '}
-                  {expenseType === TransactionType.Group ? 'members' : 'users'}
-                </span>
-              )}
-            </div>
-          )}
-          <div className="hideDetalailsButton">
-            {hide ? <IoIosArrowDown /> : <IoIosArrowUp />}{' '}
-          </div>
-        </div>
+  if (sortedTransactions.length === 0) return null;
 
-        {!hide && (
-          <div className="memberInfoStripe">
-            {sortedTransactions.map((t, i) => {
-              const id = getId(t);
-              return (
-                <div className="member" key={i}>
-                  <span className="memberName">
-                    {id === userMemberId || id === userId ? (
-                      <span className="you">You</span>
-                    ) : (
-                      participants.find((x) => x.id === id)?.name
-                    )}
-                  </span>
-                  <span className="amount">
-                    {id === userMemberId || id === userId ? (
-                      <span className="yourAmount">
-                        {displayCurrencyAndAmount(
-                          t.amount.toString(),
-                          currency
-                        )}
-                      </span>
-                    ) : (
-                      displayCurrencyAndAmount(t.amount.toString(), currency)
-                    )}
-                  </span>
-                  <span className="percentage">
-                    {' '}
-                    {id === userMemberId || id === userId ? (
-                      <span className="yourPercentage">
-                        {totalAmount && totalAmount.value !== 0
-                          ? ((t.amount / totalAmount.value) * 100).toFixed(1)
-                          : '0.0'}
-                        %
-                      </span>
-                    ) : (
-                      <span>
-                        {totalAmount && totalAmount.value !== 0
-                          ? ((t.amount / totalAmount.value) * 100).toFixed(1)
-                          : '0.0'}
-                        %{' '}
-                      </span>
-                    )}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </InfoBox>
+  const count = sortedTransactions.length;
+  const noun =
+    expenseType === TransactionType.Group
+      ? count === 1
+        ? 'member'
+        : 'members'
+      : count === 1
+        ? 'user'
+        : 'users';
+
+  const title = !areShares
+    ? 'Paid by'
+    : count === 1
+      ? 'Billed to'
+      : count === 2
+        ? 'Split between'
+        : 'Split among';
+
+  return (
+    <StyledMembersInfoBox>
+      <SectionLabel title={title} aside={`${count} ${noun}`} />
+
+      <div className="memberLines">
+        {sortedTransactions.map((t, i) => {
+          const id = getId(t);
+          const isYou = id === userMemberId || id === userId;
+          const name = isYou
+            ? 'You'
+            : participants.find((x) => x.id === id)?.name;
+          const share =
+            totalAmount && totalAmount.value !== 0
+              ? (t.amount / totalAmount.value) * 100
+              : 0;
+          const percentage =
+            share % 1 === 0 ? share.toFixed(0) : share.toFixed(1);
+
+          return (
+            <div className={`memberLine${isYou ? ' you' : ''}`} key={i}>
+              <span className="memberName">{name}</span>
+              <span className="memberAmount">
+                {displayCurrencyAndAmount(t.amount.toString(), currency)}
+              </span>
+              <span className="memberShare">{percentage}%</span>
+            </div>
+          );
+        })}
+      </div>
     </StyledMembersInfoBox>
   );
 }

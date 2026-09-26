@@ -18,7 +18,6 @@ export const StyledBackAndForthAnimation = styled.div`
     gap: 20px;
   }
 
-  /* Forward (Next): A exits left, B enters from right */
   .fade-enter {
     transform: translateX(100%);
   }
@@ -34,7 +33,6 @@ export const StyledBackAndForthAnimation = styled.div`
     transition: transform 300ms ease-out;
   }
 
-  /* Backward (Back): B exits right, A enters from left */
   .fade-back-enter {
     transform: translateX(-100%);
   }

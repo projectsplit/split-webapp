@@ -1,14 +1,18 @@
+import IonIcon from '@reacticons/ionicons';
 import { Shimmer } from '@/components/Animations/Shimmer/Shimmer';
-import TreeAdjustedContainer from '@/components/TreeAdjustedContainer/TreeAdjustedContainer';
-import { TreeItemBuilderForHomeAndGroups } from '@/components/TreeItemBuilderForHomeAndGroups';
+import ItemCard from '@/components/ListForms/ItemCard';
+import BalanceMeta from '@/components/BalanceMeta/BalanceMeta';
+import SectionLabel from '@/components/SectionLabel/SectionLabel';
 import { computeNetPerCurrency } from '@/helpers/computeNetPerCurrency';
 import {
+  Details,
   GroupedTransaction,
   MostRecentGroupDetailsResponse,
   UserInfo,
 } from '@/types';
-import { NavigateFunction } from 'react-router-dom';
+import { generatePath, NavigateFunction } from 'react-router-dom';
 import { StyledMostRecentSection } from './MostRecentSection.styled';
+import routes from '@/routes';
 
 export default function MostRecentSection({
   mostRecentGroupDataIsFetching,
@@ -25,49 +29,42 @@ export default function MostRecentSection({
   userInfo: UserInfo;
   navigate: NavigateFunction;
 }) {
+  const section = (name: string, details: Details, onClick: () => void) => (
+    <StyledMostRecentSection>
+      <SectionLabel title="Most recent" />
+      <ItemCard onClick={onClick}>
+        <div className="recentBody">
+          <div className="groupName">{name}</div>
+          <BalanceMeta details={details} />
+        </div>
+        <IonIcon
+          name="chevron-forward-outline"
+          className="recentChevron"
+        />
+      </ItemCard>
+    </StyledMostRecentSection>
+  );
+
   if (mostRecentGroupDataIsFetching) {
     return (
       <StyledMostRecentSection>
-        <Shimmer width="70px" height="12px" borderRadius="4px" />
-        <Shimmer width="100%" height="60px" borderRadius="10px" />
+        <Shimmer width="91px" height="14px" borderRadius="4px" />
+        <Shimmer width="100%" height="70px" borderRadius="14px" />
       </StyledMostRecentSection>
     );
   }
 
   if (mostRecentGroupData) {
-    return (
-      <StyledMostRecentSection>
-        <div className="mostRecentMsg">Most recent</div>
-        <TreeAdjustedContainer
-          onClick={() => navigate(`/shared/${mostRecentGroupData.id}`)}
-          hasOption={true}
-          optionname="chevron-forward-outline"
-          items={TreeItemBuilderForHomeAndGroups(mostRecentGroupData?.details)}
-        >
-          <div className="groupName">{mostRecentGroupData?.name}</div>
-        </TreeAdjustedContainer>
-      </StyledMostRecentSection>
+    return section(mostRecentGroupData.name, mostRecentGroupData.details, () =>
+      navigate(generatePath(routes.GROUP, { groupid: mostRecentGroupData.id }))
     );
   }
 
   if (recentContextId === 'NON_GROUP') {
-    return (
-      <StyledMostRecentSection>
-        <div className="mostRecentMsg">Most recent</div>
-        <TreeAdjustedContainer
-          onClick={() => navigate('/shared/nongroup/expenses')}
-          hasOption={true}
-          optionname="chevron-forward-outline"
-          items={TreeItemBuilderForHomeAndGroups(
-            computeNetPerCurrency(
-              nonGroupGroupedTransactions,
-              userInfo.userId || ''
-            )
-          )}
-        >
-          <div className="groupName">Non Group Transactions</div>
-        </TreeAdjustedContainer>
-      </StyledMostRecentSection>
+    return section(
+      'Quick splits',
+      computeNetPerCurrency(nonGroupGroupedTransactions, userInfo.userId || ''),
+      () => navigate(routes.NON_GROUP_EXPENSES)
     );
   }
 

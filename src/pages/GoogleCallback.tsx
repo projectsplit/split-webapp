@@ -4,12 +4,16 @@ import routes from '../routes';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { sendGoogleAccessToken } from '../api/auth/api';
 import Spinner from '../components/Spinner/Spinner';
+import IonIcon from '@reacticons/ionicons';
+import MyButton from '../components/MyButton/MyButton';
+import { StyledGoogleCallback } from './GoogleCallback.styled';
 
 const GoogleCallback: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const mutation = useMutation({
+    meta: { errorHandled: true },
     mutationFn: sendGoogleAccessToken,
     onSuccess: (res) => {
       localStorage.setItem('accessToken', res.accessToken);
@@ -32,26 +36,40 @@ const GoogleCallback: React.FC = () => {
     handleAuthCode();
   }, [handleAuthCode]);
 
+  if (mutation.isSuccess) {
+    return (
+      <StyledGoogleCallback>
+        <IonIcon name="checkmark-circle" className="statusIcon success" />
+        <div className="statusTitle">You're signed in</div>
+        <div className="statusInfo">Taking you to your account.</div>
+      </StyledGoogleCallback>
+    );
+  }
+
+  if (mutation.isError) {
+    return (
+      <StyledGoogleCallback>
+        <IonIcon name="alert-circle" className="statusIcon danger" />
+        <div className="statusTitle">
+          Ah snap
+          <span className="titleEmoji">😵</span>
+        </div>
+        <div className="statusInfo">
+          We could not finish signing you in with Google. Please try again.
+        </div>
+        <div className="statusAction">
+          <MyButton onClick={() => navigate(routes.AUTH, { replace: true })}>
+            Back to sign in
+          </MyButton>
+        </div>
+      </StyledGoogleCallback>
+    );
+  }
+
   return (
-    <div style={{ textAlign: 'center', marginTop: '20px' }}>
-      {mutation.isPending && <Spinner />}
-      {mutation.isSuccess && (
-        <div>
-          <h1>Login successful!</h1>
-          <button onClick={() => (window.location.href = routes.ROOT)}>
-            Go to Home
-          </button>
-        </div>
-      )}
-      {mutation.isError && (
-        <div>
-          <h1>Login failed. Please try again.</h1>
-          <button onClick={() => (window.location.href = routes.ROOT)}>
-            Back to Login
-          </button>
-        </div>
-      )}
-    </div>
+    <StyledGoogleCallback>
+      <Spinner />
+    </StyledGoogleCallback>
   );
 };
 

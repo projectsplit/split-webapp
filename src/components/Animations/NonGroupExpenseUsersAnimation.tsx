@@ -2,6 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import { NonGroupExpenseUsersAnimationProps } from '../../interfaces';
 import { useRef } from 'react';
 import { NonGroupExpenseUsersMenu } from '../Menus/NonGroupUsersMenus/NonGroupExpenseUsersMenu/NonGroupExpenseUsersMenu';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function NonGroupExpenseUsersAnimation({
   menu,
@@ -13,6 +14,7 @@ export default function NonGroupExpenseUsersAnimation({
   fromNonGroup,
 }: NonGroupExpenseUsersAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'nonGroupExpenseUsers', () => (menu.value = null));
   return (
     <CSSTransition
       nodeRef={nodeRef}

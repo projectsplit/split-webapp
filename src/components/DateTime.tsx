@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import DateTimePicker from './DateTimePicker/DateTimePicker';
 import { styled } from 'styled-components';
-import { DateTime as LuxonDateTime } from 'luxon';
-import { toLuxon, toUtcString } from '../utils';
 import { DateTimeProps } from '../interfaces';
 import { FaCalendar } from 'react-icons/fa';
+import { useRealtimeClock } from '../hooks/useRealtimeClock';
+import { useCloseOnBack } from '../hooks/useCloseOnBack';
 
 export const DateTime = ({
   selectedDateTime,
@@ -16,39 +16,30 @@ export const DateTime = ({
   isDateShowing,
   showPicker,
   setShowPicker,
+  realtimeUpdate: controlledRealtimeUpdate,
+  setRealtimeUpdate: controlledSetRealtimeUpdate,
 }: DateTimeProps) => {
-  const [realtimeUpdate, setRealtimeUpdate] = useState<boolean>(!isEdit);
+  const [localRealtimeUpdate, setLocalRealtimeUpdate] = useState<boolean>(
+    !isEdit
+  );
+  const realtimeUpdate = controlledRealtimeUpdate ?? localRealtimeUpdate;
+  const setRealtimeUpdate = controlledSetRealtimeUpdate ?? setLocalRealtimeUpdate;
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
+  useCloseOnBack(showPicker, () => setShowPicker(false));
 
-    if (realtimeUpdate) {
-      interval = setInterval(() => {
-        setSelectedDateTime((prev) => {
-          const now = LuxonDateTime.utc().setZone(timeZoneId);
-          const updatedDateTime = toLuxon(prev, timeZoneId).set({
-            hour: now.hour,
-            minute: now.minute,
-            second: now.second,
-          });
-          return toUtcString(updatedDateTime);
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [realtimeUpdate]);
+  useRealtimeClock(
+    realtimeUpdate && !showPicker && isDateShowing.value,
+    timeZoneId,
+    setSelectedDateTime
+  );
 
   useEffect(() => {
-    window.addEventListener('mousedown', (e) => closeTimePicker(e));
+    const handleMouseDown = (e: MouseEvent) => closeTimePicker(e);
+    window.addEventListener('mousedown', handleMouseDown);
 
     return () => {
-      window.removeEventListener('mousedown', closeTimePicker);
+      window.removeEventListener('mousedown', handleMouseDown);
     };
   }, []);
 
@@ -60,14 +51,10 @@ export const DateTime = ({
 
   return (
     <StyledDateTime ref={ref}>
-      <div
-        className="main"
-        onClick={(_) => {
-          (setShowPicker(!showPicker), (isDateShowing.value = true));
-        }}
-      >
+      <div className="main" onClick={() => setShowPicker(!showPicker)}>
         <FaCalendar className="calendarIcon" />
       </div>
+      {showPicker && <PickerBackdrop onClick={() => setShowPicker(false)} />}
       {showPicker && (
         <DateTimePicker
           selectedDateTime={selectedDateTime}
@@ -85,11 +72,20 @@ export const DateTime = ({
   );
 };
 
+const PickerBackdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  background-color: ${({ theme }) => theme.scrim.sheet};
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+`;
+
 const StyledDateTime = styled.div`
   .main {
     cursor: pointer;
     .text {
-      color: ${({ theme }) => theme.textActiveColor};
+      color: ${({ theme }) => theme.ink.primary};
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

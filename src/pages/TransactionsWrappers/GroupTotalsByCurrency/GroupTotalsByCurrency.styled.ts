@@ -1,57 +1,41 @@
 import { styled } from 'styled-components';
-import { StyledMiddleScreenMenu } from '../../../components/Menus/Layouts/MiddleScreenMenu/MiddleScreenMenu.styled';
+import { StyledDialog } from '../../../components/Menus/Layouts/Dialog/Dialog.styled';
 
-export const StyledGroupTotalsByCurrency = styled(StyledMiddleScreenMenu)`
-  font-size: 14px;
-  max-height: 80vh; /* Limit height to 80% of viewport height */
+export const StyledGroupTotalsByCurrency = styled(StyledDialog)`
+  max-height: 80vh;
   overflow-y: auto;
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px;
-    .infoLogo {
-      font-size: 30px;
-      color: ${({ theme }) => theme.yellow};
-    }
 
-    .closeButton {
-      font-size: 30px;
-      color: #6f6f6f;
-      height: 17px;
-      margin-top: -15px;
-      margin-right: -8px;
-      &:hover {
-        color: ${({ theme }) => theme.whiteText};
-      }
-      .close {
-        cursor: pointer;
-        display: block;
-      }
-    }
-  }
   .legends {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: ${({ theme }) => theme.space.s12};
 
     .grouping {
       display: flex;
       flex-direction: row;
-      gap: 10px;
-      .legendUser,
-      .legendGroup {
-        font-size: 18px;
-        width: 1rem;
-        height: 1rem;
+      align-items: center;
+      gap: ${({ theme }) => theme.space.s6};
+      min-width: 0;
+    }
 
-        border-radius: 5px;
-      }
-      .descr {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+    .legendUser,
+    .legendGroup {
+      width: ${({ theme }) => theme.space.s8};
+      height: ${({ theme }) => theme.space.s8};
+      flex-shrink: 0;
+      border-radius: 2px;
+    }
+
+    .descr {
+      font-size: ${({ theme }) => theme.size.s11};
+      font-weight: ${({ theme }) => theme.weight.semibold};
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: ${({ theme }) => theme.ink.tertiary};
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 `;

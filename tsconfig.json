@@ -6,10 +6,8 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "jsx": "react-jsx",
-    "types": ["@types/styled-components"],
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", "vite.config.ts"],

@@ -1,4 +1,4 @@
-import { StyledFiltersAndBars } from './FiltersAndBars.styled';
+import { StyledFiltersAndBars } from '@/components/FiltersAndBars/FiltersAndBars.styled';
 import { FiltersAndBarsSkeleton } from '@/components/FiltersAndBarsSkeleton/FiltersAndBarsSkeleton';
 import { renderTransferFilterPills } from '@/helpers/renderTransferFilterPills';
 import BarsWithLegends from '@/components/BarsWithLegends/BarsWithLegends';
@@ -29,33 +29,37 @@ export const FiltersAndBars = ({
   userConvertedTotalReceived,
   userConvertedTotalSent,
 }: FiltersAndBarsInterface) => {
+  const pills = renderTransferFilterPills(
+    transferParsedFilters,
+    allParticipants,
+    group,
+    queryClient
+  );
+
   return (
     <StyledFiltersAndBars>
       {totalsAreFetching ? (
-        <FiltersAndBarsSkeleton mode={Mode.Group} />
+        <FiltersAndBarsSkeleton mode={Mode.Group} relation="independent" />
       ) : (
         <div className="filtersAndBars">
-          <div className="pills" onTouchStart={(e) => e.stopPropagation()}>
-            {' '}
-            {renderTransferFilterPills(
-              transferParsedFilters,
-              allParticipants,
-              group,
-              queryClient
-            )}
+          <div className="barsRow">
+            <BarsWithLegends
+              bar1Legend="Total Sent"
+              bar2Legend="Total Received"
+              bar1Total={userConvertedTotalSent || 0}
+              bar2Total={userConvertedTotalReceived || 0}
+              currency={currency}
+              relation="independent"
+              onClick={() => {
+                menu.value = 'epensesByCurrency';
+              }}
+            />
           </div>
-          <BarsWithLegends
-            bar1Legend="Total Sent"
-            bar2Legend="Total Received"
-            bar1Total={userConvertedTotalSent || 0}
-            bar2Total={userConvertedTotalReceived || 0}
-            currency={currency}
-            bar1Color="#0CA0A0"
-            bar2Color="#D79244"
-            onClick={() => {
-              menu.value = 'epensesByCurrency';
-            }}
-          />
+          {pills.length > 0 ? (
+            <div className="pills" onTouchStart={(e) => e.stopPropagation()}>
+              {pills}
+            </div>
+          ) : null}
         </div>
       )}
     </StyledFiltersAndBars>

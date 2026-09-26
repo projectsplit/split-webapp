@@ -13,16 +13,19 @@ import {
   type ExpenseParsedFilters,
   type ExpenseResponseItem,
   type Group,
+  type Guest,
+  type Member,
   Mode,
+  type User,
   type UserInfo,
   type TransferParsedFilters,
 } from '../../types';
 import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
 import NewExpenseAnimation from '../../components/Animations/NewExpenseAnimation';
-import GroupQuickActionsAnimation from '../../components/Animations/MenuWithOptionsToAddAnimation';
+import GroupQuickActionsAnimation from '../../components/Animations/GroupQuickActionsAnimation';
 import useGroup from '../../api/auth/QueryHooks/useGroup';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import NewTransferAnimation from '../../components/Animations/NewTransferAnimation';
 import GroupOptions from '../Groups/GroupOptions/GroupOptions';
 import ConfirmUnArchiveGroupAnimation from '../../components/Animations/ConfirmUnArchiveGroupAnimation';
@@ -34,6 +37,8 @@ import {
   localStorageStringParser,
   getFilterStorageKey,
 } from '../../components/SearchTransactions/helpers/localStorageStringParser';
+import { transactionCategories } from '@/constants';
+import routes from '@/routes';
 
 type errorObject = {
   message: string;
@@ -50,8 +55,8 @@ export default function Group() {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
 
   const { expenseFilter, transferFilter } = localStorageStringParser(
-    localStorage.getItem(getFilterStorageKey('expense', groupid)),
-    localStorage.getItem(getFilterStorageKey('transfer', groupid))
+    sessionStorage.getItem(getFilterStorageKey('expense', groupid)),
+    sessionStorage.getItem(getFilterStorageKey('transfer', groupid))
   );
 
   const expenseParsedFilters = useSignal<ExpenseParsedFilters>(expenseFilter);
@@ -79,14 +84,19 @@ export default function Group() {
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
   const { data: group, isLoading, isFetching, isError, error } = useGroup(groupid);
+  const expenseIsPersonal = useSignal<boolean>(false);
+  const expenseNonGroupUsers = useSignal<User[]>([]);
+  const expenseIsNonGroup = useSignal<boolean>(false);
+  const groupMembers = useMemo(
+    () =>
+      signal<(Member | Guest)[]>(
+        group ? [...group.members, ...group.guests] : []
+      ),
+    [group]
+  );
 
-  const categoryCategories = {
-    cat1: 'Expenses',
-    cat2: 'Transfers',
-    cat3: 'Debts',
-  };
   const swipeHandlers = useCategorySwipe({
-    categories: categoryCategories,
+    categories: transactionCategories,
     activeCat: path,
     navLinkUse: true,
   });
@@ -98,11 +108,11 @@ export default function Group() {
     return () => {
       groupIsArchived.value = false;
     };
-  }, [group, isFetching, groupIsArchived.value]);
+  }, [group, isFetching, groupIsArchived.value, groupIsArchived]);
 
   useEffect(() => {
     topMenuTitle.value = group?.name || '';
-  }, [group, showBottomBar.value]);
+  }, [group, showBottomBar.value, topMenuTitle]);
 
   useEffect(() => {
     if (isError && error) {
@@ -116,7 +126,7 @@ export default function Group() {
     } else {
       groupError.value = undefined;
     }
-  }, [isError, error]);
+  }, [isError, error, groupError]);
 
   useEffect(() => {
     if (
@@ -125,9 +135,28 @@ export default function Group() {
       typeof groupError.value.status === 'number' &&
       groupError.value.status === 404
     ) {
-      navigate('/shared');
+      navigate(routes.GROUPS, { replace: true });
     }
   }, [isError, groupError.value, navigate]);
+
+  const outletContext = useMemo(
+    () => ({
+      userInfo,
+      group,
+      showBottomBar,
+      expenseParsedFilters,
+      transferParsedFilters,
+      mode,
+    }),
+    [
+      userInfo,
+      group,
+      showBottomBar,
+      expenseParsedFilters,
+      transferParsedFilters,
+      mode,
+    ]
+  );
 
   return (
     <StyledGroup>
@@ -143,19 +172,10 @@ export default function Group() {
         <div className="group" {...swipeHandlers}>
           <CategorySelector
             activeCat={path}
-            categories={categoryCategories}
+            categories={transactionCategories}
             navLinkUse={true}
           />
-          <Outlet
-            context={{
-              userInfo,
-              group,
-              showBottomBar,
-              expenseParsedFilters,
-              transferParsedFilters,
-              mode,
-            }}
-          />
+          <Outlet context={outletContext} />
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}
 
           <MenuAnimationBackground menu={menu} />
@@ -168,11 +188,11 @@ export default function Group() {
               menu={menu}
               selectedExpense={selectedExpense}
               timeZoneCoordinates={timeZoneCoordinates}
-              isPersonal={signal(false)}
+              isPersonal={expenseIsPersonal}
               currency={group.currency}
-              groupMembers={signal([...group.members, ...group.guests])}
-              isnonGroupExpense={signal(false)}
-              nonGroupUsers={signal([])}
+              groupMembers={groupMembers}
+              nonGroupUsers={expenseNonGroupUsers}
+              isnonGroupExpense={expenseIsNonGroup}
             />
           )}
           {group && (
@@ -181,9 +201,7 @@ export default function Group() {
               timeZoneId={timeZoneId}
               menu={menu}
               currency={group.currency}
-              groupMembers={signal([...group.members, ...group.guests])}
-              isnonGroupTransfer={signal(false)}
-              nonGroupUsers={signal([])}
+              groupMembers={groupMembers}
             />
           )}
 

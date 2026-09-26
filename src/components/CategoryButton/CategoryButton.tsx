@@ -1,19 +1,26 @@
 import { StyledCategoryButton } from './CategoryButton.styled';
 import { CategoryButtonProps } from '../../interfaces';
 import { NavLink } from 'react-router-dom';
-import { forwardRef } from 'react';
+import { forwardRef, memo, useCallback } from 'react';
 
-export const CategoryButton = forwardRef<
+const CategoryButtonPreMemo = forwardRef<
   HTMLButtonElement,
   CategoryButtonProps
 >(
   (
-    { children, to, selected, onClick, backgroundcoloronselect, style },
+    { children, to, selected, onClick, backgroundcoloronselect, style, variant },
     ref
   ) => {
+    const navLinkClassName = useCallback(
+      ({ isActive }: { isActive: boolean }) =>
+        isActive || selected ? 'active' : 'inactive',
+      [selected]
+    );
+
     return (
       <StyledCategoryButton
         backgroundcoloronselect={backgroundcoloronselect}
+        variant={variant}
         style={style}
         ref={ref as any}
       >
@@ -21,9 +28,7 @@ export const CategoryButton = forwardRef<
           <NavLink
             to={to}
             replace
-            className={({ isActive }) =>
-              isActive || selected ? 'active' : 'inactive'
-            }
+            className={navLinkClassName}
             onClick={onClick}
           >
             {children}
@@ -37,3 +42,5 @@ export const CategoryButton = forwardRef<
     );
   }
 );
+
+export const CategoryButton = memo(CategoryButtonPreMemo);

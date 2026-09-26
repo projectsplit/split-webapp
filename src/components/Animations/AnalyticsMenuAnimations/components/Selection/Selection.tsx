@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyledSelection } from './Selection.styled';
 import { CycleSelectionProps } from '../../../../../interfaces';
 

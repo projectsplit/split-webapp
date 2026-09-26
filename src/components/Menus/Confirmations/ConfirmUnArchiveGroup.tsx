@@ -3,6 +3,7 @@ import { ConfirmArchiveGroupProps } from '../../../interfaces';
 import Confirmation from './Confirmation';
 import { useArchiveGroup } from '../../../api/auth/CommandHooks/useArchiveGroup';
 import { Signal, useSignal } from '@preact/signals-react';
+import routes from '@/routes';
 
 export default function ConfirmUnArchiveGroup({
   menu,
@@ -28,7 +29,7 @@ export default function ConfirmUnArchiveGroup({
     openGroupOptionsMenu.value = false;
     activeGroupCatAsState.value = 'Active';
     if (navigateToGroups) {
-      navigate('/shared');
+      navigate(routes.GROUPS);
     }
     groupIsArchived.value = false;
   };

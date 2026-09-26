@@ -1,7 +1,7 @@
 import { Frequency } from '../../../types';
 import { formatDateIntoYMD } from './formatDateIntoYMD';
 import { getAllDaysInMonth } from '../../../helpers/monthlyDataHelpers';
-import { getWeekDates } from './weeklyDataHelpers';
+import { getWeekDates } from '@/helpers/weeklyDataHelpers';
 
 export const buildStartAndEndDates = (
   cycle: Frequency,
@@ -26,7 +26,7 @@ export const buildStartAndEndDates = (
         allDaysInMonth[allDaysInMonth.length - 1],
         timeZone
       );
-      if (endDate > todayYMD) {
+      if (endDate > todayYMD && startDate <= todayYMD) {
         endDate = todayYMD;
       }
       return [startDate, endDate];
@@ -40,7 +40,7 @@ export const buildStartAndEndDates = (
         getDateFromWeeksArray(allWeeksPerYear, selectedTimeCycleIndex, 1),
         timeZone
       );
-      if (endDate > todayYMD) {
+      if (endDate > todayYMD && startDate <= todayYMD) {
         endDate = todayYMD;
       }
       return [startDate, endDate];
@@ -60,7 +60,7 @@ export const buildStartAndEndDates = (
         ),
         timeZone
       );
-      if (endDate > todayYMD) {
+      if (endDate > todayYMD && startDate <= todayYMD) {
         endDate = todayYMD;
       }
       return [startDate, endDate];

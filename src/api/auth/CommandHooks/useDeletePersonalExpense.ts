@@ -3,6 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { DeleteExpenseRequest, ExpenseResponseItem } from '../../../types';
 import { apiClient } from '../../apiClients';
 import { Signal } from '@preact/signals-react';
+import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 
 export const useDeletePersonalExpense = (
   menu: Signal<string | null>,
@@ -12,16 +13,14 @@ export const useDeletePersonalExpense = (
   const queryClient = useQueryClient();
 
   return useMutation<any, AxiosError, string>({
+    meta: { errorHandled: true },
     mutationFn: (expenseId) => deleteExpense({ expenseId }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['personalExpenses'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['cumulativeArray'],
-        exact: false,
-      });
+      await invalidateQueryKeys(queryClient, [
+        'personalExpenses',
+        'userTotals',
+        'cumulativeArray',
+      ]);
       selectedExpense.value = null;
       menu.value = null;
     },

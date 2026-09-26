@@ -14,7 +14,7 @@ export const useTransferTotals = (
   const userMemberId =
     members?.find((m) => m.userId === userInfo?.userId)?.id ?? '';
 
-  const { data: debts, isFetching: totalsAreFetching } = useDebts(
+  const { data: debts, isPending: totalsArePending } = useDebts(
     mode,
     group?.id,
     undefined,
@@ -53,5 +53,5 @@ export const useTransferTotals = (
     };
   }, [debts, mode, userMemberId, userInfo, group]);
 
-  return { ...totals, totalsAreFetching };
+  return { ...totals, totalsAreFetching: totalsArePending };
 };

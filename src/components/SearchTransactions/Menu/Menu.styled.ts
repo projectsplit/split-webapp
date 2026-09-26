@@ -1,12 +1,22 @@
 import styled from 'styled-components';
-import { CombinedMenuProps } from '../../../interfaces';
 
-export const StyledMenu = styled.div<CombinedMenuProps>`
-  overflow: hidden;
+export const StyledMenu = styled.div`
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  flex: 0 1 auto;
+  min-height: 0;
   cursor: pointer;
   scrollbar-width: none;
-  position: relative;
-  top: ${({ $contentEditableHeight }) => `${$contentEditableHeight - 80}px`};
-  z-index: 0;
-  border: none;
+  background-color: ${({ theme }) => theme.surface.card};
+  border: 1px solid ${({ theme }) => theme.surface.outline};
+  border-radius: ${({ theme }) => theme.radius.iconButton};
+  box-shadow: ${({ theme }) => theme.shadow.dialog};
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 `;

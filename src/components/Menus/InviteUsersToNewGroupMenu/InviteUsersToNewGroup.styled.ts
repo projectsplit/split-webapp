@@ -2,14 +2,14 @@ import { styled } from 'styled-components';
 
 export const StyledInviteUsersToNewGroup = styled.div`
   position: fixed;
-  font-size: 14px;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100dvh;
   overflow: hidden;
   box-sizing: border-box;
-  background-color: #0f0f0f;
-  color: white;
+  background-color: ${({ theme }) => theme.surface.page};
+  color: ${({ theme }) => theme.ink.primary};
   z-index: 3;
   display: flex;
   flex-direction: column;
@@ -19,84 +19,154 @@ export const HeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 2rem;
-  padding-bottom: 1rem;
+  gap: ${({ theme }) => theme.space.s16};
+  padding: 56px 24px 28px;
+  flex-shrink: 0;
 `;
 
 export const IconWrapper = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-bottom: 1rem;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  border-radius: ${({ theme }) => theme.radius.pill};
+  background-color: ${({ theme }) => theme.surface.card};
+  border: 1px solid ${({ theme }) => theme.surface.hairline};
+  color: ${({ theme }) => theme.surface.mark};
+  font-size: 44px;
 `;
 
-export const Title = styled.h2`
-  font-size: 1.15rem;
-  font-weight: 600;
-  margin: 0;
-  color: #ffffff;
-`;
+export const HeaderText = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.space.s8};
+  text-align: center;
 
-export const Subtitle = styled.div`
-  font-size: 0.85rem;
-  color: #d1d1d1;
-  padding: 1rem;
-  font-weight: 600;
+  .title {
+    font-size: ${({ theme }) => theme.figure.summary};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .lead {
+    font-size: ${({ theme }) => theme.size.s13};
+    line-height: 1.6;
+    color: ${({ theme }) => theme.ink.secondary};
+    text-wrap: pretty;
+  }
 `;
 
 export const ScrollableContent = styled.div`
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.space.s10};
+  padding: ${({ theme }) => `0 ${theme.space.s20} ${theme.space.s20}`};
 
-  .membersContainer {
+  .sectionLabel {
+    font-size: ${({ theme }) => theme.size.s11};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
+
+  .membersCard {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    flex-shrink: 0;
+    background-color: ${({ theme }) => theme.surface.card};
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
+    overflow: hidden;
+  }
+
+  .memberRow {
+    position: relative;
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    padding: 0.5rem;
-    background-color: ${({ theme }) => theme.inputGrey};
-    border-radius: 10px;
-    margin-bottom: 0.5rem;
+    gap: ${({ theme }) => theme.space.s12};
+    padding: ${({ theme }) => `13px ${theme.space.s16}`};
+  }
 
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: grey;
-    }
+  .memberRow + .memberRow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 56px;
+    right: 0;
+    height: 1px;
+    background-color: ${({ theme }) => theme.surface.raisedHigh};
+  }
 
-    .statusDot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
+  .memberAvatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: ${({ theme }) => theme.radius.pill};
+    background-color: ${({ theme }) => theme.surface.raised};
+    color: ${({ theme }) => theme.ink.secondary};
+    font-size: ${({ theme }) => theme.size.s11};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+  }
 
-    .statusDot.invited {
-      background-color: orange;
-    }
+  .memberAvatar.you {
+    background-color: ${({ theme }) => theme.accent.you.tint};
+    border: 1px solid ${({ theme }) => theme.accent.you.tintBorder};
+    color: ${({ theme }) => theme.accent.you.ink};
+  }
 
-    .statusDot.guest {
-      background-color: ${({ theme }) => theme.ciel};
-    }
-    .statusDot.creator {
-      background-color: green;
-    }
+  .memberName {
+    flex: 1;
+    min-width: 0;
+    font-size: ${({ theme }) => theme.size.s14};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .memberStatus {
+    flex-shrink: 0;
+    padding: ${({ theme }) => `${theme.space.s3} ${theme.space.s8}`};
+    border-radius: ${({ theme }) => theme.radius.pill};
+    background-color: ${({ theme }) => theme.surface.raised};
+    color: ${({ theme }) => theme.ink.secondary};
+    font-size: ${({ theme }) => theme.size.s10};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .membersNote {
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.55;
+    color: ${({ theme }) => theme.ink.tertiary};
+    text-wrap: pretty;
   }
 `;
 
 export const BottomContainer = styled.div`
-  padding: 1rem;
+  flex-shrink: 0;
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding-bottom: 2rem;
-  .button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Roboto';
-    padding: 0.5em 1em;
-    font-weight: 400;
-    cursor: pointer;
+  flex-direction: row;
+  gap: ${({ theme }) => theme.space.s8};
+  padding: ${({ theme }) =>
+    `${theme.space.s12} ${theme.space.s20} ${theme.space.s20}`};
+  background: ${({ theme }) =>
+    `linear-gradient(to top, ${theme.surface.page} 60%, transparent)`};
+
+  button {
+    flex: 1;
+    padding: ${({ theme }) => `${theme.space.s12} 0`};
   }
 `;

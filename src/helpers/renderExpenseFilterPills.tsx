@@ -1,5 +1,4 @@
 import { Signal } from '@preact/signals-react';
-import Pill from '../components/Pill/Pill';
 import {
   ExpenseParsedFilters,
   GetLabelsResponse,
@@ -8,9 +7,11 @@ import {
   TruncatedMember,
 } from '../types';
 import { QueryClient } from '@tanstack/react-query';
-import labelColors from '../labelColors';
 import { getFilterStorageKey } from '../components/SearchTransactions/helpers/localStorageStringParser';
 import { MdGroup } from 'react-icons/md';
+import Pill from '../components/Pill/Pill';
+import { filterPill } from './filterPill';
+import { labelChipInk, resolveLabelColor } from './labelChip';
 
 const updateFiltersAndSave = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
@@ -23,7 +24,7 @@ const updateFiltersAndSave = (
     ...expenseParsedFilters.value,
     ...updatedFilters,
   };
-  localStorage.setItem(
+  sessionStorage.setItem(
     getFilterStorageKey('expense', groupId, mode === Mode.Personal),
     JSON.stringify(expenseParsedFilters.value)
   );
@@ -53,16 +54,10 @@ export const renderExpenseFilterPills = (
 
   if (freeText && freeText != '') {
     pills.push(
-      <Pill
-        key="freeTextExpense"
-        title={`search term: ${freeText}`}
-        color="#e0e0e0"
-        closeButton={true}
-        fontSize="14px"
-        $textColor="black"
-        $border={false}
-        $closeButtonColor="black"
-        onClose={() =>
+      filterPill(
+        'freeTextExpense',
+        `search term: ${freeText}`,
+        () =>
           updateFiltersAndSave(
             expenseParsedFilters,
             { freeText: '' },
@@ -70,23 +65,16 @@ export const renderExpenseFilterPills = (
             mode,
             group?.id
           )
-        }
-      />
+      )
     );
   }
 
   if (before && after && before === after) {
     pills.push(
-      <Pill
-        key="during"
-        title={`during: ${before}`}
-        color="#e0e0e0"
-        closeButton={true}
-        fontSize="14px"
-        $textColor="black"
-        $border={false}
-        $closeButtonColor="black"
-        onClose={() =>
+      filterPill(
+        'during',
+        `during: ${before}`,
+        () =>
           updateFiltersAndSave(
             expenseParsedFilters,
             { before: null, after: null },
@@ -94,23 +82,16 @@ export const renderExpenseFilterPills = (
             mode,
             group?.id
           )
-        }
-      />
+      )
     );
   }
 
   if (before && before !== after) {
     pills.push(
-      <Pill
-        key="before"
-        title={`before: ${before}`}
-        color="#e0e0e0"
-        closeButton={true}
-        fontSize="14px"
-        $textColor="black"
-        $border={false}
-        $closeButtonColor="black"
-        onClose={() =>
+      filterPill(
+        'before',
+        `before: ${before}`,
+        () =>
           updateFiltersAndSave(
             expenseParsedFilters,
             { before: null },
@@ -118,23 +99,16 @@ export const renderExpenseFilterPills = (
             mode,
             group?.id
           )
-        }
-      />
+      )
     );
   }
 
   if (after && before !== after) {
     pills.push(
-      <Pill
-        key="after"
-        title={`after: ${after}`}
-        color="#e0e0e0"
-        closeButton={true}
-        fontSize="14px"
-        $textColor="black"
-        $border={false}
-        $closeButtonColor="black"
-        onClose={() =>
+      filterPill(
+        'after',
+        `after: ${after}`,
+        () =>
           updateFiltersAndSave(
             expenseParsedFilters,
             { after: null },
@@ -142,8 +116,7 @@ export const renderExpenseFilterPills = (
             mode,
             group?.id
           )
-        }
-      />
+      )
     );
   }
 
@@ -152,16 +125,10 @@ export const renderExpenseFilterPills = (
       const participant = allParticipants.find((p) => p.id === id);
       const participantName = participant?.name || id;
       pills.push(
-        <Pill
-          key={`participant-${index}`}
-          title={`participant: ${participantName}`}
-          color="#e0e0e0"
-          closeButton={true}
-          fontSize="14px"
-          $textColor="black"
-          $border={false}
-          $closeButtonColor="black"
-          onClose={() =>
+        filterPill(
+        `participant-${index}`,
+        `participant: ${participantName}`,
+        () =>
             updateFiltersAndSave(
               expenseParsedFilters,
               {
@@ -171,8 +138,7 @@ export const renderExpenseFilterPills = (
               mode,
               group?.id
             )
-          }
-        />
+      )
       );
     });
   }
@@ -182,16 +148,10 @@ export const renderExpenseFilterPills = (
       const payer = allParticipants.find((p) => p.id === id);
       const payerName = payer?.name || id;
       pills.push(
-        <Pill
-          key={`payer-${index}`}
-          title={`payer: ${payerName}`}
-          color="#e0e0e0"
-          closeButton={true}
-          fontSize="14px"
-          $textColor="black"
-          $border={false}
-          $closeButtonColor="black"
-          onClose={() =>
+        filterPill(
+        `payer-${index}`,
+        `payer: ${payerName}`,
+        () =>
             updateFiltersAndSave(
               expenseParsedFilters,
               {
@@ -201,8 +161,7 @@ export const renderExpenseFilterPills = (
               mode,
               group?.id
             )
-          }
-        />
+      )
       );
     });
   }
@@ -217,12 +176,12 @@ export const renderExpenseFilterPills = (
         <Pill
           key={`label-${index}`}
           title={`${labelTitle}`}
-          color={labelColors[labelColor || '#e0e0e0']}
+          color={resolveLabelColor(labelColor)}
           closeButton={true}
           fontSize="14px"
-          $textColor="black"
+          $textColor={labelChipInk(resolveLabelColor(labelColor))}
           $border={false}
-          $closeButtonColor="black"
+          $closeButtonColor={labelChipInk(resolveLabelColor(labelColor))}
           onClose={() =>
             updateFiltersAndSave(
               expenseParsedFilters,

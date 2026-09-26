@@ -14,5 +14,5 @@ export const useTotalSelectedAmount = (
       .reduce((acc, m) => acc + Number(m.actualAmount || 0), 0);
 
     return Number(sum.toFixed(significantDigitsFromTicker(selectedCurrency)));
-  }, [memberAmounts, selectedCurrency]); // ← now safe!
+  }, [memberAmounts, selectedCurrency]);
 };

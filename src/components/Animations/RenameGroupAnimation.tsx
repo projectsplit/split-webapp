@@ -2,6 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import { useRef } from 'react';
 import { RenameGroupAnimationProps } from '../../interfaces';
 import RenameGroupMenu from '../Menus/RenameGroupMenu/RenameGroupMenu';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function RenameGroupAnimation({
   menu,
@@ -9,6 +10,7 @@ export default function RenameGroupAnimation({
   groupName,
 }: RenameGroupAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'renameGroup', () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === 'renameGroup'}

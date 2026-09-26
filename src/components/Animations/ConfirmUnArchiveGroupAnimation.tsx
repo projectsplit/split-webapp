@@ -2,6 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import { useRef } from 'react';
 import { ConfirmArchiveGroupAnimationProps } from '../../interfaces';
 import ConfirmUnArchiveGroup from '../Menus/Confirmations/ConfirmUnArchiveGroup';
+import { useCloseOnBack } from '../../hooks/useCloseOnBack';
 
 export default function ConfirmUnArchiveGroupAnimation({
   menu,
@@ -10,6 +11,7 @@ export default function ConfirmUnArchiveGroupAnimation({
   navigateToGroups,
 }: ConfirmArchiveGroupAnimationProps) {
   const nodeRef = useRef(null);
+  useCloseOnBack(menu.value === 'unarchiveGroup', () => (menu.value = null));
   return (
     <CSSTransition
       in={menu.value === 'unarchiveGroup'}

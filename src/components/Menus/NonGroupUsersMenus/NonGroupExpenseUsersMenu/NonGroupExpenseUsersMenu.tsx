@@ -2,13 +2,13 @@ import { StyledNonGroupExpenseUsersMenu } from './NonGroupExpenseUsersMenu.style
 import { NonGroupUsersProps } from '../../../../interfaces';
 import { CategorySelector } from '../../../CategorySelector/CategorySelector';
 import { useSignal } from '@preact/signals-react';
-import { BiArrowBack } from 'react-icons/bi';
+import BackButton from '../../../BackButton/BackButton';
 import MyButton from '../../../MyButton/MyButton';
 import Sentinel from '../../../Sentinel';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import AutoWidthInput from '../../../AutoWidthInput';
 import { User, UserInfo } from '../../../../types';
-import Item from '../Item/Item';
+import UserItem from '../UserItem/UserItem';
 import React from 'react';
 import { SelectedUsers } from '../SelectionLists/SelectedUsers';
 import { useSearchGroupsByName } from '../../../../api/auth/QueryHooks/useSearchGroupsByName';
@@ -23,6 +23,11 @@ import { useAcceptConnectionRequest } from '@/api/auth/CommandHooks/useAcceptCon
 import { useRevokeConnectionRequest } from '@/api/auth/CommandHooks/useRevokeConnectionRequest';
 import ConnectableUserItem from '../ConnectableUserItem/ConnectableUserItem';
 import ConnectRequestConfirm from '../ConnectRequestConfirm/ConnectRequestConfirm';
+
+const USERS_OR_GROUPS_CATEGORIES = {
+  cat1: 'Users',
+  cat2: 'Groups',
+};
 
 export const NonGroupExpenseUsersMenu = ({
   menu,
@@ -48,11 +53,7 @@ export const NonGroupExpenseUsersMenu = ({
     userInfo: UserInfo;
   }>();
 
-  const result = useSearchUsers(
-    //TODO we need new endpoint to bring users (so we can do useSearchUsers)
-    debouncedKeyword,
-    pageSize
-  );
+  const result = useSearchUsers(debouncedKeyword, pageSize);
 
   const searchedUserIds = useMemo(
     () =>
@@ -75,7 +76,6 @@ export const NonGroupExpenseUsersMenu = ({
     [connectionStatuses]
   );
 
-  if (!result) return null;
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = result;
 
   const {
@@ -107,7 +107,6 @@ export const NonGroupExpenseUsersMenu = ({
       .find((x) => x.username === trimmed);
 
     if (!existingUser) {
-      // User not found in fetched data, keep keyword as-is or show error
       return;
     }
 
@@ -147,7 +146,7 @@ export const NonGroupExpenseUsersMenu = ({
 
   const handleSuggestedGroupClick = useCallback(
     (groupId: string) => {
-      nonGroupUsers.value = []; //TODO need to only allow current user in
+      nonGroupUsers.value = [];
       const existingGroup = userGroups?.pages
         .flatMap((x) => x.groups)
         .find((x) => x.id === groupId && !x.isArchived);
@@ -222,28 +221,23 @@ export const NonGroupExpenseUsersMenu = ({
     <StyledNonGroupExpenseUsersMenu>
       <div className="fixedHeader">
         <div className="header">
-          <div className="closeButtonContainer">
-            <BiArrowBack
-              className="backButton"
-              onClick={() => {
-                if (!fromNonGroup) {
-                  isPersonalFn();
-                }
-                menu.value = null;
-              }}
-            />
-          </div>
-          <div className="title">Split expense with you and...</div>
+          <BackButton
+            onClick={() => {
+              if (!fromNonGroup) {
+                isPersonalFn();
+              }
+              menu.value = null;
+            }}
+          />
+          <div className="title">Split with</div>
           <div className="gap"></div>
         </div>
         {!fromNonGroup && (
           <div className="categories">
             <CategorySelector
+              variant="segmented"
               activeCat={'Amounts'}
-              categories={{
-                cat1: 'Users',
-                cat2: 'Groups',
-              }}
+              categories={USERS_OR_GROUPS_CATEGORIES}
               navLinkUse={false}
               activeCatAsState={category}
             />
@@ -255,7 +249,6 @@ export const NonGroupExpenseUsersMenu = ({
           <div
             className="main"
             onFocus={() => handleFocus()}
-            // onBlur={handleBlur}
             ref={mainRef}
             tabIndex={0}
           >
@@ -342,7 +335,7 @@ export const NonGroupExpenseUsersMenu = ({
         ) : !fromNonGroup && remainingSuggestedGroups.length > 0 ? (
           <div className="dropdown" ref={dropdownRef}>
             {remainingSuggestedGroups.map((group) => (
-              <Item
+              <UserItem
                 key={group.id}
                 name={group.name}
                 onClick={(e) => {

@@ -1,9 +1,11 @@
 import { signal, Signal, useSignal } from '@preact/signals-react';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Outlet, useLocation, useOutletContext } from 'react-router-dom';
 import {
   ExpenseParsedFilters,
   ExpenseResponseItem,
+  Guest,
+  Member,
   Mode,
   TransferParsedFilters,
   User,
@@ -14,7 +16,7 @@ import { useCategorySwipe } from '../../components/CategorySelector/useCategoryS
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
 import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';
 import SearchTransactionsAnimation from '../../components/Animations/SearchTransactionsAnimation';
-import GroupQuickActionsAnimation from '../../components/Animations/MenuWithOptionsToAddAnimation';
+import GroupQuickActionsAnimation from '../../components/Animations/GroupQuickActionsAnimation';
 import NewExpenseAnimation from '../../components/Animations/NewExpenseAnimation';
 import NewTransferAnimation from '../../components/Animations/NewTransferAnimation';
 import { StyledGroup } from './Group.styled';
@@ -24,6 +26,7 @@ import {
   localStorageStringParser,
   getFilterStorageKey,
 } from '../../components/SearchTransactions/helpers/localStorageStringParser';
+import { transactionCategories } from '@/constants';
 
 export default function NonGroup() {
   const menu = useSignal<string | null>(null);
@@ -47,8 +50,8 @@ export default function NonGroup() {
   });
 
   const { expenseFilter, transferFilter } = localStorageStringParser(
-    localStorage.getItem(getFilterStorageKey('expense', undefined)),
-    localStorage.getItem(getFilterStorageKey('transfer', undefined))
+    sessionStorage.getItem(getFilterStorageKey('expense', undefined)),
+    sessionStorage.getItem(getFilterStorageKey('transfer', undefined))
   );
 
   const expenseParsedFilters = useSignal<ExpenseParsedFilters>(expenseFilter);
@@ -57,6 +60,9 @@ export default function NonGroup() {
   const location = useLocation();
   const path = location.pathname.split('/').pop() || '';
   const nonGroupUsers = useSignal<User[]>([]);
+  const expenseIsPersonal = useSignal<boolean>(false);
+  const expenseGroupMembers = useSignal<(Member | Guest)[]>([]);
+  const expenseIsNonGroup = useSignal<boolean>(true);
 
   const { userInfo, topMenuTitle } = useOutletContext<{
     userInfo: UserInfo;
@@ -67,54 +73,56 @@ export default function NonGroup() {
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
   const mode: Mode = Mode.NonGroup;
 
-  const categoryCategories = {
-    cat1: 'Expenses',
-    cat2: 'Transfers',
-    cat3: 'Debts',
-  };
   const swipeHandlers = useCategorySwipe({
-    categories: categoryCategories,
+    categories: transactionCategories,
     activeCat: path,
     navLinkUse: true,
   });
 
   useEffect(() => {
-    topMenuTitle.value = 'Non Group Transactions';
-  }, [showBottomBar.value]);
+    topMenuTitle.value = 'Quick splits';
+  }, [showBottomBar.value, topMenuTitle]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('submittedFromHomePersistData');
+    const saved = sessionStorage.getItem('submittedFromHomePersistData');
     if (saved) {
       const { nonGroupUsers: u } = JSON.parse(saved);
       nonGroupUsers.value = u ?? [];
     }
+  }, [nonGroupUsers]);
+
+  useEffect(() => {
+    if (!userInfo?.userId) return;
     nonGroupTransferMenu.value = {
       attribute: '',
       menu: null,
-      senderId: userInfo?.userId,
+      senderId: userInfo.userId,
       senderName: 'You',
       receiverId: '',
       receiverName: '',
     };
-  }, []);
+  }, [userInfo?.userId, nonGroupTransferMenu]);
+
+  const outletContext = useMemo(
+    () => ({
+      userInfo,
+      showBottomBar,
+      expenseParsedFilters,
+      transferParsedFilters,
+      mode,
+    }),
+    [userInfo, showBottomBar, expenseParsedFilters, transferParsedFilters, mode]
+  );
 
   return (
     <StyledGroup>
       <div className="group" {...swipeHandlers}>
         <CategorySelector
           activeCat={path}
-          categories={categoryCategories}
+          categories={transactionCategories}
           navLinkUse={true}
         />
-        <Outlet
-          context={{
-            userInfo,
-            showBottomBar,
-            expenseParsedFilters,
-            transferParsedFilters,
-            mode: mode,
-          }}
-        />
+        <Outlet context={outletContext} />
 
         <MenuAnimationBackground menu={menu} />
 
@@ -124,11 +132,11 @@ export default function NonGroup() {
           menu={menu}
           selectedExpense={selectedExpense}
           timeZoneCoordinates={timeZoneCoordinates}
-          isPersonal={signal(false)}
+          isPersonal={expenseIsPersonal}
           currency={userInfo?.currency}
-          groupMembers={signal([])}
-          isnonGroupExpense={signal(true)}
+          groupMembers={expenseGroupMembers}
           nonGroupUsers={nonGroupUsers}
+          isnonGroupExpense={expenseIsNonGroup}
           nonGroupMenu={nonGroupMenu}
         />
 
@@ -137,8 +145,6 @@ export default function NonGroup() {
           menu={menu}
           currency={userInfo?.currency}
           groupMembers={signal([])}
-          isnonGroupTransfer={signal(true)}
-          nonGroupUsers={nonGroupUsers}
           nonGroupMenu={nonGroupTransferMenu}
           fromHomeGroup={signal(null)}
           fromHome={false}
@@ -153,7 +159,6 @@ export default function NonGroup() {
           timeZoneId={timeZoneId}
           expenseParsedFilters={expenseParsedFilters}
           transferParsedFilters={transferParsedFilters}
-          // nonGroupUsers={nonGroupUsers}
         />
 
         <div className="bottomMenu">
@@ -179,7 +184,6 @@ export default function NonGroup() {
         nonGroupTransferMenu={nonGroupTransferMenu}
         fromHomeGroup={signal(null)}
         groupMembers={signal([])}
-        isNonGroupTransfer={signal(true)}
       />
     </StyledGroup>
   );

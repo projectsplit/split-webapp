@@ -1,22 +1,30 @@
-export function copyToClipboard(invitationCode: string, baseUrl: string) {
-  if (!invitationCode) return;
+export async function copyToClipboard(
+  invitationCode: string,
+  baseUrl: string
+): Promise<boolean> {
+  if (!invitationCode) return false;
 
   const formattedLink = `${baseUrl}${invitationCode}`;
 
   if (navigator.clipboard) {
-    navigator.clipboard
-      .writeText(formattedLink)
-      .catch((err) => console.error('Failed to copy: ', err));
-  } else {
-    const textarea = document.createElement('textarea');
-    textarea.value = formattedLink;
-    document.body.appendChild(textarea);
-    textarea.select();
     try {
-      document.execCommand('copy');
+      await navigator.clipboard.writeText(formattedLink);
+      return true;
     } catch (err) {
-      console.error('Fallback copy failed: ', err);
+      console.error('Failed to copy: ', err);
     }
-    document.body.removeChild(textarea);
   }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = formattedLink;
+  document.body.appendChild(textarea);
+  textarea.select();
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } catch (err) {
+    console.error('Fallback copy failed: ', err);
+  }
+  document.body.removeChild(textarea);
+  return copied;
 }

@@ -10,23 +10,25 @@ export const StyledActionsMenu = styled.div<StyledActionsMenuProps>`
   bottom: ${({ $bottom }) =>
     typeof $bottom === 'number' ? `${$bottom}px` : $bottom};
   right: 30px;
+
   .buttons {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    margin-bottom: 15px;
+    gap: ${({ theme }) => theme.space.s12};
+    margin-bottom: ${({ theme }) => theme.space.s12};
+
     .new {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 12px;
+      gap: ${({ theme }) => theme.space.s12};
+      cursor: pointer;
 
       .wrapper {
         animation: emerge 0.2s ease-out forwards;
         transform-origin: center;
         opacity: 0;
 
-        /* Delay for staggered effect */
         &:nth-child(1) {
           animation-delay: 0.05s;
         }
@@ -34,7 +36,6 @@ export const StyledActionsMenu = styled.div<StyledActionsMenuProps>`
           animation-delay: 0.05s;
         }
 
-        /* Reset transform for animation */
         transform: scale(0);
 
         display: flex;
@@ -42,29 +43,32 @@ export const StyledActionsMenu = styled.div<StyledActionsMenuProps>`
         position: relative;
 
         .symbol {
-          padding: 0.6rem;
-          border-radius: 50%;
-          display: flex;
-
+          box-sizing: border-box;
+          display: block;
+          width: 48px;
+          height: 48px;
+          padding: 14px;
+          border-radius: ${({ theme }) => theme.radius.pill};
+          background-color: ${({ theme }) => theme.ink.primary};
+          color: ${({ theme }) => theme.surface.page};
+          box-shadow: ${({ theme }) => theme.shadow.fab};
           cursor: pointer;
-          color: rgb(81, 131, 238);
-          background-color: white;
-          width: 45px; /* Fixed size for consistent positioning */
-          height: 45px;
-          position: relative;
         }
       }
 
       .descr {
         flex: 1 1 auto;
-        margin-right: 8px;
         text-align: right;
+        font-size: ${({ theme }) => theme.size.s14};
+        font-weight: ${({ theme }) => theme.weight.medium};
+        color: ${({ theme }) => theme.ink.primary};
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
     }
   }
+
   @keyframes emerge {
     from {
       transform: scale(0);

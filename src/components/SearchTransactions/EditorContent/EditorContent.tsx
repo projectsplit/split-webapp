@@ -12,10 +12,8 @@ import OptionsToolBar from '../Toolbars/OptionsToolbar/OptionsToolBar';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import {
   forwardRef,
-  useEffect,
   useImperativeHandle,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
@@ -31,13 +29,13 @@ import { OnChangePlugin } from '../../../lexicalPlugins/OnChangePlugin';
 import { ClearEditorPlugin } from '../../../lexicalPlugins/LexicalClearEditorPlugin';
 import { EditorContentHandle, LexicalEditorProps } from '../../../interfaces';
 import { updateFiltersMentions } from '../helpers/updateFiltersMentions';
+import { appendSpaceAfterMention } from '../helpers/appendSpaceAfterMention';
 
 export const EditorContent = forwardRef<
   EditorContentHandle,
   LexicalEditorProps
 >((props, ref) => {
   const {
-    // contentEditableHeight,
     enhancedPeopleWithProps,
     submitButtonIsActive,
     expenseFilterState,
@@ -56,18 +54,33 @@ export const EditorContent = forwardRef<
 
   const [editor] = useLexicalComposerContext();
   const [isEmpty, setIsEmpty] = useState(true);
-  const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
+  const [menuSlot, setMenuSlot] = useState<HTMLDivElement | null>(null);
   const [filteredResults, setFilteredResults] = useState<
     { value: string; [key: string]: BeautifulMentionsItemData }[]
   >([]);
 
   const [editorStateString, setEditorStateString] = useState<string>();
-  const contentEditableWrapRef = useRef<HTMLDivElement>(null);
   const showOptions = useSignal<boolean>(true);
   const calendarIsOpen = useSignal<boolean>(false);
   const removedFilter = useSignal<boolean>(false);
   const datePeriodClicked = useSignal<string>('');
   const showFreeTextPill = useSignal<boolean>(true);
+  const peopleForCategory = useMemo(
+    () =>
+      enhancedPeopleWithProps.filter((person) =>
+        (category.value === 'transfers'
+          ? ['sender', 'receiver']
+          : ['participant', 'payer']
+        ).includes(person.prop)
+      ),
+    [enhancedPeopleWithProps, category.value]
+  );
+
+  const labelsForCategory = useMemo(
+    () => (category.value === 'transfers' ? [] : labels),
+    [labels, category.value]
+  );
+
   const mentionItems = useMemo(() => {
     const items: Record<string, BeautifulMentionsItem[]> = {
       'payer:': [],
@@ -80,24 +93,6 @@ export const EditorContent = forwardRef<
     updateFiltersMentions(labels, items);
     return items;
   }, [people, labels]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (contentEditableWrapRef.current) {
-        setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
-      }
-    };
-    const resizeObserver = new ResizeObserver(handleResize);
-    const element = contentEditableWrapRef.current;
-    if (element) {
-      resizeObserver.observe(element);
-    }
-    return () => {
-      if (element) {
-        resizeObserver.unobserve(element);
-      }
-    };
-  }, [setContentEditableHeight]);
 
   const clearEditor = () => {
     editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
@@ -116,7 +111,7 @@ export const EditorContent = forwardRef<
       <ClearEditorPlugin />
       <RichTextPlugin
         contentEditable={
-          <div ref={contentEditableWrapRef} className="contentEditableWrap">
+          <div className="contentEditableWrap">
             <ContentEditable className="contentEditable" />
           </div>
         }
@@ -127,6 +122,7 @@ export const EditorContent = forwardRef<
         }
         ErrorBoundary={LexicalErrorBoundary}
       />
+      <div className="mentionMenuSlot" ref={setMenuSlot} />
       <HistoryPlugin />
       <OnChangePlugin
         onChange={(editorState) =>
@@ -135,26 +131,25 @@ export const EditorContent = forwardRef<
             setEditorState,
             showOptions,
             setFilteredResults,
-            enhancedPeopleWithProps,
+            peopleForCategory,
             submitButtonIsActive,
             removedFilter,
             setEditorStateString,
             setIsEmpty,
             calendarIsOpen,
             datePeriodClicked,
-            labels,
+            labelsForCategory,
             searchKeyword
           )
         }
       />
       <BeautifulMentionsPlugin
         items={mentionItems}
-        menuComponent={(props) => (
-          <Menu {...props} contentEditableHeight={contentEditableHeight} />
-        )}
+        menuComponent={(props) => <Menu {...props} container={menuSlot} />}
         menuItemComponent={MenuItem}
         onMenuItemSelect={() => {
           showOptions.value = true;
+          queueMicrotask(() => appendSpaceAfterMention(editor));
         }}
         insertOnBlur={false}
         menuItemLimit={false}
@@ -189,7 +184,6 @@ export const EditorContent = forwardRef<
           editorStateString={editorStateString}
           filteredResults={filteredResults}
           setFilteredResults={setFilteredResults}
-          submitButtonIsActive={submitButtonIsActive}
         />
       )}
       <AutoFocusPlugin />
