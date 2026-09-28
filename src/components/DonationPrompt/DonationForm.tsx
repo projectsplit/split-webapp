@@ -181,7 +181,7 @@ export default function DonationForm({
             >
               {tier.priceString}
               {tier.kind === DonationTierKind.Monthly && (
-                <span>Every month</span>
+                <span>Monthly</span>
               )}
             </Preset>
           ))}
