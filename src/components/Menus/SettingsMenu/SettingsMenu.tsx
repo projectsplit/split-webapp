@@ -27,6 +27,8 @@ import EditUsernameAnimation from '../../Animations/EditUsernameAnimation';
 import EditEmailAnimation from '../../Animations/EditEmailAnimation';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
 import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPushNotificationsEnabled';
+import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
+import SupportMenuAnimation from '../../Animations/SupportMenuAnimation';
 import {
   isPushSupported,
   PushSubscribeFailure,
@@ -56,6 +58,11 @@ export default function SettingsMenu({
   const timeZoneMenu = useSignal<string | null>(null);
   const editUsernameMenu = useSignal<string | null>(null);
   const editEmailMenu = useSignal<string | null>(null);
+  const supportMenu = useSignal<string | null>(null);
+
+  // Only fetched to know whether donations are configured at all. An instance with no Google Play
+  // credentials should not show an entry that can only lead to a dead end.
+  const { data: donationInfo } = useGetDonationPrompt(true);
 
   const queryClient = useQueryClient();
 
@@ -247,6 +254,24 @@ export default function SettingsMenu({
                 <IonIcon name="chevron-forward-outline" className="rowChevron" />
               </span>
             </PropertyRow>
+
+            {/* Hidden only when the server has no Google Play credentials, so an instance that
+                cannot take money does not offer to. Otherwise always here, including for someone
+                who turned the prompt off — declining to be asked is not declining to give. */}
+            {donationInfo?.isAvailable && (
+              <PropertyRow
+                action
+                label="Support Buqs"
+                onClick={() => (supportMenu.value = 'support')}
+              >
+                <span className="rowValue">
+                  <IonIcon
+                    name="chevron-forward-outline"
+                    className="rowChevron"
+                  />
+                </span>
+              </PropertyRow>
+            )}
           </PropertyList>
         </div>
 
@@ -269,6 +294,8 @@ export default function SettingsMenu({
       <MenuAnimationBackground menu={timeZoneMenu} />
       <MenuAnimationBackground menu={editUsernameMenu} />
       <MenuAnimationBackground menu={editEmailMenu} />
+      <MenuAnimationBackground menu={supportMenu} />
+      <SupportMenuAnimation supportMenu={supportMenu} />
       <TimeZoneOptionsAnimation
         timeZoneMenu={timeZoneMenu}
         clickHandler={handldeTimeZoneOptionsClick}

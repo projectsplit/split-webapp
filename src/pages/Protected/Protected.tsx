@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Navigate, Outlet, useLocation, useParams } from 'react-router-dom';
+import {
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import { useSignal } from '@preact/signals-react';
 import { StyledProtected } from './Protected.styled';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
@@ -13,12 +19,21 @@ import { prewarmRoutes } from '@/lazyRoutes';
 import { syncPushSubscription } from '@/helpers/pushNotifications';
 import { isUserAuthenticated } from '@/helpers/isUserAuthenticated';
 import routes from '@/routes';
+import { addNativePushTapListener } from '@/helpers/nativePush';
+import { isNativeApp } from '@/helpers/platform';
+import DonationPrompt from '../../components/DonationPrompt/DonationPrompt';
+import { useRecoverDonationPurchases } from '@/hooks/useRecoverDonationPurchases';
 
 const Protected: React.FC = () => {
   const location = useLocation();
   const { code } = useParams<{ code?: string }>();
   const { data: userInfo } = useGetMe();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  // Catches a gift Google Play took payment for but whose registration never reached the server.
+  // Runs once per app start, and needs an account to attribute anything to.
+  useRecoverDonationPurchases(Boolean(userInfo));
 
   useEffect(() => {
     prewarmRoutes();
@@ -36,6 +51,25 @@ const Protected: React.FC = () => {
     }
   }, [userInfo]);
 
+  // The native app has no service worker to relay through, so the tap on the system notification is
+  // the only signal that a push happened. Registered once for the lifetime of the screen because a
+  // tap can launch the app from cold and the delivery is only replayed to listeners already present.
+  useEffect(() => {
+    if (!isNativeApp()) return;
+
+    addNativePushTapListener((url) => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['getMe'] });
+
+      // Server-sent urls are paths within this app. Anything absolute would navigate the WebView
+      // off our own origin with no way back, so only in-app paths are followed.
+      if (url.startsWith('/')) navigate(url);
+    });
+  }, [queryClient, navigate]);
+
+  // The service worker gets every push whether or not a tab is focused, so it relays one message
+  // and the bell and feed refresh in place. This is the live path; useGetMe's poll is only the
+  // fallback for people who never enabled push.
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
 
@@ -106,6 +140,9 @@ const Protected: React.FC = () => {
       <MenuAnimationBackground menu={menu} />
       <NotificationsMenuAnimation menu={menu} userInfo={userInfo} />
       <SettingsMenuAnimation menu={menu} userInfo={userInfo} />
+      {/* Mounted here rather than in App because it needs a signed-in account: the prompt asks the
+          server whether this person is due to be asked at all. */}
+      <DonationPrompt menu={menu} hasOverlay={Boolean(code)} />
     </StyledProtected>
   ) : (
     <Navigate

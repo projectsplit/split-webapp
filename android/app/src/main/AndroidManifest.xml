@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBarLaunch"
+            android:launchMode="singleTask"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!--
+              Group invitations are shared as https://buqs.uk/j/<code> links. Without this they open
+              in a browser even on a phone that has the app, which is the one moment someone is most
+              likely to want it. autoVerify makes Android check
+              https://buqs.uk/.well-known/assetlinks.json at install time and, if this app's signing
+              certificate is listed there, hand the link straight over with no chooser.
+
+              Scoped to /j/ deliberately. A filter on the whole host would also capture links someone
+              opened in a browser on purpose, and there is nothing else on the site that is better in
+              the app than out of it.
+
+              Verification is silent when it fails: the links simply keep opening in the browser. If
+              that happens, check assetlinks.json is reachable, is served as application/json, and
+              lists the SHA-256 of the Play App Signing certificate rather than only the upload key.
+            -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="buqs.uk"
+                    android:pathPrefix="/j/" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+    <!-- Permissions -->
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+      Google Play Services arrives as a transitive dependency of the sign-in plugin and brings the
+      advertising ID permissions with it. Buqs serves no ads and reads no ad identifier, but shipping
+      the permissions would still oblige us to declare advertising-ID collection on the Play data
+      safety form — declaring a capability we do not use. Stripped here so the manifest matches what
+      the app actually does.
+    -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID" tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION" tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_CUSTOM_AUDIENCE" tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_TOPICS" tools:node="remove" />
+</manifest>
