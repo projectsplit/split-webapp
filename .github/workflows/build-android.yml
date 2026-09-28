@@ -13,8 +13,18 @@ on:
         options:
           - aab
           - apk
+      environment:
+        description: 'Which API the build talks to. test for internal-testing purchases against the test server; production only for a real release.'
+        required: true
+        # Test by default. A test build that reaches production data is the expensive mistake here;
+        # a release built against test is caught the moment anyone opens it.
+        default: 'test'
+        type: choice
+        options:
+          - test
+          - production
 
-run-name: Build Android ${{ inputs.buildType }} from ${{ github.ref_name }}
+run-name: Build Android ${{ inputs.buildType }} (${{ inputs.environment }}) from ${{ github.ref_name }}
 
 jobs:
   build:
@@ -42,11 +52,24 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Setup .env.production
-        run: echo "${{ vars.ENV_PRODUCTION }}" > .env.production
+      # The API address is baked into the bundle, and a build installed from Play cannot be pointed
+      # anywhere else afterwards — release builds refuse cleartext, so there is no tunnelling to a
+      # laptop either. Which server a build talks to is decided here and nowhere later.
+      - name: Setup environment file
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            echo "${{ vars.ENV_PRODUCTION }}" > .env.production
+          else
+            echo "${{ vars.ENV_TEST }}" > .env.test
+          fi
 
       - name: Build web bundle
-        run: npm run build-prod
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            npm run build-prod
+          else
+            npm run build-test
+          fi
 
       # Firebase will not initialise without this, and FCM registration fails at runtime rather than
       # at build time — so a missing secret would produce an app that installs and silently never
@@ -86,7 +109,7 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: buqs-android-${{ inputs.buildType }}
+          name: buqs-android-${{ inputs.environment }}-${{ inputs.buildType }}
           path: |
             android/app/build/outputs/bundle/release/*.aab
             android/app/build/outputs/apk/release/*.apk
