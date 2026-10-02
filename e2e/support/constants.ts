@@ -1,0 +1,18 @@
+export const E2E_PORT = 5174;
+export const API_ORIGIN = 'http://api.e2e.test';
+
+export const ME_ID = '00000000-0000-4000-8000-000000000001';
+export const SAM_ID = '00000000-0000-4000-8000-000000000002';
+export const JO_ID = '00000000-0000-4000-8000-000000000003';
+
+export const GROUP_ID = '10000000-0000-4000-8000-000000000001';
+export const MY_MEMBER_ID = '20000000-0000-4000-8000-000000000001';
+export const GUEST_MEMBER_ID = '20000000-0000-4000-8000-000000000002';
+
+export const GROUP_NAME = 'Weekend trip';
+export const GUEST_NAME = 'Guest Kim';
+export const GROUP_EXPENSE = 'Dinner';
+export const GROUP_EXPENSE_ID = '30000000-0000-4000-8000-000000000001';
+export const QUICK_SPLIT_EXPENSE_ID = '30000000-0000-4000-8000-000000000002';
+export const QUICK_SPLIT_EXPENSE = 'Taxi';
+export const RECURRING_EXPENSE = 'Gym';

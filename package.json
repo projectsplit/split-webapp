@@ -15,7 +15,11 @@
     "build-test": "vite build --mode test",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:e2e": "sh e2e/run.sh run --rm --build --service-ports e2e",
+    "test:e2e:headless": "sh e2e/run.sh run --rm --build e2e npx playwright test",
+    "test:e2e:report": "sh e2e/run.sh run --rm --service-ports e2e npx playwright show-report --host 0.0.0.0 --port 9323",
+    "test:e2e:update-render-baselines": "UPDATE_RENDER_BASELINES=1 sh e2e/run.sh run --rm --build e2e npx playwright test tests/render-budget.spec.ts"
   },
   "dependencies": {
     "@lexical/react": "^0.27.2",
