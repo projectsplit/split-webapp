@@ -20,6 +20,24 @@ Both fingerprints belong in the list, and leaving either out breaks a real case:
 
 Paste them as uppercase hex with colons, exactly as the tools print them.
 
+### What is in the list now
+
+JSON cannot carry comments, so the four entries are explained here, in the order they appear:
+
+1. `AC:92:2C:…` — the Play App Signing key (RSA). The certificate on every Play install up to
+   Android 16, and the one Play Console shows.
+2. `27:D8:16:…` and
+3. `5A:59:57:…` — two more certificates Play adds for Android 17, which verifies a newer signature
+   scheme. The last is a post-quantum (ML-DSA) key, and on Android 17 it is the one the system
+   reports as the app's signer: `adb shell dumpsys package com.buqs` lists it under `Signatures`.
+   Leave it out and invitation links stop opening in the app on Android 17 only.
+4. `AB:F6:5B:…` — the upload key, for a release build installed directly rather than through Play.
+
+Play Console only shows the first. The other two were read off a Play-installed copy:
+`adb pull` the `base.apk` named by `adb shell pm path com.buqs`, then look inside its APK Signing
+Block. `apksigner verify --print-certs` from build-tools 35 does not understand the newer block and
+reports the RSA key alone.
+
 ## Checking it works
 
 The file has to be reachable at `https://buqs.uk/.well-known/assetlinks.json`, over HTTPS, with no

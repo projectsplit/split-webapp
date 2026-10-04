@@ -5,8 +5,10 @@
       "namespace": "android_app",
       "package_name": "com.buqs",
       "sha256_cert_fingerprints": [
-        "REPLACE_WITH_PLAY_APP_SIGNING_SHA256",
-        "REPLACE_WITH_UPLOAD_KEY_SHA256"
+        "AC:92:2C:13:57:08:30:8A:D6:6D:D7:08:F6:6D:AB:5D:11:C2:A9:69:2F:A9:30:1A:37:AC:8D:42:22:E5:98:29",
+        "27:D8:16:48:59:9E:78:0E:53:0F:E1:D0:D0:BA:11:61:60:78:F3:25:29:77:5F:A6:A5:88:2C:C9:EB:1B:28:4B",
+        "5A:59:57:9D:9E:DA:A1:1D:01:F6:32:F5:C4:1C:7C:77:2A:0D:97:FA:EE:70:4D:8B:C1:C3:97:41:9C:43:80:00",
+        "AB:F6:5B:6A:BF:B8:5F:84:1D:8C:AF:09:E1:D5:F9:1D:B7:17:9D:A9:9E:AA:41:E8:CA:5E:14:48:A0:62:44:44"
       ]
     }
   }
