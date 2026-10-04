@@ -123,6 +123,28 @@ export const StyledSettingsMenu = styled.div`
     }
   }
 
+  .accountLinks {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: ${({ theme }) => theme.space.s24};
+
+    .link {
+      background: none;
+      border: none;
+      padding: ${({ theme }) => theme.space.s4};
+      font-family: inherit;
+      font-size: ${({ theme }) => theme.size.s13};
+      color: ${({ theme }) => theme.ink.secondary};
+      cursor: pointer;
+    }
+
+    .link.danger {
+      color: ${({ theme }) => theme.direction.owe};
+    }
+  }
+
   .info {
     display: flex;
     flex-direction: row;

@@ -38,6 +38,13 @@ export const Personal = lazy(loaders.Personal);
 export const ManageBudgets = lazy(loaders.ManageBudgets);
 export const RecurringExpenses = lazy(loaders.RecurringExpenses);
 
+// Outside the prewarmed set on purpose. These are pages of text most people never open, and the
+// ones who do arrive from a link on the store listing rather than from inside the app.
+export const PrivacyPolicy = lazy(() => import('@/pages/Legal/PrivacyPolicy'));
+export const AccountDeletion = lazy(
+  () => import('@/pages/Legal/AccountDeletion')
+);
+
 let prewarmStarted = false;
 
 export const prewarmRoutes = () => {

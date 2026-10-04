@@ -5,6 +5,8 @@ const routes = {
   CREATE: '/entry',
   GOOGLE_REDIRECT: '/google/redirect',
   RESET_PASSWORD: '/reset-password',
+  PRIVACY: '/privacy',
+  DELETE_ACCOUNT: '/delete-account',
   USER_INVITATIONS: '/invitations',
   JOIN: '/j/:code',
   GROUPS: '/shared',

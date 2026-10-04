@@ -35,6 +35,8 @@ import {
   Personal,
   ManageBudgets,
   RecurringExpenses,
+  PrivacyPolicy,
+  AccountDeletion,
 } from './lazyRoutes';
 
 const SuspenseFallback = () => (
@@ -68,6 +70,10 @@ const App = () => {
             <Route path={routes.CREATE} element={<CreateAccount />} />
             <Route path={routes.GOOGLE_REDIRECT} element={<GoogleCallback />} />
             <Route path={routes.RESET_PASSWORD} element={<ResetPassword />} />
+            {/* Public, and they have to stay that way: Google Play links to both from the store
+                listing, and someone who cannot sign in is exactly who needs the second. */}
+            <Route path={routes.PRIVACY} element={<PrivacyPolicy />} />
+            <Route path={routes.DELETE_ACCOUNT} element={<AccountDeletion />} />
             <Route element={<Protected />}>
               <Route path={routes.ROOT} element={<Home />} />
               <Route path={routes.JOIN} element={<Home />} />

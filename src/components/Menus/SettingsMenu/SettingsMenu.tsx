@@ -29,6 +29,7 @@ import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetIn
 import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPushNotificationsEnabled';
 import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
 import SupportMenuAnimation from '../../Animations/SupportMenuAnimation';
+import DeleteAccountAnimation from '../../Animations/DeleteAccountAnimation';
 import {
   isPushSupported,
   PushSubscribeFailure,
@@ -59,6 +60,7 @@ export default function SettingsMenu({
   const editUsernameMenu = useSignal<string | null>(null);
   const editEmailMenu = useSignal<string | null>(null);
   const supportMenu = useSignal<string | null>(null);
+  const deleteAccountMenu = useSignal<string | null>(null);
 
   // Only fetched to know whether donations are configured at all. An instance with no Google Play
   // credentials should not show an entry that can only lead to a dead end.
@@ -281,6 +283,29 @@ export default function SettingsMenu({
           </MyButton>
         </div>
 
+        {/* Below Log out and quieter than it, so it is found by someone looking for it and not
+            pressed by someone who was not. Google Play requires it to be reachable from inside
+            the app, and account settings is where anyone would look. */}
+        <div className="accountLinks">
+          <button
+            type="button"
+            className="link"
+            onClick={() => {
+              menu.value = null;
+              navigate(routes.PRIVACY);
+            }}
+          >
+            Privacy policy
+          </button>
+          <button
+            type="button"
+            className="link danger"
+            onClick={() => (deleteAccountMenu.value = 'deleteAccount')}
+          >
+            Delete account
+          </button>
+        </div>
+
         <div className="info">
           <div className="appName">Buqs</div>
           <div className="version">
@@ -295,7 +320,13 @@ export default function SettingsMenu({
       <MenuAnimationBackground menu={editUsernameMenu} />
       <MenuAnimationBackground menu={editEmailMenu} />
       <MenuAnimationBackground menu={supportMenu} />
+      <MenuAnimationBackground menu={deleteAccountMenu} />
       <SupportMenuAnimation supportMenu={supportMenu} />
+      <DeleteAccountAnimation
+        deleteAccountMenu={deleteAccountMenu}
+        username={userInfo?.username}
+        hasActiveMonthly={donationInfo?.hasActiveMonthly}
+      />
       <TimeZoneOptionsAnimation
         timeZoneMenu={timeZoneMenu}
         clickHandler={handldeTimeZoneOptionsClick}
