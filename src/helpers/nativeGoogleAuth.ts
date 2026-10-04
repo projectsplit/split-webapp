@@ -39,7 +39,11 @@ export const signInWithGoogleNatively =
 
       const { result } = await SocialLogin.login({
         provider: 'google',
-        options: { scopes: ['email', 'profile'] },
+        // No scopes, on purpose. The plugin always asks for openid, email and profile, which is
+        // everything the id token needs. Naming scopes here is what made every native sign-in fail:
+        // the plugin then insists on a MainActivity that implements its marker interface, and when
+        // it does not find one it rejects before opening the sheet, without logging why.
+        options: {},
       });
 
       // The offline shape carries a serverAuthCode instead of a token. We never ask for it, but the

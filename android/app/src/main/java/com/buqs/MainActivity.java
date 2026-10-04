@@ -1,5 +1,6 @@
 package com.buqs;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.getcapacitor.BridgeActivity;
+import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginHandle;
+
+import ee.forgr.capacitor.social.login.GoogleProvider;
+import ee.forgr.capacitor.social.login.ModifiedMainActivityForSocialLoginPlugin;
+import ee.forgr.capacitor.social.login.SocialLoginPlugin;
 
 /**
  * Keeps the web layer out from under the system bars.
@@ -30,8 +37,10 @@ import com.getcapacitor.BridgeActivity;
  * nothing to pass through, but still pads its own view by the keyboard height. That keyboard padding
  * is what keeps a form above the keyboard, and it is why windowSoftInputMode is adjustNothing — the
  * legacy resize would count the keyboard a second time.
+ *
+ * It also hands Google's consent screen back to the sign-in plugin; see onActivityResult.
  */
-public class MainActivity extends BridgeActivity {
+public class MainActivity extends BridgeActivity implements ModifiedMainActivityForSocialLoginPlugin {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,4 +76,33 @@ public class MainActivity extends BridgeActivity {
                 .build();
         });
     }
+
+    /**
+     * After Google returns an identity, the sign-in plugin asks for the matching access token. When
+     * Google wants the person to approve that first, the plugin opens Google's screen from this
+     * activity, so the answer comes back here and nowhere else. Without passing it on, the plugin
+     * waits for an answer that never arrives and the sign-in button simply never finishes.
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode < GoogleProvider.REQUEST_AUTHORIZE_GOOGLE_MIN || requestCode >= GoogleProvider.REQUEST_AUTHORIZE_GOOGLE_MAX) {
+            return;
+        }
+
+        PluginHandle handle = getBridge().getPlugin("SocialLogin");
+        Plugin plugin = handle == null ? null : handle.getInstance();
+
+        if (plugin instanceof SocialLoginPlugin) {
+            ((SocialLoginPlugin) plugin).handleGoogleLoginIntent(requestCode, data);
+        }
+    }
+
+    /**
+     * Never called. The plugin only checks that the activity declares it, as its way of confirming
+     * the forwarding above is in place before it will use that path.
+     */
+    @Override
+    public void IHaveModifiedTheMainActivityForTheUseWithSocialLoginPlugin() {}
 }
