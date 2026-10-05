@@ -45,6 +45,16 @@ android {
         }
     }
     buildTypes {
+        debug {
+            // A debug build cannot replace the copy installed from Play — the two are signed with
+            // different keys — so testing one meant uninstalling the other. With
+            //   ./gradlew assembleDebug -PdebugIdSuffix=.dev
+            // it installs beside it as com.buqs.dev instead. Off unless asked for: Google sign-in,
+            // Play Billing and FCM are all registered against com.buqs and do not follow the suffix.
+            if (project.hasProperty('debugIdSuffix')) {
+                applicationIdSuffix project.property('debugIdSuffix')
+            }
+        }
         release {
             // Without the keystore this stays unsigned and the build still succeeds, so a checkout
             // can be compiled and run by anyone; only producing an uploadable bundle needs the key.
