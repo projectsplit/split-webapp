@@ -50,6 +50,10 @@ export default function AccountDeletion() {
         <li>Your account: username, email address and sign-in details.</li>
         <li>Your settings, budgets, labels and notifications.</li>
         <li>Your personal expenses and recurring expenses.</li>
+        <li>
+          Expenses in shared groups that involve only you: ones you paid for and
+          nobody else shares.
+        </li>
         <li>Any group that only you are in, with everything in it.</li>
         <li>
           Your sessions on every device, and your push notification

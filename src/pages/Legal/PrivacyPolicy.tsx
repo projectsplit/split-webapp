@@ -132,7 +132,8 @@ export default function PrivacyPolicy() {
         You can delete your account at any time from Settings in the app.
         Deletion is immediate and permanent. It removes your account and sign-in
         details, your settings, budgets, labels, notifications and personal
-        expenses, and any group that only you are in.
+        expenses, any expense in a shared group that involves only you, and any
+        group that only you are in.
       </p>
       <p>
         Expenses and transfers you shared with other people stay visible to
