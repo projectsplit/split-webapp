@@ -44,7 +44,7 @@ const pushFailureMessages: Record<PushSubscribeFailure, string> = {
     'Notifications are blocked for this site. Allow them in your browser settings, then try again.',
   'permission-dismissed':
     'The permission prompt was dismissed. Try again and choose Allow.',
-  'not-configured': 'Push notifications are not available on this server.',
+  'not-configured': 'Push notifications are not available yet.',
   failed: 'Could not register this device. Please try again.',
 };
 

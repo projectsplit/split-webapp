@@ -44,6 +44,9 @@ public class MainActivity extends BridgeActivity implements ModifiedMainActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        // Before super.onCreate, which is when the bridge collects its plugins.
+        registerPlugin(PushAvailabilityPlugin.class);
+
         super.onCreate(savedInstanceState);
 
         View content = findViewById(android.R.id.content);

@@ -1,3 +1,4 @@
+import { registerPlugin } from '@capacitor/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { apiClient } from '../api/apiClients';
 import { PushDeviceKind } from '../types';
@@ -11,6 +12,32 @@ import type { PushSubscribeResult } from './pushNotifications';
 const TOKEN_TIMEOUT_MS = 15000;
 
 let cachedToken: string | null = null;
+
+interface PushAvailabilityPlugin {
+  isAvailable(): Promise<{ available: boolean }>;
+}
+
+const PushAvailability =
+  registerPlugin<PushAvailabilityPlugin>('PushAvailability');
+
+let availability: Promise<boolean> | null = null;
+
+/**
+ * Whether this build of the app can reach FCM. It cannot when it was built without
+ * google-services.json, and then register() and unregister() do not fail — they crash the app from
+ * native code, where no try/catch here can reach. So every path that would call either asks this
+ * first.
+ *
+ * A shell too old to have the plugin rejects the call, and that counts as no. Wrongly saying no
+ * costs someone their notifications; wrongly saying yes costs them the app.
+ */
+export const isNativePushAvailable = (): Promise<boolean> => {
+  availability ??= PushAvailability.isAvailable()
+    .then((result) => result.available)
+    .catch(() => false);
+
+  return availability;
+};
 
 const requestToken = (): Promise<string | null> =>
   new Promise((resolve) => {
@@ -44,6 +71,12 @@ const requestToken = (): Promise<string | null> =>
  * push endpoint, and the server stores it in the same device record under a different kind.
  */
 export const subscribeToNativePush = async (): Promise<PushSubscribeResult> => {
+  // Before the permission prompt too: asking to send notifications that can never arrive would be
+  // a prompt for nothing.
+  if (!(await isNativePushAvailable())) {
+    return { subscribed: false, failure: 'not-configured' };
+  }
+
   try {
     // Android 13+ shows a runtime prompt; older versions return granted without one.
     let status = await PushNotifications.checkPermissions();
@@ -87,6 +120,10 @@ export const hasNativePushPermission = async (): Promise<boolean> => {
 };
 
 export const unsubscribeFromNativePush = async (): Promise<void> => {
+  // Logging out and deleting an account both come through here, so this is the guard that keeps
+  // those working in a build with no Firebase. There is no registration to undo in one anyway.
+  if (!(await isNativePushAvailable())) return;
+
   const token = cachedToken;
 
   cachedToken = null;
