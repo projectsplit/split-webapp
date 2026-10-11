@@ -92,6 +92,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
       userLocation.error ||
       userLocation.loading ||
       !map ||
+      !geocoder ||
       !userLocation.latitude ||
       !userLocation.longitude
     )
@@ -102,7 +103,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
       lng: userLocation.longitude,
     };
 
-    geocoder!.geocode({ location: userPosition }).then((response) => {
+    geocoder.geocode({ location: userPosition }).then((response) => {
       const firstResult = response.results[0];
 
       const userLocationWithGoogle = {

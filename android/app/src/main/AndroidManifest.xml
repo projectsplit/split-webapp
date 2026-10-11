@@ -61,6 +61,20 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!--
+      The expense location picker finds the person through navigator.geolocation. In the app,
+      Capacitor's WebView client turns that call into a runtime request for these two permissions,
+      and Android refuses a permission the manifest does not declare without ever showing the
+      prompt, so without them the map never moves to where the person is. Fine is what lets the
+      prompt offer a precise position; someone who chooses approximate still gets a map near them.
+
+      Play reads those permissions as needing location hardware and would hide the app from devices
+      without it. A location is optional on an expense, so the feature is declared not required.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.hardware.location" android:required="false" />
+
+    <!--
       Google Play Services arrives as a transitive dependency of the sign-in plugin and brings the
       advertising ID permissions with it. Buqs serves no ads and reads no ad identifier, but shipping
       the permissions would still oblige us to declare advertising-ID collection on the Play data
