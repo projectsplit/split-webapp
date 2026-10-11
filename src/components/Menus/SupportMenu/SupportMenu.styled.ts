@@ -30,6 +30,19 @@ export const StyledSupportMenu = styled(StyledMiddleScreenMenu)`
     }
   }
 
+  .about {
+    align-self: center;
+    background: none;
+    border: none;
+    padding: ${({ theme }) => theme.space.s4};
+    margin-top: -${({ theme }) => theme.space.s6};
+    font-family: inherit;
+    font-size: ${({ theme }) => theme.size.s13};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    color: ${({ theme }) => theme.ink.primary};
+    cursor: pointer;
+  }
+
   .close {
     align-self: center;
     background: none;

@@ -7,6 +7,7 @@ import Spinner from '../../Spinner/Spinner';
 import { openSubscriptionManagement } from '../../../helpers/playBilling';
 import { isNativeApp } from '../../../helpers/platform';
 import { StyledSupportMenu } from './SupportMenu.styled';
+import { openPlusInfo } from '../../Plus/plusMenu';
 
 /**
  * The permanent way in, opened from the Support Buqs heart on the home page or from Settings.
@@ -49,7 +50,7 @@ export default function SupportMenu({ supportMenu, nodeRef }: SupportMenuProps) 
           subhead={
             info.hasActiveMonthly
               ? 'Your monthly contribution is covering part of the running costs. You can add a one-off on top if you want to.'
-              : 'We plan to keep Buqs free for as long as we can cover the cost of its servers.'
+              : 'Buqs is free and has no ads. Tips help cover the servers.'
           }
         />
       )}
@@ -66,6 +67,18 @@ export default function SupportMenu({ supportMenu, nodeRef }: SupportMenuProps) 
           Manage or cancel in Google Play
         </button>
       )}
+
+      {/* Closes this sheet first: two cards stacked with no dimming between them read as a mistake. */}
+      <button
+        type="button"
+        className="about"
+        onClick={() => {
+          supportMenu.value = null;
+          openPlusInfo();
+        }}
+      >
+        What is Buqs Plus?
+      </button>
 
       <button
         type="button"

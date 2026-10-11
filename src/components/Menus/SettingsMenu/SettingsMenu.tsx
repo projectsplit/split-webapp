@@ -37,6 +37,7 @@ import {
 } from '../../../helpers/pushNotifications';
 import Spinner from '../../Spinner/Spinner';
 import CurrencyFlag from '../../CurrencyFlag/CurrencyFlag';
+import { openPlusInfo } from '../../Plus/plusMenu';
 
 const pushFailureMessages: Record<PushSubscribeFailure, string> = {
   unsupported: 'This browser cannot receive push notifications.',
@@ -253,6 +254,12 @@ export default function SettingsMenu({
             >
               <span className="rowValue">
                 <span className="rowCount">{recurringCount}</span>
+                <IonIcon name="chevron-forward-outline" className="rowChevron" />
+              </span>
+            </PropertyRow>
+
+            <PropertyRow action label="Buqs Plus" onClick={openPlusInfo}>
+              <span className="rowValue">
                 <IonIcon name="chevron-forward-outline" className="rowChevron" />
               </span>
             </PropertyRow>

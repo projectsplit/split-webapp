@@ -21,6 +21,7 @@ import { isUserAuthenticated } from '@/helpers/isUserAuthenticated';
 import routes from '@/routes';
 import { addNativePushTapListener } from '@/helpers/nativePush';
 import { isNativeApp } from '@/helpers/platform';
+import PlusInfoAnimation from '../../components/Animations/PlusInfoAnimation';
 import SupportMenuAnimation from '../../components/Animations/SupportMenuAnimation';
 import DonationPrompt from '../../components/DonationPrompt/DonationPrompt';
 import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
@@ -158,6 +159,7 @@ const Protected: React.FC = () => {
       <NotificationsMenuAnimation menu={menu} userInfo={userInfo} />
       <SettingsMenuAnimation menu={menu} userInfo={userInfo} />
       <SupportMenuAnimation supportMenu={menu} />
+      <PlusInfoAnimation />
       {/* Mounted here rather than in App because it needs a signed-in account: the prompt asks the
           server whether this person is due to be asked at all. */}
       <DonationPrompt menu={menu} hasOverlay={Boolean(code)} />

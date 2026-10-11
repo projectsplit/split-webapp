@@ -14,11 +14,19 @@ export const StyledTopBarWithBackButton = styled.div`
   .descr {
     flex: 1;
     min-width: 0;
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: ${({ theme }) => theme.space.s8};
     margin-right: 34px;
     font-size: ${({ theme }) => theme.size.s17};
     font-weight: ${({ theme }) => theme.weight.semibold};
     letter-spacing: -0.01em;
+  }
+
+  .descrText {
+    min-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -5,11 +5,15 @@ import { TopBarWithBackButtonProps } from '../../interfaces';
 export default function TopBarWithBackButton({
   onClick,
   header,
+  badge,
 }: TopBarWithBackButtonProps) {
   return (
     <StyledTopBarWithBackButton>
       <BackButton onClick={onClick} />
-      <div className="descr">{header}</div>
+      <div className="descr">
+        <span className="descrText">{header}</span>
+        {badge}
+      </div>
     </StyledTopBarWithBackButton>
   );
 }

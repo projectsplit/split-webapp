@@ -32,6 +32,7 @@ import Spinner from '../../components/Spinner/Spinner';
 import { useCumulativeSpendingArray } from '../../api/auth/QueryHooks/useCumulativeSpendingArray';
 import CurrencyFlag from '../../components/CurrencyFlag/CurrencyFlag';
 import routes from '@/routes';
+import PlusBadge from '@/components/Plus/PlusBadge';
 
 export default function Analytics() {
   const [selectedChart, setSelectedChart] =
@@ -145,6 +146,7 @@ export default function Analytics() {
         <>
           <TopBarWithBackButton
             header="Spending Trends"
+            badge={<PlusBadge size="md" />}
             onClick={() => handleBackButtonClick()}
           />
           <SegmentedControl

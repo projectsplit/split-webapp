@@ -5,6 +5,7 @@ import { SelectionButtonProps } from '../../../interfaces';
 export default function SelectionButton({
   children,
   name,
+  badge,
   meta,
   footer,
   onClick,
@@ -13,7 +14,10 @@ export default function SelectionButton({
     <>
       <span className="destinationIcon">{children}</span>
       <div className="destinationBody">
-        <div className="destinationName">{name}</div>
+        <div className="destinationTitle">
+          <span className="destinationName">{name}</span>
+          {badge}
+        </div>
         {meta ? <div className="destinationMeta">{meta}</div> : null}
       </div>
       <IonIcon

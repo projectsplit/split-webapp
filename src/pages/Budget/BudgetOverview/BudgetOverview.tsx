@@ -23,6 +23,7 @@ import { StyledBudgetOverview } from './BudgetOverview.styled';
 import { elapsedPercent } from '@/helpers/budgetProgress';
 import { BudgetBars } from '@/components/BudgetBars/BudgetBars';
 import routes from '@/routes';
+import PlusBadge from '@/components/Plus/PlusBadge';
 
 export const BudgetOverview = () => {
   const navigate = useNavigate();
@@ -85,7 +86,10 @@ export const BudgetOverview = () => {
       <StyledBudgetOverview>
         <div className="budgetTopBar">
           <BackButton onClick={() => navigate(routes.ROOT)} />
-          <div className="title">Budget</div>
+          <div className="title">
+            <span>Budget</span>
+            <PlusBadge size="md" />
+          </div>
           <div className="iconButton" />
         </div>
         <div className="budgetScroll">
@@ -102,7 +106,10 @@ export const BudgetOverview = () => {
       <StyledBudgetOverview>
         <div className="budgetTopBar">
           <BackButton onClick={() => navigate(routes.ROOT)} />
-          <div className="title">Budget</div>
+          <div className="title">
+            <span>Budget</span>
+            <PlusBadge size="md" />
+          </div>
           <div className="iconButton" />
         </div>
 
@@ -125,7 +132,10 @@ export const BudgetOverview = () => {
     <StyledBudgetOverview>
       <div className="budgetTopBar">
         <BackButton onClick={() => navigate(routes.ROOT)} />
-        <div className="title">Budget</div>
+        <div className="title">
+          <span>Budget</span>
+          <PlusBadge size="md" />
+        </div>
         <div
           className="iconButton"
           onClick={() => (menu.value = 'manageBudgetMenu')}

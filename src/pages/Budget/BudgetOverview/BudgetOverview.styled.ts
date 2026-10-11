@@ -37,7 +37,11 @@ export const StyledBudgetOverview = styled.div`
   .title {
     flex: 1;
     min-width: 0;
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: ${({ theme }) => theme.space.s8};
     font-size: ${({ theme }) => theme.size.s17};
     font-weight: ${({ theme }) => theme.weight.semibold};
     letter-spacing: -0.01em;

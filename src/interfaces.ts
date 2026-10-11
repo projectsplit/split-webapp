@@ -278,6 +278,8 @@ export interface ReceivedMoreThanSpentMessageProps extends OnTrackMessageProps {
 export interface SelectionButtonProps {
   children: any;
   name: string;
+  /** A mark shown after the name, such as the Plus badge. */
+  badge?: React.ReactNode;
   meta?: React.ReactNode;
   footer?: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -1072,6 +1074,8 @@ export interface AnalyticsSelectionAnimationProps {
 
 export interface TopBarWithBackButtonProps {
   header: string;
+  /** A mark shown after the title, such as the Plus badge. */
+  badge?: React.ReactNode;
   onClick: MouseEventHandler<HTMLDivElement>;
 }
 

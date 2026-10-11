@@ -52,7 +52,17 @@ export const StyledSearchTransactions = styled.div<{ $bgColor?: string }>`
       color: ${({ theme }) => theme.ink.tertiary};
     }
 
+    .groupNameRow {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: ${({ theme }) => theme.space.s8};
+      min-width: 0;
+    }
+
     .groupName {
+      min-width: 0;
       font-size: ${({ theme }) => theme.size.s15};
       font-weight: ${({ theme }) => theme.weight.semibold};
       letter-spacing: -0.01em;
