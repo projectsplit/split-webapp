@@ -92,6 +92,22 @@ export const StyledPlusInfoMenu = styled(StyledMiddleScreenMenu)`
     color: ${({ theme }) => theme.ink.secondary};
   }
 
+  .feature.upcoming {
+    .featureIcon {
+      background-color: transparent;
+      border-style: dashed;
+      color: ${({ theme }) => theme.ink.secondary};
+    }
+
+    .featureName {
+      color: ${({ theme }) => theme.ink.secondary};
+    }
+
+    .featureText {
+      color: ${({ theme }) => theme.ink.tertiary};
+    }
+  }
+
   .footnote {
     margin: 0;
     text-align: center;

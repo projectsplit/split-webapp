@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { BsBarChartFill, BsFillPiggyBankFill } from 'react-icons/bs';
 import { IoMdSearch } from 'react-icons/io';
-import { MdLocationOn } from 'react-icons/md';
+import { MdAutoAwesome, MdLocationOn } from 'react-icons/md';
 import PlusBadge from './PlusBadge';
 import { closePlusInfo } from './plusMenu';
 import { StyledPlusInfoMenu } from './PlusInfoMenu.styled';
@@ -22,12 +22,15 @@ const Feature = ({
   icon,
   name,
   text,
+  upcoming,
 }: {
   icon: ReactNode;
   name: string;
   text: string;
+  /** Quieter: something that is not here yet. */
+  upcoming?: boolean;
 }) => (
-  <div className="feature">
+  <div className={`feature${upcoming ? ' upcoming' : ''}`}>
     <span className="featureIcon">{icon}</span>
     <div className="featureBody">
       <div className="featureName">{name}</div>
@@ -70,6 +73,14 @@ export default function PlusInfoMenu({ nodeRef }: PlusInfoMenuProps) {
           icon={<MdLocationOn />}
           name="Places"
           text="Pin where an expense happened and see it on the map."
+        />
+        {/* Deliberately names nothing. A feature that is not built yet is a hope, not a fact, and
+            this sheet is meant to hold only facts. */}
+        <Feature
+          icon={<MdAutoAwesome />}
+          name="More to come"
+          text="New features will join Plus as they arrive."
+          upcoming
         />
       </div>
 
