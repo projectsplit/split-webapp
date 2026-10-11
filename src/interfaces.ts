@@ -418,6 +418,8 @@ export interface TopMenuProps {
   openGroupOptionsMenu: Signal<boolean>;
   groupIsArchived: boolean;
   confirmUnarchiveMenu: Signal<string | null>;
+  // Shows the Support Buqs button beside the bell when given.
+  onSupportClick?: () => void;
 }
 
 export interface ToggleSwitchProps {

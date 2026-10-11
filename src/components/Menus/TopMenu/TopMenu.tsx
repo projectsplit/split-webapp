@@ -13,6 +13,7 @@ export default function TopMenu({
   openGroupOptionsMenu,
   groupIsArchived,
   confirmUnarchiveMenu,
+  onSupportClick,
 }: TopMenuProps) {
   const [visuallyShowNotification, setVisuallyShowNotification] =
     useState<boolean>(true);
@@ -41,6 +42,17 @@ export default function TopMenu({
           {title}
         </div>
       </div>
+
+      {onSupportClick && (
+        <button
+          type="button"
+          className="supportButton"
+          onClick={onSupportClick}
+        >
+          <IonIcon name="heart-outline" className="heart" />
+          Support Buqs
+        </button>
+      )}
 
       <div className="slot right">
         {isInGroup ? (

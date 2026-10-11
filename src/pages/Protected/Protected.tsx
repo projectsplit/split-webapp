@@ -21,7 +21,8 @@ import { isUserAuthenticated } from '@/helpers/isUserAuthenticated';
 import routes from '@/routes';
 import { addNativePushTapListener } from '@/helpers/nativePush';
 import { isNativeApp } from '@/helpers/platform';
-import DonationPrompt from '../../components/DonationPrompt/DonationPrompt';
+import SupportMenuAnimation from '../../components/Animations/SupportMenuAnimation';
+import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
 import { useRecoverDonationPurchases } from '@/hooks/useRecoverDonationPurchases';
 
 const Protected: React.FC = () => {
@@ -96,6 +97,16 @@ const Protected: React.FC = () => {
   const activeGroupCatAsState = useSignal<string>('Active');
   const confirmUnarchiveMenu = useSignal<string | null>(null);
 
+  // The same cached answer Settings reads, so this costs no extra request.
+  const { data: donationInfo } = useGetDonationPrompt(true);
+  // Home only, and only in the app: contributions go through Google Play, so on the web this would
+  // be a prominent button leading to an explanation that it can't be done there. Settings keeps
+  // the entry on every platform.
+  const showSupport =
+    location.pathname === routes.ROOT &&
+    isNativeApp() &&
+    Boolean(donationInfo?.isAvailable);
+
   const excludeTopMenu = useShouldExcludeTopMenu([
     routes.ANALYTICS,
     routes.BUDGET,
@@ -107,6 +118,7 @@ const Protected: React.FC = () => {
     () => ({
       userInfo,
       topMenuTitle,
+      menu,
       openGroupOptionsMenu,
       activeGroupCatAsState,
       groupIsArchived,
@@ -115,6 +127,7 @@ const Protected: React.FC = () => {
     [
       userInfo,
       topMenuTitle,
+      menu,
       openGroupOptionsMenu,
       activeGroupCatAsState,
       groupIsArchived,
@@ -133,6 +146,9 @@ const Protected: React.FC = () => {
           openGroupOptionsMenu={openGroupOptionsMenu}
           groupIsArchived={groupIsArchived.value}
           confirmUnarchiveMenu={confirmUnarchiveMenu}
+          onSupportClick={
+            showSupport ? () => (menu.value = 'support') : undefined
+          }
         />
       )}
       <Outlet context={outletContext} />
@@ -140,9 +156,7 @@ const Protected: React.FC = () => {
       <MenuAnimationBackground menu={menu} />
       <NotificationsMenuAnimation menu={menu} userInfo={userInfo} />
       <SettingsMenuAnimation menu={menu} userInfo={userInfo} />
-      {/* Mounted here rather than in App because it needs a signed-in account: the prompt asks the
-          server whether this person is due to be asked at all. */}
-      <DonationPrompt menu={menu} hasOverlay={Boolean(code)} />
+      <SupportMenuAnimation supportMenu={menu} />
     </StyledProtected>
   ) : (
     <Navigate

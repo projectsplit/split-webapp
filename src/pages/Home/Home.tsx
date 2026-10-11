@@ -34,9 +34,10 @@ export default function Home() {
   const nonGroupUsers = useSignal<User[]>([]);
   const fromHomeGroup = useSignal<Group | null>(null);
   const groupMembers = useSignal<(Guest | Member)[]>([]);
-  const { userInfo, topMenuTitle, } = useOutletContext<{
+  const { userInfo, topMenuTitle, menu } = useOutletContext<{
     userInfo: UserInfo;
     topMenuTitle: Signal<string>;
+    menu: Signal<string | null>;
   }>();
 
   const nonGroupExpenseMenu = useSignal<string | null>(null);
@@ -119,19 +120,22 @@ export default function Home() {
             activeBudgetData={activeBudgetData}
             showBudgetInfo={userInfo.showBudgetInfo}
           />
-          {quickActionsMenu.value !== 'createGroup' && (
-            <div
-              className={`actions ${isGlowing ? 'glow' : ''}`}
-              onClick={() =>
-                (quickActionsMenu.value =
-                  quickActionsMenu.value === 'quickActions'
-                    ? null
-                    : 'quickActions')
-              }
-            >
-              <FaPlus className="thunder" />
-            </div>
-          )}
+          {/* Also pulled while the support card is up: it sits above the menu backdrop, so it
+              would otherwise float, live, over a modal. */}
+          {quickActionsMenu.value !== 'createGroup' &&
+            menu.value !== 'support' && (
+              <div
+                className={`actions ${isGlowing ? 'glow' : ''}`}
+                onClick={() =>
+                  (quickActionsMenu.value =
+                    quickActionsMenu.value === 'quickActions'
+                      ? null
+                      : 'quickActions')
+                }
+              >
+                <FaPlus className="thunder" />
+              </div>
+            )}
         </div>
       )}
       <MenuAnimationBackground menu={quickActionsMenu} />

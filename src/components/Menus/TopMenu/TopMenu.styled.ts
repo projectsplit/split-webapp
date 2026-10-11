@@ -58,6 +58,29 @@ export const StyledTopMenu = styled.div`
     }
   }
 
+  .supportButton {
+    display: flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s6};
+    flex-shrink: 0;
+    height: 30px;
+    padding: ${({ theme }) => `0 ${theme.space.s12}`};
+    border: 1px solid ${({ theme }) => theme.accent.you.tintBorder};
+    border-radius: ${({ theme }) => theme.radius.pill};
+    background-color: ${({ theme }) => theme.accent.you.tint};
+    color: ${({ theme }) => theme.accent.you.ink};
+    font-family: inherit;
+    font-size: ${({ theme }) => theme.size.s13};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    .heart {
+      font-size: ${({ theme }) => theme.size.s14};
+    }
+  }
+
   .bellIconAndNumberOfNotifications {
     font-size: ${({ theme }) => theme.icon.lg};
 

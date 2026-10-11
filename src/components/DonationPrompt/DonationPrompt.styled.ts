@@ -1,56 +1,4 @@
-import styled, { keyframes } from 'styled-components';
-
-const riseIn = keyframes`
-  from { opacity: 0; transform: translateY(12px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-`;
-
-export const Backdrop = styled.div`
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background-color: ${({ theme }) => theme.scrim.modal};
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: ${({ theme }) => theme.space.s16};
-  overflow-y: auto;
-`;
-
-export const Card = styled.div`
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 420px;
-  background-color: ${({ theme }) => theme.surface.card};
-  border: 1px solid ${({ theme }) => theme.surface.hairline};
-  border-radius: ${({ theme }) => theme.radius.dialog};
-  padding: ${({ theme }) =>
-    `${theme.space.s20} ${theme.space.s20} ${theme.space.s16}`};
-  box-shadow: ${({ theme }) => theme.shadow.dialog};
-  animation: ${riseIn} 260ms cubic-bezier(0.16, 1, 0.3, 1);
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
-`;
-
-export const CloseRow = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin: -${({ theme }) => theme.space.s8} -${({ theme }) => theme.space.s6} 0 0;
-
-  .closeButton {
-    font-size: ${({ theme }) => theme.icon.lg};
-    color: ${({ theme }) => theme.ink.secondary};
-    cursor: pointer;
-
-    &:hover {
-      color: ${({ theme }) => theme.ink.primary};
-    }
-  }
-`;
+import styled from 'styled-components';
 
 export const StyledDonationForm = styled.div`
   display: flex;
@@ -61,6 +9,60 @@ export const StyledDonationForm = styled.div`
     display: flex;
     justify-content: center;
     padding: ${({ theme }) => `${theme.space.s20} 0`};
+  }
+`;
+
+export const OtherAmount = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.space.s10};
+
+  .amountInput {
+    display: flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s8};
+    padding: ${({ theme }) => `${theme.space.s12} ${theme.space.s14}`};
+    border-radius: ${({ theme }) => theme.radius.control};
+    border: 1px solid ${({ theme }) => theme.surface.outline};
+    background-color: ${({ theme }) => theme.surface.raised};
+    transition: border-color 150ms;
+
+    &:focus-within {
+      border-color: ${({ theme }) => theme.accent.you.ink};
+    }
+  }
+
+  .currency {
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s17};
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: ${({ theme }) => theme.ink.primary};
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s17};
+    font-weight: ${({ theme }) => theme.weight.semibold};
+
+    &::placeholder {
+      color: ${({ theme }) => theme.ink.tertiary};
+      font-weight: ${({ theme }) => theme.weight.regular};
+    }
+  }
+
+  .monthlyRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: ${({ theme }) => theme.space.s12};
+    font-size: ${({ theme }) => theme.size.s14};
+    color: ${({ theme }) => theme.ink.primary};
   }
 `;
 
@@ -153,32 +155,6 @@ export const Footnote = styled.div`
   font-size: ${({ theme }) => theme.size.s12};
   font-weight: ${({ theme }) => theme.weight.medium};
   color: ${({ theme }) => theme.ink.tertiary};
-`;
-
-export const DismissRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.space.s20};
-  margin-top: ${({ theme }) => theme.space.s14};
-  padding-top: ${({ theme }) => theme.space.s14};
-  border-top: 1px solid ${({ theme }) => theme.surface.hairline};
-`;
-
-/* Both ways out are plain text of the same weight. Making "don't ask again" harder to find than
-   "not now" would be the trick this prompt is meant to avoid. */
-export const DismissButton = styled.button`
-  background: none;
-  border: none;
-  padding: ${({ theme }) => theme.space.s4};
-  font-family: inherit;
-  font-size: ${({ theme }) => theme.size.s13};
-  color: ${({ theme }) => theme.ink.secondary};
-  cursor: pointer;
-
-  &:hover {
-    color: ${({ theme }) => theme.ink.primary};
-  }
 `;
 
 export const ThankYou = styled.div`
