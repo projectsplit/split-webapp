@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 
-export type PlusBadgeSize = 'sm' | 'md' | 'lg';
+export type PlusBadgeSize = 'xs' | 'sm' | 'md' | 'lg';
 
 const metrics: Record<
   PlusBadgeSize,
   { height: string; padding: string; font: string; tracking: string }
 > = {
+  xs: { height: '15px', padding: '0 5px', font: '9px', tracking: '0.02em' },
   sm: { height: '18px', padding: '0 7px', font: '10px', tracking: '0.02em' },
   md: { height: '22px', padding: '0 9px', font: '12px', tracking: '0.01em' },
   lg: { height: '32px', padding: '0 15px', font: '17px', tracking: '-0.005em' },

@@ -5,6 +5,7 @@ import { LocationPickerProps } from '../../interfaces';
 import PlacePicker from '../PlacePicker/PlacePicker';
 import { MdLocationOn } from 'react-icons/md';
 import { useCloseOnBack } from '../../hooks/useCloseOnBack';
+import PlusBadge from '../Plus/PlusBadge';
 
 const LocationPicker: React.FC<LocationPickerProps> = ({
   location,
@@ -34,6 +35,9 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
           onClick={() => (isMapOpen.value = !isMapOpen.value)}
         >
           <MdLocationOn className="locationIcon" />
+          {/* Google bills per map and per place lookup, which is what puts this behind Plus. The
+              mark sits on the corner so the control itself stays the same size as its neighbours. */}
+          <PlusBadge size="xs" className="plusMark" />
         </div>
       </StyledLocationPicker>
     </APIProvider>

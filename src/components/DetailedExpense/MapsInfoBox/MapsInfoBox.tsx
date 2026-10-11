@@ -11,6 +11,7 @@ import { MapsInfoBoxProps } from '../../../interfaces';
 import { MdLocationOn, MdOutlineLocationOff } from 'react-icons/md';
 import { useState } from 'react';
 import IonIcon from '@reacticons/ionicons';
+import PlusBadge from '../../Plus/PlusBadge';
 
 export default function MapsInfoBox({
   location,
@@ -36,6 +37,7 @@ export default function MapsInfoBox({
                 >
                   <span className="locationName">{location.google?.name}</span>
                 </a>
+                <PlusBadge />
                 <span
                   className="mapToggle"
                   onClick={() => setHide((hide) => !hide)}

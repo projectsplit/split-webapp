@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { BsBarChartFill, BsFillPiggyBankFill } from 'react-icons/bs';
 import { IoMdSearch } from 'react-icons/io';
+import { MdLocationOn } from 'react-icons/md';
 import PlusBadge from './PlusBadge';
 import { closePlusInfo } from './plusMenu';
 import { StyledPlusInfoMenu } from './PlusInfoMenu.styled';
@@ -45,8 +46,8 @@ export default function PlusInfoMenu({ nodeRef }: PlusInfoMenuProps) {
 
       <h2 className="headline">Open to everyone while Buqs is new</h2>
       <p className="subhead">
-        Budgeting, analytics and search are Plus features. For now they are
-        included for everyone, with nothing to unlock.
+        Budgeting, analytics, search and places are Plus features. For now
+        they are included for everyone, with nothing to unlock.
       </p>
 
       <div className="features">
@@ -64,6 +65,11 @@ export default function PlusInfoMenu({ nodeRef }: PlusInfoMenuProps) {
           icon={<IoMdSearch />}
           name="Search"
           text="Find any expense or transfer by keyword, person, label or date."
+        />
+        <Feature
+          icon={<MdLocationOn />}
+          name="Places"
+          text="Pin where an expense happened and see it on the map."
         />
       </div>
 
