@@ -39,6 +39,7 @@ import {
 } from '../../components/SearchTransactions/helpers/localStorageStringParser';
 import { transactionCategories } from '@/constants';
 import routes from '@/routes';
+import { useClearExpenseFilterOnJump } from '@/hooks/useClearExpenseFilterOnJump';
 
 type errorObject = {
   message: string;
@@ -62,6 +63,10 @@ export default function Group() {
   const expenseParsedFilters = useSignal<ExpenseParsedFilters>(expenseFilter);
   const transferParsedFilters =
     useSignal<TransferParsedFilters>(transferFilter);
+  useClearExpenseFilterOnJump(
+    expenseParsedFilters,
+    getFilterStorageKey('expense', groupid)
+  );
   const location = useLocation();
   const path = location.pathname.split('/').pop() || '';
   const navigate = useNavigate();

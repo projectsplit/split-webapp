@@ -80,6 +80,7 @@ const Expenses = () => {
     isFetchingNextPage,
     isFetchingPreviousPage,
     isPending,
+    isPlaceholderData,
   } = useExpenseList(
     mode,
     group,
@@ -138,7 +139,8 @@ const Expenses = () => {
     isScrolled,
     expenses,
     jumpToken,
-    isFetchingPreviousPage
+    isFetchingPreviousPage,
+    isPlaceholderData
   );
   const { data: fetchedUserAndGroupLabels } = useGetUserAndGroupsLabels(
     userInfo?.userId,
