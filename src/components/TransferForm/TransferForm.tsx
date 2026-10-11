@@ -40,6 +40,8 @@ export default function TransferForm({
   const isDateShowing = useSignal<boolean>(false);
   const warningMenu = useSignal<string | null>(null);
   const warningMessage = useSignal<string>('');
+  const [calculatorBarHost, setCalculatorBarHost] =
+    useState<HTMLDivElement | null>(null);
 
   const showWarning = (message: string) => {
     warningMessage.value = message;
@@ -108,6 +110,7 @@ export default function TransferForm({
         data={data}
         actions={actions}
         handleInputBlur={handleInputBlur}
+        calculatorBarHost={calculatorBarHost}
       />
       {isNonGroup && nonGroupMenu ? (
         <NonGroupMenu
@@ -169,6 +172,8 @@ export default function TransferForm({
           setRealtimeUpdate={actions.setIsTrackingNow}
         />
       </div>
+      {/* The amount's operator bar, between the footer and the keyboard */}
+      <div ref={setCalculatorBarHost} />
       <MenuAnimationBackground menu={currencyMenu} />
       <MenuAnimationBackground menu={warningMenu} />
       <CurrencyOptionsAnimation

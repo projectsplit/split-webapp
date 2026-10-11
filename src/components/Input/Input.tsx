@@ -17,10 +17,11 @@ export default React.forwardRef(function Input(
     backgroundcolor,
     inputMode,
   }: InputProps,
-  _ref: React.Ref<HTMLInputElement>
+  ref: React.Ref<HTMLInputElement>
 ) {
   return (
     <StyledInput
+      ref={ref}
       onChange={onChange}
       placeholder={placeholder}
       value={value}

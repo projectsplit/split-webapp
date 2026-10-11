@@ -767,6 +767,9 @@ export interface InputMonetaryProps extends React.InputHTMLAttributes<HTMLInputE
   $inputError?: boolean;
   currencyMenu: Signal<React.SetStateAction<string | null>>;
   selectedCurrency: Currency | undefined;
+  // Where the operator bar goes while the amount is being typed. Without one, the field still
+  // works out sums typed with a keyboard's own operator keys, but shows no bar.
+  calculatorBarHost?: HTMLElement | null;
 }
 
 export interface ConfirmationProps {

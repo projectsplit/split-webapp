@@ -119,6 +119,9 @@ export default function ExpenseForm({
     warningMenu.value = 'generalWarning';
   };
 
+  const [calculatorBarHost, setCalculatorBarHost] =
+    useState<HTMLDivElement | null>(null);
+
   const isMapOpen = useSignal<boolean>(false);
   const isDateShowing = useSignal<boolean>(!isCreateExpense);
   const labelMenuIsOpen = useSignal<boolean>(false);
@@ -289,6 +292,7 @@ export default function ExpenseForm({
           selectedCurrency={selectedCurrency}
           autoFocus={true}
           $inputError={inputs.showAmountError && !!inputs.amountError}
+          calculatorBarHost={calculatorBarHost}
         />
         <span className="errorMsg">
           {inputs.showAmountError && inputs.amountError
@@ -420,6 +424,8 @@ export default function ExpenseForm({
         timeZoneIdForSchedule={timeZoneId}
         isExistingSeries={!!recurringExpenseId}
       />
+      {/* The amount's operator bar, between the footer and the keyboard */}
+      <div ref={setCalculatorBarHost} />
       <MenuAnimationBackground menu={currencyMenu} />
       <MenuAnimationBackground menu={warningMenu} />
       <CurrencyOptionsAnimation
