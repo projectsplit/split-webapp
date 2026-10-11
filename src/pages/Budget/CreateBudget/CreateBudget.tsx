@@ -157,7 +157,12 @@ export default function CreateBudget() {
             handleBack();
           } else {
             actions.resetForm();
-            navigate(routes.BUDGET_MANAGE);
+            // The overview links here only when there are no budgets, and Manage would be empty.
+            navigate(
+              location.state?.fromOverview
+                ? routes.BUDGET
+                : routes.BUDGET_MANAGE
+            );
           }
         }}
       />

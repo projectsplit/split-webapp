@@ -48,11 +48,27 @@ export const BudgetOverview = () => {
 
   const budgetCount =
     (data?.id ? 1 : 0) + (inactiveBudgetsData?.budgets?.length ?? 0);
+  // Decided only once the inactive budgets have loaded, so the row never offers Create and then
+  // turns into Manage.
+  const hasNoBudgets = !data?.id && inactiveBudgetsData?.budgets?.length === 0;
 
   const formatDay = (iso?: string) =>
     iso ? DateTime.fromISO(iso, { zone: timeZoneId }).toFormat('d LLL') : '';
 
-  const manageRow = (
+  // With no budgets at all, Manage would open an empty list whose only use is its create button.
+  const budgetsRow = hasNoBudgets ? (
+    <ItemCard
+      className="manageRow"
+      onClick={() =>
+        navigate(routes.BUDGET_CREATE, { state: { fromOverview: true } })
+      }
+    >
+      <div className="manageLabel">Create new budget</div>
+      <span className="manageChevron">
+        <IonIcon name="chevron-forward-outline" />
+      </span>
+    </ItemCard>
+  ) : (
     <ItemCard className="manageRow" onClick={() => navigate(routes.BUDGET_MANAGE)}>
       <div className="manageLabel">Manage budgets</div>
       <div className="manageMeta">
@@ -99,7 +115,7 @@ export const BudgetOverview = () => {
                 : 'Create a budget to start tracking your spending against a cap.'}
             </div>
           </div>
-          {manageRow}
+          {budgetsRow}
         </div>
       </StyledBudgetOverview>
     );
@@ -169,7 +185,7 @@ export const BudgetOverview = () => {
           </PropertyRow>
         </PropertyList>
 
-        {manageRow}
+        {budgetsRow}
       </div>
 
       <MenuAnimationBackground menu={menu} />
