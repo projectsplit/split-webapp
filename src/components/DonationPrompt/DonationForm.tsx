@@ -29,8 +29,8 @@ import {
 } from './DonationPrompt.styled';
 
 /**
- * The ask itself, shown in the support sheet. One place where the wording, the tiers and the flow
- * live.
+ * The ask itself. Shared by the occasional prompt and the permanent support sheet so there is one
+ * place where the wording, the tiers and the flow live.
  *
  * Google Play only sells products defined in the Play Console, at prices it sets per country, so
  * every figure here is Play's own, in the reader's currency. "Other amount" works within that rule:
@@ -78,11 +78,11 @@ const currencySymbol = (currencyCode: string | undefined) => {
 
 interface DonationFormProps {
   info: DonationPromptInfo;
-  /** Shown above the amounts. Differs for someone who has given before or gives monthly. */
+  /** Shown above the amounts. Differs between being asked and choosing to give unprompted. */
   headline: string;
   subhead: string;
   showPuppy?: boolean;
-  /** Called once a gift has actually been recorded. */
+  /** Called once a gift has actually been recorded, so a prompt can stop offering to dismiss. */
   onGiven?: () => void;
 }
 
@@ -134,16 +134,26 @@ export default function DonationForm({
   // currency is whatever Play quotes the fixed tiers in.
   const symbol = currencySymbol(tiers?.[0]?.currencyCode);
 
+  const offersMonthly = Boolean(customAmount?.monthlyMaxMinor);
+  const isWholeSteps = customAmount ? customAmount.stepMinor % 100 === 0 : true;
+  // Monthly has a lower ceiling than one-off: it is a standing commitment.
+  const limitMinor = customAmount
+    ? isOtherMonthly && offersMonthly
+      ? customAmount.monthlyMaxMinor
+      : customAmount.maxMinor
+    : 0;
+
   // In minor units, and only when it is one of the amounts that exist as products.
   const typedMinor = /^\d+(\.\d{1,2})?$/.test(typedAmount)
     ? Math.round(Number(typedAmount) * 100)
     : null;
-  const otherAmount =
-    customAmount &&
+  const isOnStep =
+    customAmount !== null &&
     typedMinor !== null &&
     typedMinor >= customAmount.stepMinor &&
-    typedMinor <= customAmount.maxMinor &&
-    typedMinor % customAmount.stepMinor === 0
+    typedMinor % customAmount.stepMinor === 0;
+  const otherAmount =
+    isOnStep && typedMinor !== null && typedMinor <= limitMinor
       ? typedMinor
       : null;
 
@@ -324,9 +334,9 @@ export default function DonationForm({
             <span className="currency">{symbol}</span>
             <input
               type="text"
-              inputMode="decimal"
+              inputMode={isWholeSteps ? 'numeric' : 'decimal'}
               autoFocus
-              placeholder={`${formatMinor(customAmount.stepMinor)} to ${formatMinor(customAmount.maxMinor)}`}
+              placeholder={`${formatMinor(customAmount.stepMinor)} to ${formatMinor(limitMinor)}`}
               aria-label="Amount to give"
               value={typedAmount}
               onChange={(event) => {
@@ -337,18 +347,22 @@ export default function DonationForm({
           </label>
           {typedAmount !== '' && otherAmount === null && (
             <ErrorText>
-              Enter an amount from {formatMinor(customAmount.stepMinor)} to{' '}
-              {formatMinor(customAmount.maxMinor)}, in steps of{' '}
-              {formatMinor(customAmount.stepMinor)}.
+              {isOnStep && isOtherMonthly
+                ? `Monthly gifts go up to ${symbol}${formatMinor(limitMinor)}.`
+                : isWholeSteps
+                  ? `Enter a whole amount from ${formatMinor(customAmount.stepMinor)} to ${formatMinor(limitMinor)}.`
+                  : `Enter an amount from ${formatMinor(customAmount.stepMinor)} to ${formatMinor(limitMinor)}, in steps of ${formatMinor(customAmount.stepMinor)}.`}
             </ErrorText>
           )}
-          <div className="monthlyRow">
-            <span>Make it monthly</span>
-            <ToggleSwitch
-              isOn={isOtherMonthly}
-              onToggle={() => setIsOtherMonthly((value) => !value)}
-            />
-          </div>
+          {offersMonthly && (
+            <div className="monthlyRow">
+              <span>Make it monthly</span>
+              <ToggleSwitch
+                isOn={isOtherMonthly}
+                onToggle={() => setIsOtherMonthly((value) => !value)}
+              />
+            </div>
+          )}
           <Disclaimer>
             Google Play shows the final price before you pay.
           </Disclaimer>

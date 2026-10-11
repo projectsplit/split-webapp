@@ -140,12 +140,15 @@ export type DonationTier = DonationProduct & {
 };
 
 /**
- * "Other amount": one Play product per amount from `stepMinor` to `maxMinor` in steps of
- * `stepMinor`, named by appending the amount in minor units to a prefix (1750 for 17.50). The form
- * builds the id for whatever was typed and asks Play for that product alone.
+ * "Other amount": one Play product per amount from `stepMinor` up to `maxMinor` (one-off) or
+ * `monthlyMaxMinor` (monthly) in steps of `stepMinor`, named by appending the amount in minor units
+ * to a prefix (1700 for 17). The form builds the id for whatever was typed and asks Play for that
+ * product alone.
  */
 export type DonationCustomAmount = {
   maxMinor: number;
+  /** Zero when typed amounts can only be one-off. */
+  monthlyMaxMinor: number;
   stepMinor: number;
   oneTimeProductPrefix: string;
   monthlyProductPrefix: string;
@@ -153,10 +156,12 @@ export type DonationCustomAmount = {
 };
 
 /**
- * What the support sheet can offer this person. Buqs never asks on its own; this only shapes the
- * sheet someone opened themselves.
+ * Whether to ask this person for a contribution, and what to ask for. `shouldAsk` is the server's
+ * decision and the client never overrides it upwards — the client only ever declines to show a
+ * prompt it was cleared to show, never the reverse.
  */
 export type DonationPromptInfo = {
+  shouldAsk: boolean;
   /** False when the server has no Google Play credentials. Hides every donation entry point. */
   isAvailable: boolean;
   products: DonationProduct[];
@@ -173,6 +178,11 @@ export type DonationPromptInfo = {
 export type RegisterDonationPurchaseRequest = {
   productId: string;
   purchaseToken: string;
+};
+
+export type DismissDonationPromptRequest = {
+  /** True only for an explicit "don't ask again". A plain "not now" sends false. */
+  optOut: boolean;
 };
 
 export type ExpenseItem = {

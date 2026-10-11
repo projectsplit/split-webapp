@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { Signal } from '@preact/signals-react';
 import { useGetDonationPrompt } from '../../../api/auth/QueryHooks/useGetDonationPrompt';
+import { suppressDonationPromptForSession } from '../../../hooks/useDonationPromptTiming';
 import DonationForm from '../../DonationPrompt/DonationForm';
 import Spinner from '../../Spinner/Spinner';
 import { openSubscriptionManagement } from '../../../helpers/playBilling';
@@ -7,8 +9,11 @@ import { isNativeApp } from '../../../helpers/platform';
 import { StyledSupportMenu } from './SupportMenu.styled';
 
 /**
- * The only way to give: opened from the Support Buqs heart on the home page or from Settings. Buqs
- * never asks on its own, so this is always someone choosing to look.
+ * The permanent way in, opened from the Support Buqs heart on the home page or from Settings.
+ *
+ * This is what makes the occasional prompt affordable. Because there is always a door, the prompt
+ * can be as rare as it is without that rarity costing anything — someone who dismissed it, or who
+ * turned it off for good, can still give whenever they feel like it.
  */
 
 interface SupportMenuProps {
@@ -18,6 +23,10 @@ interface SupportMenuProps {
 
 export default function SupportMenu({ supportMenu, nodeRef }: SupportMenuProps) {
   const { data: info, isPending } = useGetDonationPrompt(true);
+
+  // Opening this is someone deciding for themselves, so the app stops asking for the rest of the
+  // session. Only closes the door on the automatic prompt — this menu stays reachable.
+  useEffect(() => suppressDonationPromptForSession(), []);
 
   return (
     <StyledSupportMenu ref={nodeRef}>

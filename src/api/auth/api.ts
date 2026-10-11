@@ -1,4 +1,5 @@
 import {
+  DismissDonationPromptRequest,
   DonationPromptInfo,
   PasswordSignInRequest,
   PasswordSignUpRequest,
@@ -88,6 +89,18 @@ export const getDonationPrompt = async () => {
   const response = await apiClient.get<void, AxiosResponse<DonationPromptInfo>>(
     '/donations/prompt'
   );
+  return response.data;
+};
+
+export const recordDonationPromptShown = async () => {
+  const response = await apiClient.post('/donations/prompt/shown', {});
+  return response.data;
+};
+
+export const dismissDonationPrompt = async (
+  request: DismissDonationPromptRequest
+) => {
+  const response = await apiClient.post('/donations/prompt/dismiss', request);
   return response.data;
 };
 

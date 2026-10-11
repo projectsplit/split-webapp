@@ -47,8 +47,8 @@ export default function PuppyEyes({
   size?: number;
   mood?: PuppyMood;
 }) {
-  // More than one of these can be mounted at once (Settings and the home page each have a support
-  // sheet), and gradient and clip ids are document-wide. React's ids contain characters that are not valid in a CSS class name.
+  // More than one of these can be mounted at once (the prompt, and a support sheet each from
+  // Settings and the home page), and gradient and clip ids are document-wide. React's ids contain characters that are not valid in a CSS class name.
   const id = `puppy${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const svgRef = useRef<SVGSVGElement>(null);
   const [gaze, setGaze] = useState<Offset>(GAZE_REST);

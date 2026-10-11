@@ -258,7 +258,8 @@ export default function SettingsMenu({
             </PropertyRow>
 
             {/* Hidden only when the server has no Google Play credentials, so an instance that
-                cannot take money does not offer to. */}
+                cannot take money does not offer to. Otherwise always here, including for someone
+                who turned the prompt off — declining to be asked is not declining to give. */}
             {donationInfo?.isAvailable && (
               <PropertyRow
                 action
