@@ -49,7 +49,7 @@ export default function MostRecentSection({
     return (
       <StyledMostRecentSection>
         <Shimmer width="91px" height="14px" borderRadius="4px" />
-        <Shimmer width="100%" height="70px" borderRadius="14px" />
+        <Shimmer width="100%" height="50px" borderRadius="14px" />
       </StyledMostRecentSection>
     );
   }

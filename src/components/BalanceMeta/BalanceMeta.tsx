@@ -11,8 +11,8 @@ export default function BalanceMeta({ details }: BalanceMetaProps) {
     return (
       <StyledBalanceMeta>
         <span className="settled">
-          <IonIcon name="checkmark-sharp" className="checkmark" />
           <span>Settled</span>
+          <IonIcon name="checkmark-sharp" className="checkmark" />
         </span>
       </StyledBalanceMeta>
     );
