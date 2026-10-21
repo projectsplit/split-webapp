@@ -641,6 +641,8 @@ export interface PropertyListProps {
 
 export interface PropertyRowProps {
   label: React.ReactNode;
+  /** A glyph before the label, for rows that lead somewhere. */
+  icon?: React.ReactNode;
   children?: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   className?: string;

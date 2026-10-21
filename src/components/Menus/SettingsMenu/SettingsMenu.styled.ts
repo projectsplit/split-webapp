@@ -84,6 +84,13 @@ export const StyledSettingsMenu = styled.div`
     color: ${({ theme }) => theme.surface.mark};
   }
 
+  /* "Buqs" and the Plus mark, spaced the way the home page sets a name beside its mark. */
+  .plusLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s8};
+  }
+
   .toggleRow {
     padding: ${({ theme }) => `${theme.space.s10} ${theme.space.s16}`};
 

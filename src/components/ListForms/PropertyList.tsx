@@ -4,6 +4,7 @@ import { StyledPropertyList, StyledPropertyRow } from './PropertyList.styled';
 
 export function PropertyRow({
   label,
+  icon,
   children,
   onClick,
   className,
@@ -15,9 +16,11 @@ export function PropertyRow({
       onClick={onClick}
       $clickable={!!onClick}
       $hasNote={!!note}
+      $hasIcon={!!icon}
       className={className}
     >
       <div className="propertyMain">
+        {icon ? <span className="propertyIcon">{icon}</span> : null}
         <span className={action ? 'propertyAction' : 'propertyLabel'}>
           {label}
         </span>

@@ -5,6 +5,7 @@ import SectionLabel from '../../SectionLabel/SectionLabel';
 import { useGetRecurringExpenses } from '@/api/auth/QueryHooks/useGetRecurringExpenses';
 import { SettingsMenuProps } from '../../../interfaces';
 import { IoClose } from 'react-icons/io5';
+import { FaFileArrowDown, FaHeart, FaRepeat } from 'react-icons/fa6';
 import IonIcon from '@reacticons/ionicons';
 import MyButton from '../../MyButton/MyButton';
 import { StyledUserOptionsButton } from '../../UserOptionsButton/UserOptionsButton.styled';
@@ -38,6 +39,7 @@ import {
 import Spinner from '../../Spinner/Spinner';
 import CurrencyFlag from '../../CurrencyFlag/CurrencyFlag';
 import { openPlusInfo } from '../../Plus/plusMenu';
+import PlusBadge from '../../Plus/PlusBadge';
 
 const pushFailureMessages: Record<PushSubscribeFailure, string> = {
   unsupported: 'This browser cannot receive push notifications.',
@@ -246,6 +248,7 @@ export default function SettingsMenu({
           <PropertyList>
             <PropertyRow
               action
+              icon={<FaRepeat />}
               label="Recurring expenses"
               onClick={() => {
                 menu.value = null;
@@ -258,7 +261,31 @@ export default function SettingsMenu({
               </span>
             </PropertyRow>
 
-            <PropertyRow action label="Buqs Plus" onClick={openPlusInfo}>
+            <PropertyRow
+              action
+              icon={<FaFileArrowDown />}
+              label="Export expenses"
+              onClick={() => {
+                menu.value = null;
+                navigate(routes.EXPORT);
+              }}
+            >
+              <span className="rowValue">
+                <IonIcon name="chevron-forward-outline" className="rowChevron" />
+              </span>
+            </PropertyRow>
+
+            {/* No glyph of its own: the Plus mark in the label is the symbol. */}
+            <PropertyRow
+              action
+              label={
+                <span className="plusLabel">
+                  Buqs
+                  <PlusBadge opensInfo={false} />
+                </span>
+              }
+              onClick={openPlusInfo}
+            >
               <span className="rowValue">
                 <IonIcon name="chevron-forward-outline" className="rowChevron" />
               </span>
@@ -270,6 +297,7 @@ export default function SettingsMenu({
             {donationInfo?.isAvailable && (
               <PropertyRow
                 action
+                icon={<FaHeart />}
                 label="Support Buqs"
                 onClick={() => (supportMenu.value = 'support')}
               >

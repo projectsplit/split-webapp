@@ -12,7 +12,7 @@ import BalanceMeta from '@/components/BalanceMeta/BalanceMeta';
 import SectionLabel from '@/components/SectionLabel/SectionLabel';
 import { TiGroup } from 'react-icons/ti';
 import SelectionButton from '../SelectionButton/SelectionButton';
-import { BsBarChartFill, BsFileEarmarkArrowDownFill } from 'react-icons/bs';
+import { BsBarChartFill } from 'react-icons/bs';
 import { BsFillPiggyBankFill } from 'react-icons/bs';
 import { BsFillPersonFill, BsPeopleFill } from 'react-icons/bs';
 import { useMostRecentContext } from '@/api/auth/CommandHooks/useMostRecentContext';
@@ -153,13 +153,6 @@ export default function ScrollableMenuButtons({
             footer={showBudget ? budgetMeta : undefined}
           >
             <BsFillPiggyBankFill />
-          </SelectionButton>
-
-          <SelectionButton
-            name="Export"
-            onClick={() => navigate(routes.EXPORT)}
-          >
-            <BsFileEarmarkArrowDownFill />
           </SelectionButton>
         </div>
       </div>

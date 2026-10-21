@@ -18,12 +18,32 @@ export const StyledPropertyList = styled.div`
 export const StyledPropertyRow = styled.div<{
   $clickable?: boolean;
   $hasNote?: boolean;
+  $hasIcon?: boolean;
 }>`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.space.s4};
   padding: ${({ theme }) => `${theme.space.s14} ${theme.space.s16}`};
   cursor: ${({ $clickable }) => ($clickable ? 'pointer' : 'default')};
+
+  /* A fixed-width box rather than the glyph's own width, so labels line up down the list
+     whichever icon each row has. */
+  .propertyIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 20px;
+    font-size: ${({ theme }) => theme.icon.sm};
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  /* With an icon the row has three items, and space-between would park the label in the
+     middle of it. */
+  .propertyIcon + .propertyAction,
+  .propertyIcon + .propertyLabel {
+    margin-right: auto;
+  }
 
   .propertyMain {
     display: flex;
@@ -44,6 +64,9 @@ export const StyledPropertyRow = styled.div<{
     font-size: ${({ theme }) => theme.size.s12};
     line-height: 1.45;
     color: ${({ theme }) => theme.ink.tertiary};
+    /* Under the label, not under the icon: the icon box plus the gap after it. */
+    padding-left: ${({ theme, $hasIcon }) =>
+      $hasIcon ? `calc(20px + ${theme.space.s12})` : '0'};
   }
 
   .propertyLabel {
