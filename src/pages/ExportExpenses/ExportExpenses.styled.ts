@@ -286,6 +286,11 @@ export const StyledExportExpenses = styled.div`
       `${theme.space.s12} ${theme.space.s20} ${theme.space.s20}`};
     background: ${({ theme }) =>
       `linear-gradient(to top, ${theme.surface.page} 60%, transparent)`};
+
+    /* Keeps the export button its own colour on hover instead of MyButton's darker grey. */
+    button:hover {
+      background-color: ${({ theme }) => theme.ink.primary};
+    }
   }
 
   .errorMsg {

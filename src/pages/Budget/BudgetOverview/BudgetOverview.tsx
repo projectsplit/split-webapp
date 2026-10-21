@@ -8,6 +8,7 @@ import { useDeleteBudget } from '@/api/auth/CommandHooks/useDeleteBudget';
 import PropertyList, { PropertyRow } from '@/components/ListForms/PropertyList';
 import ItemCard from '@/components/ListForms/ItemCard';
 import Spinner from '@/components/Spinner/Spinner';
+import { Shimmer } from '@/components/Animations/Shimmer/Shimmer';
 import BackButton from '@/components/BackButton/BackButton';
 import { BudgetInfoMessage } from '@/components/BudgetMessages/BudgetInfoMessage';
 import MenuAnimationBackground from '@/components/Animations/MenuAnimationBackground';
@@ -23,7 +24,6 @@ import { StyledBudgetOverview } from './BudgetOverview.styled';
 import { elapsedPercent } from '@/helpers/budgetProgress';
 import { BudgetBars } from '@/components/BudgetBars/BudgetBars';
 import routes from '@/routes';
-import PlusBadge from '@/components/Plus/PlusBadge';
 
 export const BudgetOverview = () => {
   const navigate = useNavigate();
@@ -33,7 +33,8 @@ export const BudgetOverview = () => {
   const timeZoneId = userInfo?.timeZone;
 
   const { data, isPending } = useBudgetInfo();
-  const { data: inactiveBudgetsData } = useGetInactiveBudgetInfo();
+  const { data: inactiveBudgetsData, isPending: isInactivePending } =
+    useGetInactiveBudgetInfo();
   const { mutate: deleteBudget, isPending: isDeleting } = useDeleteBudget(
     menu,
     errorMessage
@@ -57,7 +58,14 @@ export const BudgetOverview = () => {
     iso ? DateTime.fromISO(iso, { zone: timeZoneId }).toFormat('d LLL') : '';
 
   // With no budgets at all, Manage would open an empty list whose only use is its create button.
-  const budgetsRow = hasNoBudgets ? (
+  const budgetsRow = isInactivePending ? (
+    <ItemCard className="manageRow">
+      <div className="manageLabel rowShimmer">
+        Manage budgets
+        <Shimmer width="120px" height="12px" borderRadius="6px" />
+      </div>
+    </ItemCard>
+  ) : hasNoBudgets ? (
     <ItemCard
       className="manageRow"
       onClick={() =>
@@ -86,10 +94,7 @@ export const BudgetOverview = () => {
       <StyledBudgetOverview>
         <div className="budgetTopBar">
           <BackButton onClick={() => navigate(routes.ROOT)} />
-          <div className="title">
-            <span>Budget</span>
-            <PlusBadge size="md" />
-          </div>
+          <div className="title">Budget</div>
           <div className="iconButton" />
         </div>
         <div className="budgetScroll">
@@ -106,21 +111,27 @@ export const BudgetOverview = () => {
       <StyledBudgetOverview>
         <div className="budgetTopBar">
           <BackButton onClick={() => navigate(routes.ROOT)} />
-          <div className="title">
-            <span>Budget</span>
-            <PlusBadge size="md" />
-          </div>
+          <div className="title">Budget</div>
           <div className="iconButton" />
         </div>
 
         <div className="budgetScroll">
           <div className="emptyState">
             <div className="emptyTitle">No active budget</div>
-            <div className="emptyNote">
-              {budgetCount > 0
-                ? 'Turn one on from Manage budgets to start tracking your spending against a cap.'
-                : 'Create a budget to start tracking your spending against a cap.'}
-            </div>
+            {/* Which note fits depends on the inactive budgets, so shimmer until they arrive
+                rather than leave the card half empty. */}
+            {isInactivePending ? (
+              <div className="emptyNote noteShimmer">
+                <Shimmer height="11px" borderRadius="6px" />
+                <Shimmer width="62%" height="11px" borderRadius="6px" />
+              </div>
+            ) : (
+              <div className="emptyNote">
+                {budgetCount > 0
+                  ? 'Turn one on from Manage budgets to start tracking your spending against a cap.'
+                  : 'Create a budget to start tracking your spending against a cap.'}
+              </div>
+            )}
           </div>
           {budgetsRow}
         </div>
@@ -132,10 +143,7 @@ export const BudgetOverview = () => {
     <StyledBudgetOverview>
       <div className="budgetTopBar">
         <BackButton onClick={() => navigate(routes.ROOT)} />
-        <div className="title">
-          <span>Budget</span>
-          <PlusBadge size="md" />
-        </div>
+        <div className="title">Budget</div>
         <div
           className="iconButton"
           onClick={() => (menu.value = 'manageBudgetMenu')}
