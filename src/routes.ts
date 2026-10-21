@@ -23,6 +23,7 @@ const routes = {
   BUDGET: '/budget',
   BUDGET_CREATE: '/budget/create',
   BUDGET_MANAGE: '/budget/manage',
+  EXPORT: '/export',
 };
 
 export default routes;

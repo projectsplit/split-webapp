@@ -13,6 +13,7 @@ export const ScopeSelector = ({
   targetGroupIds,
   allGroupsSelected,
   $inputError,
+  infoText,
 }: ScoleSelectorProps) => {
   const scopeDetails = useMemo(() => {
     return scopeBuilder(scopeState, allGroupsSelected, targetGroupIds);
@@ -36,7 +37,7 @@ export const ScopeSelector = ({
       </button>
       <MenuAnimationBackground menu={menu} />
       <InfoBoxAnimation menu={menu}>
-        <ScopeInfo menu={menu} />
+        <ScopeInfo menu={menu} text={infoText} />
       </InfoBoxAnimation>
     </StyledScopeSelector>
   );
@@ -48,4 +49,6 @@ interface ScoleSelectorProps {
   targetGroupIds: Signal<string[]>;
   allGroupsSelected: Signal<boolean>;
   $inputError: boolean;
+  /** What the info box says. Defaults to the budget wording. */
+  infoText?: string;
 }

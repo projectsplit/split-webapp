@@ -35,6 +35,7 @@ import {
   Personal,
   ManageBudgets,
   RecurringExpenses,
+  ExportExpenses,
   PrivacyPolicy,
   AccountDeletion,
 } from './lazyRoutes';
@@ -107,6 +108,8 @@ const App = () => {
                 path={routes.RECURRING_EXPENSES}
                 element={<RecurringExpenses />}
               />
+
+              <Route path={routes.EXPORT} element={<ExportExpenses />} />
 
               <Route
                 path={`${routes.ANALYTICS}/*`}

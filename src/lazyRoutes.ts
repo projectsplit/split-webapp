@@ -22,6 +22,7 @@ const loaders = {
     import('@/pages/RecurringExpenses/RecurringExpenses').then((m) => ({
       default: m.RecurringExpenses,
     })),
+  ExportExpenses: () => import('@/pages/ExportExpenses/ExportExpenses'),
 };
 
 export const Group = lazy(loaders.Group);
@@ -37,6 +38,7 @@ export const GenerateInvitationCode = lazy(loaders.GenerateInvitationCode);
 export const Personal = lazy(loaders.Personal);
 export const ManageBudgets = lazy(loaders.ManageBudgets);
 export const RecurringExpenses = lazy(loaders.RecurringExpenses);
+export const ExportExpenses = lazy(loaders.ExportExpenses);
 
 // Outside the prewarmed set on purpose. These are pages of text most people never open, and the
 // ones who do arrive from a link on the store listing rather than from inside the app.

@@ -15,6 +15,7 @@ export const ScopeSelectionMenu = ({
   scopeState,
   targetGroupIds,
   allGroupsSelected,
+  hint = 'Pick which of your expenses this budget counts.',
 }: ScopeSelectionMenuProps) => {
   const [keyword, setKeyword] = useState<string>('');
   const [groupsOpen, setGroupsOpen] = useState<boolean>(
@@ -108,9 +109,7 @@ export const ScopeSelectionMenu = ({
       </div>
 
       <div className="scrollable-content">
-        <div className="hint">
-          Pick which of your expenses this budget counts.
-        </div>
+        <div className="hint">{hint}</div>
 
         <div className="scopeCard">
           <div className="scopeRow">
@@ -176,4 +175,6 @@ interface ScopeSelectionMenuProps {
   }>;
   targetGroupIds: Signal<string[]>;
   allGroupsSelected: Signal<boolean>;
+  /** The line under the title. Defaults to the budget wording. */
+  hint?: string;
 }

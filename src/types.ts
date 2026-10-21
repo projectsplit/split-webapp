@@ -998,3 +998,56 @@ export enum BudgetScope {
   NonGroup = 2,
   Group = 4,
 }
+
+export type ExpensesExportRequest = {
+  /** Calendar days in the user's time zone, as yyyy-MM-dd. */
+  startDate: string;
+  endDate: string;
+  /** BudgetScope flags, combined. */
+  scope: number;
+  /** Empty means every group. */
+  targetGroupIds: string[];
+};
+
+export type ExportParticipant = {
+  name: string;
+  /** The person the report is for, so the file can say "you". */
+  isYou: boolean;
+  amount: number;
+};
+
+/**
+ * One expense with every id already resolved to something readable, since the file it ends up in
+ * cannot look anything up later.
+ */
+export type ExportExpenseItem = {
+  id: string;
+  occurred: string;
+  description: string;
+  type: TransactionType;
+  groupId: string | null;
+  groupName: string | null;
+  currency: string;
+  /** The whole expense, whoever paid it. */
+  amount: number;
+  /** The user's part of it; zero when they only paid for others. */
+  yourShare: number;
+  /** What the user put in; zero when someone else covered them. */
+  youPaid: number;
+  /** The same in the user's preferred currency at that day's rate, or null when rates were unavailable. */
+  yourShareConverted: number | null;
+  youPaidConverted: number | null;
+  paidBy: ExportParticipant[];
+  splitWith: ExportParticipant[];
+  labels: string[];
+  place: string | null;
+  isRecurring: boolean;
+};
+
+export type ExpensesExportResponse = {
+  /** The preferred currency the converted figures are in. */
+  currency: string;
+  timeZone: string;
+  /** Oldest first. */
+  expenses: ExportExpenseItem[];
+};

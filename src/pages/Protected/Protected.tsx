@@ -113,6 +113,7 @@ const Protected: React.FC = () => {
     routes.ANALYTICS,
     routes.BUDGET,
     routes.RECURRING_EXPENSES,
+    routes.EXPORT,
     '/shared/generatecode',
   ]);
 
