@@ -678,6 +678,8 @@ export type NonGroupParticipant = {
 };
 
 export type Transfer = {
+  /** Picked by the app so a settle-up sent twice is stored once. */
+  transferId?: string;
   description: string;
   amount: number;
   currency: string;
@@ -692,6 +694,8 @@ export type CreateTransfersRequest = {
 };
 
 export type CreateTransferRequest = {
+  /** Picked by the app so a transfer sent twice is stored once. */
+  transferId?: string;
   groupId?: string;
   description: string;
   amount: number;

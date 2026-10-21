@@ -42,9 +42,12 @@ export const StyledTopMenu = styled.div`
     flex: 1;
     min-width: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s2};
 
     .title {
+      max-width: 100%;
       font-size: ${({ theme }) => theme.size.s17};
       font-weight: ${({ theme }) => theme.weight.semibold};
       letter-spacing: -0.01em;

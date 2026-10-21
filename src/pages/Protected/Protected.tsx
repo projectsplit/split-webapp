@@ -26,6 +26,7 @@ import SupportMenuAnimation from '../../components/Animations/SupportMenuAnimati
 import DonationPrompt from '../../components/DonationPrompt/DonationPrompt';
 import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
 import { useRecoverDonationPurchases } from '@/hooks/useRecoverDonationPurchases';
+import { syncPendingTransactions } from '@/api/offline/pendingTransactionSync';
 
 const Protected: React.FC = () => {
   const location = useLocation();
@@ -40,6 +41,12 @@ const Protected: React.FC = () => {
 
   useEffect(() => {
     prewarmRoutes();
+  }, []);
+
+  // Signing back in is the other moment records left from before can go: a session that ended
+  // while they waited keeps them for the same person rather than dropping them.
+  useEffect(() => {
+    void syncPendingTransactions();
   }, []);
 
   const hasSyncedPush = useRef(false);

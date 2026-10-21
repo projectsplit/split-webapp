@@ -40,6 +40,13 @@ import Spinner from '../../Spinner/Spinner';
 import CurrencyFlag from '../../CurrencyFlag/CurrencyFlag';
 import { openPlusInfo } from '../../Plus/plusMenu';
 import PlusBadge from '../../Plus/PlusBadge';
+import LogoutWarningAnimation from '../../Animations/LogoutWarningAnimation';
+import {
+  dropPendingTransactionsOf,
+  pendingTransactions,
+} from '@/api/offline/pendingTransactions';
+import { clearSavedQueryCache } from '@/api/offline/queryCachePersistence';
+import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
 
 const pushFailureMessages: Record<PushSubscribeFailure, string> = {
   unsupported: 'This browser cannot receive push notifications.',
@@ -64,6 +71,7 @@ export default function SettingsMenu({
   const editEmailMenu = useSignal<string | null>(null);
   const supportMenu = useSignal<string | null>(null);
   const deleteAccountMenu = useSignal<string | null>(null);
+  const logoutWarningMenu = useSignal<string | null>(null);
 
   // Only fetched to know whether donations are configured at all. An instance with no Google Play
   // credentials should not show an entry that can only lead to a dead end.
@@ -98,6 +106,8 @@ export default function SettingsMenu({
   });
 
   const handleLogout = async () => {
+    const userId = getSignedInUserId();
+
     try {
       await unsubscribeFromPush();
     } catch (error) {
@@ -108,9 +118,27 @@ export default function SettingsMenu({
 
     localStorage.removeItem('accessToken');
     sessionStorage.removeItem('submittedFromHomePersistData');
+    // Logging out is a choice to leave nothing behind on this device: the saved screens, and
+    // anything still unsent, which the person was warned about first.
+    if (userId) void dropPendingTransactionsOf(userId);
+    void clearSavedQueryCache();
     navigate(routes.AUTH);
 
     setTimeout(() => queryClient.clear(), 0);
+  };
+
+  const signedInUserId = getSignedInUserId();
+  const unsynced = pendingTransactions.value.filter(
+    (x) => x.userId === signedInUserId
+  );
+
+  const handleLogoutClick = () => {
+    if (unsynced.length > 0) {
+      logoutWarningMenu.value = 'logoutWarning';
+      return;
+    }
+
+    void handleLogout();
   };
 
   const {mutateAsync:setShowBudgetInfo} = useSetShowBudgetInfo();
@@ -313,7 +341,11 @@ export default function SettingsMenu({
         </div>
 
         <div className="logOut">
-          <MyButton variant="secondary" fontSize="15" onClick={handleLogout}>
+          <MyButton
+            variant="secondary"
+            fontSize="15"
+            onClick={handleLogoutClick}
+          >
             Log out
           </MyButton>
         </div>
@@ -356,7 +388,16 @@ export default function SettingsMenu({
       <MenuAnimationBackground menu={editEmailMenu} />
       <MenuAnimationBackground menu={supportMenu} />
       <MenuAnimationBackground menu={deleteAccountMenu} />
+      <MenuAnimationBackground menu={logoutWarningMenu} />
       <SupportMenuAnimation supportMenu={supportMenu} />
+      <LogoutWarningAnimation
+        menu={logoutWarningMenu}
+        unsynced={unsynced}
+        onConfirm={() => {
+          logoutWarningMenu.value = null;
+          void handleLogout();
+        }}
+      />
       <DeleteAccountAnimation
         deleteAccountMenu={deleteAccountMenu}
         username={userInfo?.username}

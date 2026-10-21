@@ -61,6 +61,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!--
+      The WebView only keeps navigator.onLine and the online/offline events current when the app
+      holds this, and offline mode runs on them: they decide whether a new expense is sent or kept on
+      the phone, and when kept ones are sent. Play services happens to bring it in already; declared
+      here so offline mode never depends on that. A normal permission, granted at install.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!--
       The expense location picker finds the person through navigator.geolocation. In the app,
       Capacitor's WebView client turns that call into a runtime request for these two permissions,
       and Android refuses a permission the manifest does not declare without ever showing the

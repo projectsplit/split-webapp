@@ -9,6 +9,14 @@ export const StyledGroup = styled(StyledTransactionsShell)`
     flex-direction: column;
   }
 
+  .offlineNote {
+    padding: ${({ theme }) => `${theme.space.s24} ${theme.space.s20}`};
+    font-size: ${({ theme }) => theme.size.s13};
+    line-height: 1.6;
+    text-align: center;
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
   .retry {
     display: flex;
     justify-content: center;

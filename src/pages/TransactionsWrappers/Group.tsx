@@ -88,7 +88,14 @@ export default function Group() {
 
   const timeZoneId = userInfo?.timeZone;
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
-  const { data: group, isLoading, isFetching, isError, error } = useGroup(groupid);
+  const {
+    data: group,
+    isLoading,
+    isFetching,
+    isPaused,
+    isError,
+    error,
+  } = useGroup(groupid);
   const expenseIsPersonal = useSignal<boolean>(false);
   const expenseNonGroupUsers = useSignal<User[]>([]);
   const expenseIsNonGroup = useSignal<boolean>(false);
@@ -173,6 +180,16 @@ export default function Group() {
         </div>
       ) : isError ? (
         <GroupError groupError={groupError} />
+      ) : !group && isPaused ? (
+        // Offline, a group opens from what was saved the last time it was open here. One never
+        // opened on this phone has nothing saved, members included, so not even an expense can be
+        // filed for it until it loads once.
+        <div className="group">
+          <div className="offlineNote">
+            You're offline, and this group hasn't been opened on this phone yet.
+            It will load once you're back online.
+          </div>
+        </div>
       ) : (
         <div className="group" {...swipeHandlers}>
           <CategorySelector

@@ -152,7 +152,8 @@ export const StyledSettingsMenu = styled.div`
     }
   }
 
-  .info {
+  /* Scoped to the version line: a dialog opened from here has an .info of its own. */
+  .optionsContainer > .info {
     display: flex;
     flex-direction: row;
     align-items: center;

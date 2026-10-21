@@ -117,6 +117,12 @@ export const logOut = async () => {
 };
 
 export const refreshToken = async (): Promise<RefreshTokenResponse> => {
-  const response = await authApiClient.post('/auth/refresh', {});
+  // Every request waits on this one, so on a connection that has stalled it must give up in good
+  // time rather than hold them all.
+  const response = await authApiClient.post(
+    '/auth/refresh',
+    {},
+    { timeout: 15_000 }
+  );
   return response.data;
 };

@@ -34,7 +34,8 @@ export default function SettleUpOptions({
   const { mutate: submitMultipleTransfers, isPending } = useMultipleTransfers(
     menu,
     groupId,
-    showWarning
+    showWarning,
+    members
   );
   const enabled = selectedItem.value.length > 0;
   const theme = useTheme();

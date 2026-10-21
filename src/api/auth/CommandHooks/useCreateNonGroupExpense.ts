@@ -1,17 +1,22 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AxiosError, AxiosResponse } from 'axios';
-import { apiClient } from '../../apiClients';
+import { AxiosError } from 'axios';
 import {
   NonGroupExpenseRequest,
   Group,
   Guest,
   Member,
   User,
+  UserInfo,
 } from '../../../types';
 import { Signal } from '@preact/signals-react';
 import { NavigateFunction } from 'react-router-dom';
-import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 import routes from '@/routes';
+import { newId } from '@/helpers/newId';
+import {
+  refreshAfterNewTransactions,
+  sendOrKeep,
+  SendOutcome,
+} from '../../offline/pendingTransactionSync';
 
 export const useCreateNonGroupExpense = (
   menu: Signal<string | null>,
@@ -25,26 +30,37 @@ export const useCreateNonGroupExpense = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, AxiosError, NonGroupExpenseRequest>({
+  return useMutation<SendOutcome, AxiosError, NonGroupExpenseRequest>({
     meta: { errorHandled: true },
-    mutationFn: (expense) => createNonGroupExpense(expense),
-    onSuccess: async () => {
+    // Runs offline too: sendOrKeep decides between sending and keeping, where the default
+    // mode would hold the submit behind a spinner until the connection came back.
+    networkMode: 'always',
+    mutationFn: (expense) => {
+      const id = newId();
+      const me = queryClient.getQueryData<UserInfo>(['getMe']);
+
+      return sendOrKeep({
+        id,
+        kind: 'nonGroupExpense',
+        request: { ...expense, expenseId: id },
+        names: Object.fromEntries([
+          ...nonGroupUsers.value.map((u) => [u.userId, u.username]),
+          ...(me ? [[me.userId, me.username]] : []),
+        ]),
+      });
+    },
+    onSuccess: async (outcome) => {
       menu.value = null;
       if (window.location.pathname !== routes.NON_GROUP_EXPENSES) {
         navigate(routes.NON_GROUP_EXPENSES);
       }
 
-      await invalidateQueryKeys(queryClient, [
-        'nonGroupDebts',
-        'nonGroupExpenses',
-        'shared',
-        'mostRecentGroup',
-        'home',
-        'non-group-expense-users',
-        'cumulativeArray',
-        'personalExpenses',
-        'userTotals',
-      ]);
+      // A kept expense changed nothing on the server yet; the sync refreshes once it has.
+      if (outcome === 'sent') {
+        await refreshAfterNewTransactions(queryClient, [
+          { kind: 'nonGroupExpense' },
+        ]);
+      }
       const data = {
         nonGroupUsers: nonGroupUsers.value,
         fromHomeGroup: fromHomeGroup?.value,
@@ -76,13 +92,4 @@ export const useCreateNonGroupExpense = (
       setIsSubmitting(false);
     },
   });
-};
-
-const createNonGroupExpense = async (
-  req: NonGroupExpenseRequest
-): Promise<void> => {
-  await apiClient.post<void, AxiosResponse<void>>(
-    '/expenses/create-non-group',
-    req
-  );
 };

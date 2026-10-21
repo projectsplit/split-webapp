@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AxiosError, AxiosResponse } from 'axios';
-import { apiClient } from '../../apiClients';
+import { AxiosError } from 'axios';
 import {
   GroupExpenseRequest,
   Group,
@@ -10,8 +9,14 @@ import {
 } from '../../../types';
 import { Signal } from '@preact/signals-react';
 import { generatePath, NavigateFunction } from 'react-router-dom';
-import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 import routes from '@/routes';
+import { newId } from '@/helpers/newId';
+import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
+import {
+  refreshAfterNewTransactions,
+  sendOrKeep,
+  SendOutcome,
+} from '../../offline/pendingTransactionSync';
 
 export const useCreateGroupExpense = (
   menu: Signal<string | null>,
@@ -27,10 +32,31 @@ export const useCreateGroupExpense = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, AxiosError, GroupExpenseRequest>({
+  return useMutation<SendOutcome, AxiosError, GroupExpenseRequest>({
     meta: { errorHandled: true },
-    mutationFn: (expense) => createGroupExpense(expense),
-    onSuccess: async () => {
+    // Runs offline too: sendOrKeep decides between sending and keeping, where the default
+    // mode would hold the submit behind a spinner until the connection came back.
+    networkMode: 'always',
+    mutationFn: (expense) => {
+      const id = newId();
+      const expenseGroupId = expense.groupId ?? groupId ?? '';
+      const group =
+        fromHomeGroup?.value ??
+        queryClient.getQueryData<Group>([expenseGroupId]);
+      const userId = getSignedInUserId();
+
+      return sendOrKeep({
+        id,
+        kind: 'groupExpense',
+        request: { ...expense, groupId: expenseGroupId, expenseId: id },
+        groupName: group?.name ?? '',
+        memberId: group?.members.find((m) => m.userId === userId)?.id ?? '',
+        names: Object.fromEntries(
+          groupMembers.value.map((m) => [m.id, m.name])
+        ),
+      });
+    },
+    onSuccess: async (outcome, expense) => {
       menu.value = null;
       if (groupId) {
         const groupExpensesPath = generatePath(routes.GROUP_EXPENSES, {
@@ -40,20 +66,12 @@ export const useCreateGroupExpense = (
           navigate(groupExpensesPath);
         }
       }
-      await invalidateQueryKeys(queryClient, [
-        'debts',
-        'groupExpenses',
-        'home',
-        'shared',
-        'mostRecentGroup',
-        'cumulativeArray',
-        'personalExpenses',
-        'userTotals',
-      ]);
-      await queryClient.invalidateQueries({
-        queryKey: [groupId],
-        exact: false,
-      });
+      // A kept expense changed nothing on the server yet; the sync refreshes once it has.
+      if (outcome === 'sent') {
+        await refreshAfterNewTransactions(queryClient, [
+          { kind: 'groupExpense', groupId: expense.groupId ?? groupId },
+        ]);
+      }
 
       if (fromHome) {
         const data = {
@@ -88,8 +106,4 @@ export const useCreateGroupExpense = (
       setIsSubmitting(false);
     },
   });
-};
-
-const createGroupExpense = async (req: GroupExpenseRequest): Promise<void> => {
-  await apiClient.post<void, AxiosResponse<void>>('/expenses/create', req);
 };

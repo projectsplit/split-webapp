@@ -67,6 +67,8 @@ export interface ExpenseProps {
   userAmount: number;
   labels: Label[];
   mode: Mode;
+  /** Set for an expense filed on this device that the server has not confirmed yet. */
+  pendingState?: 'waiting' | 'rejected';
 }
 
 export interface MapsInfoBoxProps {
@@ -131,6 +133,8 @@ export interface TransferProps {
   timeZoneId: string;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onLongPress?: () => void;
+  /** Set for a transfer recorded on this device that the server has not confirmed yet. */
+  pendingState?: 'waiting' | 'rejected';
 }
 
 export interface DateTimePickerProps {

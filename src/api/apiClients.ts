@@ -4,9 +4,7 @@ import config from '../config';
 
 import routes from '../routes';
 import { logOut, refreshToken } from './auth/api';
-import { Mutex } from 'async-mutex';
-
-const mutex = new Mutex();
+import { isConnectivityError } from './offline/connectivity';
 
 const redirectToAuth = () => {
   if (window.location.pathname !== routes.AUTH) {
@@ -27,26 +25,46 @@ export const apiClient = axios.create({
   baseURL: `${config.serverUrl}`,
 });
 
+let refreshing: Promise<void> | null = null;
+
+/**
+ * Swaps the expired access token for a new one, once, however many requests are waiting for it.
+ * They all share the outcome: a request that went ahead after a failed refresh would carry the
+ * expired token, and its 401 would sign the person out.
+ *
+ * Only a refresh the server turns down ends the session. One that never reached the server says
+ * nothing about it — the phone may just be offline — and signing someone out for that would strand
+ * every expense they filed in the meantime, so the waiting requests fail as if offline instead.
+ */
+const refreshAccessToken = () => {
+  refreshing ??= (async () => {
+    try {
+      const refreshResponse = await refreshToken();
+      storeAccessToken(refreshResponse.accessToken);
+    } catch (error) {
+      if (isConnectivityError(error)) throw error;
+
+      try {
+        await logOut();
+      } catch {
+        // The session is over either way; this only clears the refresh cookie.
+      }
+      clearAccessToken();
+      clearSubmittedFromHomePersistData();
+      redirectToAuth();
+      throw new axios.Cancel('Session expired, logging out.');
+    } finally {
+      refreshing = null;
+    }
+  })();
+
+  return refreshing;
+};
+
 apiClient.interceptors.request.use(
   async (config) => {
     if (!isAccessTokenValid(getAccessToken())) {
-      if (mutex.isLocked()) {
-        await mutex.waitForUnlock();
-      } else {
-        const release = await mutex.acquire();
-        try {
-          const refreshResponse = await refreshToken();
-          storeAccessToken(refreshResponse.accessToken);
-        } catch (error) {
-          await logOut();
-          clearAccessToken();
-          clearSubmittedFromHomePersistData();
-          redirectToAuth();
-          throw new axios.Cancel('Session expired, logging out.');
-        } finally {
-          release();
-        }
-      }
+      await refreshAccessToken();
     }
 
     config.headers['Authorization'] = `Bearer ${getAccessToken()}`;

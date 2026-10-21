@@ -5,6 +5,9 @@ import { apiClient } from '../../apiClients';
 import { logOut } from '../api';
 import { unsubscribeFromPush } from '../../../helpers/pushNotifications';
 import routes from '../../../routes';
+import { getSignedInUserId } from '../../../helpers/isUserAuthenticated';
+import { dropPendingTransactionsOf } from '../../offline/pendingTransactions';
+import { clearSavedQueryCache } from '../../offline/queryCachePersistence';
 
 /**
  * Deletes the signed-in account, then leaves this device as signed out as the server already is.
@@ -46,8 +49,12 @@ export const useDeleteAccount = () => {
         console.error('Log out after deletion failed:', error);
       }
 
+      // Anything filed offline belonged to the account and has nowhere left to go.
+      const userId = getSignedInUserId();
       localStorage.removeItem('accessToken');
       sessionStorage.removeItem('submittedFromHomePersistData');
+      if (userId) void dropPendingTransactionsOf(userId);
+      void clearSavedQueryCache();
 
       navigate(
         `${routes.AUTH}?message=${encodeURIComponent(
