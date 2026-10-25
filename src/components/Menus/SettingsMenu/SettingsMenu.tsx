@@ -309,7 +309,7 @@ export default function SettingsMenu({
               label={
                 <span className="plusLabel">
                   Buqs
-                  <PlusBadge opensInfo={false} />
+                  <PlusBadge />
                 </span>
               }
               onClick={openPlusInfo}

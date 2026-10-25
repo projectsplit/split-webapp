@@ -5,8 +5,9 @@ import { openPlusInfo } from './plusMenu';
 interface PlusBadgeProps {
   size?: PlusBadgeSize;
   /**
-   * By default the mark is a door to the explanation of what Plus is. Pass false where the
-   * explanation is already on screen, or where a tap would fight the surrounding control.
+   * Makes the mark a door to the explanation of what Plus is. Off by default: most marks sit on or
+   * beside a small control, where a tap meant for the control would open the Plus sheet instead.
+   * The home page's Analytics and Budgeting buttons are big enough to give the mark its own tap.
    */
   opensInfo?: boolean;
   className?: string;
@@ -15,12 +16,12 @@ interface PlusBadgeProps {
 /**
  * The Plus mark: a small silver pill that says which features belong to Plus.
  *
- * It is a label first and a button second. Tapping it opens the Plus sheet, and the tap stops
- * there, so a mark sitting on a row that navigates somewhere does not also trigger that row.
+ * A label, unless it opens the Plus sheet. Then the tap stops there, so a mark sitting on a button
+ * that navigates somewhere does not also trigger that button.
  */
 export default function PlusBadge({
   size = 'sm',
-  opensInfo = true,
+  opensInfo = false,
   className,
 }: PlusBadgeProps) {
   const handleClick = (event: MouseEvent<HTMLSpanElement>) => {

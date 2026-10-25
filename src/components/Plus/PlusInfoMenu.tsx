@@ -44,7 +44,7 @@ export default function PlusInfoMenu({ nodeRef }: PlusInfoMenuProps) {
     <StyledPlusInfoMenu ref={nodeRef}>
       <div className="lockup">
         <span className="brand">Buqs</span>
-        <PlusBadge size="lg" opensInfo={false} />
+        <PlusBadge size="lg" />
       </div>
 
       <h2 className="headline">Open to everyone while Buqs is new</h2>

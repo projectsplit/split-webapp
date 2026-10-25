@@ -140,7 +140,7 @@ export default function ScrollableMenuButtons({
 
           <SelectionButton
             name="Analytics"
-            badge={<PlusBadge />}
+            badge={<PlusBadge opensInfo />}
             onClick={() => navigate(routes.ANALYTICS)}
           >
             <BsBarChartFill />
@@ -148,7 +148,7 @@ export default function ScrollableMenuButtons({
 
           <SelectionButton
             name="Budgeting"
-            badge={<PlusBadge />}
+            badge={<PlusBadge opensInfo />}
             onClick={() => navigate(routes.BUDGET)}
             footer={showBudget ? budgetMeta : undefined}
           >
