@@ -4,8 +4,10 @@ import { StyledInfoDialog } from '../../../InfoDialog.styled';
 
 export default function ScopeInfo({
   menu,
+  text = 'Choose which expense types this budget should apply to. Default setting: All expenses (including groups, quick splits, and personal).',
 }: {
   menu: Signal<React.SetStateAction<string | null>>;
+  text?: string;
 }) {
   return (
     <StyledInfoDialog>
@@ -19,10 +21,7 @@ export default function ScopeInfo({
         </div>
       </div>
       <div className="text">
-        <span className="firstP">
-          Choose which expense types this budget should apply to. Default
-          setting: All expenses (including groups, quick splits, and personal).
-        </span>
+        <span className="firstP">{text}</span>
       </div>
     </StyledInfoDialog>
   );

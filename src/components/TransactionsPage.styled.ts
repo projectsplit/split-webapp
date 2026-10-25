@@ -16,6 +16,14 @@ export const StyledTransactionsPage = styled.div`
     padding-bottom: 100px;
   }
 
+  .offlineNote {
+    padding: ${({ theme }) => `${theme.space.s24} ${theme.space.s20}`};
+    font-size: ${({ theme }) => theme.size.s13};
+    line-height: 1.6;
+    text-align: center;
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
   .same-date-container {
     display: flex;
     flex-direction: column;

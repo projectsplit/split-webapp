@@ -16,6 +16,7 @@ import {} from './helpers/localStorageStringParser';
 import { usePeople } from './hooks/usePeople';
 import { useSearchFilters } from './hooks/useSearchFilters';
 import { useLabels } from '@/api/auth/QueryHooks/useGetLabels';
+import PlusBadge from '../Plus/PlusBadge';
 
 const SEARCH_CATEGORIES = {
   cat1: 'Expenses',
@@ -82,12 +83,15 @@ export default function SearchTransactions({
           <div className="headerSpacer" />
           <div className="searchingIn">
             <div className="searchingInLabel">Searching in</div>
-            <div className="groupName">
-              {isPersonal
-                ? 'Personal'
-                : group?.name
-                  ? group?.name
-                  : 'Quick splits'}
+            <div className="groupNameRow">
+              <span className="groupName">
+                {isPersonal
+                  ? 'Personal'
+                  : group?.name
+                    ? group?.name
+                    : 'Quick splits'}
+              </span>
+              <PlusBadge />
             </div>
           </div>
           <div className="closeSign" onClick={() => (menu.value = null)}>

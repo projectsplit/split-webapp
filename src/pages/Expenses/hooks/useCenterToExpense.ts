@@ -7,7 +7,8 @@ export const useCenterToExpense = (
   isScrolled: Signal<boolean>,
   expenses: ExpenseResponseItem[] | undefined,
   jumpToken?: string,
-  isFetchingPreviousPage: boolean = false
+  isFetchingPreviousPage: boolean = false,
+  isPlaceholderData: boolean = false
 ) => {
   const savedScrollHeight = useRef<number>(0);
   const jumpToProcessed = useRef<string | null>(null);
@@ -45,6 +46,10 @@ export const useCenterToExpense = (
     if (
       jumpToken &&
       jumpToken !== jumpToProcessed.current &&
+      // A jump made while the list is already open shows the old list until the page around the
+      // target arrives. Centring on the target there would spend the jump on rows about to be
+      // replaced, and leave it off-centre once they are.
+      !isPlaceholderData &&
       expenses &&
       expenses.length > 0
     ) {
@@ -72,7 +77,7 @@ export const useCenterToExpense = (
         console.error('Failed to parse jump token', e);
       }
     }
-  }, [jumpToken, expenses]);
+  }, [jumpToken, expenses, isPlaceholderData]);
 
   return highlightedId;
 };

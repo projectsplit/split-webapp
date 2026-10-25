@@ -37,7 +37,11 @@ export const StyledBudgetOverview = styled.div`
   .title {
     flex: 1;
     min-width: 0;
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: ${({ theme }) => theme.space.s8};
     font-size: ${({ theme }) => theme.size.s17};
     font-weight: ${({ theme }) => theme.weight.semibold};
     letter-spacing: -0.01em;
@@ -103,6 +107,36 @@ export const StyledBudgetOverview = styled.div`
     line-height: 1.6;
     color: ${({ theme }) => theme.ink.secondary};
     text-wrap: pretty;
+  }
+
+  /* The shimmer's own base colour is the card's, which would hide it on this card. */
+  .noteShimmer > div,
+  .rowShimmer > div {
+    background-color: ${({ theme }) => theme.surface.raised};
+    background-image: ${({ theme }) =>
+      `linear-gradient(90deg, ${theme.surface.raised} 0%, ${theme.surface.outline} 50%, ${theme.surface.raised} 100%)`};
+    background-size: 200% 100%;
+  }
+
+  /* Two bars on the note's two 21px lines, so nothing moves when the text arrives. */
+  .noteShimmer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 5px 0;
+  }
+
+  /* Keeps the label's text for the row's height, hidden behind the bar. */
+  .rowShimmer {
+    position: relative;
+    color: transparent;
+
+    > div {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
 
   .monoValue {

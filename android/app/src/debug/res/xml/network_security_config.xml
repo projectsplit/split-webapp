@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Debug builds only. Android has refused cleartext HTTP by default since targetSdk 28, which is
+  right for a shipped app and in the way of testing one against a dev server on a laptop.
+
+  The exception is localhost and nothing else, because the way a phone reaches that server is
+  `adb reverse tcp:5097 tcp:5097` — the phone's own localhost forwarded down the USB cable. That
+  keeps the dev machine's LAN address out of every config file, and it matters for more than
+  tidiness: refresh cookies are Secure + SameSite=None, and Chromium only treats localhost as a
+  secure origin over plain HTTP. Point the app at http://192.168.x.x instead and sign-in fails
+  with nothing in the UI to say why.
+
+  This file is in src/debug, so the release manifest never references it and a production build
+  stays cleartext-blocked everywhere.
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">localhost</domain>
+        <!-- The host machine as seen from an emulator, so the same debug build works there too. -->
+        <domain includeSubdomains="false">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>

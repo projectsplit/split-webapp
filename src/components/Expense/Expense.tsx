@@ -1,8 +1,14 @@
 import { ExpenseProps } from '../../interfaces';
 import { StyledExpense } from './Expense.styled';
-import { MdLocationOn, MdGroup, MdPersonOff } from 'react-icons/md';
+import {
+  MdLocationOn,
+  MdGroup,
+  MdPersonOff,
+  MdSchedule,
+  MdErrorOutline,
+} from 'react-icons/md';
 import { displayCurrencyAndAmount } from '../../helpers/displayCurrencyAndAmount';
-import { TimeOnly } from '../../helpers/timeHelpers';
+import { FormatDateTime, TimeOnly } from '../../helpers/timeHelpers';
 import Pill from '../Pill/Pill';
 import labelColors from '../../labelColors';
 import { Mode } from '@/types';
@@ -27,6 +33,7 @@ const Expense = ({
   userAmount,
   labels,
   mode,
+  pendingState,
 }: ExpenseProps) => {
   const handleClick = useCallback(() => onClick(expense), [onClick, expense]);
   const handleLongPress = useCallback(
@@ -78,7 +85,20 @@ const Expense = ({
       </span>
 
       <div className="meta">
-        <span className="time">{TimeOnly(occurred, timeZoneId)}</span>
+        {/* Pending rows sit together above the dated list, so they carry their own date. */}
+        {pendingState === 'rejected' ? (
+          <span className="pendingState rejected">
+            <MdErrorOutline className="pendingIcon" />
+            Couldn't sync
+          </span>
+        ) : pendingState === 'waiting' ? (
+          <span className="pendingState">
+            <MdSchedule className="pendingIcon" />
+            <span className="time">{FormatDateTime(occurred, timeZoneId)}</span>
+          </span>
+        ) : (
+          <span className="time">{TimeOnly(occurred, timeZoneId)}</span>
+        )}
         {place ? <MdLocationOn className="locationIcon" title={place} /> : null}
         {labels.length > 0 ? (
           <span className="labels" ref={labelsRef}>

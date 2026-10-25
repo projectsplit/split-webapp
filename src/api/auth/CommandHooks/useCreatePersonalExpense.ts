@@ -1,11 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AxiosError, AxiosResponse } from 'axios';
-import { apiClient } from '../../apiClients';
+import { AxiosError } from 'axios';
 import { PersonalExpenseRequest } from '../../../types';
 import { Signal } from '@preact/signals-react';
 import { NavigateFunction } from 'react-router-dom';
-import { invalidateQueryKeys } from '../helpers/invalidateQueryKeys';
 import routes from '@/routes';
+import { newId } from '@/helpers/newId';
+import {
+  refreshAfterNewTransactions,
+  sendOrKeep,
+  SendOutcome,
+} from '../../offline/pendingTransactionSync';
 
 export const useCreatePersonalExpense = (
   menu: Signal<string | null>,
@@ -16,10 +20,22 @@ export const useCreatePersonalExpense = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<any, AxiosError, PersonalExpenseRequest>({
+  return useMutation<SendOutcome, AxiosError, PersonalExpenseRequest>({
     meta: { errorHandled: true },
-    mutationFn: (expense) => createPersonalExpense(expense),
-    onSuccess: async () => {
+    // Runs offline too: sendOrKeep decides between sending and keeping, where the default
+    // mode would hold the submit behind a spinner until the connection came back.
+    networkMode: 'always',
+    mutationFn: (expense) => {
+      const id = newId();
+
+      return sendOrKeep({
+        id,
+        kind: 'personalExpense',
+        request: { ...expense, expenseId: id },
+        names: {},
+      });
+    },
+    onSuccess: async (outcome) => {
       menu.value = null;
       if (makePersonalClicked) {
         sessionStorage.removeItem('submittedFromHomePersistData');
@@ -27,11 +43,12 @@ export const useCreatePersonalExpense = (
       if (window.location.pathname !== routes.PERSONAL) {
         navigate(routes.PERSONAL);
       }
-      await invalidateQueryKeys(queryClient, [
-        'personalExpenses',
-        'userTotals',
-        'cumulativeArray',
-      ]);
+      // A kept expense changed nothing on the server yet; the sync refreshes once it has.
+      if (outcome === 'sent') {
+        await refreshAfterNewTransactions(queryClient, [
+          { kind: 'personalExpense' },
+        ]);
+      }
     },
     onError: (err) => {
       const error = err as AxiosError;
@@ -45,13 +62,4 @@ export const useCreatePersonalExpense = (
       setIsSubmitting(false);
     },
   });
-};
-
-const createPersonalExpense = async (
-  req: PersonalExpenseRequest
-): Promise<void> => {
-  await apiClient.post<void, AxiosResponse<void>>(
-    '/expenses/create-personal',
-    req
-  );
 };

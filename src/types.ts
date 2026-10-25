@@ -45,8 +45,29 @@ export type VerifyAccountEmailRequest = {
   code: string;
 };
 
+/**
+ * Mirrors the server's PushDeviceKind enum. The API has no string-enum converter, so these cross the
+ * wire as the numbers the server's enum actually is — naming them here keeps that off the call sites.
+ */
+export const PushDeviceKind = {
+  WebPush: 0,
+  Fcm: 1,
+} as const;
+
 export type SendGoogleCodeRequest = {
   code: string;
+};
+
+/**
+ * The native app's equivalent of SendGoogleCodeRequest. Google's Android sheet returns a signed
+ * identity token outright, so there is no code to redeem and no redirect to come back from.
+ */
+export type SendGoogleIdTokenRequest = {
+  idToken: string;
+};
+
+export type SendGoogleAccessTokenResponse = {
+  accessToken: string;
 };
 
 export type UserInfo = {
@@ -82,6 +103,97 @@ export type GetNotificationsResponse = {
 
 export type SetPushNotificationsEnabledRequest = {
   enabled: boolean;
+};
+
+/**
+ * Mirrors the server's DonationKind enum. The API has no string-enum converter, so these cross the
+ * wire as the numbers the server's enum actually is — naming them here keeps that off the call sites.
+ */
+export const DonationTierKind = {
+  OneTime: 0,
+  Monthly: 1,
+} as const;
+
+export type DonationTierKindValue =
+  (typeof DonationTierKind)[keyof typeof DonationTierKind];
+
+/**
+ * One tier as the server describes it. Carries no price: Google Play sets prices per country and
+ * the device reads them from Play, so the server has nothing to say about what anyone pays.
+ */
+export type DonationProduct = {
+  /** Play in-app product id. Must exist in the Play Console under exactly this id. */
+  productId: string;
+  kind: DonationTierKindValue;
+  /** Play needs this to know which plan of a subscription to bill. Null for a one-off. */
+  basePlanId: string | null;
+};
+
+/** A tier once Play has said what it costs here. This is what the form actually renders. */
+export type DonationTier = DonationProduct & {
+  /** Play's own formatting, in the buyer's currency and locale. Shown verbatim. */
+  priceString: string;
+  price: number;
+  currencyCode: string;
+  /** Identifies the specific offer to bill, when Play returns one. */
+  offerToken?: string;
+};
+
+/**
+ * "Other amount": one Play product per amount from `stepMinor` up to `maxMinor` (one-off) or
+ * `monthlyMaxMinor` (monthly) in steps of `stepMinor`, named by appending the amount in minor units
+ * to a prefix (1700 for 17). The form builds the id for whatever was typed and asks Play for that
+ * product alone.
+ */
+export type DonationCustomAmount = {
+  maxMinor: number;
+  /** Zero when typed amounts can only be one-off. */
+  monthlyMaxMinor: number;
+  stepMinor: number;
+  oneTimeProductPrefix: string;
+  monthlyProductPrefix: string;
+  monthlyBasePlanId: string;
+};
+
+/**
+ * Whether to ask this person for a contribution, and what to ask for. `shouldAsk` is the server's
+ * decision and the client never overrides it upwards — the client only ever declines to show a
+ * prompt it was cleared to show, never the reverse.
+ */
+export type DonationPromptInfo = {
+  shouldAsk: boolean;
+  /** False when the server has no Google Play credentials. Hides every donation entry point. */
+  isAvailable: boolean;
+  products: DonationProduct[];
+  /** Null when the server has "Other amount" switched off. */
+  customAmount: DonationCustomAmount | null;
+  hasDonated: boolean;
+  hasActiveMonthly: boolean;
+};
+
+/**
+ * A purchase the app has just made, for the server to verify. Deliberately carries no amount: what
+ * was paid is Play's to report, and a client-stated figure is exactly the thing not to trust.
+ */
+export type RegisterDonationPurchaseRequest = {
+  productId: string;
+  purchaseToken: string;
+};
+
+export type DismissDonationPromptRequest = {
+  /** True only for an explicit "don't ask again". A plain "not now" sends false. */
+  optOut: boolean;
+};
+
+export type ExpenseItem = {
+  id: string;
+  date: string;
+  description: string;
+  amount: number;
+  currency: string;
+  shareAmount: number;
+  location: GeoLocation | undefined;
+  labels: string[];
 };
 
 export type TransferItem = {
@@ -566,6 +678,8 @@ export type NonGroupParticipant = {
 };
 
 export type Transfer = {
+  /** Picked by the app so a settle-up sent twice is stored once. */
+  transferId?: string;
   description: string;
   amount: number;
   currency: string;
@@ -580,6 +694,8 @@ export type CreateTransfersRequest = {
 };
 
 export type CreateTransferRequest = {
+  /** Picked by the app so a transfer sent twice is stored once. */
+  transferId?: string;
   groupId?: string;
   description: string;
   amount: number;
@@ -886,3 +1002,56 @@ export enum BudgetScope {
   NonGroup = 2,
   Group = 4,
 }
+
+export type ExpensesExportRequest = {
+  /** Calendar days in the user's time zone, as yyyy-MM-dd. */
+  startDate: string;
+  endDate: string;
+  /** BudgetScope flags, combined. */
+  scope: number;
+  /** Empty means every group. */
+  targetGroupIds: string[];
+};
+
+export type ExportParticipant = {
+  name: string;
+  /** The person the report is for, so the file can say "you". */
+  isYou: boolean;
+  amount: number;
+};
+
+/**
+ * One expense with every id already resolved to something readable, since the file it ends up in
+ * cannot look anything up later.
+ */
+export type ExportExpenseItem = {
+  id: string;
+  occurred: string;
+  description: string;
+  type: TransactionType;
+  groupId: string | null;
+  groupName: string | null;
+  currency: string;
+  /** The whole expense, whoever paid it. */
+  amount: number;
+  /** The user's part of it; zero when they only paid for others. */
+  yourShare: number;
+  /** What the user put in; zero when someone else covered them. */
+  youPaid: number;
+  /** The same in the user's preferred currency at that day's rate, or null when rates were unavailable. */
+  yourShareConverted: number | null;
+  youPaidConverted: number | null;
+  paidBy: ExportParticipant[];
+  splitWith: ExportParticipant[];
+  labels: string[];
+  place: string | null;
+  isRecurring: boolean;
+};
+
+export type ExpensesExportResponse = {
+  /** The preferred currency the converted figures are in. */
+  currency: string;
+  timeZone: string;
+  /** Oldest first. */
+  expenses: ExportExpenseItem[];
+};

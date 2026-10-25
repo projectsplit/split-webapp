@@ -40,7 +40,19 @@ export const StyledSelectionButton = styled.div`
     gap: ${({ theme }) => theme.space.s4};
   }
 
+  .destinationTitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s8};
+    min-width: 0;
+  }
+
   .destinationName {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: ${({ theme }) => theme.size.s15};
     font-weight: ${({ theme }) => theme.weight.medium};
   }

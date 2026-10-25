@@ -1,5 +1,8 @@
 import { DeleteExpenseConfirmationProps } from '../../../interfaces';
 import Confirmation from './Confirmation';
+import { onlineManager } from '@tanstack/react-query';
+import { needsConnectionMessage } from '@/api/offline/connectivity';
+import { showGlobalWarning } from '@/components/GlobalWarning/globalWarningState';
 import { useDeleteExpenseMutation } from '@/api/auth/CommandHooks/useDeleteExpenseMutation';
 
 export default function DeleteExpenseConfirmation({
@@ -18,6 +21,13 @@ export default function DeleteExpenseConfirmation({
 
   const handleDelete = () => {
     if (!expenseId) return;
+
+    if (!onlineManager.isOnline()) {
+      menu.value = null;
+      showGlobalWarning(needsConnectionMessage('Deleting an expense'));
+      return;
+    }
+
     deleteExpense(expenseId);
   };
 

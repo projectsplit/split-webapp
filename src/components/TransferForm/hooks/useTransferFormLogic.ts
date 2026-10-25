@@ -107,7 +107,13 @@ export const useTransferFormLogic = ({
   const {
     mutate: createNonGroupTransferMutation,
     isPending: isNonGroupTransferPending,
-  } = useCreateNonGroupTransfer(menu, navigate, isSubmitting, showWarning);
+  } = useCreateNonGroupTransfer(
+    menu,
+    navigate,
+    isSubmitting,
+    showWarning,
+    nonGroupMenu
+  );
 
   const createTransferMutation = isNonGroup
     ? createNonGroupTransferMutation

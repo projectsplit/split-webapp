@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { tokens } from '../../styles/tokens';
 import { useQueryClient } from '@tanstack/react-query';
 import Transfer from '../../components/Transfer/Transfer';
@@ -29,6 +29,17 @@ import { NoTransfersFound } from './NoTransfersFound/NoTransfersFound';
 import { FiltersAndBars } from './FiltersAndBars/FiltersAndBars';
 import { useTransferTotals } from './hooks/useTransferTotals';
 import { useCloseOnBack } from '@/hooks/useCloseOnBack';
+import {
+  PendingTransaction,
+  pendingTransactions,
+} from '@/api/offline/pendingTransactions';
+import {
+  pendingName,
+  pendingTransferRowsFor,
+} from '@/api/offline/pendingTransactionItems';
+import PendingTransactionAnimation from '../../components/Animations/PendingTransactionAnimation';
+import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
+import { hasActiveTransferFilters } from '@/helpers/hasActiveTransferFilters';
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
@@ -51,6 +62,8 @@ const Transfers: React.FC = () => {
   const selectedTransfer = useSignal<TransferResponseItem | null>(null);
   const longPressTransfer = useSignal<TransferResponseItem | null>(null);
   const longPressMenu = useSignal<string | null>(null);
+  const pendingMenu = useSignal<string | null>(null);
+  const selectedPending = useSignal<PendingTransaction | null>(null);
   useCloseOnBack(
     !!selectedTransfer.value,
     () => (selectedTransfer.value = null)
@@ -70,6 +83,7 @@ const Transfers: React.FC = () => {
     hasNextPage,
     isFetchingNextPage,
     isPending,
+    isPaused,
     hasPreviousPage,
   } = useTransferList(mode, group, transferParsedFilters, pageSize, timeZoneId);
 
@@ -86,9 +100,32 @@ const Transfers: React.FC = () => {
     }))
   );
 
+  // By the session's own id: offline, the profile it would otherwise come from may not be saved.
+  const allPending = pendingTransactions.value;
+  const signedInUserId = getSignedInUserId() ?? undefined;
+  const pendingRows = useMemo(() => {
+    const listedIds = new Set(transfers?.map((x) => x.id));
+
+    return (
+      pendingTransferRowsFor(allPending, signedInUserId, mode, group?.id)
+        // Sent, and already back in the list from the server: its copy is the one to show.
+        .filter((x) => !listedIds.has(x.id))
+    );
+  }, [allPending, signedInUserId, mode, group?.id, transfers]);
+
+  const openPending = useCallback(
+    (transaction: PendingTransaction) => {
+      selectedPending.value = transaction;
+      pendingMenu.value = 'pendingTransaction';
+    },
+    [selectedPending, pendingMenu]
+  );
+
+  // Offline with nothing saved, the list never loads, and the bar's add button is how a transfer
+  // gets recorded for later.
   useEffect(() => {
-    showBottomBar.value = !isPending;
-  }, [isPending, showBottomBar]);
+    showBottomBar.value = !isPending || isPaused;
+  }, [isPending, isPaused, showBottomBar]);
 
   const {
     userTotalSentByCurr,
@@ -98,13 +135,19 @@ const Transfers: React.FC = () => {
     totalsAreFetching,
   } = useTransferTotals(group, mode, userInfo, transferParsedFilters);
 
-  if (isPending) {
+  if (isPending && !isPaused) {
     return (
       <div className="spinner">
         <Spinner />
       </div>
     );
   }
+
+  // Above the newest transfers, so not over search results or a page that starts further back.
+  const showPending =
+    pendingRows.length > 0 &&
+    !hasPreviousPage &&
+    !hasActiveTransferFilters(transferParsedFilters.value);
 
   return (
     <StyledTransactionsPage>
@@ -122,13 +165,45 @@ const Transfers: React.FC = () => {
         />
       )}
       <div className="scroll-area" ref={scrollAreaRef}>
-        {!transfers || transfers.length === 0 ? (
-          <NoTransfersFound
-            transferParsedFilters={transferParsedFilters}
-            allParticipants={allParticipants}
-            group={group}
-            queryClient={queryClient}
-          />
+        {showPending && (
+          <div className="same-date-container">
+            <div className="date-only">Not synced yet</div>
+            <div className="rows">
+              {pendingRows.map((row) => (
+                <Transfer
+                  key={row.id}
+                  onClick={() => openPending(row.pending)}
+                  transfer={{
+                    amount: row.amount,
+                    currency: row.currency,
+                    date: row.occurred,
+                    description: row.description,
+                    id: row.id,
+                    senderName: pendingName(row.pending, row.senderId),
+                    receiverName: pendingName(row.pending, row.receiverId),
+                  }}
+                  timeZoneId={timeZoneId}
+                  pendingState={row.pending.rejection ? 'rejected' : 'waiting'}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+        {isPending ? (
+          <div className="offlineNote">
+            {showPending
+              ? "The rest of the list will load once you're back online."
+              : "You're offline. This list will load once you're back online."}
+          </div>
+        ) : !transfers || transfers.length === 0 ? (
+          showPending ? null : (
+            <NoTransfersFound
+              transferParsedFilters={transferParsedFilters}
+              allParticipants={allParticipants}
+              group={group}
+              queryClient={queryClient}
+            />
+          )
         ) : (
           <>
             {Object.entries(
@@ -225,6 +300,12 @@ const Transfers: React.FC = () => {
       <ErrorMenuAnimation
         menu={menu}
         type="transfer"
+      />
+      <MenuAnimationBackground menu={pendingMenu} />
+      <PendingTransactionAnimation
+        menu={pendingMenu}
+        transaction={selectedPending.value}
+        timeZoneId={timeZoneId}
       />
       <GroupTotalsByCurrencyAnimation
         menu={menu}

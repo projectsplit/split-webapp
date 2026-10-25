@@ -67,6 +67,8 @@ export interface ExpenseProps {
   userAmount: number;
   labels: Label[];
   mode: Mode;
+  /** Set for an expense filed on this device that the server has not confirmed yet. */
+  pendingState?: 'waiting' | 'rejected';
 }
 
 export interface MapsInfoBoxProps {
@@ -131,6 +133,8 @@ export interface TransferProps {
   timeZoneId: string;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onLongPress?: () => void;
+  /** Set for a transfer recorded on this device that the server has not confirmed yet. */
+  pendingState?: 'waiting' | 'rejected';
 }
 
 export interface DateTimePickerProps {
@@ -278,6 +282,8 @@ export interface ReceivedMoreThanSpentMessageProps extends OnTrackMessageProps {
 export interface SelectionButtonProps {
   children: any;
   name: string;
+  /** A mark shown after the name, such as the Plus badge. */
+  badge?: React.ReactNode;
   meta?: React.ReactNode;
   footer?: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -418,6 +424,8 @@ export interface TopMenuProps {
   openGroupOptionsMenu: Signal<boolean>;
   groupIsArchived: boolean;
   confirmUnarchiveMenu: Signal<string | null>;
+  // Shows the Support Buqs button beside the bell when given.
+  onSupportClick?: () => void;
 }
 
 export interface ToggleSwitchProps {
@@ -637,6 +645,8 @@ export interface PropertyListProps {
 
 export interface PropertyRowProps {
   label: React.ReactNode;
+  /** A glyph before the label, for rows that lead somewhere. */
+  icon?: React.ReactNode;
   children?: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   className?: string;
@@ -767,6 +777,9 @@ export interface InputMonetaryProps extends React.InputHTMLAttributes<HTMLInputE
   $inputError?: boolean;
   currencyMenu: Signal<React.SetStateAction<string | null>>;
   selectedCurrency: Currency | undefined;
+  // Where the operator bar goes while the amount is being typed. Without one, the field still
+  // works out sums typed with a keyboard's own operator keys, but shows no bar.
+  calculatorBarHost?: HTMLElement | null;
 }
 
 export interface ConfirmationProps {
@@ -1067,6 +1080,8 @@ export interface AnalyticsSelectionAnimationProps {
 
 export interface TopBarWithBackButtonProps {
   header: string;
+  /** A mark shown after the title, such as the Plus badge. */
+  badge?: React.ReactNode;
   onClick: MouseEventHandler<HTMLDivElement>;
 }
 

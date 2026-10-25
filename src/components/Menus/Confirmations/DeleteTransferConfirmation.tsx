@@ -1,5 +1,8 @@
 import { DeleteTransferConfirmationProps } from '../../../interfaces';
 import Confirmation from './Confirmation';
+import { onlineManager } from '@tanstack/react-query';
+import { needsConnectionMessage } from '@/api/offline/connectivity';
+import { showGlobalWarning } from '@/components/GlobalWarning/globalWarningState';
 import { useDeleteTransferMutation } from '@/api/auth/CommandHooks/useDeleteTransferMutation';
 
 export default function DeleteTransferConfirmation({
@@ -17,6 +20,13 @@ export default function DeleteTransferConfirmation({
 
   const handleDelete = () => {
     if (!transferId) return;
+
+    if (!onlineManager.isOnline()) {
+      menu.value = null;
+      showGlobalWarning(needsConnectionMessage('Deleting a transfer'));
+      return;
+    }
+
     deleteTransfer(transferId);
   };
 

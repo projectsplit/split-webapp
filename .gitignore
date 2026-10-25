@@ -22,6 +22,25 @@ dev-dist/
 # Personal Claude Code settings
 .claude/settings.local.json
 
+### Capacitor / Android ###
+# The native project is committed, but everything Gradle or `cap sync` regenerates is not.
+android/.gradle/
+android/.idea/
+android/build/
+android/app/build/
+android/local.properties
+android/capacitor-cordova-android-plugins/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/app/release/
+
+# Upload signing key. Losing this means never being able to update the Play listing again, and
+# committing it means anyone who clones the repo can publish as us. Back it up outside git.
+*.jks
+*.keystore
+android/keystore.properties
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json

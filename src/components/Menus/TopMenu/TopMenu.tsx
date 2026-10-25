@@ -4,6 +4,7 @@ import UserOptionsButton from '../../UserOptionsButton/UserOptionsButton';
 import { StyledTopMenu } from './TopMenu.styled';
 import { useState } from 'react';
 import IonIcon from '@reacticons/ionicons';
+import ConnectionStatus from '../../ConnectionStatus/ConnectionStatus';
 
 export default function TopMenu({
   title,
@@ -13,6 +14,7 @@ export default function TopMenu({
   openGroupOptionsMenu,
   groupIsArchived,
   confirmUnarchiveMenu,
+  onSupportClick,
 }: TopMenuProps) {
   const [visuallyShowNotification, setVisuallyShowNotification] =
     useState<boolean>(true);
@@ -40,7 +42,19 @@ export default function TopMenu({
         >
           {title}
         </div>
+        <ConnectionStatus />
       </div>
+
+      {onSupportClick && (
+        <button
+          type="button"
+          className="supportButton"
+          onClick={onSupportClick}
+        >
+          <IonIcon name="heart-outline" className="heart" />
+          Support Buqs
+        </button>
+      )}
 
       <div className="slot right">
         {isInGroup ? (

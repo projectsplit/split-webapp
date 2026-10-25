@@ -6,7 +6,14 @@ interface StyledLocationPickerProps {
 }
 export const StyledLocationPicker = styled.div<StyledLocationPickerProps>`
   .main {
+    position: relative;
     cursor: pointer;
+
+    .plusMark {
+      position: absolute;
+      top: -6px;
+      right: -7px;
+    }
     .closeButtonWrapper {
       display: flex;
       align-items: center;

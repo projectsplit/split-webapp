@@ -19,7 +19,10 @@ import CreateAccount from './pages/CreateAccount/CreateAccount';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
 import Spinner from './components/Spinner/Spinner';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt/PwaInstallPrompt';
+import { useAndroidBackButton } from './hooks/useAndroidBackButton';
+import AppUrlListener from './components/AppUrlListener';
 import {
+  
   Group,
   NonGroup,
   Expenses,
@@ -33,6 +36,9 @@ import {
   Personal,
   ManageBudgets,
   RecurringExpenses,
+  ExportExpenses,
+  PrivacyPolicy,
+  AccountDeletion,
 } from './lazyRoutes';
 
 const SuspenseFallback = () => (
@@ -50,15 +56,26 @@ const SuspenseFallback = () => (
 );
 
 const App = () => {
+  // Outside the Router on purpose: the back button has to work on the sign-in screens too, and
+  // history is the browser's rather than the router's.
+  useAndroidBackButton();
+
   return (
     <>
       <Router>
+        {/* Inside the Router because it navigates, and above Routes so an invitation link is
+            handled whichever screen the app happens to be showing. */}
+        <AppUrlListener />
         <Suspense fallback={<SuspenseFallback />}>
           <Routes>
             <Route path={routes.AUTH} element={<Auth />} />
             <Route path={routes.CREATE} element={<CreateAccount />} />
             <Route path={routes.GOOGLE_REDIRECT} element={<GoogleCallback />} />
             <Route path={routes.RESET_PASSWORD} element={<ResetPassword />} />
+            {/* Public, and they have to stay that way: Google Play links to both from the store
+                listing, and someone who cannot sign in is exactly who needs the second. */}
+            <Route path={routes.PRIVACY} element={<PrivacyPolicy />} />
+            <Route path={routes.DELETE_ACCOUNT} element={<AccountDeletion />} />
             <Route element={<Protected />}>
               <Route path={routes.ROOT} element={<Home />} />
               <Route path={routes.JOIN} element={<Home />} />
@@ -92,6 +109,8 @@ const App = () => {
                 path={routes.RECURRING_EXPENSES}
                 element={<RecurringExpenses />}
               />
+
+              <Route path={routes.EXPORT} element={<ExportExpenses />} />
 
               <Route
                 path={`${routes.ANALYTICS}/*`}

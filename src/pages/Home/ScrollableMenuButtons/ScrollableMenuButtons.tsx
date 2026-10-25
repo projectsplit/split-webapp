@@ -21,6 +21,7 @@ import { BudgetBars } from '@/components/BudgetBars/BudgetBars';
 import { elapsedPercent } from '@/helpers/budgetProgress';
 import { Frequency } from '@/types';
 import routes from '@/routes';
+import PlusBadge from '@/components/Plus/PlusBadge';
 
 export default function ScrollableMenuButtons({
   mostRecentGroupDataIsFetching,
@@ -139,6 +140,7 @@ export default function ScrollableMenuButtons({
 
           <SelectionButton
             name="Analytics"
+            badge={<PlusBadge opensInfo />}
             onClick={() => navigate(routes.ANALYTICS)}
           >
             <BsBarChartFill />
@@ -146,6 +148,7 @@ export default function ScrollableMenuButtons({
 
           <SelectionButton
             name="Budgeting"
+            badge={<PlusBadge opensInfo />}
             onClick={() => navigate(routes.BUDGET)}
             footer={showBudget ? budgetMeta : undefined}
           >

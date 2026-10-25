@@ -1,20 +1,33 @@
 import {
+  DismissDonationPromptRequest,
+  DonationPromptInfo,
   PasswordSignInRequest,
   PasswordSignUpRequest,
   RefreshTokenResponse,
   RequestPasswordResetRequest,
+  RegisterDonationPurchaseRequest,
   RequestUsernameRecoveryRequest,
   ResetPasswordRequest,
   SendGoogleCodeRequest,
+  SendGoogleIdTokenRequest,
   SetAccountEmailRequest,
   SetPushNotificationsEnabledRequest,
   VerifyAccountEmailRequest,
 } from '../../types';
+import { AxiosResponse } from 'axios';
 import { apiClient, authApiClient } from '../apiClients';
 
 export const sendGoogleAccessToken = async (request: SendGoogleCodeRequest) => {
   const response = await authApiClient.post<SendGoogleCodeRequest, any>(
     '/auth/external/google/token',
+    request
+  );
+  return response.data;
+};
+
+export const sendGoogleIdToken = async (request: SendGoogleIdTokenRequest) => {
+  const response = await authApiClient.post<SendGoogleIdTokenRequest, any>(
+    '/auth/external/google/id-token',
     request
   );
   return response.data;
@@ -72,12 +85,44 @@ export const setPushNotificationsEnabled = async (
   return response.data;
 };
 
+export const getDonationPrompt = async () => {
+  const response = await apiClient.get<void, AxiosResponse<DonationPromptInfo>>(
+    '/donations/prompt'
+  );
+  return response.data;
+};
+
+export const recordDonationPromptShown = async () => {
+  const response = await apiClient.post('/donations/prompt/shown', {});
+  return response.data;
+};
+
+export const dismissDonationPrompt = async (
+  request: DismissDonationPromptRequest
+) => {
+  const response = await apiClient.post('/donations/prompt/dismiss', request);
+  return response.data;
+};
+
+export const registerDonationPurchase = async (
+  request: RegisterDonationPurchaseRequest
+) => {
+  const response = await apiClient.post('/donations/purchase', request);
+  return response.data;
+};
+
 export const logOut = async () => {
   const response = await authApiClient.post('/auth/log-out', {});
   return response.data;
 };
 
 export const refreshToken = async (): Promise<RefreshTokenResponse> => {
-  const response = await authApiClient.post('/auth/refresh', {});
+  // Every request waits on this one, so on a connection that has stalled it must give up in good
+  // time rather than hold them all.
+  const response = await authApiClient.post(
+    '/auth/refresh',
+    {},
+    { timeout: 15_000 }
+  );
   return response.data;
 };

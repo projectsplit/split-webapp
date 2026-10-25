@@ -12,6 +12,7 @@ interface InputAndErrorsWrapperProps {
   data: Pick<TransferState, 'currencySymbol' | 'errors'>;
   actions: Pick<TransferState, 'setAmount' | 'setError'>;
   handleInputBlur: () => void;
+  calculatorBarHost: HTMLElement | null;
 }
 
 export const InputAndErrorsWrapper = ({
@@ -20,6 +21,7 @@ export const InputAndErrorsWrapper = ({
   data,
   actions,
   handleInputBlur,
+  calculatorBarHost,
 }: InputAndErrorsWrapperProps) => {
 
   const allCurrencies = useSignal<Currency[]>(currencyData);
@@ -47,6 +49,7 @@ export const InputAndErrorsWrapper = ({
         selectedCurrency={selectedCurrency}
         autoFocus={true}
         $inputError={data.errors.showAmountError && !!data.errors.amountError}
+        calculatorBarHost={calculatorBarHost}
       />
       <span className="errorMsg">
         {data.errors.showAmountError && data.errors.amountError

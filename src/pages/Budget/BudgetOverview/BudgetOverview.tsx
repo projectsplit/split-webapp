@@ -8,6 +8,7 @@ import { useDeleteBudget } from '@/api/auth/CommandHooks/useDeleteBudget';
 import PropertyList, { PropertyRow } from '@/components/ListForms/PropertyList';
 import ItemCard from '@/components/ListForms/ItemCard';
 import Spinner from '@/components/Spinner/Spinner';
+import { Shimmer } from '@/components/Animations/Shimmer/Shimmer';
 import BackButton from '@/components/BackButton/BackButton';
 import { BudgetInfoMessage } from '@/components/BudgetMessages/BudgetInfoMessage';
 import MenuAnimationBackground from '@/components/Animations/MenuAnimationBackground';
@@ -32,7 +33,8 @@ export const BudgetOverview = () => {
   const timeZoneId = userInfo?.timeZone;
 
   const { data, isPending } = useBudgetInfo();
-  const { data: inactiveBudgetsData } = useGetInactiveBudgetInfo();
+  const { data: inactiveBudgetsData, isPending: isInactivePending } =
+    useGetInactiveBudgetInfo();
   const { mutate: deleteBudget, isPending: isDeleting } = useDeleteBudget(
     menu,
     errorMessage
@@ -48,11 +50,34 @@ export const BudgetOverview = () => {
 
   const budgetCount =
     (data?.id ? 1 : 0) + (inactiveBudgetsData?.budgets?.length ?? 0);
+  // Decided only once the inactive budgets have loaded, so the row never offers Create and then
+  // turns into Manage.
+  const hasNoBudgets = !data?.id && inactiveBudgetsData?.budgets?.length === 0;
 
   const formatDay = (iso?: string) =>
     iso ? DateTime.fromISO(iso, { zone: timeZoneId }).toFormat('d LLL') : '';
 
-  const manageRow = (
+  // With no budgets at all, Manage would open an empty list whose only use is its create button.
+  const budgetsRow = isInactivePending ? (
+    <ItemCard className="manageRow">
+      <div className="manageLabel rowShimmer">
+        Manage budgets
+        <Shimmer width="120px" height="12px" borderRadius="6px" />
+      </div>
+    </ItemCard>
+  ) : hasNoBudgets ? (
+    <ItemCard
+      className="manageRow"
+      onClick={() =>
+        navigate(routes.BUDGET_CREATE, { state: { fromOverview: true } })
+      }
+    >
+      <div className="manageLabel">Create new budget</div>
+      <span className="manageChevron">
+        <IonIcon name="chevron-forward-outline" />
+      </span>
+    </ItemCard>
+  ) : (
     <ItemCard className="manageRow" onClick={() => navigate(routes.BUDGET_MANAGE)}>
       <div className="manageLabel">Manage budgets</div>
       <div className="manageMeta">
@@ -93,13 +118,22 @@ export const BudgetOverview = () => {
         <div className="budgetScroll">
           <div className="emptyState">
             <div className="emptyTitle">No active budget</div>
-            <div className="emptyNote">
-              {budgetCount > 0
-                ? 'Turn one on from Manage budgets to start tracking your spending against a cap.'
-                : 'Create a budget to start tracking your spending against a cap.'}
-            </div>
+            {/* Which note fits depends on the inactive budgets, so shimmer until they arrive
+                rather than leave the card half empty. */}
+            {isInactivePending ? (
+              <div className="emptyNote noteShimmer">
+                <Shimmer height="11px" borderRadius="6px" />
+                <Shimmer width="62%" height="11px" borderRadius="6px" />
+              </div>
+            ) : (
+              <div className="emptyNote">
+                {budgetCount > 0
+                  ? 'Turn one on from Manage budgets to start tracking your spending against a cap.'
+                  : 'Create a budget to start tracking your spending against a cap.'}
+              </div>
+            )}
           </div>
-          {manageRow}
+          {budgetsRow}
         </div>
       </StyledBudgetOverview>
     );
@@ -169,7 +203,7 @@ export const BudgetOverview = () => {
           </PropertyRow>
         </PropertyList>
 
-        {manageRow}
+        {budgetsRow}
       </div>
 
       <MenuAnimationBackground menu={menu} />

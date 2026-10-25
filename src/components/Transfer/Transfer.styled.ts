@@ -54,6 +54,23 @@ export const StyledTransfer = styled(StyledTransactionCard)`
     line-height: 16px;
   }
 
+  .pendingState {
+    display: flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s4};
+    flex-shrink: 0;
+  }
+
+  .pendingState.rejected {
+    color: ${({ theme }) => theme.direction.owe};
+  }
+
+  .pendingIcon {
+    display: block;
+    flex-shrink: 0;
+    font-size: ${({ theme }) => theme.size.s13};
+  }
+
   .dot {
     color: ${({ theme }) => theme.surface.dot};
     flex-shrink: 0;

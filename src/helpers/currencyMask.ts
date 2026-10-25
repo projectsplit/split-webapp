@@ -110,7 +110,11 @@ export const currencyMask = (
     Math.min(newCursorPosition, input.value.length)
   );
 
-  input.setSelectionRange(newCursorPosition, newCursorPosition);
+  // The amount field also reformats after it loses focus, when it turns a sum into its result,
+  // and a field without focus has no caret to place.
+  if (input === document.activeElement) {
+    input.setSelectionRange(newCursorPosition, newCursorPosition);
+  }
 
   return e;
 };

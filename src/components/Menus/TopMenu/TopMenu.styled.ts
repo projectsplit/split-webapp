@@ -42,9 +42,12 @@ export const StyledTopMenu = styled.div`
     flex: 1;
     min-width: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s2};
 
     .title {
+      max-width: 100%;
       font-size: ${({ theme }) => theme.size.s17};
       font-weight: ${({ theme }) => theme.weight.semibold};
       letter-spacing: -0.01em;
@@ -55,6 +58,29 @@ export const StyledTopMenu = styled.div`
 
     .title.archived {
       color: ${({ theme }) => theme.state.locked};
+    }
+  }
+
+  .supportButton {
+    display: flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s6};
+    flex-shrink: 0;
+    height: 30px;
+    padding: ${({ theme }) => `0 ${theme.space.s12}`};
+    border: 1px solid ${({ theme }) => theme.accent.you.tintBorder};
+    border-radius: ${({ theme }) => theme.radius.pill};
+    background-color: ${({ theme }) => theme.accent.you.tint};
+    color: ${({ theme }) => theme.accent.you.ink};
+    font-family: inherit;
+    font-size: ${({ theme }) => theme.size.s13};
+    font-weight: ${({ theme }) => theme.weight.medium};
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    .heart {
+      font-size: ${({ theme }) => theme.size.s14};
     }
   }
 

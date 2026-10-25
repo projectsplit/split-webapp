@@ -109,6 +109,20 @@ export const tokens = {
     locked: '#C08A4E',
   },
 
+  /* The Plus mark. Deliberately not the pink "you" accent: Plus is a product, not a person, and
+     it should read as quiet metal against the dark surfaces rather than as another highlight. */
+  plus: {
+    ink: '#FFFFFF',
+    inkSoft: '#C7C7CC',
+    fillTop: '#2C2C33',
+    fillBottom: '#17171B',
+    edgeStrong: 'rgba(255, 255, 255, 0.42)',
+    edgeSoft: 'rgba(255, 255, 255, 0.08)',
+    edgeMid: 'rgba(255, 255, 255, 0.2)',
+    sheen: 'rgba(255, 255, 255, 0.1)',
+    glow: 'rgba(255, 255, 255, 0.06)',
+  },
+
   shadow: {
     dialog: '0 14px 32px rgba(0, 0, 0, 0.6)',
     sheet: '0 -4px 24px rgba(0, 0, 0, 0.25)',

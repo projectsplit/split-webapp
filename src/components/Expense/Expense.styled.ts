@@ -44,6 +44,23 @@ export const StyledExpense = styled(StyledTransactionCard)`
     color: ${({ theme }) => theme.accent.group.ink};
   }
 
+  .pendingState {
+    display: flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s4};
+    flex-shrink: 0;
+  }
+
+  .pendingState.rejected {
+    color: ${({ theme }) => theme.direction.owe};
+  }
+
+  .pendingIcon {
+    display: block;
+    flex-shrink: 0;
+    font-size: ${({ theme }) => theme.size.s13};
+  }
+
   .locationIcon {
     display: block;
     flex-shrink: 0;

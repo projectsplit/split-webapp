@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Currency, PickerMember, UserInfo } from '@/types';
+import { Currency, ExpenseRequest, PickerMember, UserInfo } from '@/types';
 import MenuAnimationBackground from '@/components/Animations/MenuAnimationBackground';
 import CurrencyOptionsAnimation from '@/components/Animations/CurrencyOptionsAnimation';
 import InputMonetary from '@/components/InputMonetary/InputMonetary';
@@ -29,6 +29,8 @@ import { useLabels } from '@/api/auth/QueryHooks/useGetLabels';
 import { useCreateRecurringExpense } from '@/api/auth/CommandHooks/useCreateRecurringExpense';
 import { useEditRecurringExpense } from '@/api/auth/CommandHooks/useEditRecurringExpense';
 import ScheduleDisplay from './components/ScheduleDisplay/ScheduleDisplay';
+import { onlineManager } from '@tanstack/react-query';
+import { needsConnectionMessage } from '@/api/offline/connectivity';
 
 export default function ExpenseForm({
   groupMembers,
@@ -119,6 +121,9 @@ export default function ExpenseForm({
     warningMenu.value = 'generalWarning';
   };
 
+  const [calculatorBarHost, setCalculatorBarHost] =
+    useState<HTMLDivElement | null>(null);
+
   const isMapOpen = useSignal<boolean>(false);
   const isDateShowing = useSignal<boolean>(!isCreateExpense);
   const labelMenuIsOpen = useSignal<boolean>(false);
@@ -208,15 +213,38 @@ export default function ExpenseForm({
     menu.value = null;
   }, showWarning);
 
+  // Only a new one-off expense can be kept on the phone until there is a connection. A change to
+  // one the server already has, or a series the server schedules, has to reach it there and then.
+  const whenOnline =
+    <T,>(action: string, mutate: (request: T) => void) =>
+    (request: T) => {
+      if (!onlineManager.isOnline()) {
+        inputs.setIsSubmitting(false);
+        showWarning(needsConnectionMessage(action));
+        return;
+      }
+
+      mutate(request);
+    };
+
   const onSubmit = () => {
     inputs.submitExpense({
       groupId,
       timeZoneId,
       isDatePicked: isDateShowing.value,
       createExpenseMutation,
-      editExpenseMutation: editExpenseMutation as any,
-      createRecurringExpenseMutation,
-      editRecurringExpenseMutation,
+      editExpenseMutation: whenOnline(
+        'Changing an expense',
+        editExpenseMutation as (req: ExpenseRequest) => void
+      ),
+      createRecurringExpenseMutation: whenOnline(
+        'Setting up a recurring expense',
+        createRecurringExpenseMutation
+      ),
+      editRecurringExpenseMutation: whenOnline(
+        'Changing a recurring expense',
+        editRecurringExpenseMutation
+      ),
       recurringExpenseId,
       isnonGroupExpense,
       fromPersonal,
@@ -289,6 +317,7 @@ export default function ExpenseForm({
           selectedCurrency={selectedCurrency}
           autoFocus={true}
           $inputError={inputs.showAmountError && !!inputs.amountError}
+          calculatorBarHost={calculatorBarHost}
         />
         <span className="errorMsg">
           {inputs.showAmountError && inputs.amountError
@@ -420,6 +449,8 @@ export default function ExpenseForm({
         timeZoneIdForSchedule={timeZoneId}
         isExistingSeries={!!recurringExpenseId}
       />
+      {/* The amount's operator bar, between the footer and the keyboard */}
+      <div ref={setCalculatorBarHost} />
       <MenuAnimationBackground menu={currencyMenu} />
       <MenuAnimationBackground menu={warningMenu} />
       <CurrencyOptionsAnimation

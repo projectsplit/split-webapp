@@ -5,6 +5,7 @@ import SectionLabel from '../../SectionLabel/SectionLabel';
 import { useGetRecurringExpenses } from '@/api/auth/QueryHooks/useGetRecurringExpenses';
 import { SettingsMenuProps } from '../../../interfaces';
 import { IoClose } from 'react-icons/io5';
+import { FaFileArrowDown, FaHeart, FaRepeat } from 'react-icons/fa6';
 import IonIcon from '@reacticons/ionicons';
 import MyButton from '../../MyButton/MyButton';
 import { StyledUserOptionsButton } from '../../UserOptionsButton/UserOptionsButton.styled';
@@ -27,6 +28,9 @@ import EditUsernameAnimation from '../../Animations/EditUsernameAnimation';
 import EditEmailAnimation from '../../Animations/EditEmailAnimation';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
 import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPushNotificationsEnabled';
+import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
+import SupportMenuAnimation from '../../Animations/SupportMenuAnimation';
+import DeleteAccountAnimation from '../../Animations/DeleteAccountAnimation';
 import {
   isPushSupported,
   PushSubscribeFailure,
@@ -34,6 +38,15 @@ import {
 } from '../../../helpers/pushNotifications';
 import Spinner from '../../Spinner/Spinner';
 import CurrencyFlag from '../../CurrencyFlag/CurrencyFlag';
+import { openPlusInfo } from '../../Plus/plusMenu';
+import PlusBadge from '../../Plus/PlusBadge';
+import LogoutWarningAnimation from '../../Animations/LogoutWarningAnimation';
+import {
+  dropPendingTransactionsOf,
+  pendingTransactions,
+} from '@/api/offline/pendingTransactions';
+import { clearSavedQueryCache } from '@/api/offline/queryCachePersistence';
+import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
 
 const pushFailureMessages: Record<PushSubscribeFailure, string> = {
   unsupported: 'This browser cannot receive push notifications.',
@@ -41,7 +54,7 @@ const pushFailureMessages: Record<PushSubscribeFailure, string> = {
     'Notifications are blocked for this site. Allow them in your browser settings, then try again.',
   'permission-dismissed':
     'The permission prompt was dismissed. Try again and choose Allow.',
-  'not-configured': 'Push notifications are not available on this server.',
+  'not-configured': 'Push notifications are not available yet.',
   failed: 'Could not register this device. Please try again.',
 };
 
@@ -56,6 +69,13 @@ export default function SettingsMenu({
   const timeZoneMenu = useSignal<string | null>(null);
   const editUsernameMenu = useSignal<string | null>(null);
   const editEmailMenu = useSignal<string | null>(null);
+  const supportMenu = useSignal<string | null>(null);
+  const deleteAccountMenu = useSignal<string | null>(null);
+  const logoutWarningMenu = useSignal<string | null>(null);
+
+  // Only fetched to know whether donations are configured at all. An instance with no Google Play
+  // credentials should not show an entry that can only lead to a dead end.
+  const { data: donationInfo } = useGetDonationPrompt(true);
 
   const queryClient = useQueryClient();
 
@@ -86,6 +106,8 @@ export default function SettingsMenu({
   });
 
   const handleLogout = async () => {
+    const userId = getSignedInUserId();
+
     try {
       await unsubscribeFromPush();
     } catch (error) {
@@ -96,9 +118,27 @@ export default function SettingsMenu({
 
     localStorage.removeItem('accessToken');
     sessionStorage.removeItem('submittedFromHomePersistData');
+    // Logging out is a choice to leave nothing behind on this device: the saved screens, and
+    // anything still unsent, which the person was warned about first.
+    if (userId) void dropPendingTransactionsOf(userId);
+    void clearSavedQueryCache();
     navigate(routes.AUTH);
 
     setTimeout(() => queryClient.clear(), 0);
+  };
+
+  const signedInUserId = getSignedInUserId();
+  const unsynced = pendingTransactions.value.filter(
+    (x) => x.userId === signedInUserId
+  );
+
+  const handleLogoutClick = () => {
+    if (unsynced.length > 0) {
+      logoutWarningMenu.value = 'logoutWarning';
+      return;
+    }
+
+    void handleLogout();
   };
 
   const {mutateAsync:setShowBudgetInfo} = useSetShowBudgetInfo();
@@ -236,6 +276,7 @@ export default function SettingsMenu({
           <PropertyList>
             <PropertyRow
               action
+              icon={<FaRepeat />}
               label="Recurring expenses"
               onClick={() => {
                 menu.value = null;
@@ -247,13 +288,89 @@ export default function SettingsMenu({
                 <IonIcon name="chevron-forward-outline" className="rowChevron" />
               </span>
             </PropertyRow>
+
+            <PropertyRow
+              action
+              icon={<FaFileArrowDown />}
+              label="Export expenses"
+              onClick={() => {
+                menu.value = null;
+                navigate(routes.EXPORT);
+              }}
+            >
+              <span className="rowValue">
+                <IonIcon name="chevron-forward-outline" className="rowChevron" />
+              </span>
+            </PropertyRow>
+
+            {/* No glyph of its own: the Plus mark in the label is the symbol. */}
+            <PropertyRow
+              action
+              label={
+                <span className="plusLabel">
+                  Buqs
+                  <PlusBadge />
+                </span>
+              }
+              onClick={openPlusInfo}
+            >
+              <span className="rowValue">
+                <IonIcon name="chevron-forward-outline" className="rowChevron" />
+              </span>
+            </PropertyRow>
+
+            {/* Hidden only when the server has no Google Play credentials, so an instance that
+                cannot take money does not offer to. Otherwise always here, including for someone
+                who turned the prompt off — declining to be asked is not declining to give. */}
+            {donationInfo?.isAvailable && (
+              <PropertyRow
+                action
+                icon={<FaHeart />}
+                label="Support Buqs"
+                onClick={() => (supportMenu.value = 'support')}
+              >
+                <span className="rowValue">
+                  <IonIcon
+                    name="chevron-forward-outline"
+                    className="rowChevron"
+                  />
+                </span>
+              </PropertyRow>
+            )}
           </PropertyList>
         </div>
 
         <div className="logOut">
-          <MyButton variant="secondary" fontSize="15" onClick={handleLogout}>
+          <MyButton
+            variant="secondary"
+            fontSize="15"
+            onClick={handleLogoutClick}
+          >
             Log out
           </MyButton>
+        </div>
+
+        {/* Below Log out and quieter than it, so it is found by someone looking for it and not
+            pressed by someone who was not. Google Play requires it to be reachable from inside
+            the app, and account settings is where anyone would look. */}
+        <div className="accountLinks">
+          <button
+            type="button"
+            className="link"
+            onClick={() => {
+              menu.value = null;
+              navigate(routes.PRIVACY);
+            }}
+          >
+            Privacy policy
+          </button>
+          <button
+            type="button"
+            className="link danger"
+            onClick={() => (deleteAccountMenu.value = 'deleteAccount')}
+          >
+            Delete account
+          </button>
         </div>
 
         <div className="info">
@@ -269,6 +386,23 @@ export default function SettingsMenu({
       <MenuAnimationBackground menu={timeZoneMenu} />
       <MenuAnimationBackground menu={editUsernameMenu} />
       <MenuAnimationBackground menu={editEmailMenu} />
+      <MenuAnimationBackground menu={supportMenu} />
+      <MenuAnimationBackground menu={deleteAccountMenu} />
+      <MenuAnimationBackground menu={logoutWarningMenu} />
+      <SupportMenuAnimation supportMenu={supportMenu} />
+      <LogoutWarningAnimation
+        menu={logoutWarningMenu}
+        unsynced={unsynced}
+        onConfirm={() => {
+          logoutWarningMenu.value = null;
+          void handleLogout();
+        }}
+      />
+      <DeleteAccountAnimation
+        deleteAccountMenu={deleteAccountMenu}
+        username={userInfo?.username}
+        hasActiveMonthly={donationInfo?.hasActiveMonthly}
+      />
       <TimeZoneOptionsAnimation
         timeZoneMenu={timeZoneMenu}
         clickHandler={handldeTimeZoneOptionsClick}

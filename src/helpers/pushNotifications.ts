@@ -1,11 +1,21 @@
 import { AxiosResponse } from 'axios';
 import { apiClient } from '../api/apiClients';
 import { GetVapidPublicKeyResponse } from '../types';
+import { isNativeApp } from './platform';
+import {
+  hasNativePushPermission,
+  subscribeToNativePush,
+  unsubscribeFromNativePush,
+} from './nativePush';
 
 export const isPushSupported = () =>
-  'serviceWorker' in navigator &&
-  'PushManager' in window &&
-  'Notification' in window;
+  // The native shell has no Push API at all — its WebView does not implement it — but it can still
+  // receive notifications, through FCM. Reporting unsupported there would hide the settings toggle
+  // on the one platform where notifications work best.
+  isNativeApp() ||
+  ('serviceWorker' in navigator &&
+    'PushManager' in window &&
+    'Notification' in window);
 
 const urlBase64ToUint8Array = (base64String: string): Uint8Array => {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -39,13 +49,18 @@ export type PushSubscribeFailure =
   | 'not-configured'
   | 'failed';
 
-type PushSubscribeResult =
+export type PushSubscribeResult =
   | { subscribed: true }
   | { subscribed: false; failure: PushSubscribeFailure };
 
 export const subscribeToPush = async (): Promise<PushSubscribeResult> => {
   if (!isPushSupported()) return { subscribed: false, failure: 'unsupported' };
 
+  // Ahead of anything touching the Push API, which the native WebView does not implement at all.
+  if (isNativeApp()) return subscribeToNativePush();
+
+  // Returns the standing answer without prompting when the user has already decided, so a
+  // previously blocked site never gets a second prompt no matter how often this is called.
   const permission = await Notification.requestPermission();
 
   if (permission !== 'granted') {
@@ -91,6 +106,10 @@ export const subscribeToPush = async (): Promise<PushSubscribeResult> => {
 export const unsubscribeFromPush = async (): Promise<void> => {
   if (!isPushSupported()) return;
 
+  if (isNativeApp()) return unsubscribeFromNativePush();
+
+  // getRegistration rather than `ready`, which never resolves when no worker was ever registered —
+  // the native build being exactly that case, though it has already returned above.
   const registration = await navigator.serviceWorker.getRegistration();
 
   if (!registration) return;
@@ -109,7 +128,13 @@ export const unsubscribeFromPush = async (): Promise<void> => {
 };
 
 export const syncPushSubscription = async (): Promise<void> => {
-  if (!isPushSupported() || Notification.permission !== 'granted') return;
+  if (!isPushSupported()) return;
+
+  const alreadyGranted = isNativeApp()
+    ? await hasNativePushPermission()
+    : Notification.permission === 'granted';
+
+  if (!alreadyGranted) return;
 
   const result = await subscribeToPush();
 

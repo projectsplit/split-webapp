@@ -84,6 +84,13 @@ export const StyledSettingsMenu = styled.div`
     color: ${({ theme }) => theme.surface.mark};
   }
 
+  /* "Buqs" and the Plus mark, spaced the way the home page sets a name beside its mark. */
+  .plusLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s8};
+  }
+
   .toggleRow {
     padding: ${({ theme }) => `${theme.space.s10} ${theme.space.s16}`};
 
@@ -123,7 +130,30 @@ export const StyledSettingsMenu = styled.div`
     }
   }
 
-  .info {
+  .accountLinks {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: ${({ theme }) => theme.space.s24};
+
+    .link {
+      background: none;
+      border: none;
+      padding: ${({ theme }) => theme.space.s4};
+      font-family: inherit;
+      font-size: ${({ theme }) => theme.size.s13};
+      color: ${({ theme }) => theme.ink.secondary};
+      cursor: pointer;
+    }
+
+    .link.danger {
+      color: ${({ theme }) => theme.direction.owe};
+    }
+  }
+
+  /* Scoped to the version line: a dialog opened from here has an .info of its own. */
+  .optionsContainer > .info {
     display: flex;
     flex-direction: row;
     align-items: center;

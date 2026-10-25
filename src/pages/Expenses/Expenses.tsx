@@ -41,6 +41,16 @@ import DeleteExpenseAnimation from '../../components/Animations/DeleteExpenseAni
 import EditExpenseAnimation from '../../components/Animations/EditExpenseAnimation';
 import { buildFormExpense, toUser } from '../../components/DetailedExpense/buildFormExpense';
 import { useCloseOnBack } from '@/hooks/useCloseOnBack';
+import {
+  PendingTransaction,
+  pendingTransactions,
+} from '@/api/offline/pendingTransactions';
+import {
+  pendingExpensesFor,
+  toExpenseItem,
+} from '@/api/offline/pendingTransactionItems';
+import PendingTransactionAnimation from '../../components/Animations/PendingTransactionAnimation';
+import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -48,6 +58,8 @@ const Expenses = () => {
   const menu = useSignal<string | null>(errorMessage.value ? 'error' : null);
   const longPressExpense = useSignal<ExpenseResponseItem | null>(null);
   const longPressMenu = useSignal<string | null>(null);
+  const pendingMenu = useSignal<string | null>(null);
+  const selectedPending = useSignal<PendingTransaction | null>(null);
   const queryClient = useQueryClient();
   useCloseOnBack(!!selectedExpense.value, () => (selectedExpense.value = null));
   useCloseOnBack(longPressMenu.value === 'options', () => (longPressMenu.value = null));
@@ -80,6 +92,8 @@ const Expenses = () => {
     isFetchingNextPage,
     isFetchingPreviousPage,
     isPending,
+    isPaused,
+    isPlaceholderData,
   } = useExpenseList(
     mode,
     group,
@@ -96,6 +110,20 @@ const Expenses = () => {
       ? Array.from(new Map(rawExpenses.map((e) => [e.id, e])).values())
       : undefined;
   }, [data]);
+
+  // By the session's own id: offline, the profile it would otherwise come from may not be saved.
+  const allPending = pendingTransactions.value;
+  const signedInUserId = getSignedInUserId() ?? undefined;
+  const pendingRows = useMemo(() => {
+    const listedIds = new Set(expenses?.map((e) => e.id));
+
+    return (
+      pendingExpensesFor(allPending, signedInUserId, mode, group?.id)
+        // Sent, and already back in the list from the server: its copy is the one to show.
+        .filter((x) => !listedIds.has(x.id))
+        .map((x) => ({ pending: x, item: toExpenseItem(x, mode) }))
+    );
+  }, [allPending, signedInUserId, mode, group?.id, expenses]);
 
   const allParticipants = useMemo(
     () =>
@@ -129,16 +157,19 @@ const Expenses = () => {
     expenseParsedFilters
   );
 
+  // Offline with nothing saved, the list never loads, and the bar's add button is how an expense
+  // gets filed for later.
   useEffect(() => {
-    showBottomBar.value = !isPending;
-  }, [isPending, showBottomBar]);
+    showBottomBar.value = !isPending || isPaused;
+  }, [isPending, isPaused, showBottomBar]);
 
   const highlightedId = useCenterToExpense(
     scrollAreaRef,
     isScrolled,
     expenses,
     jumpToken,
-    isFetchingPreviousPage
+    isFetchingPreviousPage,
+    isPlaceholderData
   );
   const { data: fetchedUserAndGroupLabels } = useGetUserAndGroupsLabels(
     userInfo?.userId,
@@ -169,6 +200,15 @@ const Expenses = () => {
     [longPressExpense, longPressMenu]
   );
 
+  const handlePendingClick = useCallback(
+    (e: ExpenseResponseItem) => {
+      selectedPending.value =
+        pendingTransactions.value.find((x) => x.id === e.id) ?? null;
+      pendingMenu.value = 'pendingTransaction';
+    },
+    [selectedPending, pendingMenu]
+  );
+
   const longPressValue = longPressExpense.value;
   const longPressFormExpense = useMemo(
     () =>
@@ -191,7 +231,7 @@ const Expenses = () => {
   const editIsPersonal = useSignal<boolean>(mode === Mode.Personal);
   const editIsNonGroup = useSignal<boolean>(mode === Mode.NonGroup);
 
-  if (isPending) {
+  if (isPending && !isPaused) {
     return (
       <div className="spinner">
         <Spinner />
@@ -212,6 +252,12 @@ const Expenses = () => {
   const showFiltersAndBars =
     mode !== Mode.Personal ||
     hasActiveExpenseFilters(expenseParsedFilters.value);
+
+  // Above the newest expenses, so not over search results or a page that starts further back.
+  const showPending =
+    pendingRows.length > 0 &&
+    !hasPreviousPage &&
+    !hasActiveExpenseFilters(expenseParsedFilters.value);
 
   return (
     <StyledExpenses>
@@ -236,15 +282,48 @@ const Expenses = () => {
           />
         )}
       <div className="scroll-area" ref={scrollAreaRef}>
-        {!expenses || expenses.length === 0 ? (
-          <NoExpensesFound
-            expenseParsedFilters={expenseParsedFilters}
-            allParticipants={allParticipants}
-            group={group}
-            queryClient={queryClient}
-            mode={mode}
-            fetchedUserAndGroupLabels={fetchedUserAndGroupLabels}
-          />
+        {showPending && (
+          <div className="same-date-container">
+            <div className="date-only">Not synced yet</div>
+            <div className="rows">
+              {pendingRows.map(({ pending, item }) => (
+                <div className="expense" key={item.id}>
+                  <Expense
+                    expense={item}
+                    amount={item.amount}
+                    currency={item.currency}
+                    occurred={item.occurred}
+                    description={item.description}
+                    location={item.location}
+                    timeZoneId={timeZoneId}
+                    onClick={handlePendingClick}
+                    userAmount={getUserAmount(item)}
+                    labels={item.labels}
+                    mode={mode}
+                    pendingState={pending.rejection ? 'rejected' : 'waiting'}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {isPending ? (
+          <div className="offlineNote">
+            {showPending
+              ? "The rest of the list will load once you're back online."
+              : "You're offline. This list will load once you're back online."}
+          </div>
+        ) : !expenses || expenses.length === 0 ? (
+          showPending ? null : (
+            <NoExpensesFound
+              expenseParsedFilters={expenseParsedFilters}
+              allParticipants={allParticipants}
+              group={group}
+              queryClient={queryClient}
+              mode={mode}
+              fetchedUserAndGroupLabels={fetchedUserAndGroupLabels}
+            />
+          )
         ) : (
           <>
             <Sentinel
@@ -375,6 +454,12 @@ const Expenses = () => {
       <ErrorMenuAnimation
         menu={menu}
         type="expense"
+      />
+      <MenuAnimationBackground menu={pendingMenu} />
+      <PendingTransactionAnimation
+        menu={pendingMenu}
+        transaction={selectedPending.value}
+        timeZoneId={timeZoneId}
       />
       <GroupTotalsByCurrencyAnimation
         menu={menu}

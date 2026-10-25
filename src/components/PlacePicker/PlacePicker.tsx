@@ -15,6 +15,7 @@ import { IoClose } from 'react-icons/io5';
 import { StyledPlacePicker } from './PlacePicker.styled';
 import { PlacePickerProps } from '../../interfaces';
 import MyButton from '../MyButton/MyButton';
+import PlusBadge from '../Plus/PlusBadge';
 
 const PlacePicker: React.FC<PlacePickerProps> = ({
   location,
@@ -92,6 +93,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
       userLocation.error ||
       userLocation.loading ||
       !map ||
+      !geocoder ||
       !userLocation.latitude ||
       !userLocation.longitude
     )
@@ -102,7 +104,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
       lng: userLocation.longitude,
     };
 
-    geocoder!.geocode({ location: userPosition }).then((response) => {
+    geocoder.geocode({ location: userPosition }).then((response) => {
       const firstResult = response.results[0];
 
       const userLocationWithGoogle = {
@@ -277,6 +279,7 @@ const PlacePicker: React.FC<PlacePickerProps> = ({
           placeholder="Search for a place"
           className="searchBar"
         />
+        <PlusBadge />
         <div
           className="closeButton"
           onClick={() => (isMapOpen.value = false)}
