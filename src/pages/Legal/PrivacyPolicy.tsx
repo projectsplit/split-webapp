@@ -17,8 +17,7 @@ export default function PrivacyPolicy() {
       <p className="updated">Last updated {lastUpdated}</p>
       <p>
         This policy explains what Buqs keeps about you, why, and what you can do
-        about it. Buqs is the expense-splitting and budgeting app at buqs.uk and
-        on Google Play.
+        about it. Buqs is the expense manager at buqs.uk and on Google Play.
       </p>
 
       <h2>Who runs Buqs</h2>
