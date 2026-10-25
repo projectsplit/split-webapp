@@ -24,8 +24,8 @@ jobs:
           node-version: '23'
       - name: Bump version patch
         run: |
-          git config --local user.email "github-actions@github.com"
-          git config --local user.name "GitHub Actions"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           npm config set tag-version-prefix ''
           npm version patch --tag-version-prefix="" -m "Version bump to %s [skip ci]"
           git push --follow-tags
