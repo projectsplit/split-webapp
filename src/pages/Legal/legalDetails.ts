@@ -5,12 +5,14 @@
  * and in the Google Play listing, and separate copies would drift apart.
  */
 export const legalDetails = {
-  // The person or company legally responsible for the data. UK data protection law requires the
-  // policy to name them, so this has to be real before the pages go live.
-  operator: '[name of the person or company that runs Buqs]',
+  // Who is legally responsible for the data. A description rather than a name, at the owner's
+  // choice. UK data protection law expects the controller to be named, so this becomes a name, or a
+  // company, if that choice changes.
+  operator: 'an individual developer based in the UK',
 
-  // Must be a mailbox someone reads: deletion and data requests arrive here.
-  contactEmail: 'privacy@buqs.uk',
+  // Must be a mailbox someone reads: deletion and data requests arrive here. The same address is
+  // the public contact on the Play listing.
+  contactEmail: 'support@buqs.uk',
 
-  lastUpdated: '4 October 2026',
+  lastUpdated: '25 October 2026',
 };

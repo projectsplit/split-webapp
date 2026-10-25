@@ -104,6 +104,15 @@ export default function PrivacyPolicy() {
         </li>
       </ul>
 
+      <h2>How your data is protected</h2>
+      <p>
+        Everything between the app and our servers travels encrypted over
+        HTTPS. Passwords are stored only as salted hashes. The database is
+        hosted by MongoDB, which keeps it encrypted on disk, and reaching the
+        servers or the database takes credentials that only the people who
+        maintain Buqs hold.
+      </p>
+
       <h2>Why we are allowed to use it</h2>
       <ul>
         <li>
