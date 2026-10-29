@@ -1,4 +1,5 @@
 import {
+  ChangePasswordRequest,
   DismissDonationPromptRequest,
   DonationPromptInfo,
   PasswordSignInRequest,
@@ -75,6 +76,11 @@ export const verifyAccountEmail = async (
   request: VerifyAccountEmailRequest
 ) => {
   const response = await apiClient.post('/auth/account/email/verify', request);
+  return response.data;
+};
+
+export const changePassword = async (request: ChangePasswordRequest) => {
+  const response = await apiClient.post('/auth/account/password', request);
   return response.data;
 };
 

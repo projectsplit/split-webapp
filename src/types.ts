@@ -45,6 +45,11 @@ export type VerifyAccountEmailRequest = {
   code: string;
 };
 
+export type ChangePasswordRequest = {
+  currentPassword: string;
+  newPassword: string;
+};
+
 /**
  * Mirrors the server's PushDeviceKind enum. The API has no string-enum converter, so these cross the
  * wire as the numbers the server's enum actually is — naming them here keeps that off the call sites.
@@ -81,6 +86,8 @@ export type UserInfo = {
   showBudgetInfo: boolean;
   email: string | null;
   emailVerified: boolean;
+  /** False for an account created through Google sign-in, which has no password to change. */
+  hasPassword: boolean;
   pushNotificationsEnabled: boolean;
 };
 
