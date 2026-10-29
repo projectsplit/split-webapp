@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { resetPassword } from '../../api/auth/api';
 import { ResetPasswordRequest } from '../../types';
 import routes from '../../routes';
+import { PASSWORD_MIN_LENGTH } from '../../constants';
 import Input from '../../components/Input/Input';
 import MyButton from '../../components/MyButton/MyButton';
 import BackButton from '../../components/BackButton/BackButton';
@@ -37,8 +38,10 @@ export default function ResetPassword() {
 
   const handleSubmit = () => {
     if (!token) return;
-    if (newPassword.length < 10) {
-      setError('Password should contain at least 10 characters');
+    if (newPassword.length < PASSWORD_MIN_LENGTH) {
+      setError(
+        `Password should contain at least ${PASSWORD_MIN_LENGTH} characters`
+      );
       return;
     }
     if (newPassword !== confirmPassword) {

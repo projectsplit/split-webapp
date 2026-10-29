@@ -9,6 +9,7 @@ import { useMutation } from '@tanstack/react-query';
 import { createPasswordCredentials } from '../../api/auth/api';
 import { PasswordSignUpRequest, PasswordSignUpResponse } from '../../types';
 import routes from '../../routes';
+import { PASSWORD_MIN_LENGTH } from '../../constants';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -68,8 +69,11 @@ export default function CreateAccount() {
       showError('password', 'Enter a password');
       return;
     }
-    if (password.length < 9) {
-      showError('password', 'Password should contain at least 10 characters');
+    if (password.length < PASSWORD_MIN_LENGTH) {
+      showError(
+        'password',
+        `Password should contain at least ${PASSWORD_MIN_LENGTH} characters`
+      );
       return;
     }
 

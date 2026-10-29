@@ -4,12 +4,10 @@ import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { changePassword } from '../../../api/auth/api';
 import { ChangePasswordRequest } from '../../../types';
+import { PASSWORD_MIN_LENGTH } from '../../../constants';
 import { messageFromError } from '../../GlobalWarning/globalWarningState';
 import MyButton from '../../MyButton/MyButton';
 import { StyledChangePassword } from './ChangePassword.styled';
-
-// The floor the sign-up and reset pages apply, and the server's ValidationService enforces.
-const PASSWORD_MIN_LENGTH = 10;
 
 interface ChangePasswordProps {
   changePasswordMenu: Signal<string | null>;

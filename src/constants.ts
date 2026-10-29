@@ -20,3 +20,6 @@ export const months = [
 ];
 
 export const shortWeekdays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+/** The shortest password the server accepts, at sign-up, on reset and when changing it. */
+export const PASSWORD_MIN_LENGTH = 10;
