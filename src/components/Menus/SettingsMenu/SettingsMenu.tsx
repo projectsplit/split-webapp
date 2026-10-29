@@ -31,6 +31,7 @@ import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPu
 import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
 import SupportMenuAnimation from '../../Animations/SupportMenuAnimation';
 import DeleteAccountAnimation from '../../Animations/DeleteAccountAnimation';
+import ChangePasswordAnimation from '../../Animations/ChangePasswordAnimation';
 import {
   isPushSupported,
   PushSubscribeFailure,
@@ -71,6 +72,7 @@ export default function SettingsMenu({
   const editEmailMenu = useSignal<string | null>(null);
   const supportMenu = useSignal<string | null>(null);
   const deleteAccountMenu = useSignal<string | null>(null);
+  const changePasswordMenu = useSignal<string | null>(null);
   const logoutWarningMenu = useSignal<string | null>(null);
 
   // Only fetched to know whether donations are configured at all. An instance with no Google Play
@@ -157,6 +159,9 @@ export default function SettingsMenu({
   const { data: recurringData } = useGetRecurringExpenses();
   const recurringCount = recurringData?.recurringExpenses?.length ?? 0;
 
+  const isEmailVerified = !!userInfo?.email && userInfo.emailVerified;
+  const canVerifyEmail = !!userInfo?.email && !userInfo.emailVerified;
+
   const handlePushToggle = () => {
     setPushError(null);
 
@@ -207,26 +212,55 @@ export default function SettingsMenu({
                 <IonIcon name="chevron-forward-outline" className="rowChevron" />
               </span>
             </PropertyRow>
-            <PropertyRow label="Verification">
+            {/* An unverified address is a tap away from the code step, with a code on its way. */}
+            <PropertyRow
+              label="Verification"
+              onClick={
+                canVerifyEmail
+                  ? () => (editEmailMenu.value = 'verifyEmail')
+                  : undefined
+              }
+            >
               {!userInfo ? (
                 <Spinner fontSize="1rem" />
               ) : (
-                <span
-                  className={`status ${
-                    userInfo.email && userInfo.emailVerified ? 'ok' : 'pending'
-                  }`}
-                >
-                  {userInfo.email && userInfo.emailVerified ? (
-                    <IonIcon name="checkmark-outline" />
+                <span className="rowValue">
+                  <span
+                    className={`status ${isEmailVerified ? 'ok' : 'pending'}`}
+                  >
+                    {isEmailVerified ? (
+                      <IonIcon name="checkmark-outline" />
+                    ) : null}
+                    {userInfo.email
+                      ? userInfo.emailVerified
+                        ? 'Verified'
+                        : 'Unverified'
+                      : 'Not set'}
+                  </span>
+                  {canVerifyEmail ? (
+                    <IonIcon
+                      name="chevron-forward-outline"
+                      className="rowChevron"
+                    />
                   ) : null}
-                  {userInfo.email
-                    ? userInfo.emailVerified
-                      ? 'Verified'
-                      : 'Unverified'
-                    : 'Not set'}
                 </span>
               )}
             </PropertyRow>
+            {/* Only an account with a password has one to change; Google sign-in has none. */}
+            {userInfo?.hasPassword ? (
+              <PropertyRow
+                label="Password"
+                onClick={() => (changePasswordMenu.value = 'changePassword')}
+              >
+                <span className="rowValue">
+                  <span className="rowText">Change</span>
+                  <IonIcon
+                    name="chevron-forward-outline"
+                    className="rowChevron"
+                  />
+                </span>
+              </PropertyRow>
+            ) : null}
           </PropertyList>
         </div>
 
@@ -388,6 +422,7 @@ export default function SettingsMenu({
       <MenuAnimationBackground menu={editEmailMenu} />
       <MenuAnimationBackground menu={supportMenu} />
       <MenuAnimationBackground menu={deleteAccountMenu} />
+      <MenuAnimationBackground menu={changePasswordMenu} />
       <MenuAnimationBackground menu={logoutWarningMenu} />
       <SupportMenuAnimation supportMenu={supportMenu} />
       <LogoutWarningAnimation
@@ -403,6 +438,7 @@ export default function SettingsMenu({
         username={userInfo?.username}
         hasActiveMonthly={donationInfo?.hasActiveMonthly}
       />
+      <ChangePasswordAnimation changePasswordMenu={changePasswordMenu} />
       <TimeZoneOptionsAnimation
         timeZoneMenu={timeZoneMenu}
         clickHandler={handldeTimeZoneOptionsClick}

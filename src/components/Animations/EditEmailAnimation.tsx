@@ -10,16 +10,23 @@ interface EditEmailAnimationProps {
   emailVerified: boolean | undefined;
 }
 
+/**
+ * Opened as 'editEmail' from the Email row, or as 'verifyEmail' from an unverified Verification
+ * row, which lands on the code step straight away.
+ */
 export default function EditEmailAnimation({
   editEmailMenu,
   existingEmail,
   emailVerified,
 }: EditEmailAnimationProps) {
   const nodeRef = useRef(null);
-  useCloseOnBack(editEmailMenu.value === 'editEmail', () => (editEmailMenu.value = null));
+  const isOpen =
+    editEmailMenu.value === 'editEmail' ||
+    editEmailMenu.value === 'verifyEmail';
+  useCloseOnBack(isOpen, () => (editEmailMenu.value = null));
   return (
     <CSSTransition
-      in={editEmailMenu.value === 'editEmail'}
+      in={isOpen}
       timeout={100}
       classNames="infoBox"
       unmountOnExit
@@ -29,6 +36,7 @@ export default function EditEmailAnimation({
         existingEmail={existingEmail}
         emailVerified={emailVerified}
         editEmailMenu={editEmailMenu}
+        startAtVerify={editEmailMenu.value === 'verifyEmail'}
       />
     </CSSTransition>
   );

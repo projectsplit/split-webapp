@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Signal } from '@preact/signals-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { setAccountEmail, verifyAccountEmail } from '../../../api/auth/api';
+import { messageFromError } from '../../GlobalWarning/globalWarningState';
 import {
   SetAccountEmailRequest,
   UserInfo,
@@ -18,6 +19,8 @@ interface EditEmailProps {
   existingEmail: string | null | undefined;
   emailVerified: boolean | undefined;
   editEmailMenu: Signal<string | null>;
+  /** Open on the code step straight away, with a fresh code on its way. */
+  startAtVerify?: boolean;
 }
 
 type Step = 'view' | 'edit' | 'verify';
@@ -26,9 +29,11 @@ export default function EditEmail({
   existingEmail,
   emailVerified,
   editEmailMenu,
+  startAtVerify = false,
 }: EditEmailProps) {
   const queryClient = useQueryClient();
-  const initialStep: Step = existingEmail ? 'view' : 'edit';
+  const initialStep: Step =
+    startAtVerify && existingEmail ? 'verify' : existingEmail ? 'view' : 'edit';
 
   const [step, setStep] = useState<Step>(initialStep);
   const [email, setEmail] = useState(existingEmail ?? '');
@@ -46,6 +51,17 @@ export default function EditEmail({
     meta: { errorHandled: true },
     mutationFn: verifyAccountEmail,
   });
+
+  // Settings opens this on the code step when the address is unverified. The code is sent from
+  // here rather than by the row that was tapped, so that "Resending…" and any failure show
+  // where the person is looking.
+  const hasSentOnOpen = useRef(false);
+  useEffect(() => {
+    if (!startAtVerify || !existingEmail || hasSentOnOpen.current) return;
+    hasSentOnOpen.current = true;
+    setEmailMutation.mutate({ email: existingEmail });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSetEmail = () => {
     if (!email || !EMAIL_REGEX.test(email)) {
@@ -211,6 +227,15 @@ export default function EditEmail({
     );
   }
 
+  // A code that never left — the sending is throttled, say — would otherwise be waited for in
+  // silence.
+  const sendError = setEmailMutation.isError
+    ? messageFromError(
+        setEmailMutation.error,
+        'The code could not be sent. Please try again.'
+      )
+    : '';
+
   return (
     <StyledEditEmail>
       <div className="title">Verify email</div>
@@ -232,6 +257,7 @@ export default function EditEmail({
         }}
       />
       {codeError && <div className="errormsg">{codeError}</div>}
+      {!codeError && sendError && <div className="errormsg">{sendError}</div>}
       <button
         type="button"
         className="resend"
