@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import {
   Navigate,
   Outlet,
@@ -27,6 +27,23 @@ import DonationPrompt from '../../components/DonationPrompt/DonationPrompt';
 import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
 import { useRecoverDonationPurchases } from '@/hooks/useRecoverDonationPurchases';
 import { syncPendingTransactions } from '@/api/offline/pendingTransactionSync';
+
+/**
+ * Everything the bell and the notifications menu are built from. A push can be about any of them:
+ * a connection request is its own list rather than an activity entry, so refreshing only the feed
+ * left a menu that was already open without the request the push had just announced. The menu's
+ * lists are dropped from the cache once it closes, so while it is closed this costs nothing.
+ */
+const refreshNotifications = (queryClient: QueryClient) => {
+  for (const queryKey of [
+    ['getMe'],
+    ['notifications'],
+    ['connectionRequests'],
+    ['userInvitations'],
+  ]) {
+    queryClient.invalidateQueries({ queryKey });
+  }
+};
 
 const Protected: React.FC = () => {
   const location = useLocation();
@@ -68,8 +85,7 @@ const Protected: React.FC = () => {
     if (!isNativeApp()) return;
 
     addNativePushTapListener((url) => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
-      queryClient.invalidateQueries({ queryKey: ['getMe'] });
+      refreshNotifications(queryClient);
 
       // Server-sent urls are paths within this app. Anything absolute would navigate the WebView
       // off our own origin with no way back, so only in-app paths are followed.
@@ -86,8 +102,7 @@ const Protected: React.FC = () => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type !== 'notification-received') return;
 
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
-      queryClient.invalidateQueries({ queryKey: ['getMe'] });
+      refreshNotifications(queryClient);
     };
 
     navigator.serviceWorker.addEventListener('message', handleMessage);
