@@ -4,4 +4,7 @@
     <string name="title_activity_main">Buqs</string>
     <string name="package_name">com.buqs</string>
     <string name="custom_url_scheme">com.buqs</string>
+    <!-- The notification category Android lists for Buqs. FCM creates it on the first push and
+         takes its name from this string, which otherwise falls back to a generic default. -->
+    <string name="fcm_fallback_notification_channel_label">Activity</string>
 </resources>

@@ -47,7 +47,9 @@ self.addEventListener('push', (event) => {
       self.registration.showNotification(payload.title ?? 'Buqs', {
         body: payload.body,
         icon: '/icon-192x192.png',
-        badge: '/icon-192x192.png',
+        // Android draws the badge from its alpha channel alone, so the opaque app icon came out as
+        // a plain white square. This one is the B on transparency.
+        badge: '/badge-96x96.png',
         data: { url: payload.url ?? '/' },
       }),
       notifyOpenClients(),

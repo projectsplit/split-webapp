@@ -25,11 +25,13 @@ export default React.memo(function ConnectableUserItem({
   onAccept,
   onRevoke,
 }: ConnectableUserItemProps) {
+  // A sent request is only taken back through its own button. The row is where people tap to add
+  // someone, which is the very next thing they try after sending a request, and revoking on that
+  // tap deleted the request silently after its push had already reached the other person.
   const handleRowClick = (e: React.MouseEvent) => {
     if (status === undefined || status === 'connected') onSelect(e);
     else if (status === 'none') onRequest(e);
     else if (status === 'pending_received') onAccept(e);
-    else if (status === 'pending_sent') onRevoke(e);
   };
 
   return (

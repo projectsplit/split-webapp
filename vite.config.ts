@@ -50,7 +50,7 @@ export default defineConfig(({ mode }) => {
       srcDir: 'src',
       filename: 'sw.ts',
       registerType: 'autoUpdate',
-      includeAssets: ['icon-192x192.png', 'icon-512x512.png'],
+      includeAssets: ['icon-192x192.png', 'icon-512x512.png', 'badge-96x96.png'],
       manifest: {
         id: '/',
         start_url: '/',
