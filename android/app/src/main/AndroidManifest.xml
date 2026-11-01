@@ -54,6 +54,16 @@
             android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
+
+        <!--
+          The small icon on push notifications. Android draws it from the alpha channel alone, so
+          without this FCM falls back to the launcher icon, which is opaque edge to edge and comes
+          out as a plain white square. The push plugin reads the same entry for notifications that
+          arrive while the app is open.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_buqs" />
     </application>
 
     <!-- Permissions -->
