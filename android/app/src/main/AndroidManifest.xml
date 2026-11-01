@@ -64,6 +64,15 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_stat_buqs" />
+
+        <!--
+          Firebase would otherwise fetch an FCM token for every install as soon as the app starts.
+          The push plugin switches this on when someone turns notifications on in Settings, so a
+          token only exists for the people who asked for notifications.
+        -->
+        <meta-data
+            android:name="firebase_messaging_auto_init_enabled"
+            android:value="false" />
     </application>
 
     <!-- Permissions -->

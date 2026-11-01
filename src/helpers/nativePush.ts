@@ -156,3 +156,14 @@ export const addNativePushTapListener = (onOpenUrl: (url: string) => void) => {
     }
   );
 };
+
+/**
+ * Registers what happens when a push arrives while the app is open. The tray still shows it, but
+ * without this the bell and an open notifications menu only caught up on a tap or the next poll:
+ * the gap the service worker's relay closes on the web.
+ */
+export const addNativePushReceivedListener = (onReceived: () => void) => {
+  void PushNotifications.addListener('pushNotificationReceived', () =>
+    onReceived()
+  );
+};

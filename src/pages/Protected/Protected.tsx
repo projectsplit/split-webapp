@@ -19,7 +19,10 @@ import { prewarmRoutes } from '@/lazyRoutes';
 import { syncPushSubscription } from '@/helpers/pushNotifications';
 import { isUserAuthenticated } from '@/helpers/isUserAuthenticated';
 import routes from '@/routes';
-import { addNativePushTapListener } from '@/helpers/nativePush';
+import {
+  addNativePushReceivedListener,
+  addNativePushTapListener,
+} from '@/helpers/nativePush';
 import { isNativeApp } from '@/helpers/platform';
 import PlusInfoAnimation from '../../components/Animations/PlusInfoAnimation';
 import SupportMenuAnimation from '../../components/Animations/SupportMenuAnimation';
@@ -78,11 +81,14 @@ const Protected: React.FC = () => {
     }
   }, [userInfo]);
 
-  // The native app has no service worker to relay through, so the tap on the system notification is
-  // the only signal that a push happened. Registered once for the lifetime of the screen because a
-  // tap can launch the app from cold and the delivery is only replayed to listeners already present.
+  // The native app has no service worker to relay through. While it is open the push plugin reports
+  // each arrival; from the background, the tap on the system notification is the only signal.
+  // Registered once for the lifetime of the screen because a tap can launch the app from cold and
+  // the delivery is only replayed to listeners already present.
   useEffect(() => {
     if (!isNativeApp()) return;
+
+    addNativePushReceivedListener(() => refreshNotifications(queryClient));
 
     addNativePushTapListener((url) => {
       refreshNotifications(queryClient);

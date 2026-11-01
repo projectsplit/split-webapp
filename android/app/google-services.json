@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "760456242955",
+    "project_id": "buqs-ce693",
+    "storage_bucket": "buqs-ce693.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760456242955:android:8b0f1a73cb63de2fdd640e",
+        "android_client_info": {
+          "package_name": "com.buqs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANTL5u8UVNCjf0rotGhhEVftQL9ZcKlLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760456242955:android:97ac265490856eb7dd640e",
+        "android_client_info": {
+          "package_name": "com.buqs.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANTL5u8UVNCjf0rotGhhEVftQL9ZcKlLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
