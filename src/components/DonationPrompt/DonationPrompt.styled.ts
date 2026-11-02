@@ -141,14 +141,19 @@ export const Subhead = styled.p`
 `;
 
 export const AmountRow = styled.div`
-  display: grid;
-  /* Auto-fit rather than a fixed count, because how many tiers there are is a server setting and
-     Play drops any the console does not know about. The floor is what a price like "$12.00" needs
-     before it wraps mid-amount; below that the row folds to fewer columns on its own. */
-  grid-template-columns: repeat(auto-fit, minmax(74px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: ${({ theme }) => theme.space.s8};
   /* Room for the badge that overhangs the top of a tier. */
   margin-top: ${({ theme }) => theme.space.s12};
+
+  /* An even share of the row each, whatever the count, because how many tiers there are is a server
+     setting and Play drops any the console does not know about. A grid of auto-fit columns left an
+     empty column beside them, held open by the full-width "Other amount" below. The floor is what a
+     price like "$12.00" needs before it wraps mid-amount; below that the tiers fold onto a new line. */
+  > * {
+    flex: 1 1 74px;
+  }
 `;
 
 export const Preset = styled.button<{ $selected: boolean }>`
@@ -200,6 +205,15 @@ export const Disclaimer = styled.div`
   text-align: center;
   font-size: ${({ theme }) => theme.size.s12};
   color: ${({ theme }) => theme.ink.secondary};
+`;
+
+/** The span "Other amount" can buy, kept in view while typing, and red once a figure is past it. */
+export const AmountRange = styled.div<{ $outside: boolean }>`
+  text-align: center;
+  font-size: ${({ theme }) => theme.size.s12};
+  color: ${({ theme, $outside }) =>
+    $outside ? theme.direction.owe : theme.ink.secondary};
+  transition: color 150ms;
 `;
 
 export const Footnote = styled.div`
