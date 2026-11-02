@@ -69,6 +69,12 @@ export default function EditEmail({
       return;
     }
     setEmailError('');
+    // The address already on the account and verified needs no code: Change opens with it filled
+    // in, and pressing Continue unchanged used to mail one anyway.
+    if (emailVerified && existingEmail?.toLowerCase() === email.toLowerCase()) {
+      setStep('view');
+      return;
+    }
     setEmailMutation.mutate(
       { email },
       {
