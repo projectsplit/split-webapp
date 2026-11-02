@@ -49,8 +49,8 @@ android {
             // A debug build cannot replace the copy installed from Play — the two are signed with
             // different keys — so testing one meant uninstalling the other. With
             //   ./gradlew assembleDebug -PdebugIdSuffix=.dev
-            // it installs beside it as com.buqs.dev instead. Off unless asked for: Google sign-in,
-            // Play Billing and FCM are all registered against com.buqs and do not follow the suffix.
+            // it installs beside it as com.buqs.dev instead. Off unless asked for: Google sign-in and
+            // Play Billing are registered against com.buqs only and do not follow the suffix.
             if (project.hasProperty('debugIdSuffix')) {
                 applicationIdSuffix project.property('debugIdSuffix')
             }
@@ -61,8 +61,21 @@ android {
             if (keystorePropertiesFile.exists()) {
                 signingConfig signingConfigs.release
             }
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // R8 shrinks, optimises and obfuscates the native code. Play scores every upload on all
+            // three, and Capacitor's template ships with it off. Resources are not shrunk: the web
+            // layer can ask for one by name, which R8 has no way to see.
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        // R8 only runs on release builds, and one signed for Play cannot be installed beside the Play
+        // copy. This is the release build again, as com.buqs.dev and signed with the debug key, so
+        // what R8 produced can be tried on a phone before it ships:
+        //   ./gradlew assembleReleaseDev
+        releaseDev {
+            initWith release
+            applicationIdSuffix '.dev'
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ['release']
         }
     }
 }
