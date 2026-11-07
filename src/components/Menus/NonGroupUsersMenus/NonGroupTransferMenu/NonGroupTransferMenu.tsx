@@ -19,6 +19,7 @@ import { useAcceptConnectionRequest } from '@/api/auth/CommandHooks/useAcceptCon
 import { useRevokeConnectionRequest } from '@/api/auth/CommandHooks/useRevokeConnectionRequest';
 import ConnectableUserItem from '../ConnectableUserItem/ConnectableUserItem';
 import ConnectRequestConfirm from '../ConnectRequestConfirm/ConnectRequestConfirm';
+import SectionLabel from '../../../SectionLabel/SectionLabel';
 
 export default function NonGroupTransferMenu({
   nonGroupTransferMenu,
@@ -132,6 +133,88 @@ export default function NonGroupTransferMenu({
     () => new Map(connectionStatuses?.statuses.map((s) => [s.userId, s]) ?? []),
     [connectionStatuses]
   );
+
+  // The search lists connections first. Once their statuses are in, they get a section of their own
+  // at the top, with the person first, apart from everyone else on Buqs, so the people a transfer is
+  // usually between are there to tap without searching for them each time.
+  const [topUsers, otherUsers] = useMemo(() => {
+    const isSelf = (user: (typeof users)[number]) =>
+      user.userId === userInfo.userId;
+    const isConnected = (user: (typeof users)[number]) =>
+      isSelf(user) || statusByUserId.get(user.userId)?.status === 'connected';
+
+    return [
+      [
+        ...users.filter(isSelf),
+        ...users.filter((user) => !isSelf(user) && isConnected(user)),
+      ],
+      users.filter((user) => !isConnected(user)),
+    ];
+  }, [users, statusByUserId, userInfo.userId]);
+
+  const hasConnections = topUsers.some(
+    (user) => user.userId !== userInfo.userId
+  );
+
+  const userRow = (user: (typeof users)[number]) => {
+    const isSelf = user.userId === userInfo.userId;
+    const status = statusByUserId.get(user.userId)?.status;
+
+    return isSelf || status === 'connected' || status === undefined ? (
+      <User
+        key={user.userId}
+        currentUserId={userInfo.userId}
+        name={user.username}
+        userId={user.userId}
+        nonGroupTransferMenu={nonGroupTransferMenu}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleSuggestedUserClick(user.userId, user.username);
+        }}
+      />
+    ) : (
+      <ConnectableUserItem
+        key={user.userId}
+        name={user.username}
+        status={status}
+        isAcceptPending={
+          acceptConnectionRequest.isPending &&
+          acceptConnectionRequest.variables ===
+            statusByUserId.get(user.userId)?.connectionId
+        }
+        isRevokePending={
+          revokeConnectionRequest.isPending &&
+          revokeConnectionRequest.variables ===
+            statusByUserId.get(user.userId)?.connectionId
+        }
+        onSelect={(e) => {
+          e.stopPropagation();
+          handleSuggestedUserClick(user.userId, user.username);
+        }}
+        onRequest={(e) => {
+          e.stopPropagation();
+          setConnectTarget({
+            userId: user.userId,
+            username: user.username,
+          });
+        }}
+        onAccept={(e) => {
+          e.stopPropagation();
+          const connectionId = statusByUserId.get(user.userId)?.connectionId;
+          if (connectionId) {
+            acceptConnectionRequest.mutate(connectionId);
+          }
+        }}
+        onRevoke={(e) => {
+          e.stopPropagation();
+          const connectionId = statusByUserId.get(user.userId)?.connectionId;
+          if (connectionId) {
+            revokeConnectionRequest.mutate(connectionId);
+          }
+        }}
+      />
+    );
+  };
 
   const remainingSuggestedGroups = useMemo(() => {
     return (
@@ -249,90 +332,43 @@ export default function NonGroupTransferMenu({
         <div className="searchStatus">
           {showSearchingSpinner && <Spinner fontSize="18px" />}
         </div>
-        <div className="dropdown" ref={dropdownRef}>
-          {showSpinner ? (
-            <div className="spinner">
-              <Spinner />
-            </div>
-          ) : showUsers ? (
-            users.map((user) => {
-              const isSelf = user.userId === userInfo.userId;
-              const status = statusByUserId.get(user.userId)?.status;
-
-              return isSelf ||
-                status === 'connected' ||
-                status === undefined ? (
-                <User
-                  key={user.userId}
-                  currentUserId={userInfo.userId}
-                  name={user.username}
-                  userId={user.userId}
-                  nonGroupTransferMenu={nonGroupTransferMenu}
+        {showUsers ? (
+          <>
+            {topUsers.length > 0 && (
+              <div className="userSection">
+                {hasConnections && <SectionLabel title="Connections" />}
+                <div className="dropdown">{topUsers.map(userRow)}</div>
+              </div>
+            )}
+            {otherUsers.length > 0 && (
+              <div className="userSection">
+                {topUsers.length > 0 && <SectionLabel title="Others on Buqs" />}
+                <div className="dropdown" ref={dropdownRef}>
+                  {otherUsers.map(userRow)}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="dropdown" ref={dropdownRef}>
+            {showSpinner ? (
+              <div className="spinner">
+                <Spinner />
+              </div>
+            ) : (
+              remainingSuggestedGroups.map((group) => (
+                <UserItem
+                  key={group.id}
+                  name={group.name}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSuggestedUserClick(user.userId, user.username);
+                    handleSuggestedGroupClick(group.id);
                   }}
                 />
-              ) : (
-                <ConnectableUserItem
-                  key={user.userId}
-                  name={user.username}
-                  status={status}
-                  isAcceptPending={
-                    acceptConnectionRequest.isPending &&
-                    acceptConnectionRequest.variables ===
-                      statusByUserId.get(user.userId)?.connectionId
-                  }
-                  isRevokePending={
-                    revokeConnectionRequest.isPending &&
-                    revokeConnectionRequest.variables ===
-                      statusByUserId.get(user.userId)?.connectionId
-                  }
-                  onSelect={(e) => {
-                    e.stopPropagation();
-                    handleSuggestedUserClick(user.userId, user.username);
-                  }}
-                  onRequest={(e) => {
-                    e.stopPropagation();
-                    setConnectTarget({
-                      userId: user.userId,
-                      username: user.username,
-                    });
-                  }}
-                  onAccept={(e) => {
-                    e.stopPropagation();
-                    const connectionId = statusByUserId.get(
-                      user.userId
-                    )?.connectionId;
-                    if (connectionId) {
-                      acceptConnectionRequest.mutate(connectionId);
-                    }
-                  }}
-                  onRevoke={(e) => {
-                    e.stopPropagation();
-                    const connectionId = statusByUserId.get(
-                      user.userId
-                    )?.connectionId;
-                    if (connectionId) {
-                      revokeConnectionRequest.mutate(connectionId);
-                    }
-                  }}
-                />
-              );
-            })
-          ) : (
-            remainingSuggestedGroups.map((group) => (
-              <UserItem
-                key={group.id}
-                name={group.name}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSuggestedGroupClick(group.id);
-                }}
-              />
-            ))
-          )}
-        </div>
+              ))
+            )}
+          </div>
+        )}
         {showUsers && (
           <Sentinel
             fetchPage={fetchNextPage}

@@ -23,6 +23,7 @@ import { useAcceptConnectionRequest } from '@/api/auth/CommandHooks/useAcceptCon
 import { useRevokeConnectionRequest } from '@/api/auth/CommandHooks/useRevokeConnectionRequest';
 import ConnectableUserItem from '../ConnectableUserItem/ConnectableUserItem';
 import ConnectRequestConfirm from '../ConnectRequestConfirm/ConnectRequestConfirm';
+import SectionLabel from '../../../SectionLabel/SectionLabel';
 
 const USERS_OR_GROUPS_CATEGORIES = {
   cat1: 'Users',
@@ -189,6 +190,22 @@ export const NonGroupExpenseUsersMenu = ({
     );
   }, [data, nonGroupUsers.value]);
 
+  // The search lists connections first. Once their statuses are in, they get a section of their own
+  // at the top, apart from everyone else on Buqs, so the people split with are there to tap without
+  // searching for them each time.
+  const [connectedUsers, otherUsers] = useMemo(() => {
+    const users = remainingSuggestedUsers.filter(
+      (user) => user.userId !== userInfo.userId
+    );
+    const isConnected = (user: User) =>
+      statusByUserId.get(user.userId)?.status === 'connected';
+
+    return [
+      users.filter(isConnected),
+      users.filter((user) => !isConnected(user)),
+    ];
+  }, [remainingSuggestedUsers, statusByUserId, userInfo.userId]);
+
   const allActiveGroups = useMemo(() => {
     return (
       userGroups?.pages.flatMap((x) => x.groups).filter((x) => !x.isArchived) ??
@@ -208,6 +225,49 @@ export const NonGroupExpenseUsersMenu = ({
       !fromHomeGroup.value
     );
   }, [nonGroupUsers.value, fromHomeGroup.value, keyword]);
+
+  const userRow = (user: User) => (
+    <ConnectableUserItem
+      key={user.userId}
+      name={user.username}
+      status={statusByUserId.get(user.userId)?.status}
+      isAcceptPending={
+        acceptConnectionRequest.isPending &&
+        acceptConnectionRequest.variables ===
+          statusByUserId.get(user.userId)?.connectionId
+      }
+      isRevokePending={
+        revokeConnectionRequest.isPending &&
+        revokeConnectionRequest.variables ===
+          statusByUserId.get(user.userId)?.connectionId
+      }
+      onSelect={(e) => {
+        e.stopPropagation();
+        handleSuggestedUserClick(user.username);
+      }}
+      onRequest={(e) => {
+        e.stopPropagation();
+        setConnectTarget({
+          userId: user.userId,
+          username: user.username,
+        });
+      }}
+      onAccept={(e) => {
+        e.stopPropagation();
+        const connectionId = statusByUserId.get(user.userId)?.connectionId;
+        if (connectionId) {
+          acceptConnectionRequest.mutate(connectionId);
+        }
+      }}
+      onRevoke={(e) => {
+        e.stopPropagation();
+        const connectionId = statusByUserId.get(user.userId)?.connectionId;
+        if (connectionId) {
+          revokeConnectionRequest.mutate(connectionId);
+        }
+      }}
+    />
+  );
 
   const isPersonalFn = () => {
     if (nonGroupUsers.value.length > 0 || groupMembers.value.length > 0) {
@@ -280,58 +340,24 @@ export const NonGroupExpenseUsersMenu = ({
         </div>
 
         {category.value === 'Users' ? (
-          remainingSuggestedUsers.length > 0 && (
-            <div className="dropdown" ref={dropdownRef}>
-              {remainingSuggestedUsers.map((user) =>
-                user.userId !== userInfo.userId ? (
-                  <ConnectableUserItem
-                    key={user.userId}
-                    name={user.username}
-                    status={statusByUserId.get(user.userId)?.status}
-                    isAcceptPending={
-                      acceptConnectionRequest.isPending &&
-                      acceptConnectionRequest.variables ===
-                        statusByUserId.get(user.userId)?.connectionId
-                    }
-                    isRevokePending={
-                      revokeConnectionRequest.isPending &&
-                      revokeConnectionRequest.variables ===
-                        statusByUserId.get(user.userId)?.connectionId
-                    }
-                    onSelect={(e) => {
-                      e.stopPropagation();
-                      handleSuggestedUserClick(user.username);
-                    }}
-                    onRequest={(e) => {
-                      e.stopPropagation();
-                      setConnectTarget({
-                        userId: user.userId,
-                        username: user.username,
-                      });
-                    }}
-                    onAccept={(e) => {
-                      e.stopPropagation();
-                      const connectionId = statusByUserId.get(
-                        user.userId
-                      )?.connectionId;
-                      if (connectionId) {
-                        acceptConnectionRequest.mutate(connectionId);
-                      }
-                    }}
-                    onRevoke={(e) => {
-                      e.stopPropagation();
-                      const connectionId = statusByUserId.get(
-                        user.userId
-                      )?.connectionId;
-                      if (connectionId) {
-                        revokeConnectionRequest.mutate(connectionId);
-                      }
-                    }}
-                  />
-                ) : null
-              )}
-            </div>
-          )
+          <>
+            {connectedUsers.length > 0 && (
+              <div className="userSection">
+                <SectionLabel title="Connections" />
+                <div className="dropdown">{connectedUsers.map(userRow)}</div>
+              </div>
+            )}
+            {otherUsers.length > 0 && (
+              <div className="userSection">
+                {connectedUsers.length > 0 && (
+                  <SectionLabel title="Others on Buqs" />
+                )}
+                <div className="dropdown" ref={dropdownRef}>
+                  {otherUsers.map(userRow)}
+                </div>
+              </div>
+            )}
+          </>
         ) : !fromNonGroup && remainingSuggestedGroups.length > 0 ? (
           <div className="dropdown" ref={dropdownRef}>
             {remainingSuggestedGroups.map((group) => (
