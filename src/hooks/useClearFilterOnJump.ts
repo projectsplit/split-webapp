@@ -5,6 +5,7 @@ import { ExpenseParsedFilters, TransferParsedFilters } from '@/types';
 import { hasActiveExpenseFilters } from '@/helpers/hasActiveExpenseFilters';
 import { hasActiveTransferFilters } from '@/helpers/hasActiveTransferFilters';
 import { localStorageStringParser } from '@/components/SearchTransactions/helpers/localStorageStringParser';
+import { useJumpRequest } from './useJumpRequest';
 
 /**
  * A jump link (?jumpTo=) opens a list on one particular item, so it has to show the whole list: a
@@ -14,22 +15,26 @@ import { localStorageStringParser } from '@/components/SearchTransactions/helper
  * which reads it back from session storage.
  *
  * Each list only answers a jump into itself: a link to a transfer leaves the expense filter alone.
+ * Following the same link again is another jump (see useJumpRequest), so a filter set since the
+ * last one goes too.
  */
-const useJumpTokenFor = (list: 'expenses' | 'transfers') => {
+const useJumpFor = (list: 'expenses' | 'transfers') => {
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
 
-  return pathname.endsWith(`/${list}`) ? searchParams.get('jumpTo') : null;
+  return useJumpRequest(
+    pathname.endsWith(`/${list}`) ? searchParams.get('jumpTo') : null
+  );
 };
 
 export const useClearExpenseFilterOnJump = (
   expenseParsedFilters: Signal<ExpenseParsedFilters>,
   storageKey: string
 ) => {
-  const jumpToken = useJumpTokenFor('expenses');
+  const jump = useJumpFor('expenses');
 
   useEffect(() => {
-    if (!jumpToken) return;
+    if (!jump) return;
 
     sessionStorage.removeItem(storageKey);
 
@@ -37,17 +42,17 @@ export const useClearExpenseFilterOnJump = (
       const { expenseFilter } = localStorageStringParser(null, null);
       expenseParsedFilters.value = expenseFilter;
     }
-  }, [jumpToken, storageKey, expenseParsedFilters]);
+  }, [jump, storageKey, expenseParsedFilters]);
 };
 
 export const useClearTransferFilterOnJump = (
   transferParsedFilters: Signal<TransferParsedFilters>,
   storageKey: string
 ) => {
-  const jumpToken = useJumpTokenFor('transfers');
+  const jump = useJumpFor('transfers');
 
   useEffect(() => {
-    if (!jumpToken) return;
+    if (!jump) return;
 
     sessionStorage.removeItem(storageKey);
 
@@ -55,5 +60,5 @@ export const useClearTransferFilterOnJump = (
       const { transferFilter } = localStorageStringParser(null, null);
       transferParsedFilters.value = transferFilter;
     }
-  }, [jumpToken, storageKey, transferParsedFilters]);
+  }, [jump, storageKey, transferParsedFilters]);
 };

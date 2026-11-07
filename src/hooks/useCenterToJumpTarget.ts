@@ -1,12 +1,19 @@
 import { Signal } from '@preact/signals-react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useJumpRequest } from './useJumpRequest';
 
 type JumpTarget = { id: string; occurred: string; created: string };
+
+/** The item a jump marked, and which jump it was, so each one draws its ring afresh. */
+export type JumpHighlight = { id: string; run: number };
 
 /**
  * Brings the item a jump link (?jumpTo=) names into the middle of the list and marks it, and keeps
  * the view steady while newer items load in above it. Used by the expense and transfer lists alike:
  * each renders its rows with the id `${idPrefix}-${item.id}` so the target can be found.
+ *
+ * Following the same link again is another jump (see useJumpRequest), so the same notification
+ * tapped again from inside the list brings the item back to the middle and rings it again.
  */
 export const useCenterToJumpTarget = <T extends JumpTarget>(
   scrollAreaRef: React.RefObject<HTMLDivElement | null>,
@@ -17,9 +24,10 @@ export const useCenterToJumpTarget = <T extends JumpTarget>(
   isFetchingPreviousPage: boolean = false,
   isPlaceholderData: boolean = false
 ) => {
+  const jump = useJumpRequest(jumpToken);
   const savedScrollHeight = useRef<number>(0);
-  const jumpToProcessed = useRef<string | null>(null);
-  const [highlightedId, setHighlightedId] = useState<string | null>(null);
+  const jumpProcessed = useRef<string | null>(null);
+  const [highlight, setHighlight] = useState<JumpHighlight | null>(null);
 
   useEffect(() => {
     const el = scrollAreaRef.current;
@@ -51,8 +59,9 @@ export const useCenterToJumpTarget = <T extends JumpTarget>(
 
   useLayoutEffect(() => {
     if (
+      jump &&
       jumpToken &&
-      jumpToken !== jumpToProcessed.current &&
+      jump !== jumpProcessed.current &&
       // A jump made while the list is already open shows the old list until the page around the
       // target arrives. Centring on the target there would spend the jump on rows about to be
       // replaced, and leave it off-centre once they are.
@@ -73,16 +82,19 @@ export const useCenterToJumpTarget = <T extends JumpTarget>(
           if (element) {
             element.scrollIntoView({ block: 'center' });
 
-            setHighlightedId(target.id);
+            setHighlight((current) => ({
+              id: target.id,
+              run: (current?.run ?? 0) + 1,
+            }));
 
-            jumpToProcessed.current = jumpToken;
+            jumpProcessed.current = jump;
           }
         }
       } catch (e) {
         console.error('Failed to parse jump token', e);
       }
     }
-  }, [jumpToken, items, idPrefix, isPlaceholderData]);
+  }, [jump, jumpToken, items, idPrefix, isPlaceholderData]);
 
-  return highlightedId;
+  return highlight;
 };

@@ -163,7 +163,7 @@ const Expenses = () => {
     showBottomBar.value = !isPending || isPaused;
   }, [isPending, isPaused, showBottomBar]);
 
-  const highlightedId = useCenterToJumpTarget(
+  const highlight = useCenterToJumpTarget(
     scrollAreaRef,
     isScrolled,
     expenses,
@@ -342,12 +342,17 @@ const Expenses = () => {
                 <div className="rows">
                   {items.map((e) => (
                     <div
-                      className={`expense${e.id === highlightedId ? ' jump-highlight' : ''}`}
+                      className={`expense${e.id === highlight?.id ? ' jump-highlight' : ''}`}
                       key={e.id}
                       id={`expense-${e.id}`}
                     >
-                      {e.id === highlightedId ? (
-                        <svg className="jumpRing" aria-hidden="true">
+                      {highlight && e.id === highlight.id ? (
+                        // Keyed by the jump, so a jump back to the same row draws the ring afresh.
+                        <svg
+                          key={highlight.run}
+                          className="jumpRing"
+                          aria-hidden="true"
+                        >
                           <rect
                             width="100%"
                             height="100%"
