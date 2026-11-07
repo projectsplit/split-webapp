@@ -42,6 +42,18 @@ export const StyledNotificationCard = styled.div`
     font-weight: ${({ theme }) => theme.weight.semibold};
   }
 
+  .detail {
+    margin-top: ${({ theme }) => theme.space.s3};
+    font-size: ${({ theme }) => theme.size.s12};
+    line-height: 1.5;
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  .detail .consequence {
+    margin-top: ${({ theme }) => theme.space.s3};
+    color: ${({ theme }) => theme.ink.primary};
+  }
+
   .actions {
     display: flex;
     flex-direction: row;
@@ -63,5 +75,4 @@ export const StyledNotificationCard = styled.div`
     display: flex;
     flex-direction: column;
   }
-
 `;
