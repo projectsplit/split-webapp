@@ -41,11 +41,17 @@ interface DonationPromptTimingOptions {
   enabled: boolean;
   /** Something is in the way right now — a menu, an overlay, a route that is mid-flow. */
   blocked: boolean;
+  /**
+   * Asked once more just before the prompt opens. `blocked` is as of the last render, and what else
+   * was waiting for the screen claims it from its own effect in the same moment it comes free.
+   */
+  isStillBlocked?: () => boolean;
 }
 
 export function useDonationPromptTiming({
   enabled,
   blocked,
+  isStillBlocked,
 }: DonationPromptTimingOptions) {
   const [hasDwelled, setHasDwelled] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -55,6 +61,8 @@ export function useDonationPromptTiming({
   const [isOpen, setIsOpen] = useState(false);
 
   const hasLatched = useRef(false);
+  const stillBlocked = useRef(isStillBlocked);
+  stillBlocked.current = isStillBlocked;
 
   useEffect(() => {
     const timer = window.setTimeout(
@@ -97,10 +105,20 @@ export function useDonationPromptTiming({
       return;
     }
 
-    hasLatched.current = true;
-    hasShownThisSession = true;
+    // A beat later rather than now. Leaving a group invitation frees the screen for the welcome
+    // tour too, which takes it from an effect running alongside this one; the prompt then waits
+    // for the tour instead of opening over it.
+    const timer = window.setTimeout(() => {
+      if (hasLatched.current || hasShownThisSession) return;
+      if (stillBlocked.current?.()) return;
 
-    setIsOpen(true);
+      hasLatched.current = true;
+      hasShownThisSession = true;
+
+      setIsOpen(true);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, [enabled, blocked, hasDwelled, hasInteracted, isVisible]);
 
   return {

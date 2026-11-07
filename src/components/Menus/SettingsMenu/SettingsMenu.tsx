@@ -5,7 +5,7 @@ import SectionLabel from '../../SectionLabel/SectionLabel';
 import { useGetRecurringExpenses } from '@/api/auth/QueryHooks/useGetRecurringExpenses';
 import { SettingsMenuProps } from '../../../interfaces';
 import { IoClose } from 'react-icons/io5';
-import { FaFileArrowDown, FaHeart, FaRepeat } from 'react-icons/fa6';
+import { FaCompass, FaFileArrowDown, FaHeart, FaRepeat } from 'react-icons/fa6';
 import IonIcon from '@reacticons/ionicons';
 import MyButton from '../../MyButton/MyButton';
 import { StyledUserOptionsButton } from '../../UserOptionsButton/UserOptionsButton.styled';
@@ -49,6 +49,7 @@ import {
 import { clearSavedQueryCache } from '@/api/offline/queryCachePersistence';
 import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
 import { forgetPaymentsOnDevice } from '@/helpers/paymentCapture/paymentReview';
+import { WELCOME_FROM_SETTINGS } from '@/helpers/welcomeTour';
 import { usePaymentCaptureStatus } from '@/hooks/usePaymentCaptureStatus';
 import PaymentCaptureMenuAnimation from '../../Animations/PaymentCaptureMenuAnimation';
 
@@ -375,6 +376,17 @@ export default function SettingsMenu({
                 </span>
               }
               onClick={openPlusInfo}
+            >
+              <span className="rowValue">
+                <IonIcon name="chevron-forward-outline" className="rowChevron" />
+              </span>
+            </PropertyRow>
+
+            <PropertyRow
+              action
+              icon={<FaCompass />}
+              label="Welcome tour"
+              onClick={() => (menu.value = WELCOME_FROM_SETTINGS)}
             >
               <span className="rowValue">
                 <IonIcon name="chevron-forward-outline" className="rowChevron" />

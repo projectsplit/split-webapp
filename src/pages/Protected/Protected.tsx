@@ -31,6 +31,7 @@ import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt
 import { useRecoverDonationPurchases } from '@/hooks/useRecoverDonationPurchases';
 import { syncPendingTransactions } from '@/api/offline/pendingTransactionSync';
 import PaymentReview from '../../components/PaymentReview/PaymentReview';
+import WelcomeTour from '../../components/WelcomeTour/WelcomeTour';
 
 /**
  * Everything the bell and the notifications menu are built from. A push can be about any of them:
@@ -190,6 +191,9 @@ const Protected: React.FC = () => {
       <SettingsMenuAnimation menu={menu} userInfo={userInfo} />
       <SupportMenuAnimation supportMenu={menu} />
       <PlusInfoAnimation />
+      {/* Before the prompts below, so that on someone's first start it takes the screen first and
+          they wait for it on the shared menu signal. */}
+      <WelcomeTour menu={menu} hasOverlay={Boolean(code)} />
       {/* Mounted here rather than in App because it needs a signed-in account: the prompt asks the
           server whether this person is due to be asked at all. */}
       <DonationPrompt menu={menu} hasOverlay={Boolean(code)} />

@@ -64,6 +64,7 @@ export default function DonationPrompt({
     // to. The settings entry stays reachable there and explains where it can be done.
     enabled: Boolean(info?.isAvailable && info?.shouldAsk) && isNativeApp(),
     blocked: Boolean(menu.value) || hasOverlay || isMidFlow,
+    isStillBlocked: () => Boolean(menu.peek()),
   });
 
   const handleDismiss = (optOut: boolean) => {
