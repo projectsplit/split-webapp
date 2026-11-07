@@ -17,8 +17,8 @@ export default function PrivacyPolicy() {
       <p className="updated">Last updated {lastUpdated}</p>
       <p>
         This policy explains what Buqs keeps about you, why, and what you can do
-        about it. Buqs is the expense-splitting and budgeting app at buqs.uk and
-        on Google Play.
+        about it. Buqs is the expense and budget manager at buqs.uk and on
+        Google Play.
       </p>
 
       <h2>Who runs Buqs</h2>
@@ -76,19 +76,23 @@ export default function PrivacyPolicy() {
 
       <h2>Payments from your notifications</h2>
       <p>
-        In the Android app you can let Buqs read the notifications your bank
-        and payment apps send when you pay, so that it can offer each payment
-        as an expense. It is off until you turn it on in settings and allow
-        notification access in Android. Buqs then keeps, on your phone only,
-        the notifications that mention an amount from the payment apps you
-        choose. Of any other app it notes only the name, when it posts what
+        In the Android app you can let Buqs read the notifications your bank and
+        payment apps send when you pay, so that it can offer each payment as an
+        expense. It is off until you turn it on, in the welcome tour or in
+        settings, and allow notification access in Android. Buqs then keeps, on
+        your phone only, the notifications that mention an amount from the
+        payment apps you choose, in storage left out of your phone&apos;s
+        backups. Of any other app it notes only the name, when it posts what
         looks like a payment, so that you can choose it too. Chats are never
         passed to Buqs.
       </p>
       <p>
         Nothing read this way reaches our servers unless you add it as an
-        expense. What you leave out is deleted from your phone, and signing out
-        deletes the rest.
+        expense. What you leave out is deleted from your phone, and so is
+        anything you have not looked at within 60 days. Signing out, deleting
+        your account or someone else signing in on the phone deletes the rest,
+        along with how you filed the places you paid at. You can turn it off at
+        any time in settings, or by withdrawing notification access in Android.
       </p>
 
       <h2>What Buqs does not do</h2>
@@ -203,9 +207,9 @@ export default function PrivacyPolicy() {
         Buqs sets one cookie, which keeps you signed in. It also keeps your
         sign-in token and the last location you allowed in your browser&apos;s
         storage on your device, and in the Android app, how you filed the places
-        you paid at (the name, the group and the labels), so that their next
-        payments come up filed the same way. There are no advertising or
-        tracking cookies.
+        you paid at (the name, where it went, who shared it and the labels), so
+        that their next payments come up filed the same way. There are no
+        advertising or tracking cookies.
       </p>
 
       <h2>Children</h2>

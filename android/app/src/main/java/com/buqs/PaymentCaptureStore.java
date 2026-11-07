@@ -114,9 +114,21 @@ final class PaymentCaptureStore {
         return true;
     }
 
-    /** A copy, so the caller can hand it on while the listener keeps adding. */
+    /**
+     * A copy, so the caller can hand it on while the listener keeps adding. What is too old to keep
+     * goes as it is read as well as when the next payment arrives, so that a phone whose payment apps
+     * go quiet does not hold on to it past the 60 days the privacy policy promises.
+     */
     static synchronized JSONArray captures(Context context) {
-        return copy(captures(load(context)));
+        JSONArray all = captures(load(context));
+        JSONArray kept = prune(all);
+
+        if (kept.length() != all.length()) {
+            put(state, "captures", kept);
+            save(context);
+        }
+
+        return copy(kept);
     }
 
     static synchronized void remove(Context context, Set<String> ids) {
