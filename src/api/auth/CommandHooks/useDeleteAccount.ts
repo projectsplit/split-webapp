@@ -8,6 +8,7 @@ import routes from '../../../routes';
 import { getSignedInUserId } from '../../../helpers/isUserAuthenticated';
 import { dropPendingTransactionsOf } from '../../offline/pendingTransactions';
 import { clearSavedQueryCache } from '../../offline/queryCachePersistence';
+import { forgetPaymentsOnDevice } from '../../../helpers/paymentCapture/paymentReview';
 
 /**
  * Deletes the signed-in account, then leaves this device as signed out as the server already is.
@@ -55,6 +56,8 @@ export const useDeleteAccount = () => {
       sessionStorage.removeItem('submittedFromHomePersistData');
       if (userId) void dropPendingTransactionsOf(userId);
       void clearSavedQueryCache();
+      // As for signing out: the payments read from notifications were the account's.
+      void forgetPaymentsOnDevice();
 
       navigate(
         `${routes.AUTH}?message=${encodeURIComponent(

@@ -1,20 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
-  DonationProduct,
   DonationPromptInfo,
   DonationTier,
   DonationTierKind,
 } from '../../types';
 import { useDonate } from '../../api/auth/CommandHooks/useDonate';
+import { useDonationAmounts } from '../../api/auth/QueryHooks/useDonationAmounts';
 import { useDonationTiers } from '../../api/auth/QueryHooks/useDonationTiers';
 import { useGetMe } from '@/api/auth/QueryHooks/useGetMe';
-import { loadDonationTiers } from '@/helpers/playBilling';
 import { isNativeApp } from '@/helpers/platform';
 import MyButton from '../MyButton/MyButton';
 import Spinner from '../Spinner/Spinner';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import PuppyEyes from './PuppyEyes';
 import {
+  AmountRange,
   AmountRow,
   Disclaimer,
   ErrorText,
@@ -34,16 +34,46 @@ import {
  *
  * Google Play only sells products defined in the Play Console, at prices it sets per country, so
  * every figure here is Play's own, in the reader's currency. "Other amount" works within that rule:
- * there is one product per whole amount, and the typed figure picks which one to buy. Play's own
- * checkout then shows the exact price before anything is charged.
+ * there is one product per whole amount, Play prices each of them for the reader's country, and the
+ * typed figure picks the one whose price is nearest. The button shows that price, and Play's own
+ * checkout confirms it before anything is charged.
  */
 
 /** Stands in for a product id while "Other amount" is the selection. */
 const OTHER = 'other';
 
-/** 1700 as "17", 1750 as "17.50": decimals only when there are any. */
-const formatMinor = (minor: number) =>
-  minor % 100 === 0 ? String(minor / 100) : (minor / 100).toFixed(2);
+/** The nearest ancestor that scrolls its own content: the sheet the form sits in. */
+const scrollingAncestor = (element: HTMLElement | null) => {
+  for (let node = element?.parentElement; node; node = node.parentElement) {
+    const { overflowY } = getComputedStyle(node);
+    if (overflowY === 'auto' || overflowY === 'scroll') return node;
+  }
+
+  return null;
+};
+
+/**
+ * The amount to buy for a typed figure: the one whose price here is nearest to it. In dollars,
+ * euros, pounds and Swiss francs that is the figure itself; elsewhere each amount costs Play's
+ * conversion of that many dollars, so the nearest is as close as Play can sell. A figure below the
+ * cheapest or above the dearest matches nothing, rather than being quietly moved into range.
+ * Expects the amounts cheapest first.
+ */
+const nearestAmount = (amounts: DonationTier[], typed: number) => {
+  if (
+    amounts.length === 0 ||
+    typed < amounts[0].price ||
+    typed > amounts[amounts.length - 1].price
+  ) {
+    return null;
+  }
+
+  return amounts.reduce((nearest, amount) =>
+    Math.abs(amount.price - typed) < Math.abs(nearest.price - typed)
+      ? amount
+      : nearest
+  );
+};
 
 /**
  * What may be typed: digits with at most one decimal point and two places after it. A comma counts
@@ -105,8 +135,6 @@ export default function DonationForm({
   );
   const [typedAmount, setTypedAmount] = useState('');
   const [isOtherMonthly, setIsOtherMonthly] = useState(false);
-  const [isFindingAmount, setIsFindingAmount] = useState(false);
-  const [otherError, setOtherError] = useState<string | null>(null);
   const [hasGiven, setHasGiven] = useState(false);
 
   const donate = useDonate(userInfo?.userId);
@@ -130,32 +158,75 @@ export default function DonationForm({
     (tier) => tier.productId === selectedProductId
   );
 
-  // The products for typed amounts are priced as the same number in each currency, so the reader's
-  // currency is whatever Play quotes the fixed tiers in.
-  const symbol = currencySymbol(tiers?.[0]?.currencyCode);
-
   const offersMonthly = Boolean(customAmount?.monthlyMaxMinor);
-  const isWholeSteps = customAmount ? customAmount.stepMinor % 100 === 0 : true;
-  // Monthly has a lower ceiling than one-off: it is a standing commitment.
-  const limitMinor = customAmount
-    ? isOtherMonthly && offersMonthly
-      ? customAmount.monthlyMaxMinor
-      : customAmount.maxMinor
-    : 0;
+  const isOtherMonthlyKind = isOtherMonthly && offersMonthly;
 
-  // In minor units, and only when it is one of the amounts that exist as products.
-  const typedMinor = /^\d+(\.\d{1,2})?$/.test(typedAmount)
-    ? Math.round(Number(typedAmount) * 100)
+  // Two hundred prices nobody needs until "Other amount" is picked, so they are asked for only then.
+  const { data: amounts, isPending: isLoadingAmounts } = useDonationAmounts(
+    customAmount,
+    isOtherMonthlyKind ? DonationTierKind.Monthly : DonationTierKind.OneTime,
+    isOther && info.isAvailable
+  );
+  const cheapest = amounts?.[0];
+  const dearest =
+    amounts && amounts.length > 0 ? amounts[amounts.length - 1] : undefined;
+
+  // The currency Play quotes is the one it charges in, so that is the symbol beside the box.
+  const symbol = currencySymbol(
+    cheapest?.currencyCode ?? tiers?.[0]?.currencyCode
+  );
+
+  // A trailing point is a decimal still being typed, so "12." already counts as 12.
+  const typedValue = /^\d+(\.\d{0,2})?$/.test(typedAmount)
+    ? Number(typedAmount)
     : null;
-  const isOnStep =
-    customAmount !== null &&
-    typedMinor !== null &&
-    typedMinor >= customAmount.stepMinor &&
-    typedMinor % customAmount.stepMinor === 0;
-  const otherAmount =
-    isOnStep && typedMinor !== null && typedMinor <= limitMinor
-      ? typedMinor
-      : null;
+  const matched =
+    typedValue !== null && amounts ? nearestAmount(amounts, typedValue) : null;
+  const isBelowRange =
+    typedValue !== null && cheapest !== undefined && typedValue < cheapest.price;
+  const isAboveRange =
+    typedValue !== null && dearest !== undefined && typedValue > dearest.price;
+
+  // What the button buys and prices: Play's figure for exactly that product, so a typed amount shows
+  // as the nearest one Play sells rather than as typed.
+  const toBuy = isOther ? matched : selected;
+
+  const otherRef = useRef<HTMLDivElement>(null);
+
+  // The keyboard opens straight onto the amount box and shrinks the sheet around it, which otherwise
+  // leaves the box half hidden and the button that answers it under the keyboard. Centring the box
+  // keeps the range above it and the button below it in view, as MemberPicker does for its rows.
+  useEffect(() => {
+    if (!isOther) return;
+
+    let frame = 0;
+
+    const revealAmount = () => {
+      const box = otherRef.current?.querySelector('.amountInput');
+      if (!box || !box.contains(document.activeElement)) return;
+
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        box.scrollIntoView({ block: 'center' });
+      });
+    };
+
+    // The sheet's height is a share of the viewport, and it can settle a frame after the viewport
+    // reports the keyboard. Centring on the viewport event alone then sometimes measured the sheet
+    // before it had shrunk, so its own size change triggers it too.
+    const sheetResized = new ResizeObserver(revealAmount);
+    const sheet = scrollingAncestor(otherRef.current);
+    if (sheet) sheetResized.observe(sheet);
+
+    document.addEventListener('focusin', revealAmount);
+    window.visualViewport?.addEventListener('resize', revealAmount);
+    return () => {
+      cancelAnimationFrame(frame);
+      sheetResized.disconnect();
+      document.removeEventListener('focusin', revealAmount);
+      window.visualViewport?.removeEventListener('resize', revealAmount);
+    };
+  }, [isOther]);
 
   const give = (tier: DonationTier) => {
     donate.mutate(tier, {
@@ -168,41 +239,8 @@ export default function DonationForm({
     });
   };
 
-  const handleGive = async () => {
-    if (!isOther) {
-      if (selected) give(selected);
-      return;
-    }
-
-    if (!customAmount || otherAmount === null) return;
-
-    const product: DonationProduct = isOtherMonthly
-      ? {
-          productId: `${customAmount.monthlyProductPrefix}${otherAmount}`,
-          kind: DonationTierKind.Monthly,
-          basePlanId: customAmount.monthlyBasePlanId,
-        }
-      : {
-          productId: `${customAmount.oneTimeProductPrefix}${otherAmount}`,
-          kind: DonationTierKind.OneTime,
-          basePlanId: null,
-        };
-
-    // Asked for on demand rather than loaded with the tiers: there is a product for every amount,
-    // and only the one typed is ever needed.
-    setOtherError(null);
-    setIsFindingAmount(true);
-    const [tier] = await loadDonationTiers([product]);
-    setIsFindingAmount(false);
-
-    if (!tier) {
-      setOtherError(
-        "That amount isn't available right now. Please try another."
-      );
-      return;
-    }
-
-    give(tier);
+  const handleGive = () => {
+    if (toBuy) give(toBuy);
   };
 
   // Only ever shown once the server has confirmed the gift, which it does by verifying the purchase
@@ -262,20 +300,22 @@ export default function DonationForm({
   const hasNoTiers = !isLoadingTiers && !tiers?.length;
 
   const isMonthly = isOther
-    ? isOtherMonthly
+    ? isOtherMonthlyKind
     : selected?.kind === DonationTierKind.Monthly;
 
-  const giveLabel = isOther
-    ? otherAmount === null
-      ? 'Enter an amount'
-      : `Give ${symbol}${formatMinor(otherAmount)}${isOtherMonthly ? ' monthly' : ''}`
-    : !selected
+  // Below the cheapest is often a figure still being typed ("1" on the way to "150"), so only the
+  // button says so; past the dearest no further digit can help, so the range line turns red too.
+  const giveLabel = toBuy
+    ? `Give ${toBuy.priceString}${isMonthly ? ' monthly' : ''}`
+    : !isOther
       ? ''
-      : isMonthly
-        ? `Give ${selected.priceString} monthly`
-        : `Give ${selected.priceString}`;
+      : isBelowRange && cheapest
+        ? `Minimum ${cheapest.priceString}`
+        : isAboveRange && dearest
+          ? `Maximum ${dearest.priceString}`
+          : 'Enter an amount';
 
-  const isBusy = donate.isPending || isFindingAmount;
+  const isBusy = donate.isPending;
 
   return (
     <StyledDonationForm>
@@ -318,7 +358,7 @@ export default function DonationForm({
           {customAmount && (
             <Preset
               type="button"
-              style={{ gridColumn: '1 / -1' }}
+              style={{ flexBasis: '100%' }}
               $selected={isOther}
               onClick={() => setSelectedProductId(OTHER)}
             >
@@ -329,30 +369,48 @@ export default function DonationForm({
       )}
 
       {isOther && customAmount && (
-        <OtherAmount>
-          <label className="amountInput">
-            <span className="currency">{symbol}</span>
-            <input
-              type="text"
-              inputMode={isWholeSteps ? 'numeric' : 'decimal'}
-              autoFocus
-              placeholder={`${formatMinor(customAmount.stepMinor)} to ${formatMinor(limitMinor)}`}
-              aria-label="Amount to give"
-              value={typedAmount}
-              onChange={(event) => {
-                setTypedAmount(cleanTypedAmount(event.target.value));
-                setOtherError(null);
-              }}
-            />
-          </label>
-          {typedAmount !== '' && otherAmount === null && (
+        <OtherAmount ref={otherRef}>
+          {isLoadingAmounts ? (
+            <div className="loading">
+              <Spinner />
+            </div>
+          ) : !cheapest || !dearest ? (
             <ErrorText>
-              {isOnStep && isOtherMonthly
-                ? `Monthly gifts go up to ${symbol}${formatMinor(limitMinor)}.`
-                : isWholeSteps
-                  ? `Enter a whole amount from ${formatMinor(customAmount.stepMinor)} to ${formatMinor(limitMinor)}.`
-                  : `Enter an amount from ${formatMinor(customAmount.stepMinor)} to ${formatMinor(limitMinor)}, in steps of ${formatMinor(customAmount.stepMinor)}.`}
+              Other amounts are unavailable right now. Please try again later.
             </ErrorText>
+          ) : (
+            <>
+              {/* Above the box rather than under it: the keyboard opens straight onto the box, and
+                  anything below it starts out hidden behind the keyboard. */}
+              <AmountRange $outside={isAboveRange}>
+                From {cheapest.priceString} to {dearest.priceString}
+              </AmountRange>
+              <label className="amountInput">
+                <span className="currency">{symbol}</span>
+                <input
+                  type="text"
+                  inputMode={
+                    amounts?.every((amount) => Number.isInteger(amount.price))
+                      ? 'numeric'
+                      : 'decimal'
+                  }
+                  autoFocus
+                  aria-label="Amount to give"
+                  value={typedAmount}
+                  onChange={(event) =>
+                    setTypedAmount(cleanTypedAmount(event.target.value))
+                  }
+                />
+              </label>
+              {/* Within half a cent counts as exact: both sides are decimals stored as floats. */}
+              {matched &&
+                typedValue !== null &&
+                Math.abs(typedValue - matched.price) >= 0.005 && (
+                <Disclaimer>
+                  The nearest amount Google Play offers is {matched.priceString}.
+                </Disclaimer>
+              )}
+            </>
           )}
           {offersMonthly && (
             <div className="monthlyRow">
@@ -369,13 +427,12 @@ export default function DonationForm({
         </OtherAmount>
       )}
 
-      {otherError && <ErrorText>{otherError}</ErrorText>}
       {requestError && <ErrorText>{requestError}</ErrorText>}
 
       {(selected || isOther) && (
         <MyButton
           variant="primary"
-          disabled={isBusy || (isOther && otherAmount === null)}
+          disabled={isBusy || !toBuy}
           isLoading={isBusy}
           onClick={handleGive}
         >

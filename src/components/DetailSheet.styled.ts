@@ -10,6 +10,11 @@ export const StyledDetailedBackdrop = styled.div`
   -webkit-backdrop-filter: blur(6px);
 `;
 
+/**
+ * The detail of an expense or a transfer. Its rules reach only its own header, details and footer:
+ * the menus opened from it, such as the edit form and its split screen or the delete dialog, are
+ * drawn inside it as well and use some of the same class names.
+ */
 export const StyledDetailSheet = styled(StyledMiddleScreenMenu)`
   display: flex;
   flex-direction: column;
@@ -19,7 +24,7 @@ export const StyledDetailSheet = styled(StyledMiddleScreenMenu)`
   overflow: hidden;
   z-index: 4;
 
-  .header {
+  > .header {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -60,7 +65,7 @@ export const StyledDetailSheet = styled(StyledMiddleScreenMenu)`
     }
   }
 
-  .detailsScroll {
+  > .detailsScroll {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
@@ -68,58 +73,58 @@ export const StyledDetailSheet = styled(StyledMiddleScreenMenu)`
     flex-direction: column;
     gap: ${({ theme }) => theme.space.s12};
     padding: ${({ theme }) => `0 ${theme.space.s16}`};
+
+    .summary {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: ${({ theme }) => theme.space.s8};
+    }
+
+    .amount {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: ${({ theme }) => theme.font.mono};
+      font-size: ${({ theme }) => theme.figure.card};
+      font-weight: ${({ theme }) => theme.weight.medium};
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: ${({ theme }) => theme.ink.primary};
+    }
+
+    .meta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: ${({ theme }) => theme.space.s2};
+      padding-top: ${({ theme }) => theme.space.s2};
+      font-size: ${({ theme }) => theme.size.s11};
+      line-height: 1.5;
+      color: ${({ theme }) => theme.ink.tertiary};
+
+      .metaLine {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: center;
+        gap: ${({ theme }) => theme.space.s6};
+        text-align: center;
+      }
+
+      .metaSep {
+        color: ${({ theme }) => theme.surface.mark};
+      }
+    }
   }
 
-  .detailsScroll:not(:has(~ .footer)) {
+  > .detailsScroll:not(:has(~ .footer)) {
     padding-bottom: ${({ theme }) => theme.space.s16};
   }
 
-  .summary {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: ${({ theme }) => theme.space.s8};
-  }
-
-  .amount {
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-family: ${({ theme }) => theme.font.mono};
-    font-size: ${({ theme }) => theme.figure.card};
-    font-weight: ${({ theme }) => theme.weight.medium};
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    color: ${({ theme }) => theme.ink.primary};
-  }
-
-  .meta {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: ${({ theme }) => theme.space.s2};
-    padding-top: ${({ theme }) => theme.space.s2};
-    font-size: ${({ theme }) => theme.size.s11};
-    line-height: 1.5;
-    color: ${({ theme }) => theme.ink.tertiary};
-
-    .metaLine {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: center;
-      gap: ${({ theme }) => theme.space.s6};
-      text-align: center;
-    }
-
-    .metaSep {
-      color: ${({ theme }) => theme.surface.mark};
-    }
-  }
-
-  .footer {
+  > .footer {
     flex-shrink: 0;
     display: flex;
     flex-direction: row;

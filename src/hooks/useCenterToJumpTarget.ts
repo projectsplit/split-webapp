@@ -1,11 +1,18 @@
 import { Signal } from '@preact/signals-react';
-import { ExpenseResponseItem } from '@/types';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-export const useCenterToExpense = (
+type JumpTarget = { id: string; occurred: string; created: string };
+
+/**
+ * Brings the item a jump link (?jumpTo=) names into the middle of the list and marks it, and keeps
+ * the view steady while newer items load in above it. Used by the expense and transfer lists alike:
+ * each renders its rows with the id `${idPrefix}-${item.id}` so the target can be found.
+ */
+export const useCenterToJumpTarget = <T extends JumpTarget>(
   scrollAreaRef: React.RefObject<HTMLDivElement | null>,
   isScrolled: Signal<boolean>,
-  expenses: ExpenseResponseItem[] | undefined,
+  items: T[] | undefined,
+  idPrefix: string,
   jumpToken?: string,
   isFetchingPreviousPage: boolean = false,
   isPlaceholderData: boolean = false
@@ -22,7 +29,7 @@ export const useCenterToExpense = (
     };
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
-  }, [isScrolled, expenses, scrollAreaRef]);
+  }, [isScrolled, items, scrollAreaRef]);
   useLayoutEffect(() => {
     if (isFetchingPreviousPage && scrollAreaRef.current) {
       savedScrollHeight.current = scrollAreaRef.current.scrollHeight;
@@ -40,7 +47,7 @@ export const useCenterToExpense = (
         newScrollHeight - savedScrollHeight.current;
       savedScrollHeight.current = 0;
     }
-  }, [isFetchingPreviousPage, expenses?.length, scrollAreaRef]);
+  }, [isFetchingPreviousPage, items?.length, scrollAreaRef]);
 
   useLayoutEffect(() => {
     if (
@@ -50,25 +57,23 @@ export const useCenterToExpense = (
       // target arrives. Centring on the target there would spend the jump on rows about to be
       // replaced, and leave it off-centre once they are.
       !isPlaceholderData &&
-      expenses &&
-      expenses.length > 0
+      items &&
+      items.length > 0
     ) {
       try {
         const tokenStr = atob(jumpToken);
         const parsedToken = JSON.parse(tokenStr);
         const targetOccurred = parsedToken.Occurred;
         const targetCreated = parsedToken.Created;
-        const targetExpense = expenses.find(
+        const target = items.find(
           (e) => e.occurred === targetOccurred && e.created === targetCreated
         );
-        if (targetExpense) {
-          const element = document.getElementById(
-            `expense-${targetExpense.id}`
-          );
+        if (target) {
+          const element = document.getElementById(`${idPrefix}-${target.id}`);
           if (element) {
             element.scrollIntoView({ block: 'center' });
 
-            setHighlightedId(targetExpense.id);
+            setHighlightedId(target.id);
 
             jumpToProcessed.current = jumpToken;
           }
@@ -77,7 +82,7 @@ export const useCenterToExpense = (
         console.error('Failed to parse jump token', e);
       }
     }
-  }, [jumpToken, expenses, isPlaceholderData]);
+  }, [jumpToken, items, idPrefix, isPlaceholderData]);
 
   return highlightedId;
 };

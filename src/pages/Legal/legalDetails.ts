@@ -14,5 +14,5 @@ export const legalDetails = {
   // the public contact on the Play listing.
   contactEmail: 'support@buqs.uk',
 
-  lastUpdated: '25 October 2026',
+  lastUpdated: '7 November 2026',
 };

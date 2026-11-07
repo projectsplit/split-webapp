@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyledSettingsMenu } from './SettingsMenu.styled';
 import PropertyList, { PropertyRow } from '../../ListForms/PropertyList';
 import SectionLabel from '../../SectionLabel/SectionLabel';
 import { useGetRecurringExpenses } from '@/api/auth/QueryHooks/useGetRecurringExpenses';
 import { SettingsMenuProps } from '../../../interfaces';
 import { IoClose } from 'react-icons/io5';
-import { FaFileArrowDown, FaHeart, FaRepeat } from 'react-icons/fa6';
+import { FaCompass, FaFileArrowDown, FaHeart, FaRepeat } from 'react-icons/fa6';
 import IonIcon from '@reacticons/ionicons';
 import MyButton from '../../MyButton/MyButton';
 import { StyledUserOptionsButton } from '../../UserOptionsButton/UserOptionsButton.styled';
@@ -48,6 +48,10 @@ import {
 } from '@/api/offline/pendingTransactions';
 import { clearSavedQueryCache } from '@/api/offline/queryCachePersistence';
 import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
+import { forgetPaymentsOnDevice } from '@/helpers/paymentCapture/paymentReview';
+import { WELCOME_FROM_SETTINGS } from '@/helpers/welcomeTour';
+import { usePaymentCaptureStatus } from '@/hooks/usePaymentCaptureStatus';
+import PaymentCaptureMenuAnimation from '../../Animations/PaymentCaptureMenuAnimation';
 
 const pushFailureMessages: Record<PushSubscribeFailure, string> = {
   unsupported: 'This browser cannot receive push notifications.',
@@ -74,6 +78,16 @@ export default function SettingsMenu({
   const deleteAccountMenu = useSignal<string | null>(null);
   const changePasswordMenu = useSignal<string | null>(null);
   const logoutWarningMenu = useSignal<string | null>(null);
+  const paymentCaptureMenu = useSignal<string | null>(null);
+
+  // Null outside the Android app, which is the only place notifications can be read. Read again as
+  // its own screen closes, where it is switched.
+  const { status: paymentCapture, refresh: refreshPaymentCapture } =
+    usePaymentCaptureStatus();
+
+  useEffect(() => {
+    if (paymentCaptureMenu.value === null) void refreshPaymentCapture();
+  }, [paymentCaptureMenu.value, refreshPaymentCapture]);
 
   // Only fetched to know whether donations are configured at all. An instance with no Google Play
   // credentials should not show an entry that can only lead to a dead end.
@@ -120,10 +134,12 @@ export default function SettingsMenu({
 
     localStorage.removeItem('accessToken');
     sessionStorage.removeItem('submittedFromHomePersistData');
-    // Logging out is a choice to leave nothing behind on this device: the saved screens, and
-    // anything still unsent, which the person was warned about first.
+    // Logging out is a choice to leave nothing behind on this device: the saved screens, anything
+    // still unsent, which the person was warned about first, and payments read from notifications
+    // along with how each merchant was filed.
     if (userId) void dropPendingTransactionsOf(userId);
     void clearSavedQueryCache();
+    void forgetPaymentsOnDevice();
     navigate(routes.AUTH);
 
     setTimeout(() => queryClient.clear(), 0);
@@ -302,6 +318,19 @@ export default function SettingsMenu({
                 />
               </PropertyRow>
             ) : null}
+            {paymentCapture ? (
+              <PropertyRow
+                label="Payments from notifications"
+                onClick={() => (paymentCaptureMenu.value = 'paymentCapture')}
+              >
+                <span className="rowValue">
+                  <span className="rowText">
+                    {paymentCapture.enabled ? 'On' : 'Off'}
+                  </span>
+                  <IonIcon name="chevron-forward-outline" className="rowChevron" />
+                </span>
+              </PropertyRow>
+            ) : null}
           </PropertyList>
           {pushError ? <div className="optionNote">{pushError}</div> : null}
         </div>
@@ -347,6 +376,17 @@ export default function SettingsMenu({
                 </span>
               }
               onClick={openPlusInfo}
+            >
+              <span className="rowValue">
+                <IonIcon name="chevron-forward-outline" className="rowChevron" />
+              </span>
+            </PropertyRow>
+
+            <PropertyRow
+              action
+              icon={<FaCompass />}
+              label="Welcome tour"
+              onClick={() => (menu.value = WELCOME_FROM_SETTINGS)}
             >
               <span className="rowValue">
                 <IonIcon name="chevron-forward-outline" className="rowChevron" />
@@ -424,7 +464,14 @@ export default function SettingsMenu({
       <MenuAnimationBackground menu={deleteAccountMenu} />
       <MenuAnimationBackground menu={changePasswordMenu} />
       <MenuAnimationBackground menu={logoutWarningMenu} />
+      <MenuAnimationBackground menu={paymentCaptureMenu} />
       <SupportMenuAnimation supportMenu={supportMenu} />
+      <PaymentCaptureMenuAnimation
+        menu={paymentCaptureMenu}
+        timeZoneId={
+          timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone
+        }
+      />
       <LogoutWarningAnimation
         menu={logoutWarningMenu}
         unsynced={unsynced}

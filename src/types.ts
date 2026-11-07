@@ -149,8 +149,8 @@ export type DonationTier = DonationProduct & {
 /**
  * "Other amount": one Play product per amount from `stepMinor` up to `maxMinor` (one-off) or
  * `monthlyMaxMinor` (monthly) in steps of `stepMinor`, named by appending the amount in minor units
- * to a prefix (1700 for 17). The form builds the id for whatever was typed and asks Play for that
- * product alone.
+ * to a prefix (1700 for 17). Play prices each one per country, so the form asks Play for all of them
+ * and buys the one whose price, in the reader's currency, is nearest to what was typed.
  */
 export type DonationCustomAmount = {
   maxMinor: number;
@@ -292,6 +292,7 @@ export type GetExpensesResponse = {
 export type GetGroupTransfersResponse = {
   transfers: TransferResponseItem[];
   next: string | null;
+  previous: string | null;
 };
 
 export type GroupExpenseResponseItem = ExpenseResponseItem & {
@@ -416,6 +417,10 @@ export type Invitation = {
   groupName: string;
   guestId: string | null;
   guestName: string | null;
+  // What the guest owes (positive) or is owed (negative), per currency.
+  guestBalance: Record<string, number> | null;
+  // Already in the group: accepting merges the guest into them.
+  isMerge: boolean;
 };
 export type GroupMember = Member | Guest;
 
@@ -775,6 +780,8 @@ export type GetUserInvitationsResponseItem = {
   groupName: string;
   guestId: string | null;
   guestName: string | null;
+  guestBalance: Record<string, number> | null;
+  isMerge: boolean;
 };
 export type DeleteExpenseRequest = {
   expenseId: string;

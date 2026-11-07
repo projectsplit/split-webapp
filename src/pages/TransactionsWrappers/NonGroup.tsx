@@ -27,7 +27,10 @@ import {
   getFilterStorageKey,
 } from '../../components/SearchTransactions/helpers/localStorageStringParser';
 import { transactionCategories } from '@/constants';
-import { useClearExpenseFilterOnJump } from '@/hooks/useClearExpenseFilterOnJump';
+import {
+  useClearExpenseFilterOnJump,
+  useClearTransferFilterOnJump,
+} from '@/hooks/useClearFilterOnJump';
 
 export default function NonGroup() {
   const menu = useSignal<string | null>(null);
@@ -61,6 +64,10 @@ export default function NonGroup() {
   useClearExpenseFilterOnJump(
     expenseParsedFilters,
     getFilterStorageKey('expense', undefined)
+  );
+  useClearTransferFilterOnJump(
+    transferParsedFilters,
+    getFilterStorageKey('transfer', undefined)
   );
   const location = useLocation();
   const path = location.pathname.split('/').pop() || '';

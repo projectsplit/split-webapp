@@ -150,6 +150,8 @@ export default function NotificationsMenu({
                         receiverId: x.receiverId,
                         senderId: x.senderId,
                         guestName: x.guestName,
+                        guestBalance: x.guestBalance,
+                        isMerge: x.isMerge,
                       }}
                       menu={menu}
                       timeZoneId={timeZoneId}

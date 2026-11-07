@@ -8,7 +8,8 @@ export const useTransferList = (
   group: Group,
   transferParsedFilters: Signal<TransferParsedFilters>,
   pageSize: number,
-  timeZoneId: string
+  timeZoneId: string,
+  jumpToken?: string
 ) => {
   const isNonGroup = mode === Mode.NonGroup;
 
@@ -16,13 +17,17 @@ export const useTransferList = (
     group,
     transferParsedFilters,
     pageSize,
-    timeZoneId
+    timeZoneId,
+    !isNonGroup,
+    jumpToken
   );
 
   const nonGroupQuery = useGetNonGroupTransfers(
     transferParsedFilters,
     pageSize,
-    timeZoneId
+    timeZoneId,
+    isNonGroup,
+    jumpToken
   );
 
   if (isNonGroup) return nonGroupQuery;

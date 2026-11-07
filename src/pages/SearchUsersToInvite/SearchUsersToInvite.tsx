@@ -17,6 +17,7 @@ import MenuAnimationBackground from '../../components/Animations/MenuAnimationBa
 import Sentinel from '../../components/Sentinel';
 import { SearchResultItem } from './SearchResultItem/SearchResultItem';
 import useDebounce from '../../hooks/useDebounce';
+import { useGetMe } from '@/api/auth/QueryHooks/useGetMe';
 
 const INVITE_CATEGORIES = {
   cat1: 'Invite User',
@@ -70,7 +71,9 @@ const SearchUsersToInvite = ({
   } = useCreateGuest(groupId, noGroupError, guestName, setGuestName);
 
   const { data: group } = useGroup(groupId);
+  const { data: me } = useGetMe();
   const groupGuests = group?.guests ?? [];
+  const isReplacing = !!guestToBeReplaced?.guestId;
 
   const handleCannotRemoveClick = () => {
     cannotBeRemovedClickedWarning.value = 'cannotRemoveGuest';
@@ -111,14 +114,23 @@ const SearchUsersToInvite = ({
           )}
 
           {category.value === 'Invite User' ? (
-            <div className="inputField">
-              <Input
-                className="search-input"
-                placeholder="Search"
-                onChange={(e) => setKeyword(e.target.value)}
-                value={keyword || ''}
-              />
-            </div>
+            <>
+              {isReplacing && (
+                <div className="sheetNote">
+                  Whoever accepts takes {guestToBeReplaced?.guestName}'s place,
+                  along with their expenses and balance. Someone already in the
+                  group is merged with {guestToBeReplaced?.guestName}.
+                </div>
+              )}
+              <div className="inputField">
+                <Input
+                  className="search-input"
+                  placeholder="Search"
+                  onChange={(e) => setKeyword(e.target.value)}
+                  value={keyword || ''}
+                />
+              </div>
+            </>
           ) : (
             <>
               <div className="sheetNote">
@@ -171,6 +183,7 @@ const SearchUsersToInvite = ({
                 groupId={groupId}
                 guestId={guestToBeReplaced?.guestId}
                 guestName={guestToBeReplaced?.guestName}
+                isYou={user.userId === me?.userId}
                 onInviteSuccess={(wasInvited) => {
                   updateUserInvitationStatus(user.userId, wasInvited);
                   if (wasInvited) {

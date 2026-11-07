@@ -12,11 +12,13 @@ import {
   Icon
 } from './PwaInstallPrompt.styled'
 import logo from '../../styles/logo/logoRounded.png';
+import { welcomeTourOpen } from '../../helpers/welcomeTour';
 
 export const PwaInstallPrompt: React.FC = () => {
   const { isInstallable, isAppInstalled, promptInstall, clearPrompt } = usePwaInstall();
 
-  if (!isInstallable || isAppInstalled) {
+  // After the welcome tour rather than over it, on someone's first sign-in.
+  if (!isInstallable || isAppInstalled || welcomeTourOpen.value) {
     return null;
   }
 

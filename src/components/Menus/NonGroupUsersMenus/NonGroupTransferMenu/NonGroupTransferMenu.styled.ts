@@ -70,6 +70,12 @@ export const StyledNonGroupTransferUsersMenu = styled(StyledFullScreenMenu)`
       color: ${({ theme }) => theme.ink.tertiary};
     }
 
+    .userSection {
+      display: flex;
+      flex-direction: column;
+      gap: ${({ theme }) => theme.space.s10};
+    }
+
     .dropdown {
       display: flex;
       flex-direction: column;

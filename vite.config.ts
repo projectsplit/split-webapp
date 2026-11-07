@@ -56,7 +56,7 @@ export default defineConfig(({ mode }) => {
         start_url: '/',
         name: appName,
         short_name: appName,
-        description: 'Buqs Web App',
+        description: 'Your expense manager',
         theme_color: '#000000',
         background_color: '#000000',
         display: 'standalone',

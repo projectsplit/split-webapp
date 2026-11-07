@@ -12,7 +12,7 @@ import {
   UserInfo,
 } from '../../types';
 import { StyledTransactionsPage } from '@/components/TransactionsPage.styled';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { Signal, useSignal } from '@preact/signals-react';
 import { DateOnly } from '../../helpers/timeHelpers';
 import DetailedTransfer from '../../components/DetailedTransfer/DetailedTransfer';
@@ -40,6 +40,7 @@ import {
 import PendingTransactionAnimation from '../../components/Animations/PendingTransactionAnimation';
 import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
 import { hasActiveTransferFilters } from '@/helpers/hasActiveTransferFilters';
+import { useCenterToJumpTarget } from '@/hooks/useCenterToJumpTarget';
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
@@ -76,19 +77,51 @@ const Transfers: React.FC = () => {
   const guests = group?.guests;
   const userMemberId = members?.find((m) => m.userId === userInfo?.userId)?.id;
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const isScrolled = useSignal<boolean>(false);
+  const [searchParams] = useSearchParams();
+  const jumpToken = searchParams.get('jumpTo') || '';
 
   const {
     data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    fetchPreviousPage,
+    isFetchingPreviousPage,
     isPending,
     isPaused,
+    isPlaceholderData,
     hasPreviousPage,
-  } = useTransferList(mode, group, transferParsedFilters, pageSize, timeZoneId);
+  } = useTransferList(
+    mode,
+    group,
+    transferParsedFilters,
+    pageSize,
+    timeZoneId,
+    jumpToken
+  );
 
   const { allUsers } = useGetAllNonGroupUsers(mode);
-  const transfers = data?.pages.flatMap((p) => p.transfers);
+  const transfers = useMemo(() => {
+    const rawTransfers = data?.pages.flatMap((p) => p.transfers);
+    return rawTransfers
+      ? Array.from(new Map(rawTransfers.map((t) => [t.id, t])).values())
+      : undefined;
+  }, [data]);
+
+  const highlightedId = useCenterToJumpTarget(
+    scrollAreaRef,
+    isScrolled,
+    transfers,
+    'transfer',
+    jumpToken,
+    isFetchingPreviousPage,
+    isPlaceholderData
+  );
+
+  const handleFetchPreviousPage = useCallback(() => {
+    fetchPreviousPage();
+  }, [fetchPreviousPage]);
   const allParticipants = getAllTransfersParticipants(
     transfers,
     mode,
@@ -206,6 +239,13 @@ const Transfers: React.FC = () => {
           )
         ) : (
           <>
+            <Sentinel
+              fetchPage={handleFetchPreviousPage}
+              hasMore={hasPreviousPage}
+              isFetchingPage={isFetchingPreviousPage}
+              id="sentinel-top"
+              isTop={true}
+            />
             {Object.entries(
               groupBy(transfers, (x) => DateOnly(x.occurred, timeZoneId))
             ).map(([date, transfers]) => (
@@ -213,35 +253,54 @@ const Transfers: React.FC = () => {
                 <div className="date-only">{date}</div>
                 <div className="rows">
                   {transfers.map((t) => (
-                    <Transfer
-                      onClick={() => (selectedTransfer.value = t)}
-                      onLongPress={() => {
-                        longPressTransfer.value = t;
-                        longPressMenu.value = 'options';
-                      }}
+                    <div
+                      className={
+                        t.id === highlightedId ? 'jump-highlight' : undefined
+                      }
                       key={t.id}
-                      transfer={{
-                        amount: t.amount,
-                        currency: t.currency,
-                        date: t.occurred,
-                        description: t.description,
-                        id: t.id,
-                        senderName:
-                          t.senderId === memberId ||
-                          t.senderId === userInfo?.userId
-                            ? 'You'
-                            : (allParticipants.find((x) => x.id === t.senderId)
-                                ?.name ?? ''),
-                        receiverName:
-                          t.receiverId === memberId ||
-                          t.receiverId === userInfo?.userId
-                            ? 'You'
-                            : (allParticipants.find(
-                                (x) => x.id === t.receiverId
-                              )?.name ?? ''),
-                      }}
-                      timeZoneId={timeZoneId}
-                    />
+                      id={`transfer-${t.id}`}
+                    >
+                      {t.id === highlightedId ? (
+                        <svg className="jumpRing" aria-hidden="true">
+                          <rect
+                            width="100%"
+                            height="100%"
+                            rx="13"
+                            ry="13"
+                            pathLength="100"
+                          />
+                        </svg>
+                      ) : null}
+                      <Transfer
+                        onClick={() => (selectedTransfer.value = t)}
+                        onLongPress={() => {
+                          longPressTransfer.value = t;
+                          longPressMenu.value = 'options';
+                        }}
+                        transfer={{
+                          amount: t.amount,
+                          currency: t.currency,
+                          date: t.occurred,
+                          description: t.description,
+                          id: t.id,
+                          senderName:
+                            t.senderId === memberId ||
+                            t.senderId === userInfo?.userId
+                              ? 'You'
+                              : (allParticipants.find(
+                                  (x) => x.id === t.senderId
+                                )?.name ?? ''),
+                          receiverName:
+                            t.receiverId === memberId ||
+                            t.receiverId === userInfo?.userId
+                              ? 'You'
+                              : (allParticipants.find(
+                                  (x) => x.id === t.receiverId
+                                )?.name ?? ''),
+                        }}
+                        timeZoneId={timeZoneId}
+                      />
+                    </div>
                   ))}
                 </div>
               </div>

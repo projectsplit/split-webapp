@@ -48,6 +48,12 @@ export const StyledNonGroupExpenseUsersMenu = styled(StyledFullScreenMenu)`
       }
     }
 
+    .userSection {
+      display: flex;
+      flex-direction: column;
+      gap: ${({ theme }) => theme.space.s10};
+    }
+
     .dropdown {
       display: flex;
       flex-direction: column;

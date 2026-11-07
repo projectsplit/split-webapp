@@ -56,6 +56,32 @@
         </provider>
 
         <!--
+          Payments from notifications. Android binds this whenever the person has given Buqs
+          notification access in system settings, whether the app is open or not, and it keeps what
+          the person's payment apps post for the app to offer as expenses later.
+
+          The filter types decide what the system passes on, and are what its settings page offers
+          for this listener. They are bit flags, written as one number because Android versions
+          disagree on the separator between names: 6 is alerting (2) and silent (4), the kinds a
+          payment notification comes as; 9 is conversations (1) and ongoing (8), switched off with no
+          way to switch them on, so chats, calls and downloads never reach it at all.
+        -->
+        <service
+            android:name=".PaymentNotificationListener"
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.notification.default_filter_types"
+                android:value="6" />
+            <meta-data
+                android:name="android.service.notification.disabled_filter_types"
+                android:value="9" />
+        </service>
+
+        <!--
           The small icon on push notifications. Android draws it from the alpha channel alone, so
           without this FCM falls back to the launcher icon, which is opaque edge to edge and comes
           out as a plain white square. The push plugin reads the same entry for notifications that
