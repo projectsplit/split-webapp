@@ -292,6 +292,7 @@ export type GetExpensesResponse = {
 export type GetGroupTransfersResponse = {
   transfers: TransferResponseItem[];
   next: string | null;
+  previous: string | null;
 };
 
 export type GroupExpenseResponseItem = ExpenseResponseItem & {

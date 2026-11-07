@@ -13,7 +13,7 @@ import {
   TransactionType,
 } from '../../types';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
-import { StyledExpenses } from './Expenses.styled';
+import { StyledTransactionsPage } from '@/components/TransactionsPage.styled';
 import { signal, Signal, useSignal } from '@preact/signals-react';
 import DetailedExpense from '../../components/DetailedExpense/DetailedExpense';
 import { DateOnly } from '../../helpers/timeHelpers';
@@ -33,7 +33,7 @@ import { groupBy } from '../../helpers/groupBy';
 import { NoExpensesFound } from './NoExpensesFound/NoExpensesFound';
 import { FiltersAndBars } from './FiltersAndBars/FiltersAndBars';
 import { useExpenseTotals } from './hooks/useExpenseTotals';
-import { useCenterToExpense } from './hooks/useCenterToExpense';
+import { useCenterToJumpTarget } from '@/hooks/useCenterToJumpTarget';
 import { hasActiveExpenseFilters } from '@/helpers/hasActiveExpenseFilters';
 import { useGetUserAndGroupsLabels } from '@/api/auth/QueryHooks/useGetUserAndGroupsLabels';
 import LongPressMenu from '../../components/LongPressMenu/LongPressMenu';
@@ -163,10 +163,11 @@ const Expenses = () => {
     showBottomBar.value = !isPending || isPaused;
   }, [isPending, isPaused, showBottomBar]);
 
-  const highlightedId = useCenterToExpense(
+  const highlightedId = useCenterToJumpTarget(
     scrollAreaRef,
     isScrolled,
     expenses,
+    'expense',
     jumpToken,
     isFetchingPreviousPage,
     isPlaceholderData
@@ -260,7 +261,7 @@ const Expenses = () => {
     !hasActiveExpenseFilters(expenseParsedFilters.value);
 
   return (
-    <StyledExpenses>
+    <StyledTransactionsPage>
       {expenses &&
         expenses.length > 0 &&
         showFiltersAndBars &&
@@ -341,7 +342,7 @@ const Expenses = () => {
                 <div className="rows">
                   {items.map((e) => (
                     <div
-                      className={`expense${e.id === highlightedId ? ' expense-highlight' : ''}`}
+                      className={`expense${e.id === highlightedId ? ' jump-highlight' : ''}`}
                       key={e.id}
                       id={`expense-${e.id}`}
                     >
@@ -469,7 +470,7 @@ const Expenses = () => {
         userTotalsByCurrency={userTotalsByCurrency}
         mode={mode}
       />
-    </StyledExpenses>
+    </StyledTransactionsPage>
   );
 };
 

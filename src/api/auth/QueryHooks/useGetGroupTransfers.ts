@@ -9,11 +9,15 @@ import { AxiosResponse } from 'axios';
 import { Signal } from '@preact/signals-react';
 import { appendFilterToParams } from '../helpers/appendFilterToParams';
 
+type PageParam = { next?: string; previous?: string };
+
 const useGetGroupTransfers = (
   group: Group,
   transferParsedFilters: Signal<TransferParsedFilters>,
   pageSize: number,
-  timeZoneId: string
+  timeZoneId: string,
+  enabled: boolean = true,
+  jumpToken?: string
 ) => {
   const queryKey = [
     'groupTransfers',
@@ -21,21 +25,28 @@ const useGetGroupTransfers = (
     pageSize,
     transferParsedFilters.value,
     timeZoneId,
+    jumpToken,
   ];
 
   const query = useInfiniteQuery({
     queryKey: queryKey,
-    queryFn: ({ pageParam: next }) =>
-      getGroupTransfers(
+    queryFn: ({ pageParam }) => {
+      const { next, previous } = pageParam as PageParam;
+      return getGroupTransfers(
         group?.id!,
         pageSize,
         transferParsedFilters.value,
-        next
-      ),
-    getNextPageParam: (lastPage) => lastPage?.next || undefined,
-    initialPageParam: '',
+        next,
+        previous
+      );
+    },
+    getNextPageParam: (lastPage): PageParam | undefined =>
+      lastPage?.next ? { next: lastPage.next } : undefined,
+    getPreviousPageParam: (firstPage): PageParam | undefined =>
+      firstPage?.previous ? { previous: firstPage.previous } : undefined,
+    initialPageParam: { next: jumpToken || '' } as PageParam,
     placeholderData: keepPreviousData,
-    enabled: !!group,
+    enabled: enabled && !!group,
   });
 
   return { ...query };
@@ -45,7 +56,8 @@ const getGroupTransfers = async (
   groupId: string,
   pageSize: number,
   parsedFilters: TransferParsedFilters = {},
-  next?: string
+  next?: string,
+  previous?: string
 ): Promise<GetGroupTransfersResponse> => {
   const { sendersIds = [], receiversIds = [], ...base } = parsedFilters;
 
@@ -53,6 +65,7 @@ const getGroupTransfers = async (
     groupId,
     pageSize,
     next,
+    previous,
     arrayMappings: [
       { key: 'senderIds', values: sendersIds },
       { key: 'receiverIds', values: receiversIds },
