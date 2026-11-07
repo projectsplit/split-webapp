@@ -149,8 +149,8 @@ export type DonationTier = DonationProduct & {
 /**
  * "Other amount": one Play product per amount from `stepMinor` up to `maxMinor` (one-off) or
  * `monthlyMaxMinor` (monthly) in steps of `stepMinor`, named by appending the amount in minor units
- * to a prefix (1700 for 17). The form builds the id for whatever was typed and asks Play for that
- * product alone.
+ * to a prefix (1700 for 17). Play prices each one per country, so the form asks Play for all of them
+ * and buys the one whose price, in the reader's currency, is nearest to what was typed.
  */
 export type DonationCustomAmount = {
   maxMinor: number;

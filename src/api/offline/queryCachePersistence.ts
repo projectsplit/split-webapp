@@ -18,6 +18,7 @@ const NOT_SAVED = new Set([
   'usernameStatus',
   'donationPrompt',
   'donationTiers',
+  'donationAmounts',
 ]);
 
 // The pickers for who an expense is with open on these lists unfiltered, and offline the saved
