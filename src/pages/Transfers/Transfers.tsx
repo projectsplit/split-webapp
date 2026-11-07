@@ -109,7 +109,7 @@ const Transfers: React.FC = () => {
       : undefined;
   }, [data]);
 
-  const highlightedId = useCenterToJumpTarget(
+  const highlight = useCenterToJumpTarget(
     scrollAreaRef,
     isScrolled,
     transfers,
@@ -255,13 +255,18 @@ const Transfers: React.FC = () => {
                   {transfers.map((t) => (
                     <div
                       className={
-                        t.id === highlightedId ? 'jump-highlight' : undefined
+                        t.id === highlight?.id ? 'jump-highlight' : undefined
                       }
                       key={t.id}
                       id={`transfer-${t.id}`}
                     >
-                      {t.id === highlightedId ? (
-                        <svg className="jumpRing" aria-hidden="true">
+                      {highlight && t.id === highlight.id ? (
+                        // Keyed by the jump, so a jump back to the same row draws the ring afresh.
+                        <svg
+                          key={highlight.run}
+                          className="jumpRing"
+                          aria-hidden="true"
+                        >
                           <rect
                             width="100%"
                             height="100%"
