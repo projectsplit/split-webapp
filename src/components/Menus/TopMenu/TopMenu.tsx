@@ -5,6 +5,7 @@ import { StyledTopMenu } from './TopMenu.styled';
 import { useState } from 'react';
 import IonIcon from '@reacticons/ionicons';
 import ConnectionStatus from '../../ConnectionStatus/ConnectionStatus';
+import PaymentReviewStatus from '../../PaymentReview/PaymentReviewStatus';
 
 export default function TopMenu({
   title,
@@ -43,6 +44,7 @@ export default function TopMenu({
           {title}
         </div>
         <ConnectionStatus />
+        <PaymentReviewStatus menu={menu} />
       </div>
 
       {onSupportClick && (

@@ -30,6 +30,7 @@ import DonationPrompt from '../../components/DonationPrompt/DonationPrompt';
 import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
 import { useRecoverDonationPurchases } from '@/hooks/useRecoverDonationPurchases';
 import { syncPendingTransactions } from '@/api/offline/pendingTransactionSync';
+import PaymentReview from '../../components/PaymentReview/PaymentReview';
 
 /**
  * Everything the bell and the notifications menu are built from. A push can be about any of them:
@@ -192,6 +193,9 @@ const Protected: React.FC = () => {
       {/* Mounted here rather than in App because it needs a signed-in account: the prompt asks the
           server whether this person is due to be asked at all. */}
       <DonationPrompt menu={menu} hasOverlay={Boolean(code)} />
+      {/* Here for the same reason, and on the shared menu signal, so that the donation prompt
+          waits while the payments list is open rather than landing on top of it. */}
+      <PaymentReview menu={menu} hasOverlay={Boolean(code)} />
     </StyledProtected>
   ) : (
     <Navigate

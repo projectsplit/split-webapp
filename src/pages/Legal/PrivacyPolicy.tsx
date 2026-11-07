@@ -74,6 +74,23 @@ export default function PrivacyPolicy() {
         location you choose to save with an expense.
       </p>
 
+      <h2>Payments from your notifications</h2>
+      <p>
+        In the Android app you can let Buqs read the notifications your bank
+        and payment apps send when you pay, so that it can offer each payment
+        as an expense. It is off until you turn it on in settings and allow
+        notification access in Android. Buqs then keeps, on your phone only,
+        the notifications that mention an amount from the payment apps you
+        choose. Of any other app it notes only the name, when it posts what
+        looks like a payment, so that you can choose it too. Chats are never
+        passed to Buqs.
+      </p>
+      <p>
+        Nothing read this way reaches our servers unless you add it as an
+        expense. What you leave out is deleted from your phone, and signing out
+        deletes the rest.
+      </p>
+
       <h2>What Buqs does not do</h2>
       <p>
         Buqs shows no adverts, does not sell or rent your data, and has no
@@ -124,8 +141,9 @@ export default function PrivacyPolicy() {
           keeping shared records accurate for the other people in them.
         </li>
         <li>
-          <strong>Your consent:</strong> device location and notifications. You
-          can withdraw it at any time in your device or browser settings.
+          <strong>Your consent:</strong> device location, notifications, and
+          reading payment notifications. You can withdraw it at any time in your
+          device or browser settings.
         </li>
       </ul>
 
@@ -184,7 +202,9 @@ export default function PrivacyPolicy() {
       <p>
         Buqs sets one cookie, which keeps you signed in. It also keeps your
         sign-in token and the last location you allowed in your browser&apos;s
-        storage on your device. There are no advertising or tracking cookies.
+        storage on your device, and in the Android app, what you called the
+        places you paid at, so that their next payments come up named the same
+        way. There are no advertising or tracking cookies.
       </p>
 
       <h2>Children</h2>

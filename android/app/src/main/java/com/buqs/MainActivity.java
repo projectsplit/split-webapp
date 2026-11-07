@@ -46,6 +46,7 @@ public class MainActivity extends BridgeActivity implements ModifiedMainActivity
     public void onCreate(Bundle savedInstanceState) {
         // Before super.onCreate, which is when the bridge collects its plugins.
         registerPlugin(PushAvailabilityPlugin.class);
+        registerPlugin(PaymentCapturePlugin.class);
 
         super.onCreate(savedInstanceState);
 
