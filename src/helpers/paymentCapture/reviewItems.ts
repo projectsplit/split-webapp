@@ -1,4 +1,5 @@
 import { Label } from '@/types';
+import { Destination, PERSONAL, Person } from '../expenseSplit';
 import { CapturedPayment, GOOGLE_WALLET } from './paymentCapture';
 import { ParsedPayment, parsePayment, PaymentKind } from './parsePayment';
 
@@ -10,26 +11,6 @@ export type KnownExpense = {
   occurred: string;
   description: string;
 };
-
-/** Someone the person can quick-split with, which takes being connected to them. */
-export type Person = { userId: string; username: string };
-
-/**
- * Where a payment is filed and who shares it. The person always paid, since the notification is
- * about their own card, and whoever shares it shares it equally.
- *
- * - `group`: `memberIds` are the members and guests sharing it. Without them everyone in the group
- *   shares it, whoever is in the group when it is filed. The group's name is kept for showing it
- *   while the groups themselves cannot be loaded.
- * - `quickSplit`: shared with people outside any group, the person among them unless `withMe` is
- *   false.
- */
-export type Destination =
-  | { kind: 'personal' }
-  | { kind: 'group'; groupId: string; groupName: string; memberIds?: string[] }
-  | { kind: 'quickSplit'; people: Person[]; withMe: boolean };
-
-export const PERSONAL: Destination = { kind: 'personal' };
 
 /** A group a payment can be filed in, as far as choosing one goes. */
 export type GroupOption = { id: string; name: string; memberIds: string[] };

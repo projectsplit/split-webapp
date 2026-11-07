@@ -50,6 +50,7 @@ import { clearSavedQueryCache } from '@/api/offline/queryCachePersistence';
 import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
 import { clearPaymentCapture } from '@/helpers/paymentCapture/paymentCapture';
 import { paymentReviewItems } from '@/helpers/paymentCapture/paymentReview';
+import { forgetMerchants } from '@/helpers/paymentCapture/merchantMemory';
 import { usePaymentCaptureStatus } from '@/hooks/usePaymentCaptureStatus';
 import PaymentCaptureMenuAnimation from '../../Animations/PaymentCaptureMenuAnimation';
 
@@ -135,10 +136,12 @@ export default function SettingsMenu({
     localStorage.removeItem('accessToken');
     sessionStorage.removeItem('submittedFromHomePersistData');
     // Logging out is a choice to leave nothing behind on this device: the saved screens, anything
-    // still unsent, which the person was warned about first, and payments read from notifications.
+    // still unsent, which the person was warned about first, and payments read from notifications
+    // along with how each merchant was filed.
     if (userId) void dropPendingTransactionsOf(userId);
     void clearSavedQueryCache();
     void clearPaymentCapture();
+    forgetMerchants();
     paymentReviewItems.value = [];
     navigate(routes.AUTH);
 

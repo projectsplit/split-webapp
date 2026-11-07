@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { TransactionDraft } from '@/api/offline/pendingTransactionSync';
 import type { Group } from '@/types';
-import { draftFor, equalShares } from './paymentDraft';
-import { Destination, ReviewItem } from './reviewItems';
+import { Destination, equalShares } from '../expenseSplit';
+import { draftFor } from './paymentDraft';
+import { ReviewItem } from './reviewItems';
 
 const me = { userId: 'u-me', username: 'christos' };
 const maria = { userId: 'u-maria', username: 'maria' };
@@ -35,7 +36,7 @@ const flat: Group = {
   ownerId: 'u-me',
   name: 'Flat',
   currency: 'EUR',
-  // The person filing is deliberately not first: the extra cent should still be theirs.
+  // The person filing is deliberately not first: the split still lists them first.
   members: [
     { id: 'm-maria', name: 'maria', userId: 'u-maria', joined: new Date() },
     { id: 'm-me', name: 'christos', userId: 'u-me', joined: new Date() },
@@ -66,19 +67,27 @@ const quickSplit = (
 ) => row({ destination: { kind: 'quickSplit', ...destination } });
 
 describe('equalShares', () => {
-  it('gives the payer the cents that do not divide', () => {
+  it('puts the payer first and the cents that do not divide last, as the split screen does', () => {
     expect([...equalShares(10, ['a', 'me', 'b'], 'me', 'EUR')]).toEqual([
-      ['me', 3.34],
+      ['me', 3.33],
       ['a', 3.33],
-      ['b', 3.33],
+      ['b', 3.34],
     ]);
   });
 
-  it('gives them to the first when the payer does not share it', () => {
+  it('keeps the order given when the payer does not share it', () => {
     expect([...equalShares(10, ['a', 'b', 'c'], 'me', 'EUR')]).toEqual([
-      ['a', 3.34],
+      ['a', 3.33],
       ['b', 3.33],
-      ['c', 3.33],
+      ['c', 3.34],
+    ]);
+  });
+
+  it("splits to the currency's smallest unit", () => {
+    expect([...equalShares(1000, ['me', 'a', 'b'], 'me', 'JPY')]).toEqual([
+      ['me', 333],
+      ['a', 333],
+      ['b', 334],
     ]);
   });
 });
@@ -115,9 +124,9 @@ describe('draftFor', () => {
     expect(draft.request.groupId).toBe('g1');
     expect(draft.request.payments).toEqual([{ memberId: 'm-me', amount: 10 }]);
     expect(draft.request.shares).toEqual([
-      { memberId: 'm-me', amount: 3.34 },
+      { memberId: 'm-me', amount: 3.33 },
       { memberId: 'm-maria', amount: 3.33 },
-      { memberId: 'g-nikos', amount: 3.33 },
+      { memberId: 'g-nikos', amount: 3.34 },
     ]);
   });
 
@@ -149,7 +158,7 @@ describe('draftFor', () => {
     if (draft.kind !== 'groupExpense') throw new Error(draft.kind);
 
     expect(draft.request.shares.map((share) => share.amount)).toEqual([
-      334, 333, 333,
+      333, 333, 334,
     ]);
   });
 
@@ -170,9 +179,9 @@ describe('draftFor', () => {
         labels: [{ text: 'groceries', color: 'green' }],
         payments: [{ userId: 'u-me', amount: 10 }],
         shares: [
-          { userId: 'u-me', amount: 3.34 },
+          { userId: 'u-me', amount: 3.33 },
           { userId: 'u-maria', amount: 3.33 },
-          { userId: 'u-nikos', amount: 3.33 },
+          { userId: 'u-nikos', amount: 3.34 },
         ],
       },
     });

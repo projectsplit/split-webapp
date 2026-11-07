@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { CapturedPayment, GOOGLE_WALLET } from './paymentCapture';
+import { Person } from '../expenseSplit';
 import {
   buildReviewItems,
   GroupOption,
   KnownExpense,
   MerchantChoice,
-  Person,
 } from './reviewItems';
 
 const FLAT: GroupOption = {

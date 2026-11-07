@@ -1,5 +1,6 @@
 import { Label } from '@/types';
-import { Destination, MerchantChoice } from './reviewItems';
+import { Destination, evenly } from '../expenseSplit';
+import { MerchantChoice } from './reviewItems';
 
 const STORAGE_KEY = 'paymentCaptureMerchants';
 
@@ -15,6 +16,15 @@ const read = (): Record<string, Remembered> => {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') ?? {};
   } catch {
     return {};
+  }
+};
+
+/** For signing out, which leaves nothing behind on the device, how merchants were filed included. */
+export const forgetMerchants = () => {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Storage that is blocked holds nothing to forget.
   }
 };
 
@@ -55,7 +65,8 @@ export const rememberMerchants = (
     if (added) {
       remembered[key] = {
         description: description === merchant ? undefined : description,
-        destination: destination.kind === 'personal' ? undefined : destination,
+        // Who shared it, not the amounts: the next payment's amount will differ.
+        destination: destination.kind === 'personal' ? undefined : evenly(destination),
         labels:
           labels.length > 0
             ? labels.map(({ text, color }) => ({ text, color }))

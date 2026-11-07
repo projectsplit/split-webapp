@@ -1,7 +1,5 @@
 import { StyledDetailedBackdrop } from '../DetailSheet.styled';
-import {
-  StyledDetailedExpense,
-} from './DetailedExpense.styled';
+import { StyledDetailedExpense } from './DetailedExpense.styled';
 import MembersInfoBox from './MembersInfoBox/MembersInfoBox';
 import IonIcon from '@reacticons/ionicons';
 import { displayCurrencyAndAmount } from '../../helpers/displayCurrencyAndAmount';
@@ -23,7 +21,13 @@ import { generatePath, useNavigate } from 'react-router-dom';
 import { createJumpToken } from '@/api/auth/helpers/createJumpToken';
 import { getFilterStorageKey } from '@/components/SearchTransactions/helpers/localStorageStringParser';
 import routes from '@/routes';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+import { CSSTransition } from 'react-transition-group';
+import { useGetMe } from '@/api/auth/QueryHooks/useGetMe';
+import { useSplitTargets } from '@/api/auth/QueryHooks/useSplitTargets';
+import { useSplitPersonalExpense } from '@/api/auth/CommandHooks/useSplitPersonalExpense';
+import { useCloseOnBack } from '@/hooks/useCloseOnBack';
+import ExpenseDestinationSheet from '../ExpenseDestinationSheet/ExpenseDestinationSheet';
 
 export default function DetailedExpense({
   selectedExpense,
@@ -51,6 +55,21 @@ export default function DetailedExpense({
 
   const menu = useSignal<string | null>(null);
   const navigate = useNavigate();
+
+  // A personal expense can be shared after the fact: in a group or a quick split, paid by the
+  // person, shared equally by whoever they tick. Its groups and people load as the detail opens,
+  // so they are ready by the time Split is tapped. A share of someone else's expense is not the
+  // person's to split, so only a strictly personal one offers it.
+  const isPersonalOnly = expenseType === TransactionType.Personal;
+  const { data: userInfo } = useGetMe();
+  const { groups: splitGroups, people: splitPeople } =
+    useSplitTargets(isPersonalOnly);
+  const splitMenu = useSignal<string | null>(null);
+  const splitRef = useRef<HTMLDivElement>(null);
+  const { mutate: splitExpense, isPending: isSplitting } =
+    useSplitPersonalExpense(selectedExpense, errorMessage);
+
+  useCloseOnBack(splitMenu.value === 'split', () => (splitMenu.value = null));
 
   const goToOriginExpense = () => {
     const expense = selectedExpense.value;
@@ -224,6 +243,15 @@ export default function DetailedExpense({
             <MyButton onClick={() => (menu.value = 'editExpense')}>
               Edit
             </MyButton>
+            {isPersonalOnly ? (
+              <MyButton
+                onClick={() => (splitMenu.value = 'split')}
+                variant="secondary"
+                isLoading={isSplitting}
+              >
+                Split
+              </MyButton>
+            ) : null}
             <MyButton
               onClick={() => (menu.value = 'deleteExpense')}
               variant="secondary"
@@ -264,6 +292,41 @@ export default function DetailedExpense({
           isPersonal={editIsPersonal}
           isnonGroupExpense={editIsNonGroup}
         />
+
+        <MenuAnimationBackground menu={splitMenu} />
+        <CSSTransition
+          in={splitMenu.value === 'split'}
+          timeout={100}
+          classNames="bottomslide"
+          unmountOnExit
+          nodeRef={splitRef}
+        >
+          {userInfo && selectedValue ? (
+            <ExpenseDestinationSheet
+              nodeRef={splitRef}
+              title="Split with"
+              showPersonal={false}
+              doneLabel="Split"
+              groups={splitGroups}
+              people={splitPeople}
+              me={{ userId: userInfo.userId, username: userInfo.username }}
+              chosen={undefined}
+              amount={amount}
+              currency={currency}
+              onChoose={(destination) => {
+                splitMenu.value = null;
+                splitExpense({
+                  expense: selectedValue,
+                  destination,
+                  groups: splitGroups,
+                  me: { userId: userInfo.userId, username: userInfo.username },
+                });
+              }}
+            />
+          ) : (
+            <div ref={splitRef} />
+          )}
+        </CSSTransition>
       </StyledDetailedExpense>
     </>
   );

@@ -8,7 +8,7 @@ import MyButton from '../MyButton/MyButton';
 import MenuAnimationBackground from '../Animations/MenuAnimationBackground';
 import CurrencyOptionsAnimation from '../Animations/CurrencyOptionsAnimation';
 import { LabelMenu } from '../ExpenseForm/components/LabelMenu/LabelMenu';
-import PaymentDestinationSheet from './PaymentDestinationSheet';
+import ExpenseDestinationSheet from '../ExpenseDestinationSheet/ExpenseDestinationSheet';
 import { StyledPaymentReviewDialog } from './PaymentReviewDialog.styled';
 import { useCloseOnBack } from '@/hooks/useCloseOnBack';
 import { FormatDateTime } from '@/helpers/timeHelpers';
@@ -24,11 +24,8 @@ import {
   parseAmount,
   PaymentKind,
 } from '@/helpers/paymentCapture/parsePayment';
-import {
-  Destination,
-  Person,
-  ReviewItem,
-} from '@/helpers/paymentCapture/reviewItems';
+import { Destination, Person } from '@/helpers/expenseSplit';
+import { ReviewItem } from '@/helpers/paymentCapture/reviewItems';
 import {
   fileReviewedPayments,
   paymentReviewGroups,
@@ -48,7 +45,8 @@ type Props = {
 
 /**
  * Where a row's chip says it goes: "Personal", the group's name, with how many share it when not
- * everyone does ("Flat · 2 of 3"), or who a quick split is with ("Quick split · maria +1").
+ * everyone does ("Flat · 2 of 3"), or who a quick split is with ("Quick split · maria +1"); then
+ * "· uneven" when the amounts were set on the split screen.
  */
 const destinationText = (destination: Destination, groups: Group[] | null) => {
   switch (destination.kind) {
@@ -58,16 +56,17 @@ const destinationText = (destination: Destination, groups: Group[] | null) => {
       const group = groups?.find((x) => x.id === destination.groupId);
       const size = group ? group.members.length + group.guests.length : 0;
       const sharing = destination.memberIds?.length;
+      const uneven = destination.shares ? ' · uneven' : '';
 
       return sharing && size && sharing < size
-        ? `${destination.groupName} · ${sharing} of ${size}`
-        : destination.groupName;
+        ? `${destination.groupName} · ${sharing} of ${size}${uneven}`
+        : `${destination.groupName}${uneven}`;
     }
     case 'quickSplit': {
       const [first, ...rest] = destination.people;
       const names =
         rest.length > 0 ? `${first.username} +${rest.length}` : first.username;
-      return `Quick split · ${names}`;
+      return `Quick split · ${names}${destination.shares ? ' · uneven' : ''}`;
     }
   }
 };
@@ -441,7 +440,7 @@ export default function PaymentReviewDialog({ menu, timeZoneId, me }: Props) {
         nodeRef={destinationRef}
       >
         {destinationRow && me ? (
-          <PaymentDestinationSheet
+          <ExpenseDestinationSheet
             nodeRef={destinationRef}
             groups={paymentReviewGroups.value}
             people={paymentReviewPeople.value}

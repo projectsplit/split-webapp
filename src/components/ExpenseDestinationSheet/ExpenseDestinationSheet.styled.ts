@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { StyledBottomMenu } from '../Menus/Layouts/BottomMenu/BottomMenu.styled';
 
 /** Drawn like the currency sheet, the other choice made from a payment's row. */
-export const StyledPaymentDestinationSheet = styled(StyledBottomMenu)`
+export const StyledExpenseDestinationSheet = styled(StyledBottomMenu)`
   max-height: 75dvh;
   overflow: hidden;
   gap: ${({ theme }) => theme.space.s10};
@@ -26,7 +26,8 @@ export const StyledPaymentDestinationSheet = styled(StyledBottomMenu)`
     }
   }
 
-  .option {
+  /* Only the sheet's own rows: the split screen opened from it has rows called "option" too. */
+  .options > .option {
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
@@ -44,7 +45,7 @@ export const StyledPaymentDestinationSheet = styled(StyledBottomMenu)`
     -webkit-tap-highlight-color: transparent;
   }
 
-  .option.chosen {
+  .options > .option.chosen {
     background-color: ${({ theme }) => theme.surface.hairline};
   }
 
@@ -145,6 +146,18 @@ export const StyledPaymentDestinationSheet = styled(StyledBottomMenu)`
     font-family: ${({ theme }) => theme.font.mono};
     font-size: ${({ theme }) => theme.size.s14};
     color: ${({ theme }) => theme.accent.you.inkRow};
+  }
+
+  .split {
+    flex-shrink: 0;
+    border: 1px solid ${({ theme }) => theme.surface.hairline};
+    border-radius: ${({ theme }) => theme.radius.surface};
+  }
+
+  .splitError {
+    margin: 0;
+    font-size: ${({ theme }) => theme.size.s13};
+    color: ${({ theme }) => theme.direction.owe};
   }
 
   .done {
