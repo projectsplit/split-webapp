@@ -42,8 +42,12 @@ final class PaymentCaptureStore {
     private static final int MAX_CAPTURES = 200;
     private static final long MAX_AGE_MS = 60L * 24 * 60 * 60 * 1000;
 
-    /** A notification updated in place with the same text is the same payment, not another one. */
-    private static final long REPOST_WINDOW_MS = 10 * 60 * 1000;
+    /**
+     * A notification updated in place with the same text is the same payment, not another one. Apps
+     * do that within moments. A bank that posts every payment under one notification can post the
+     * same text again minutes later for a second, identical payment, which is a second coffee.
+     */
+    private static final long REPOST_WINDOW_MS = 60 * 1000;
 
     /** How stale a seen app's entry may get before another sighting is worth a write. */
     private static final long SEEN_WRITE_INTERVAL_MS = 60 * 60 * 1000;

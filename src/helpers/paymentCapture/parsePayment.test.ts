@@ -256,6 +256,44 @@ describe('parsePayment', () => {
       kind: 'spend',
     });
   });
+
+  it('gives a symbol between two numbers to the amount, not to card digits or a date', () => {
+    expect(parse('Visa •••• 1234 €5.00 at Tesco')).toMatchObject({
+      amount: 5,
+      currency: 'EUR',
+      merchant: 'Tesco',
+    });
+    expect(parse('Card payment 12/05 €3.50 at Lidl').amount).toBe(3.5);
+    expect(parse('Payment with card *1234 EUR 12.50 at Tesco').amount).toBe(
+      12.5
+    );
+    expect(parse('Αγορά 12,50 € 07/11 στο ΣΚΛΑΒΕΝΙΤΗΣ').amount).toBe(12.5);
+  });
+
+  it('offers a payment whose merchant or wording only looks like a code', () => {
+    expect(parse('You paid €4.50 at Code Coffee')).toMatchObject({
+      kind: 'spend',
+      merchant: 'Code Coffee',
+    });
+    expect(parse('One-time payment of €50.00 to Vodafone').kind).toBe('spend');
+  });
+
+  it('still never offers a verification code or an approval request', () => {
+    expect(
+      parse('482910 is your verification code for a payment of €45.00').kind
+    ).toBe('prompt');
+    expect(parse('Approve this payment of €12.50 at Amazon').kind).toBe(
+      'prompt'
+    );
+    expect(parse('Use code 482910 to pay €45.00 at Amazon').kind).toBe(
+      'prompt'
+    );
+  });
+
+  it('does not read a recurring charge as money coming in', () => {
+    expect(parse('Recurring charge €9.99 Netflix').kind).toBe('spend');
+    expect(parse('Virement reçu 50,00 € de Marie').kind).toBe('incoming');
+  });
 });
 
 describe('cleanMerchant', () => {

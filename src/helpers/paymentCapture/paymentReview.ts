@@ -11,10 +11,15 @@ import {
 import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
 import { loadSplitGroups, loadSplitPeople } from '@/helpers/splitTargets';
 import { GetExpensesResponse, Group } from '@/types';
-import { rememberMerchants, recallMerchant } from './merchantMemory';
+import {
+  forgetMerchants,
+  rememberMerchants,
+  recallMerchant,
+} from './merchantMemory';
 import { parseAmount } from './parsePayment';
 import {
   CapturedPayment,
+  clearPaymentCapture,
   isPaymentCaptureAvailable,
   PaymentCapture,
 } from './paymentCapture';
@@ -37,6 +42,53 @@ export const paymentReviewGroups = signal<Group[] | null>(null);
  * once. A quick split needs no lookup to be filed, so a remembered one works offline as it is.
  */
 export const paymentReviewPeople = signal<Person[] | null>(null);
+
+const OWNER_KEY = 'paymentCaptureOwner';
+
+/**
+ * Leaves nothing of payments from notifications on this phone: what was collected, which apps were
+ * chosen and that collecting was on, how each merchant was filed, and the groups and people kept for
+ * filing offline. For signing out, for deleting the account, and for someone else signing in.
+ */
+export const forgetPaymentsOnDevice = async () => {
+  paymentReviewItems.value = [];
+  paymentReviewGroups.value = null;
+  paymentReviewPeople.value = null;
+  forgetMerchants();
+
+  try {
+    localStorage.removeItem(OWNER_KEY);
+  } catch {
+    // Without storage there is no owner recorded to remove.
+  }
+
+  await clearPaymentCapture();
+};
+
+/**
+ * What the phone collected belongs to whoever was signed in. Signing out clears it, but a session can
+ * also simply run out, and if someone else signs in next none of it is theirs to see. A phone that
+ * has no owner recorded yet belongs to whoever is signed in now.
+ */
+const claimForSignedInUser = async () => {
+  const userId = getSignedInUserId();
+  if (!userId) return;
+
+  let owner: string | null = null;
+  try {
+    owner = localStorage.getItem(OWNER_KEY);
+  } catch {
+    // Without storage every start looks like the first, which keeps the payments.
+  }
+
+  if (owner && owner !== userId) await forgetPaymentsOnDevice();
+
+  try {
+    localStorage.setItem(OWNER_KEY, userId);
+  } catch {
+    // As above.
+  }
+};
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -134,8 +186,18 @@ const keepEdits = (previous: ReviewItem[], next: ReviewItem[]) =>
 let running: Promise<void> | null = null;
 let runAgain = false;
 
+// Filing removes captures and replaces the rows, so reading captures meanwhile would bring filed
+// payments back as new ones. Loads wait for a filing in progress, and one that a filing finished
+// in the middle of starts again.
+let filing: Promise<void> | null = null;
+let filings = 0;
+
 const load = async (homeCurrency: string) => {
   if (!(await isPaymentCaptureAvailable())) return;
+
+  await claimForSignedInUser();
+  await filing;
+  const filedBefore = filings;
 
   const { captures } = await PaymentCapture.getCaptures();
 
@@ -167,6 +229,11 @@ const load = async (homeCurrency: string) => {
   });
 
   if (dropped.length > 0) await PaymentCapture.removeCaptures({ ids: dropped });
+
+  if (filings !== filedBefore) {
+    runAgain = true;
+    return;
+  }
 
   paymentReviewItems.value = keepEdits(paymentReviewItems.peek(), items);
 };
@@ -201,6 +268,8 @@ export const loadPaymentReview = (homeCurrency: string): Promise<void> => {
 export const rowProblem = (item: ReviewItem): string | null => {
   if (!item.selected) return null;
   if (parseAmount(item.amount) === null) return 'Enter the amount';
+  // The currency shown is only a guess until the person picks one, even the same one.
+  if (item.problem === 'currency') return 'Check the currency';
   if (!item.description.trim()) return 'Add a description';
   return null;
 };
@@ -215,6 +284,19 @@ export const rowProblem = (item: ReviewItem): string | null => {
  * many were filed. `me` is who is filing, by name too, since a quick split records names.
  */
 export const fileReviewedPayments = async (items: ReviewItem[], me: Person) => {
+  let finish = () => {};
+  filing = new Promise((resolve) => (finish = resolve));
+
+  try {
+    return await file(items, me);
+  } finally {
+    filings += 1;
+    filing = null;
+    finish();
+  }
+};
+
+const file = async (items: ReviewItem[], me: Person) => {
   const groups = paymentReviewGroups.peek();
 
   const errors = new Map<string, string>();

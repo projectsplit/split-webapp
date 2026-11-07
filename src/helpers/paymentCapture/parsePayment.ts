@@ -100,9 +100,14 @@ const NUMBER = `\\d{1,3}(?:${GROUP}\\d{3})+(?:[.,]\\d{1,2})?(?!\\d)|\\d+(?:[.,]\
 // JavaScript's \s already takes in the no-break spaces.
 const SPACE = String.raw`\s?`;
 
+// A symbol between two numbers belongs to the second when it touches it or the second has cents:
+// in "card 1234 €5.00" and "card 1234 EUR 12.50" the card digits are no amount. A date after a
+// trailing symbol ("12,50 € 07/11") has no cents, so it leaves the symbol with the first.
+const NOT_A_PREFIX = `(?!\\d)(?!${SPACE}[-−+]?${SPACE}\\d{1,3}(?:${GROUP}\\d{3})*[.,]\\d{2}(?!\\d))`;
+
 const AMOUNT = new RegExp(
   `(?<signBefore>[-−+])?${SPACE}(?<before>${CURRENCY})${SPACE}(?<signAfter>[-−+])?${SPACE}(?<number>${NUMBER})` +
-    `|(?<signLead>[-−+])?(?<number2>${NUMBER})${SPACE}(?<after>${CURRENCY})`,
+    `|(?<signLead>[-−+])?(?<number2>${NUMBER})${SPACE}(?<after>${CURRENCY})${NOT_A_PREFIX}`,
   'gu'
 );
 
@@ -115,14 +120,16 @@ const SPEND_HINT =
 const BALANCE_HINT =
   /balance|available|remaining|limit|υπολοιπο|διαθεσιμο|kontostand|guthaben|solde|saldo|disponible|disponibile/;
 
+// Codes and requests to approve a payment, which come before the payment itself. Narrow on purpose:
+// a capture read as one is deleted unseen, so "Code Coffee" or a "one-time payment" must not match.
 const PROMPT =
-  /\b(code|otp|passcode|one.?time)\b|κωδικ|\b(confirm|approve|authori[sz]e) (your|this|the)\b|επιβεβαιωστε|εγκρινετε|bestatigen sie|confirmez/;
+  /\b(otp|passcode)\b|\bone.?time (password|passcode|code|pin)\b|\b(verification|security|confirmation|authori[sz]ation|auth|login|sign.?in|access) code\b|\bcode\s*(is|:)?\s*\d{4,8}\b|\b\d{4,8} is your\b|κωδικ|\b(confirm|approve|authori[sz]e) (your|this|the) (payment|purchase|transaction|order|card|login|sign.?in)\b|επιβεβαιωστε|εγκρινετε|bestatigen sie|confirmez/;
 const DECLINED =
   /declin|rejected|unsuccessful|not approved|failed|insufficient|απορριφθ|απορριψ|ανεπιτυχ|δεν ολοκληρωθ|δεν εγκριθ|abgelehnt|fehlgeschlagen|refuse|rechaz|rifiutat/;
 const REFUND =
   /refund|reversal|reversed|returned|chargeback|επιστροφ|αντιλογισ|erstatt|rembours|reembols|devoluc|rimbors|storno/;
 const INCOMING =
-  /received|you got|sent you|credited|deposited|top.?up|topped up|added to your|salary|cashback|πιστωσ|καταθεσ|εισερχ|ελαβεσ|λαβατε|erhalten|gutschrift|eingang|recu|recibid|ricevut|accredit/;
+  /received|you got|sent you|credited|deposited|top.?up|topped up|added to your|salary|cashback|πιστωσ|καταθεσ|εισερχ|ελαβεσ|λαβατε|erhalten|gutschrift|eingang|\brecue?s?\b|recibid|ricevut|accredit/;
 const PROMO =
   /\b(offer|promo|deal|discount|earn|win|reward|invite|refer|bonus|chance)\b|% off|save up to|προσφορ|εκπτωσ|κερδισ|δωρο|angebot|rabatt|offre|oferta|offerta|sconto/;
 

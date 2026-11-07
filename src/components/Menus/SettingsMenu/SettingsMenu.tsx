@@ -48,9 +48,7 @@ import {
 } from '@/api/offline/pendingTransactions';
 import { clearSavedQueryCache } from '@/api/offline/queryCachePersistence';
 import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
-import { clearPaymentCapture } from '@/helpers/paymentCapture/paymentCapture';
-import { paymentReviewItems } from '@/helpers/paymentCapture/paymentReview';
-import { forgetMerchants } from '@/helpers/paymentCapture/merchantMemory';
+import { forgetPaymentsOnDevice } from '@/helpers/paymentCapture/paymentReview';
 import { usePaymentCaptureStatus } from '@/hooks/usePaymentCaptureStatus';
 import PaymentCaptureMenuAnimation from '../../Animations/PaymentCaptureMenuAnimation';
 
@@ -140,9 +138,7 @@ export default function SettingsMenu({
     // along with how each merchant was filed.
     if (userId) void dropPendingTransactionsOf(userId);
     void clearSavedQueryCache();
-    void clearPaymentCapture();
-    forgetMerchants();
-    paymentReviewItems.value = [];
+    void forgetPaymentsOnDevice();
     navigate(routes.AUTH);
 
     setTimeout(() => queryClient.clear(), 0);

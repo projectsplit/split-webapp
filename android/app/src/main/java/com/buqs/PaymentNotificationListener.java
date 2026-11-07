@@ -37,10 +37,26 @@ public class PaymentNotificationListener extends NotificationListenerService {
 
     private static final String SPACE = "[\\s\\u00a0\\u202f]?";
 
+    /**
+     * Every currency code the web layer knows (openExchangeRates.ts), so that nothing it could read is
+     * thrown away here first.
+     */
+    private static final String CODES =
+        "USD|EUR|GBP|CHF|INR|CNY|JPY|AED|AFN|ALL|AMD|AOA|ARS|AUD|AWG|AZN|BAM|BBD|BDT|BGN|BHD|BIF|BMD"
+            + "|BND|BOB|BRL|BSD|BTN|BWP|BYN|BZD|CAD|CDF|CLF|CLP|COP|CRC|CUC|CUP|CVE|CZK|DJF|DKK|DOP"
+            + "|DZD|EGP|ERN|ETB|FJD|FKP|GEL|GHS|GIP|GMD|GNF|GTQ|GYD|HKD|HNL|HRK|HTG|HUF|IDR|ILS|IQD"
+            + "|IRR|ISK|JMD|JOD|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LRD|LSL|LYD|MAD|MDL"
+            + "|MGA|MKD|MMK|MNT|MOP|MRU|MUR|MVR|MWK|MXN|MYR|MZN|NAD|NGN|NIO|NOK|NPR|NZD|OMR|PAB|PEN"
+            + "|PGK|PHP|PKR|PLN|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SLL|SOS|SRD|SSP"
+            + "|STN|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|UYU|UZS|VES|VND|VUV|WST"
+            + "|YER|ZAR|ZMW";
+
+    // The symbols the web layer reads as well: NZ$, R$ and the like end in a $ already. The lev is
+    // fenced by a lookbehind, since \b only knows ASCII letters on some Java runtimes.
     private static final String CURRENCY =
         "(?:[€£$¥₹₺₽₩₪₫฿₱₦₴]"
-            + "|\\b(?:EUR|GBP|USD|CHF|PLN|RON|HUF|CZK|SEK|NOK|DKK|BGN|TRY|AUD|CAD|JPY|INR)\\b"
-            + "|\\bkr\\b|zł|Kč|\\blei\\b)";
+            + "|\\b(?:" + CODES + ")\\b"
+            + "|\\bkr\\b|zł|Kč|\\blei\\b|\\bFt\\b|(?<!\\p{L})лв|\\bFr\\.)";
 
     /**
      * A currency beside a number: €12.50, 12,50 €, EUR 12.50, 120 kr. Deliberately loose. What is
