@@ -416,6 +416,10 @@ export type Invitation = {
   groupName: string;
   guestId: string | null;
   guestName: string | null;
+  // What the guest owes (positive) or is owed (negative), per currency.
+  guestBalance: Record<string, number> | null;
+  // Already in the group: accepting merges the guest into them.
+  isMerge: boolean;
 };
 export type GroupMember = Member | Guest;
 
@@ -775,6 +779,8 @@ export type GetUserInvitationsResponseItem = {
   groupName: string;
   guestId: string | null;
   guestName: string | null;
+  guestBalance: Record<string, number> | null;
+  isMerge: boolean;
 };
 export type DeleteExpenseRequest = {
   expenseId: string;

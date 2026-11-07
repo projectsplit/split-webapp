@@ -15,6 +15,7 @@ export const SearchResultItem: React.FC<{
   guestId?: string;
   userInvitationSent: Signal<boolean>;
   guestName?: string;
+  isYou?: boolean;
 }> = ({
   userId,
   username,
@@ -25,6 +26,7 @@ export const SearchResultItem: React.FC<{
   guestId,
   userInvitationSent,
   guestName,
+  isYou,
 }) => {
   const {
     mutate: revoke,
@@ -39,13 +41,16 @@ export const SearchResultItem: React.FC<{
 
   const isPending = isAlreadyInvited ? isRevoking : isSending;
   const isError = isAlreadyInvited ? isRevokeError : isSendError;
+  const replacesGuest = !!guestId && guestId !== '';
 
-  if (isGroupMember) {
+  // Someone already in the group can still be invited onto a guest's slot: accepting merges
+  // the guest into them. Without a guest to replace there is nothing to invite them to.
+  if (isGroupMember && (isYou || !replacesGuest)) {
     return (
       <StyledSearchResultItem>
         <span className="avatar">{getInitials(username)}</span>
         <div className="resultName muted">{username}</div>
-        <span className="chip">In group</span>
+        <span className="chip">{isYou ? 'You' : 'In group'}</span>
       </StyledSearchResultItem>
     );
   }
@@ -79,7 +84,7 @@ export const SearchResultItem: React.FC<{
         onClick={isPending ? undefined : onClick}
         hasFailed={isError}
       >
-        {isAlreadyInvited ? 'Cancel' : 'Invite'}
+        {isAlreadyInvited ? 'Cancel' : isGroupMember ? 'Replace' : 'Invite'}
       </MyButton>
     </StyledSearchResultItem>
   );
