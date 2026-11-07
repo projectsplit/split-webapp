@@ -11,18 +11,28 @@ export type KnownExpense = {
   description: string;
 };
 
+/** Someone the person can quick-split with, which takes being connected to them. */
+export type Person = { userId: string; username: string };
+
 /**
- * Where a payment is filed: the person's own expenses, or a group, split equally among everyone in
- * it. The group's name is kept for showing it while the groups themselves cannot be loaded.
+ * Where a payment is filed and who shares it. The person always paid, since the notification is
+ * about their own card, and whoever shares it shares it equally.
+ *
+ * - `group`: `memberIds` are the members and guests sharing it. Without them everyone in the group
+ *   shares it, whoever is in the group when it is filed. The group's name is kept for showing it
+ *   while the groups themselves cannot be loaded.
+ * - `quickSplit`: shared with people outside any group, the person among them unless `withMe` is
+ *   false.
  */
 export type Destination =
   | { kind: 'personal' }
-  | { kind: 'group'; groupId: string; groupName: string };
+  | { kind: 'group'; groupId: string; groupName: string; memberIds?: string[] }
+  | { kind: 'quickSplit'; people: Person[]; withMe: boolean };
 
 export const PERSONAL: Destination = { kind: 'personal' };
 
 /** A group a payment can be filed in, as far as choosing one goes. */
-export type GroupOption = { id: string; name: string };
+export type GroupOption = { id: string; name: string; memberIds: string[] };
 
 /** What the person chose for a merchant last time. */
 export type MerchantChoice = {
@@ -114,21 +124,52 @@ const formatAmount = (amount: number) =>
   Number.isInteger(amount) ? String(amount) : amount.toFixed(2);
 
 /**
- * The group remembered for a merchant, under its current name, if the person is still in it.
- * Without the list of groups (no connection) the memory is trusted as it is; filing a payment in a
- * group needs the connection anyway, and says so.
+ * Where the merchant's payments went last time, brought up to date: a group under its current
+ * name, without anyone who has left it since, and a quick split without anyone the person is no
+ * longer connected to. A group the person has left, or a quick split with nobody left in it, falls
+ * back to personal.
+ *
+ * What cannot be loaded (no connection) is trusted as remembered. Filing in a group needs the
+ * connection anyway, and says so.
  */
 const currentDestination = (
   remembered: Destination | undefined,
-  groups: GroupOption[] | null
+  groups: GroupOption[] | null,
+  people: Person[] | null
 ): Destination => {
-  if (remembered?.kind !== 'group') return PERSONAL;
-  if (groups === null) return remembered;
+  switch (remembered?.kind) {
+    case 'group': {
+      if (groups === null) return remembered;
 
-  const group = groups.find((x) => x.id === remembered.groupId);
-  return group
-    ? { kind: 'group', groupId: group.id, groupName: group.name }
-    : PERSONAL;
+      const group = groups.find((x) => x.id === remembered.groupId);
+      if (!group) return PERSONAL;
+
+      // If nobody chosen is still in the group, everyone in it shares the payment.
+      const memberIds = remembered.memberIds?.filter((id) =>
+        group.memberIds.includes(id)
+      );
+
+      return {
+        kind: 'group',
+        groupId: group.id,
+        groupName: group.name,
+        memberIds: memberIds?.length ? memberIds : undefined,
+      };
+    }
+    case 'quickSplit': {
+      if (people === null) return remembered;
+
+      const stillConnected = remembered.people.flatMap((person) =>
+        people.filter((x) => x.userId === person.userId)
+      );
+
+      return stillConnected.length > 0
+        ? { ...remembered, people: stillConnected }
+        : PERSONAL;
+    }
+    default:
+      return PERSONAL;
+  }
 };
 
 const toReviewItem = (
@@ -136,6 +177,7 @@ const toReviewItem = (
   homeCurrency: string,
   known: KnownExpense[],
   groups: GroupOption[] | null,
+  people: Person[] | null,
   recall: (merchant: string) => MerchantChoice | undefined
 ): ReviewItem => {
   const [first] = group;
@@ -183,7 +225,7 @@ const toReviewItem = (
     currency,
     description: choice?.description ?? primary.merchant,
     merchant: primary.merchant,
-    destination: currentDestination(choice?.destination, groups),
+    destination: currentDestination(choice?.destination, groups, people),
     labels: (choice?.labels ?? []).map((label) => ({
       id: label.text,
       ...label,
@@ -210,12 +252,15 @@ export const buildReviewItems = (
     homeCurrency,
     known,
     groups,
+    people,
     recall,
   }: {
     homeCurrency: string;
     known: KnownExpense[];
     /** The person's groups, or null when they could not be loaded. */
     groups: GroupOption[] | null;
+    /** The people they can quick-split with, or null when those could not be loaded. */
+    people: Person[] | null;
     recall: (merchant: string) => MerchantChoice | undefined;
   }
 ): { items: ReviewItem[]; dropped: string[] } => {
@@ -243,7 +288,7 @@ export const buildReviewItems = (
     items: payments
       .filter((payment) => !isFiled(payment))
       .map((payment) =>
-        toReviewItem(payment, homeCurrency, known, groups, recall)
+        toReviewItem(payment, homeCurrency, known, groups, people, recall)
       ),
     dropped: [
       ...parsed.filter((x) => x.kind === 'prompt'),

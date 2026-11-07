@@ -20,20 +20,64 @@ import {
   labelChipInk,
   resolveLabelColor,
 } from '@/helpers/labelChip';
-import { PaymentKind } from '@/helpers/paymentCapture/parsePayment';
-import { ReviewItem } from '@/helpers/paymentCapture/reviewItems';
+import {
+  parseAmount,
+  PaymentKind,
+} from '@/helpers/paymentCapture/parsePayment';
+import {
+  Destination,
+  Person,
+  ReviewItem,
+} from '@/helpers/paymentCapture/reviewItems';
 import {
   fileReviewedPayments,
   paymentReviewGroups,
   paymentReviewItems,
+  paymentReviewPeople,
   rowProblem,
 } from '@/helpers/paymentCapture/paymentReview';
 import routes from '@/routes';
+import { Group } from '@/types';
 
 type Props = {
   menu: Signal<string | null>;
   timeZoneId: string;
+  /** Who is filing; null only while their profile is still loading. */
+  me: Person | null;
 };
+
+/**
+ * Where a row's chip says it goes: "Personal", the group's name, with how many share it when not
+ * everyone does ("Flat · 2 of 3"), or who a quick split is with ("Quick split · maria +1").
+ */
+const destinationText = (destination: Destination, groups: Group[] | null) => {
+  switch (destination.kind) {
+    case 'personal':
+      return 'Personal';
+    case 'group': {
+      const group = groups?.find((x) => x.id === destination.groupId);
+      const size = group ? group.members.length + group.guests.length : 0;
+      const sharing = destination.memberIds?.length;
+
+      return sharing && size && sharing < size
+        ? `${destination.groupName} · ${sharing} of ${size}`
+        : destination.groupName;
+    }
+    case 'quickSplit': {
+      const [first, ...rest] = destination.people;
+      const names =
+        rest.length > 0 ? `${first.username} +${rest.length}` : first.username;
+      return `Quick split · ${names}`;
+    }
+  }
+};
+
+const destinationIcon = (destination: Destination) =>
+  destination.kind === 'group'
+    ? 'people-outline'
+    : destination.kind === 'quickSplit'
+      ? 'person-add-outline'
+      : 'person-outline';
 
 /** Why a row starts unticked, for the kinds that are not spending. */
 const kindNotes: Partial<Record<PaymentKind, string>> = {
@@ -57,12 +101,12 @@ const noteOf = (item: ReviewItem, timeZoneId: string) => {
 };
 
 /**
- * The payments Buqs collected from notifications, each ready to file: as a personal expense, or in
- * a group where it is split equally, with labels, all as the person filed that merchant last time.
- * The person ticks the ones to keep and corrects anything read wrong; filing lets go of the rest.
- * Closing keeps everything for later.
+ * The payments Buqs collected from notifications, each ready to file: as a personal expense, or
+ * split equally in a group or a quick split, with labels, all as the person filed that merchant last
+ * time. The person ticks the ones to keep and corrects anything read wrong; filing lets go of the
+ * rest. Closing keeps everything for later.
  */
-export default function PaymentReviewDialog({ menu, timeZoneId }: Props) {
+export default function PaymentReviewDialog({ menu, timeZoneId, me }: Props) {
   const navigate = useNavigate();
   const items = paymentReviewItems.value;
   const [isFiling, setIsFiling] = useState(false);
@@ -88,6 +132,7 @@ export default function PaymentReviewDialog({ menu, timeZoneId }: Props) {
   const labelsRow = labelMenuIsOpen.value
     ? items.find((x) => x.id === labelsFor)
     : undefined;
+  const destinationRow = items.find((x) => x.id === destinationFor);
 
   // The keyboard shrinks the list from below, and the browser does not scroll a list inside the
   // page to keep the field being typed in on screen, so a row low down ended up behind the footer.
@@ -165,10 +210,12 @@ export default function PaymentReviewDialog({ menu, timeZoneId }: Props) {
       return;
     }
 
+    if (!me) return;
+
     setIsFiling(true);
 
     try {
-      const filed = await fileReviewedPayments(items);
+      const filed = await fileReviewedPayments(items, me);
 
       // Anything left is a row the server turned down, shown with its reason.
       if (paymentReviewItems.peek().length > 0) return;
@@ -286,17 +333,14 @@ export default function PaymentReviewDialog({ menu, timeZoneId }: Props) {
                       }}
                     >
                       <IonIcon
-                        name={
-                          item.destination.kind === 'group'
-                            ? 'people-outline'
-                            : 'person-outline'
-                        }
+                        name={destinationIcon(item.destination)}
                         className="chipIcon"
                       />
                       <span className="chipText">
-                        {item.destination.kind === 'group'
-                          ? item.destination.groupName
-                          : 'Personal'}
+                        {destinationText(
+                          item.destination,
+                          paymentReviewGroups.value
+                        )}
                       </span>
                       <IonIcon
                         name="chevron-down-outline"
@@ -396,15 +440,23 @@ export default function PaymentReviewDialog({ menu, timeZoneId }: Props) {
         unmountOnExit
         nodeRef={destinationRef}
       >
-        <PaymentDestinationSheet
-          nodeRef={destinationRef}
-          groups={paymentReviewGroups.value}
-          chosen={items.find((x) => x.id === destinationFor)?.destination}
-          onChoose={(destination) => {
-            if (destinationFor) update(destinationFor, { destination });
-            destinationMenu.value = null;
-          }}
-        />
+        {destinationRow && me ? (
+          <PaymentDestinationSheet
+            nodeRef={destinationRef}
+            groups={paymentReviewGroups.value}
+            people={paymentReviewPeople.value}
+            me={me}
+            chosen={destinationRow.destination}
+            amount={parseAmount(destinationRow.amount)}
+            currency={destinationRow.currency}
+            onChoose={(destination) => {
+              update(destinationRow.id, { destination });
+              destinationMenu.value = null;
+            }}
+          />
+        ) : (
+          <div ref={destinationRef} />
+        )}
       </CSSTransition>
 
       {labelsRow ? (

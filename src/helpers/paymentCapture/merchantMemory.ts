@@ -24,8 +24,9 @@ export const recallMerchant = (merchant: string): MerchantChoice | undefined =>
 
 /**
  * Remembers, per merchant, how the person filed the expense: what they called it, so
- * "SQ *COFFEE CORNER" they renamed "Coffee" comes back as "Coffee"; where it went, so Lidl keeps
- * going to the flat's group; and its labels. Also that they left it out, so next time it starts
+ * "SQ *COFFEE CORNER" they renamed "Coffee" comes back as "Coffee"; where it went and who shared
+ * it, so Lidl keeps going to the flat's group between the same people; and its labels. Also that
+ * they left it out, so next time it starts
  * unticked. Only unticking a row Buqs had ticked counts as leaving one out: a row that started
  * unticked, because it looked already in Buqs or was not spending, says nothing about the merchant.
  *
@@ -54,7 +55,7 @@ export const rememberMerchants = (
     if (added) {
       remembered[key] = {
         description: description === merchant ? undefined : description,
-        destination: destination.kind === 'group' ? destination : undefined,
+        destination: destination.kind === 'personal' ? undefined : destination,
         labels:
           labels.length > 0
             ? labels.map(({ text, color }) => ({ text, color }))

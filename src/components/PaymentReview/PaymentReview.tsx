@@ -98,7 +98,15 @@ export default function PaymentReview({ menu, hasOverlay }: Props) {
 
   return (
     <CSSTransition in={isOpen} timeout={0} unmountOnExit nodeRef={nodeRef}>
-      <PaymentReviewDialog menu={menu} timeZoneId={timeZoneId} />
+      <PaymentReviewDialog
+        menu={menu}
+        timeZoneId={timeZoneId}
+        me={
+          userInfo
+            ? { userId: userInfo.userId, username: userInfo.username }
+            : null
+        }
+      />
     </CSSTransition>
   );
 }

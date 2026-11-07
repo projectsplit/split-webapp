@@ -5,7 +5,16 @@ import {
   GroupOption,
   KnownExpense,
   MerchantChoice,
+  Person,
 } from './reviewItems';
+
+const FLAT: GroupOption = {
+  id: 'g1',
+  name: 'Flat',
+  memberIds: ['m-me', 'm-maria', 'g-nikos'],
+};
+const MARIA: Person = { userId: 'u-maria', username: 'maria' };
+const NIKOS: Person = { userId: 'u-nikos', username: 'nikos' };
 
 const MINUTE = 60 * 1000;
 const NOON = Date.parse('2026-11-07T12:00:00Z');
@@ -28,12 +37,14 @@ const build = (
     known = [] as KnownExpense[],
     remembered = {} as Record<string, MerchantChoice>,
     groups = [] as GroupOption[] | null,
+    people = [] as Person[] | null,
   } = {}
 ) =>
   buildReviewItems(captures, {
     homeCurrency: 'EUR',
     known,
     groups,
+    people,
     recall: (merchant) => remembered[merchant],
   });
 
@@ -281,13 +292,106 @@ describe('buildReviewItems', () => {
           labels: [{ text: 'coffee', color: 'brown' }],
         },
       },
-      groups: [{ id: 'g1', name: 'Flat' }],
+      groups: [FLAT],
     });
 
     expect(items[0]).toMatchObject({
       destination: { kind: 'group', groupId: 'g1', groupName: 'Flat' },
       labels: [{ id: 'coffee', text: 'coffee', color: 'brown' }],
     });
+  });
+
+  it('keeps who shared it last time, without anyone who has left the group since', () => {
+    const { items } = build([capture({})], {
+      remembered: {
+        Pret: {
+          destination: {
+            kind: 'group',
+            groupId: 'g1',
+            groupName: 'Flat',
+            memberIds: ['m-me', 'm-left'],
+          },
+        },
+      },
+      groups: [FLAT],
+    });
+
+    expect(items[0].destination).toEqual({
+      kind: 'group',
+      groupId: 'g1',
+      groupName: 'Flat',
+      memberIds: ['m-me'],
+    });
+  });
+
+  it('shares it with everyone when nobody chosen last time is still in the group', () => {
+    const { items } = build([capture({})], {
+      remembered: {
+        Pret: {
+          destination: {
+            kind: 'group',
+            groupId: 'g1',
+            groupName: 'Flat',
+            memberIds: ['m-left'],
+          },
+        },
+      },
+      groups: [FLAT],
+    });
+
+    expect(items[0].destination).toEqual({
+      kind: 'group',
+      groupId: 'g1',
+      groupName: 'Flat',
+      memberIds: undefined,
+    });
+  });
+
+  it('quick-splits a merchant with the people chosen last time, under their current names', () => {
+    const { items } = build([capture({})], {
+      remembered: {
+        Pret: {
+          destination: {
+            kind: 'quickSplit',
+            people: [{ userId: 'u-maria', username: 'old name' }, NIKOS],
+            withMe: true,
+          },
+        },
+      },
+      people: [MARIA],
+    });
+
+    expect(items[0].destination).toEqual({
+      kind: 'quickSplit',
+      people: [MARIA],
+      withMe: true,
+    });
+  });
+
+  it('falls back to personal when nobody from a quick split is still connected', () => {
+    const { items } = build([capture({})], {
+      remembered: {
+        Pret: {
+          destination: { kind: 'quickSplit', people: [NIKOS], withMe: true },
+        },
+      },
+      people: [MARIA],
+    });
+
+    expect(items[0].destination).toEqual({ kind: 'personal' });
+  });
+
+  it('trusts a remembered quick split while the connections cannot be loaded', () => {
+    const remembered: MerchantChoice = {
+      destination: { kind: 'quickSplit', people: [NIKOS], withMe: false },
+    };
+
+    const { items } = build([capture({})], {
+      remembered: { Pret: remembered },
+      people: null,
+    });
+
+    expect(items[0].destination).toEqual(remembered.destination);
   });
 
   it('falls back to personal for a group the person is no longer in', () => {
@@ -297,7 +401,7 @@ describe('buildReviewItems', () => {
           destination: { kind: 'group', groupId: 'gone', groupName: 'Trip' },
         },
       },
-      groups: [{ id: 'g1', name: 'Flat' }],
+      groups: [FLAT],
     });
 
     expect(items[0].destination).toEqual({ kind: 'personal' });

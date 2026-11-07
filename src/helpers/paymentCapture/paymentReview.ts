@@ -9,7 +9,13 @@ import {
   TransactionDraft,
 } from '@/api/offline/pendingTransactionSync';
 import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
-import { GetExpensesResponse, GetGroupsResponse, Group } from '@/types';
+import {
+  GetConnectionStatusesResponse,
+  GetExpensesResponse,
+  GetGroupsResponse,
+  Group,
+  SearchUserResponse,
+} from '@/types';
 import { rememberMerchants, recallMerchant } from './merchantMemory';
 import { parseAmount } from './parsePayment';
 import {
@@ -18,7 +24,12 @@ import {
   PaymentCapture,
 } from './paymentCapture';
 import { draftFor } from './paymentDraft';
-import { buildReviewItems, KnownExpense, ReviewItem } from './reviewItems';
+import {
+  buildReviewItems,
+  KnownExpense,
+  Person,
+  ReviewItem,
+} from './reviewItems';
 
 /** The payments waiting for the person, rebuilt whenever the phone has collected more. */
 export const paymentReviewItems = signal<ReviewItem[]>([]);
@@ -29,6 +40,12 @@ export const paymentReviewItems = signal<ReviewItem[]>([]);
  * until the members can be known.
  */
 export const paymentReviewGroups = signal<Group[] | null>(null);
+
+/**
+ * The people a payment can be quick-split with: those the person is connected to. Null until loaded
+ * once. A quick split needs no lookup to be filed, so a remembered one works offline as it is.
+ */
+export const paymentReviewPeople = signal<Person[] | null>(null);
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -78,6 +95,45 @@ const loadGroups = async (): Promise<Group[] | null> => {
     return data.groups.filter((group) => !group.isArchived);
   } catch {
     return paymentReviewGroups.peek();
+  }
+};
+
+/**
+ * Everyone the person is connected to. The user search lists connections first when given no
+ * keyword, then tops the page up with other users, so the statuses sort the two apart. Fifty is
+ * more connections than anyone splits with in practice.
+ */
+const loadPeople = async (): Promise<Person[] | null> => {
+  try {
+    const { data } = await apiClient.get<SearchUserResponse>(
+      '/users/search-all-users',
+      { params: { pageSize: 50 } }
+    );
+
+    const me = getSignedInUserId();
+    const users = data.users.filter((user) => user.userId !== me);
+    if (users.length === 0) return [];
+
+    const params = new URLSearchParams();
+    users.forEach((user) => params.append('userIds', user.userId));
+
+    const { data: connections } =
+      await apiClient.get<GetConnectionStatusesResponse>(
+        '/connections/statuses',
+        { params }
+      );
+
+    const connected = new Set(
+      connections.statuses
+        .filter((x) => x.status === 'connected')
+        .map((x) => x.userId)
+    );
+
+    return users
+      .filter((user) => connected.has(user.userId))
+      .map(({ userId, username }) => ({ userId, username }));
+  } catch {
+    return paymentReviewPeople.peek();
   }
 };
 
@@ -143,17 +199,25 @@ const load = async (homeCurrency: string) => {
     return;
   }
 
-  const [expenses, groups] = await Promise.all([
+  const [expenses, groups, people] = await Promise.all([
     expensesAround(captures),
     loadGroups(),
+    loadPeople(),
   ]);
 
   paymentReviewGroups.value = groups;
+  paymentReviewPeople.value = people;
 
   const { items, dropped } = buildReviewItems(captures, {
     homeCurrency,
     known: [...expenses, ...pendingExpenses()],
-    groups: groups?.map(({ id, name }) => ({ id, name })) ?? null,
+    groups:
+      groups?.map(({ id, name, members, guests }) => ({
+        id,
+        name,
+        memberIds: [...members, ...guests].map((member) => member.id),
+      })) ?? null,
+    people,
     recall: recallMerchant,
   });
 
@@ -203,17 +267,16 @@ export const rowProblem = (item: ReviewItem): string | null => {
  * twice.
  *
  * Rows that could not be filed stay, with the reason, for the person to put right. Resolves to how
- * many were filed.
+ * many were filed. `me` is who is filing, by name too, since a quick split records names.
  */
-export const fileReviewedPayments = async (items: ReviewItem[]) => {
-  const userId = getSignedInUserId() ?? '';
+export const fileReviewedPayments = async (items: ReviewItem[], me: Person) => {
   const groups = paymentReviewGroups.peek();
 
   const errors = new Map<string, string>();
   const drafts: TransactionDraft[] = [];
 
   for (const item of items.filter((x) => x.selected)) {
-    const result = draftFor(item, { groups, userId });
+    const result = draftFor(item, { groups, me });
 
     if ('error' in result) errors.set(item.id, result.error);
     else drafts.push(result.draft);

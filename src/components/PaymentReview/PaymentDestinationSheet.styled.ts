@@ -83,6 +83,76 @@ export const StyledPaymentDestinationSheet = styled(StyledBottomMenu)`
     color: ${({ theme }) => theme.direction.owed};
   }
 
+  .optionNext {
+    display: flex;
+    flex-shrink: 0;
+    font-size: ${({ theme }) => theme.size.s15};
+    color: ${({ theme }) => theme.surface.mark};
+  }
+
+  .stepHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: ${({ theme }) => theme.space.s6};
+    min-width: 0;
+
+    .sheetTitle {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    margin: 0 0 0 -${({ theme }) => theme.space.s8};
+    padding: 0;
+    border: none;
+    background: none;
+    color: ${({ theme }) => theme.ink.secondary};
+    font-size: ${({ theme }) => theme.icon.lg};
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .paidBy {
+    margin: 0;
+    font-size: ${({ theme }) => theme.size.s13};
+    line-height: 1.5;
+    color: ${({ theme }) => theme.ink.secondary};
+  }
+
+  .tickIcon {
+    display: flex;
+    flex-shrink: 0;
+    font-size: ${({ theme }) => theme.icon.lg};
+    color: ${({ theme }) => theme.ink.tertiary};
+  }
+
+  .tickIcon.on {
+    color: ${({ theme }) => theme.accent.you.fill};
+  }
+
+  .share {
+    flex-shrink: 0;
+    font-family: ${({ theme }) => theme.font.mono};
+    font-size: ${({ theme }) => theme.size.s14};
+    color: ${({ theme }) => theme.accent.you.inkRow};
+  }
+
+  .done {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
   .unavailable {
     margin: 0;
     padding: ${({ theme }) => `${theme.space.s8} ${theme.space.s14}`};
