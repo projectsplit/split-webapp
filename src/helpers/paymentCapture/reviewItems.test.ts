@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { CapturedPayment, GOOGLE_WALLET } from './paymentCapture';
-import { buildReviewItems, KnownExpense, MerchantChoice } from './reviewItems';
+import {
+  buildReviewItems,
+  GroupOption,
+  KnownExpense,
+  MerchantChoice,
+} from './reviewItems';
 
 const MINUTE = 60 * 1000;
 const NOON = Date.parse('2026-11-07T12:00:00Z');
@@ -22,11 +27,13 @@ const build = (
   {
     known = [] as KnownExpense[],
     remembered = {} as Record<string, MerchantChoice>,
+    groups = [] as GroupOption[] | null,
   } = {}
 ) =>
   buildReviewItems(captures, {
     homeCurrency: 'EUR',
     known,
+    groups,
     recall: (merchant) => remembered[merchant],
   });
 
@@ -257,6 +264,56 @@ describe('buildReviewItems', () => {
     ]);
 
     expect(items.map((x) => x.suggested)).toEqual([true, false]);
+  });
+
+  it('files a payment as personal and unlabelled by default', () => {
+    expect(build([capture({})]).items[0]).toMatchObject({
+      destination: { kind: 'personal' },
+      labels: [],
+    });
+  });
+
+  it('files a merchant in the group and with the labels chosen last time, under its current name', () => {
+    const { items } = build([capture({})], {
+      remembered: {
+        Pret: {
+          destination: { kind: 'group', groupId: 'g1', groupName: 'Old name' },
+          labels: [{ text: 'coffee', color: 'brown' }],
+        },
+      },
+      groups: [{ id: 'g1', name: 'Flat' }],
+    });
+
+    expect(items[0]).toMatchObject({
+      destination: { kind: 'group', groupId: 'g1', groupName: 'Flat' },
+      labels: [{ id: 'coffee', text: 'coffee', color: 'brown' }],
+    });
+  });
+
+  it('falls back to personal for a group the person is no longer in', () => {
+    const { items } = build([capture({})], {
+      remembered: {
+        Pret: {
+          destination: { kind: 'group', groupId: 'gone', groupName: 'Trip' },
+        },
+      },
+      groups: [{ id: 'g1', name: 'Flat' }],
+    });
+
+    expect(items[0].destination).toEqual({ kind: 'personal' });
+  });
+
+  it('trusts the remembered group while the groups cannot be loaded', () => {
+    const remembered: MerchantChoice = {
+      destination: { kind: 'group', groupId: 'g1', groupName: 'Flat' },
+    };
+
+    const { items } = build([capture({})], {
+      remembered: { Pret: remembered },
+      groups: null,
+    });
+
+    expect(items[0].destination).toEqual(remembered.destination);
   });
 
   it('quotes the notification without a title that is only the app name', () => {

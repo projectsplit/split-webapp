@@ -1,4 +1,5 @@
-import { MerchantChoice } from './reviewItems';
+import { Label } from '@/types';
+import { Destination, MerchantChoice } from './reviewItems';
 
 const STORAGE_KEY = 'paymentCaptureMerchants';
 
@@ -22,17 +23,20 @@ export const recallMerchant = (merchant: string): MerchantChoice | undefined =>
   read()[keyOf(merchant)];
 
 /**
- * Remembers, per merchant, what the person called the expense, so "SQ *COFFEE CORNER" they renamed
- * "Coffee" comes back as "Coffee"; and that they left it out, so next time it starts unticked.
- * Only unticking a row Buqs had ticked counts as leaving one out: a row that started unticked,
- * because it looked already in Buqs or was not spending, says nothing about the merchant.
+ * Remembers, per merchant, how the person filed the expense: what they called it, so
+ * "SQ *COFFEE CORNER" they renamed "Coffee" comes back as "Coffee"; where it went, so Lidl keeps
+ * going to the flat's group; and its labels. Also that they left it out, so next time it starts
+ * unticked. Only unticking a row Buqs had ticked counts as leaving one out: a row that started
+ * unticked, because it looked already in Buqs or was not spending, says nothing about the merchant.
  *
- * Kept on this device only. Losing it costs a few renames, nothing more.
+ * Kept on this device only. Losing it costs a few choices made again, nothing more.
  */
 export const rememberMerchants = (
   choices: {
     merchant: string;
     description: string;
+    destination: Destination;
+    labels: Label[];
     added: boolean;
     deliberate: boolean;
   }[]
@@ -40,7 +44,9 @@ export const rememberMerchants = (
   const remembered = read();
   const now = Date.now();
 
-  for (const { merchant, description, added, deliberate } of choices) {
+  for (const choice of choices) {
+    const { merchant, description, destination, labels, added, deliberate } =
+      choice;
     if (!merchant) continue;
 
     const key = keyOf(merchant);
@@ -48,6 +54,11 @@ export const rememberMerchants = (
     if (added) {
       remembered[key] = {
         description: description === merchant ? undefined : description,
+        destination: destination.kind === 'group' ? destination : undefined,
+        labels:
+          labels.length > 0
+            ? labels.map(({ text, color }) => ({ text, color }))
+            : undefined,
         at: now,
       };
     } else if (deliberate) {

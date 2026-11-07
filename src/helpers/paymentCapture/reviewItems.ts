@@ -1,3 +1,4 @@
+import { Label } from '@/types';
 import { CapturedPayment, GOOGLE_WALLET } from './paymentCapture';
 import { ParsedPayment, parsePayment, PaymentKind } from './parsePayment';
 
@@ -10,8 +11,26 @@ export type KnownExpense = {
   description: string;
 };
 
+/**
+ * Where a payment is filed: the person's own expenses, or a group, split equally among everyone in
+ * it. The group's name is kept for showing it while the groups themselves cannot be loaded.
+ */
+export type Destination =
+  | { kind: 'personal' }
+  | { kind: 'group'; groupId: string; groupName: string };
+
+export const PERSONAL: Destination = { kind: 'personal' };
+
+/** A group a payment can be filed in, as far as choosing one goes. */
+export type GroupOption = { id: string; name: string };
+
 /** What the person chose for a merchant last time. */
-export type MerchantChoice = { description?: string; skip?: boolean };
+export type MerchantChoice = {
+  description?: string;
+  skip?: boolean;
+  destination?: Destination;
+  labels?: { text: string; color: string }[];
+};
 
 export type ReviewItem = {
   /** What the expense is filed under: its earliest capture's id, so filing it twice stores it once. */
@@ -25,6 +44,9 @@ export type ReviewItem = {
   description: string;
   /** The merchant as read from the notification, which choices are remembered by. */
   merchant: string;
+  destination: Destination;
+  /** Shaped as the label picker keeps them; a label new to the person has its text as its id. */
+  labels: Label[];
   kind: PaymentKind;
   /** The notification as posted, shown so the person can check what Buqs made of it. */
   source: string;
@@ -91,10 +113,29 @@ const isSamePayment = (group: Parsed[], capture: Parsed) =>
 const formatAmount = (amount: number) =>
   Number.isInteger(amount) ? String(amount) : amount.toFixed(2);
 
+/**
+ * The group remembered for a merchant, under its current name, if the person is still in it.
+ * Without the list of groups (no connection) the memory is trusted as it is; filing a payment in a
+ * group needs the connection anyway, and says so.
+ */
+const currentDestination = (
+  remembered: Destination | undefined,
+  groups: GroupOption[] | null
+): Destination => {
+  if (remembered?.kind !== 'group') return PERSONAL;
+  if (groups === null) return remembered;
+
+  const group = groups.find((x) => x.id === remembered.groupId);
+  return group
+    ? { kind: 'group', groupId: group.id, groupName: group.name }
+    : PERSONAL;
+};
+
 const toReviewItem = (
   group: Parsed[],
   homeCurrency: string,
   known: KnownExpense[],
+  groups: GroupOption[] | null,
   recall: (merchant: string) => MerchantChoice | undefined
 ): ReviewItem => {
   const [first] = group;
@@ -142,6 +183,11 @@ const toReviewItem = (
     currency,
     description: choice?.description ?? primary.merchant,
     merchant: primary.merchant,
+    destination: currentDestination(choice?.destination, groups),
+    labels: (choice?.labels ?? []).map((label) => ({
+      id: label.text,
+      ...label,
+    })),
     kind,
     source: [title, primary.text].filter(Boolean).join(' · '),
     selected: suggested,
@@ -163,10 +209,13 @@ export const buildReviewItems = (
   {
     homeCurrency,
     known,
+    groups,
     recall,
   }: {
     homeCurrency: string;
     known: KnownExpense[];
+    /** The person's groups, or null when they could not be loaded. */
+    groups: GroupOption[] | null;
     recall: (merchant: string) => MerchantChoice | undefined;
   }
 ): { items: ReviewItem[]; dropped: string[] } => {
@@ -174,25 +223,31 @@ export const buildReviewItems = (
     .map((capture) => ({ ...capture, ...parsePayment(capture, homeCurrency) }))
     .sort((a, b) => a.postedAt - b.postedAt);
 
-  const groups: Parsed[][] = [];
+  // The notifications of each payment, usually one, two when a wallet and a bank both tell of it.
+  const payments: Parsed[][] = [];
 
   for (const capture of parsed.filter((x) => x.kind !== 'prompt')) {
-    const group = groups.find((candidate) => isSamePayment(candidate, capture));
+    const payment = payments.find((candidate) =>
+      isSamePayment(candidate, capture)
+    );
 
-    if (group) group.push(capture);
-    else groups.push([capture]);
+    if (payment) payment.push(capture);
+    else payments.push([capture]);
   }
 
   const knownIds = new Set(known.map((expense) => expense.id));
-  const isFiled = (group: Parsed[]) => group.some((x) => knownIds.has(x.id));
+  const isFiled = (payment: Parsed[]) =>
+    payment.some((x) => knownIds.has(x.id));
 
   return {
-    items: groups
-      .filter((group) => !isFiled(group))
-      .map((group) => toReviewItem(group, homeCurrency, known, recall)),
+    items: payments
+      .filter((payment) => !isFiled(payment))
+      .map((payment) =>
+        toReviewItem(payment, homeCurrency, known, groups, recall)
+      ),
     dropped: [
       ...parsed.filter((x) => x.kind === 'prompt'),
-      ...groups.filter(isFiled).flat(),
+      ...payments.filter(isFiled).flat(),
     ].map((x) => x.id),
   };
 };

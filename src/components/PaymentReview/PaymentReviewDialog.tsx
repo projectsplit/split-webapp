@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 import { Signal, useSignal } from '@preact/signals-react';
 import { useNavigate } from 'react-router-dom';
 import IonIcon from '@reacticons/ionicons';
@@ -6,14 +7,24 @@ import { IoClose } from 'react-icons/io5';
 import MyButton from '../MyButton/MyButton';
 import MenuAnimationBackground from '../Animations/MenuAnimationBackground';
 import CurrencyOptionsAnimation from '../Animations/CurrencyOptionsAnimation';
+import { LabelMenu } from '../ExpenseForm/components/LabelMenu/LabelMenu';
+import PaymentDestinationSheet from './PaymentDestinationSheet';
 import { StyledPaymentReviewDialog } from './PaymentReviewDialog.styled';
+import { useCloseOnBack } from '@/hooks/useCloseOnBack';
 import { FormatDateTime } from '@/helpers/timeHelpers';
 import { displayCurrencyAndAmount } from '@/helpers/displayCurrencyAndAmount';
 import { getSymbolFromCurrency } from '@/helpers/currency-symbol-map';
+import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
+import {
+  labelChipBackground,
+  labelChipInk,
+  resolveLabelColor,
+} from '@/helpers/labelChip';
 import { PaymentKind } from '@/helpers/paymentCapture/parsePayment';
 import { ReviewItem } from '@/helpers/paymentCapture/reviewItems';
 import {
   fileReviewedPayments,
+  paymentReviewGroups,
   paymentReviewItems,
   rowProblem,
 } from '@/helpers/paymentCapture/paymentReview';
@@ -46,8 +57,9 @@ const noteOf = (item: ReviewItem, timeZoneId: string) => {
 };
 
 /**
- * The payments Buqs collected from notifications, each ready to file as a personal expense. The
- * person ticks the ones to keep and corrects anything read wrong; filing lets go of the rest.
+ * The payments Buqs collected from notifications, each ready to file: as a personal expense, or in
+ * a group where it is split equally, with labels, all as the person filed that merchant last time.
+ * The person ticks the ones to keep and corrects anything read wrong; filing lets go of the rest.
  * Closing keeps everything for later.
  */
 export default function PaymentReviewDialog({ menu, timeZoneId }: Props) {
@@ -55,11 +67,27 @@ export default function PaymentReviewDialog({ menu, timeZoneId }: Props) {
   const items = paymentReviewItems.value;
   const [isFiling, setIsFiling] = useState(false);
 
+  // Which row each sheet is open for. State rather than refs: the sheets are handed that row's
+  // current choice to show as selected.
   const currencyMenu = useSignal<string | null>(null);
-  // State rather than a ref: the sheet is handed this row's currency as its selection.
   const [currencyFor, setCurrencyFor] = useState<string | null>(null);
+  const destinationMenu = useSignal<string | null>(null);
+  const [destinationFor, setDestinationFor] = useState<string | null>(null);
+  const destinationRef = useRef<HTMLDivElement>(null);
+  const labelMenuIsOpen = useSignal<boolean>(false);
+  const [labelsFor, setLabelsFor] = useState<string | null>(null);
+
   const rows = useRef(new Map<string, HTMLDivElement>());
   const list = useRef<HTMLDivElement>(null);
+
+  useCloseOnBack(
+    destinationMenu.value === 'destination',
+    () => (destinationMenu.value = null)
+  );
+
+  const labelsRow = labelMenuIsOpen.value
+    ? items.find((x) => x.id === labelsFor)
+    : undefined;
 
   // The keyboard shrinks the list from below, and the browser does not scroll a list inside the
   // page to keep the field being typed in on screen, so a row low down ended up behind the footer.
@@ -248,6 +276,71 @@ export default function PaymentReviewDialog({ menu, timeZoneId }: Props) {
                     {FormatDateTime(item.occurred, timeZoneId)}
                   </div>
 
+                  <div className="chips">
+                    <button
+                      type="button"
+                      className="chip destination"
+                      onClick={() => {
+                        setDestinationFor(item.id);
+                        destinationMenu.value = 'destination';
+                      }}
+                    >
+                      <IonIcon
+                        name={
+                          item.destination.kind === 'group'
+                            ? 'people-outline'
+                            : 'person-outline'
+                        }
+                        className="chipIcon"
+                      />
+                      <span className="chipText">
+                        {item.destination.kind === 'group'
+                          ? item.destination.groupName
+                          : 'Personal'}
+                      </span>
+                      <IonIcon
+                        name="chevron-down-outline"
+                        className="chipIcon"
+                      />
+                    </button>
+
+                    {item.labels.map((label) => {
+                      const color = resolveLabelColor(label.color);
+
+                      return (
+                        <button
+                          type="button"
+                          key={label.id}
+                          className="chip label"
+                          style={{
+                            backgroundColor: labelChipBackground(color),
+                            color: labelChipInk(color),
+                          }}
+                          onClick={() => {
+                            setLabelsFor(item.id);
+                            labelMenuIsOpen.value = true;
+                          }}
+                        >
+                          {label.text}
+                        </button>
+                      );
+                    })}
+
+                    {item.labels.length === 0 ? (
+                      <button
+                        type="button"
+                        className="chip addLabel"
+                        onClick={() => {
+                          setLabelsFor(item.id);
+                          labelMenuIsOpen.value = true;
+                        }}
+                      >
+                        <IonIcon name="pricetag-outline" className="chipIcon" />
+                        <span className="chipText">Label</span>
+                      </button>
+                    ) : null}
+                  </div>
+
                   {note ? (
                     <div
                       className={`note${item.alreadyIn || item.problem ? ' warning' : ''}`}
@@ -294,6 +387,40 @@ export default function PaymentReviewDialog({ menu, timeZoneId }: Props) {
           currencyMenu.value = null;
         }}
       />
+
+      <MenuAnimationBackground menu={destinationMenu} />
+      <CSSTransition
+        in={destinationMenu.value === 'destination'}
+        timeout={100}
+        classNames="bottomslide"
+        unmountOnExit
+        nodeRef={destinationRef}
+      >
+        <PaymentDestinationSheet
+          nodeRef={destinationRef}
+          groups={paymentReviewGroups.value}
+          chosen={items.find((x) => x.id === destinationFor)?.destination}
+          onChoose={(destination) => {
+            if (destinationFor) update(destinationFor, { destination });
+            destinationMenu.value = null;
+          }}
+        />
+      </CSSTransition>
+
+      {labelsRow ? (
+        <LabelMenu
+          labelMenuIsOpen={labelMenuIsOpen}
+          labels={labelsRow.labels}
+          setLabels={(labels) => update(labelsRow.id, { labels })}
+          isPersonal={labelsRow.destination.kind === 'personal'}
+          groupId={
+            labelsRow.destination.kind === 'group'
+              ? labelsRow.destination.groupId
+              : undefined
+          }
+          userId={getSignedInUserId() ?? undefined}
+        />
+      ) : null}
     </StyledPaymentReviewDialog>
   );
 }

@@ -202,9 +202,10 @@ export default function PrivacyPolicy() {
       <p>
         Buqs sets one cookie, which keeps you signed in. It also keeps your
         sign-in token and the last location you allowed in your browser&apos;s
-        storage on your device, and in the Android app, what you called the
-        places you paid at, so that their next payments come up named the same
-        way. There are no advertising or tracking cookies.
+        storage on your device, and in the Android app, how you filed the places
+        you paid at (the name, the group and the labels), so that their next
+        payments come up filed the same way. There are no advertising or
+        tracking cookies.
       </p>
 
       <h2>Children</h2>

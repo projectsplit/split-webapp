@@ -6,9 +6,10 @@ import { pendingTransactions } from '@/api/offline/pendingTransactions';
 import {
   refreshAfterNewTransactions,
   sendOrKeep,
+  TransactionDraft,
 } from '@/api/offline/pendingTransactionSync';
 import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
-import { GetExpensesResponse } from '@/types';
+import { GetExpensesResponse, GetGroupsResponse, Group } from '@/types';
 import { rememberMerchants, recallMerchant } from './merchantMemory';
 import { parseAmount } from './parsePayment';
 import {
@@ -16,10 +17,18 @@ import {
   isPaymentCaptureAvailable,
   PaymentCapture,
 } from './paymentCapture';
+import { draftFor } from './paymentDraft';
 import { buildReviewItems, KnownExpense, ReviewItem } from './reviewItems';
 
 /** The payments waiting for the person, rebuilt whenever the phone has collected more. */
 export const paymentReviewItems = signal<ReviewItem[]>([]);
+
+/**
+ * The groups payments can be filed in. Null until they have been loaded once, which without a
+ * connection they may never be: rows remembered for a group then keep it, and filing one waits
+ * until the members can be known.
+ */
+export const paymentReviewGroups = signal<Group[] | null>(null);
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -59,6 +68,19 @@ const expensesAround = async (
   }
 };
 
+/** Archived groups take no new expenses, so they are not offered. */
+const loadGroups = async (): Promise<Group[] | null> => {
+  try {
+    const { data } = await apiClient.get<GetGroupsResponse>('/groups/search', {
+      params: { keyword: '', pageSize: 100 },
+    });
+
+    return data.groups.filter((group) => !group.isArchived);
+  } catch {
+    return paymentReviewGroups.peek();
+  }
+};
+
 /** Expenses filed on this phone that the server has not confirmed yet, which count as in Buqs. */
 const pendingExpenses = (): KnownExpense[] => {
   const userId = getSignedInUserId();
@@ -84,8 +106,28 @@ const keepEdits = (previous: ReviewItem[], next: ReviewItem[]) =>
     const edited = previous.find((x) => x.id === item.id);
     if (!edited) return item;
 
-    const { amount, currency, description, selected, problem, error } = edited;
-    return { ...item, amount, currency, description, selected, problem, error };
+    const {
+      amount,
+      currency,
+      description,
+      destination,
+      labels,
+      selected,
+      problem,
+      error,
+    } = edited;
+
+    return {
+      ...item,
+      amount,
+      currency,
+      description,
+      destination,
+      labels,
+      selected,
+      problem,
+      error,
+    };
   });
 
 let running: Promise<void> | null = null;
@@ -101,10 +143,17 @@ const load = async (homeCurrency: string) => {
     return;
   }
 
-  const known = [...(await expensesAround(captures)), ...pendingExpenses()];
+  const [expenses, groups] = await Promise.all([
+    expensesAround(captures),
+    loadGroups(),
+  ]);
+
+  paymentReviewGroups.value = groups;
+
   const { items, dropped } = buildReviewItems(captures, {
     homeCurrency,
-    known,
+    known: [...expenses, ...pendingExpenses()],
+    groups: groups?.map(({ id, name }) => ({ id, name })) ?? null,
     recall: recallMerchant,
   });
 
@@ -148,43 +197,38 @@ export const rowProblem = (item: ReviewItem): string | null => {
 };
 
 /**
- * Files the ticked rows as personal expenses and lets go of the rest, which the person has looked at
- * and left out. Each goes the same way as one from the expense form, so without a connection it
- * waits on the phone and is sent later, under the id that keeps it from being stored twice.
+ * Files the ticked rows, each where the person chose, and lets go of the rest, which they have
+ * looked at and left out. Each goes the same way as one from the expense form, so without a
+ * connection it waits on the phone and is sent later, under the id that keeps it from being stored
+ * twice.
  *
- * Rows the server turned down stay, with its reason, for the person to put right. Resolves to how
+ * Rows that could not be filed stay, with the reason, for the person to put right. Resolves to how
  * many were filed.
  */
 export const fileReviewedPayments = async (items: ReviewItem[]) => {
-  const selected = items.filter((x) => x.selected);
-
-  const results = await Promise.allSettled(
-    selected.map((item) =>
-      sendOrKeep({
-        id: item.id,
-        kind: 'personalExpense',
-        request: {
-          expenseId: item.id,
-          amount: parseAmount(item.amount) ?? 0,
-          currency: item.currency,
-          description: item.description.trim(),
-          location: null,
-          occurred: item.occurred,
-          labels: [],
-        },
-        names: {},
-      })
-    )
-  );
+  const userId = getSignedInUserId() ?? '';
+  const groups = paymentReviewGroups.peek();
 
   const errors = new Map<string, string>();
+  const drafts: TransactionDraft[] = [];
+
+  for (const item of items.filter((x) => x.selected)) {
+    const result = draftFor(item, { groups, userId });
+
+    if ('error' in result) errors.set(item.id, result.error);
+    else drafts.push(result.draft);
+  }
+
+  const results = await Promise.allSettled(
+    drafts.map((draft) => sendOrKeep(draft))
+  );
 
   results.forEach((result, index) => {
     if (result.status === 'fulfilled') return;
 
     const error = result.reason as AxiosError;
     errors.set(
-      selected[index].id,
+      drafts[index].id,
       error.response?.data
         ? String(error.response.data)
         : 'Could not add this expense. Please try again.'
@@ -201,6 +245,8 @@ export const fileReviewedPayments = async (items: ReviewItem[]) => {
     settled.map((x) => ({
       merchant: x.merchant,
       description: x.description.trim(),
+      destination: x.destination,
+      labels: x.labels,
       added: x.selected,
       deliberate: x.suggested && !x.selected,
     }))
@@ -210,15 +256,22 @@ export const fileReviewedPayments = async (items: ReviewItem[]) => {
     .filter((x) => errors.has(x.id))
     .map((x) => ({ ...x, error: errors.get(x.id) }));
 
-  if (
-    results.some(
-      (result) => result.status === 'fulfilled' && result.value === 'sent'
-    )
-  ) {
-    await refreshAfterNewTransactions(queryClient, [
-      { kind: 'personalExpense' },
-    ]);
+  // A kept expense changed nothing on the server yet; the sync refreshes once it has.
+  const sent = drafts.filter((_, index) => {
+    const result = results[index];
+    return result.status === 'fulfilled' && result.value === 'sent';
+  });
+
+  if (sent.length > 0) {
+    await refreshAfterNewTransactions(
+      queryClient,
+      sent.map((draft) => ({
+        kind: draft.kind,
+        groupId:
+          draft.kind === 'groupExpense' ? draft.request.groupId : undefined,
+      }))
+    );
   }
 
-  return selected.length - errors.size;
+  return results.filter((result) => result.status === 'fulfilled').length;
 };

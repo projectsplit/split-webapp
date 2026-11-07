@@ -161,6 +161,53 @@ export const StyledPaymentReviewDialog = styled.div`
       color: ${({ theme }) => theme.ink.tertiary};
     }
 
+    .chips {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: ${({ theme }) => theme.space.s6};
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: ${({ theme }) => theme.space.s4};
+      max-width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+      padding: ${({ theme }) => `${theme.space.s4} ${theme.space.s8}`};
+      border: 1px solid ${({ theme }) => theme.surface.hairline};
+      border-radius: ${({ theme }) => theme.radius.pill};
+      background-color: ${({ theme }) => theme.surface.page};
+      color: ${({ theme }) => theme.ink.secondary};
+      font-family: inherit;
+      font-size: ${({ theme }) => theme.size.s12};
+      font-weight: ${({ theme }) => theme.weight.medium};
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .chip.label {
+      border-color: transparent;
+    }
+
+    .chip.destination {
+      color: ${({ theme }) => theme.ink.primary};
+    }
+
+    .chipIcon {
+      display: flex;
+      flex-shrink: 0;
+      font-size: ${({ theme }) => theme.size.s13};
+    }
+
+    .chipText {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .note {
       align-self: flex-start;
       max-width: 100%;
