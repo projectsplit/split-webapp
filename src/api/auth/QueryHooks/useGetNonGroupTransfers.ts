@@ -8,25 +8,39 @@ import { AxiosResponse } from 'axios';
 import { Signal } from '@preact/signals-react';
 import { appendFilterToParams } from '../helpers/appendFilterToParams';
 
+type PageParam = { next?: string; previous?: string };
+
 const useGetNonGroupTransfers = (
   transferParsedFilters: Signal<TransferParsedFilters>,
   pageSize: number,
   timeZoneId: string,
-  enabled: boolean = true
+  enabled: boolean = true,
+  jumpToken?: string
 ) => {
   const queryKey = [
     'nonGroupTransfers',
     pageSize,
     transferParsedFilters.value,
     timeZoneId,
+    jumpToken,
   ].filter(Boolean);
 
   const query = useInfiniteQuery({
     queryKey: queryKey,
-    queryFn: ({ pageParam: next }) =>
-      getNonGroupTransfers(pageSize, transferParsedFilters.value, next),
-    getNextPageParam: (lastPage) => lastPage?.next || undefined,
-    initialPageParam: '',
+    queryFn: ({ pageParam }) => {
+      const { next, previous } = pageParam as PageParam;
+      return getNonGroupTransfers(
+        pageSize,
+        transferParsedFilters.value,
+        next,
+        previous
+      );
+    },
+    getNextPageParam: (lastPage): PageParam | undefined =>
+      lastPage?.next ? { next: lastPage.next } : undefined,
+    getPreviousPageParam: (firstPage): PageParam | undefined =>
+      firstPage?.previous ? { previous: firstPage.previous } : undefined,
+    initialPageParam: { next: jumpToken || '' } as PageParam,
     placeholderData: keepPreviousData,
     enabled,
   });
@@ -37,13 +51,15 @@ const useGetNonGroupTransfers = (
 const getNonGroupTransfers = async (
   pageSize: number,
   parsedFilters: TransferParsedFilters = {},
-  next?: string
+  next?: string,
+  previous?: string
 ): Promise<GetGroupTransfersResponse> => {
   const { sendersIds = [], receiversIds = [], ...base } = parsedFilters;
 
   const params = appendFilterToParams(base, {
     pageSize,
     next,
+    previous,
     arrayMappings: [
       { key: 'senderIds', values: sendersIds },
       { key: 'receiverIds', values: receiversIds },

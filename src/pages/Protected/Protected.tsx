@@ -202,8 +202,9 @@ const Protected: React.FC = () => {
       <PaymentReview menu={menu} hasOverlay={Boolean(code)} />
     </StyledProtected>
   ) : (
+    // The search is part of where they were going: a notification's link names its expense there.
     <Navigate
-      to={`${routes.AUTH}?redirect=${encodeURIComponent(location.pathname)}`}
+      to={`${routes.AUTH}?redirect=${encodeURIComponent(location.pathname + location.search)}`}
       replace
     />
   );

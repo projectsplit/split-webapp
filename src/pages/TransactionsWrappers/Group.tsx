@@ -39,7 +39,10 @@ import {
 } from '../../components/SearchTransactions/helpers/localStorageStringParser';
 import { transactionCategories } from '@/constants';
 import routes from '@/routes';
-import { useClearExpenseFilterOnJump } from '@/hooks/useClearExpenseFilterOnJump';
+import {
+  useClearExpenseFilterOnJump,
+  useClearTransferFilterOnJump,
+} from '@/hooks/useClearFilterOnJump';
 
 type errorObject = {
   message: string;
@@ -66,6 +69,10 @@ export default function Group() {
   useClearExpenseFilterOnJump(
     expenseParsedFilters,
     getFilterStorageKey('expense', groupid)
+  );
+  useClearTransferFilterOnJump(
+    transferParsedFilters,
+    getFilterStorageKey('transfer', groupid)
   );
   const location = useLocation();
   const path = location.pathname.split('/').pop() || '';
