@@ -138,20 +138,35 @@ export const unsubscribeFromNativePush = async (): Promise<void> => {
   }
 };
 
+// The plugin keeps every listener it is handed and never drops one, while the callers below re-run
+// whenever their navigate function changes, which is every route change. So the plugin gets one
+// listener each, for the life of the app, and only the handler behind it is swapped: a tap then
+// runs once, through the latest handler, instead of once per screen visited since start-up.
+let onTap: ((url: string) => void) | null = null;
+let onReceived: (() => void) | null = null;
+let tapListenerAdded = false;
+let receivedListenerAdded = false;
+
 /**
  * Registers what happens when a notification is tapped. FCM delivers the payload's `url` in `data`,
  * matching what the service worker reads on the web, so both platforms route on the same field.
- * Called once at startup rather than per subscribe: a tap can launch the app from cold, and the
- * listener has to already exist for that delivery to be seen.
+ * Called at startup rather than per subscribe: a tap can launch the app from cold, and the plugin
+ * replays that delivery to the first listener registered.
  */
 export const addNativePushTapListener = (onOpenUrl: (url: string) => void) => {
+  onTap = onOpenUrl;
+
+  if (tapListenerAdded) return;
+
+  tapListenerAdded = true;
+
   void PushNotifications.addListener(
     'pushNotificationActionPerformed',
     (action) => {
       const url = action.notification.data?.url;
 
       if (typeof url === 'string' && url.length > 0) {
-        onOpenUrl(url);
+        onTap?.(url);
       }
     }
   );
@@ -162,8 +177,14 @@ export const addNativePushTapListener = (onOpenUrl: (url: string) => void) => {
  * without this the bell and an open notifications menu only caught up on a tap or the next poll:
  * the gap the service worker's relay closes on the web.
  */
-export const addNativePushReceivedListener = (onReceived: () => void) => {
+export const addNativePushReceivedListener = (handler: () => void) => {
+  onReceived = handler;
+
+  if (receivedListenerAdded) return;
+
+  receivedListenerAdded = true;
+
   void PushNotifications.addListener('pushNotificationReceived', () =>
-    onReceived()
+    onReceived?.()
   );
 };
