@@ -86,6 +86,7 @@ export const StyledWelcomeTourDialog = styled.div`
     }
   }
 
+  /* A size container, so a scene can be as large as the height left over from the words allows. */
   .stage {
     flex: 1 1 auto;
     min-height: 200px;
@@ -94,6 +95,7 @@ export const StyledWelcomeTourDialog = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    container-type: size;
   }
 
   .text {
