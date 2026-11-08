@@ -8,6 +8,7 @@ import { useState } from 'react';
 import IonIcon from '@reacticons/ionicons';
 import { getInitials } from '@/helpers/getInitials';
 import { useCloseOnBack } from '@/hooks/useCloseOnBack';
+import { useDragToClose } from '@/hooks/useDragToClose';
 
 interface GroupMenuProps {
   fromHomeGroup: Signal<Group | null> | undefined;
@@ -35,6 +36,7 @@ export const GroupMenu = ({
 }: GroupMenuProps) => {
   const [picking, setPicking] = useState<'sender' | 'receiver' | null>(null);
   useCloseOnBack(picking !== null, () => setPicking(null));
+  const sheetRef = useDragToClose(() => setPicking(null));
 
   const errorCondition =
     (idError.isSenderError || idError.isReceiverError) &&
@@ -115,7 +117,7 @@ export const GroupMenu = ({
       {picking && (
         <>
           <div className="sheetBackdrop" onClick={() => setPicking(null)} />
-          <StyledMemberSheet>
+          <StyledMemberSheet ref={sheetRef}>
             <div className="sheetHandle" />
             <div className="sheetTitle">
               {picking === 'sender' ? 'Sent from' : 'Received by'}

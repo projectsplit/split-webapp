@@ -448,6 +448,7 @@ export default function PaymentReviewDialog({ menu, timeZoneId, me }: Props) {
             chosen={destinationRow.destination}
             amount={parseAmount(destinationRow.amount)}
             currency={destinationRow.currency}
+            onClose={() => (destinationMenu.value = null)}
             onChoose={(destination) => {
               update(destinationRow.id, { destination });
               destinationMenu.value = null;

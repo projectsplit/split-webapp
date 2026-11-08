@@ -6,16 +6,19 @@ import { currencyData } from '../../../helpers/openExchangeRates';
 import { CurrencyOptionProps } from '../../../interfaces';
 import CurrencyFlag from '../../CurrencyFlag/CurrencyFlag';
 import { centerSelectedOption } from '@/helpers/centerSelectedOption';
+import { useDragToClose } from '@/hooks/useDragToClose';
 
 export default function CurrencyOptions({
   clickHandler,
   selectedCurrency,
+  onClose,
 }: CurrencyOptionProps) {
   const [searchItem, setSearchItem] = useState<string>('');
   const [filteredCurrencies, setFilteredCurrencies] =
     useState<Currency[]>(currencyData);
   const containerRef = useRef<HTMLDivElement>(null);
   const selectedRef = useRef<HTMLDivElement>(null);
+  const sheetRef = useDragToClose(onClose);
 
   useLayoutEffect(() => {
     centerSelectedOption(containerRef.current, selectedRef.current);
@@ -35,7 +38,7 @@ export default function CurrencyOptions({
   };
 
   return (
-    <StyledCurrencyOptions height="75vh">
+    <StyledCurrencyOptions ref={sheetRef} height="75vh">
       <div className="headerAndSearchbar">
         <div className="sheetHandle" />
         <div className="header">Select currency</div>

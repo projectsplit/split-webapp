@@ -11,7 +11,8 @@ export default function CurrencyOptionsAnimation({
   selectedCurrency,
 }: CurrencyOptionsAnimationProps) {
   const nodeRef = useRef(null);
-  useCloseOnBack(currencyMenu.value === 'currencyOptions', () => (currencyMenu.value = null));
+  const close = () => (currencyMenu.value = null);
+  useCloseOnBack(currencyMenu.value === 'currencyOptions', close);
   return (
     <CSSTransition
       nodeRef={nodeRef}
@@ -23,6 +24,7 @@ export default function CurrencyOptionsAnimation({
       <CurrencyOptions
         clickHandler={clickHandler}
         selectedCurrency={selectedCurrency}
+        onClose={close}
       />
     </CSSTransition>
   );

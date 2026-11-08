@@ -12,6 +12,7 @@ import { getUserName } from '@/helpers/getUserName';
 import { useMultipleTransfers } from '@/api/auth/CommandHooks/useMultipleTransfers';
 import MenuAnimationBackground from '@/components/Animations/MenuAnimationBackground';
 import GeneralWarningMenuAnimation from '@/components/Animations/GeneralWarningMenuAnimation';
+import { useDragToClose } from '@/hooks/useDragToClose';
 
 export default function SettleUpOptions({
   pendingTransactions,
@@ -25,6 +26,7 @@ export default function SettleUpOptions({
   const groupId = params?.groupid;
   const warningMenu = useSignal<string | null>(null);
   const warningMessage = useSignal<string>('');
+  const sheetRef = useDragToClose(() => (menu.value = null));
 
   const showWarning = (message: string) => {
     warningMessage.value = message;
@@ -96,7 +98,7 @@ export default function SettleUpOptions({
   };
 
   return (
-    <StyledSettleUpOptions>
+    <StyledSettleUpOptions ref={sheetRef}>
       <div className="sheetHandle" />
 
       <div className="settleUpHeader">

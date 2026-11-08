@@ -310,6 +310,7 @@ export interface StyledBottomMenuProps {
 export interface CurrencyOptionProps {
   clickHandler: (curr: string) => void;
   selectedCurrency?: string | undefined;
+  onClose: () => void;
 }
 export interface TimeZoneOptionsProps {
   clickHandler: (curr: string) => void;
