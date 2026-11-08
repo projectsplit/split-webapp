@@ -1,4 +1,4 @@
-import { CSSProperties, JSX, MouseEventHandler } from 'react';
+import { CSSProperties, JSX, MouseEventHandler, RefObject } from 'react';
 import {
   Coordinates,
   Debt,
@@ -310,6 +310,7 @@ export interface StyledBottomMenuProps {
 export interface CurrencyOptionProps {
   clickHandler: (curr: string) => void;
   selectedCurrency?: string | undefined;
+  onClose: () => void;
 }
 export interface TimeZoneOptionsProps {
   clickHandler: (curr: string) => void;
@@ -384,6 +385,8 @@ export interface CategorySelectorProps {
   navLinkUse: boolean;
   activeCatAsState?: Signal<string>;
   variant?: 'tab' | 'segmented' | 'segmentedCompact';
+  /** The track of pages the tabs head, whose scrolling the line under them follows. */
+  trackRef?: RefObject<HTMLElement | null>;
 }
 
 export interface MenuProps {

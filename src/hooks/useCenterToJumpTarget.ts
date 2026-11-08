@@ -79,8 +79,15 @@ export const useCenterToJumpTarget = <T extends JumpTarget>(
         );
         if (target) {
           const element = document.getElementById(`${idPrefix}-${target.id}`);
-          if (element) {
-            element.scrollIntoView({ block: 'center' });
+          const area = scrollAreaRef.current;
+          if (element && area) {
+            // The list alone. scrollIntoView would scroll the track of tabs around it too, and stop
+            // it short if the jump arrives while it is still sliding to this page.
+            const top =
+              element.getBoundingClientRect().top -
+              area.getBoundingClientRect().top;
+            area.scrollTop +=
+              top - (area.clientHeight - element.offsetHeight) / 2;
 
             setHighlight((current) => ({
               id: target.id,
@@ -94,7 +101,7 @@ export const useCenterToJumpTarget = <T extends JumpTarget>(
         console.error('Failed to parse jump token', e);
       }
     }
-  }, [jump, jumpToken, items, idPrefix, isPlaceholderData]);
+  }, [jump, jumpToken, items, idPrefix, isPlaceholderData, scrollAreaRef]);
 
   return highlight;
 };

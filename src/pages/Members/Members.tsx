@@ -1,5 +1,5 @@
 import { StyledMembers } from './Members.styled';
-import { useOutletContext, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useMemo } from 'react';
 import { groupTransactions } from '../../helpers/groupTransactions';
 import { Group, Mode, UserInfo } from '../../types';
@@ -11,6 +11,7 @@ import Spinner from '../../components/Spinner/Spinner';
 import AddNewUserAnimation from '../../components/Animations/AddNewUserAnimation';
 import getAllDebtsParticipants from '@/helpers/getAllDebtsParticipants';
 import { useDebts } from '@/api/auth/QueryHooks/useDebts';
+import { useTransactionsPageContext } from '../TransactionsWrappers/transactionsPageContext';
 
 const EMPTY_DEBTS = { debts: [], totalSpent: {} };
 
@@ -23,7 +24,7 @@ export default function Members() {
   });
 
   const { groupid } = useParams();
-  const { userInfo, group, showBottomBar, mode } = useOutletContext<{
+  const { userInfo, group, showBottomBar, mode } = useTransactionsPageContext<{
     userInfo: UserInfo;
     group: Group;
     showBottomBar: Signal<boolean>;

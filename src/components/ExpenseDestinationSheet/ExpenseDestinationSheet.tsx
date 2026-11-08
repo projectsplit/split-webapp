@@ -1,4 +1,4 @@
-import { RefObject, useState } from 'react';
+import { RefObject, useCallback, useState } from 'react';
 import IonIcon from '@reacticons/ionicons';
 import { signal, useSignal } from '@preact/signals-react';
 import MyButton from '../MyButton/MyButton';
@@ -17,6 +17,7 @@ import {
   Person,
 } from '@/helpers/expenseSplit';
 import { StyledExpenseDestinationSheet } from './ExpenseDestinationSheet.styled';
+import { useDragToClose } from '@/hooks/useDragToClose';
 
 type Props = {
   nodeRef: RefObject<HTMLDivElement | null>;
@@ -30,6 +31,8 @@ type Props = {
   amount: number | null;
   currency: string;
   onChoose: (destination: Destination) => void;
+  /** Closes the sheet without a choice, as pulling it down does. */
+  onClose: () => void;
   /** "Add to" for a payment that has nowhere yet; "Split with" for one already personal. */
   title?: string;
   /** Left out when the expense is personal already and the point is to share it. */
@@ -157,6 +160,7 @@ export default function ExpenseDestinationSheet({
   amount,
   currency,
   onChoose,
+  onClose,
   title = 'Add to',
   showPersonal = true,
   doneLabel = 'Done',
@@ -165,6 +169,21 @@ export default function ExpenseDestinationSheet({
   const [members, setMembers] = useState<PickerMember[]>([]);
   const [splitError, setSplitError] = useState('');
   const splitMethod = useSignal<SplitMethod>('Amounts');
+
+  // The transition that slides it in and out holds the sheet too.
+  const dragRef = useDragToClose(onClose);
+  const sheetRef = useCallback(
+    (sheet: HTMLDivElement | null) => {
+      nodeRef.current = sheet;
+      const release = dragRef(sheet);
+
+      return () => {
+        release?.();
+        nodeRef.current = null;
+      };
+    },
+    [nodeRef, dragRef]
+  );
 
   const total = amount ?? 0;
   const hasAmount = total > 0;
@@ -218,7 +237,7 @@ export default function ExpenseDestinationSheet({
     const quickSplitChosen = chosen?.kind === 'quickSplit';
 
     return (
-      <StyledExpenseDestinationSheet ref={nodeRef}>
+      <StyledExpenseDestinationSheet ref={sheetRef}>
         <div className="sheetHandle" />
         <div className="sheetTitle">{title}</div>
 
@@ -399,7 +418,7 @@ export default function ExpenseDestinationSheet({
   };
 
   return (
-    <StyledExpenseDestinationSheet ref={nodeRef}>
+    <StyledExpenseDestinationSheet ref={sheetRef}>
       <div className="sheetHandle" />
       <div className="stepHeader">
         <button

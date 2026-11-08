@@ -12,7 +12,7 @@ import {
   UserInfo,
 } from '../../types';
 import { StyledTransactionsPage } from '@/components/TransactionsPage.styled';
-import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Signal, useSignal } from '@preact/signals-react';
 import { DateOnly } from '../../helpers/timeHelpers';
 import DetailedTransfer from '../../components/DetailedTransfer/DetailedTransfer';
@@ -41,11 +41,15 @@ import PendingTransactionAnimation from '../../components/Animations/PendingTran
 import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
 import { hasActiveTransferFilters } from '@/helpers/hasActiveTransferFilters';
 import { useCenterToJumpTarget } from '@/hooks/useCenterToJumpTarget';
+import {
+  useTabInView,
+  useTransactionsPageContext,
+} from '../TransactionsWrappers/transactionsPageContext';
 
 const Transfers: React.FC = () => {
   const pageSize = 10;
   const { userInfo, group, showBottomBar, transferParsedFilters, mode } =
-    useOutletContext<{
+    useTransactionsPageContext<{
       userInfo: UserInfo;
       group: Group;
       showBottomBar: Signal<boolean>;
@@ -79,7 +83,8 @@ const Transfers: React.FC = () => {
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const isScrolled = useSignal<boolean>(false);
   const [searchParams] = useSearchParams();
-  const jumpToken = searchParams.get('jumpTo') || '';
+  // Only the page in view: the pages beside it share its address, and with it its jump.
+  const jumpToken = useTabInView() ? searchParams.get('jumpTo') || '' : '';
 
   const {
     data,

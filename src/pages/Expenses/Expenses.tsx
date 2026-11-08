@@ -12,7 +12,7 @@ import {
   Mode,
   TransactionType,
 } from '../../types';
-import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { StyledTransactionsPage } from '@/components/TransactionsPage.styled';
 import { signal, Signal, useSignal } from '@preact/signals-react';
 import DetailedExpense from '../../components/DetailedExpense/DetailedExpense';
@@ -51,6 +51,10 @@ import {
 } from '@/api/offline/pendingTransactionItems';
 import PendingTransactionAnimation from '../../components/Animations/PendingTransactionAnimation';
 import { getSignedInUserId } from '@/helpers/isUserAuthenticated';
+import {
+  useTabInView,
+  useTransactionsPageContext,
+} from '../TransactionsWrappers/transactionsPageContext';
 
 const Expenses = () => {
   const selectedExpense = useSignal<ExpenseResponseItem | null>(null);
@@ -64,12 +68,13 @@ const Expenses = () => {
   useCloseOnBack(!!selectedExpense.value, () => (selectedExpense.value = null));
   useCloseOnBack(longPressMenu.value === 'options', () => (longPressMenu.value = null));
   const [searchParams] = useSearchParams();
-  const jumpToken = searchParams.get('jumpTo') || '';
+  // Only the page in view: the pages beside it share its address, and with it its jump.
+  const jumpToken = useTabInView() ? searchParams.get('jumpTo') || '' : '';
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const isScrolled = useSignal<boolean>(false);
 
   const { userInfo, group, showBottomBar, expenseParsedFilters, mode } =
-    useOutletContext<{
+    useTransactionsPageContext<{
       userInfo: UserInfo;
       group: Group;
       showBottomBar: Signal<boolean>;

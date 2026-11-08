@@ -1,5 +1,5 @@
 import { signal, Signal, useSignal } from '@preact/signals-react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Outlet, useLocation, useOutletContext } from 'react-router-dom';
 import {
   ExpenseParsedFilters,
@@ -12,7 +12,7 @@ import {
   UserInfo,
 } from '../../types';
 import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
-import { useCategorySwipe } from '../../components/CategorySelector/useCategorySwipe';
+import TransactionTabs from './TransactionTabs';
 import MenuAnimationBackground from '../../components/Animations/MenuAnimationBackground';
 import BottomMainMenu from '../../components/Menus/BottomMainMenu/BottomMainMenu';
 import SearchTransactionsAnimation from '../../components/Animations/SearchTransactionsAnimation';
@@ -85,11 +85,7 @@ export default function NonGroup() {
   const timeZoneCoordinates = userInfo?.timeZoneCoordinates;
   const mode: Mode = Mode.NonGroup;
 
-  const swipeHandlers = useCategorySwipe({
-    categories: transactionCategories,
-    activeCat: path,
-    navLinkUse: true,
-  });
+  const tabsTrackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     topMenuTitle.value = 'Quick splits';
@@ -128,13 +124,20 @@ export default function NonGroup() {
 
   return (
     <StyledGroup>
-      <div className="group" {...swipeHandlers}>
+      <div className="group">
         <CategorySelector
           activeCat={path}
           categories={transactionCategories}
           navLinkUse={true}
+          trackRef={tabsTrackRef}
         />
-        <Outlet context={outletContext} />
+        <TransactionTabs
+          trackRef={tabsTrackRef}
+          activePath={path}
+          context={outletContext}
+        />
+        {/* Only the redirect from an address without a tab: the tabs' pages are in the track. */}
+        <Outlet />
 
         <MenuAnimationBackground menu={menu} />
 

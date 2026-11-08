@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import { StyledLongPressMenu } from './LongPressMenu.styled';
+import { useDragToClose } from '@/hooks/useDragToClose';
 
 interface LongPressMenuProps {
   onEdit?: () => void;
@@ -19,10 +20,12 @@ export default function LongPressMenu({
   onClose,
   extraOptions,
 }: LongPressMenuProps) {
+  const sheetRef = useDragToClose(onClose);
+
   return (
     <StyledLongPressMenu>
       <div className="backdrop" onClick={onClose} />
-      <div className="sheet">
+      <div className="sheet" ref={sheetRef}>
         <div className="handle" />
         {onEdit && (
           <button

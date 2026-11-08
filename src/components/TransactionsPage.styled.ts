@@ -17,9 +17,12 @@ export const StyledTransactionsPage = styled.div`
   overflow: hidden;
   flex: 1;
 
+  /* Up and down only: a row a pixel too wide would otherwise take a sideways swipe meant for the
+     tabs. */
   .scroll-area {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     padding-bottom: 100px;

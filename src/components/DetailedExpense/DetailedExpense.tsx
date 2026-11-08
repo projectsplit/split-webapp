@@ -313,6 +313,7 @@ export default function DetailedExpense({
               chosen={undefined}
               amount={amount}
               currency={currency}
+              onClose={() => (splitMenu.value = null)}
               onChoose={(destination) => {
                 splitMenu.value = null;
                 splitExpense({

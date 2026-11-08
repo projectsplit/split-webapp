@@ -16,6 +16,7 @@ export const CategorySelector = ({
   navLinkUse,
   activeCatAsState,
   variant,
+  trackRef,
 }: CategorySelectorProps) => {
   const isCompact = variant === 'segmentedCompact';
   const isSegmented = variant === 'segmented' || isCompact;
@@ -85,7 +86,8 @@ export const CategorySelector = ({
   }, []);
 
   useEffect(() => {
-    if (isFirstRender.current) return;
+    // Over a track of pages, the line goes where the track does, which the effect below sees to.
+    if (isFirstRender.current || trackRef) return;
 
     const updateIndicator = () => {
       const activeButton = categoryRefs[activeCategory]?.current;
@@ -105,7 +107,44 @@ export const CategorySelector = ({
     updateIndicator();
     window.addEventListener('resize', updateIndicator);
     return () => window.removeEventListener('resize', updateIndicator);
-  }, [activeCategory, activeCatAsState?.value, activeCat]);
+  }, [activeCategory, activeCatAsState?.value, activeCat, trackRef]);
+
+  const indicatorRef = useRef<HTMLDivElement>(null);
+
+  // A swipe across the pages moves the line with it, partway between the tabs it is passing.
+  useEffect(() => {
+    const track = trackRef?.current;
+    if (!track) return;
+
+    const keys = Object.keys(categories);
+    const centre = (button: HTMLElement) =>
+      button.offsetLeft + button.clientWidth / 2;
+
+    const follow = () => {
+      const indicator = indicatorRef.current;
+      if (!indicator || track.clientWidth === 0) return;
+
+      const progress = Math.min(
+        Math.max(track.scrollLeft / track.clientWidth, 0),
+        keys.length - 1
+      );
+      const from = categoryRefs[keys[Math.floor(progress)]]?.current;
+      const to = categoryRefs[keys[Math.ceil(progress)]]?.current;
+      if (!from || !to) return;
+
+      const part = progress - Math.floor(progress);
+      indicator.style.transition = 'none';
+      indicator.style.left = `${centre(from) + (centre(to) - centre(from)) * part}px`;
+      indicator.style.width = `${from.clientWidth + (to.clientWidth - from.clientWidth) * part}px`;
+    };
+
+    track.addEventListener('scroll', follow, { passive: true });
+    window.addEventListener('resize', follow);
+    return () => {
+      track.removeEventListener('scroll', follow);
+      window.removeEventListener('resize', follow);
+    };
+  }, [trackRef, categories, categoryRefs]);
 
   const isSmallScreen = window.matchMedia('(max-width: 360px)').matches;
   const getCategoryLabel = (label: string) => {
@@ -158,6 +197,7 @@ export const CategorySelector = ({
           </CategoryButton>
         ))}
         <div
+          ref={indicatorRef}
           className="selectedIndicator"
           style={{
             left: indicatorPosition.left,

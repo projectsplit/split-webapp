@@ -26,8 +26,6 @@ import {
   Group,
   NonGroup,
   Expenses,
-  Transfers,
-  Members,
   Analytics,
   Budget,
   CreateBudget,
@@ -85,19 +83,21 @@ const App = () => {
                 element={<GenerateInvitationCode />}
               />
 
+              {/* The tabs' pages are drawn by the screen itself, side by side to swipe between,
+                  so their routes only name the tab in view. */}
               <Route path={routes.GROUP} element={<Group />}>
                 <Route index element={<RedirectToExpenses />} />
-                <Route path="expenses" element={<Expenses />} />
-                <Route path="transfers" element={<Transfers />} />
-                <Route path="debts" element={<Members />} />
+                <Route path="expenses" />
+                <Route path="transfers" />
+                <Route path="debts" />
                 <Route path="*" element={<RedirectToExpenses />} />
               </Route>
 
               <Route path={routes.NON_GROUP} element={<NonGroup />}>
                 <Route index element={<RedirectToNonGroupExpenses />} />
-                <Route path="expenses" element={<Expenses />} />
-                <Route path="transfers" element={<Transfers />} />
-                <Route path="debts" element={<Members />} />
+                <Route path="expenses" />
+                <Route path="transfers" />
+                <Route path="debts" />
                 <Route path="*" element={<RedirectToNonGroupExpenses />} />
               </Route>
 
