@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import { StyledGroup } from './Group.styled';
 import { CategorySelector } from '../../components/CategorySelector/CategorySelector';
-import { useCategorySwipe } from '../../components/CategorySelector/useCategorySwipe';
+import TransactionTabs from './TransactionTabs';
 import { signal, Signal, useSignal } from '@preact/signals-react';
 import {
   type ExpenseParsedFilters,
@@ -25,7 +25,7 @@ import MenuAnimationBackground from '../../components/Animations/MenuAnimationBa
 import NewExpenseAnimation from '../../components/Animations/NewExpenseAnimation';
 import GroupQuickActionsAnimation from '../../components/Animations/GroupQuickActionsAnimation';
 import useGroup from '../../api/auth/QueryHooks/useGroup';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import NewTransferAnimation from '../../components/Animations/NewTransferAnimation';
 import GroupOptions from '../Groups/GroupOptions/GroupOptions';
 import ConfirmUnArchiveGroupAnimation from '../../components/Animations/ConfirmUnArchiveGroupAnimation';
@@ -114,11 +114,7 @@ export default function Group() {
     [group]
   );
 
-  const swipeHandlers = useCategorySwipe({
-    categories: transactionCategories,
-    activeCat: path,
-    navLinkUse: true,
-  });
+  const tabsTrackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isFetching) {
@@ -198,13 +194,20 @@ export default function Group() {
           </div>
         </div>
       ) : (
-        <div className="group" {...swipeHandlers}>
+        <div className="group">
           <CategorySelector
             activeCat={path}
             categories={transactionCategories}
             navLinkUse={true}
+            trackRef={tabsTrackRef}
           />
-          <Outlet context={outletContext} />
+          <TransactionTabs
+            trackRef={tabsTrackRef}
+            activePath={path}
+            context={outletContext}
+          />
+          {/* Only the redirect from an address without a tab: the tabs' pages are in the track. */}
+          <Outlet />
           {openGroupOptionsMenu.value && <GroupOptions group={group} />}
 
           <MenuAnimationBackground menu={menu} />

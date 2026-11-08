@@ -18,7 +18,9 @@ export const StyledNoExpensesFound = styled.div`
     display: flex;
     flex-direction: row;
     gap: ${({ theme }) => theme.space.s6};
+    /* Pills too many to fit scroll on their own, to either end, without swiping the page away. */
     overflow-x: auto;
+    overscroll-behavior-x: contain;
     scrollbar-width: none;
     padding: ${({ theme }) => `${theme.space.s12} ${theme.space.s20}`};
     border-bottom: 1px solid ${({ theme }) => theme.surface.hairline};

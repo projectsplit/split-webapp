@@ -4,7 +4,9 @@ export const StyledMembers = styled.div`
   display: flex;
   flex-direction: column;
   scrollbar-width: thin;
-  overflow: auto;
+  /* Up and down only, so a sideways swipe goes to the tabs. */
+  overflow-y: auto;
+  overflow-x: hidden;
   height: 100%;
   gap: ${({ theme }) => theme.space.s10};
   padding: ${({ theme }) => `${theme.space.s16} ${theme.space.s20} 100px`};

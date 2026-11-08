@@ -79,7 +79,7 @@ export const FiltersAndBars = ({
             </div>
           ) : null}
           {pills.length > 0 ? (
-            <div className="pills" onTouchStart={(e) => e.stopPropagation()}>
+            <div className="pills">
               {pills}
             </div>
           ) : null}
