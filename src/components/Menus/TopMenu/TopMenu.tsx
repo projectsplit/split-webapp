@@ -28,7 +28,7 @@ export default function TopMenu({
 
   return (
     <StyledTopMenu>
-      <div className="slot left">
+      <div className="side left">
         {username ? (
           <UserOptionsButton
             username={username}
@@ -47,18 +47,18 @@ export default function TopMenu({
         <PaymentReviewStatus menu={menu} />
       </div>
 
-      {onSupportClick && (
-        <button
-          type="button"
-          className="supportButton"
-          onClick={onSupportClick}
-        >
-          <IonIcon name="heart-outline" className="heart" />
-          Support Buqs
-        </button>
-      )}
+      <div className="side right">
+        {onSupportClick && (
+          <button
+            type="button"
+            className="supportButton"
+            aria-label="Support Buqs"
+            onClick={onSupportClick}
+          >
+            <IonIcon name="heart-outline" />
+          </button>
+        )}
 
-      <div className="slot right">
         {isInGroup ? (
           groupIsArchived ? (
             <div
