@@ -3,20 +3,21 @@ import puppyStill from './puppy-still.webp';
 
 /**
  * The puppy above the ask: a long-haired puppy looking up at whoever is holding the phone, its
- * big nose closest to them, blinking now and then.
+ * big nose closest to them, wagging its tail and blinking now and then.
  *
  * It replaced a drawn head whose pleading face read as close to tears. This one looks up at you
  * the same way, as a real puppy does.
  *
- * The background was cut away and the blink made by stretching the fur above each eye down over
- * it, the way an upper lid closes. It is an animated WebP: open for about three seconds, then a
- * blink of about 300 ms. The same puppy stays on the thank-you, so the puppy that asked is the one
- * that is thanked.
+ * The white background was cut away for the dark card. The blink stretches the fur above each eye
+ * down over it, the way an upper lid closes, and the tail bends from its root with the tip trailing
+ * a little. It is an animated WebP: a 3.2 s loop of 50 ms frames, the tail wagging every 0.4 s and
+ * one blink of about 350 ms. The same puppy stays on the thank-you, so the puppy that asked is the
+ * one that is thanked.
  */
 
-/** The clip is 440 by 546; this keeps its proportions. */
+/** The clip is 440 by 536; this keeps its proportions. */
 const WIDTH = 160;
-const HEIGHT = 199;
+const HEIGHT = 195;
 
 export default function PuppyEyes() {
   return (
