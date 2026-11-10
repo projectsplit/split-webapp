@@ -106,15 +106,20 @@ export const StyledWelcomeTourDialog = styled.div`
   }
 
   .title {
-    display: inline-flex;
-    align-items: center;
-    gap: ${({ theme }) => theme.space.s8};
     margin: 0 0 ${({ theme }) => theme.space.s10};
     font-size: 24px;
     font-weight: ${({ theme }) => theme.weight.semibold};
     letter-spacing: -0.02em;
     line-height: 1.2;
     color: ${({ theme }) => theme.ink.primary};
+    text-wrap: balance;
+
+    /* The Plus mark follows the last word, so a title that wraps keeps it beside the words
+       rather than out at the edge between the two lines. */
+    > span {
+      margin-left: ${({ theme }) => theme.space.s4};
+      vertical-align: 0.2em;
+    }
   }
 
   .body {

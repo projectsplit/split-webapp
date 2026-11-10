@@ -65,9 +65,13 @@ const SLIDES: Slide[] = [
 const NOTIFICATIONS: Slide = {
   key: 'notifications',
   scene: (active) => <NotificationScene active={active} />,
-  title: 'Add payments without typing',
+  title: (
+    <>
+      Add payments without typing <PlusBadge />
+    </>
+  ),
   body: 'When your bank or payment app tells you about a payment, Buqs keeps it on this phone and offers it as an expense the next time you open the app. You pick the ones to add, and nothing leaves your phone until you do.',
-  note: 'Android will ask to let Buqs read notifications, and warns that this means all of them. Buqs never receives chats: it keeps only payments, from apps such as Google Wallet and Revolut and any others you choose in Settings.',
+  note: "Android's warning is the same for every app that reads notifications. Buqs has texts and chats switched off there, skips email and news apps, and keeps only payments from apps like Google Wallet and Revolut.",
 };
 
 const prefersReducedMotion = () =>

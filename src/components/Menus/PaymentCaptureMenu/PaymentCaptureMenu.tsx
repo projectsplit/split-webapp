@@ -5,6 +5,7 @@ import PropertyList, { PropertyRow } from '../../ListForms/PropertyList';
 import SectionLabel from '../../SectionLabel/SectionLabel';
 import ToggleSwitch from '../../ToggleSwitch/ToggleSwitch';
 import MyButton from '../../MyButton/MyButton';
+import PlusBadge from '../../Plus/PlusBadge';
 import { StyledPaymentCaptureMenu } from './PaymentCaptureMenu.styled';
 import { usePaymentCaptureStatus } from '@/hooks/usePaymentCaptureStatus';
 import { FormatDateTime } from '@/helpers/timeHelpers';
@@ -82,7 +83,10 @@ export default function PaymentCaptureMenu({
   return (
     <StyledPaymentCaptureMenu ref={nodeRef}>
       <div className="header">
-        <div className="name">Payments from notifications</div>
+        <div className="name plusLabel">
+          Payments from notifications
+          <PlusBadge />
+        </div>
         <div
           className="closeButtonContainer"
           onClick={() => (menu.value = null)}
@@ -100,9 +104,11 @@ export default function PaymentCaptureMenu({
             until you do.
           </p>
           <p>
-            Android will ask you to let Buqs read notifications, and says that
-            means all of them. Buqs never receives chats, and keeps only
-            payments from the apps listed below.
+            Android shows every app that reads notifications the same warning.
+            On its page for Buqs, texts and chats are switched off and greyed
+            out, so Buqs never receives them. Buqs also skips email, news and
+            browser apps, keeps only payments from the apps listed below, and
+            never replies to or clears a notification.
           </p>
         </div>
 
@@ -155,11 +161,11 @@ export default function PaymentCaptureMenu({
             ) : (
               <p>
                 {status.lastCapturedAt
-                  ? `On. Last payment kept ${FormatDateTime(
+                  ? `Last payment kept ${FormatDateTime(
                       new Date(status.lastCapturedAt).toISOString(),
                       timeZoneId
                     )}.`
-                  : 'On. Waiting for your first payment.'}
+                  : 'Waiting for your first payment.'}
               </p>
             )}
           </div>

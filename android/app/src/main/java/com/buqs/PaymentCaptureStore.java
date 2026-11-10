@@ -184,7 +184,8 @@ final class PaymentCaptureStore {
         while (packageNames.hasNext()) {
             String packageName = packageNames.next();
             JSONObject entry = seen.optJSONObject(packageName);
-            if (entry == null) continue;
+            // An app skipped since it was listed, by an earlier version, leaves the list as well.
+            if (entry == null || PaymentNotificationListener.SKIPPED_APPS.contains(packageName)) continue;
 
             JSONObject item = copy(entry);
             put(item, "packageName", packageName);

@@ -320,7 +320,12 @@ export default function SettingsMenu({
             ) : null}
             {paymentCapture ? (
               <PropertyRow
-                label="Payments from notifications"
+                label={
+                  <span className="plusLabel">
+                    Payments from notifications
+                    <PlusBadge />
+                  </span>
+                }
                 onClick={() => (paymentCaptureMenu.value = 'paymentCapture')}
               >
                 <span className="rowValue">
