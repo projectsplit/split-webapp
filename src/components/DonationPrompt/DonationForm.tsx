@@ -250,7 +250,7 @@ export default function DonationForm({
       <StyledDonationForm>
         {showPuppy && (
           <PuppyFrame>
-            <PuppyEyes mood="happy" />
+            <PuppyEyes />
           </PuppyFrame>
         )}
 

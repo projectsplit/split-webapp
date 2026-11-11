@@ -16,6 +16,9 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -24,11 +27,13 @@ import java.util.regex.Pattern;
  * the next time it is opened.
  *
  * Android hands a notification listener the notifications of every app on the phone; the manifest
- * already declines conversations, so chats never arrive. Only notifications that mention an amount
- * are looked at further, and only those from the apps the person picked are kept: a bank's statement
- * reminders are no use as expenses. Of any other app nothing is kept but its name, when what it
- * posted looks like a payment, so that settings can offer it — which is how someone whose bank Buqs
- * has never heard of finds it there.
+ * already declines conversations, so chats never arrive. Mail, news, browser and text message apps
+ * are passed over without a look, and so are mail, adverts and suggestions from any app: they
+ * mention money all day long and never report a payment. Of the rest, only notifications that
+ * mention an amount are looked at further, and only those from the apps the person picked are kept:
+ * a bank's statement reminders are no use as expenses. Of any other app nothing is kept but its
+ * name, when what it posted looks like a payment, so that settings can offer it — which is how
+ * someone whose bank Buqs has never heard of finds it there.
  *
  * Runs without the web layer. The system binds it whenever notification access is on, whether or not
  * the app is open, so it writes to {@link PaymentCaptureStore} and the plugin reads from there.
@@ -66,6 +71,72 @@ public class PaymentNotificationListener extends NotificationListenerService {
         Pattern.compile(CURRENCY + SPACE + "[-−]?" + SPACE + "\\d|\\d" + SPACE + CURRENCY);
 
     private static final char[] HEX = "0123456789abcdef".toCharArray();
+
+    /**
+     * Apps whose notifications are never a payment, however often they mention money: mail, the
+     * Google app's news and stock alerts, news apps, offers websites push through a browser, video
+     * titles, and texts from apps that don't post them as conversations. Settings never lists them.
+     */
+    static final Set<String> SKIPPED_APPS = new HashSet<>(Arrays.asList(
+        // Mail
+        "com.google.android.gm",
+        "com.google.android.gm.lite",
+        "com.microsoft.office.outlook",
+        "com.yahoo.mobile.client.android.mail",
+        "com.samsung.android.email.provider",
+        "com.android.email",
+        "com.huawei.email",
+        "ch.protonmail.android",
+        "com.readdle.spark",
+        "me.bluemail.mail",
+        "org.kman.AquaMail",
+        "com.fsck.k9",
+        "net.thunderbird.android",
+        "com.easilydo.mail",
+        "com.fastmail.app",
+        "de.tutao.tutanota",
+        "de.gmx.mobile.android.mail",
+        "de.web.mobile.android.mail",
+        "com.aol.mobile.aolapp",
+        "com.zoho.mail",
+        // News
+        "com.google.android.googlequicksearchbox",
+        "com.google.android.apps.searchlite",
+        "com.google.android.apps.magazines",
+        "com.microsoft.amp.apps.bingnews",
+        "flipboard.app",
+        "bbc.mobile.news.uk",
+        "bbc.mobile.news.ww",
+        "com.guardian",
+        "com.bskyb.skynews.android",
+        "com.ft.news",
+        "com.nytimes.android",
+        "com.cnn.mobile.android.phone",
+        "com.thomsonreuters.reuters",
+        "com.bloomberg.android.plus",
+        "jp.gocro.smartnews.android",
+        "com.particlenews.newsbreak",
+        // Browsers and video
+        "com.android.chrome",
+        "org.mozilla.firefox",
+        "com.sec.android.app.sbrowser",
+        "com.microsoft.emmx",
+        "com.opera.browser",
+        "com.brave.browser",
+        "com.duckduckgo.mobile.android",
+        "com.google.android.youtube",
+        // Texts
+        "com.google.android.apps.messaging",
+        "com.samsung.android.messaging",
+        "com.android.messaging",
+        "com.android.mms"));
+
+    /**
+     * The kinds of notification an app can say it is posting that are never a payment: new mail,
+     * adverts and suggested reading. A payment app's own offers ("£5 back at...") are adverts too.
+     */
+    private static final Set<String> SKIPPED_CATEGORIES = new HashSet<>(Arrays.asList(
+        Notification.CATEGORY_EMAIL, Notification.CATEGORY_PROMO, Notification.CATEGORY_RECOMMENDATION));
 
     /**
      * Whether the system has this listener bound right now, which the plugin checks to catch one that
@@ -109,13 +180,14 @@ public class PaymentNotificationListener extends NotificationListenerService {
         if (!PaymentCaptureStore.isEnabled(this)) return;
 
         String packageName = posted.getPackageName();
-        if (getPackageName().equals(packageName)) return;
+        if (getPackageName().equals(packageName) || SKIPPED_APPS.contains(packageName)) return;
 
         Notification notification = posted.getNotification();
 
         // A group's summary repeats the notifications under it, and an ongoing notification is a call
         // or a download in progress, never a payment that has happened.
         if ((notification.flags & Notification.FLAG_GROUP_SUMMARY) != 0 || posted.isOngoing()) return;
+        if (SKIPPED_CATEGORIES.contains(notification.category)) return;
 
         Bundle extras = notification.extras;
         if (extras == null) return;

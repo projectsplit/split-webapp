@@ -1,7 +1,11 @@
 import { ReactNode } from 'react';
 import { BsBarChartFill, BsFillPiggyBankFill } from 'react-icons/bs';
 import { IoMdSearch } from 'react-icons/io';
-import { MdAutoAwesome, MdLocationOn } from 'react-icons/md';
+import {
+  MdAutoAwesome,
+  MdLocationOn,
+  MdNotificationsActive,
+} from 'react-icons/md';
 import PlusBadge from './PlusBadge';
 import { closePlusInfo } from './plusMenu';
 import { StyledPlusInfoMenu } from './PlusInfoMenu.styled';
@@ -49,11 +53,17 @@ export default function PlusInfoMenu({ nodeRef }: PlusInfoMenuProps) {
 
       <h2 className="headline">Open to everyone while Buqs is new</h2>
       <p className="subhead">
-        Budgeting, analytics, search and places are Plus features. For now
-        they are included for everyone, with nothing to unlock.
+        Payments from notifications, budgeting, analytics, search and places
+        are Plus features. For now they are included for everyone, with nothing
+        to unlock.
       </p>
 
       <div className="features">
+        <Feature
+          icon={<MdNotificationsActive />}
+          name="Payments from notifications"
+          text="In the Android app, the payments your bank and payment apps tell you about wait in Buqs, ready to add as expenses."
+        />
         <Feature
           icon={<BsFillPiggyBankFill />}
           name="Budgeting"

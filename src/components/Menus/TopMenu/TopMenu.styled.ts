@@ -9,16 +9,18 @@ export const StyledTopMenu = styled.div`
   padding: ${({ theme }) => `${theme.space.s20} ${theme.space.s20} ${theme.space.s14}`};
   padding-top: calc(${({ theme }) => theme.space.s20} + env(safe-area-inset-top));
 
-  .slot {
+  /* The two sides share what the title leaves over equally, so the title sits in the middle of the
+     bar whatever either side holds: the heart that shows only on the home page used to push it off
+     centre, and it slid back once the next page was open. */
+  .side {
+    flex: 1 1 0;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    flex-shrink: 0;
+    gap: ${({ theme }) => theme.space.s10};
+    min-height: 34px;
   }
 
-  .slot.right {
+  .side.right {
     justify-content: flex-end;
   }
 
@@ -39,7 +41,7 @@ export const StyledTopMenu = styled.div`
   }
 
   .titleStripe {
-    flex: 1;
+    flex: 0 1 auto;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -62,26 +64,21 @@ export const StyledTopMenu = styled.div`
   }
 
   .supportButton {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
-    gap: ${({ theme }) => theme.space.s6};
+    justify-content: center;
     flex-shrink: 0;
-    height: 30px;
-    padding: ${({ theme }) => `0 ${theme.space.s12}`};
+    width: 34px;
+    height: 34px;
+    padding: 0;
     border: 1px solid ${({ theme }) => theme.accent.you.tintBorder};
     border-radius: ${({ theme }) => theme.radius.pill};
     background-color: ${({ theme }) => theme.accent.you.tint};
     color: ${({ theme }) => theme.accent.you.ink};
-    font-family: inherit;
-    font-size: ${({ theme }) => theme.size.s13};
-    font-weight: ${({ theme }) => theme.weight.medium};
-    white-space: nowrap;
+    font-size: ${({ theme }) => theme.size.s17};
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-
-    .heart {
-      font-size: ${({ theme }) => theme.size.s14};
-    }
   }
 
   .bellIconAndNumberOfNotifications {
