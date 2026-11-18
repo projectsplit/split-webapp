@@ -16,7 +16,7 @@ export const useGetMe = () => {
   });
 };
 
-const getMe = async () => {
+export const getMe = async () => {
   const response = await apiClient.get<void, AxiosResponse<UserInfo>>(
     '/users/me'
   );

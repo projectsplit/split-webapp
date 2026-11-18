@@ -29,6 +29,8 @@ import EditEmailAnimation from '../../Animations/EditEmailAnimation';
 import { useSetShowBudgetInfo } from '@/api/auth/CommandHooks/useSetShowBudgetInfo';
 import { useSetPushNotificationsEnabled } from '@/api/auth/CommandHooks/useSetPushNotificationsEnabled';
 import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
+import { usePlus } from '@/hooks/usePlus';
+import { daysLeftText, trialDaysLeft } from '@/helpers/plusPlans';
 import SupportMenuAnimation from '../../Animations/SupportMenuAnimation';
 import DeleteAccountAnimation from '../../Animations/DeleteAccountAnimation';
 import ChangePasswordAnimation from '../../Animations/ChangePasswordAnimation';
@@ -92,6 +94,22 @@ export default function SettingsMenu({
   // Only fetched to know whether donations are configured at all. An instance with no Google Play
   // credentials should not show an entry that can only lead to a dead end.
   const { data: donationInfo } = useGetDonationPrompt(true);
+  const plus = usePlus();
+
+  // What the Buqs Plus row says about this account, beside the chevron. Nothing while Plus is open
+  // to everyone: there is no state to report.
+  const plusRowText =
+    plus.access === 'subscription'
+      ? plus.subscription?.plan === 'annual'
+        ? 'Annual'
+        : 'Monthly'
+      : plus.access === 'lifetime'
+        ? 'For life'
+        : plus.access === 'trial' && plus.trialEndsAt
+          ? daysLeftText(trialDaysLeft(plus.trialEndsAt))
+          : plus.access === 'none'
+            ? 'Subscribe'
+            : null;
 
   const queryClient = useQueryClient();
 
@@ -326,11 +344,19 @@ export default function SettingsMenu({
                     <PlusBadge />
                   </span>
                 }
-                onClick={() => (paymentCaptureMenu.value = 'paymentCapture')}
+                onClick={() => {
+                  // A Plus feature: once the free days are over, the row leads to the plans.
+                  if (plus.isLocked) openPlusInfo();
+                  else paymentCaptureMenu.value = 'paymentCapture';
+                }}
               >
                 <span className="rowValue">
                   <span className="rowText">
-                    {paymentCapture.enabled ? 'On' : 'Off'}
+                    {plus.isLocked
+                      ? 'Plus'
+                      : paymentCapture.enabled
+                        ? 'On'
+                        : 'Off'}
                   </span>
                   <IonIcon name="chevron-forward-outline" className="rowChevron" />
                 </span>
@@ -371,18 +397,20 @@ export default function SettingsMenu({
               </span>
             </PropertyRow>
 
-            {/* No glyph of its own: the Plus mark in the label is the symbol. */}
+            {/* No glyph of its own: the Plus mark in the label is the symbol. It names the row, so
+                it stays for a member; where the account stands is shown beside it. */}
             <PropertyRow
               action
               label={
                 <span className="plusLabel">
                   Buqs
-                  <PlusBadge />
+                  <PlusBadge always />
                 </span>
               }
               onClick={openPlusInfo}
             >
               <span className="rowValue">
+                {plusRowText && <span className="rowText">{plusRowText}</span>}
                 <IonIcon name="chevron-forward-outline" className="rowChevron" />
               </span>
             </PropertyRow>
@@ -398,10 +426,14 @@ export default function SettingsMenu({
               </span>
             </PropertyRow>
 
-            {/* Hidden only when the server has no Google Play credentials, so an instance that
-                cannot take money does not offer to. Otherwise always here, including for someone
-                who turned the prompt off — declining to be asked is not declining to give. */}
-            {donationInfo?.isAvailable && (
+            {/* Hidden when the server has no Google Play credentials, so an instance that cannot
+                take money does not offer to. While Plus is not live it is here for everyone,
+                including someone who turned the prompt off: declining to be asked is not declining
+                to give. Once Plus is live it stays only for a founding account. They have Plus for
+                life and cannot buy it, so this is the one way they can give; everyone else is
+                offered Plus and nothing beside it. */}
+            {donationInfo?.isAvailable &&
+              (plus.access === 'open' || plus.access === 'lifetime') && (
               <PropertyRow
                 action
                 icon={<FaHeart />}

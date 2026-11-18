@@ -7,6 +7,13 @@ export const StyledPlusInfoMenu = styled(StyledMiddleScreenMenu)`
   gap: ${({ theme }) => theme.space.s16};
   padding-top: ${({ theme }) => theme.space.s24};
 
+  .puppy {
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-bottom: -${({ theme }) => theme.space.s8};
+  }
+
   .lockup {
     display: flex;
     align-items: center;
@@ -41,6 +48,10 @@ export const StyledPlusInfoMenu = styled(StyledMiddleScreenMenu)`
   .features {
     display: flex;
     flex-direction: column;
+    /* With the plans above it the sheet is taller than the screen. The list clips its corners, so
+       left to itself it would be the one thing that gives way, and shrink to a row and a half;
+       held at full height, the sheet scrolls instead. */
+    flex-shrink: 0;
     background-color: ${({ theme }) => theme.surface.raised};
     border: 1px solid ${({ theme }) => theme.surface.hairline};
     border-radius: ${({ theme }) => theme.radius.surface};

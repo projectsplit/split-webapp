@@ -22,6 +22,7 @@ import { elapsedPercent } from '@/helpers/budgetProgress';
 import { Frequency } from '@/types';
 import routes from '@/routes';
 import PlusBadge from '@/components/Plus/PlusBadge';
+import { usePlus } from '@/hooks/usePlus';
 
 export default function ScrollableMenuButtons({
   mostRecentGroupDataIsFetching,
@@ -51,7 +52,11 @@ export default function ScrollableMenuButtons({
   const updateMostRecentContextId = useMostRecentContext();
   const hasBalance = (details: Details) =>
     Object.values(details).some((amount) => amount !== 0);
-  const showBudget = !!(showBudgetInfo && activeBudgetData);
+  const { isLocked } = usePlus();
+
+  // The strip under Budgeting is live budget tracking, which is the feature itself, so it goes
+  // with the rest of budgeting once an account's free Plus days are over.
+  const showBudget = !!(showBudgetInfo && activeBudgetData) && !isLocked;
 
   const budgetSpent =
     parseFloat(activeBudgetData?.totalAmountSpent ?? '0') || 0;

@@ -12,6 +12,8 @@ import { MdLocationOn, MdOutlineLocationOff } from 'react-icons/md';
 import { useState } from 'react';
 import IonIcon from '@reacticons/ionicons';
 import PlusBadge from '../../Plus/PlusBadge';
+import { openPlusInfo } from '../../Plus/plusMenu';
+import { usePlus } from '../../../hooks/usePlus';
 
 export default function MapsInfoBox({
   location,
@@ -20,6 +22,15 @@ export default function MapsInfoBox({
   const mapId = `${config.googleMapId}`;
   const defaultZoom = 14;
   const [hide, setHide] = useState<boolean>(true);
+  const { isLocked } = usePlus();
+
+  // The place's name and its link to Google Maps stay for everyone: they were saved with the
+  // expense and cost nothing to show. Drawing the map here is what Google bills for, so that is
+  // the part behind Plus.
+  const handleMapToggle = () => {
+    if (isLocked) openPlusInfo();
+    else setHide((hide) => !hide);
+  };
 
   return (
     <APIProvider apiKey={config.googleMapsApiKey}>
@@ -40,7 +51,7 @@ export default function MapsInfoBox({
                 <PlusBadge />
                 <span
                   className="mapToggle"
-                  onClick={() => setHide((hide) => !hide)}
+                  onClick={handleMapToggle}
                 >
                   <IonIcon
                     name={hide ? 'chevron-down-outline' : 'chevron-up-outline'}
@@ -48,7 +59,7 @@ export default function MapsInfoBox({
                 </span>
               </div>
 
-              {!hide && (
+              {!hide && !isLocked && (
                 <Map
                   className="map"
                   mapId={mapId}
