@@ -1,0 +1,80 @@
+name: Build iOS
+
+# Compiles the iOS app for the simulator, unsigned. Nobody on the project has a Mac, so this is the
+# only place the Swift and Xcode side gets built at all: a change that breaks it fails here, on the
+# commit that broke it. Signed archives and TestFlight uploads come later, once the Apple Developer
+# account and its signing secrets exist.
+on:
+  push:
+    branches:
+      - ios-app
+    paths:
+      - 'ios/**'
+      - 'capacitor.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/ios-spm-paths.mjs'
+      - '.github/workflows/build-ios.yml'
+  pull_request:
+    paths:
+      - 'ios/**'
+      - 'capacitor.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/ios-spm-paths.mjs'
+      - '.github/workflows/build-ios.yml'
+  workflow_dispatch:
+
+# A newer push makes the build in progress pointless; macOS minutes are the slow ones.
+concurrency:
+  group: build-ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23'
+
+      # Apple only accepts uploads built with a recent Xcode and iOS SDK, and FinanceKit's background
+      # delivery extension needs Xcode 26, so build with the newest stable one the runner has rather
+      # than whatever the image happens to default to.
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Install dependencies
+        run: npm install
+
+      # The API address is baked into the bundle. Which server it is does not matter for a compile
+      # check; test matches the default of the Android workflow.
+      - name: Setup environment file
+        run: echo "${{ vars.ENV_TEST }}" > .env.test
+
+      - name: Build web bundle
+        run: npm run build-test
+
+      # Copies the bundle in and writes Package.swift from the installed plugins. Done on the Mac
+      # rather than trusting the committed copy, the same as the Android workflow does.
+      - name: Sync web assets into the native project
+        run: npx cap sync ios
+
+      - name: Build for the simulator
+        working-directory: ios/App
+        run: |
+          xcodebuild -version
+          xcodebuild build \
+            -project App.xcodeproj \
+            -scheme App \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO

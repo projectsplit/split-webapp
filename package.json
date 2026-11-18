@@ -16,7 +16,8 @@
     "test:unit": "vitest run",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "capacitor:update:after": "node scripts/ios-spm-paths.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.0",
@@ -25,6 +26,7 @@
     "@capacitor/cli": "^8.5.0",
     "@capacitor/core": "^8.5.0",
     "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/ios": "^8.5.0",
     "@capacitor/keyboard": "^8.0.5",
     "@capacitor/push-notifications": "^8.1.2",
     "@capacitor/share": "^8.0.3",
