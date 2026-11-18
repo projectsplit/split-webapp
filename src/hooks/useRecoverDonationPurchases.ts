@@ -1,11 +1,28 @@
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { findUnregisteredPurchases } from '@/helpers/playBilling';
-import { registerDonationPurchase } from '@/api/auth/api';
+import {
+  getPlusOffer,
+  registerDonationPurchase,
+  registerPlusPurchase,
+} from '@/api/auth/api';
 import { isNativeApp } from '@/helpers/platform';
 
 /**
- * Catches gifts that were paid for but never recorded.
+ * Which Play product is the Plus subscription, or null if the server cannot say. A Plus purchase
+ * is registered somewhere else than a gift, and the product id is what tells the two apart.
+ */
+const plusProductId = async (): Promise<string | null> => {
+  try {
+    return (await getPlusOffer()).productId;
+  } catch {
+    // A server that predates Plus has no such answer, and has sold no Plus to recover either.
+    return null;
+  }
+};
+
+/**
+ * Catches purchases that were paid for but never recorded: gifts, and Plus subscriptions.
  *
  * Registration happens right after the payment sheet closes, and almost always lands. When it does
  * not — the app was killed, the connection dropped — Google Play has taken the money and this
@@ -32,9 +49,16 @@ export function useRecoverDonationPurchases(enabled: boolean) {
 
       if (purchases.length === 0) return;
 
+      // Asked only now, when there is something to sort: almost every app start finds nothing.
+      const plusId = await plusProductId();
+
       for (const purchase of purchases) {
         try {
-          await registerDonationPurchase(purchase);
+          if (plusId !== null && purchase.productId === plusId) {
+            await registerPlusPurchase({ purchaseToken: purchase.purchaseToken });
+          } else {
+            await registerDonationPurchase(purchase);
+          }
         } catch (error) {
           // Left for the next app start. The purchase stays unacknowledged, so it will be found
           // again, and Play's own notification is the backstop if it never is.
@@ -43,6 +67,8 @@ export function useRecoverDonationPurchases(enabled: boolean) {
       }
 
       queryClient.invalidateQueries({ queryKey: ['donationPrompt'] });
+      // A recovered subscription is what makes this account Plus.
+      queryClient.invalidateQueries({ queryKey: ['getMe'] });
     })();
   }, [enabled, queryClient]);
 }

@@ -7,6 +7,8 @@ import {
   turnOnPaymentCapture,
 } from '@/helpers/paymentCapture/paymentCapture';
 import { usePaymentCaptureStatus } from '@/hooks/usePaymentCaptureStatus';
+import { usePlus } from '@/hooks/usePlus';
+import { trialDaysLeft } from '@/helpers/plusPlans';
 import {
   BudgetScene,
   LedgerScene,
@@ -28,6 +30,35 @@ type Slide = {
   body: ReactNode;
   note?: ReactNode;
 };
+
+/**
+ * What the budgets slide says about Plus. The tour is most people's first sight of the word, so it
+ * has to be true for the account reading it: free for a number of days to a new account, simply
+ * theirs to a member, and open to everyone only while Plus is not live.
+ */
+function BudgetsPlusNote() {
+  const { access, trialEndsAt } = usePlus();
+
+  switch (access) {
+    case 'trial': {
+      const days = trialEndsAt ? trialDaysLeft(trialEndsAt) : 0;
+
+      return days > 1
+        ? `Budgets and analytics are Plus features, free for you for the next ${days} days.`
+        : 'Budgets and analytics are Plus features, free for you for now.';
+    }
+
+    case 'subscription':
+    case 'lifetime':
+      return 'Budgets and analytics are part of your Buqs Plus.';
+
+    case 'none':
+      return 'Budgets and analytics are Plus features.';
+
+    default:
+      return 'Budgets and analytics are Plus features, open to everyone while Buqs is new.';
+  }
+}
 
 const SLIDES: Slide[] = [
   {
@@ -57,7 +88,7 @@ const SLIDES: Slide[] = [
       </>
     ),
     body: "Set a budget for a week, a month or any period, and see what's left as you spend. Analytics show where the money goes.",
-    note: 'Budgets and analytics are Plus features, open to everyone while Buqs is new.',
+    note: <BudgetsPlusNote />,
   },
 ];
 

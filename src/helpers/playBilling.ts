@@ -3,7 +3,13 @@ import {
   PURCHASE_TYPE,
   type Product,
 } from '@capgo/native-purchases';
-import { DonationProduct, DonationTier, DonationTierKind } from '../types';
+import {
+  DonationProduct,
+  DonationTier,
+  DonationTierKind,
+  PlusOffer,
+  PlusPlanPrice,
+} from '../types';
 import { isNativeApp } from './platform';
 
 /**
@@ -98,20 +104,75 @@ export const loadDonationTiers = async (
     .filter((tier): tier is DonationTier => tier !== null);
 };
 
+/**
+ * Puts Google Play's prices on the Plus plans the server names.
+ *
+ * Both plans are base plans of one subscription product, and the plugin answers a subscription
+ * query with one entry per offer, named by its base plan rather than by the product. An entry that
+ * carries an offer id is a promotion layered on a base plan, such as a trial; the picker quotes the
+ * plain recurring price, so those are passed over.
+ *
+ * A plan Play does not return is dropped, on the same rule as a tip tier. A failed lookup is left
+ * to throw instead, so the query holding this stays unanswered and asks again the next time the
+ * sheet opens, rather than remembering "no plans" for the rest of the session.
+ */
+export const loadPlusPlans = async (
+  offer: PlusOffer
+): Promise<PlusPlanPrice[]> => {
+  if (!isNativeApp() || !offer.isAvailable || offer.plans.length === 0) {
+    return [];
+  }
+
+  const { products } = await NativePurchases.getProducts({
+    productIdentifiers: [offer.productId],
+    productType: PURCHASE_TYPE.SUBS,
+  });
+
+  return offer.plans
+    .map((plan): PlusPlanPrice | null => {
+      const playPlan = products.find(
+        (product) =>
+          product.identifier === plan.basePlanId &&
+          (product.planIdentifier ?? offer.productId) === offer.productId &&
+          !product.offerId
+      );
+
+      return playPlan
+        ? {
+            ...plan,
+            productId: offer.productId,
+            priceString: playPlan.priceString,
+            price: playPlan.price,
+            currencyCode: playPlan.currencyCode,
+            offerToken: playPlan.offerToken,
+          }
+        : null;
+    })
+    .filter((plan): plan is PlusPlanPrice => plan !== null);
+};
+
 export type PurchaseOutcome =
   | { ok: true; purchaseToken: string }
   | { ok: false; cancelled: boolean };
+
+/** What Play needs to know to sell one thing: the product, its catalogue, and for a subscription the plan. */
+type PurchaseTarget = {
+  productIdentifier: string;
+  productType: PURCHASE_TYPE;
+  planIdentifier?: string;
+  offerToken?: string;
+};
 
 /**
  * Opens Play's payment sheet and returns the token it issues.
  *
  * Acknowledgement is left to the server, which is why `autoAcknowledgePurchases` is off: Play
  * refunds anything unacknowledged after three days, so acknowledging here would mean the money
- * sticking whether or not the gift ever reached the ledger. The server acknowledges as part of
+ * sticking whether or not the purchase ever reached the server. The server acknowledges as part of
  * recording it, and the two therefore cannot come apart.
  */
-export const purchaseDonation = async (
-  tier: DonationTier,
+const purchase = async (
+  target: PurchaseTarget,
   userId: string
 ): Promise<PurchaseOutcome> => {
   if (!isNativeApp()) return { ok: false, cancelled: false };
@@ -124,23 +185,16 @@ export const purchaseDonation = async (
 
   try {
     const transaction = await NativePurchases.purchaseProduct({
-      productIdentifier: tier.productId,
-      productType:
-        tier.kind === DonationTierKind.Monthly
-          ? PURCHASE_TYPE.SUBS
-          : PURCHASE_TYPE.INAPP,
-      // Play needs to know which plan of a subscription product to bill; ignored for a one-off.
-      ...(tier.basePlanId ? { planIdentifier: tier.basePlanId } : {}),
-      ...(tier.offerToken ? { offerToken: tier.offerToken } : {}),
-      // Comes back to the server on the verified purchase, which is how a gift is tied to an
-      // account without trusting the client to say whose it is. An opaque internal id, never an
-      // email or a name — Play blocks purchases carrying identifiable information in the clear.
+      ...target,
+      // Comes back to the server on the verified purchase, which is how it is tied to an account
+      // without trusting the client to say whose it is. An opaque internal id, never an email or a
+      // name — Play blocks purchases carrying identifiable information in the clear.
       appAccountToken: userId,
       autoAcknowledgePurchases: false,
     });
 
     // Android always carries one on a completed purchase. Its absence means the sheet returned
-    // something this code does not understand, which must not be reported as a gift.
+    // something this code does not understand, which must not be reported as a purchase.
     if (!transaction.purchaseToken) {
       console.error('Google Play returned a purchase with no token');
 
@@ -162,6 +216,39 @@ export const purchaseDonation = async (
     return { ok: false, cancelled };
   }
 };
+
+export const purchaseDonation = (
+  tier: DonationTier,
+  userId: string
+): Promise<PurchaseOutcome> =>
+  purchase(
+    {
+      productIdentifier: tier.productId,
+      productType:
+        tier.kind === DonationTierKind.Monthly
+          ? PURCHASE_TYPE.SUBS
+          : PURCHASE_TYPE.INAPP,
+      // Play needs to know which plan of a subscription product to bill; ignored for a one-off.
+      ...(tier.basePlanId ? { planIdentifier: tier.basePlanId } : {}),
+      ...(tier.offerToken ? { offerToken: tier.offerToken } : {}),
+    },
+    userId
+  );
+
+/** Buys a Plus plan: one base plan of the Plus subscription, at its plain recurring price. */
+export const purchasePlus = (
+  plan: PlusPlanPrice,
+  userId: string
+): Promise<PurchaseOutcome> =>
+  purchase(
+    {
+      productIdentifier: plan.productId,
+      productType: PURCHASE_TYPE.SUBS,
+      planIdentifier: plan.basePlanId,
+      ...(plan.offerToken ? { offerToken: plan.offerToken } : {}),
+    },
+    userId
+  );
 
 /**
  * Gifts that were paid for but never recorded — the app was closed mid-flight, or the network
@@ -204,7 +291,7 @@ export const findUnregisteredPurchases = async (): Promise<
   }
 };
 
-/** Opens Play's own subscription management page, the only place a monthly gift can be stopped. */
+/** Opens Play's own subscription management page, the only place a subscription can be stopped. */
 export const openSubscriptionManagement = async (): Promise<void> => {
   if (!isNativeApp()) return;
 

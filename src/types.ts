@@ -89,6 +89,81 @@ export type UserInfo = {
   /** False for an account created through Google sign-in, which has no password to change. */
   hasPassword: boolean;
   pushNotificationsEnabled: boolean;
+  /**
+   * Where this account stands with Plus. Absent from a server that predates Plus, which reads the
+   * same as "open": nothing is locked and nothing is for sale.
+   */
+  plus?: PlusStatus;
+};
+
+export type PlusPlan = 'monthly' | 'annual';
+
+/**
+ * How an account comes to have Plus, or not to.
+ *
+ * - `open`: Plus is not live on this server, so its features are open to everyone.
+ * - `subscription`: paying for it through Google Play.
+ * - `lifetime`: a founding account, given Plus for life.
+ * - `trial`: inside the free days every new account starts with.
+ * - `none`: those days are over and there is no subscription. The Plus features are locked.
+ */
+export type PlusAccess = 'open' | 'subscription' | 'lifetime' | 'trial' | 'none';
+
+/** The server's whole answer about an account and Plus. The app only ever reads it. */
+export type PlusStatus = {
+  access: PlusAccess;
+  /** When the free days end, or ended. Null for an account they do not apply to. */
+  trialEndsAt: string | null;
+  /** The subscription, when that is what gives this account Plus. */
+  subscription: PlusMembership | null;
+};
+
+/**
+ * What the server knows about someone's Plus subscription. Every field is Google Play's answer as
+ * the server last read it; the app never decides any of this for itself.
+ */
+export type PlusMembership = {
+  plan: PlusPlan;
+  /** End of the period already paid for. The renewal date while renewing, the last day once cancelled. */
+  expiresAt: string;
+  /** False once the subscriber has turned renewal off in Google Play. */
+  autoRenewing: boolean;
+  /** Play could not take the renewal payment and is still retrying. Plus stays on meanwhile. */
+  inGracePeriod: boolean;
+  /** What the next renewal costs, in the subscriber's own currency. Null when Play did not say. */
+  renewalPrice: number | null;
+  renewalCurrencyCode: string | null;
+};
+
+/** One plan as the server names it. Carries no price: Play sets those per country. */
+export type PlusPlanOffer = {
+  plan: PlusPlan;
+  /** The base plan of the Plus subscription in the Play Console. */
+  basePlanId: string;
+};
+
+export type PlusOffer = {
+  /** False when the server is not selling Plus. The sheet then only explains what Plus is. */
+  isAvailable: boolean;
+  /** The subscription product in the Play Console that both plans belong to. */
+  productId: string;
+  plans: PlusPlanOffer[];
+};
+
+/** A plan once Play has said what it costs here. This is what the plan picker renders. */
+export type PlusPlanPrice = PlusPlanOffer & {
+  productId: string;
+  /** Play's own formatting, in the buyer's currency and locale. Shown verbatim. */
+  priceString: string;
+  price: number;
+  currencyCode: string;
+  /** Identifies the plan's base offer to bill. */
+  offerToken?: string;
+};
+
+/** Carries no plan and no price, for the reason a donation carries no amount: Play reports both. */
+export type RegisterPlusPurchaseRequest = {
+  purchaseToken: string;
 };
 
 export type GetVapidPublicKeyResponse = {

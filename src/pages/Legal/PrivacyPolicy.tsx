@@ -54,9 +54,11 @@ export default function PrivacyPolicy() {
           notifications in the app is deleted after 60 days.
         </li>
         <li>
-          <strong>Contributions.</strong> If you support Buqs through Google
-          Play, Google takes the payment. We receive the order reference, the
-          product and the time, and never your card or bank details.
+          <strong>Contributions and Buqs Plus.</strong> If you support Buqs or
+          subscribe to Buqs Plus through Google Play, Google takes the payment.
+          We receive the order reference, the product or plan, the price and
+          the time, and for a subscription its renewal date and whether it
+          renews. We never receive your card or bank details.
         </li>
         <li>
           <strong>Technical records.</strong> Our server logs record requests,
@@ -116,7 +118,8 @@ export default function PrivacyPolicy() {
         <li>
           <strong>Companies that process data for us.</strong> Google (sign-in,
           Maps, Firebase Cloud Messaging for notifications, and Google Play for
-          contributions), MongoDB (database hosting), our server hosting
+          contributions and subscriptions), MongoDB (database hosting), our
+          server hosting
           provider, Resend (account emails), and the push service of your
           browser&apos;s maker for web notifications.
         </li>
@@ -174,8 +177,8 @@ export default function PrivacyPolicy() {
         once nobody with an account can see them any more.
       </p>
       <p>
-        Records of contributions made through Google Play are kept as financial
-        records.
+        Records of contributions and subscriptions made through Google Play are
+        kept as financial records.
       </p>
       <p>
         If you cannot sign in, see{' '}

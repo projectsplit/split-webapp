@@ -5,51 +5,31 @@ const riseIn = keyframes`
   to   { opacity: 1; transform: translateY(0) scale(1); }
 `;
 
-export const Backdrop = styled.div`
+/**
+ * Holds the prompt above everything else in the app, the Support sheet included. The sheet keeps
+ * its own z-index, which here only has to clear the backdrop beside it.
+ */
+export const PromptLayer = styled.div`
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background-color: ${({ theme }) => theme.scrim.modal};
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: ${({ theme }) => theme.space.s16};
-  overflow-y: auto;
-`;
 
-export const Card = styled.div`
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 420px;
-  background-color: ${({ theme }) => theme.surface.card};
-  border: 1px solid ${({ theme }) => theme.surface.hairline};
-  border-radius: ${({ theme }) => theme.radius.dialog};
-  padding: ${({ theme }) =>
-    `${theme.space.s20} ${theme.space.s20} ${theme.space.s16}`};
-  box-shadow: ${({ theme }) => theme.shadow.dialog};
-  animation: ${riseIn} 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  .promptSheet {
+    animation: ${riseIn} 260ms cubic-bezier(0.16, 1, 0.3, 1);
 
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
-`;
-
-export const CloseRow = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin: -${({ theme }) => theme.space.s8} -${({ theme }) => theme.space.s6} 0 0;
-
-  .closeButton {
-    font-size: ${({ theme }) => theme.icon.lg};
-    color: ${({ theme }) => theme.ink.secondary};
-    cursor: pointer;
-
-    &:hover {
-      color: ${({ theme }) => theme.ink.primary};
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
     }
   }
+`;
+
+/** The same dimming as behind the Support sheet when it is opened from the heart. */
+export const Backdrop = styled.div`
+  position: absolute;
+  inset: 0;
+  background-color: ${({ theme }) => theme.scrim.sheet};
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 `;
 
 export const StyledDonationForm = styled.div`
@@ -228,7 +208,7 @@ export const DismissRow = styled.div`
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.space.s20};
-  margin-top: ${({ theme }) => theme.space.s14};
+  /* No margin of its own: the sheet's gap already spaces it from the Plus link above. */
   padding-top: ${({ theme }) => theme.space.s14};
   border-top: 1px solid ${({ theme }) => theme.surface.hairline};
 `;

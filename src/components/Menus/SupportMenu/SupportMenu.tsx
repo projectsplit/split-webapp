@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { Signal } from '@preact/signals-react';
+import { ReactNode, useEffect } from 'react';
 import { useGetDonationPrompt } from '../../../api/auth/QueryHooks/useGetDonationPrompt';
 import { suppressDonationPromptForSession } from '../../../hooks/useDonationPromptTiming';
 import DonationForm from '../../DonationPrompt/DonationForm';
@@ -15,22 +14,38 @@ import { openPlusInfo } from '../../Plus/plusMenu';
  * This is what makes the occasional prompt affordable. Because there is always a door, the prompt
  * can be as rare as it is without that rarity costing anything — someone who dismissed it, or who
  * turned it off for good, can still give whenever they feel like it.
+ *
+ * The occasional prompt shows this same sheet, so being asked and choosing to give look the same.
+ * It only swaps the Close button for its own two ways out.
  */
 
 interface SupportMenuProps {
-  supportMenu: Signal<string | null>;
-  nodeRef: React.MutableRefObject<null>;
+  nodeRef?: React.MutableRefObject<null>;
+  /** Closes the sheet. Also called on the way to the Plus sheet. */
+  onClose: () => void;
+  /** Takes the place of the Close button. */
+  footer?: ReactNode;
+  /** Called once a gift has actually been recorded. */
+  onGiven?: () => void;
+  className?: string;
 }
 
-export default function SupportMenu({ supportMenu, nodeRef }: SupportMenuProps) {
+export default function SupportMenu({
+  nodeRef,
+  onClose,
+  footer,
+  onGiven,
+  className,
+}: SupportMenuProps) {
   const { data: info, isPending } = useGetDonationPrompt(true);
 
   // Opening this is someone deciding for themselves, so the app stops asking for the rest of the
-  // session. Only closes the door on the automatic prompt — this menu stays reachable.
+  // session. Only closes the door on the automatic prompt — this menu stays reachable. When the
+  // prompt is the one showing this, the session's one ask is already spent and this changes nothing.
   useEffect(() => suppressDonationPromptForSession(), []);
 
   return (
-    <StyledSupportMenu ref={nodeRef}>
+    <StyledSupportMenu ref={nodeRef} className={className}>
       {isPending && (
         <div className="loading">
           <Spinner />
@@ -52,6 +67,7 @@ export default function SupportMenu({ supportMenu, nodeRef }: SupportMenuProps) 
               ? 'Your monthly contribution is covering part of the running costs. You can add a one-off on top if you want to.'
               : 'Buqs is free and has no ads. Tips help cover the servers.'
           }
+          onGiven={onGiven}
         />
       )}
 
@@ -73,20 +89,18 @@ export default function SupportMenu({ supportMenu, nodeRef }: SupportMenuProps) 
         type="button"
         className="about"
         onClick={() => {
-          supportMenu.value = null;
+          onClose();
           openPlusInfo();
         }}
       >
         What is Buqs Plus?
       </button>
 
-      <button
-        type="button"
-        className="close"
-        onClick={() => (supportMenu.value = null)}
-      >
-        Close
-      </button>
+      {footer ?? (
+        <button type="button" className="close" onClick={onClose}>
+          Close
+        </button>
+      )}
     </StyledSupportMenu>
   );
 }
