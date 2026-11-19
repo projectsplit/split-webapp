@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Signal } from '@preact/signals-react';
 import { useLocation } from 'react-router-dom';
-import { IoClose } from 'react-icons/io5';
 import { useGetDonationPrompt } from '../../api/auth/QueryHooks/useGetDonationPrompt';
 import { useRecordDonationPromptShown } from '../../api/auth/CommandHooks/useRecordDonationPromptShown';
 import { useDismissDonationPrompt } from '../../api/auth/CommandHooks/useDismissDonationPrompt';
 import { useDonationPromptTiming } from '../../hooks/useDonationPromptTiming';
 import { isNativeApp } from '@/helpers/platform';
 import { useCloseOnBack } from '@/hooks/useCloseOnBack';
-import DonationForm from './DonationForm';
+import { usePlus } from '@/hooks/usePlus';
+import SupportMenu from '../Menus/SupportMenu/SupportMenu';
 import {
   Backdrop,
-  Card,
-  CloseRow,
   DismissButton,
   DismissRow,
+  PromptLayer,
 } from './DonationPrompt.styled';
 
 /**
- * The occasional ask.
+ * The occasional ask. It shows the same sheet as the Support Buqs heart, with "Not now" and "Don't
+ * ask again" in place of its Close button.
  *
  * Whether this person is ever asked is the server's call and is measured in months; this component
  * only chooses a moment inside the session and takes no for an answer. Closing it any way at all —
@@ -58,11 +58,18 @@ export default function DonationPrompt({
     location.pathname.startsWith(route)
   );
 
+  // The prompt belongs to the time before Plus is live. Once it is, nobody is asked for a tip:
+  // Plus is the one ask, and a founding account that wants to give finds the way in Settings.
+  const isPlusLive = usePlus().access !== 'open';
+
   const { isOpen, close } = useDonationPromptTiming({
     // Native only. Contributions go through Google Play, which the web build has no access to, so
     // on the web this would interrupt someone with an ask they could not act on even if they wanted
     // to. The settings entry stays reachable there and explains where it can be done.
-    enabled: Boolean(info?.isAvailable && info?.shouldAsk) && isNativeApp(),
+    enabled:
+      Boolean(info?.isAvailable && info?.shouldAsk) &&
+      isNativeApp() &&
+      !isPlusLive,
     blocked: Boolean(menu.value) || hasOverlay || isMidFlow,
     isStillBlocked: () => Boolean(menu.peek()),
   });
@@ -109,35 +116,28 @@ export default function DonationPrompt({
   }
 
   return (
-    <Backdrop
-      onClick={() => handleDismiss(false)}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Support Buqs"
-    >
-      <Card onClick={(event) => event.stopPropagation()}>
-        <CloseRow>
-          <IoClose className="closeButton" onClick={() => handleDismiss(false)} />
-        </CloseRow>
+    <PromptLayer role="dialog" aria-modal="true" aria-label="Support Buqs">
+      <Backdrop onClick={() => handleDismiss(false)} />
 
-        <DonationForm
-          info={info}
-          headline="Buqs runs on servers someone pays for"
-          subhead="Right now that's us. If Buqs has been useful to you, a contribution covers a slice of the bill and keeps it running for everyone."
-          onGiven={() => setHasGiven(true)}
-        />
-
-        {!hasGiven && (
-          <DismissRow>
-            <DismissButton type="button" onClick={() => handleDismiss(false)}>
-              Not now
-            </DismissButton>
-            <DismissButton type="button" onClick={() => handleDismiss(true)}>
-              Don't ask again
-            </DismissButton>
-          </DismissRow>
-        )}
-      </Card>
-    </Backdrop>
+      {/* After a gift the footer goes back to the sheet's own Close, which lands in handleDismiss
+          too and so is not taken as a no. */}
+      <SupportMenu
+        className="promptSheet"
+        onClose={() => handleDismiss(false)}
+        onGiven={() => setHasGiven(true)}
+        footer={
+          hasGiven ? undefined : (
+            <DismissRow>
+              <DismissButton type="button" onClick={() => handleDismiss(false)}>
+                Not now
+              </DismissButton>
+              <DismissButton type="button" onClick={() => handleDismiss(true)}>
+                Don't ask again
+              </DismissButton>
+            </DismissRow>
+          )
+        }
+      />
+    </PromptLayer>
   );
 }

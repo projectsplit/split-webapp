@@ -4,9 +4,11 @@ import {
   DonationPromptInfo,
   PasswordSignInRequest,
   PasswordSignUpRequest,
+  PlusOffer,
   RefreshTokenResponse,
   RequestPasswordResetRequest,
   RegisterDonationPurchaseRequest,
+  RegisterPlusPurchaseRequest,
   RequestUsernameRecoveryRequest,
   ResetPasswordRequest,
   SendGoogleCodeRequest,
@@ -114,6 +116,20 @@ export const registerDonationPurchase = async (
   request: RegisterDonationPurchaseRequest
 ) => {
   const response = await apiClient.post('/donations/purchase', request);
+  return response.data;
+};
+
+export const getPlusOffer = async () => {
+  const response = await apiClient.get<void, AxiosResponse<PlusOffer>>(
+    '/plus/offer'
+  );
+  return response.data;
+};
+
+export const registerPlusPurchase = async (
+  request: RegisterPlusPurchaseRequest
+) => {
+  const response = await apiClient.post('/plus/purchase', request);
   return response.data;
 };
 

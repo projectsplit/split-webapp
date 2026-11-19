@@ -23,7 +23,10 @@ export default function SupportMenuAnimation({
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <SupportMenu supportMenu={supportMenu} nodeRef={nodeRef} />
+      <SupportMenu
+        nodeRef={nodeRef}
+        onClose={() => (supportMenu.value = null)}
+      />
     </CSSTransition>
   );
 }

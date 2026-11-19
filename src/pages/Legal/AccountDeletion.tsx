@@ -71,9 +71,9 @@ export default function AccountDeletion() {
           once nobody with an account can see them any more.
         </li>
         <li>
-          Records of contributions made through Google Play are kept as
-          financial records. If you give monthly, the monthly contribution is
-          cancelled when you delete your account.
+          Records of contributions and subscriptions made through Google Play
+          are kept as financial records. If you give monthly or subscribe to
+          Buqs Plus, that is cancelled when you delete your account.
         </li>
         <li>
           Server logs, which can include your IP address, are kept only as long

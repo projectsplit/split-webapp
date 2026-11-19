@@ -25,6 +25,8 @@ import {
 } from '@/helpers/nativePush';
 import { isNativeApp } from '@/helpers/platform';
 import PlusInfoAnimation from '../../components/Animations/PlusInfoAnimation';
+import { openPlusInfo } from '../../components/Plus/plusMenu';
+import { usePlus } from '@/hooks/usePlus';
 import SupportMenuAnimation from '../../components/Animations/SupportMenuAnimation';
 import DonationPrompt from '../../components/DonationPrompt/DonationPrompt';
 import { useGetDonationPrompt } from '@/api/auth/QueryHooks/useGetDonationPrompt';
@@ -49,6 +51,9 @@ const refreshNotifications = (queryClient: QueryClient) => {
     queryClient.invalidateQueries({ queryKey });
   }
 };
+
+/** On a link into the app, asks for the Plus sheet to be opened on arrival. */
+const PLUS_SHEET_PARAM = 'plus';
 
 const Protected: React.FC = () => {
   const location = useLocation();
@@ -131,13 +136,36 @@ const Protected: React.FC = () => {
 
   // The same cached answer the prompt reads, so this costs no extra request.
   const { data: donationInfo } = useGetDonationPrompt(true);
+  const plus = usePlus();
+
   // Home only, and only in the app: contributions go through Google Play, so on the web this would
   // be a prominent button leading to an explanation that it can't be done there. Settings keeps
-  // the entry on every platform.
+  // the entry on every platform. And only while Plus is not live: once it is, Plus is the one
+  // thing the app asks anyone for, and a heart beside it would be a second ask competing with it.
   const showSupport =
     location.pathname === routes.ROOT &&
     isNativeApp() &&
-    Boolean(donationInfo?.isAvailable);
+    Boolean(donationInfo?.isAvailable) &&
+    plus.access === 'open';
+
+  // A renewal reminder links to "/?plus=1": the Plus sheet is where the plan, its renewal date and
+  // the way to Google Play are. The sheet is not a route, so the marker opens it and is then taken
+  // back out of the address, which keeps Back and a reload from opening it a second time.
+  useEffect(() => {
+    const search = new URLSearchParams(location.search);
+
+    if (!search.has(PLUS_SHEET_PARAM)) return;
+
+    search.delete(PLUS_SHEET_PARAM);
+    openPlusInfo();
+
+    const rest = search.toString();
+
+    navigate(
+      { pathname: location.pathname, search: rest ? `?${rest}` : '' },
+      { replace: true, state: location.state }
+    );
+  }, [location.pathname, location.search, location.state, navigate]);
 
   const excludeTopMenu = useShouldExcludeTopMenu([
     routes.ANALYTICS,
@@ -198,8 +226,12 @@ const Protected: React.FC = () => {
           server whether this person is due to be asked at all. */}
       <DonationPrompt menu={menu} hasOverlay={Boolean(code)} />
       {/* Here for the same reason, and on the shared menu signal, so that the donation prompt
-          waits while the payments list is open rather than landing on top of it. */}
-      <PaymentReview menu={menu} hasOverlay={Boolean(code)} />
+          waits while the payments list is open rather than landing on top of it. Not for an
+          account whose Plus has lapsed: payments from notifications are a Plus feature, and the
+          list offering them is the feature. What the phone has collected stays on the phone. */}
+      {!plus.isLocked && (
+        <PaymentReview menu={menu} hasOverlay={Boolean(code)} />
+      )}
     </StyledProtected>
   ) : (
     // The search is part of where they were going: a notification's link names its expense there.

@@ -444,9 +444,7 @@ export default function DonationForm({
         Payment is handled by Google Play. Buqs never sees your card details.
       </Disclaimer>
       <Footnote>
-        Everything that is free in Buqs today will always be free, whether or
-        not you give. New features that depend on a third-party provider may
-        need a paid subscription.
+        A tip is a thank you and unlocks nothing.
         {isMonthly &&
           ' A monthly gift can be cancelled any time from Google Play.'}
       </Footnote>

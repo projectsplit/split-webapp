@@ -21,6 +21,7 @@ import Spinner from './components/Spinner/Spinner';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt/PwaInstallPrompt';
 import { useAndroidBackButton } from './hooks/useAndroidBackButton';
 import AppUrlListener from './components/AppUrlListener';
+import PlusGate from './components/Plus/PlusGate';
 import {
   
   Group,
@@ -116,7 +117,14 @@ const App = () => {
                 path={`${routes.ANALYTICS}/*`}
                 element={<RedirectToAnalytics />}
               />
-              <Route path={routes.ANALYTICS} element={<Analytics />} />
+              <Route
+                path={routes.ANALYTICS}
+                element={
+                  <PlusGate feature="analytics">
+                    <Analytics />
+                  </PlusGate>
+                }
+              />
 
               <Route path={routes.BUDGET} element={<Budget />}>
                 <Route index element={<BudgetOverview />} />
