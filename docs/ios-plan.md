@@ -103,7 +103,7 @@ entitlement request the day that account exists, because Apple's review time is 
 | Google sign-in | `@capgo/capacitor-social-login`; the id token is minted for the web client id | Needs an iOS OAuth client (bundle id `com.buqs`) in the Google Cloud project that holds the web client, its URL scheme in Info.plist, and the server accepting that audience as well (`AuthSettings.GoogleClientId` is a single value). |
 | Sign in with Apple | None | App Review guideline 4.8 asks for an equivalent private login wherever Google sign-in is offered. Use the same plugin's Apple provider. The server verifies Apple's identity token and links accounts, and account deletion revokes the Apple token, which Apple requires. |
 | Push | FCM through the Firebase project that has the Android apps; `PushAvailability` plugin | Add an iOS app to the same Firebase project and upload an APNs auth key. Add Firebase Messaging so that the push plugin hands out FCM tokens instead of raw APNs ones (Capacitor's Firebase guide changes `AppDelegate`). Write `PushAvailability` in Swift. Server: an `ApnsConfig` next to the `AndroidConfig` in `SendViaFcm`. |
-| Tips | Play Billing through `@capgo/native-purchases`; the server verifies Play tokens and takes Play's notifications | The same plugin speaks StoreKit 2. Create the three consumables in App Store Connect. The server verifies the signed transaction and takes App Store Server Notifications v2 for refunds. Until then, iOS must stay off the Play paths (Phase 1). |
+| Plus and tips | Play Billing through `@capgo/native-purchases`: the `buqs_plus` subscription (base plans `annual` and `monthly`) and one-off tips. The server verifies Play tokens and keeps `plus.access` per account; after the 30-day trial, the Plus features lock unless subscribed | **Required before release.** An iPhone app that locks features must sell the unlock through Apple's in-app purchase (App Review 3.1.1), and may honour a subscription bought on Android only if it is also on sale in the app (3.1.3(b)). It may not tell people to subscribe elsewhere. The same plugin speaks StoreKit 2. App Store Connect: one subscription group with two subscriptions (monthly and annual; StoreKit has no base plans, so these are two product ids) at the Play prices, plus the tip consumables. The server verifies the signed transaction, takes App Store Server Notifications v2 (renewals, expiry, refunds), and maps App Store subscriptions into the same `plus` state. Until then, iOS must stay off the Play paths (Phase 1). |
 | Location | Location permissions in the manifest | Purpose string added. WKWebView can also ask a second, web-style question naming "localhost"; if it does, use `@capacitor/geolocation` on iOS. |
 | Maps (Plus) | Maps JavaScript key with referrer rules | Check that the key accepts the iOS origin; otherwise use a second key for iOS. |
 | Invitation links (`/j/`) | `assetlinks.json` with `autoVerify` | Universal Links: `public/.well-known/apple-app-site-association` with the Team ID, and the Associated Domains capability `applinks:buqs.uk`. `AppUrlListener` already handles the opened link. |
@@ -146,7 +146,8 @@ entitlement request the day that account exists, because Apple's review time is 
       Universal Links depend on it: get it confirmed by Developer Support before converting.
 - [ ] App ID `com.buqs` with Push Notifications, Sign in with Apple, Associated Domains and App
       Groups (`group.com.buqs`).
-- [ ] App Store Connect app record, and the three tip products as consumables.
+- [ ] App Store Connect app record: a Plus subscription group (monthly and annual) and the tip
+      consumables.
 - [ ] APNs auth key uploaded to Firebase; iOS app `com.buqs` in the Firebase project, with its
       `GoogleService-Info.plist`.
 - [ ] iOS OAuth client for Google sign-in.
@@ -164,20 +165,23 @@ entitlement request the day that account exists, because Apple's review time is 
 - [ ] SplitServer allows `capacitor://localhost`.
 - [ ] The refresh-cookie test, then App-Bound Domains or the token in the body.
 - [ ] Keep iOS off the Play-only paths: `isBillingAvailable`, `DonationPrompt`, `DonationForm`,
-      `SupportMenu` and `useRecoverDonationPurchases` all use `isNativeApp()` to mean "has Play
-      Billing". Hide the Google button on iOS until its client id exists.
+      `SupportMenu` and `useRecoverDonationPurchases` use `isNativeApp()` to mean "has Play
+      Billing", and so do the Plus purchase paths in `playBilling.ts` (`loadPlusPlans`,
+      `purchasePlus`). A locked iOS account must not be told to subscribe from the Android app,
+      as the web is. Hide the Google button on iOS until its client id exists.
 - [ ] Signed build and TestFlight workflow; first install; username and password sign-in survives a
       restart and an expired access token.
 
 ### 2. Parity
 
 Google and Apple sign-in, push, Universal Links, location and maps, export and share, offline mode,
-StoreKit tips, privacy manifest.
+Plus and tips through StoreKit (with the server side), privacy manifest.
 
 ### 3. Apple Pay capture through Shortcuts
 
 The App Intent and the App Group store, `PaymentCapture` in Swift, structured captures in the web
-layer, the Settings and tour wording, the setup guide, and the privacy policy. Buqs's side can be
+layer, the Settings and tour wording, the setup guide, and the privacy policy. It is a Plus feature,
+behind the same lock as payments from notifications on Android. Buqs's side can be
 tested on an iPad by running the action by hand with made-up values; the real trigger needs an
 iPhone at a till.
 
