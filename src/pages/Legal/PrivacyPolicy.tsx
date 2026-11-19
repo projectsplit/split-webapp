@@ -58,7 +58,9 @@ export default function PrivacyPolicy() {
           subscribe to Buqs Plus through Google Play, Google takes the payment.
           We receive the order reference, the product or plan, the price and
           the time, and for a subscription its renewal date and whether it
-          renews. We never receive your card or bank details.
+          renews. We never receive your card or bank details. We also keep how
+          your account has Buqs Plus, if it does: during its free days, by
+          subscription, or for life.
         </li>
         <li>
           <strong>Technical records.</strong> Our server logs record requests,
@@ -140,8 +142,13 @@ export default function PrivacyPolicy() {
       <h2>Why we are allowed to use it</h2>
       <ul>
         <li>
-          <strong>To provide the service you asked for:</strong> your account
-          and everything you enter.
+          <strong>To provide the service you asked for:</strong> your account,
+          everything you enter, and your Buqs Plus subscription, including
+          reminders before your free days end or your plan renews.
+        </li>
+        <li>
+          <strong>To meet our legal obligations:</strong> keeping records of
+          payments made through Google Play.
         </li>
         <li>
           <strong>Legitimate interests:</strong> keeping Buqs secure, and
